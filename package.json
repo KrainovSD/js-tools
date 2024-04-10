@@ -1,15 +1,17 @@
 {
-  "name": "@krainov/utils",
-  "version": "0.1.0",
+  "name": "@krainovsd/utils",
+  "version": "0.0.1",
   "description": "Krainov utils",
   "author": "KrainovSD <denislosev48@gmail.com>",
   "license": "ISC",
-  "repository": "https://github.com/KrainovSD/js-utils",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KrainovSD/js-utils"
+  },
   "main": "./dist/bundle.js",
   "module": "./dist/bundle.es.js",
   "jsnext:main": "./dist/bundle.es.js",
   "types": "./dist/index.d.ts",
-  "private": true,
   "keywords": [
     "utils",
     "js",

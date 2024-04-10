@@ -1,23 +1,23 @@
-# @krainov/utils
+# @krainovsd/utils
 
 Пакет с используемыми в проектах хелперами.
 
 ## Download
 
 ```
-yarn add @krainov/utils
+yarn add @krainovsd/utils
 ```
 
 ## Usage
 
 ```
-const utils = require('@krainov/utils');
+const utils = require('@krainovsd/utils');
 
 ```
 
 или
 
 ```
-import utils from "@krainov/utils"
+import utils from "@krainovsd/utils"
 
 ```
