@@ -16,14 +16,13 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org/
       - run: yarn
-      # - run: |
-      #     git config user.name github-actions
-      #     git config user.email github-actions@github.com
-      #     npm version ${{ github.event.inputs.version }}
-      #     git push origin master
-      #     git push origin v${{ github.event.inputs.version }}
-      # - run: yarn build
-      - run: printenv NODE_AUTH_TOKEN
-      # - run: npm publish
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          npm version ${{ github.event.inputs.version }}
+          git push origin master
+          git push origin v${{ github.event.inputs.version }}
+      - run: yarn build
+      - run: npm publish
     env:
       NODE_AUTH_TOKEN: ${{secrets.npm_token}}
