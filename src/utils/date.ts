@@ -1,12 +1,12 @@
-import dayjs from "dayjs";
-import today from "dayjs/plugin/isToday";
-import yesterday from "dayjs/plugin/isYesterday";
-import tomorrow from "dayjs/plugin/isTomorrow";
-import { DateGetterRule, DateType, Maybe, _DateTypes } from "../types";
+import dayjs from 'dayjs';
+import todayPlugin from 'dayjs/plugin/isToday';
+import yesterdayPlugin from 'dayjs/plugin/isYesterday';
+import tomorrowPlugin from 'dayjs/plugin/isTomorrow';
+import { DateGetterRule, DateType, Maybe, DATE_TYPES } from '../types';
 
-dayjs.extend(today);
-dayjs.extend(yesterday);
-dayjs.extend(tomorrow);
+dayjs.extend(todayPlugin);
+dayjs.extend(yesterdayPlugin);
+dayjs.extend(tomorrowPlugin);
 
 function isToday(date: Maybe<string | Date>) {
   try {
@@ -33,27 +33,27 @@ function isTomorrow(date: Maybe<string | Date>) {
 function getDate(increment: number, type: DateType, date: Date = new Date()) {
   const result = date;
   switch (type) {
-    case _DateTypes.days: {
+    case DATE_TYPES.days: {
       result.setDate(result.getDate() + increment);
       return result;
     }
-    case _DateTypes.months: {
+    case DATE_TYPES.months: {
       result.setMonth(result.getMonth() + increment);
       return result;
     }
-    case _DateTypes.years: {
+    case DATE_TYPES.years: {
       result.setFullYear(result.getFullYear() + increment);
       return result;
     }
-    case _DateTypes.seconds: {
+    case DATE_TYPES.seconds: {
       result.setSeconds(result.getSeconds() + increment);
       return result;
     }
-    case _DateTypes.minutes: {
+    case DATE_TYPES.minutes: {
       result.setMinutes(result.getMinutes() + increment);
       return result;
     }
-    case _DateTypes.hours: {
+    case DATE_TYPES.hours: {
       result.setHours(result.getHours() + increment);
       return result;
     }
@@ -63,7 +63,7 @@ function getDate(increment: number, type: DateType, date: Date = new Date()) {
 }
 
 function getDateByMultipleRule(rules: DateGetterRule[]) {
-  let result = new Date();
+  const result = new Date();
   for (const rule of rules) {
     getDate(rule.increment, rule.type, result);
   }
@@ -74,7 +74,7 @@ function differenceDate(
   type: DateType,
   firstDate: Date,
   secondDate: Date = new Date(),
-  float: boolean = false
+  float: boolean = false,
 ) {
   const first = dayjs(firstDate);
   return first.diff(secondDate, type, float);
@@ -97,6 +97,7 @@ function getToday() {
   startNow.setHours(0, 0, 0, 0);
   const endNow = new Date();
   endNow.setHours(23, 59, 59, 999);
+
   return { startNow, endNow };
 }
 

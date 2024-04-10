@@ -5,10 +5,12 @@
       "@babel/env",
       {
         "useBuiltIns": false,
+        "bugfixes": true,
         "loose": true,
-        "bugfixes": true
+        "targets": "last 2 versions, not dead, > 0.2%"
       }
     ]
   ],
-  "plugins": [["@babel/transform-runtime"]]
+
+  "plugins": [["@babel/plugin-transform-runtime"]]
 }

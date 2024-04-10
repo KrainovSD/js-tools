@@ -1,9 +1,9 @@
-import typings from "../typings";
-import _ from "../underscore";
-import { nanoid } from "nanoid";
+import { nanoid } from 'nanoid';
+import typings from '../typings';
+import _ from '../underscore';
 
 function checkIrregularVerb(word: string) {
-  const splitWord = word.split("--").filter((item) => typings.isString(item));
+  const splitWord = word.split('--').filter((item) => typings.isString(item));
   if (splitWord.length === 3) return true;
   return false;
 }
@@ -11,7 +11,7 @@ function checkIrregularVerb(word: string) {
 function updateNewValue(
   oldObj: Record<string, any>,
   newObj: Record<string, any>,
-  exception: string[] = []
+  exception: string[] = [],
 ) {
   for (const field in newObj) {
     if (exception.includes(field)) continue;
