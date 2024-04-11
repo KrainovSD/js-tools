@@ -1,5 +1,5 @@
 function isString(value: unknown): value is string {
-  return typeof value === 'string' && value.length > 0;
+  return typeof value === 'string';
 }
 
 function isNumber(value: unknown): value is number {
@@ -16,10 +16,6 @@ function isBoolean(value: unknown): value is boolean {
 
 function isObject(value: unknown): value is Record<string, unknown> {
   return Boolean(value && typeof value === 'object' && !Array.isArray(value));
-}
-
-function isArrayOfObjects(value: unknown): value is Record<string, unknown>[] {
-  return Array.isArray(value) && value.every((val) => isObject(val));
 }
 
 function isArray(value: unknown): value is unknown[] {
@@ -48,7 +44,6 @@ export default {
   isId,
   isBoolean,
   isObject,
-  isArrayOfObjects,
   isArray,
   isUndefined,
   isNull,

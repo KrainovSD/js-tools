@@ -86,6 +86,7 @@
         "no-unsafe-finally": "warn",
         "no-param-reassign": "off",
         "no-shadow": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
       },
     },
   ],

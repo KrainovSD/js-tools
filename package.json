@@ -24,13 +24,8 @@
     "prettier:check": "prettier src --check",
     "lint:check": "eslint --debug ./src/**/*.ts",
     "lint": "yarn prettier:check && eslint ./src/**/*.ts",
-    "test": "jest"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "test",
-      "pre-push": "test"
-    }
+    "test": "jest",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",

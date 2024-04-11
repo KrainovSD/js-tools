@@ -9,8 +9,8 @@ function checkIrregularVerb(word: string) {
 }
 
 function updateNewValue(
-  oldObj: Record<string, any>,
-  newObj: Record<string, any>,
+  oldObj: Record<string, unknown>,
+  newObj: Record<string, unknown>,
   exception: string[] = [],
 ) {
   for (const field in newObj) {
@@ -28,7 +28,7 @@ function getRandomId(size?: number) {
   return nanoid(size);
 }
 
-function safeJsonParse<T = unknown>(value: any) {
+function safeJsonParse<T = unknown>(value: unknown) {
   try {
     if (!typings.isString(value)) return null;
     return JSON.parse(value) as T;

@@ -8,7 +8,7 @@ import typings from '../typings';
 function get(
   object: Maybe<Record<string, any>>,
   path: Maybe<string>,
-  defaultValue: any = null,
+  defaultValue: unknown = null,
 ) {
   if (!typings.isObject(object) || !typings.isString(path)) return defaultValue;
 
