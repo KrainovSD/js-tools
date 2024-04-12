@@ -6,7 +6,7 @@ import { Maybe } from '../types';
 import typings from '../typings';
 
 function get(
-  object: Maybe<Record<string, any>>,
+  object: Maybe<Record<string, unknown>>,
   path: Maybe<string>,
   defaultValue: unknown = null,
 ) {

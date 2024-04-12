@@ -8,21 +8,21 @@ dayjs.extend(todayPlugin);
 dayjs.extend(yesterdayPlugin);
 dayjs.extend(tomorrowPlugin);
 
-function isToday(date: Maybe<string | Date>) {
+function isToday(date: Maybe<string | Date | number>) {
   try {
     return dayjs(date).isToday();
   } catch {
     return false;
   }
 }
-function isYesterday(date: Maybe<string | Date>) {
+function isYesterday(date: Maybe<string | Date | number>) {
   try {
     return dayjs(date).isYesterday();
   } catch {
     return false;
   }
 }
-function isTomorrow(date: Maybe<string | Date>) {
+function isTomorrow(date: Maybe<string | Date | number>) {
   try {
     return dayjs(date).isTomorrow();
   } catch {
@@ -31,7 +31,7 @@ function isTomorrow(date: Maybe<string | Date>) {
 }
 
 function getDate(increment: number, type: DateType, date: Date = new Date()) {
-  const result = date;
+  const result = new Date(date);
   switch (type) {
     case DATE_TYPES.days: {
       result.setDate(result.getDate() + increment);
@@ -62,10 +62,13 @@ function getDate(increment: number, type: DateType, date: Date = new Date()) {
   }
 }
 
-function getDateByMultipleRule(rules: DateGetterRule[]) {
-  const result = new Date();
+function getDateByMultipleRule(
+  rules: DateGetterRule[],
+  date: Date = new Date(),
+) {
+  let result = new Date(date);
   for (const rule of rules) {
-    getDate(rule.increment, rule.type, result);
+    result = getDate(rule.increment, rule.type, result);
   }
   return result;
 }
@@ -93,12 +96,12 @@ function getYesterday() {
   return yesterday;
 }
 function getToday() {
-  const startNow = new Date();
-  startNow.setHours(0, 0, 0, 0);
-  const endNow = new Date();
-  endNow.setHours(23, 59, 59, 999);
+  const startToday = new Date();
+  startToday.setHours(0, 0, 0, 0);
+  const endToday = new Date();
+  endToday.setHours(23, 59, 59, 999);
 
-  return { startNow, endNow };
+  return { startToday, endToday };
 }
 
 export default {

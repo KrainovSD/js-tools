@@ -22,7 +22,7 @@
     "rollup": "rollup --config rollup.config.js",
     "prettier:format": "prettier src --write",
     "prettier:check": "prettier src --check",
-    "lint:check": "eslint --debug ./src/**/*.ts",
+    "lint:format": "eslint ./src/**/*.ts  --fix",
     "lint": "yarn prettier:check && eslint ./src/**/*.ts",
     "test": "jest",
     "prepare": "husky"

@@ -3,7 +3,9 @@ import typings from '../typings';
 import _ from '../underscore';
 
 function checkIrregularVerb(word: string) {
-  const splitWord = word.split('--').filter((item) => typings.isString(item));
+  const splitWord = word
+    .split('--')
+    .filter((item) => typings.isString(item) && item.length > 0);
   if (splitWord.length === 3) return true;
   return false;
 }
