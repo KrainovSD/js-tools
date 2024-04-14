@@ -10,3 +10,4 @@ tmp/
 node_modules/
 src/
 .github/
+.husky/
