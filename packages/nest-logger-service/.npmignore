@@ -1,0 +1,15 @@
+.eslintrc
+.gitignore
+.prettierrc
+api-extractor.json
+babel.config.json
+jest.config.js
+rollup.config.js
+tsconfig.json
+tmp/
+node_modules/
+src/
+.github/
+.husky/
+tests/
+dev/

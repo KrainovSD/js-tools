@@ -1,0 +1,130 @@
+import { WsException } from '@nestjs/websockets';
+import { typings } from '@krainovsd/utils';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpStatus,
+  Inject,
+} from '@nestjs/common';
+import { FastifyReply, FastifyRequest } from 'fastify';
+import { throwError } from 'rxjs';
+import { LOGGER_PROVIDER_MODULE } from './logger.constants';
+import { LoggerService } from './logger.service';
+import { Client, RpcData } from './typings';
+
+@Catch()
+export class LoggerFilter implements ExceptionFilter {
+  constructor(
+    @Inject(LOGGER_PROVIDER_MODULE)
+    private readonly loggerService: LoggerService,
+  ) {}
+
+  catch(exception: unknown, host: ArgumentsHost) {
+    const type = host.getType();
+
+    switch (type) {
+      case 'rpc': {
+        return this.rpcFilter(exception, host);
+      }
+      case 'http': {
+        return this.httpFilter(exception, host);
+      }
+      case 'ws': {
+        return this.wsFilter(exception, host);
+      }
+      default: {
+        return this.loggerService.error({
+          message: 'strange type host',
+          error: exception,
+        });
+      }
+    }
+  }
+
+  public async httpFilter(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<FastifyReply>();
+    const request = ctx.getRequest<FastifyRequest>();
+    const requestInfo = await this.loggerService.getRequestInfo(request);
+    const errorInfo = this.loggerService.getErrorInfo(exception);
+    const status = errorInfo.status || 500;
+
+    this.loggerService.error({
+      info: { ...requestInfo, ...errorInfo, status },
+      message: 'request error',
+    });
+
+    if (requestInfo.traceId) {
+      response.header('traceId', requestInfo.traceId);
+    }
+
+    return response
+      .status(status)
+      .header('operationId', request.operationId)
+      .send({
+        statusCode: status,
+        timestamp: new Date().toISOString(),
+        traceId: requestInfo.traceId,
+        operationId: requestInfo.operationId,
+        path: request.url,
+        message: errorInfo.error,
+        description: errorInfo.description,
+      });
+  }
+  public rpcFilter(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToRpc();
+    const data = ctx.getData<RpcData>();
+    const rpcContext = ctx.getContext<Record<string, unknown>>();
+    const errorInfo = this.loggerService.getErrorInfo(exception);
+    const eventInfo = {
+      pattern:
+        typeof rpcContext?.getPattern === 'function'
+          ? rpcContext?.getPattern?.()
+          : undefined,
+      operationId: data?.operationId,
+      sendBy: data?.sendBy,
+    };
+
+    this.loggerService.error({
+      info: { ...eventInfo, ...errorInfo },
+      message: 'error rpc event',
+    });
+    return throwError(() => ({ status: 'error', message: errorInfo.error }));
+  }
+  public wsFilter(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToWs();
+    const client = ctx.getClient<Client>();
+    const pattern = ctx.getPattern();
+    const body = JSON.stringify(ctx.getData());
+
+    const socketInfo = this.loggerService.getSocketInfo(client);
+    const errorInfo = this.loggerService.getErrorInfo(exception);
+    const status =
+      !errorInfo.status ||
+      errorInfo.status === HttpStatus.INTERNAL_SERVER_ERROR ||
+      errorInfo.status < 1000
+        ? 1011
+        : errorInfo.status;
+    const reason = JSON.stringify({
+      name: errorInfo.error,
+      description: errorInfo.description,
+      operationId: socketInfo.operationId,
+    });
+
+    this.loggerService.error({
+      info: {
+        ...socketInfo,
+        pattern: !typings.isString(pattern) ? JSON.stringify(pattern) : pattern,
+        ...errorInfo,
+        status,
+      },
+      message: 'error ws event',
+    });
+
+    if (typeof client.close === 'function') client.close(status, reason);
+    if (WsException) return new WsException(reason);
+
+    return null;
+  }
+}
