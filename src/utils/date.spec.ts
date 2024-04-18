@@ -77,30 +77,32 @@ describe('Date test', () => {
   describe('differenceDate', () => {
     it('1 day', () => {
       const now = new Date();
-      expect(date.differenceDate('days', date.getDate(1, 'days', now))).toBe(1);
+      expect(
+        date.differenceDate('days', date.getDate(1, 'days', now), now),
+      ).toBe(1);
     });
     it('1 hour', () => {
       const now = new Date();
-      expect(date.differenceDate('hours', date.getDate(1, 'hours', now))).toBe(
-        1,
-      );
+      expect(
+        date.differenceDate('hours', date.getDate(1, 'hours', now), now),
+      ).toBe(1);
     });
     it('1 minute', () => {
       const now = new Date();
       expect(
-        date.differenceDate('minutes', date.getDate(1, 'minutes', now)),
+        date.differenceDate('minutes', date.getDate(1, 'minutes', now), now),
       ).toBe(1);
     });
     it('1 minute in seconds', () => {
       const now = new Date();
       expect(
-        date.differenceDate('seconds', date.getDate(1, 'minutes', now)),
+        date.differenceDate('seconds', date.getDate(1, 'minutes', now), now),
       ).toBe(60);
     });
     it('1 second', () => {
       const now = new Date();
       expect(
-        date.differenceDate('seconds', date.getDate(1, 'seconds', now)),
+        date.differenceDate('seconds', date.getDate(1, 'seconds', now), now),
       ).toBe(1);
     });
   });
