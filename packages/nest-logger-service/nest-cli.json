@@ -4,6 +4,6 @@
   "sourceRoot": "tests",
   "compilerOptions": {
     "deleteOutDir": true,
-    "tsConfigPath": "./tsconfig.test.json"
+    "tsConfigPath": "./tsconfig.dev.json"
   }
 }

@@ -2,8 +2,7 @@ import { FastifyRequest } from 'fastify';
 import { typings } from '@krainovsd/utils';
 import { v4 } from 'uuid';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
-import { trace } from '@opentelemetry/api';
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Logger } from 'winston';
 import {
   Client,
@@ -36,17 +35,7 @@ export class LoggerService {
   }
 
   async getRequestInfo(request: FastifyRequest) {
-    console.log(trace);
-
-    let traceId: undefined | string;
-    try {
-      const { trace } = await import('@opentelemetry/api');
-      if (trace) {
-        traceId = trace?.getActiveSpan()?.spanContext()?.traceId ?? undefined;
-      }
-    } catch {
-      /* empty */
-    }
+    const traceId = await this.getTraceId();
     const ip = request.ip;
     const host = request.hostname;
     const url = request.url;
@@ -69,22 +58,40 @@ export class LoggerService {
       typings.isObject(err) && typings.isString(err?.name)
         ? err?.name
         : undefined;
-    const stack =
-      typings.isObject(err) && typings.isString(err?.stack)
-        ? err?.stack
-        : undefined;
+    // const stack =
+    //   typings.isObject(err) && typings.isString(err?.stack)
+    //     ? err?.stack
+    //     : undefined;
     const status =
       typings.isObject(err) && typings.isNumber(err?.status)
         ? err.status
         : undefined;
 
-    return { error, name, description, stack, status };
+    return { error, name, description, status };
   }
-  getSocketInfo(client: Client) {
+  async getSocketInfo(client: Client) {
+    const traceId = await this.getTraceId();
+
     return {
+      traceId,
       userId: client.user?.id,
       operationId: client.operationId ?? v4(),
       sessionId: client.id,
     };
+  }
+  async getTraceId() {
+    let traceId: undefined | string;
+    try {
+      console.log('check trace');
+      const { trace } = await import('@opentelemetry/api');
+      console.log(trace);
+      if (trace) {
+        traceId = trace?.getActiveSpan()?.spanContext()?.traceId ?? undefined;
+      }
+    } catch {
+      /* empty */
+    }
+
+    return traceId;
   }
 }

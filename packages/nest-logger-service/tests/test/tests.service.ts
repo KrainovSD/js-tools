@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { LOGGER_PROVIDER_MODULE, LoggerService } from '../../src';
 
 @Injectable()
@@ -9,10 +9,11 @@ export class TestsService {
   ) {}
 
   async success() {
+    this.logger.info({ message: 'test' });
     return true;
   }
 
   async error() {
-    return false;
+    throw new BadRequestException();
   }
 }

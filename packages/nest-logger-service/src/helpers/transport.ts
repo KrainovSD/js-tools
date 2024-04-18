@@ -1,13 +1,23 @@
 import { format } from 'winston';
 
-export const transportFormatLogfmt = format.printf((info) => {
-  console.log(info);
-  return getCorrectLog(info);
-});
-export const transportFormatJson = format.printf((info) => {
-  console.log(info);
-  return JSON.stringify(info);
-});
+export const transportFormatLogfmt = format.printf(
+  ({ level, message, ...rest }) =>
+    getCorrectLog({
+      level,
+      time: new Date().toISOString(),
+      ...rest,
+      message,
+    }),
+);
+export const transportFormatJson = format.printf(
+  ({ level, message, ...rest }) =>
+    JSON.stringify({
+      level,
+      time: new Date().toISOString(),
+      ...rest,
+      message,
+    }),
+);
 
 function isHasSpace(str: string | null) {
   return typeof str === 'string' && str.includes(' ');

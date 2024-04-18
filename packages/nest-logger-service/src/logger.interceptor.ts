@@ -6,7 +6,6 @@ import {
   CallHandler,
   Inject,
 } from '@nestjs/common';
-import { v4 } from 'uuid';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoggerService } from './logger.service';
@@ -28,14 +27,16 @@ export class LoggerInterceptor implements NestInterceptor {
 
     switch (type) {
       case 'rpc': {
-        return this.interceptRpc(context, next);
+        // eslint-disable-next-line @typescript-eslint/return-await
+        return await this.interceptRpc(context, next);
       }
       case 'http': {
         // eslint-disable-next-line @typescript-eslint/return-await
         return await this.interceptHttp(context, next);
       }
       case 'ws': {
-        return this.interceptWs(context, next);
+        // eslint-disable-next-line @typescript-eslint/return-await
+        return await this.interceptWs(context, next);
       }
       default: {
         return next.handle();
@@ -55,12 +56,12 @@ export class LoggerInterceptor implements NestInterceptor {
       tap(() => {
         this.loggerService.info({
           info: { ...requestInfo, status: response.statusCode },
-          message: 'start request',
+          message: 'end request',
         });
       }),
     );
   }
-  public interceptRpc(context: ExecutionContext, next: CallHandler) {
+  public async interceptRpc(context: ExecutionContext, next: CallHandler) {
     const ctx = context.switchToRpc();
     const data = ctx.getData<RpcData>();
     const rpcContext = ctx.getContext<Record<string, unknown>>();
@@ -90,13 +91,13 @@ export class LoggerInterceptor implements NestInterceptor {
       }),
     );
   }
-  public interceptWs(context: ExecutionContext, next: CallHandler) {
+  public async interceptWs(context: ExecutionContext, next: CallHandler) {
     const ctx = context.switchToWs();
 
     const client = ctx.getClient<Client>();
     const pattern = ctx.getPattern();
-    const body = JSON.stringify(ctx.getData());
-    const socketInfo = this.loggerService.getSocketInfo(client);
+    // const body = JSON.stringify(ctx.getData());
+    const socketInfo = await this.loggerService.getSocketInfo(client);
     if (!client.operationId) client.traceId = socketInfo.operationId;
 
     this.loggerService.info({

@@ -1,4 +1,3 @@
-import { WsException } from '@nestjs/websockets';
 import { typings } from '@krainovsd/utils';
 import {
   ExceptionFilter,
@@ -20,18 +19,21 @@ export class LoggerFilter implements ExceptionFilter {
     private readonly loggerService: LoggerService,
   ) {}
 
-  catch(exception: unknown, host: ArgumentsHost) {
+  async catch(exception: unknown, host: ArgumentsHost) {
     const type = host.getType();
 
     switch (type) {
       case 'rpc': {
-        return this.rpcFilter(exception, host);
+        // eslint-disable-next-line @typescript-eslint/return-await
+        return await this.rpcFilter(exception, host);
       }
       case 'http': {
-        return this.httpFilter(exception, host);
+        // eslint-disable-next-line @typescript-eslint/return-await
+        return await this.httpFilter(exception, host);
       }
       case 'ws': {
-        return this.wsFilter(exception, host);
+        // eslint-disable-next-line @typescript-eslint/return-await
+        return await this.wsFilter(exception, host);
       }
       default: {
         return this.loggerService.error({
@@ -72,7 +74,7 @@ export class LoggerFilter implements ExceptionFilter {
         description: errorInfo.description,
       });
   }
-  public rpcFilter(exception: unknown, host: ArgumentsHost) {
+  public async rpcFilter(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToRpc();
     const data = ctx.getData<RpcData>();
     const rpcContext = ctx.getContext<Record<string, unknown>>();
@@ -84,6 +86,7 @@ export class LoggerFilter implements ExceptionFilter {
           : undefined,
       operationId: data?.operationId,
       sendBy: data?.sendBy,
+      traceId: await this.loggerService.getTraceId(),
     };
 
     this.loggerService.error({
@@ -92,13 +95,13 @@ export class LoggerFilter implements ExceptionFilter {
     });
     return throwError(() => ({ status: 'error', message: errorInfo.error }));
   }
-  public wsFilter(exception: unknown, host: ArgumentsHost) {
+  public async wsFilter(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToWs();
     const client = ctx.getClient<Client>();
     const pattern = ctx.getPattern();
-    const body = JSON.stringify(ctx.getData());
+    // const body = JSON.stringify(ctx.getData());
 
-    const socketInfo = this.loggerService.getSocketInfo(client);
+    const socketInfo = await this.loggerService.getSocketInfo(client);
     const errorInfo = this.loggerService.getErrorInfo(exception);
     const status =
       !errorInfo.status ||
@@ -110,6 +113,7 @@ export class LoggerFilter implements ExceptionFilter {
       name: errorInfo.error,
       description: errorInfo.description,
       operationId: socketInfo.operationId,
+      traceId: socketInfo.traceId,
     });
 
     this.loggerService.error({
@@ -123,8 +127,17 @@ export class LoggerFilter implements ExceptionFilter {
     });
 
     if (typeof client.close === 'function') client.close(status, reason);
-    if (WsException) return new WsException(reason);
 
+    let WebsokcetException: undefined | ErrorConstructor;
+    try {
+      const { WsException } = await import('@nestjs/websockets');
+      if (WsException) {
+        WebsokcetException = WsException as unknown as ErrorConstructor;
+      }
+    } catch {
+      /* empty */
+    }
+    if (WebsokcetException) return new WebsokcetException(reason);
     return null;
   }
 }

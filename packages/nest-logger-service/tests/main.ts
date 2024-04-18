@@ -36,7 +36,6 @@ async function start() {
     customSiteTitle: 'Krainov Nest logger service',
   });
 
-  await app.startAllMicroservices();
   await app.listen(PORT);
 }
 start();
