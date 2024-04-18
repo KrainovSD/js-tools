@@ -17,8 +17,8 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: yarn
       - run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.name krainovsd
+          git config user.email krainossd@gmail.com
           npm version ${{ github.event.inputs.version }}
           git push origin main
           git push origin v${{ github.event.inputs.version }}
