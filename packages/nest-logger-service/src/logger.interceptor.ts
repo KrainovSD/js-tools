@@ -71,7 +71,7 @@ export class LoggerInterceptor implements NestInterceptor {
           ? rpcContext?.getPattern?.()
           : undefined,
       operationId: data?.operationId,
-      sendBy: data?.sendBy,
+      sender: data?.sender,
     };
     this.loggerService.info({ info: eventInfo, message: 'start rpc event' });
 

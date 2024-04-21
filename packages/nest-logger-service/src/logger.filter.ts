@@ -86,7 +86,7 @@ export class LoggerFilter implements ExceptionFilter {
           ? rpcContext?.getPattern?.()
           : undefined,
       operationId: data?.operationId,
-      sendBy: data?.sendBy,
+      sender: data?.sender,
       traceId: await this.loggerService.getTraceId(),
     };
 

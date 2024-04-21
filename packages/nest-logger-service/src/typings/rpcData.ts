@@ -1,4 +1,4 @@
 export type RpcData = {
   operationId: string;
-  sendBy: string;
+  sender: string;
 };
