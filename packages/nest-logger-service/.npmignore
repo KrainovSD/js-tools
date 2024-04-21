@@ -7,10 +7,14 @@ babel.config.json
 jest.config.js
 rollup.config.js
 tsconfig.json
-tmp/
 node_modules/
-src/
 .github/
 .husky/
+dev/
+coverage/
+tmp/
+src/
 tests/
-dev
+
+
+

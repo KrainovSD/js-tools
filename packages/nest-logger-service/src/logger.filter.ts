@@ -44,10 +44,11 @@ export class LoggerFilter implements ExceptionFilter {
     }
   }
 
-  public async httpFilter(exception: unknown, host: ArgumentsHost) {
+  private async httpFilter(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
     const request = ctx.getRequest<FastifyRequest>();
+
     const requestInfo = await this.loggerService.getRequestInfo(request);
     const errorInfo = this.loggerService.getErrorInfo(exception);
     const status = errorInfo.status || 500;
@@ -63,18 +64,18 @@ export class LoggerFilter implements ExceptionFilter {
 
     return response
       .status(status)
-      .header('operationId', request.operationId)
+      .header('operationId', requestInfo.operationId)
       .send({
         statusCode: status,
         timestamp: new Date().toISOString(),
         traceId: requestInfo.traceId,
         operationId: requestInfo.operationId,
-        path: request.url,
+        path: requestInfo.url,
         message: errorInfo.error,
         description: errorInfo.description,
       });
   }
-  public async rpcFilter(exception: unknown, host: ArgumentsHost) {
+  private async rpcFilter(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToRpc();
     const data = ctx.getData<RpcData>();
     const rpcContext = ctx.getContext<Record<string, unknown>>();
@@ -95,7 +96,7 @@ export class LoggerFilter implements ExceptionFilter {
     });
     return throwError(() => ({ status: 'error', message: errorInfo.error }));
   }
-  public async wsFilter(exception: unknown, host: ArgumentsHost) {
+  private async wsFilter(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToWs();
     const client = ctx.getClient<Client>();
     const pattern = ctx.getPattern();

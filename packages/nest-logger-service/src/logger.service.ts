@@ -51,7 +51,8 @@ export class LoggerService {
 
     const error = typings.isObject(err) ? err?.message : undefined;
     const description =
-      typings.isObject(err) && typings.isObject(err?.messages)
+      typings.isObject(err) &&
+      (typings.isObject(err?.messages) || typings.isArray(err?.messages))
         ? JSON.stringify(err.messages)
         : undefined;
     const name =

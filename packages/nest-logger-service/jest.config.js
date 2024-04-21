@@ -8,4 +8,5 @@ module.exports = {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
   transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  coverageDirectory: '<rootDir>/../coverage',
 };
