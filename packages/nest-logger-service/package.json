@@ -19,13 +19,14 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "dev": "nest start --watch",
-    "prettier:format": "prettier src --write",
+    "prettier:format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"dev-test/**/*.ts\"",
     "prettier:check": "prettier src --check",
-    "lint:format": "eslint ./src/**/*.ts  --fix",
+    "lint:format": "eslint \"{src,test,dev-test}/**/*.ts\"  --fix",
     "lint": "yarn prettier:check && eslint ./src/**/*.ts",
     "test": "jest",
-    "coverage": "jest --coverage",
+    "test:dev": "nest start --watch",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:coverage": "jest --coverage",
     "prepare": "husky"
   },
   "dependencies": {
@@ -49,6 +50,7 @@
     "@types/eslint": "^8.56.7",
     "@types/jest": "^29.5.12",
     "@types/node": "18.15.11",
+    "@types/supertest": "^6.0.2",
     "@types/uuid": "9.0.2",
     "@typescript-eslint/eslint-plugin": "^7.6.0",
     "@typescript-eslint/parser": "^7.6.0",
@@ -66,12 +68,15 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "source-map-support": "0.5.21",
+    "superagent": "^9.0.0",
+    "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
     "ts-loader": "9.4.4",
     "ts-node": "10.9.1",
     "tsconfig-paths": "4.2.0",
     "typescript": "5.1.6",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "webpack": "^5.0.0"
   },
   "peerDependencies": {
     "@krainovsd/utils": "^0.1.1",

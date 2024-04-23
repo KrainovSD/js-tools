@@ -1,22 +1,9 @@
 {
+  "extends": "./tsconfig.json",
+
   "compilerOptions": {
-    "target": "ES2021",
-    "module": "CommonJS",
-    "allowJs": true,
-    "declaration": true,
-    "removeComments": true,
-    "sourceMap": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "outDir": "./dev",
-    "typeRoots": ["node_modules/@types", "src/typings"],
-    "incremental": true
+    "outDir": "./dev"
   },
-  "exclude": ["node_modules", "dist", "**/*spec.ts"],
-  "include": ["tests/**/*", "src/**/*"]
+  "exclude": ["node_modules", "dist", "dev", "test", "**/*spec.ts"],
+  "include": ["dev-test/**/*", "src/**/*"]
 }

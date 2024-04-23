@@ -10,11 +10,12 @@ tsconfig.json
 node_modules/
 .github/
 .husky/
-dev/
+dev-test/
 coverage/
 tmp/
 src/
 tests/
+test/
 
 
 

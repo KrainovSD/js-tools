@@ -17,7 +17,6 @@
     "typeRoots": ["node_modules/@types", "src/typings"],
     "incremental": true
   },
-  "exclude": ["node_modules", "dist"],
-  "include": ["**/*.spec.ts", "tests/*"],
-  "files": ["src/index.ts"]
+  "exclude": ["node_modules", "dist", "dev"],
+  "include": ["**/*.spec.ts", "dev-test/*", "test/*"]
 }

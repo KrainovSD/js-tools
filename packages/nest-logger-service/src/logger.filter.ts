@@ -8,9 +8,10 @@ import {
 } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { throwError } from 'rxjs';
+import { Client, RpcData } from './typings';
+
 import { LOGGER_PROVIDER_MODULE } from './logger.constants';
 import { LoggerService } from './logger.service';
-import { Client, RpcData } from './typings';
 
 @Catch()
 export class LoggerFilter implements ExceptionFilter {

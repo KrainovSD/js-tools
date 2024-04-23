@@ -7,6 +7,6 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/'],
-  coverageDirectory: '<rootDir>/../coverage',
+  transformIgnorePatterns: ['./node_modules/'],
+  coverageDirectory: '../coverage',
 };
