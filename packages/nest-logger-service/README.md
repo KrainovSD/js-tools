@@ -1,6 +1,6 @@
 # @krainovsd/nest-logger-service
 
-Пакет с используемыми в проектах хелперами.
+Модуль с используемым в проектах логгером для NestJS.
 
 ## Download
 
@@ -11,13 +11,6 @@ yarn add @krainovsd/nest-logger-service
 ## Usage
 
 ```
-const utils = require('@krainovsd/nest-logger-service');
-
-```
-
-или
-
-```
-import utils from "@krainovsd/nest-logger-service"
+import {LoggerModule} from "@krainovsd/nest-logger-service"
 
 ```
