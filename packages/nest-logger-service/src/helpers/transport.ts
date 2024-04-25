@@ -1,8 +1,9 @@
 import { format } from 'winston';
+import { logfmtGetter } from './logfmtGetter';
 
 export const transportFormatLogfmt = format.printf(
   ({ level, message, ...rest }) =>
-    getCorrectLog({
+    logfmtGetter({
       level,
       time: new Date().toISOString(),
       ...rest,
@@ -18,29 +19,3 @@ export const transportFormatJson = format.printf(
       message,
     }),
 );
-
-function isHasSpace(str: string | null) {
-  return typeof str === 'string' && str.includes(' ');
-}
-function getCorrectLog(
-  obj: Record<string, string | null>,
-  deniedProperties?: string[],
-) {
-  let log = '';
-  // eslint-disable-next-line prefer-const
-  for (let [key, value] of Object.entries(obj)) {
-    if (
-      (deniedProperties && deniedProperties.includes(key.toLowerCase())) ||
-      typeof value === 'undefined'
-    )
-      continue;
-
-    if (isHasSpace(value)) {
-      value = `"${value}"`;
-    }
-
-    log += `${key}=${value} `;
-  }
-
-  return log.trim();
-}

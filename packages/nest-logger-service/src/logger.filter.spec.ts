@@ -46,7 +46,7 @@ describe('Logger Filter', () => {
   let filter: LoggerFilter;
   let logger: LoggerService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         WinstonModule.forRoot({

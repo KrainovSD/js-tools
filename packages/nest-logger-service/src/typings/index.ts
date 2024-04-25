@@ -18,7 +18,7 @@ declare global {
 
 declare module 'fastify' {
   interface FastifyRequest {
-    operationId: string;
-    user: UserInfo;
+    operationId?: string;
+    user?: UserInfo;
   }
 }
