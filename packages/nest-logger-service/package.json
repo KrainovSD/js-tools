@@ -8,8 +8,12 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KrainovSD/nest-logger-service"
+    "url": "git+https://github.com/KrainovSD/nest-logger-service.git"
   },
+  "bugs": {
+    "url": "https://github.com/KrainovSD/nest-logger-service/issues"
+  },
+  "homepage": "https://github.com/KrainovSD/nest-logger-service#readme",
   "keywords": [
     "utils",
     "js",

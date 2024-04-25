@@ -7,6 +7,12 @@ babel.config.json
 jest.config.js
 rollup.config.js
 tsconfig.json
+nest-cli.json
+tsconfig.build.json
+tsconfig.build.tsbuildinfo
+tsconfig.dev.json
+tsconfig.test.tsbuildinfo
+js
 node_modules/
 .github/
 .husky/
@@ -16,6 +22,7 @@ tmp/
 src/
 tests/
 test/
+dev/
 
 
 
