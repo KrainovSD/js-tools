@@ -5,7 +5,7 @@ import {
 } from './entities';
 import { ForbiddenException, ValidationException } from './exceptions';
 import { TransformToNumberPipe, TrimPipe, ValidationPipe } from './pipes';
-import { UserId, TraceId, OperationId } from './decorators';
+import { UserId, TraceId, OperationId, IncomingFileName } from './decorators';
 import { ClientMessageDto, GetMessageDto } from './dto';
 
 export {
@@ -22,4 +22,5 @@ export {
   UserId,
   TraceId,
   OperationId,
+  IncomingFileName,
 };

@@ -10,7 +10,7 @@ declare global {
 
 declare module 'fastify' {
   interface FastifyRequest {
-    incomingFileName: string;
+    incomingFileName?: string;
     traceId?: string;
     operationId?: string;
     user?: UserInfo;
