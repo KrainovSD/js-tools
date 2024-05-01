@@ -50,6 +50,7 @@ export class LoggerInterceptor implements NestInterceptor {
     const response = ctx.getResponse<FastifyReply>();
     const requestInfo = await this.loggerService.getRequestInfo(request);
     if (!request.operationId) request.operationId = requestInfo.operationId;
+    if (!request.traceId) request.traceId = requestInfo.traceId;
     this.loggerService.info({ info: requestInfo, message: 'start request' });
 
     return next.handle().pipe(
@@ -63,15 +64,12 @@ export class LoggerInterceptor implements NestInterceptor {
   }
   public async interceptRpc(context: ExecutionContext, next: CallHandler) {
     const ctx = context.switchToRpc();
-    const data = ctx.getData<RpcData>();
     const rpcContext = ctx.getContext<Record<string, unknown>>();
     const eventInfo = {
       pattern:
         typeof rpcContext?.getPattern === 'function'
           ? rpcContext?.getPattern?.()
           : undefined,
-      operationId: data?.operationId,
-      sender: data?.sender,
     };
     this.loggerService.info({ info: eventInfo, message: 'start rpc event' });
 
@@ -98,7 +96,8 @@ export class LoggerInterceptor implements NestInterceptor {
     const pattern = ctx.getPattern();
     // const body = JSON.stringify(ctx.getData());
     const socketInfo = await this.loggerService.getSocketInfo(client);
-    if (!client.operationId) client.traceId = socketInfo.operationId;
+    if (!client.operationId) client.operationId = socketInfo.operationId;
+    if (!client.traceId) client.traceId = socketInfo.traceId;
 
     this.loggerService.info({
       info: { ...socketInfo, pattern },
