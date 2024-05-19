@@ -24,7 +24,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "dev": "nest start --watch",
-    "prettier:format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"dev-test/**/*.ts\"",
+    "prettier:format": "prettier --write \"src/**/*.ts\"",
     "prettier:check": "prettier src --check",
     "lint:format": "eslint \"{src,test,dev-test}/**/*.ts\"  --fix",
     "lint": "yarn prettier:check && eslint ./src/**/*.ts",
@@ -34,6 +34,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@nestjs/config": "^3.2.2",
     "@nestjs/jwt": "^10.2.0"
   },
   "devDependencies": {

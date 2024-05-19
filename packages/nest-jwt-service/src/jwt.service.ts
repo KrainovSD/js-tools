@@ -1,44 +1,63 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService as JWT } from '@nestjs/jwt';
-import { EXPIRES_ACCESS_TOKEN, EXPIRES_REFRESH_TOKEN } from './jwt.constants';
-import {
-  ACCESS_TOKEN_SECRET,
-  REFRESH_TOKEN_SECRET,
-  SWAGGER_ACCOUNT_ID,
-  SWAGGER_BASIC_AUTH,
-} from '../../config';
+import { ConfigService } from '@nestjs/config';
 import {
   GenerateTokenOptions,
   GetUserInfoOptions,
+  ModuleOptions,
   VerifyTokenOptions,
 } from './jwt.typings';
 
 @Injectable()
 export class JwtService {
-  constructor(private readonly jwtService: JWT) {}
+  private EXPIRES_ACCESS_TOKEN: string;
+  private EXPIRES_REFRESH_TOKEN: string;
+  private ACCESS_TOKEN_SECRET: string;
+  private REFRESH_TOKEN_SECRET: string;
 
-  async getUserInfo({ header, ...rest }: GetUserInfoOptions) {
+  constructor(
+    private readonly configService: ConfigService<ModuleOptions, true>,
+    private readonly jwtService: JWT,
+  ) {
+    this.EXPIRES_ACCESS_TOKEN =
+      this.configService.get<string>('expiresAccessToken');
+    this.EXPIRES_REFRESH_TOKEN = this.configService.get<string>(
+      'expiresRefreshToken',
+    );
+    this.ACCESS_TOKEN_SECRET =
+      this.configService.get<string>('accessTokenSecret');
+    this.REFRESH_TOKEN_SECRET =
+      this.configService.get<string>('refreshTokenSecret');
+  }
+
+  private async getUserInfoFromHeader(header?: string) {
+    if (!header) return null;
+
     const authInfo = header.split(' ');
     if (authInfo.length !== 2) return null;
     const bearer = authInfo[0];
     const token = authInfo[1];
 
-    if (
-      SWAGGER_ACCOUNT_ID &&
-      bearer === 'Basic' &&
-      token === SWAGGER_BASIC_AUTH
-    ) {
-      const user: UserInfo = {
-        id: SWAGGER_ACCOUNT_ID,
-        role: 'user',
-        subscription: null,
-      };
-      return user;
+    if (bearer !== 'Bearer') return null;
+    return this.verifyToken({ token, type: 'access' });
+  }
+  private async getUserInfoFromCookie(cookie?: string) {
+    if (!cookie) return null;
+    return this.verifyToken({ token: cookie, type: 'access' });
+  }
+
+  async getUserInfo({ header, cookie }: GetUserInfoOptions) {
+    if (!header && !cookie) return null;
+
+    let user: UserInfo | null = await this.getUserInfoFromHeader(header);
+    if (!user) {
+      user = await this.getUserInfoFromCookie(cookie);
     }
 
-    if (bearer !== 'Bearer') return null;
+    if (user && user.subscription) {
+      user.subscription = new Date(user.subscription);
+    }
 
-    const user = await this.verifyToken({ token, type: 'access', ...rest });
     return user;
   }
   async generateToken({ user, type }: GenerateTokenOptions) {
@@ -50,12 +69,12 @@ export class JwtService {
     const options =
       type === 'refresh'
         ? {
-            expiresIn: EXPIRES_REFRESH_TOKEN,
-            secret: REFRESH_TOKEN_SECRET,
+            expiresIn: this.EXPIRES_REFRESH_TOKEN,
+            secret: this.REFRESH_TOKEN_SECRET,
           }
         : {
-            expiresIn: EXPIRES_ACCESS_TOKEN,
-            secret: ACCESS_TOKEN_SECRET,
+            expiresIn: this.EXPIRES_ACCESS_TOKEN,
+            secret: this.ACCESS_TOKEN_SECRET,
           };
     return this.jwtService.sign(payload, options);
   }
@@ -66,15 +85,23 @@ export class JwtService {
     const options =
       type === 'refresh'
         ? {
-            secret: REFRESH_TOKEN_SECRET,
+            secret: this.REFRESH_TOKEN_SECRET,
           }
         : {
-            secret: ACCESS_TOKEN_SECRET,
+            secret: this.ACCESS_TOKEN_SECRET,
           };
 
     try {
       if (!token || typeof token !== 'string') throw new Error();
       const decoded = await this.jwtService.verify(token, options);
+
+      if (decoded && 'exp' in decoded) {
+        delete decoded.exp;
+      }
+      if (decoded && 'iat' in decoded) {
+        delete decoded.iat;
+      }
+
       return decoded;
     } catch (e) {
       return null;

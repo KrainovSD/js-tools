@@ -12,6 +12,7 @@ import {
 import { typings } from '@krainovsd/utils';
 import { v4 } from 'uuid';
 import { JwtService } from './jwt.service';
+import { JWT_PROVIDER_MODULE } from './jwt.constants';
 
 type AuthGuardOptions = {
   roles?: string[] | string;
@@ -20,7 +21,9 @@ type AuthGuardOptions = {
 
 export function AuthGuard(options?: AuthGuardOptions) {
   class AuthGuardClass implements CanActivate {
-    constructor(@Inject(JwtService) private readonly jwtService: JwtService) {}
+    constructor(
+      @Inject(JWT_PROVIDER_MODULE) private readonly jwtService: JwtService,
+    ) {}
 
     private checkRole(requiredRoles: string | string[], currentRole: string) {
       if (typings.isArray(requiredRoles)) {
@@ -28,10 +31,9 @@ export function AuthGuard(options?: AuthGuardOptions) {
           ? true
           : requiredRoles.some((role) => role === currentRole);
       }
-      if (typings.isString(requiredRoles)) {
-        return requiredRoles === currentRole;
-      }
-      return true;
+      return typings.isString(requiredRoles) && requiredRoles.length > 0
+        ? requiredRoles === currentRole
+        : true;
     }
 
     private checkSubscription(subscription: Date | null) {
@@ -56,8 +58,6 @@ export function AuthGuard(options?: AuthGuardOptions) {
 
         const user = await this.jwtService.getUserInfo({
           header: authHeader,
-          operationId: req.operationId,
-          traceId: req.traceId,
         });
         if (!user) throw new Error();
 

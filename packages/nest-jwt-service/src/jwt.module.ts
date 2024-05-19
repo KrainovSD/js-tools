@@ -1,8 +1,10 @@
 import { JwtModule as JWT } from '@nestjs/jwt';
 import { DynamicModule, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { JwtService } from './jwt.service';
 import { ModuleOptions } from './jwt.typings';
 import { createProvider } from './jwt.provider';
+import config from './jwt.config';
 
 @Module({
   imports: [JWT],
@@ -15,7 +17,7 @@ export class JwtModule {
 
     return {
       module: JwtModule,
-      imports: [JWT],
+      imports: [JWT, ConfigModule.forRoot({ load: [config(options)] })],
       providers: [providers],
       exports: [providers],
     };
