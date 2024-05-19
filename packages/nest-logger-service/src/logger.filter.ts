@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { throwError } from 'rxjs';
-import { Client, RpcData } from './typings';
+import { Client } from './typings';
 
 import { LOGGER_PROVIDER_MODULE } from './logger.constants';
 import { LoggerService } from './logger.service';
@@ -25,16 +25,13 @@ export class LoggerFilter implements ExceptionFilter {
 
     switch (type) {
       case 'rpc': {
-        // eslint-disable-next-line @typescript-eslint/return-await
-        return await this.rpcFilter(exception, host);
+        return this.rpcFilter(exception, host);
       }
       case 'http': {
-        // eslint-disable-next-line @typescript-eslint/return-await
-        return await this.httpFilter(exception, host);
+        return this.httpFilter(exception, host);
       }
       case 'ws': {
-        // eslint-disable-next-line @typescript-eslint/return-await
-        return await this.wsFilter(exception, host);
+        return this.wsFilter(exception, host);
       }
       default: {
         return this.loggerService.error({
@@ -78,16 +75,14 @@ export class LoggerFilter implements ExceptionFilter {
   }
   private async rpcFilter(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToRpc();
-    const data = ctx.getData<RpcData>();
     const rpcContext = ctx.getContext<Record<string, unknown>>();
+    // const data = ctx.getData();
     const errorInfo = this.loggerService.getErrorInfo(exception);
     const eventInfo = {
       pattern:
         typeof rpcContext?.getPattern === 'function'
           ? rpcContext?.getPattern?.()
           : undefined,
-      operationId: data?.operationId,
-      sender: data?.sender,
       traceId: await this.loggerService.getTraceId(),
     };
 

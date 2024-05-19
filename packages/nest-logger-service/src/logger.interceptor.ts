@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoggerService } from './logger.service';
 import { LOGGER_PROVIDER_MODULE } from './logger.constants';
-import { Client, RpcData } from './typings';
+import { Client } from './typings';
 
 @Injectable()
 export class LoggerInterceptor implements NestInterceptor {
@@ -27,16 +27,13 @@ export class LoggerInterceptor implements NestInterceptor {
 
     switch (type) {
       case 'rpc': {
-        // eslint-disable-next-line @typescript-eslint/return-await
-        return await this.interceptRpc(context, next);
+        return this.interceptRpc(context, next);
       }
       case 'http': {
-        // eslint-disable-next-line @typescript-eslint/return-await
-        return await this.interceptHttp(context, next);
+        return this.interceptHttp(context, next);
       }
       case 'ws': {
-        // eslint-disable-next-line @typescript-eslint/return-await
-        return await this.interceptWs(context, next);
+        return this.interceptWs(context, next);
       }
       default: {
         return next.handle();
@@ -50,7 +47,6 @@ export class LoggerInterceptor implements NestInterceptor {
     const response = ctx.getResponse<FastifyReply>();
     const requestInfo = await this.loggerService.getRequestInfo(request);
     if (!request.operationId) request.operationId = requestInfo.operationId;
-    if (!request.traceId) request.traceId = requestInfo.traceId;
     this.loggerService.info({ info: requestInfo, message: 'start request' });
 
     return next.handle().pipe(
@@ -65,11 +61,13 @@ export class LoggerInterceptor implements NestInterceptor {
   public async interceptRpc(context: ExecutionContext, next: CallHandler) {
     const ctx = context.switchToRpc();
     const rpcContext = ctx.getContext<Record<string, unknown>>();
+    // const data = ctx.getData();
     const eventInfo = {
       pattern:
         typeof rpcContext?.getPattern === 'function'
           ? rpcContext?.getPattern?.()
           : undefined,
+      traceId: await this.loggerService.getTraceId(),
     };
     this.loggerService.info({ info: eventInfo, message: 'start rpc event' });
 
@@ -97,7 +95,6 @@ export class LoggerInterceptor implements NestInterceptor {
     // const body = JSON.stringify(ctx.getData());
     const socketInfo = await this.loggerService.getSocketInfo(client);
     if (!client.operationId) client.operationId = socketInfo.operationId;
-    if (!client.traceId) client.traceId = socketInfo.traceId;
 
     this.loggerService.info({
       info: { ...socketInfo, pattern },

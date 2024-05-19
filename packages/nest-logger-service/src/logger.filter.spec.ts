@@ -7,7 +7,7 @@ import { transportFormatLogfmt } from './helpers';
 import { LoggerService } from './logger.service';
 import { LOGGER_PROVIDER_MODULE } from './logger.constants';
 import { createLoggerProvider } from './logger.provider';
-import { Client, RpcData } from './typings';
+import { Client } from './typings';
 
 describe('Logger Filter', () => {
   const traceId = '1';
@@ -27,8 +27,6 @@ describe('Logger Filter', () => {
   };
   const eventInfo = {
     pattern: 'pattern',
-    operationId: '2',
-    sender: 'user',
     traceId,
   };
   const socketInfo = {
@@ -132,9 +130,8 @@ describe('Logger Filter', () => {
       });
     });
     it('rpc type', async () => {
-      const rpcData: RpcData = {
-        operationId: eventInfo.operationId,
-        sender: eventInfo.sender,
+      const rpcData = {
+        test: 2,
       };
       const eventContext = {
         getPattern: () => eventInfo.pattern,
