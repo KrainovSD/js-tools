@@ -8,6 +8,7 @@ rollup.config.js
 tsconfig.build.json
 tsconfig.build.tsbuildinfo
 tsconfig.json
+.eslintignore
 tmp/
 node_modules/
 src/
