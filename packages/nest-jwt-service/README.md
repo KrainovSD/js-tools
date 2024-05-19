@@ -1,16 +1,16 @@
-# @krainovsd/nest-logger-service
+# @krainovsd/nest-jwt-service
 
-Модуль с используемым в проектах логгером для NestJS.
+Модуль с используемым в проектах jwt для NestJS.
 
 ## Download
 
 ```
-yarn add @krainovsd/nest-logger-service
+yarn add @krainovsd/nest-jwt-service
 ```
 
 ## Usage
 
 ```
-import {LoggerModule} from "@krainovsd/nest-logger-service"
+import {JwtModule} from "@krainovsd/nest-jwt-service"
 
 ```

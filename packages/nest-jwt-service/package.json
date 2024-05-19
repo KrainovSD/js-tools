@@ -1,7 +1,7 @@
 {
   "name": "@krainovsd/nest-jwt-service",
-  "version": "0.0.2",
-  "description": "Krainov logger service API",
+  "version": "0.0.1",
+  "description": "Krainov jwt service",
   "author": "KrainovSD <denislosev48@gmail.com>",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -26,10 +26,9 @@
     "dev": "nest start --watch",
     "prettier:format": "prettier --write \"src/**/*.ts\"",
     "prettier:check": "prettier src --check",
-    "lint:format": "eslint \"{src,test,dev-test}/**/*.ts\"  --fix",
+    "lint:format": "eslint \"{src}/**/*.ts\"  --fix",
     "lint": "yarn prettier:check && eslint ./src/**/*.ts",
     "test": "jest",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:coverage": "jest --coverage",
     "prepare": "husky"
   },
