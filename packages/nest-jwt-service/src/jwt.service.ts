@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService as JWT } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import {
   GenerateTokenOptions,
   GetUserInfoOptions,
   ModuleOptions,
   VerifyTokenOptions,
 } from './jwt.typings';
+import { JWT_PROVIDER_OPTIONS } from './jwt.constants';
 
 @Injectable()
 export class JwtService {
@@ -16,18 +16,13 @@ export class JwtService {
   private REFRESH_TOKEN_SECRET: string;
 
   constructor(
-    private readonly configService: ConfigService<ModuleOptions, true>,
+    @Inject(JWT_PROVIDER_OPTIONS) private options: ModuleOptions,
     private readonly jwtService: JWT,
   ) {
-    this.EXPIRES_ACCESS_TOKEN =
-      this.configService.get<string>('expiresAccessToken');
-    this.EXPIRES_REFRESH_TOKEN = this.configService.get<string>(
-      'expiresRefreshToken',
-    );
-    this.ACCESS_TOKEN_SECRET =
-      this.configService.get<string>('accessTokenSecret');
-    this.REFRESH_TOKEN_SECRET =
-      this.configService.get<string>('refreshTokenSecret');
+    this.EXPIRES_ACCESS_TOKEN = options.expiresAccessToken;
+    this.EXPIRES_REFRESH_TOKEN = options.expiresRefreshToken;
+    this.ACCESS_TOKEN_SECRET = options.accessTokenSecret;
+    this.REFRESH_TOKEN_SECRET = options.refreshTokenSecret;
   }
 
   private async getUserInfoFromHeader(header?: string) {

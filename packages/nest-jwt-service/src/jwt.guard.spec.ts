@@ -5,12 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigModule } from '@nestjs/config';
-import { JwtModule as JWT } from '@nestjs/jwt';
 import { JwtService } from './jwt.service';
-import { createProvider } from './jwt.provider';
 import { AuthGuard } from './jwt.guard';
 import { JWT_PROVIDER_MODULE } from './jwt.constants';
+import { JwtModule } from './jwt.module';
 
 describe('JWT Guard', () => {
   const httpContext = (requestInstance: unknown) => ({
@@ -28,20 +26,14 @@ describe('JWT Guard', () => {
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
-          JWT,
-          ConfigModule.forRoot({
-            load: [
-              () => ({
-                accessTokenSecret: 'access',
-                refreshTokenSecret: 'refresh',
-                expiresAccessToken: '1d',
-                expiresRefreshToken: '1d',
-              }),
-            ],
+          JwtModule.forRoot({
+            accessTokenSecret: 'access',
+            refreshTokenSecret: 'refresh',
+            expiresAccessToken: '24d',
+            expiresRefreshToken: '24d',
           }),
         ],
         providers: [
-          createProvider(),
           {
             provide: 'guard',
             useClass: AuthGuard({
@@ -100,20 +92,14 @@ describe('JWT Guard', () => {
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
-          JWT,
-          ConfigModule.forRoot({
-            load: [
-              () => ({
-                accessTokenSecret: 'access',
-                refreshTokenSecret: 'refresh',
-                expiresAccessToken: '1d',
-                expiresRefreshToken: '1d',
-              }),
-            ],
+          JwtModule.forRoot({
+            accessTokenSecret: 'access',
+            refreshTokenSecret: 'refresh',
+            expiresAccessToken: '24d',
+            expiresRefreshToken: '24d',
           }),
         ],
         providers: [
-          createProvider(),
           {
             provide: 'guard',
             useClass: AuthGuard({
@@ -172,20 +158,14 @@ describe('JWT Guard', () => {
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
-          JWT,
-          ConfigModule.forRoot({
-            load: [
-              () => ({
-                accessTokenSecret: 'access',
-                refreshTokenSecret: 'refresh',
-                expiresAccessToken: '1d',
-                expiresRefreshToken: '1d',
-              }),
-            ],
+          JwtModule.forRoot({
+            accessTokenSecret: 'access',
+            refreshTokenSecret: 'refresh',
+            expiresAccessToken: '24d',
+            expiresRefreshToken: '24d',
           }),
         ],
         providers: [
-          createProvider(),
           {
             provide: 'guard',
             useClass: AuthGuard({
@@ -243,20 +223,14 @@ describe('JWT Guard', () => {
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
-          JWT,
-          ConfigModule.forRoot({
-            load: [
-              () => ({
-                accessTokenSecret: 'access',
-                refreshTokenSecret: 'refresh',
-                expiresAccessToken: '1d',
-                expiresRefreshToken: '1d',
-              }),
-            ],
+          JwtModule.forRoot({
+            accessTokenSecret: 'access',
+            refreshTokenSecret: 'refresh',
+            expiresAccessToken: '24d',
+            expiresRefreshToken: '24d',
           }),
         ],
         providers: [
-          createProvider(),
           {
             provide: 'guard',
             useClass: AuthGuard(),
@@ -312,20 +286,14 @@ describe('JWT Guard', () => {
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
         imports: [
-          JWT,
-          ConfigModule.forRoot({
-            load: [
-              () => ({
-                accessTokenSecret: 'access',
-                refreshTokenSecret: 'refresh',
-                expiresAccessToken: '1d',
-                expiresRefreshToken: '1d',
-              }),
-            ],
+          JwtModule.forRoot({
+            accessTokenSecret: 'access',
+            refreshTokenSecret: 'refresh',
+            expiresAccessToken: '24d',
+            expiresRefreshToken: '24d',
           }),
         ],
         providers: [
-          createProvider(),
           {
             provide: 'guard',
             useClass: AuthGuard({
