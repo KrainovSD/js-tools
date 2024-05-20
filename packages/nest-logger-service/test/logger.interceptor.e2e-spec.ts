@@ -16,7 +16,7 @@ import { WinstonModule } from 'nest-winston';
 import { transports } from 'winston';
 import { transportFormatLogfmt } from '../src/helpers';
 import { LoggerService } from '../src/logger.service';
-import { LOGGER_PROVIDER_MODULE } from '../src/logger.constants';
+import { LOGGER_TOKEN } from '../src/logger.constants';
 import { createLoggerProvider } from '../src/logger.provider';
 import { LoggerInterceptor } from '../src/logger.interceptor';
 
@@ -58,7 +58,7 @@ describe('Logger Interceptor', () => {
       providers: [createLoggerProvider()],
     }).compile();
     interceptor = module.get<LoggerInterceptor>(LoggerInterceptor);
-    logger = module.get<LoggerService>(LOGGER_PROVIDER_MODULE);
+    logger = module.get<LoggerService>(LOGGER_TOKEN);
   });
 
   describe('check define', () => {

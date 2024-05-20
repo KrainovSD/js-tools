@@ -4,20 +4,16 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-  Inject,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LoggerService } from './logger.service';
-import { LOGGER_PROVIDER_MODULE } from './logger.constants';
 import { Client } from './typings';
+import { InjectLogger } from './logger.decorator';
 
 @Injectable()
 export class LoggerInterceptor implements NestInterceptor {
-  constructor(
-    @Inject(LOGGER_PROVIDER_MODULE)
-    private readonly loggerService: LoggerService,
-  ) {}
+  constructor(@InjectLogger() private readonly loggerService: LoggerService) {}
 
   async intercept(
     context: ExecutionContext,

@@ -5,9 +5,9 @@ import { transports } from 'winston';
 import { LoggerFilter } from './logger.filter';
 import { transportFormatLogfmt } from './helpers';
 import { LoggerService } from './logger.service';
-import { LOGGER_PROVIDER_MODULE } from './logger.constants';
 import { createLoggerProvider } from './logger.provider';
 import { Client } from './typings';
+import { LOGGER_TOKEN } from './logger.constants';
 
 describe('Logger Filter', () => {
   const traceId = '1';
@@ -62,7 +62,7 @@ describe('Logger Filter', () => {
       providers: [createLoggerProvider(), LoggerFilter],
     }).compile();
     filter = module.get<LoggerFilter>(LoggerFilter);
-    logger = module.get<LoggerService>(LOGGER_PROVIDER_MODULE);
+    logger = module.get<LoggerService>(LOGGER_TOKEN);
   });
 
   it('filter should be defined', () => {

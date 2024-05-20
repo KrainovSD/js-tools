@@ -16,7 +16,11 @@ import {
 export class LoggerService {
   constructor(
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-  ) {}
+  ) {
+    // FIXME: Убрать после отладки
+    console.log(this.logger.level);
+    console.log(this.logger.debug);
+  }
 
   debug({ info = {}, message = 'debug', error }: DebugOptions) {
     const errorInfo = error ? this.getErrorInfo(error) : {};
@@ -83,14 +87,12 @@ export class LoggerService {
   async getTraceId() {
     let traceId: undefined | string;
     try {
-      console.log('check trace');
       const { trace } = await import('@opentelemetry/api');
-      console.log(trace);
       if (trace) {
         traceId = trace?.getActiveSpan()?.spanContext()?.traceId ?? undefined;
       }
-    } catch {
-      /* empty */
+    } catch (error) {
+      this.debug({ error, message: 'error get trace id' });
     }
 
     return traceId;

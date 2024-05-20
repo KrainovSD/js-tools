@@ -1,22 +1,38 @@
 import { WinstonModule } from 'nest-winston';
-import { DynamicModule, Global, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module, Type } from '@nestjs/common';
 import { transports } from 'winston';
 import { createLoggerProvider } from './logger.provider';
 import { TransportOption } from './typings';
 import { transportFormatJson, transportFormatLogfmt } from './helpers';
 import { TRANSPORT_FORMATS, TRANSPORT_TYPES } from './logger.constants';
-
-export type LoggerModuleOptions = {
-  transportOptions: TransportOption[];
-  defaultMeta?: Record<string, string | undefined>;
-};
+import { LoggerModuleOptions } from './logger.interfaces';
 
 @Global()
 @Module({})
 export class LoggerModule {
   public static forRoot(options: LoggerModuleOptions): DynamicModule {
-    const providers = createLoggerProvider();
-    const customTransports = options.transportOptions.reduce(
+    // FIXME: Убрать после отладки
+    console.log(WinstonModule);
+
+    const provider = createLoggerProvider();
+    const customTransports = this.getTransports(options.transportOptions);
+
+    return {
+      module: LoggerModule,
+      imports: [
+        WinstonModule.forRoot({
+          transports: customTransports,
+          defaultMeta: options.defaultMeta,
+        }),
+      ],
+      controllers: [],
+      providers: [provider],
+      exports: [provider],
+    };
+  }
+
+  private static getTransports(transportOptions: TransportOption[]) {
+    return transportOptions.reduce(
       (
         result: (typeof transports.File | typeof transports.Console)[],
         option,
@@ -64,18 +80,5 @@ export class LoggerModule {
       },
       [],
     );
-
-    return {
-      module: LoggerModule,
-      imports: [
-        WinstonModule.forRoot({
-          transports: customTransports,
-          defaultMeta: options.defaultMeta,
-        }),
-      ],
-      controllers: [],
-      providers: [providers],
-      exports: [providers],
-    };
   }
 }

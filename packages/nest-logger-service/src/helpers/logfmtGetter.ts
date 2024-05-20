@@ -2,6 +2,9 @@ export function logfmtGetter(
   obj: Record<string, unknown>,
   deniedProperties?: string[],
 ) {
+  // FIXME: Убрать после отладки
+  console.log(JSON.stringify(obj));
+
   let log = '';
   // eslint-disable-next-line prefer-const
   for (let [key, value] of Object.entries(obj)) {

@@ -6,7 +6,7 @@ import { Logger, transports } from 'winston';
 import { transportFormatLogfmt } from './helpers';
 import { createLoggerProvider } from './logger.provider';
 import { LoggerService } from './logger.service';
-import { LOGGER_PROVIDER_MODULE } from './logger.constants';
+import { LOGGER_TOKEN } from './logger.constants';
 import { Client } from './typings';
 
 jest.mock('uuid');
@@ -32,7 +32,7 @@ describe('Logger Service', () => {
       ],
       providers: [createLoggerProvider()],
     }).compile();
-    service = module.get<LoggerService>(LOGGER_PROVIDER_MODULE);
+    service = module.get<LoggerService>(LOGGER_TOKEN);
     logger = module.get<Logger>(WINSTON_MODULE_PROVIDER);
   });
 

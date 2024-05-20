@@ -4,19 +4,18 @@ import {
   Catch,
   ArgumentsHost,
   HttpStatus,
-  Inject,
 } from '@nestjs/common';
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { throwError } from 'rxjs';
-import { Client } from './typings';
 
-import { LOGGER_PROVIDER_MODULE } from './logger.constants';
+import { Client } from './typings';
 import { LoggerService } from './logger.service';
+import { InjectLogger } from './logger.decorator';
 
 @Catch()
 export class LoggerFilter implements ExceptionFilter {
   constructor(
-    @Inject(LOGGER_PROVIDER_MODULE)
+    @InjectLogger()
     private readonly loggerService: LoggerService,
   ) {}
 
