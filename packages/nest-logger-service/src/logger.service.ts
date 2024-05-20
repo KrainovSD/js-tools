@@ -16,11 +16,7 @@ import {
 export class LoggerService {
   constructor(
     @Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger,
-  ) {
-    // FIXME: Убрать после отладки
-    console.log(this.logger.level);
-    console.log(this.logger.debug);
-  }
+  ) {}
 
   debug({ info = {}, message = 'debug', error }: DebugOptions) {
     const errorInfo = error ? this.getErrorInfo(error) : {};

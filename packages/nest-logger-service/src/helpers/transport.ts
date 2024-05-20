@@ -11,14 +11,11 @@ export const transportFormatLogfmt = format.printf(
     }),
 );
 export const transportFormatJson = format.printf(
-  ({ level, message, ...rest }) => {
-    console.log(message);
-
-    return JSON.stringify({
+  ({ level, message, ...rest }) =>
+    JSON.stringify({
       level,
       time: new Date().toISOString(),
       ...rest,
       message,
-    });
-  },
+    }),
 );

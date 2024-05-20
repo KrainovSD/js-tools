@@ -11,9 +11,6 @@ import { LoggerModuleOptions } from './logger.interfaces';
 @Module({})
 export class LoggerModule {
   public static forRoot(options: LoggerModuleOptions): DynamicModule {
-    // FIXME: Убрать после отладки
-    console.log(WinstonModule);
-
     const provider = createLoggerProvider();
     const customTransports = this.getTransports(options.transportOptions);
 
