@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/nest-logger-service",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Krainov logger service API",
   "author": "KrainovSD <denislosev48@gmail.com>",
   "main": "./dist/index.js",
