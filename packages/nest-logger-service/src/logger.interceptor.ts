@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+
 import { LoggerService } from './logger.service';
 import { Client } from './typings';
 import { InjectLogger } from './logger.decorator';

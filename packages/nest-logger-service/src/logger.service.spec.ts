@@ -3,13 +3,18 @@ import { FastifyRequest } from 'fastify';
 import { WINSTON_MODULE_PROVIDER, WinstonModule } from 'nest-winston';
 import * as uuid from 'uuid';
 import { Logger, transports } from 'winston';
-import { transportFormatLogfmt } from './helpers';
+
+import {
+  transportFormatLogfmt,
+  ConfigModule,
+  ConfigService,
+  config,
+} from './helpers';
 import { loggerProvider } from './logger.provider';
 import { LoggerService } from './logger.service';
 import { LOGGER_TOKEN } from './logger.constants';
 import { Client } from './typings';
 import { LoggerModule } from './logger.module';
-import { ConfigModule, ConfigService, config } from './helpers/config';
 
 jest.mock('uuid');
 

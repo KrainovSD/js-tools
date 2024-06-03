@@ -17,7 +17,7 @@ import { transports } from 'winston';
 import { transportFormatLogfmt } from '../src/helpers';
 import { LoggerService } from '../src/logger.service';
 import { LOGGER_TOKEN } from '../src/logger.constants';
-import { createLoggerProvider } from '../src/logger.provider';
+import { loggerProvider } from '../src/logger.provider';
 import { LoggerInterceptor } from '../src/logger.interceptor';
 
 @Controller()
@@ -55,7 +55,7 @@ describe('Logger Interceptor', () => {
         }),
       ],
       controllers: [TestController],
-      providers: [createLoggerProvider()],
+      providers: [loggerProvider],
     }).compile();
     interceptor = module.get<LoggerInterceptor>(LoggerInterceptor);
     logger = module.get<LoggerService>(LOGGER_TOKEN);

@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ArgumentsHost } from '@nestjs/common';
 import { WinstonModule } from 'nest-winston';
 import { transports } from 'winston';
+
 import { LoggerFilter } from './logger.filter';
 import { transportFormatLogfmt } from './helpers';
 import { LoggerService } from './logger.service';

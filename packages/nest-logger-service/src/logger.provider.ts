@@ -1,4 +1,5 @@
 import { Provider } from '@nestjs/common';
+
 import { LOGGER_OPTIONS_TOKEN, LOGGER_TOKEN } from './logger.constants';
 import { LoggerService } from './logger.service';
 import {

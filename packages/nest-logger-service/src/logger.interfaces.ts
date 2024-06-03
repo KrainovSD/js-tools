@@ -21,8 +21,8 @@ export interface AsyncLoggerModuleOptions
   inject?: (InjectionToken | OptionalFactoryDependency)[];
   useExisting?: Type<LoggerOptionFactory>;
   useClass?: Type<LoggerOptionFactory>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   useFactory?: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ...args: any[]
   ) => Promise<LoggerModuleOptions> | LoggerModuleOptions;
 }

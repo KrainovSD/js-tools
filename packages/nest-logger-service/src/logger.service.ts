@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { Inject, Injectable } from '@nestjs/common';
 import { Logger } from 'winston';
+
 import {
   Client,
   DebugOptions,

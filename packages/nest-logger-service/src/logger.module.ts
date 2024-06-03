@@ -1,6 +1,7 @@
 import { WinstonModule } from 'nest-winston';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { transports } from 'winston';
+
 import { createAsyncOptionsProvider, loggerProvider } from './logger.provider';
 import { TransportOption } from './typings';
 import { transportFormatJson, transportFormatLogfmt } from './helpers';

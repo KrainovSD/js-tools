@@ -1,4 +1,5 @@
 import { format } from 'winston';
+
 import { logfmtGetter } from './logfmtGetter';
 
 export const transportFormatLogfmt = format.printf(
