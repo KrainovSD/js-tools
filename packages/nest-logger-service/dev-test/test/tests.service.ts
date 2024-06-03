@@ -1,10 +1,10 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { LOGGER_PROVIDER_MODULE, LoggerService } from '../../src';
+import { LOGGER_TOKEN, LoggerService } from '../../src';
 
 @Injectable()
 export class TestsService {
   constructor(
-    @Inject(LOGGER_PROVIDER_MODULE)
+    @Inject(LOGGER_TOKEN)
     private readonly logger: LoggerService,
   ) {}
 

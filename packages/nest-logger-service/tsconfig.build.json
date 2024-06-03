@@ -3,6 +3,14 @@
   "compilerOptions": {
     "rootDir": "src"
   },
-  "exclude": ["node_modules", "dist", "dev-test", "dev", "test", "**/*spec.ts"],
-  "include": ["src/**/*"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dev-test",
+    "dev",
+    "test",
+    "**/*spec.ts",
+    "src/helpers/config"
+  ],
+  "include": ["src/*"]
 }

@@ -18,5 +18,11 @@
     "incremental": true
   },
   "exclude": ["node_modules", "dist", "dev"],
-  "include": ["**/*.spec.ts", "dev-test/*", "test/*", "src/*"]
+  "include": [
+    "**/*.spec.ts",
+    "dev-test/*",
+    "test/*",
+    "src/*",
+    "src/helpers/config/*"
+  ]
 }

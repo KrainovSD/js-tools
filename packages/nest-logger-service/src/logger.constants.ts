@@ -1,4 +1,5 @@
 export const LOGGER_TOKEN = Symbol('krainov-logger');
+export const LOGGER_OPTIONS_TOKEN = Symbol('krainov-logger-options');
 
 export const TRANSPORT_TYPES = {
   file: 'file',

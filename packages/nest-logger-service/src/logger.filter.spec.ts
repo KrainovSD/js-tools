@@ -5,7 +5,7 @@ import { transports } from 'winston';
 import { LoggerFilter } from './logger.filter';
 import { transportFormatLogfmt } from './helpers';
 import { LoggerService } from './logger.service';
-import { createLoggerProvider } from './logger.provider';
+import { loggerProvider } from './logger.provider';
 import { Client } from './typings';
 import { LOGGER_TOKEN } from './logger.constants';
 
@@ -59,7 +59,7 @@ describe('Logger Filter', () => {
           defaultMeta: { meta: 'test' },
         }),
       ],
-      providers: [createLoggerProvider(), LoggerFilter],
+      providers: [loggerProvider, LoggerFilter],
     }).compile();
     filter = module.get<LoggerFilter>(LoggerFilter);
     logger = module.get<LoggerService>(LOGGER_TOKEN);
