@@ -1,4 +1,5 @@
 import { Provider } from '@nestjs/common';
+
 import { S3_INSTANCE_TOKEN, S3_OPTIONS_TOKEN, S3_TOKEN } from './s3.constants';
 import { S3ConnectionService, S3Service } from './s3.service';
 import {

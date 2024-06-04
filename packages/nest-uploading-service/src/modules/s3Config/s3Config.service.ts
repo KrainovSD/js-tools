@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { S3ModuleOptions, S3OptionsFactory } from '../s3';
 import { s3Config } from './s3Config.constants';
 

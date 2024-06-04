@@ -1362,10 +1362,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@krainovsd/nest-logger-service@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@krainovsd/nest-logger-service/-/nest-logger-service-0.1.1.tgz#77f5b333ebd4e9770468730cc38aa036d63e08f5"
-  integrity sha512-r2LVVcJb4OOCgHnTkMlhSBaZgyb6x/MQszxfx/Yk38ZZTR7LyItSPzhxQg5LFrpeN5K91xrHIZHlMT963rzmOQ==
+"@krainovsd/nest-logger-service@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@krainovsd/nest-logger-service/-/nest-logger-service-0.1.2.tgz#dd03cc0697d0c49d711b52cd6f22dd7e4ecb708e"
+  integrity sha512-NKnpDHhhLkN9BEwVR7W37JGnubeClv1hcjncstMSdQ1qV0/oPrtajow26joDmUg5Rk8CKA9uQx0wRgUhKdMWfg==
   dependencies:
     nest-winston "1.9.4"
     winston "3.10.0"

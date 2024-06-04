@@ -1,4 +1,5 @@
 import { Global, Module } from '@nestjs/common';
+
 import { S3ConfigService } from './s3Config.service';
 
 @Global()
