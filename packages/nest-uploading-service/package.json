@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/nest-uploading-service",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Krainov uploading service API",
   "author": "KrainovSD <denislosev48@gmail.com>",
   "main": "./dist/index.js",
