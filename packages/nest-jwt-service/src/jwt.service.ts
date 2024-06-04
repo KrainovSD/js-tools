@@ -1,12 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService as JWT } from '@nestjs/jwt';
+
 import {
   GenerateTokenOptions,
   GetUserInfoOptions,
-  ModuleOptions,
   VerifyTokenOptions,
 } from './jwt.typings';
-import { JWT_PROVIDER_OPTIONS } from './jwt.constants';
+import { JWT_OPTIONS_TOKEN } from './jwt.constants';
+import { JwtModuleOptions } from './jwt.interfaces';
 
 @Injectable()
 export class JwtService {
@@ -16,7 +17,7 @@ export class JwtService {
   private REFRESH_TOKEN_SECRET: string;
 
   constructor(
-    @Inject(JWT_PROVIDER_OPTIONS) private options: ModuleOptions,
+    @Inject(JWT_OPTIONS_TOKEN) private options: JwtModuleOptions,
     private readonly jwtService: JWT,
   ) {
     this.EXPIRES_ACCESS_TOKEN = options.expiresAccessToken;

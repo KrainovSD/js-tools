@@ -5,9 +5,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { JwtService } from './jwt.service';
 import { AuthGuard } from './jwt.guard';
-import { JWT_PROVIDER_MODULE } from './jwt.constants';
+import { JWT_TOKEN } from './jwt.constants';
 import { JwtModule } from './jwt.module';
 
 describe('JWT Guard', () => {
@@ -43,7 +44,7 @@ describe('JWT Guard', () => {
         ],
       }).compile();
       guard = module.get<CanActivate>('guard');
-      jwtService = module.get<JwtService>(JWT_PROVIDER_MODULE);
+      jwtService = module.get<JwtService>(JWT_TOKEN);
     });
 
     it('guard should be defined', () => {
@@ -109,7 +110,7 @@ describe('JWT Guard', () => {
         ],
       }).compile();
       guard = module.get<CanActivate>('guard');
-      jwtService = module.get<JwtService>(JWT_PROVIDER_MODULE);
+      jwtService = module.get<JwtService>(JWT_TOKEN);
     });
 
     it('guard should be defined', () => {
@@ -175,7 +176,7 @@ describe('JWT Guard', () => {
         ],
       }).compile();
       guard = module.get<CanActivate>('guard');
-      jwtService = module.get<JwtService>(JWT_PROVIDER_MODULE);
+      jwtService = module.get<JwtService>(JWT_TOKEN);
     });
 
     it('guard should be defined', () => {
@@ -238,7 +239,7 @@ describe('JWT Guard', () => {
         ],
       }).compile();
       guard = module.get<CanActivate>('guard');
-      jwtService = module.get<JwtService>(JWT_PROVIDER_MODULE);
+      jwtService = module.get<JwtService>(JWT_TOKEN);
     });
 
     it('guard should be defined', () => {
@@ -304,7 +305,7 @@ describe('JWT Guard', () => {
         ],
       }).compile();
       guard = module.get<CanActivate>('guard');
-      jwtService = module.get<JwtService>(JWT_PROVIDER_MODULE);
+      jwtService = module.get<JwtService>(JWT_TOKEN);
     });
 
     it('guard should be defined', () => {

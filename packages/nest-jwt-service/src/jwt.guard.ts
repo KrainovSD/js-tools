@@ -11,8 +11,9 @@ import {
 } from '@nestjs/common';
 import { typings } from '@krainovsd/utils';
 import { v4 } from 'uuid';
+
 import { JwtService } from './jwt.service';
-import { JWT_PROVIDER_MODULE } from './jwt.constants';
+import { JWT_TOKEN } from './jwt.constants';
 
 type AuthGuardOptions = {
   roles?: string[] | string;
@@ -21,9 +22,7 @@ type AuthGuardOptions = {
 
 export function AuthGuard(options?: AuthGuardOptions) {
   class AuthGuardClass implements CanActivate {
-    constructor(
-      @Inject(JWT_PROVIDER_MODULE) private readonly jwtService: JwtService,
-    ) {}
+    constructor(@Inject(JWT_TOKEN) private readonly jwtService: JwtService) {}
 
     private checkRole(requiredRoles: string | string[], currentRole: string) {
       if (typings.isArray(requiredRoles)) {
