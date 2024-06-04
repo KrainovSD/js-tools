@@ -23,7 +23,6 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "dev": "nest start --watch",
     "prettier:format": "prettier --write \"src/**/*.ts\"",
     "prettier:check": "prettier src --check",
     "lint:format": "eslint \"{src}/**/*.ts\"  --fix",
