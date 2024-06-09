@@ -68,10 +68,14 @@ export class LoggerService {
       typings.isObject(err) && typings.isNumber(err?.status)
         ? err.status
         : undefined;
-    const code =
-      typings.isObject(err) && typings.isNumber(err?.code)
+    const code = typings.isObject(err)
+      ? typings.isNumber(err?.code)
         ? err.code
-        : undefined;
+        : typings.isObject(err?.response) &&
+            typings.isNumber(err?.response?.code)
+          ? err.response.code
+          : undefined
+      : undefined;
 
     return { error, name, description, status, code };
   }
