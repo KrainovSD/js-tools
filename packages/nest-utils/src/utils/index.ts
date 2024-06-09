@@ -3,13 +3,14 @@ import {
   SuccessEntity,
   UnauthorizedEntity,
 } from './entities';
-import { ValidationException } from './exceptions';
+import { ValidationException, ConflictException } from './exceptions';
 import { TransformToNumberPipe, TrimPipe, ValidationPipe } from './pipes';
-import { UserId, OperationId, IncomingFileName } from './decorators';
+import { UserId, OperationId } from './decorators';
 import { ClientMessageDto, GetMessageDto } from './dto';
 
 export {
   BadRequestEntity,
+  ConflictException,
   SuccessEntity,
   UnauthorizedEntity,
   ValidationException,
@@ -20,5 +21,4 @@ export {
   GetMessageDto,
   UserId,
   OperationId,
-  IncomingFileName,
 };
