@@ -68,8 +68,12 @@ export class LoggerService {
       typings.isObject(err) && typings.isNumber(err?.status)
         ? err.status
         : undefined;
+    const code =
+      typings.isObject(err) && typings.isNumber(err?.code)
+        ? err.code
+        : undefined;
 
-    return { error, name, description, status };
+    return { error, name, description, status, code };
   }
   async getSocketInfo(client: Client) {
     const traceId = await this.getTraceId();

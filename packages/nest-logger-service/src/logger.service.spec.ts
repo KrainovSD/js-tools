@@ -162,12 +162,14 @@ describe('Logger Service', () => {
         messages: ['test'],
         name: 'error',
         status: 500,
+        code: 2,
       };
       const notValidError = {
         message: null,
         messages: 'test',
         name: 2,
         status: '500',
+        code: '2',
       };
 
       it('common error', () => {
@@ -177,6 +179,7 @@ describe('Logger Service', () => {
           name: error.name,
           description: JSON.stringify(error.messages),
           status: error.status,
+          code: error.code,
         });
       });
 
@@ -187,6 +190,7 @@ describe('Logger Service', () => {
           name: error.name,
           description: JSON.stringify(error.messages),
           status: error.status,
+          code: error.code,
         });
       });
 
@@ -197,6 +201,7 @@ describe('Logger Service', () => {
           name: undefined,
           description: undefined,
           status: undefined,
+          code: undefined,
         });
       });
       it('not valid data error', () => {
@@ -206,6 +211,7 @@ describe('Logger Service', () => {
           name: undefined,
           description: undefined,
           status: undefined,
+          code: undefined,
         });
       });
     });

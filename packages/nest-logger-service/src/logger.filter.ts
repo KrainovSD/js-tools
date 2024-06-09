@@ -70,6 +70,7 @@ export class LoggerFilter implements ExceptionFilter {
         path: requestInfo.url,
         message: errorInfo.error,
         description: errorInfo.description,
+        code: errorInfo.code,
       });
   }
   private async rpcFilter(exception: unknown, host: ArgumentsHost) {

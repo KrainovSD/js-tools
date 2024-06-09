@@ -17,6 +17,7 @@ describe('Logger Filter', () => {
     name: 'Error',
     description: undefined,
     status: 500,
+    code: 2,
   };
   const requestInfo = {
     ip: '0.0.0.1',
@@ -40,6 +41,7 @@ describe('Logger Filter', () => {
     message: errorInfo.error,
     status: errorInfo.status,
     name: errorInfo.name,
+    code: errorInfo.code,
   };
 
   let filter: LoggerFilter;
