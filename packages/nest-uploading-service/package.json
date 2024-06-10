@@ -39,7 +39,7 @@
     "@fastify/multipart": "^8.2.0"
   },
   "devDependencies": {
-    "@krainovsd/nest-logger-service": "^0.1.2",
+    "@krainovsd/nest-logger-service": "^0.2.1",
     "@krainovsd/utils": "^0.1.1",
     "@nestjs/cli": "^10.3.2",
     "@nestjs/common": "^10.3.7",
@@ -80,7 +80,7 @@
     "webpack": "^5.0.0"
   },
   "peerDependencies": {
-    "@krainovsd/nest-logger-service": "^0.1.2",
+    "@krainovsd/nest-logger-service": "^0.2.1",
     "@krainovsd/utils": "^0.1.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/platform-fastify": "^10.0.0",
