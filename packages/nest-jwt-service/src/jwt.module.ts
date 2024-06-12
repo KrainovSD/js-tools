@@ -21,7 +21,7 @@ export class JwtModule {
       module: JwtModule,
       imports: [JWT],
       providers: [jwtProvider, createOptionsProvider(options)],
-      exports: [jwtProvider],
+      exports: [jwtProvider, createOptionsProvider(options)],
     };
   }
 
@@ -30,7 +30,7 @@ export class JwtModule {
       module: JwtModule,
       imports: [...(options.imports || []), JWT],
       providers: [...createAsyncOptionsProvider(options), jwtProvider],
-      exports: [jwtProvider],
+      exports: [jwtProvider, ...createAsyncOptionsProvider(options)],
     };
   }
 }

@@ -10,6 +10,7 @@ export interface JwtModuleOptions {
   refreshTokenSecret: string;
   expiresAccessToken: string;
   expiresRefreshToken: string;
+  authCookieName?: string;
 }
 
 export interface JwtOptionFactory {

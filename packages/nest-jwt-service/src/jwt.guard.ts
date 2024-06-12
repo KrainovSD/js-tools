@@ -13,7 +13,8 @@ import { typings } from '@krainovsd/utils';
 import { v4 } from 'uuid';
 
 import { JwtService } from './jwt.service';
-import { JWT_TOKEN } from './jwt.constants';
+import { JWT_OPTIONS_TOKEN, JWT_TOKEN } from './jwt.constants';
+import { JwtModuleOptions } from './jwt.interfaces';
 
 type AuthGuardOptions = {
   roles?: string[] | string;
@@ -22,7 +23,10 @@ type AuthGuardOptions = {
 
 export function AuthGuard(options?: AuthGuardOptions) {
   class AuthGuardClass implements CanActivate {
-    constructor(@Inject(JWT_TOKEN) private readonly jwtService: JwtService) {}
+    constructor(
+      @Inject(JWT_TOKEN) private readonly jwtService: JwtService,
+      @Inject(JWT_OPTIONS_TOKEN) private readonly jwtOptions: JwtModuleOptions,
+    ) {}
 
     private checkRole(requiredRoles: string | string[], currentRole: string) {
       if (typings.isArray(requiredRoles)) {
@@ -52,11 +56,17 @@ export function AuthGuard(options?: AuthGuardOptions) {
       }
 
       try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || typeof authHeader !== 'string') throw new Error();
+        const authHeader = req.headers?.authorization;
+        const cookie = this.jwtOptions.authCookieName
+          ? req.cookies?.[this.jwtOptions.authCookieName]
+          : undefined;
+
+        if ((!authHeader || typeof authHeader !== 'string') && !cookie)
+          throw new Error();
 
         const user = await this.jwtService.getUserInfo({
           header: authHeader,
+          cookie,
         });
         if (!user) throw new Error();
 

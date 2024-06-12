@@ -283,6 +283,7 @@ describe('JWT Guard', () => {
   describe('canActive without token', () => {
     let guard: CanActivate;
     let jwtService: JwtService;
+    const cookieName = 'test';
 
     beforeAll(async () => {
       const module: TestingModule = await Test.createTestingModule({
@@ -292,6 +293,7 @@ describe('JWT Guard', () => {
             refreshTokenSecret: 'refresh',
             expiresAccessToken: '24d',
             expiresRefreshToken: '24d',
+            authCookieName: cookieName,
           }),
         ],
         providers: [
@@ -335,6 +337,21 @@ describe('JWT Guard', () => {
       await expect(
         guard.canActivate(host(httpContext(request))),
       ).rejects.toThrow(UnauthorizedException);
+    });
+    it('empty header but has cookie => success', async () => {
+      const user: UserInfo = {
+        id: '1',
+        role: 'user',
+        subscription: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      };
+      const token = await jwtService.generateToken({ user, type: 'access' });
+      const request = {
+        cookies: { [cookieName]: token },
+      };
+
+      await expect(
+        guard.canActivate(host(httpContext(request))),
+      ).resolves.toBeTruthy();
     });
   });
 });
