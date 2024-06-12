@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/nest-jwt-service",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Krainov jwt service",
   "author": "KrainovSD <denislosev48@gmail.com>",
   "main": "./dist/index.js",
