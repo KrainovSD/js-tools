@@ -10,6 +10,7 @@
       "types": "./tmp/src/index.d.ts"
     }
   },
+  "files": ["lib", "tmp"],
   "scripts": {
     "lint:debug": "eslint --debug eslint.config.js",
     "build": "npm run build:types && npm run build:js",
