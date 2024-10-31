@@ -22,14 +22,7 @@ export default [
   prettierConfig,
   prettierPluginRecommended,
   {
-    ignores: [
-      "dist/**",
-      "node_modules/**",
-      "bin/**",
-      "build/**",
-      "lib/**",
-      "tmp/**",
-    ],
+    ignores: ["dist/**", "node_modules/**", "bin/**", "build/**", "lib/**", "tmp/**"],
     rules: {
       "import/no-unresolved": "off",
       "import/extensions": "off",
