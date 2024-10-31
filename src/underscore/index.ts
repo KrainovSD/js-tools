@@ -1,9 +1,9 @@
-import setByPath from 'lodash/set';
-import clone from 'lodash/cloneDeep';
-import getByPath from 'lodash/get';
-import shuffleLodash from 'lodash/shuffle';
-import { Maybe } from '../types';
-import typings from '../typings';
+import clone from "lodash/cloneDeep";
+import getByPath from "lodash/get";
+import setByPath from "lodash/set";
+import shuffleLodash from "lodash/shuffle";
+import { Maybe } from "../types";
+import typings from "../typings";
 
 function get(
   object: Maybe<Record<string, unknown>>,

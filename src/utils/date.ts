@@ -1,8 +1,8 @@
-import dayjs from 'dayjs';
-import todayPlugin from 'dayjs/plugin/isToday';
-import yesterdayPlugin from 'dayjs/plugin/isYesterday';
-import tomorrowPlugin from 'dayjs/plugin/isTomorrow';
-import { DateGetterRule, DateType, Maybe, DATE_TYPES } from '../types';
+import dayjs from "dayjs";
+import todayPlugin from "dayjs/plugin/isToday";
+import tomorrowPlugin from "dayjs/plugin/isTomorrow";
+import yesterdayPlugin from "dayjs/plugin/isYesterday";
+import { DATE_TYPES, DateGetterRule, DateType, Maybe } from "../types";
 
 dayjs.extend(todayPlugin);
 dayjs.extend(yesterdayPlugin);
@@ -35,26 +35,32 @@ function getDate(increment: number, type: DateType, date: Date = new Date()) {
   switch (type) {
     case DATE_TYPES.days: {
       result.setDate(result.getDate() + increment);
+
       return result;
     }
     case DATE_TYPES.months: {
       result.setMonth(result.getMonth() + increment);
+
       return result;
     }
     case DATE_TYPES.years: {
       result.setFullYear(result.getFullYear() + increment);
+
       return result;
     }
     case DATE_TYPES.seconds: {
       result.setSeconds(result.getSeconds() + increment);
+
       return result;
     }
     case DATE_TYPES.minutes: {
       result.setMinutes(result.getMinutes() + increment);
+
       return result;
     }
     case DATE_TYPES.hours: {
       result.setHours(result.getHours() + increment);
+
       return result;
     }
     default:
@@ -62,14 +68,12 @@ function getDate(increment: number, type: DateType, date: Date = new Date()) {
   }
 }
 
-function getDateByMultipleRule(
-  rules: DateGetterRule[],
-  date: Date = new Date(),
-) {
+function getDateByMultipleRule(rules: DateGetterRule[], date: Date = new Date()) {
   let result = new Date(date);
   for (const rule of rules) {
     result = getDate(rule.increment, rule.type, result);
   }
+
   return result;
 }
 
@@ -80,6 +84,7 @@ function differenceDate(
   float: boolean = false,
 ) {
   const first = dayjs(firstDate);
+
   return first.diff(secondDate, type, float);
 }
 
@@ -87,12 +92,14 @@ function getTomorrow() {
   const tomorrow = new Date();
   tomorrow.setHours(0, 0, 0, 0);
   tomorrow.setDate(tomorrow.getDate() + 1);
+
   return tomorrow;
 }
 function getYesterday() {
   const yesterday = new Date();
   yesterday.setHours(0, 0, 0, 0);
   yesterday.setDate(yesterday.getDate() - 1);
+
   return yesterday;
 }
 function getToday() {

@@ -1,11 +1,22 @@
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-  moduleFileExtensions: ['js', 'json', 'ts'],
-  rootDir: 'src',
-  testRegex: '.*\\.spec\\.ts$',
+/** @type {import('ts-jest').JestConfigWithTsJest} */
+export default {
+  preset: "ts-jest",
+
+  testEnvironment: "node",
+  moduleFileExtensions: ["js", "json", "ts"],
+  rootDir: "src",
+  testRegex: ".*\\.spec\\.ts$",
+  // transform: {
+  //   "^.+\\.(t|j)s$": [
+  //     "ts-jest",
+  //     {
+  //       tsconfig: "tsconfig.test.json",
+  //       useESM: true,
+  //     },
+  //   ],
+  // },
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    "^.+\\.(t|j)s$": "@swc/jest",
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/'],
+  transformIgnorePatterns: ["<rootDir>/node_modules/"],
 };

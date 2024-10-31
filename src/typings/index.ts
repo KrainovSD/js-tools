@@ -1,9 +1,9 @@
 function isString(value: unknown): value is string {
-  return typeof value === 'string';
+  return typeof value === "string";
 }
 
 function isNumber(value: unknown): value is number {
-  return typeof value === 'number' && !Number.isNaN(value);
+  return typeof value === "number" && !Number.isNaN(value);
 }
 
 function isId(value: unknown): value is number | string {
@@ -11,11 +11,11 @@ function isId(value: unknown): value is number | string {
 }
 
 function isBoolean(value: unknown): value is boolean {
-  return typeof value === 'boolean';
+  return typeof value === "boolean";
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {
-  return Boolean(value && typeof value === 'object' && !Array.isArray(value));
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
 function isArray(value: unknown): value is unknown[] {
@@ -23,7 +23,7 @@ function isArray(value: unknown): value is unknown[] {
 }
 
 function isUndefined(value: unknown): value is undefined {
-  return typeof value === 'undefined';
+  return typeof value === "undefined";
 }
 
 function isNull(value: unknown): value is null {
