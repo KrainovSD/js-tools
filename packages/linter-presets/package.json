@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/eslint-presets",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -10,7 +10,10 @@
       "types": "./tmp/src/index.d.ts"
     }
   },
-  "files": ["lib", "tmp"],
+  "files": [
+    "lib",
+    "tmp"
+  ],
   "scripts": {
     "lint:debug": "eslint --debug eslint.config.js",
     "build": "npm run build:types && npm run build:js",
