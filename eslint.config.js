@@ -7,5 +7,11 @@ export default [
   ...plugin.configs.testing,
   {
     ignores: ["rollup.config.ts"],
+    rules: {
+      "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports" }],
+      "no-plusplus": "off",
+
+      "import/no-extraneous-dependencies": "off",
+    },
   },
 ];

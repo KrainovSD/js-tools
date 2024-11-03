@@ -1,0 +1,9 @@
+import { isString } from "./is-string";
+
+export function isGuid(value: unknown): value is string {
+  if (!isString(value)) return false;
+
+  const regExp = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+
+  return regExp.test(value);
+}

@@ -1,7 +1,9 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import commonjs from "@rollup/plugin-commonjs";
 import eslint from "@rollup/plugin-eslint";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import { type Plugin, defineConfig } from "rollup";
 import externals from "rollup-plugin-peer-deps-external";
@@ -24,7 +26,8 @@ export default defineConfig({
     },
   ],
   plugins: [
-    externals() as Plugin,
+    externals({ includeDependencies: true }) as Plugin,
+    terser() as Plugin,
     eslint({
       throwOnError: true,
       throwOnWarning: true,
