@@ -1,6 +1,6 @@
 # @krainovsd/utils
 
-Пакет с используемыми в проектах хелперами.
+Пакет с часто используемыми хелперами в проектах.
 
 ## Download
 
@@ -18,6 +18,6 @@ const utils = require('@krainovsd/utils');
 или
 
 ```
-import utils from "@krainovsd/utils"
+import { ksdu } from "@krainovsd/utils"
 
 ```
