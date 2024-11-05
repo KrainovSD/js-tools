@@ -11,7 +11,9 @@ export const generateAuthMiddleWare =
       !options.authRedirectUrl ||
       !options.authRedirectUrl ||
       !options.storageExpiresTokenName ||
-      !options.storageTokenName
+      !options.storageTokenName ||
+      !options.pathToExpires ||
+      !options.pathToToken
     ) {
       // eslint-disable-next-line no-console
       console.error("Auth middleware hasn't required options");

@@ -1,4 +1,4 @@
-import { API_MIDDLEWARES, IS_BROWSER } from "../../../constants";
+import { API_MIDDLEWARES, IS_BROWSER, IS_JEST } from "../../../constants";
 import type {
   ActiveMiddleware,
   Middleware,
@@ -17,7 +17,7 @@ export function generateMiddlewares(
   for (const key of activeMiddlewares) {
     switch (key) {
       case API_MIDDLEWARES.Auth: {
-        if (middlewareOptions.auth && IS_BROWSER)
+        if (middlewareOptions.auth && (IS_BROWSER || IS_JEST))
           selectedMiddlewares.push(generateAuthMiddleWare(middlewareOptions.auth));
         continue;
       }

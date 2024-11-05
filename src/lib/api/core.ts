@@ -1,5 +1,5 @@
 import type { BodyInit as NodeBodyInit, Response as NodeResponse } from "node-fetch";
-import { IS_BROWSER, IS_NODE } from "../../constants";
+import { IS_BROWSER, IS_JEST, IS_NODE } from "../../constants";
 import type { ActiveMiddleware, MiddlewaresOptions, RequestInterface } from "../../types";
 import { downloadFile } from "../browser";
 import { isArray, isObject } from "../typings";
@@ -66,7 +66,7 @@ export function generateRequestsInstance(
 
     let response: Response | NodeResponse | undefined;
 
-    if (IS_BROWSER) {
+    if (IS_BROWSER || IS_JEST) {
       response = await fetch(url, {
         method,
         body: preparedBody as BodyInit,
@@ -79,7 +79,7 @@ export function generateRequestsInstance(
         signal: request.signal,
       });
     }
-    if (IS_NODE) {
+    if (IS_NODE && !IS_JEST) {
       const nodeFetch = (await import("node-fetch")).default;
       response = await nodeFetch(url, {
         method,
