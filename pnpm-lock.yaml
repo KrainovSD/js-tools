@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@krainovsd/eslint-presets':
-        specifier: 0.0.4
-        version: 0.0.4(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(eslint@9.13.0)(jest@29.7.0(@types/node@22.8.6))(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
+        specifier: 0.1.0
+        version: 0.1.0(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(eslint@9.13.0)(jest@29.7.0(@types/node@22.8.6))(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)
       '@rollup/plugin-commonjs':
         specifier: 28.0.1
         version: 28.0.1(rollup@4.21.2)
@@ -441,8 +441,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
-  '@krainovsd/eslint-presets@0.0.4':
-    resolution: {integrity: sha512-cSkn3Bc7AWZVXAVfaXB2DcnyO7CqsRkBMp6EnYpkBkjTay/9l9vxAz0dPJnXtj+YRViOfCUdiQ7Jvs5zR/W7Jg==}
+  '@krainovsd/eslint-presets@0.1.0':
+    resolution: {integrity: sha512-6sr4Pw+0Z/0hwMiCOplDY76B2F9T8uduMb7nC/Olq5XBygtFHFEfH+aCQ72tHA6rJEeXWYH/o2ZAqV9kALfd4A==}
     peerDependencies:
       eslint: 9.13.0
       react: 18.3.1
@@ -3167,7 +3167,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@krainovsd/eslint-presets@0.0.4(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(eslint@9.13.0)(jest@29.7.0(@types/node@22.8.6))(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
+  '@krainovsd/eslint-presets@0.1.0(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(eslint@9.13.0)(jest@29.7.0(@types/node@22.8.6))(prettier@3.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.3)':
     dependencies:
       '@eslint/eslintrc': 3.1.0
       '@eslint/js': 9.13.0
