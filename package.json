@@ -29,6 +29,7 @@
     "lint:debug": "eslint --debug eslint.config.js",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "prepare": "husky"
   },
   "devDependencies": {

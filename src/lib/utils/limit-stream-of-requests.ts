@@ -3,7 +3,7 @@ import { wait } from "./wait";
 type LimitStreamOfRequestsOptions<T> = {
   countRequests: number;
   maxCountInParallel: number;
-  promiseGetter: (count: number) => () => Promise<T>;
+  promiseGetter: (count: number) => Promise<T>;
   refetchAfterError?: boolean;
   maxTryCount?: number;
   collectResult?: boolean;
@@ -34,13 +34,15 @@ export function limitStreamOfRequests<T>({
         request(promiseGetter(++currentRequests), currentRequests);
       }
 
-      function request(cb: () => Promise<T>, position: number, tryCount: number = 1) {
+      function request(promise: Promise<T>, position: number, tryCount: number = 1) {
         if (isStopped) return void resolve(results);
         if (currentResponses === countRequests) return void resolve(results);
-        if (position > countRequests || !cb) return;
+        if (position > countRequests || promise == undefined) return;
 
-        cb()
+        promise
           .then((result) => {
+            if (isStopped) return void resolve(results);
+
             if (collectResult) results.push(result);
             if (resultCb) resultCb(result);
             currentResponses++;
@@ -48,8 +50,10 @@ export function limitStreamOfRequests<T>({
             request(promiseGetter(++currentRequests), currentRequests);
           })
           .catch(() => {
+            if (isStopped) return void resolve(results);
+
             if (refetchAfterError && maxTryCount > tryCount) {
-              void wait(1000).then(() => request(cb, position, tryCount + 1));
+              void wait(1000).then(() => request(promiseGetter(position), position, tryCount + 1));
             } else {
               currentResponses++;
               request(promiseGetter(++currentRequests), currentRequests);

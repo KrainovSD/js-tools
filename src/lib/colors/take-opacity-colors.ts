@@ -15,7 +15,7 @@ export function takeOpacityColors(color: string | undefined, opacities: number[]
     rgbColor = transformRGBAtoRGB(rgbColor);
   }
 
-  if (getColorFormat(rgbColor) !== "RGB") return [];
+  if (getColorFormat(rgbColor) !== COLOR_FORMATS.Rgb) return [];
 
-  return [rgbColor, ...opacities.map((opacity) => transformRGBtoRGBA(rgbColor, opacity))];
+  return [...opacities.map((opacity) => transformRGBtoRGBA(rgbColor, opacity))];
 }

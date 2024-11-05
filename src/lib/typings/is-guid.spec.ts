@@ -10,4 +10,7 @@ describe("is-guid", () => {
   it("empty", () => {
     expect(isGuid("")).toBeFalsy();
   });
+  it("no string", () => {
+    expect(isGuid(2)).toBeFalsy();
+  });
 });

@@ -1,7 +1,7 @@
-import { IS_BROWSER } from "../../constants";
+import { IS_BROWSER, IS_JEST } from "../../constants";
 
 export function downloadJson(data: unknown, name: string) {
-  if (!IS_BROWSER) return null;
+  if (!IS_BROWSER && !IS_JEST) return null;
 
   const url = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data))}`;
 

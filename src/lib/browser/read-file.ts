@@ -1,8 +1,8 @@
-import { IS_BROWSER } from "../../constants";
+import { IS_BROWSER, IS_JEST } from "../../constants";
 
 export function readFile(file: File) {
   return new Promise((resolve) => {
-    if (!IS_BROWSER) {
+    if (!IS_BROWSER && !IS_JEST) {
       resolve(null);
 
       return;

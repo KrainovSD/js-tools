@@ -1,6 +1,6 @@
 import { typings } from "..";
 import type { AuthMiddleWareOptions } from "../../types";
-import { getByPaths } from "../utils";
+import { getByPath } from "../utils";
 
 export const tokenRequest = async (options: Required<AuthMiddleWareOptions>) => {
   try {
@@ -35,8 +35,8 @@ export const tokenRequest = async (options: Required<AuthMiddleWareOptions>) => 
 function transformData(data: unknown, pathToToken: string, pathToExpires: string): TokenPayload {
   if (!typings.isObject(data)) throw new Error("Bad response data");
 
-  const token = getByPaths(data, pathToToken);
-  const expiresToken = getByPaths(data, pathToExpires);
+  const token = getByPath(data, pathToToken);
+  const expiresToken = getByPath(data, pathToExpires);
 
   if (
     (!typings.isString(expiresToken) && !typings.isNumber(expiresToken)) ||

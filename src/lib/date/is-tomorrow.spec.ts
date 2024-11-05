@@ -8,4 +8,7 @@ describe("is-tomorrow", () => {
   it("tomorrow", () => {
     expect(isTomorrow(getDateByRules([{ increment: 1, type: "days" }]))).toBeTruthy();
   });
+  it("error", () => {
+    expect(isTomorrow({} as Date)).toBeFalsy();
+  });
 });

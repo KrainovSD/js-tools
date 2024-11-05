@@ -1,6 +1,5 @@
-import { isObject } from "lodash";
 import type { ParamsType } from "../../types";
-import { isArray } from "../typings";
+import { isArray, isObject } from "../typings";
 
 export function buildQueryString(params: ParamsType): string {
   const queryString: string[] = [];

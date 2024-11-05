@@ -15,10 +15,6 @@ export async function scriptLayout({ action }: ScriptLayoutOptions) {
       };
     }
 
-    if (error instanceof Error) {
-      return { errorName: error.name, errorMessage: error.message, errorStack: error.stack };
-    }
-
     throw error;
   }
 }

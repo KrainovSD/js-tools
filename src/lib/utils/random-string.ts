@@ -1,10 +1,11 @@
-export function randomString(length: number = 10) {
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+export function randomString(length: number = 10, allowCharacters: string = characters) {
   let result = "";
   let counter = 0;
 
   while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
+    result += allowCharacters.charAt(Math.floor(Math.random() * allowCharacters.length));
     counter += 1;
   }
 

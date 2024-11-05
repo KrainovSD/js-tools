@@ -19,4 +19,21 @@ describe("get-date-by-rules", () => {
     );
     expect(future.getTime() - now.getTime()).toBe(secondDiff + minuteDiff + hourDiff + dayDiff);
   });
+  it("1 month, 1 year", () => {
+    const now = new Date();
+    const currentMonth = 10;
+    const currentYear = 2020;
+    now.setMonth(currentMonth);
+    now.setFullYear(currentYear);
+
+    const future = getDateByRules(
+      [
+        { increment: 1, type: "months" },
+        { increment: 1, type: "years" },
+      ],
+      now,
+    );
+    expect(future.getFullYear()).toBe(currentYear + 1);
+    expect(future.getMonth()).toBe(currentMonth + 1);
+  });
 });

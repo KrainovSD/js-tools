@@ -12,4 +12,7 @@ describe("date-format", () => {
 
     expect(dateFormat(date, "YYYY-MM-DD")).toBe(`${year}-${month + 1}-${day}`);
   });
+  it("not valid", () => {
+    expect(dateFormat({} as Date, "YYYY-MM-DD")).toBe("");
+  });
 });
