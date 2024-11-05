@@ -32,6 +32,7 @@ export default [
         "error",
         { ignoreArrowShorthand: true, ignoreVoidOperator: true },
       ],
+      "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports" }],
     },
   },
 ];

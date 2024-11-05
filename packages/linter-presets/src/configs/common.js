@@ -43,6 +43,7 @@ export default [
       "consistent-return": "off",
       "no-undef": "off",
       "linebreak-style": "off",
+      "no-plusplus": "off",
 
       "padding-line-between-statements": [
         "error",
