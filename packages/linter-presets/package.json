@@ -1,7 +1,14 @@
 {
   "name": "@krainovsd/eslint-presets",
   "version": "0.1.0",
+  "description": "Krainov eslint presets",
   "type": "module",
+  "author": "KrainovSD <denislosev48@gmail.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KrainovSD/js-utils"
+  },
   "sideEffects": false,
   "exports": {
     ".": {
