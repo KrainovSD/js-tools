@@ -9,6 +9,7 @@
     "type": "git",
     "url": "https://github.com/KrainovSD/js-utils"
   },
+  "sideEffects": false,
   "exports": {
     ".": {
       "import": "./lib/esm/index.js",
@@ -20,6 +21,10 @@
     "utils",
     "js",
     "nodejs"
+  ],
+  "files": [
+    "lib",
+    "tmp"
   ],
   "scripts": {
     "build": "npm run build:types && npm run build:js",
@@ -33,7 +38,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@krainovsd/eslint-presets": "0.0.4",
+    "@krainovsd/eslint-presets": "0.1.0",
     "@rollup/plugin-commonjs": "28.0.1",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.3.0",
