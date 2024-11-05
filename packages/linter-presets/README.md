@@ -11,13 +11,13 @@ pnpm i @krainovsd/eslint-presets
 ## Usage
 
 ```
-const eslint-presets = require('@krainovsd/eslint-presets');
+const eslintPresets = require('@krainovsd/eslint-presets');
 
 module.exports = [
-  ...eslint-presets.configs.common,
-  ...eslint-presets.configs.testing,
-  ...eslint-presets.configs.react,
-  ...eslint-presets.configs.typescript,
+  ...eslintPresets.configs.common,
+  ...eslintPresets.configs.testing,
+  ...eslintPresets.configs.react,
+  ...eslintPresets.configs.typescript,
 ];
 
 ```
@@ -25,13 +25,13 @@ module.exports = [
 или
 
 ```
-import eslint-presets from "@krainovsd/eslint-presets"
+import eslintPresets from "@krainovsd/eslint-presets"
 
 export default [
-  ...eslint-presets.configs.common,
-  ...eslint-presets.configs.testing,
-  ...eslint-presets.configs.react,
-  ...eslint-presets.configs.typescript,
+  ...eslintPresets.configs.common,
+  ...eslintPresets.configs.testing,
+  ...eslintPresets.configs.react,
+  ...eslintPresets.configs.typescript,
 ];
 
 ```
