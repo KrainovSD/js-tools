@@ -23,7 +23,7 @@ export { Frame } from "./frame-icon";
 export { GraphFill } from "./graph-fill-icon";
 export { Graphic } from "./graphic-icon";
 export { Grid } from "./grid-icon";
-export { Infinity } from "./infinity-icon";
+export { InfinityI } from "./infinity-icon";
 export { InfinityOne } from "./infinity-one-icon";
 export { Letters } from "./letters-icon";
 export { List } from "./list-icon";

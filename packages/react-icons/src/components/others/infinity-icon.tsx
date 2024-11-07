@@ -1,6 +1,6 @@
 import type { IconProps } from "../../types";
 
-export function Infinity(props: IconProps): React.JSX.Element {
+export function InfinityI(props: IconProps): React.JSX.Element {
   const { sizeX = 14, sizeY = 14, color = "#FFFFFF", ...rest } = props;
 
   return (

@@ -1,7 +1,6 @@
-import React from "react";
 import type { IconProps } from "../../types";
 
-export function SidePanel(props: IconProps): React.React.JSX.Element {
+export function SidePanel(props: IconProps): React.JSX.Element {
   const { sizeX = 14, sizeY = 14, color = "#FFFFFF", ...rest } = props;
 
   return (
