@@ -1,13 +1,13 @@
 import React from "react";
 import { Flex } from "../flex";
-import { styles } from "./styles";
+import * as styles from "./styles";
 
-type Props = {
+export type ImportPropsInterface = {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   accept?: string;
 };
 
-export function Import(props: React.PropsWithChildren<Props>) {
+export function Import(props: React.PropsWithChildren<ImportPropsInterface>) {
   const { onChange, children, ...rest } = props;
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 

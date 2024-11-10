@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
 
-export const styles = {
-  wide: css`
+export const base = css`
+  &.wide {
     width: 100%;
-  `,
-};
+  }
+`;

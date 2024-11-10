@@ -1,7 +1,6 @@
 import { Icon } from "@krainovsd/icons";
 import { Form, theme } from "antd";
 import { type JSX, useCallback, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { Button } from "../button";
 import { Flex } from "../flex";
 import { Popover } from "../popover";
@@ -12,6 +11,7 @@ import * as styles from "./styles";
 import type { FilterFieldType } from "./types";
 
 interface FiltersBlockProps<T> {
+  filterLabel: string;
   fields?: FilterFieldType[];
   fixedFields?: FilterFieldType[];
   showSearchField?: boolean;
@@ -31,9 +31,9 @@ export function FiltersBlock<T>(props: FiltersBlockProps<T>): JSX.Element {
     isDisabledFields,
     onValuesChange,
     initialValues,
+    filterLabel,
     onChangeSearch,
   } = props;
-  const { t } = useTranslation();
   const [form] = Form.useForm();
   const { token } = theme.useToken();
   const [open, setOpen] = useState(false);
@@ -129,7 +129,7 @@ export function FiltersBlock<T>(props: FiltersBlockProps<T>): JSX.Element {
             shape="round"
             type="default"
           >
-            {t("common.filters.label")}
+            {filterLabel}
           </Button>
         </Popover>
       </>

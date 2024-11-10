@@ -3,7 +3,7 @@ import FormItemAntd from "antd/es/form/FormItem";
 import clsx from "clsx";
 import { styles } from "./styles";
 
-interface FormItemProps extends FormItemPropsAntd {
+export interface FormItemProps extends FormItemPropsAntd {
   wide?: boolean;
 }
 

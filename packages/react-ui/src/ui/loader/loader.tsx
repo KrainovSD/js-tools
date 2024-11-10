@@ -1,22 +1,21 @@
 import clsx from "clsx";
 import React from "react";
 import { createPortal } from "react-dom";
-import { COLORS } from "../../config";
 import { Flex } from "../flex";
 import { Spinner } from "../spinner";
 import { Text } from "../typography";
-import { styles } from "./styles";
+import * as styles from "./styles";
 
-type Props = {
-  background?: "full" | "common" | "none";
+export type LoaderPropsInterface = {
+  background?: "page" | "block" | "single";
   target?: string;
   zIndex?: number;
   color?: string;
   percent?: number;
 };
 
-export function Loader(props: Props) {
-  const { background = "none", color = COLORS.greyPrimary, zIndex = 1000 } = props;
+export function Loader(props: LoaderPropsInterface) {
+  const { background = "none", color = "#8893a4", zIndex = 1000 } = props;
   const percent = React.useMemo(() => {
     if (props.percent && props.percent < 100) return props.percent;
     if (props.percent && props.percent >= 100) return 99;
@@ -39,13 +38,14 @@ export function Loader(props: Props) {
     return null;
   }, [props.target]);
 
-  if (background === "none") return <Spinner color={color} zIndex={zIndex} />;
+  if (background === "single") return <Spinner color={color} zIndex={zIndex} />;
 
   const LoaderComponent = (
     <Flex
       align="center"
       justify="center"
-      className={clsx(styles.back(zIndex), background === "full" && "full")}
+      className={clsx(styles.background, background)}
+      style={{ zIndex }}
     >
       <Spinner color={color} zIndex={zIndex} />
       {percent != undefined && <Text className={styles.text}>{`${percent}%`} </Text>}

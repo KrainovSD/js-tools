@@ -1,6 +1,6 @@
 import type { FormRule } from "antd";
 import type { OptionInterface } from "../../typings";
-import type { RangePickerProps } from "../range-picker";
+import type { RangePickerProps } from "../date-range-picker";
 
 type InputValueType =
   | string

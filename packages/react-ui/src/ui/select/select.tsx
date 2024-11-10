@@ -1,11 +1,12 @@
 import { Select as AntdSelect, theme } from "antd";
 import type { SelectProps as AntdSelectProps } from "antd";
 import type { DefaultOptionType, SelectValue } from "antd/es/select";
+import clsx from "clsx";
 import type React from "react";
 import { type ReactElement, useCallback, useMemo } from "react";
 import { Flex } from "../flex";
 import { Spin } from "../spin";
-import { selectLoadingStyle } from "./styles";
+import * as styles from "./styles";
 
 export interface SelectItemInterface {
   label: string;
@@ -18,6 +19,7 @@ export type SelectItems = SelectItemInterface[];
 export interface SelectProps extends AntdSelectProps {
   customOption?: React.JSX.Element;
   withEmptyOption?: boolean;
+  wide?: boolean;
 }
 
 const EMPTY_OPTION = {
@@ -26,14 +28,28 @@ const EMPTY_OPTION = {
 };
 
 export function Select(props: SelectProps): React.JSX.Element {
-  const { withEmptyOption, loading, customOption, options, onChange, ...otherProps } = props;
+  const {
+    withEmptyOption,
+    loading,
+    customOption,
+    options,
+    wide,
+    onChange,
+    className,
+    ...otherProps
+  } = props;
   const { token } = theme.useToken();
 
   const dropdownContentRender = useCallback(
     (menu: ReactElement) => (
       <>
         {loading ? (
-          <Flex align="center" justify="center" className={selectLoadingStyle(token)}>
+          <Flex
+            align="center"
+            justify="center"
+            className={styles.content}
+            style={{ padding: token.paddingSM }}
+          >
             <Spin />
           </Flex>
         ) : (
@@ -63,6 +79,7 @@ export function Select(props: SelectProps): React.JSX.Element {
       value={props.value === undefined && withEmptyOption ? "" : (props.value as SelectValue)}
       options={selectOptions}
       dropdownRender={dropdownContentRender}
+      className={clsx(styles.base, wide && "wide", className)}
     />
   );
 }

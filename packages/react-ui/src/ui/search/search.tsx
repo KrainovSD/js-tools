@@ -1,21 +1,27 @@
 import { Icon } from "@krainovsd/icons";
 import { type InputProps, Tag, theme } from "antd";
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { COLORS } from "../../config";
-import type { TagOption } from "../../typings";
 import { Button } from "../button";
 import { Flex } from "../flex";
 import { Input } from "../input";
 import * as styles from "./styles";
 
+export type TagOption = {
+  label: string;
+  value: string;
+  colorBg: string;
+  color: string;
+};
+
 type Props = {
+  label: string;
   search: string;
   setSearch: (search: string) => void;
+  shape?: "square" | "circle";
   variant?: InputProps["variant"];
   tags?: TagOption[];
   selectedTags?: string[];
-  setSelectedTag?: (tag: string, checked: boolean) => void;
+  setSelectedTag?: (tags: string[]) => void;
   clearTags?: () => void;
 };
 
@@ -25,23 +31,35 @@ export function Search({
   tags,
   selectedTags,
   setSelectedTag,
-  variant = "filled",
+  variant = "outlined",
   clearTags,
+  label,
+  shape = "square",
 }: Props) {
   const { token } = theme.useToken();
-  const { t } = useTranslation();
   const [isOpenTags, setIsOpenTags] = React.useState(false);
 
+  const onTagSelect = React.useCallback(
+    (selectedTag: string, checked: boolean) => {
+      if (checked) {
+        setSelectedTag?.(selectedTags?.filter?.((tag) => tag !== selectedTag) || []);
+      } else {
+        setSelectedTag?.([...(selectedTags || []), selectedTag]);
+      }
+    },
+    [selectedTags, setSelectedTag],
+  );
+
   return (
-    <Flex gap={12} vertical>
-      <Flex gap={7}>
+    <Flex gap={12} vertical wide>
+      <Flex gap={7} wide>
         <Input
           variant={variant}
-          placeholder={t("common.search.input")}
+          placeholder={label}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          suffix={<Icon icon="Search" color={COLORS.greyPrimary} size={13} />}
-          shape="circle"
+          suffix={<Icon icon="Search" color={"#8893a4"} size={13} />}
+          shape={shape}
         />
         {tags && (
           <Button
@@ -70,7 +88,7 @@ export function Search({
               return (
                 <Tag
                   key={tag.value}
-                  onClick={() => setSelectedTag?.(tag.value, checked)}
+                  onClick={() => onTagSelect(tag.value, checked)}
                   color={tag.colorBg}
                   style={{
                     color: tag.color,

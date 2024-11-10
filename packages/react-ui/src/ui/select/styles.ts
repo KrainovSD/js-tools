@@ -1,7 +1,11 @@
 import { css } from "@emotion/css";
-import type { TokenType } from "../../typings";
 
-export const selectLoadingStyle = (token: TokenType) => css`
-  padding: ${token.paddingSM}px;
+export const content = css`
   height: 80px;
+`;
+
+export const base = css`
+  &.wide {
+    width: 100%;
+  }
 `;

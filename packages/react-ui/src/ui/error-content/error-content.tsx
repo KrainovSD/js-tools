@@ -1,14 +1,14 @@
 import { Icon } from "@krainovsd/icons";
+import { theme } from "antd";
 import type { JSX } from "react";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { COLORS } from "../../config";
 import { Button } from "../button";
 import { Flex } from "../flex";
 import { Text, Title } from "../typography";
-import { contentStyles, typographyStyles, wrapperStyles } from "./styles";
+import * as styles from "./styles";
 
-interface ErrorContentProps {
+export interface ErrorContentProps {
   title?: string;
   description?: string;
   buttonLabel?: string;
@@ -17,10 +17,11 @@ interface ErrorContentProps {
 
 export function ErrorContent(props: ErrorContentProps): JSX.Element {
   const { t } = useTranslation();
+  const { token } = theme.useToken();
   const {
-    title = t("common.notifications.cardGetErrorTitle"),
-    description = t("common.notifications.cardGetErrorDescription"),
-    buttonLabel = t("common.notifications.cardGetErrorRepeatButton"),
+    title = t("ui.notifications.error.title"),
+    description = t("ui.notifications.error.description"),
+    buttonLabel = t("ui.notifications.error.button"),
     ...rest
   } = props;
 
@@ -29,11 +30,11 @@ export function ErrorContent(props: ErrorContentProps): JSX.Element {
   }, [rest]);
 
   return (
-    <div className={wrapperStyles}>
-      <Flex vertical align="center" gap={20} className={contentStyles}>
-        <Icon icon="WarningFilled" color={COLORS.red} size={60} />
+    <div className={styles.wrapper}>
+      <Flex vertical align="center" gap={20} className={styles.content}>
+        <Icon icon="WarningFilled" color={token.colorError} size={60} />
         <Flex vertical align="center" gap="large">
-          <Flex vertical gap="small" className={typographyStyles}>
+          <Flex vertical gap="small" className={styles.text}>
             <Title level={4}>{title}</Title>
             <Text>{description}</Text>
           </Flex>

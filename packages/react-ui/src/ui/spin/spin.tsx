@@ -3,7 +3,7 @@ import type { SpinProps as AntdSpinProps } from "antd";
 import type React from "react";
 import { Spinner } from "../spinner";
 
-interface SpinProps extends AntdSpinProps {
+export interface SpinProps extends AntdSpinProps {
   iconSize?: number;
 }
 

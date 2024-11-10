@@ -2,19 +2,14 @@ import { Input as AntdInput } from "antd";
 import type { InputProps as AntdInputProps } from "antd";
 import clsx from "clsx";
 import type { JSX } from "react";
-import { styles } from "./styles";
+import * as styles from "./styles";
 
 export interface InputProps extends AntdInputProps {
-  shape?: "normal" | "circle";
+  shape?: "square" | "circle";
 }
 
 export function Input(props: InputProps): JSX.Element {
-  const { shape = "normal", className, ...rest } = props;
+  const { shape = "square", className, ...rest } = props;
 
-  return (
-    <AntdInput
-      {...rest}
-      className={clsx(styles.input, shape === "circle" && "circle", className)}
-    />
-  );
+  return <AntdInput {...rest} className={clsx(styles.base, shape, className)} />;
 }

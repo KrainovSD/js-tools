@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 
-export const wrapperStyles = css`
+export const wrapper = css`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,10 +8,10 @@ export const wrapperStyles = css`
   height: 100%;
 `;
 
-export const contentStyles = css`
+export const content = css`
   max-width: 262px;
 `;
 
-export const typographyStyles = css`
+export const text = css`
   text-align: center;
 `;

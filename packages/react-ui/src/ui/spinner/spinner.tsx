@@ -1,17 +1,16 @@
 import clsx from "clsx";
-import { COLORS } from "../../config";
 import * as styles from "./styles";
 
 export type SpinnerSize = "normal" | "small";
 
-type Props = {
+export type SpinnerPropsInterface = {
   size?: SpinnerSize;
   color?: string;
   zIndex?: number;
 };
 
-export function Spinner(props: Props) {
-  const { color = COLORS.greyPrimary, size = "normal", zIndex = 1000 } = props;
+export function Spinner(props: SpinnerPropsInterface) {
+  const { color = "#8893a480", size = "normal", zIndex = 1000 } = props;
 
   return (
     <div className={clsx(styles.spinner, size)}>
