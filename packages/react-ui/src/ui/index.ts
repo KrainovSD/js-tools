@@ -12,7 +12,6 @@ export * from "./date-picker";
 export * from "./date-range-picker";
 export * from "./tag";
 export * from "./table";
-export * from "./table-infinite-scroll";
 export * from "./badge";
 export * from "./collapse";
 export * from "./skeleton";

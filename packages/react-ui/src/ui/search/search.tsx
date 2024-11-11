@@ -1,9 +1,10 @@
 import { Icon } from "@krainovsd/icons";
-import { type InputProps, Tag, theme } from "antd";
+import { type InputProps, theme } from "antd";
 import React from "react";
 import { Button } from "../button";
 import { Flex } from "../flex";
 import { Input } from "../input";
+import { Tag } from "../tag";
 import * as styles from "./styles";
 
 export type TagOption = {
@@ -90,11 +91,8 @@ export function Search({
                   key={tag.value}
                   onClick={() => onTagSelect(tag.value, checked)}
                   color={tag.colorBg}
-                  style={{
-                    color: tag.color,
-                    border: checked ? `1px solid ${tag.color}` : `1px solid transparent`,
-                    cursor: "pointer",
-                  }}
+                  mainColor={tag.color}
+                  checked={checked}
                 >
                   {tag.label}
                 </Tag>

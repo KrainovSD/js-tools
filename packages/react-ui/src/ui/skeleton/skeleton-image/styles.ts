@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 
-export const imageStyles = (size?: number) => css`
+export const image = (size?: number) => css`
   width: ${size ? `${size}px` : "auto"} !important;
   height: ${size ? `${size}px` : "auto"} !important;
 

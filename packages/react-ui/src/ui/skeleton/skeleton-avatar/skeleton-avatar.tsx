@@ -2,10 +2,23 @@ import type { GetProps } from "antd";
 import { Skeleton as AntdSkeleton } from "antd";
 import type { JSX } from "react";
 
-type Props = GetProps<typeof AntdSkeleton.Avatar>;
+export type SkeletonAvatarPropsInterface = GetProps<typeof AntdSkeleton.Avatar>;
 
-export function SkeletonAvatar(props: Props): JSX.Element {
-  const { active = true, ...otherProps } = props;
+export function SkeletonAvatar(props: SkeletonAvatarPropsInterface): JSX.Element {
+  const { active = true, shape, size, style, ...otherProps } = props;
 
-  return <AntdSkeleton.Avatar active={active} {...otherProps} />;
+  let borderRadius: number | undefined;
+  if (shape === "square" && size === "small") borderRadius = 4;
+  if (shape === "square" && size === "default") borderRadius = 6;
+  if (shape === "square" && size === "large") borderRadius = 8;
+
+  return (
+    <AntdSkeleton.Avatar
+      active={active}
+      size={size}
+      shape={shape}
+      style={{ ...(style || {}), borderRadius }}
+      {...otherProps}
+    />
+  );
 }

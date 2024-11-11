@@ -7,7 +7,9 @@ export function useNotification() {
   const { notification } = App.useApp();
 
   const showNotification = (type: NotificationType, params: ArgsProps) => {
-    notification[type]({ duration: 5, ...params });
+    const { duration = 3, showProgress = true, closable = true, ...rest } = params;
+
+    notification[type]({ ...rest, duration, showProgress, closable });
   };
 
   return { showNotification };

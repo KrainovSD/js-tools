@@ -1,11 +1,16 @@
 import { css } from "@emotion/css";
-import type { TokenType } from "../../../typings";
+import type { GlobalToken } from "antd";
 
-export const tableWrapperStyles = css`
+export const container = css`
   overflow: hidden;
+  padding-bottom: 30px;
+
+  &.pagination {
+    padding-bottom: 0px;
+  }
 `;
 
-export const tableStyles = (token: TokenType, clickableRow?: boolean) => css`
+export const table = (token: GlobalToken, clickableRow?: boolean) => css`
   overflow: hidden;
   max-height: 100%;
   height: 100%;

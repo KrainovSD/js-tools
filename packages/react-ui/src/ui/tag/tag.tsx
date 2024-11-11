@@ -1,39 +1,34 @@
-import { Tag as AntdTag, theme } from "antd";
+import { Tag as AntdTag } from "antd";
 import type { TagProps as AntdTagProps } from "antd";
 import { clsx } from "clsx";
 import type { JSX } from "react";
-import {
-  baseStyles,
-  fontStyles,
-  primaryAppearanceStyles,
-  secondaryAppearanceStyles,
-} from "./styles";
 
-interface TagProps extends AntdTagProps {
-  appearance?: "primary" | "secondary";
-  large?: boolean;
+export interface TagProps extends AntdTagProps {
+  mainColor?: string;
+  checked?: boolean;
 }
 
 export function Tag(props: TagProps): JSX.Element {
-  const { children, appearance, color, large, className = "", ...otherProps } = props;
-  const { token } = theme.useToken();
+  const { children, style, className, mainColor, checked, ...otherProps } = props;
 
-  const getClassName = (appearance?: TagProps["appearance"]): string => {
-    if (appearance === "primary") {
-      return primaryAppearanceStyles(token);
-    }
-    if (appearance === "secondary") {
-      return secondaryAppearanceStyles(token);
-    }
-
-    return "";
-  };
+  let border: string | undefined;
+  if (checked && mainColor) {
+    border = `1px solid ${mainColor}`;
+  } else if (mainColor) {
+    border = `1px solid transparent`;
+  }
 
   return (
     <AntdTag
       {...otherProps}
-      color={color}
-      className={clsx(getClassName(appearance), fontStyles(token, large), baseStyles, className)}
+      className={clsx(className)}
+      style={{
+        ...(style || {
+          cursor: "pointer",
+          color: mainColor,
+          border,
+        }),
+      }}
     >
       {children}
     </AntdTag>

@@ -1,17 +1,18 @@
 import { theme } from "antd";
 import type { ReactNode } from "react";
 import type React from "react";
-import { downBarContainerStyles } from "./styles";
+import * as styles from "./styles";
 
 interface TableDownBarProps {
   children: ReactNode | ReactNode[];
   className?: string;
   float?: boolean;
+  pagination: boolean;
 }
 
 export function TableDownBar(props: TableDownBarProps): React.JSX.Element {
-  const { children } = props;
+  const { children, pagination } = props;
   const { token } = theme.useToken();
 
-  return <div className={downBarContainerStyles(token)}>{children}</div>;
+  return <div className={styles.base(token, pagination)}>{children}</div>;
 }

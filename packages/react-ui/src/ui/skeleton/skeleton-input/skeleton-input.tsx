@@ -1,14 +1,21 @@
 import type { GetProps } from "antd";
 import { Skeleton as AntdSkeleton } from "antd";
+import clsx from "clsx";
 import type { JSX } from "react";
-import { inputStyles } from "./style";
+import * as styles from "./style";
 
-type SkeletonInputProps = GetProps<typeof AntdSkeleton.Input> & {
-  width: string | number;
+export type SkeletonInputProps = GetProps<typeof AntdSkeleton.Input> & {
+  wide?: boolean;
 };
 
 export function SkeletonInput(props: SkeletonInputProps): JSX.Element {
-  const { width, active = true, ...otherProps } = props;
+  const { active = true, className, wide, ...otherProps } = props;
 
-  return <AntdSkeleton.Input active={active} {...otherProps} className={inputStyles(width)} />;
+  return (
+    <AntdSkeleton.Input
+      active={active}
+      className={clsx(styles.base, wide && "wide", className)}
+      {...otherProps}
+    />
+  );
 }
