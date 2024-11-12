@@ -1,7 +1,7 @@
 import { css } from "@emotion/css";
-import type { TokenType } from "../../../typings";
+import type { GlobalToken } from "antd";
 
-export const PopoverElementStyles = (token: TokenType) => css`
+export const popover = (token: GlobalToken) => css`
   display: flex;
   align-items: center;
   justify-content: flex-start;

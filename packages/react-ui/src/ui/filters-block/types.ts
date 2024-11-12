@@ -1,14 +1,14 @@
 import type { FormRule } from "antd";
-import type { OptionInterface } from "../../typings";
-import type { RangePickerProps } from "../date-range-picker";
+import type { DateRangePickerProps } from "../date-range-picker";
+import type { SelectItemInterface } from "../select";
 
-type InputValueType =
+export type InputValueType =
   | string
   | number
   | undefined
   | null
-  | OptionInterface
-  | RangePickerProps["value"];
+  | SelectItemInterface[]
+  | DateRangePickerProps["value"];
 
 export type FilterInputValueType = InputValueType | InputValueType[];
 

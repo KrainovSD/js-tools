@@ -1,16 +1,23 @@
-import { Icon } from "@krainovsd/icons";
-import { Form, theme } from "antd";
-import { type JSX, useCallback, useEffect, useState } from "react";
-import { Button } from "../button";
+import { Form } from "antd";
+import React from "react";
 import { Flex } from "../flex";
-import { Popover } from "../popover";
 import { FixedFields } from "./fixed-fields";
-import { PopoverField } from "./popover-field";
+import { PopoverFields } from "./popover-fields";
 import { SearchField } from "./search-field/search-field";
-import * as styles from "./styles";
-import type { FilterFieldType } from "./types";
+import type { FilterFieldType, FilterInputValueType } from "./types";
 
-interface FiltersBlockProps<T> {
+type RecursivePartial<T> =
+  NonNullable<T> extends object
+    ? {
+        [P in keyof T]?: NonNullable<T[P]> extends (infer U)[]
+          ? RecursivePartial<U>[]
+          : NonNullable<T[P]> extends object
+            ? RecursivePartial<T[P]>
+            : T[P];
+      }
+    : T;
+
+interface FiltersBlockProps<T extends Record<string, FilterInputValueType>> {
   filterLabel: string;
   fields?: FilterFieldType[];
   fixedFields?: FilterFieldType[];
@@ -20,9 +27,12 @@ interface FiltersBlockProps<T> {
   onValuesChange: (values: T) => void;
   initialValues?: Partial<T>;
   onChangeSearch?: (value: string) => void;
+  position: "vertical" | "horizontal";
 }
 
-export function FiltersBlock<T>(props: FiltersBlockProps<T>): JSX.Element {
+export function FiltersBlock<T extends Record<string, FilterInputValueType>>(
+  props: FiltersBlockProps<T>,
+): React.JSX.Element {
   const {
     fields,
     fixedFields,
@@ -34,116 +44,19 @@ export function FiltersBlock<T>(props: FiltersBlockProps<T>): JSX.Element {
     filterLabel,
     onChangeSearch,
   } = props;
-  const [form] = Form.useForm();
-  const { token } = theme.useToken();
-  const [open, setOpen] = useState(false);
-  const [newFilter, setNewFilter] = useState("");
-  const [selectedFields, setSelectedFields] = useState<FilterFieldType[]>([]);
+  const [form] = Form.useForm<T>();
 
-  useEffect(() => {
-    if (!!fields?.length && initialValues) {
-      const initialFields: FilterFieldType[] = [];
-
-      for (const key of Object.keys(initialValues) as (keyof T)[]) {
-        const filteredField = fields.find((field) => field?.name === (key as string));
-
-        if (filteredField && initialValues[key] !== undefined) {
-          initialFields.push(filteredField);
-        }
-      }
-
-      setSelectedFields([...initialFields]);
-    }
-  }, [fields, initialValues]);
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (initialValues) {
-      form.setFieldsValue(initialValues);
+      form.setFieldsValue(initialValues as RecursivePartial<T>);
     }
   }, [initialValues, form]);
 
-  const handleSelectChange = (field: FilterFieldType) => {
-    setOpen(false);
-    setNewFilter(field.name);
-    setSelectedFields([...selectedFields, field]);
-  };
-
-  const handleRemoveField = (cField: FilterFieldType) => {
-    setOpen(false);
-    setNewFilter("");
-    setSelectedFields(selectedFields.filter((field) => field.name !== cField.name));
-    form.setFieldValue(cField.name, undefined);
-
-    const currentValues = form.getFieldsValue() as T;
-
-    if (onValuesChange) {
-      onValuesChange(currentValues);
-    }
-  };
-
-  const onChangeFormValues = (_: unknown, values: T) => onValuesChange(values);
-
-  const renderPopoverFields = useCallback(
-    (fields: FilterFieldType[]) => (
-      <>
-        {fields
-          .filter((object1) => selectedFields.some((object2) => object1.name === object2.name))
-          .map((field) => (
-            <PopoverField
-              key={field.name}
-              form={form}
-              newFilter={newFilter === field.name}
-              onRemove={() => handleRemoveField(field)}
-              field={field}
-            />
-          ))}
-        <Popover
-          placement="bottomLeft"
-          arrow={false}
-          content={
-            <Flex vertical align="start">
-              {fields
-                .filter(
-                  (object1) => !selectedFields.some((object2) => object1.name === object2.name),
-                )
-                .map((field) => (
-                  <Button
-                    className={styles.popoverButton}
-                    key={field.name}
-                    type="text"
-                    icon={field.icon}
-                    onClick={() => handleSelectChange(field)}
-                  >
-                    {field.label}
-                  </Button>
-                ))}
-            </Flex>
-          }
-          trigger="click"
-          open={fields.length !== selectedFields.length && open}
-          onOpenChange={setOpen}
-        >
-          <Button
-            icon={<Icon icon="Filter" color={token.colorTextDescription} />}
-            disabled={isDisabledFields || fields.length === selectedFields.length}
-            shape="round"
-            type="default"
-          >
-            {filterLabel}
-          </Button>
-        </Popover>
-      </>
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      form,
-      handleRemoveField,
-      handleSelectChange,
-      isDisabledFields,
-      newFilter,
-      open,
-      selectedFields,
-    ],
+  const onChangeFormValues = React.useCallback(
+    (_: unknown, values: T) => {
+      onValuesChange(values);
+    },
+    [onValuesChange],
   );
 
   return (
@@ -154,10 +67,19 @@ export function FiltersBlock<T>(props: FiltersBlockProps<T>): JSX.Element {
       initialValues={initialValues}
       style={{ width: "100%" }}
     >
-      <Flex justify="space-between" gap={40} align="flex-start">
+      <Flex justify="space-between" gap={12} align="flex-start">
         <Flex gap={12} wrap>
           {!!fixedFields?.length && <FixedFields fields={fixedFields} />}
-          {fields && fields?.length > 0 && renderPopoverFields(fields)}
+          {fields && fields?.length > 0 && (
+            <PopoverFields<T>
+              fields={fields}
+              filterLabel={filterLabel}
+              form={form}
+              onValuesChange={onValuesChange}
+              initialValues={initialValues}
+              isDisabledFields={isDisabledFields}
+            />
+          )}
         </Flex>
 
         {showSearchField && (

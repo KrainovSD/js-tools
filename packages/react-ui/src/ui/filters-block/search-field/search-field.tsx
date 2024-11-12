@@ -1,8 +1,8 @@
 import { Icon } from "@krainovsd/icons";
 import { ksdu } from "@krainovsd/utils";
-import { ConfigProvider, theme } from "antd";
-import { type ChangeEvent, type JSX, memo, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { ConfigProvider, type InputRef, theme } from "antd";
+import clsx from "clsx";
+import React, { type ChangeEvent, type JSX, memo, useState } from "react";
 import { Button } from "../../button";
 import { Flex } from "../../flex";
 import { Input } from "../../input";
@@ -15,11 +15,10 @@ interface SearchFieldProps {
 
 export const SearchField = memo(function SearchField(props: SearchFieldProps): JSX.Element {
   const { searchPlaceholder, onChangeSearch } = props;
-  const { t } = useTranslation();
   const { token } = theme.useToken();
-  const [clickSearch, setClickSearch] = useState(false);
-  const [firstClickSearch, setFirstClickSearch] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState<string>("");
+  const inputRef = React.useRef<InputRef>(null);
 
   const onChangeSearchDebounced = ksdu.utils.debounce((value: string) => {
     if (onChangeSearch) {
@@ -33,46 +32,45 @@ export const SearchField = memo(function SearchField(props: SearchFieldProps): J
     onChangeSearchDebounced(value);
   };
 
-  const handleSearchClick = () => {
-    setClickSearch((prev) => !prev);
-    setFirstClickSearch(true);
-  };
+  const onOpen = React.useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, [setIsOpen]);
 
   const handleCleanClick = () => {
     setInputValue("");
     onChangeSearchDebounced("");
   };
 
-  const getInputClassName = () => {
-    if (clickSearch) return styles.inputSearchShow;
-    if (firstClickSearch && !clickSearch) return styles.inputSearchHide;
-
-    return styles.inputSearchDefault;
-  };
+  React.useEffect(() => {
+    if (isOpen && inputRef.current) inputRef.current.focus();
+  }, [isOpen]);
 
   return (
-    <Flex>
+    <Flex gap={10} align="center" className={styles.container}>
       <ConfigProvider wave={{ disabled: true }}>
         <Button
-          icon={<Icon icon="Search" color={token.colorText} />}
-          className={styles.searchButton}
-          onClick={handleSearchClick}
+          icon={<Icon icon="Search" color={token.colorText} size={16} />}
+          onClick={onOpen}
+          onlyIcon
         />
       </ConfigProvider>
       <Input
-        className={getInputClassName()}
-        variant="borderless"
-        placeholder={searchPlaceholder || t("common.filters.searchPlaceholder")}
+        ref={inputRef}
+        className={clsx(styles.input, isOpen && "showing", !isOpen && "hiding")}
+        placeholder={searchPlaceholder}
         value={inputValue}
         onChange={handleSearchChange}
         suffix={
-          <ConfigProvider wave={{ disabled: true }}>
-            <Button
-              icon={<Icon icon="Close" style={{ color: token.colorIcon }} />}
-              onClick={handleCleanClick}
-              className={inputValue ? styles.closeButtonShow : styles.closeButtonHide}
-            />
-          </ConfigProvider>
+          isOpen ? (
+            <ConfigProvider wave={{ disabled: true }}>
+              <Button
+                icon={<Icon icon="Close" color="black" size={12} />}
+                onClick={handleCleanClick}
+                onlyIcon
+                style={{ display: inputValue ? "flex" : "none" }}
+              />
+            </ConfigProvider>
+          ) : undefined
         }
       />
     </Flex>

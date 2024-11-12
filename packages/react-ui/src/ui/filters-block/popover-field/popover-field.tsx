@@ -2,14 +2,14 @@ import { Icon } from "@krainovsd/icons";
 import type { FormInstance } from "antd";
 import { Form, theme } from "antd";
 import type { FC } from "react";
-import { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { Button } from "../../button";
 import { Flex } from "../../flex";
 import { Input } from "../../input";
 import { Popover } from "../../popover";
 import { Text } from "../../typography";
 import type { FilterFieldType, FilterInputValueType } from "../types";
-import { PopoverElementStyles } from "./styles";
+import * as styles from "./styles";
 
 interface IProps {
   field: FilterFieldType;
@@ -19,15 +19,15 @@ interface IProps {
 }
 
 export const PopoverField: FC<IProps> = (props) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
   const fieldValue = Form.useWatch(props.field.name, props.form) as FilterInputValueType;
   const { token } = theme.useToken();
 
-  useEffect(() => {
+  React.useEffect(() => {
     setOpen(props.newFilter);
   }, [props.newFilter]);
 
-  const displayValue = useMemo(() => {
+  const displayValue = React.useMemo(() => {
     if (fieldValue) {
       if (props.field.labelInValue && props.field.renderDisplayValue) {
         return props.field.renderDisplayValue(fieldValue);
@@ -35,8 +35,7 @@ export const PopoverField: FC<IProps> = (props) => {
 
       return props.field.renderDisplayValue
         ? props.field.renderDisplayValue(fieldValue)
-        : // eslint-disable-next-line @typescript-eslint/no-base-to-string
-          `${fieldValue}`;
+        : `${fieldValue}`;
     }
   }, [fieldValue, props.field]);
 
@@ -59,7 +58,7 @@ export const PopoverField: FC<IProps> = (props) => {
       open={open}
       onOpenChange={setOpen}
     >
-      <div className={PopoverElementStyles(token)} style={{ paddingRight: 5 }}>
+      <div className={styles.popover(token)} style={{ paddingRight: 5 }}>
         {/* Используется для инициализации формы */}
         <Form.Item name={props.field.name} style={{ display: "none" }}>
           {props.field.inputField || <Input placeholder={props.field.label} />}

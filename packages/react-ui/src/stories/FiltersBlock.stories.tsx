@@ -1,4 +1,5 @@
 import { Icon } from "@krainovsd/icons";
+import { ksdu } from "@krainovsd/utils";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { type FilterFieldType, FiltersBlock, Flex, Select } from "../ui";
 
@@ -33,8 +34,12 @@ export const Primary: Story = {
         name: "status",
         icon: <Icon icon="PlayPause" color={"black"} />,
         labelInValue: true,
-        renderDisplayValue: (value: Record<string, string>[]) =>
-          value.map((item: Record<string, string>) => item.label).join(", "),
+        renderDisplayValue: (value: Record<string, string>[] | string[]) =>
+          ksdu.typings.isObject(value[0])
+            ? (value as Record<string, string>[])
+                .map((item: Record<string, string>) => item.label)
+                .join(", ")
+            : value.join(", "),
         inputField: (
           <Select
             mode={"multiple"}
@@ -97,6 +102,29 @@ export const Primary: Story = {
           />
         ),
       },
+      {
+        label: "И Еще одно",
+        name: "and_other",
+        icon: <Icon icon="PlayPause" color={"black"} />,
+        labelInValue: true,
+        renderDisplayValue: (value: Record<string, string>[]) =>
+          value.map((item: Record<string, string>) => item.label).join(", "),
+        inputField: (
+          <Select
+            mode={"multiple"}
+            labelInValue={true}
+            variant="outlined"
+            size="middle"
+            style={{ width: "fit-content", minWidth: 200 }}
+            options={[
+              { value: "Супер длинное название", label: "Супер длинное название" },
+              { value: "Супер длинное название 2", label: "Супер длинное название 2" },
+              { value: "Стоп", label: "Стоп" },
+            ]}
+            placeholder={"Выберите статус"}
+          />
+        ),
+      },
     ] as unknown as FilterFieldType[],
     fixedFields: [
       {
@@ -123,5 +151,10 @@ export const Primary: Story = {
         ),
       },
     ] as unknown as FilterFieldType[],
+    initialValues: {
+      status: ["Старт"],
+    },
+    showSearchField: true,
+    searchPlaceholder: "Поиск",
   },
 };
