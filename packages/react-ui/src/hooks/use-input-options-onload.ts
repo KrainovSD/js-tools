@@ -1,6 +1,6 @@
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import type { OptionListType } from "../typings";
+import type { SelectItems } from "../ui";
 import { useNotification } from "./use-notification";
 
 interface UseInputOptionsOnLoadParams<T, V> {
@@ -9,7 +9,7 @@ interface UseInputOptionsOnLoadParams<T, V> {
   value?: V;
 }
 
-export function useInputOptionsOnload<T = OptionListType, V = unknown>(
+export function useInputOptionsOnload<T = SelectItems, V = unknown>(
   params: UseInputOptionsOnLoadParams<T, V>,
 ) {
   const { request, value, errorMessage } = params;
