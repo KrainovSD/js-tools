@@ -74,7 +74,8 @@
     "vite": "5.4.10"
   },
   "peerDependencies": {
-    "@krainovsd/icons": "^0.0.1",
+    "@krainovsd/icons": "0.0.1",
+    "@krainovsd/utils": "0.2.1",
     "clsx": "^2.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
