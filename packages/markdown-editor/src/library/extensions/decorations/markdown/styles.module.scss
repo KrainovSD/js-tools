@@ -1,0 +1,35 @@
+.header {
+  font-weight: bold;
+
+  &.level_1 {
+    font-size: 2.2rem;
+  }
+  &.level_2 {
+    font-size: 1.8rem;
+  }
+
+  &.level_3 {
+    font-size: 1.4rem;
+  }
+
+  &.level_4 {
+    font-size: 1.2rem;
+  }
+
+  &.level_5 {
+    font-size: 1rem;
+  }
+
+  &.level_6 {
+    font-size: 0.8rem;
+  }
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+  color: blue;
+}
