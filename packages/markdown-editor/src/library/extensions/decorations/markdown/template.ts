@@ -16,3 +16,5 @@ export function getTemplateHideDecorations({ decorations, node, view }: GetDecor
     return;
   }
 }
+
+// console.log(node.name, view.state.doc.sliceString(node.from, node.to), node.from, node.to)

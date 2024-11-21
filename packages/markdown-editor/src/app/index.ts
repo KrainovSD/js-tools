@@ -8,9 +8,9 @@ if (!root) throw new Error("Hasn't root");
 
 const editor = new Editor({
   root,
-  initialText: `*italic***bold**
-**bold**
-***boldalic***
+  initialText: `_itlic_
+__bold__
+___wide___
 `,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());
@@ -35,3 +35,10 @@ button.addEventListener("click", () => {
   editor.setTheme(theme === "light" ? "dark" : "light");
   theme = theme === "light" ? "dark" : "light";
 });
+
+// *italic***bold**
+// *italitc****wide***
+// **bold***italic*
+// **bold*****wide***
+// ***wide****italic*
+// ***wide*****bold**

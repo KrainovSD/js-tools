@@ -4,6 +4,7 @@ import { getHideDecoration, getMarkDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
 const MARK_FULL = "StrongEmphasis";
+const MARKS = new Set([95, 42]);
 
 export function getBoldDecorations({ decorations, node, view }: GetDecorationsOptions) {
   if (node.name !== MARK_FULL) {
@@ -11,7 +12,7 @@ export function getBoldDecorations({ decorations, node, view }: GetDecorationsOp
   }
 
   const step =
-    view.state.doc.sliceString(node.from - 1, node.from) === "*" &&
+    MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
     syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
       ? 1
       : 0;
@@ -30,7 +31,7 @@ export function getBoldHideDecorations({ decorations, node, view }: GetDecoratio
   }
 
   if (
-    view.state.doc.sliceString(node.from - 1, node.from) === "*" &&
+    MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
     syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
   ) {
     return;
