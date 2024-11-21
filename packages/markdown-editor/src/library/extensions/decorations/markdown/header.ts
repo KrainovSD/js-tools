@@ -13,6 +13,8 @@ export function getHeaderDecorations({ decorations, node, view }: GetDecorations
 
   const level = node.name.replace(MARK_FULL, "");
 
+  if (view.state.doc.sliceString(node.from + +level).charCodeAt(0) !== 32) return;
+
   decorations.push(
     getLineDecoration({
       style: clsx(styles.header, styles[`level_${level}`]),
@@ -27,6 +29,8 @@ export function getHeaderHideDecorations({ decorations, node, view }: GetDecorat
   }
 
   const line = view.lineBlockAt(node.from);
+
+  if (line.length < node.to - node.from + 1) return;
 
   if (isInRange(view.state.selection.ranges, [line.from, line.to]) && view.hasFocus) {
     return;

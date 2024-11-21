@@ -7,6 +7,7 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
+import { getBlockquoteDecorations, getBlockquoteHideDecorations } from "./blockquote";
 import { getBoldDecorations, getBoldHideDecorations } from "./bold";
 import type { GetDecorationsOptions } from "./decoration-markdown-types";
 import { getHeaderDecorations, getHeaderHideDecorations } from "./header";
@@ -16,13 +17,15 @@ const decorationFunctions: ((options: GetDecorationsOptions) => void)[] = [
   getHeaderDecorations,
   getBoldDecorations,
   getItalicDecorations,
+  getBlockquoteDecorations,
 ];
 const hideDecorationFunctions: ((options: GetDecorationsOptions) => void)[] = [
   getHeaderHideDecorations,
   getBoldHideDecorations,
   getItalicHideDecorations,
+  getBlockquoteHideDecorations,
 ];
-const BAD_MARKS = new Set(["Document", "Paragraph", "EmphasisMark"]);
+const BAD_MARKS = new Set(["Document", "Paragraph", "EmphasisMark", "Blockquote"]);
 
 let markdownDecorations: Range<Decoration>[] = [];
 
