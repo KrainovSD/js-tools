@@ -1,5 +1,5 @@
-import { EditorSelection, StateCommand, Text, Transaction } from "@codemirror/state";
-import { KeyBinding } from "@codemirror/view";
+import { EditorSelection, type StateCommand, Text, Transaction } from "@codemirror/state";
+import { type KeyBinding } from "@codemirror/view";
 
 const insertBoldMarker: StateCommand = ({ state, dispatch }) => {
   const changes = state.changeByRange((range) => {

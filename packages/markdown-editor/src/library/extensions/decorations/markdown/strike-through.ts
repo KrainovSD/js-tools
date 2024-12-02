@@ -1,44 +1,29 @@
-import { syntaxTree } from "@codemirror/language";
 import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
 import { getHideDecoration, getMarkDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
-const MARK_FULL = "StrongEmphasis";
-const MARKS = new Set([95, 42]);
+const MARK_FULL = "Strikethrough";
 
-export function getBoldDecorations({ decorations, node, view }: GetDecorationsOptions) {
+export function getStrikeThroughDecorations({ decorations, node }: GetDecorationsOptions) {
   if (node.name !== MARK_FULL) {
     return;
   }
 
-  const step =
-    MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
-    syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
-      ? 1
-      : 0;
-
   decorations.push(
     getMarkDecoration({
-      style: styles.bold,
-      range: [node.from - step, node.to + step],
+      style: styles["strike-through"],
+      range: [node.from, node.to],
     }),
   );
 }
 
-export function getBoldHideDecorations({
+export function getStrikeThroughHideDecorations({
   decorations,
   node,
   view,
   isReadonly,
 }: GetHideDecorationsOptions) {
   if (node.name !== MARK_FULL) {
-    return;
-  }
-
-  if (
-    MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
-    syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
-  ) {
     return;
   }
 

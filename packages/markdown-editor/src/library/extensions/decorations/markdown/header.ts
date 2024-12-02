@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { GetDecorationsOptions } from "./decoration-markdown-types";
+import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
 import { getHideDecoration, getLineDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
@@ -23,7 +23,12 @@ export function getHeaderDecorations({ decorations, node, view }: GetDecorations
   );
 }
 
-export function getHeaderHideDecorations({ decorations, node, view }: GetDecorationsOptions) {
+export function getHeaderHideDecorations({
+  decorations,
+  node,
+  view,
+  isReadonly,
+}: GetHideDecorationsOptions) {
   if (!node.name.startsWith(MARK)) {
     return;
   }
@@ -32,9 +37,11 @@ export function getHeaderHideDecorations({ decorations, node, view }: GetDecorat
 
   if (line.length < node.to - node.from + 1) return;
 
-  if (isInRange(view.state.selection.ranges, [line.from, line.to]) && view.hasFocus) {
-    return;
+  if (
+    isReadonly ||
+    !view.hasFocus ||
+    !isInRange(view.state.selection.ranges, [line.from, line.to])
+  ) {
+    decorations.push(getHideDecoration({ range: [node.from, node.to + 1] }));
   }
-
-  decorations.push(getHideDecoration({ range: [node.from, node.to + 1] }));
 }

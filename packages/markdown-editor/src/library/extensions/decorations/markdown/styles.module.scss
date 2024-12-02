@@ -31,10 +31,13 @@
 
 .italic {
   font-style: italic;
-  color: blue;
 }
 
 .blockquote {
   border-left: 3px solid gray;
   margin-left: 5px;
+}
+
+.strike-through {
+  text-decoration: line-through;
 }

@@ -8,7 +8,7 @@ if (!root) throw new Error("Hasn't root");
 
 const editor = new Editor({
   root,
-  initialText: `# test
+  initialText: `~~test~~
 `,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());
@@ -23,13 +23,32 @@ const editor = new Editor({
   //   console.log("enter ", view.state.doc.toString());
   // },
   vimMode: false,
+  readonly: false,
 });
 
 let theme: "dark" | "light" = "light";
-const button = document.createElement("button");
-button.textContent = "Сменить тему";
-document.body.appendChild(button);
-button.addEventListener("click", () => {
+const themeButton = document.createElement("button");
+themeButton.textContent = "Сменить тему";
+document.body.appendChild(themeButton);
+themeButton.addEventListener("click", () => {
   editor.setTheme(theme === "light" ? "dark" : "light");
   theme = theme === "light" ? "dark" : "light";
+});
+
+let readonly = false;
+const readonlyButton = document.createElement("button");
+readonlyButton.textContent = "Сменить режим";
+document.body.appendChild(readonlyButton);
+readonlyButton.addEventListener("click", () => {
+  editor.setReadonly(!readonly);
+  readonly = !readonly;
+});
+
+let vimMode = false;
+const vimButton = document.createElement("button");
+vimButton.textContent = "Сменить vim режим";
+document.body.appendChild(vimButton);
+vimButton.addEventListener("click", () => {
+  editor.setVimMode(!vimMode);
+  vimMode = !vimMode;
 });

@@ -1,4 +1,4 @@
-import type { GetDecorationsOptions } from "./decoration-markdown-types";
+import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
 import { getHideDecoration, getLineDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
@@ -17,16 +17,23 @@ export function getBlockquoteDecorations({ decorations, node, view }: GetDecorat
   );
 }
 
-export function getBlockquoteHideDecorations({ decorations, node, view }: GetDecorationsOptions) {
+export function getBlockquoteHideDecorations({
+  decorations,
+  node,
+  view,
+  isReadonly,
+}: GetHideDecorationsOptions) {
   if (node.name !== MARK) {
     return;
   }
 
   const line = view.lineBlockAt(node.from);
 
-  if (isInRange(view.state.selection.ranges, [line.from, line.to]) && view.hasFocus) {
-    return;
+  if (
+    isReadonly ||
+    !view.hasFocus ||
+    !isInRange(view.state.selection.ranges, [line.from, line.to])
+  ) {
+    decorations.push(getHideDecoration({ range: [node.from, node.to] }));
   }
-
-  decorations.push(getHideDecoration({ range: [node.from, node.to] }));
 }

@@ -7,3 +7,10 @@ export type GetDecorationsOptions = {
   decorations: Range<Decoration>[];
   view: EditorView;
 };
+
+export type GetHideDecorationsOptions = {
+  node: SyntaxNodeRef;
+  decorations: Range<Decoration>[];
+  view: EditorView;
+  isReadonly: boolean;
+};

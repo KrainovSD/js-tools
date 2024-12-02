@@ -8,11 +8,11 @@ import { lineThroughKeymap } from "./line-through-keymap";
 import { underlineKeymap } from "./underline-keymap";
 
 export type InitKeyMapsOptions = {
-  onEnter?: (view: EditorView) => void;
+  onEnter?: (view: EditorView) => boolean;
 };
 
 export const initKeyMaps = ({ onEnter }: InitKeyMapsOptions): Extension => {
-  return [
+  const extensions = [
     keymap.of(yUndoManagerKeymap),
     keymap.of([indentWithTab]),
     keymap.of(
@@ -22,9 +22,7 @@ export const initKeyMaps = ({ onEnter }: InitKeyMapsOptions): Extension => {
             key: "Enter",
             shift: keyMap.run,
             run: (view) => {
-              onEnter(view);
-
-              return false;
+              return onEnter(view);
             },
           };
         }
@@ -37,4 +35,6 @@ export const initKeyMaps = ({ onEnter }: InitKeyMapsOptions): Extension => {
     keymap.of(lineThroughKeymap),
     keymap.of(underlineKeymap),
   ];
+
+  return extensions;
 };
