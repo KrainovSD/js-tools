@@ -1,10 +1,13 @@
-import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
+import type {
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+} from "./decoration-markdown-types";
 import { getHideDecoration, getLineDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
 const MARK = "QuoteMark";
 
-export function getBlockquoteDecorations({ decorations, node, view }: GetDecorationsOptions) {
+export function getBlockquoteDecorations({ decorations, node, view }: GetDecorationOptions) {
   if (node.name !== MARK) {
     return;
   }
@@ -17,12 +20,12 @@ export function getBlockquoteDecorations({ decorations, node, view }: GetDecorat
   );
 }
 
-export function getBlockquoteHideDecorations({
+export function getBlockquoteSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
-}: GetHideDecorationsOptions) {
+}: GetSelectionDecorationOptions) {
   if (node.name !== MARK) {
     return;
   }

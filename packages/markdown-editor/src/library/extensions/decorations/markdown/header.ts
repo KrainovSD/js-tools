@@ -1,12 +1,15 @@
 import clsx from "clsx";
-import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
+import type {
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+} from "./decoration-markdown-types";
 import { getHideDecoration, getLineDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
 const MARK_FULL = "ATXHeading";
 const MARK = "HeaderMark";
 
-export function getHeaderDecorations({ decorations, node, view }: GetDecorationsOptions) {
+export function getHeaderDecorations({ decorations, node, view }: GetDecorationOptions) {
   if (!node.name.startsWith(MARK_FULL)) {
     return;
   }
@@ -23,12 +26,12 @@ export function getHeaderDecorations({ decorations, node, view }: GetDecorations
   );
 }
 
-export function getHeaderHideDecorations({
+export function getHeaderSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
-}: GetHideDecorationsOptions) {
+}: GetSelectionDecorationOptions) {
   if (!node.name.startsWith(MARK)) {
     return;
   }

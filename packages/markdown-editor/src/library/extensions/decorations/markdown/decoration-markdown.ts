@@ -7,26 +7,34 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
-import { getBlockquoteDecorations, getBlockquoteHideDecorations } from "./blockquote";
-import { getBoldDecorations, getBoldHideDecorations } from "./bold";
-import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
-import { getHeaderDecorations, getHeaderHideDecorations } from "./header";
-import { getItalicDecorations, getItalicHideDecorations } from "./italic";
-import { getStrikeThroughDecorations, getStrikeThroughHideDecorations } from "./strike-through";
+import { getBlockquoteDecorations, getBlockquoteSelectionDecorations } from "./blockquote";
+import { getBoldDecorations, getBoldSelectionDecorations } from "./bold";
+import type {
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+} from "./decoration-markdown-types";
+import { getHeaderDecorations, getHeaderSelectionDecorations } from "./header";
+import { getItalicDecorations, getItalicSelectionDecorations } from "./italic";
+import { getListSelectionDecorations } from "./list";
+import {
+  getStrikeThroughDecorations,
+  getStrikeThroughSelectionDecorations,
+} from "./strike-through";
 
-const decorationFunctions: ((options: GetDecorationsOptions) => void)[] = [
+const decorationFunctions: ((options: GetDecorationOptions) => void)[] = [
   getHeaderDecorations,
   getBoldDecorations,
   getItalicDecorations,
   getBlockquoteDecorations,
   getStrikeThroughDecorations,
 ];
-const hideDecorationFunctions: ((options: GetHideDecorationsOptions) => void)[] = [
-  getHeaderHideDecorations,
-  getBoldHideDecorations,
-  getItalicHideDecorations,
-  getBlockquoteHideDecorations,
-  getStrikeThroughHideDecorations,
+const selectionDecorationFunctions: ((options: GetSelectionDecorationOptions) => void)[] = [
+  getHeaderSelectionDecorations,
+  getBoldSelectionDecorations,
+  getItalicSelectionDecorations,
+  getBlockquoteSelectionDecorations,
+  getStrikeThroughSelectionDecorations,
+  getListSelectionDecorations,
 ];
 const SKIP_MARKS = new Set([
   "Document",
@@ -34,13 +42,18 @@ const SKIP_MARKS = new Set([
   "EmphasisMark",
   "Blockquote",
   "StrikethroughMark",
+  "BulletList",
+  "OrderedList",
+  "ListItem",
 ]);
 
 let markdownDecorations: Range<Decoration>[] = [];
 
 function getDecorations(view: EditorView, isChanged: boolean) {
   const decorations: Range<Decoration>[] = isChanged ? [] : markdownDecorations;
-  const hiddenDecorations: Range<Decoration>[] = [];
+  const selectionDecorations: Range<Decoration>[] = [];
+  const contentEditable = view.contentDOM.getAttribute("contenteditable");
+  const isReadonly = !contentEditable || contentEditable === "false";
 
   for (const { from: fromVisible, to: toVisible } of view.visibleRanges) {
     syntaxTree(view.state).iterate({
@@ -51,16 +64,14 @@ function getDecorations(view: EditorView, isChanged: boolean) {
 
         console.log(node.name, view.state.doc.sliceString(node.from, node.to));
 
-        /** Style decorations */
+        /** Decoration by change content */
         if (isChanged) {
           decorationFunctions.forEach((f) => f({ decorations, node, view }));
         }
 
-        /** Hide decorations */
-        const contentEditable = view.contentDOM.getAttribute("contenteditable");
-        const isReadonly = !contentEditable || contentEditable === "false";
-        hideDecorationFunctions.forEach((f) =>
-          f({ decorations: hiddenDecorations, node, view, isReadonly }),
+        /** Decoration by selection content  */
+        selectionDecorationFunctions.forEach((f) =>
+          f({ decorations: selectionDecorations, node, view, isReadonly }),
         );
       },
     });
@@ -70,7 +81,7 @@ function getDecorations(view: EditorView, isChanged: boolean) {
     markdownDecorations = decorations;
   }
 
-  return Decoration.set([...decorations, ...hiddenDecorations], true);
+  return Decoration.set([...decorations, ...selectionDecorations], true);
 }
 
 export const decorationMarkdownPlugin = ViewPlugin.fromClass(

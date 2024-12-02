@@ -1,10 +1,13 @@
-import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
+import type {
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+} from "./decoration-markdown-types";
 import { getHideDecoration, getMarkDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
 const MARK_FULL = "Strikethrough";
 
-export function getStrikeThroughDecorations({ decorations, node }: GetDecorationsOptions) {
+export function getStrikeThroughDecorations({ decorations, node }: GetDecorationOptions) {
   if (node.name !== MARK_FULL) {
     return;
   }
@@ -17,12 +20,12 @@ export function getStrikeThroughDecorations({ decorations, node }: GetDecoration
   );
 }
 
-export function getStrikeThroughHideDecorations({
+export function getStrikeThroughSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
-}: GetHideDecorationsOptions) {
+}: GetSelectionDecorationOptions) {
   if (node.name !== MARK_FULL) {
     return;
   }

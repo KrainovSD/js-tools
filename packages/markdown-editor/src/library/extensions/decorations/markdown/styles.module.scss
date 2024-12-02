@@ -41,3 +41,25 @@
 .strike-through {
   text-decoration: line-through;
 }
+
+.list {
+  &.ordered {
+  }
+  &.common {
+    position: relative;
+    visibility: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      visibility: visible;
+      width: 5px;
+      height: 5px;
+      border-radius: 100%;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 0;
+      background: black;
+    }
+  }
+}

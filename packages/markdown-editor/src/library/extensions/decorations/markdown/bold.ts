@@ -1,12 +1,15 @@
 import { syntaxTree } from "@codemirror/language";
-import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
+import type {
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+} from "./decoration-markdown-types";
 import { getHideDecoration, getMarkDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
 const MARK_FULL = "StrongEmphasis";
 const MARKS = new Set([95, 42]);
 
-export function getBoldDecorations({ decorations, node, view }: GetDecorationsOptions) {
+export function getBoldDecorations({ decorations, node, view }: GetDecorationOptions) {
   if (node.name !== MARK_FULL) {
     return;
   }
@@ -25,12 +28,12 @@ export function getBoldDecorations({ decorations, node, view }: GetDecorationsOp
   );
 }
 
-export function getBoldHideDecorations({
+export function getBoldSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
-}: GetHideDecorationsOptions) {
+}: GetSelectionDecorationOptions) {
   if (node.name !== MARK_FULL) {
     return;
   }

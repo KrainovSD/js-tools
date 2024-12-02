@@ -1,11 +1,14 @@
-import type { GetDecorationsOptions, GetHideDecorationsOptions } from "./decoration-markdown-types";
+import type {
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+} from "./decoration-markdown-types";
 import { getHideDecoration, getMarkDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
 const MARK_FULL = "Emphasis";
 const MARKS = new Set([95, 42]);
 
-export function getItalicDecorations({ decorations, node }: GetDecorationsOptions) {
+export function getItalicDecorations({ decorations, node }: GetDecorationOptions) {
   if (node.name !== MARK_FULL) {
     return;
   }
@@ -18,12 +21,12 @@ export function getItalicDecorations({ decorations, node }: GetDecorationsOption
   );
 }
 
-export function getItalicHideDecorations({
+export function getItalicSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
-}: GetHideDecorationsOptions) {
+}: GetSelectionDecorationOptions) {
   if (node.name !== MARK_FULL) {
     return;
   }
@@ -52,7 +55,7 @@ export function getItalicHideDecorations({
 }
 
 /** Fixed wide italic + italic */
-export function checkIsSeveralEmphasis({ node, view }: GetHideDecorationsOptions) {
+export function checkIsSeveralEmphasis({ node, view }: GetSelectionDecorationOptions) {
   let marks = 0;
   let pos = 0;
 
@@ -68,7 +71,12 @@ export function checkIsSeveralEmphasis({ node, view }: GetHideDecorationsOptions
   return false;
 }
 
-export function splitEmphasis({ decorations, node, view, isReadonly }: GetHideDecorationsOptions) {
+export function splitEmphasis({
+  decorations,
+  node,
+  view,
+  isReadonly,
+}: GetSelectionDecorationOptions) {
   const text = view.state.doc.sliceString(node.from, node.to);
   let marks = 0;
   let pos = 0;
@@ -78,13 +86,13 @@ export function splitEmphasis({ decorations, node, view, isReadonly }: GetHideDe
     pos++;
   }
 
-  getItalicHideDecorations({
+  getItalicSelectionDecorations({
     decorations,
     view,
     node: { ...node, name: node.name, from: node.from, to: node.from + pos },
     isReadonly,
   });
-  getItalicHideDecorations({
+  getItalicSelectionDecorations({
     decorations,
     view,
     node: { ...node, name: node.name, from: node.from + pos, to: node.to },
