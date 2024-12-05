@@ -15,6 +15,7 @@ import type {
 } from "./decoration-markdown-types";
 import { getHeaderDecorations, getHeaderSelectionDecorations } from "./header";
 import { getItalicDecorations, getItalicSelectionDecorations } from "./italic";
+import { getLinkSelectionDecorations } from "./link";
 import { getListSelectionDecorations } from "./list";
 import {
   getStrikeThroughDecorations,
@@ -35,6 +36,7 @@ const selectionDecorationFunctions: ((options: GetSelectionDecorationOptions) =>
   getBlockquoteSelectionDecorations,
   getStrikeThroughSelectionDecorations,
   getListSelectionDecorations,
+  getLinkSelectionDecorations,
 ];
 const SKIP_MARKS = new Set([
   "Document",
@@ -45,6 +47,8 @@ const SKIP_MARKS = new Set([
   "BulletList",
   "OrderedList",
   "ListItem",
+  "LinkMark",
+  "URL",
 ]);
 
 let markdownDecorations: Range<Decoration>[] = [];

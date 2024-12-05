@@ -8,11 +8,8 @@ if (!root) throw new Error("Hasn't root");
 
 const editor = new Editor({
   root,
-  initialText: `1. test
-   * kek
-   - kek
-     
-`,
+  initialText: `[Текст ссылки](https://www.example.com) 
+  проверка собственно [Текст ссылки](https://www.example.com) и очень супер пупер большой текст репит и очень супер пупер большой текст репит и очень супер пупер большой текст репит и очень супер пупер большой текст репит и очень супер пупер большой текст репит [Текст ссылки](https://www.example.com)`,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());
   // },

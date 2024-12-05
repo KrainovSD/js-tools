@@ -4,7 +4,6 @@ import { getReplaceDecoration, isInRange } from "./lib";
 import styles from "./styles.module.scss";
 
 const MARK_FULL = "ListMark";
-/** Ordered list detected by 46 code that equal '.'   */
 const CHAR_CODES_COMMON = new Set([42, 45]);
 const CHAR_CODES_ORDERED = 46;
 
