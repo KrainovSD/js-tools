@@ -9,6 +9,7 @@ import {
 } from "@codemirror/view";
 import { getBlockquoteDecorations, getBlockquoteSelectionDecorations } from "./blockquote";
 import { getBoldDecorations, getBoldSelectionDecorations } from "./bold";
+import { getCodeSelectionDecorations } from "./code";
 import type {
   GetDecorationOptions,
   GetSelectionDecorationOptions,
@@ -37,6 +38,7 @@ const selectionDecorationFunctions: ((options: GetSelectionDecorationOptions) =>
   getStrikeThroughSelectionDecorations,
   getListSelectionDecorations,
   getLinkSelectionDecorations,
+  getCodeSelectionDecorations,
 ];
 const SKIP_MARKS = new Set([
   "Document",
@@ -49,6 +51,9 @@ const SKIP_MARKS = new Set([
   "ListItem",
   "LinkMark",
   "URL",
+  "CodeMark",
+  "CodeInfo",
+  "CodeText",
 ]);
 
 let markdownDecorations: Range<Decoration>[] = [];
@@ -66,7 +71,7 @@ function getDecorations(view: EditorView, isChanged: boolean) {
       enter: (node) => {
         if (SKIP_MARKS.has(node.name)) return;
 
-        console.log(node.name, view.state.doc.sliceString(node.from, node.to));
+        // console.log(node.name, view.state.doc.sliceString(node.from, node.to));
 
         /** Decoration by change content */
         if (isChanged) {

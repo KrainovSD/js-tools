@@ -34,3 +34,11 @@ type GetReplaceDecorationOptions = {
 export function getReplaceDecoration({ range, widget }: GetReplaceDecorationOptions) {
   return Decoration.replace({ widget }).range(range[0], range[1]);
 }
+
+type GetWidgetDecorationOptions = {
+  widget: WidgetType;
+  range: [number, number?];
+};
+export function getWidgetDecorationOptions({ widget, range }: GetWidgetDecorationOptions) {
+  return Decoration.widget({ widget, side: 1 }).range(range[0], range[1]);
+}

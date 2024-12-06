@@ -12,8 +12,16 @@ export type InitThemeOptions = {
 
 const highlightStyle = HighlightStyle.define([
   {
-    tag: tags.monospace,
+    tag: tags.blockComment,
     fontFamily: "monospace",
+  },
+  {
+    tag: tags.bool,
+    color: "purple",
+  },
+  {
+    tag: tags.string,
+    color: "green",
   },
 ]);
 
