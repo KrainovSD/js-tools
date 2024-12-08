@@ -8,16 +8,8 @@ if (!root) throw new Error("Hasn't root");
 
 const editor = new Editor({
   root,
-  initialText: ` \`\`\`js
-const test = "string"
-const bool = true
- \`\`\`  
- 
- \`\`
- test2
- \`\`  
-
-\`test\` `,
+  initialText: `header
+---  `,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());
   // },

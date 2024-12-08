@@ -196,3 +196,10 @@
     }
   }
 }
+
+.horizontal {
+  width: calc(100% - 10px);
+  position: relative;
+  border-bottom: 1px solid black;
+  margin: 0px 5px;
+}
