@@ -92,10 +92,107 @@
     top: 5px;
     right: 5px;
     z-index: 1;
+    min-width: 30px;
     cursor: pointer;
 
     &:hover {
       background-color: rgb(164, 163, 163);
+    }
+
+    &.pending {
+      &:before {
+        $circle-size: 15px;
+
+        content: "";
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        display: inline-block;
+
+        height: #{$circle-size * 0.7};
+        width: #{$circle-size * 0.7};
+
+        border: 2px solid rgba(255, 255, 255, 0.33);
+        border-top-color: black;
+        border-radius: 50%;
+
+        animation:
+          loading-btn--fade-in 0.33s ease,
+          loading-btn--rotation 0.66s linear 0s infinite;
+      }
+    }
+
+    &.success {
+      &:after {
+        content: "";
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        display: inline-block;
+        height: 7px;
+        width: 11px;
+
+        border: 1px solid black;
+        border-top-width: 0;
+        border-right-width: 0;
+
+        transform: translate(-50%, -75%) rotate(-45deg);
+
+        animation: loading-btn--fade-in 0.6s ease;
+      }
+    }
+
+    &.fail {
+      &:before,
+      &:after {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        content: " ";
+        height: 13px;
+        width: 1px;
+        background-color: black;
+      }
+
+      &:before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+      &:after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+    }
+
+    @keyframes loading-btn--fade-in {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes loading-btn--rotation {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+  }
+
+  &__span {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+
+    &.hide {
+      opacity: 0;
     }
   }
 }
