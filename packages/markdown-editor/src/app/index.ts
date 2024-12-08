@@ -8,10 +8,13 @@ if (!root) throw new Error("Hasn't root");
 
 const editor = new Editor({
   root,
-  initialText: `## test
+  initialText: `> Dorothy followed her through many of the beautiful rooms in her castle.
+>
+>    > The Witch bade her clean the pots and kettles and sweep the floor and keep the fire fed with wood.
+>    > test
+> Test > The Witch bade her clean the pots and kettles and sweep the floor and keep the fire fed with wood.
 
-header
----  `,
+test`,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());
   // },

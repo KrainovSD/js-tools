@@ -74,7 +74,7 @@ function getDecorations(view: EditorView, isChanged: boolean) {
       enter: (node) => {
         if (SKIP_MARKS.has(node.name)) return;
 
-        console.log(node.name, view.state.doc.sliceString(node.from, node.to));
+        // console.log(node.name, view.state.doc.sliceString(node.from, node.to));
 
         /** Decoration by change content */
         if (isChanged) {
