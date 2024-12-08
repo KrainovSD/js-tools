@@ -8,7 +8,9 @@ if (!root) throw new Error("Hasn't root");
 
 const editor = new Editor({
   root,
-  initialText: `header
+  initialText: `## test
+
+header
 ---  `,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());

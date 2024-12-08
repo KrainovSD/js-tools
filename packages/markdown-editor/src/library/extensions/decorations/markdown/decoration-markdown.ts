@@ -56,6 +56,7 @@ const SKIP_MARKS = new Set([
   "CodeMark",
   "CodeInfo",
   "CodeText",
+  "HeaderMark",
 ]);
 
 let markdownDecorations: Range<Decoration>[] = [];
