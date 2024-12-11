@@ -1,20 +1,21 @@
 /* eslint-disable no-console */
-import { Editor } from "../module";
+import { Editor } from "@/module";
 import "./global.css";
 
+const fullExample = ``;
+const viewFull = false;
 const root = document.querySelector<HTMLElement>("#root");
 
 if (!root) throw new Error("Hasn't root");
 
 const editor = new Editor({
   root,
-  initialText: `> Dorothy followed her through many of the beautiful rooms in her castle.
->
->    > The Witch bade her clean the pots and kettles and sweep the floor and keep the fire fed with wood.
->    > test
-> Test > The Witch bade her clean the pots and kettles and sweep the floor and keep the fire fed with wood.
+  initialText: viewFull
+    ? fullExample
+    : `![inage](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=400)
 
-test    `,
+
+`,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());
   // },

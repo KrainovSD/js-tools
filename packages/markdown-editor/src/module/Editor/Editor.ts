@@ -2,7 +2,7 @@ import { EditorView } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
 import { basicDark } from "cm6-theme-basic-dark";
 import { type WebsocketProvider } from "y-websocket";
-import { ReadonlyCompartment, ThemeCompartment, VimModeCompartment } from "../../library";
+import { ReadonlyCompartment, ThemeCompartment, VimModeCompartment } from "@/extensions";
 import { type EditorArguments } from "./Editor.types";
 import { initEditor } from "./lib";
 

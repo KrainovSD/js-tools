@@ -1,5 +1,5 @@
 import { EditorState } from "@codemirror/state";
-import { type InitExtensionsOptions, initExtensions } from "../../../library";
+import { type InitExtensionsOptions, initExtensions } from "@/extensions";
 
 type InitEditorStateOptions = {
   text: string;

@@ -11,6 +11,7 @@ export default [
     rules: {
       "import/no-extraneous-dependencies": "off",
       "no-empty": "off",
+      "prettier/prettier": ["error", { endOfLine: "lf" }, { usePrettierrc: true }],
     },
   },
 ];

@@ -1,4 +1,4 @@
-import type { ExtensionsOptions } from "../../library";
+import { type ExtensionsOptions } from "@/extensions";
 
 export type EditorArguments = {
   root: HTMLElement;

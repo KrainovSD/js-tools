@@ -17,7 +17,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src/**/*", "eslint.config.js", "rollup.config.ts", "src/types.d.ts"],
   "exclude": ["node_modules", "dist"],
