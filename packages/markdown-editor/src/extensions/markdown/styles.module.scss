@@ -37,14 +37,20 @@
   border-left: 3px solid gray;
   margin-left: 5px;
   &__inner {
-    padding-right: 5px;
+    margin-left: 1px;
+    padding-left: 5px;
     position: relative;
     &:before {
       content: "";
       position: absolute;
+      top: -3px;
       left: 0;
       height: 140%;
       border-left: 3px solid gray;
+    }
+
+    &-deep {
+      margin-left: 5px;
     }
   }
 }

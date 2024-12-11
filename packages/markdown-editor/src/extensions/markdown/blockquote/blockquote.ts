@@ -18,14 +18,21 @@ export function getBlockquoteDecorations({ decorations, node, view }: GetDecorat
   if (line.from !== node.from) {
     const content = view.state.doc.sliceString(line.from, node.to);
     let pos = content.length - 1;
+    let isHasMark = false;
 
     while (pos >= 0) {
       pos--;
       const currentCode = content.charCodeAt(pos);
       if (currentCode === CODE_OF_SPACE) continue;
       if (currentCode === CODE_OF_MARK) {
-        isInner = true;
-        break;
+        if (!isHasMark) {
+          isHasMark = true;
+          continue;
+        }
+        if (!isInner) {
+          isInner = true;
+          break;
+        }
       }
       pos = -1;
     }
@@ -52,18 +59,31 @@ export function getBlockquoteSelectionDecorations({
 
   const line = view.lineBlockAt(node.from);
   let isInner = false;
+  let isDeepInner = false;
 
   if (line.from !== node.from) {
     const content = view.state.doc.sliceString(line.from, node.to);
-    let pos = content.length - 1;
+    let pos = content.length;
+    let isHasMark = false;
 
     while (pos >= 0) {
       pos--;
       const currentCode = content.charCodeAt(pos);
+
       if (currentCode === CODE_OF_SPACE) continue;
       if (currentCode === CODE_OF_MARK) {
-        isInner = true;
-        break;
+        if (!isHasMark) {
+          isHasMark = true;
+          continue;
+        }
+        if (!isInner) {
+          isInner = true;
+          continue;
+        }
+        if (!isDeepInner) {
+          isDeepInner = true;
+          break;
+        }
       }
       pos = -1;
     }
@@ -77,15 +97,23 @@ export function getBlockquoteSelectionDecorations({
     if (!isInner) decorations.push(utils.getHideDecoration({ range: [node.from, node.to] }));
     else
       decorations.push(
-        utils.getReplaceDecoration({ widget: new BlockquoteWidget(), range: [node.from, node.to] }),
+        utils.getReplaceDecoration({
+          widget: new BlockquoteWidget(isDeepInner),
+          range: [node.from, node.to],
+        }),
       );
   }
 }
 
 class BlockquoteWidget extends WidgetType {
+  constructor(private readonly deep: boolean) {
+    super();
+  }
+
   toDOM(): HTMLElement {
     const span = document.createElement("span");
     span.classList.add(styles.blockquote__inner);
+    if (this.deep) span.classList.add(styles["blockquote__inner-deep"]);
 
     return span;
   }

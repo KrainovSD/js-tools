@@ -12,10 +12,15 @@ const editor = new Editor({
   root,
   initialText: viewFull
     ? fullExample
-    : `![inage](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=400)
+    : `> Первый уровень цитирования
+>> Второй уровень цитирования
+>>> Третий уровень цитирования
+>>> test 3
+>>> test4
 
 
-`,
+> test
+test`,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());
   // },
