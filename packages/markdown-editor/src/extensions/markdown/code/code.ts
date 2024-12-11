@@ -18,8 +18,8 @@ export function getCodeSelectionDecorations({
   }
 
   let isOverlapLine = false;
-  const startMarkPosition = { from: 0, to: 0 };
-  const endMarkPosition = { from: 0, to: 0 };
+  const startMarkPosition = { from: -1, to: -1 };
+  const endMarkPosition = { from: -1, to: -1 };
   const lines = view.viewportLineBlocks.filter((line) => {
     const isOverlap = utils.isRangeOverlap([node.from, node.to], [line.from, line.to]);
     if (isOverlap && utils.isInRange(view.state.selection.ranges, [line.from, line.to]))
@@ -34,49 +34,52 @@ export function getCodeSelectionDecorations({
   const content = view.state.doc.sliceString(node.from, node.to);
   let pos = -1;
   while (
-    (startMarkPosition.from === 0 || startMarkPosition.to === 0) &&
+    (startMarkPosition.from === -1 || startMarkPosition.to === -1) &&
     pos >= -1 &&
     pos < content.length
   ) {
     pos++;
     const code = content.charCodeAt(pos);
 
-    if (code !== CODE_OF_MARK && startMarkPosition.from === 0) continue;
-    else if (code === CODE_OF_MARK && startMarkPosition.from === 0)
+    if (code !== CODE_OF_MARK && startMarkPosition.from === -1) continue;
+    else if (code === CODE_OF_MARK && startMarkPosition.from === -1)
       startMarkPosition.from = node.from + pos;
-    else if (code !== CODE_OF_MARK && startMarkPosition.from !== 0)
+    else if (code !== CODE_OF_MARK && startMarkPosition.from !== -1)
       startMarkPosition.to = node.from + pos;
   }
 
   pos = content.length;
 
   while (
-    (endMarkPosition.from === 0 || endMarkPosition.to === 0) &&
+    (endMarkPosition.from === -1 || endMarkPosition.to === -1) &&
     pos >= -1 &&
     pos <= content.length
   ) {
     pos--;
     const code = content.charCodeAt(pos);
 
-    if (code !== CODE_OF_MARK && endMarkPosition.to === 0) continue;
-    else if (code === CODE_OF_MARK && endMarkPosition.to === 0)
+    if (code !== CODE_OF_MARK && endMarkPosition.to === -1) continue;
+    else if (code === CODE_OF_MARK && endMarkPosition.to === -1)
       endMarkPosition.to = node.from + pos + 1;
-    else if (code !== CODE_OF_MARK && endMarkPosition.to !== 0)
-      endMarkPosition.from = node.from + pos;
+    else if (code !== CODE_OF_MARK && endMarkPosition.to !== -1)
+      endMarkPosition.from = node.from + pos + 1;
   }
 
   if (node.name === MARK_CODE) {
     const codeInfo = node.node.getChild("CodeInfo");
     const codeText = node.node.getChild("CodeText");
-    if (!codeInfo || !codeText) return;
 
-    language = view.state.doc.sliceString(codeInfo.from, codeInfo.to);
-    codeContent = view.state.doc.sliceString(codeText.from, codeText.to);
-    languagePos = [codeInfo.from, codeInfo.to];
-  } else {
-    language = "copy";
+    if (codeInfo) {
+      language = view.state.doc.sliceString(codeInfo.from, codeInfo.to);
+      languagePos = [codeInfo.from, codeInfo.to];
+    }
+    if (codeText) codeContent = view.state.doc.sliceString(codeText.from, codeText.to);
+    else codeContent = "";
+  }
+  if (node.name === MARK_INLINE) {
     codeContent = view.state.doc.sliceString(startMarkPosition.to, endMarkPosition.from).trim();
   }
+  if (!language) language = "copy";
 
   if (lines.length > 1)
     lines.forEach((line) => {

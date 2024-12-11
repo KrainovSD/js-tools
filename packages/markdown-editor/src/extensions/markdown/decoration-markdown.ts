@@ -71,7 +71,7 @@ function getDecorations(view: EditorView, isChanged: boolean) {
       from: fromVisible,
       to: toVisible,
       enter: (node) => {
-        // console.log(node.name, view.state.doc.sliceString(node.from, node.to));
+        console.log(node.name, view.state.doc.sliceString(node.from, node.to));
 
         if (SKIP_MARKS.has(node.name)) return;
 

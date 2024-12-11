@@ -156,20 +156,20 @@ class ImageWidget extends WidgetType {
 
 function parseInfo(view: EditorView, node: SyntaxNodeRef) {
   const content = view.state.doc.sliceString(node.from, node.to);
-  const textCoordinates = { from: 0, to: 0 };
-  const urlCoordinates = { from: 0, to: 0 };
+  const textCoordinates = { from: -1, to: -1 };
+  const urlCoordinates = { from: -1, to: -1 };
   let pos = -1;
 
   while (pos < content.length) {
     pos++;
     const code = content.charCodeAt(pos);
 
-    if (textCoordinates.from === 0 && code === CODE_OF_START_TEXT) textCoordinates.from = pos + 1;
-    else if (urlCoordinates.from === 0 && textCoordinates.to !== 0 && code === CODE_OF_START_URL)
+    if (textCoordinates.from === -1 && code === CODE_OF_START_TEXT) textCoordinates.from = pos + 1;
+    else if (urlCoordinates.from === -1 && textCoordinates.to !== -1 && code === CODE_OF_START_URL)
       urlCoordinates.from = pos + 1;
-    else if (textCoordinates.from !== 0 && textCoordinates.to === 0 && code === CODE_OF_END_TEXT)
+    else if (textCoordinates.from !== -1 && textCoordinates.to === -1 && code === CODE_OF_END_TEXT)
       textCoordinates.to = pos;
-    else if (urlCoordinates.from !== 0 && urlCoordinates.to === 0 && code === CODE_OF_END_URL)
+    else if (urlCoordinates.from !== -1 && urlCoordinates.to === -1 && code === CODE_OF_END_URL)
       urlCoordinates.to = pos;
   }
 
