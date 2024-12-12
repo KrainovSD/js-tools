@@ -1,7 +1,7 @@
-import { type EditorView, WidgetType } from "@codemirror/view";
 import { utils } from "@/lib";
 import type { GetSelectionDecorationOptions } from "../markdown-types";
-import styles from "../styles.module.scss";
+import { getLinkLabelSelectionDecoration } from "./link-label";
+import { LinkWidget } from "./link-widget";
 
 const MARK_FULL = "Link";
 const CODE_OF_START_TEXT = 91;
@@ -37,6 +37,9 @@ export function getLinkSelectionDecorations({
       urlCoordinates.to = pos;
   }
 
+  if (urlCoordinates.from === -1 || urlCoordinates.to === -1)
+    return void getLinkLabelSelectionDecoration({ decorations, isReadonly, node, view });
+
   const text = content.substring(textCoordinates.from, textCoordinates.to);
   const url = content.substring(urlCoordinates.from, urlCoordinates.to);
 
@@ -48,71 +51,8 @@ export function getLinkSelectionDecorations({
     decorations.push(
       utils.getReplaceDecoration({
         range: [node.from, node.to],
-        widget: new LinkWidget(text, url),
+        widget: new LinkWidget(text, url, "link"),
       }),
     );
-  }
-}
-
-class LinkWidget extends WidgetType {
-  view: EditorView | undefined;
-
-  constructor(
-    private readonly text: string,
-    private readonly link: string,
-  ) {
-    super();
-  }
-
-  handleClick(event: MouseEvent) {
-    if (!this.view) return;
-
-    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey || !this.view.hasFocus) {
-      if (event.type === "mousedown") {
-        const target = event.target as HTMLAnchorElement;
-        window.open(target.href, "_blank");
-      }
-
-      return;
-    }
-
-    event.stopPropagation();
-    event.preventDefault();
-    const target = event.target as HTMLAnchorElement;
-    const parent = target.parentNode;
-    const editor = this.view.dom.querySelector(".cm-content");
-    const selection = window.getSelection();
-
-    if (!selection || !editor || !parent) return;
-    const targetIndex = Array.from(parent.childNodes).findIndex((element) => element === target);
-
-    const range = document.createRange();
-    range.setStart(parent, targetIndex);
-
-    range.collapse(true);
-
-    selection.removeAllRanges();
-    selection.addRange(range);
-
-    return false;
-  }
-
-  toDOM(view: EditorView): HTMLElement {
-    this.view = view;
-    const anchor = document.createElement("a");
-    anchor.classList.add(styles.link);
-    anchor.target = "_blank";
-    anchor.textContent = this.text;
-    anchor.href = this.link;
-
-    anchor.addEventListener("mousedown", this.handleClick.bind(this));
-    anchor.addEventListener("click", this.handleClick.bind(this));
-
-    return anchor;
-  }
-
-  destroy(dom: HTMLElement): void {
-    dom.removeEventListener("mousedown", this.handleClick.bind(this));
-    dom.removeEventListener("click", this.handleClick.bind(this));
   }
 }

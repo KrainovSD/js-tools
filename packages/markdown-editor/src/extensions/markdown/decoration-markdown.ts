@@ -14,7 +14,7 @@ import { getHeaderDecorations, getHeaderSelectionDecorations } from "./header";
 import { getHorizontalSelectionDecoration } from "./horizontal";
 import { getImageSelectionDecorations } from "./image/image";
 import { getItalicDecorations, getItalicSelectionDecorations } from "./italic";
-import { getLinkSelectionDecorations } from "./link";
+import { getAutoLinkSelectionDecorations, getLinkSelectionDecorations } from "./link";
 import { getListSelectionDecorations } from "./list";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "./markdown-types";
 import {
@@ -40,6 +40,7 @@ const selectionDecorationFunctions: ((options: GetSelectionDecorationOptions) =>
   getCodeSelectionDecorations,
   getHorizontalSelectionDecoration,
   getImageSelectionDecorations,
+  getAutoLinkSelectionDecorations,
 ];
 const SKIP_MARKS = new Set([
   "Document",
@@ -71,9 +72,9 @@ function getDecorations(view: EditorView, isChanged: boolean) {
       from: fromVisible,
       to: toVisible,
       enter: (node) => {
-        console.log(node.name, view.state.doc.sliceString(node.from, node.to));
-
         if (SKIP_MARKS.has(node.name)) return;
+
+        console.log(node.name, view.state.doc.sliceString(node.from, node.to));
 
         /** Decoration by change content */
         if (isChanged) {

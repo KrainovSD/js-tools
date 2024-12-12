@@ -4,7 +4,7 @@ import type { GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
 
 const MARK_FULL = "ListMark";
-const CHAR_CODES_COMMON = new Set([42, 45]);
+const CHAR_CODES_COMMON = new Set([42, 43, 45]);
 const CHAR_CODES_ORDERED = 46;
 
 export function getListSelectionDecorations({

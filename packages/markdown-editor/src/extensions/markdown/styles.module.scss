@@ -84,6 +84,12 @@
 .link {
   color: rgb(77, 77, 236);
   text-decoration: none;
+
+  &__label {
+    font-size: 12px;
+    position: relative;
+    top: -4px;
+  }
 }
 
 .code {
