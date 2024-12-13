@@ -1,67 +1,126 @@
 /* eslint-disable no-console */
-import { Editor } from "@/module";
+import { Editor, type MultiCursorOptions } from "@/module";
 import type { ThemeOptions } from "@/extensions/theme";
-import { fullExample } from "./full-example";
 import "./global.css";
+import { fullExample, randomColor, randomString } from "./helpers";
 
+/** Multi Cursor Mode */
+const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");
+const presetMultiCursor: MultiCursorOptions = {
+  roomId: roomId || randomString(10),
+  url: "ws://192.168.135.150:3000",
+  userName: randomString(5),
+  userColor: randomColor(),
+};
+
+let editor: Editor | undefined;
 let theme: "dark" | "light" = "dark";
-
+let multiCursor: MultiCursorOptions | undefined = roomId ? presetMultiCursor : undefined;
+let readonly: boolean = false;
+let vimMode: boolean = false;
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
-
 const viewFullExample = false;
 const root = document.querySelector<HTMLElement>("#root");
-
 if (!root) throw new Error("Hasn't root");
 
-const editor = new Editor({
-  root,
-  initialText: viewFullExample
-    ? fullExample
-    : `just text
+function initEditor() {
+  if (!root) return;
 
-`,
-  // onChange: (view) => {
-  //   console.log(view.state.doc.toString());
-  // },
-  // onBlur: (state) => {
-  //   console.log("blur ", state.doc.toString());
-  // },
-  // onFocus: (state) => {
-  //   console.log("focus ", state.doc.toString());
-  // },
-  // onEnter: (view) => {
-  //   console.log("enter ", view.state.doc.toString());
-  // },
-  vimMode: false,
-  readonly: false,
-  dark,
-  light,
-  theme,
-});
+  editor = new Editor({
+    root,
+    multiCursor,
+    initialText: viewFullExample
+      ? fullExample
+      : `just text
+  
+  `,
+    vimMode,
+    readonly,
+    dark,
+    light,
+    theme,
+  });
+}
 
-const themeButton = document.createElement("button");
-themeButton.textContent = "Сменить тему";
-document.body.appendChild(themeButton);
-themeButton.addEventListener("click", () => {
-  editor.setTheme(theme === "light" ? "dark" : "light");
-  theme = theme === "light" ? "dark" : "light";
-});
+/** Theme Mode */
+const themeButton = document.querySelector(".theme-mode");
+if (themeButton) {
+  const text = {
+    dark: "Включить светлую тему",
+    light: "Включить темную тему",
+  };
+  themeButton.textContent = text[theme];
+  themeButton.addEventListener("click", () => {
+    if (!editor) return;
 
-let readonly = false;
-const readonlyButton = document.createElement("button");
-readonlyButton.textContent = "Сменить режим";
-document.body.appendChild(readonlyButton);
-readonlyButton.addEventListener("click", () => {
-  editor.setReadonly(!readonly);
-  readonly = !readonly;
-});
+    editor.setTheme(theme === "light" ? "dark" : "light");
+    theme = theme === "light" ? "dark" : "light";
+    themeButton.textContent = text[theme];
+  });
+}
+/** Edit Mode */
+const readonlyButton = document.querySelector(".edit-mode");
+if (readonlyButton) {
+  const text: Record<string, string> = {
+    false: "Выключить режим редактирования",
+    true: "Включить режим редактирования",
+  };
+  readonlyButton.textContent = text[String(readonly)];
+  readonlyButton.addEventListener("click", () => {
+    if (!editor) return;
 
-let vimMode = false;
-const vimButton = document.createElement("button");
-vimButton.textContent = "Сменить vim режим";
-document.body.appendChild(vimButton);
-vimButton.addEventListener("click", () => {
-  editor.setVimMode(!vimMode);
-  vimMode = !vimMode;
-});
+    editor.setReadonly(!readonly);
+    readonly = !readonly;
+    readonlyButton.textContent = text[String(readonly)];
+  });
+}
+
+/** Vim Mode */
+const vimButton = document.querySelector(".vim-mode");
+if (vimButton) {
+  const text: Record<string, string> = {
+    false: "Включить Vim",
+    true: "Выключить Vim",
+  };
+  vimButton.textContent = text[String(vimMode)];
+  vimButton.addEventListener("click", () => {
+    if (!editor) return;
+
+    editor.setVimMode(!vimMode);
+    vimMode = !vimMode;
+    vimButton.textContent = text[String(vimMode)];
+  });
+}
+
+/** Multi Cursor Mode */
+const multiButton = document.querySelector(".multi-mode");
+if (multiButton) {
+  const text: Record<string, string> = {
+    false: "Включить совместный режим",
+    true: "Выключить совместный режим",
+  };
+  multiButton.textContent = text[String(Boolean(multiCursor))];
+  multiButton.addEventListener("click", () => {
+    if (!editor) return;
+
+    editor.destroy();
+
+    if (!multiCursor) {
+      multiCursor = {
+        ...presetMultiCursor,
+        url: `${presetMultiCursor.url}/ws/v1/wiki/${presetMultiCursor.roomId}`,
+      };
+      window.history.pushState({}, "", `${window.location.origin}/${presetMultiCursor.roomId}`);
+    } else {
+      multiCursor = undefined;
+      window.history.pushState({}, "", window.location.origin);
+    }
+
+    initEditor();
+
+    multiButton.textContent = text[String(Boolean(multiCursor))];
+  });
+}
+
+initEditor();

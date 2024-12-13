@@ -10,14 +10,22 @@
       height: 100vh;
       width: 100vw;
       margin: 0;
-      padding-top: 50px;
+      padding-top: 20px;
+      padding: 20px 10px;
       overflow: hidden;
       background-color: #f3f3f3;
     "
   >
+    <div style="display: flex; gap: 10px; align-items: center; width: 100%">
+      <button class="theme-mode"></button>
+      <button class="edit-mode"></button>
+      <button class="vim-mode"></button>
+      <button class="multi-mode"></button>
+    </div>
     <div
       id="root"
       style="
+        margin-top: 20px;
         border: 1px solid black;
         min-height: 800px;
         max-height: 800px;
