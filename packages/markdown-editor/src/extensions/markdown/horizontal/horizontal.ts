@@ -1,3 +1,4 @@
+import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import { type GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
@@ -22,6 +23,12 @@ export function getHorizontalSelectionDecoration({
     decorations.push(
       utils.getLineDecoration({
         style: styles.horizontal,
+        range: [line.from],
+      }),
+    );
+    decorations.push(
+      utils.getLineDecoration({
+        style: CLASSES.horizontal,
         range: [line.from],
       }),
     );

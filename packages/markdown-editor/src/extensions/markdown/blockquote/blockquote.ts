@@ -1,4 +1,5 @@
 import { WidgetType } from "@codemirror/view";
+import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
@@ -38,13 +39,20 @@ export function getBlockquoteDecorations({ decorations, node, view }: GetDecorat
     }
   }
 
-  if (!isInner)
+  if (!isInner) {
     decorations.push(
       utils.getLineDecoration({
         style: styles.blockquote,
         range: [line.from],
       }),
     );
+    decorations.push(
+      utils.getLineDecoration({
+        style: CLASSES.blockquote,
+        range: [line.from],
+      }),
+    );
+  }
 }
 
 export function getBlockquoteSelectionDecorations({
@@ -114,6 +122,7 @@ class BlockquoteWidget extends WidgetType {
     const span = document.createElement("span");
     span.classList.add(styles.blockquote__inner);
     if (this.deep) span.classList.add(styles["blockquote__inner-deep"]);
+    span.classList.add(CLASSES.blockquoteInner);
 
     return span;
   }

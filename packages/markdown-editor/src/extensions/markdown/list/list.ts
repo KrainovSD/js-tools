@@ -1,4 +1,5 @@
 import { WidgetType } from "@codemirror/view";
+import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import type { GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
@@ -65,6 +66,7 @@ class ListPointWidget extends WidgetType {
     span.textContent = this.mark;
     if (CHAR_CODES_COMMON.has(this.lastCodePoint)) {
       span.classList.add(styles.common);
+      span.classList.add(CLASSES.listCommon);
     }
     if (CHAR_CODES_ORDERED === this.lastCodePoint) {
       span.classList.add(styles.ordered);

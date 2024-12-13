@@ -29,12 +29,13 @@ export const initExtensions = ({
   multiCursorText,
   provider,
   theme,
-  fontFamily,
+  dark,
+  light,
 }: InitExtensionsOptions): Extension[] => {
   const extensions = [
     InitSettings({ readonly, vimMode }),
     initMarkdown(),
-    initTheme({ fontFamily, theme }),
+    initTheme({ theme, dark, light }),
     initKeyMaps({ onEnter }),
     initListeners({ onBlur, onChange, onFocus }),
   ];

@@ -1,4 +1,5 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
+import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import styles from "../styles.module.scss";
 
@@ -110,6 +111,8 @@ export class LinkWidget extends WidgetType {
     this.view = view;
     const anchor = document.createElement("a");
     anchor.classList.add(styles.link);
+    anchor.classList.add(CLASSES.link);
+
     anchor.target = "_blank";
     anchor.textContent = this.text;
     anchor.href = this.link;

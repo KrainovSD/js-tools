@@ -34,7 +34,7 @@
 }
 
 .blockquote {
-  border-left: 3px solid gray;
+  border-left: 3px solid;
   margin-left: 5px;
   &__inner {
     margin-left: 1px;
@@ -46,7 +46,7 @@
       top: -3px;
       left: 0;
       height: 140%;
-      border-left: 3px solid gray;
+      border-left: 3px solid;
     }
 
     &-deep {
@@ -76,14 +76,13 @@
       top: 50%;
       transform: translateY(-50%);
       left: 0;
-      background: black;
     }
   }
 }
 
 .link {
-  color: rgb(77, 77, 236);
   text-decoration: none;
+  text-decoration: underline;
 
   &__label {
     font-size: 12px;
@@ -94,13 +93,11 @@
 
 .code {
   &__line {
-    background-color: rgb(213, 213, 213);
     position: relative;
     padding: 5px;
     font-family: monospace;
   }
   &__single {
-    background-color: rgb(213, 213, 213);
     font-family: monospace;
   }
   &__button {
@@ -117,10 +114,6 @@
     z-index: 1;
     min-width: 30px;
     cursor: pointer;
-
-    &:hover {
-      background-color: rgb(164, 163, 163);
-    }
 
     &.pending {
       &:before {
@@ -159,7 +152,7 @@
         height: 7px;
         width: 11px;
 
-        border: 1px solid black;
+        border: 1px solid;
         border-top-width: 0;
         border-right-width: 0;
 
@@ -178,7 +171,6 @@
         content: " ";
         height: 13px;
         width: 1px;
-        background-color: black;
       }
 
       &:before {
@@ -223,7 +215,7 @@
 .horizontal {
   width: calc(100% - 10px);
   position: relative;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid;
   margin: 0px 5px;
 }
 

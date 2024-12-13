@@ -1,8 +1,13 @@
 import { EditorView } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
-import { basicDark } from "cm6-theme-basic-dark";
 import { type WebsocketProvider } from "y-websocket";
-import { ReadonlyCompartment, ThemeCompartment, VimModeCompartment } from "@/extensions";
+import {
+  ReadonlyCompartment,
+  ThemeCompartment,
+  VimModeCompartment,
+  getDarkTheme,
+  getLightTheme,
+} from "@/extensions";
 import { type EditorArguments } from "./Editor.types";
 import { initEditor } from "./lib";
 
@@ -11,8 +16,11 @@ export class Editor {
 
   provider: WebsocketProvider | undefined;
 
+  arguments: EditorArguments;
+
   constructor(options: EditorArguments) {
     const editor = initEditor(options);
+    this.arguments = options;
     this.view = editor.view;
     this.provider = editor.provider;
   }
@@ -33,7 +41,19 @@ export class Editor {
 
   setTheme = (theme?: "dark" | "light") => {
     this.view.dispatch({
-      effects: ThemeCompartment.reconfigure(theme === "dark" ? basicDark : []),
+      effects: ThemeCompartment.reconfigure(
+        theme === "dark"
+          ? getDarkTheme({
+              dark: this.arguments.dark,
+              light: this.arguments.light,
+              theme,
+            })
+          : getLightTheme({
+              dark: this.arguments.dark,
+              light: this.arguments.light,
+              theme,
+            }),
+      ),
     });
   };
 
