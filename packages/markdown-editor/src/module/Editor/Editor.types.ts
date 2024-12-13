@@ -11,5 +11,5 @@ export type MultiCursorOptions = {
   userName?: string;
   userColor?: string;
   roomId: string;
-  logger?: boolean;
+  onStartProvider?: (status?: string) => void;
 };

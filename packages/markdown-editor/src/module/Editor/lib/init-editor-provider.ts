@@ -1,10 +1,9 @@
 import { WebsocketProvider } from "y-websocket";
-import type { Doc } from "yjs";
+import { Doc } from "yjs";
 import type { MultiCursorOptions } from "../Editor.types";
 
 type InitEditorProviderOptions = {
-  multiCursorDocument: Doc;
-  logger?: boolean;
+  initialText?: string;
 } & MultiCursorOptions;
 
 export function initEditorProvider({
@@ -12,20 +11,37 @@ export function initEditorProvider({
   url,
   userName = "Anonymous",
   userColor,
-  multiCursorDocument,
-  logger,
+  initialText,
+  onStartProvider,
 }: InitEditorProviderOptions) {
+  const multiCursorDocument = new Doc();
+  const multiCursorText = multiCursorDocument.getText(roomId);
+
+  if (!userColor || !userColor.startsWith("#")) {
+    // eslint-disable-next-line no-console
+    console.warn("user color must be hex!");
+    userColor = "#30bced";
+  }
+  const userColorLight = `${userColor.substring(0, 7)}33`;
+
   const provider = new WebsocketProvider(url, roomId, multiCursorDocument);
   provider.awareness.setLocalStateField("user", {
     name: userName,
-    color: userColor || "#000000",
+    color: userColor,
+    colorLight: userColorLight,
   });
 
-  if (logger)
+  if (onStartProvider)
     provider.on("status", (event: { status: string }) => {
-      // eslint-disable-next-line no-console
-      console.log(event?.status);
+      onStartProvider(event?.status);
     });
 
-  return provider;
+  if (provider && multiCursorText)
+    provider.on("sync", (isSynced: boolean) => {
+      if (isSynced && !multiCursorText.length && initialText) {
+        multiCursorText.insert(0, initialText);
+      }
+    });
+
+  return { provider, multiCursorText };
 }

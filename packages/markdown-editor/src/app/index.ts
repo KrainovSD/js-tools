@@ -9,7 +9,7 @@ let theme: "dark" | "light" = "dark";
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
 
-const viewFullExample = true;
+const viewFullExample = false;
 const root = document.querySelector<HTMLElement>("#root");
 
 if (!root) throw new Error("Hasn't root");
@@ -18,43 +18,7 @@ const editor = new Editor({
   root,
   initialText: viewFullExample
     ? fullExample
-    : `+ Fourth item
-
-> test
-> > test
-
-[standart link](/api/docs)
-
-
-\`\`Use \`code\` in your Markdown file.\`\`
-
-\`\`\` JS
-import { param } from "module";
-
-const btn = document.getElementById('btn');
-let count: number = 0;
-
-function render(){
-  btn.innerText = \`Count: \${count}\`;
-}
-
-btn.addEventListener("click", (e) => {
-  // Count from 1 to 10.
-  if (count < 10){
-    count += 1;
-    render();
-  }
-})
-
-const boolean = true
-const object = {
-  value: boolean
-}
-const array = [1, "test"]   
-
-\`\`\`
-
---- 
+    : `just text
 
 `,
   // onChange: (view) => {
