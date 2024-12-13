@@ -21,6 +21,7 @@ import {
   getStrikeThroughDecorations,
   getStrikeThroughSelectionDecorations,
 } from "./strike-through";
+import { getTodoSelectionDecoration } from "./todo";
 
 const decorationFunctions: ((options: GetDecorationOptions) => void)[] = [
   getHeaderDecorations,
@@ -41,6 +42,7 @@ const selectionDecorationFunctions: ((options: GetSelectionDecorationOptions) =>
   getHorizontalSelectionDecoration,
   getImageSelectionDecorations,
   getAutoLinkSelectionDecorations,
+  getTodoSelectionDecoration,
 ];
 const SKIP_MARKS = new Set([
   "Document",
@@ -57,6 +59,7 @@ const SKIP_MARKS = new Set([
   "CodeInfo",
   "CodeText",
   "HeaderMark",
+  "TaskMarker",
 ]);
 
 let markdownDecorations: Range<Decoration>[] = [];

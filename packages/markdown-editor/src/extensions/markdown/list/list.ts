@@ -4,6 +4,7 @@ import type { GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
 
 const MARK_FULL = "ListMark";
+const MARK_TASK = "Task";
 const CHAR_CODES_COMMON = new Set([42, 43, 45]);
 const CHAR_CODES_ORDERED = 46;
 
@@ -20,6 +21,19 @@ export function getListSelectionDecorations({
   const content = view.state.doc.sliceString(node.from, node.to);
   const lastCodePoint = content.codePointAt(content.length - 1) || 0;
   if (!CHAR_CODES_COMMON.has(lastCodePoint) && CHAR_CODES_ORDERED !== lastCodePoint) {
+    return;
+  }
+
+  const nextSibling = node.node.nextSibling;
+  if (nextSibling && nextSibling.name === MARK_TASK) {
+    if (
+      isReadonly ||
+      !view.hasFocus ||
+      !utils.isInRange(view.state.selection.ranges, [node.from, nextSibling.from + 3])
+    ) {
+      decorations.push(utils.getHideDecoration({ range: [node.from, nextSibling.from] }));
+    }
+
     return;
   }
 

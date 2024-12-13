@@ -89,10 +89,10 @@ const editor = new Editor({
   root,
   initialText: viewFull
     ? fullExample
-    : `test ![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300) test
+    : `- [x] task
+- [ ] test
+- [ ] te2
 
-
-![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300)
 `,
   // onChange: (view) => {
   //   console.log(view.state.doc.toString());

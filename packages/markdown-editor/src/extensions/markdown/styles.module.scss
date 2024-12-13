@@ -226,3 +226,19 @@
   border-bottom: 1px solid black;
   margin: 0px 5px;
 }
+
+.todo {
+  display: inline-flex;
+  align-items: flex-end;
+  height: 100%;
+  padding-right: 3px;
+  padding-left: 3px;
+
+  & > input {
+    margin: 0;
+  }
+
+  &__checked {
+    text-decoration: line-through;
+  }
+}
