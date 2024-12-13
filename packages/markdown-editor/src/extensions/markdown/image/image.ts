@@ -23,21 +23,41 @@ export function getImageSelectionDecorations({
   const { text, url } = parseInfo(view, node);
   const line = view.lineBlockAt(node.from);
 
-  if (
+  if (line.from === node.from && line.to === node.to) {
+    if (
+      isReadonly ||
+      !view.hasFocus ||
+      !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
+    ) {
+      decorations.push(
+        utils.getReplaceDecoration({
+          range: [line.from, line.to],
+          widget: new ImageWidget(text, url),
+        }),
+      );
+    } else {
+      decorations.push(
+        utils.getWidgetDecorationOptions({
+          range: [node.to + 1],
+          widget: new ImageWidget(text, url),
+        }),
+      );
+    }
+  } else if (
     isReadonly ||
     !view.hasFocus ||
-    !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
+    !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
   ) {
     decorations.push(
       utils.getReplaceDecoration({
-        range: [line.from, line.to],
+        range: [node.from, node.to],
         widget: new ImageWidget(text, url),
       }),
     );
   } else {
     decorations.push(
       utils.getWidgetDecorationOptions({
-        range: [node.to + 1],
+        range: [node.to],
         widget: new ImageWidget(text, url),
       }),
     );

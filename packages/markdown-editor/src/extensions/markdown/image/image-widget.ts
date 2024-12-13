@@ -37,7 +37,7 @@ export class ImageWidget extends WidgetType {
     const textContent = node?.textContent;
     const minLength = this.getMinLength();
 
-    return Boolean(node && textContent && node.nodeType === 3 && textContent.length === minLength);
+    return Boolean(node && textContent && node.nodeType === 3 && textContent.length >= minLength);
   }
 
   selectLink(node: ChildNode | Node, selection: Selection, start?: number) {
@@ -54,22 +54,6 @@ export class ImageWidget extends WidgetType {
   handleClick(event: MouseEvent) {
     const selection = window.getSelection();
 
-    const textNode = selection?.anchorNode;
-
-    if (this.isCorrectNode(textNode)) {
-      const startPosition = textNode.textContent?.indexOf?.(this.link) || 0;
-      const endPosition = startPosition + this.link.length;
-
-      if (
-        selection &&
-        (selection.anchorOffset !== startPosition || selection.focusOffset !== endPosition)
-      ) {
-        this.selectLink(textNode, selection, startPosition);
-      }
-
-      return;
-    }
-
     if (!this.view) return;
 
     if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {
@@ -84,6 +68,9 @@ export class ImageWidget extends WidgetType {
 
     if (!selection || !editor || !parent) return;
     const targetIndex = Array.from(parent.childNodes).findIndex((element) => element === target);
+    const prevLine = parent.previousSibling;
+    if (this.getTextNode(prevLine)) return;
+    if (this.getTextNode(parent)) return;
 
     const range = document.createRange();
     range.setStart(parent, targetIndex);

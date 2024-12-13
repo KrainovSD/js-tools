@@ -89,7 +89,7 @@ const editor = new Editor({
   root,
   initialText: viewFull
     ? fullExample
-    : ` ![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300)
+    : `test ![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300) test
 
 
 ![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300)
