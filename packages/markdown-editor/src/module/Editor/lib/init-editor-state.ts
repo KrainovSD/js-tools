@@ -6,5 +6,9 @@ type InitEditorStateOptions = {
 } & InitExtensionsOptions;
 
 export function initEditorState({ text, ...rest }: InitEditorStateOptions) {
-  return EditorState.create({ doc: text, extensions: initExtensions(rest) });
+  return EditorState.create({
+    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+    doc: rest.multiCursorText ? rest.multiCursorText.toString() : text,
+    extensions: initExtensions(rest),
+  });
 }

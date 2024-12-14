@@ -7,8 +7,8 @@ import { fullExample, randomColor, randomString } from "./helpers";
 /** Multi Cursor Mode */
 const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");
 const presetMultiCursor: MultiCursorOptions = {
-  roomId: roomId || randomString(10),
-  url: "ws://192.168.135.150:3000",
+  roomId,
+  url: "ws://192.168.135.150:3001",
   userName: randomString(5),
   userColor: randomColor(),
 };
@@ -107,10 +107,8 @@ if (multiButton) {
     editor.destroy();
 
     if (!multiCursor) {
-      multiCursor = {
-        ...presetMultiCursor,
-        url: `${presetMultiCursor.url}/ws/v1/wiki/${presetMultiCursor.roomId}`,
-      };
+      if (!presetMultiCursor.roomId) presetMultiCursor.roomId = randomString(10);
+      multiCursor = presetMultiCursor;
       window.history.pushState({}, "", `${window.location.origin}/${presetMultiCursor.roomId}`);
     } else {
       multiCursor = undefined;
