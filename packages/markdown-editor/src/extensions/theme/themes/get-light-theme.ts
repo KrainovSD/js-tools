@@ -1,4 +1,4 @@
-import { type HighlightConfig, type InitThemeOptions, type ThemeConfig } from "../theme.types";
+import { type HighlightConfig, type InitThemeOptions, type ThemeConfig } from "../theme-types";
 import { getHighlightTemplate } from "./get-highlight-template";
 import { getThemeTemplate } from "./get-theme-template";
 
@@ -28,6 +28,7 @@ const THEME_CONFIG: Required<ThemeConfig> = {
   fontFamily: "Montserrat",
   horizontalColor: "#000000",
   linkColor: "#8A5CF5",
+  mentionColor: "#8A5CF5",
 };
 
 export function getLightTheme({ light }: InitThemeOptions) {

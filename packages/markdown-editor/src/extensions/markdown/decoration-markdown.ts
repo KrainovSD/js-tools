@@ -18,6 +18,10 @@ import { getAutoLinkSelectionDecorations, getLinkSelectionDecorations } from "./
 import { getListSelectionDecorations } from "./list";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "./markdown-types";
 import {
+  getMentionDecorations,
+  getMentionSelectionDecorations,
+} from "./mention/mention-decoration";
+import {
   getStrikeThroughDecorations,
   getStrikeThroughSelectionDecorations,
 } from "./strike-through";
@@ -29,6 +33,7 @@ const decorationFunctions: ((options: GetDecorationOptions) => void)[] = [
   getItalicDecorations,
   getBlockquoteDecorations,
   getStrikeThroughDecorations,
+  getMentionDecorations,
 ];
 const selectionDecorationFunctions: ((options: GetSelectionDecorationOptions) => void)[] = [
   getHeaderSelectionDecorations,
@@ -43,6 +48,7 @@ const selectionDecorationFunctions: ((options: GetSelectionDecorationOptions) =>
   getImageSelectionDecorations,
   getAutoLinkSelectionDecorations,
   getTodoSelectionDecoration,
+  getMentionSelectionDecorations,
 ];
 const SKIP_MARKS = new Set([
   "Document",

@@ -10,4 +10,5 @@ export const CLASSES = {
   blockquote: "cm-blockquote",
   blockquoteInner: "cm-blockquote-inner",
   link: "cm-link",
+  mention: "cm-mention",
 };

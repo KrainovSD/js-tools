@@ -32,8 +32,10 @@ function initEditor() {
     multiCursor,
     initialText: viewFullExample
       ? fullExample
-      : `just text
-  
+      : `
+@denis
+
+
   `,
     vimMode,
     readonly,

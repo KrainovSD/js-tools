@@ -1,6 +1,6 @@
 import { EditorView } from "@codemirror/view";
-import { CLASSES } from "../theme.constants";
-import type { ThemeConfig } from "../theme.types";
+import { CLASSES } from "../theme-constants";
+import type { ThemeConfig } from "../theme-types";
 
 export function getThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
   return EditorView.theme(
@@ -53,6 +53,9 @@ export function getThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
       [`.${CLASSES.codeButtonPending}:before`]: {
         borderColor: config.codeBackground,
         borderTopColor: config.codeButtonColor,
+      },
+      [`.${CLASSES.mention}`]: {
+        color: config.mentionColor,
       },
     },
     { dark },

@@ -1,6 +1,6 @@
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags as t } from "@lezer/highlight";
-import type { HighlightConfig } from "../theme.types";
+import type { HighlightConfig } from "../theme-types";
 
 export function getHighlightTemplate(config: Required<HighlightConfig>) {
   return syntaxHighlighting(

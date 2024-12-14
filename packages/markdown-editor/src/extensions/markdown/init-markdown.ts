@@ -1,16 +1,8 @@
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
-import type { Extension } from "@codemirror/state";
-import { Tag, styleTags, tags } from "@lezer/highlight";
+import { type Extension } from "@codemirror/state";
 import { decorationMarkdownPlugin } from "./decoration-markdown";
-
-const customTags = {
-  inlineCode: Tag.define(tags.monospace),
-};
-
-const customTagStyles = styleTags({
-  InlineCode: [tags.monospace, customTags.inlineCode],
-});
+import { mentionParser } from "./mention";
 
 export const initMarkdown = (): Extension => {
   return [
@@ -18,7 +10,7 @@ export const initMarkdown = (): Extension => {
       base: markdownLanguage,
       codeLanguages: languages,
       addKeymap: true,
-      extensions: [{ props: [customTagStyles] }],
+      extensions: [mentionParser],
     }),
     decorationMarkdownPlugin,
   ];

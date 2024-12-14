@@ -20,6 +20,7 @@ export type ThemeConfig = {
   horizontalColor?: string;
   linkColor?: string;
   blockquoteColor?: string;
+  mentionColor?: string;
 };
 
 export type HighlightConfig = {
