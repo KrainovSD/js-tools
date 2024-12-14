@@ -1,1 +1,1 @@
-export * from "./strike-through";
+export * from "./strike-through-decoration";

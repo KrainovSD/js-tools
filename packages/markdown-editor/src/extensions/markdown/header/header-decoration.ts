@@ -2,14 +2,11 @@ import clsx from "clsx";
 import { utils } from "@/lib";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
-
-const MARK_FULL = "ATXHeading";
-const MARK_UNDER_FULL = "SetextHeading";
-const MARK = "HeaderMark";
+import { NAME_OF_HEADER, NAME_OF_HEADER_MARK, NAME_OF_HEADER_UNDER } from "./header-constants";
 
 export function getHeaderDecorations({ decorations, node, view }: GetDecorationOptions) {
-  const isHeader = node.name.startsWith(MARK_FULL);
-  const isHeaderUnder = node.name.startsWith(MARK_UNDER_FULL);
+  const isHeader = node.name.startsWith(NAME_OF_HEADER);
+  const isHeaderUnder = node.name.startsWith(NAME_OF_HEADER_UNDER);
 
   if (!isHeader && !isHeaderUnder) {
     return;
@@ -18,11 +15,11 @@ export function getHeaderDecorations({ decorations, node, view }: GetDecorationO
   let level: string | undefined;
 
   if (isHeader) {
-    level = node.name.replace(MARK_FULL, "");
+    level = node.name.replace(NAME_OF_HEADER, "");
 
     if (view.state.doc.sliceString(node.from + +level).charCodeAt(0) !== 32) return;
   } else {
-    level = node.name.replace(MARK_UNDER_FULL, "");
+    level = node.name.replace(NAME_OF_HEADER_UNDER, "");
   }
 
   if (!level) return;
@@ -41,14 +38,14 @@ export function getHeaderSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  const isHeader = node.name.startsWith(MARK_FULL);
-  const isHeaderUnder = node.name.startsWith(MARK_UNDER_FULL);
+  const isHeader = node.name.startsWith(NAME_OF_HEADER);
+  const isHeaderUnder = node.name.startsWith(NAME_OF_HEADER_UNDER);
 
   if (!isHeader && !isHeaderUnder) {
     return;
   }
 
-  const mark = node.node.getChild(MARK);
+  const mark = node.node.getChild(NAME_OF_HEADER_MARK);
   if (!mark) return;
 
   if (isHeader) {

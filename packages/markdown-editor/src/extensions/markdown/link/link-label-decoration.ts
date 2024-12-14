@@ -1,8 +1,7 @@
 import { utils } from "@/lib";
 import { type GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
-
-const CODE_OF_END = 58; // :
+import { CODE_OF_LINK_LABEL_END } from "./link-constants";
 
 export function getLinkLabelSelectionDecoration({
   decorations,
@@ -10,7 +9,8 @@ export function getLinkLabelSelectionDecoration({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (view.state.doc.sliceString(node.to, node.to + 1).charCodeAt(0) !== CODE_OF_END) return;
+  if (view.state.doc.sliceString(node.to, node.to + 1).charCodeAt(0) !== CODE_OF_LINK_LABEL_END)
+    return;
 
   if (
     isReadonly ||

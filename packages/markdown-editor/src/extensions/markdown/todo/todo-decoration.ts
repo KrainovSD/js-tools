@@ -1,11 +1,8 @@
 import { utils } from "@/lib";
 import { type GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
+import { LIST_OF_TODO_MARKS, NAME_OF_LIST_MARK, NAME_OF_TODO } from "./todo-constants";
 import { TodoWidget } from "./todo-widget";
-
-const TODO_MARK = "Task";
-const LIST_MARK = "ListMark";
-const CODES_OF_CHECKED = new Set([120, 1093]); // x
 
 export function getTodoSelectionDecoration({
   decorations,
@@ -13,12 +10,12 @@ export function getTodoSelectionDecoration({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== TODO_MARK) return;
+  if (node.name !== NAME_OF_TODO) return;
 
   const prevSibling = node.node.prevSibling;
-  if (!prevSibling || prevSibling.name !== LIST_MARK) return;
+  if (!prevSibling || prevSibling.name !== NAME_OF_LIST_MARK) return;
 
-  const isChecked = CODES_OF_CHECKED.has(
+  const isChecked = LIST_OF_TODO_MARKS.has(
     view.state.doc.sliceString(node.from + 1, node.from + 2).codePointAt(0) || 0,
   );
 

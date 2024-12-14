@@ -1,15 +1,17 @@
-import { WidgetType } from "@codemirror/view";
+import clsx from "clsx";
 import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
-
-const MARK = "QuoteMark";
-const CODE_OF_SPACE = 32;
-const CODE_OF_MARK = 62;
+import {
+  CODE_OF_BLOCKQUOTE_MARK,
+  CODE_OF_SPACE,
+  NAME_OF_BLOCKQUOTE_MARK,
+} from "./blockquote-constants";
+import { BlockquoteWidget } from "./blockquote-widget";
 
 export function getBlockquoteDecorations({ decorations, node, view }: GetDecorationOptions) {
-  if (node.name !== MARK) {
+  if (node.name !== NAME_OF_BLOCKQUOTE_MARK) {
     return;
   }
 
@@ -25,7 +27,7 @@ export function getBlockquoteDecorations({ decorations, node, view }: GetDecorat
       pos--;
       const currentCode = content.charCodeAt(pos);
       if (currentCode === CODE_OF_SPACE) continue;
-      if (currentCode === CODE_OF_MARK) {
+      if (currentCode === CODE_OF_BLOCKQUOTE_MARK) {
         if (!isHasMark) {
           isHasMark = true;
           continue;
@@ -42,13 +44,7 @@ export function getBlockquoteDecorations({ decorations, node, view }: GetDecorat
   if (!isInner) {
     decorations.push(
       utils.getLineDecoration({
-        style: styles.blockquote,
-        range: [line.from],
-      }),
-    );
-    decorations.push(
-      utils.getLineDecoration({
-        style: CLASSES.blockquote,
+        style: clsx(styles.blockquote, CLASSES.blockquote),
         range: [line.from],
       }),
     );
@@ -61,7 +57,7 @@ export function getBlockquoteSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MARK) {
+  if (node.name !== NAME_OF_BLOCKQUOTE_MARK) {
     return;
   }
 
@@ -79,7 +75,7 @@ export function getBlockquoteSelectionDecorations({
       const currentCode = content.charCodeAt(pos);
 
       if (currentCode === CODE_OF_SPACE) continue;
-      if (currentCode === CODE_OF_MARK) {
+      if (currentCode === CODE_OF_BLOCKQUOTE_MARK) {
         if (!isHasMark) {
           isHasMark = true;
           continue;
@@ -110,20 +106,5 @@ export function getBlockquoteSelectionDecorations({
           range: [node.from, node.to],
         }),
       );
-  }
-}
-
-class BlockquoteWidget extends WidgetType {
-  constructor(private readonly deep: boolean) {
-    super();
-  }
-
-  toDOM(): HTMLElement {
-    const span = document.createElement("span");
-    span.classList.add(styles.blockquote__inner);
-    if (this.deep) span.classList.add(styles["blockquote__inner-deep"]);
-    span.classList.add(CLASSES.blockquoteInner);
-
-    return span;
   }
 }

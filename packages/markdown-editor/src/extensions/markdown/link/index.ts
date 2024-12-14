@@ -1,2 +1,2 @@
-export * from "./link";
-export * from "./auto-link";
+export * from "./link-decoration";
+export * from "./auto-link-decoration";

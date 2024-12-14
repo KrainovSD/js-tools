@@ -2,17 +2,15 @@ import { syntaxTree } from "@codemirror/language";
 import { utils } from "@/lib";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
-
-const MARK_FULL = "StrongEmphasis";
-const MARKS = new Set([95, 42]);
+import { LIST_OF_BOLD_MARKS, NAME_OF_BOLD } from "./bold-constants";
 
 export function getBoldDecorations({ decorations, node, view }: GetDecorationOptions) {
-  if (node.name !== MARK_FULL) {
+  if (node.name !== NAME_OF_BOLD) {
     return;
   }
 
   const step =
-    MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
+    LIST_OF_BOLD_MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
     syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
       ? 1
       : 0;
@@ -31,12 +29,12 @@ export function getBoldSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MARK_FULL) {
+  if (node.name !== NAME_OF_BOLD) {
     return;
   }
 
   if (
-    MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
+    LIST_OF_BOLD_MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
     syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
   ) {
     return;

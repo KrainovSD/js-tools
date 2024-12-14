@@ -1,13 +1,14 @@
 import { utils } from "@/lib";
 import type { GetSelectionDecorationOptions } from "../markdown-types";
-import { getLinkLabelSelectionDecoration } from "./link-label";
+import {
+  CODE_OF_END_LINK_TEXT,
+  CODE_OF_END_LINK_URL,
+  CODE_OF_START_LINK_TEXT,
+  CODE_OF_START_LINK_URL,
+  NAME_OF_LINK,
+} from "./link-constants";
+import { getLinkLabelSelectionDecoration } from "./link-label-decoration";
 import { LinkWidget } from "./link-widget";
-
-const MARK_FULL = "Link";
-const CODE_OF_START_TEXT = 91;
-const CODE_OF_END_TEXT = 93;
-const CODE_OF_START_URL = 40;
-const CODE_OF_END_URL = 41;
 
 export function getLinkSelectionDecorations({
   decorations,
@@ -15,7 +16,7 @@ export function getLinkSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MARK_FULL) {
+  if (node.name !== NAME_OF_LINK) {
     return;
   }
 
@@ -28,12 +29,25 @@ export function getLinkSelectionDecorations({
     pos++;
     const code = content.charCodeAt(pos);
 
-    if (textCoordinates.from === -1 && code === CODE_OF_START_TEXT) textCoordinates.from = pos + 1;
-    else if (urlCoordinates.from === -1 && textCoordinates.to !== -1 && code === CODE_OF_START_URL)
+    if (textCoordinates.from === -1 && code === CODE_OF_START_LINK_TEXT)
+      textCoordinates.from = pos + 1;
+    else if (
+      urlCoordinates.from === -1 &&
+      textCoordinates.to !== -1 &&
+      code === CODE_OF_START_LINK_URL
+    )
       urlCoordinates.from = pos + 1;
-    else if (textCoordinates.from !== -1 && textCoordinates.to === -1 && code === CODE_OF_END_TEXT)
+    else if (
+      textCoordinates.from !== -1 &&
+      textCoordinates.to === -1 &&
+      code === CODE_OF_END_LINK_TEXT
+    )
       textCoordinates.to = pos;
-    else if (urlCoordinates.from !== -1 && urlCoordinates.to === -1 && code === CODE_OF_END_URL)
+    else if (
+      urlCoordinates.from !== -1 &&
+      urlCoordinates.to === -1 &&
+      code === CODE_OF_END_LINK_URL
+    )
       urlCoordinates.to = pos;
   }
 

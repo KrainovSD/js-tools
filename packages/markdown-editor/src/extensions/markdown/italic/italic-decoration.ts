@@ -1,12 +1,10 @@
 import { utils } from "@/lib";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
-
-const MARK_FULL = "Emphasis";
-const MARKS = new Set([95, 42]);
+import { LIST_OF_ITALIC_MARKS, NAME_OF_ITALIC } from "./italic-constants";
 
 export function getItalicDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== MARK_FULL) {
+  if (node.name !== NAME_OF_ITALIC) {
     return;
   }
 
@@ -24,7 +22,7 @@ export function getItalicSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MARK_FULL) {
+  if (node.name !== NAME_OF_ITALIC) {
     return;
   }
 
@@ -35,9 +33,9 @@ export function getItalicSelectionDecorations({
   let step = 1;
   const startText = view.state.doc.sliceString(node.from, node.from + 3);
   if (
-    MARKS.has(startText.charCodeAt(0)) &&
-    MARKS.has(startText.charCodeAt(1)) &&
-    MARKS.has(startText.charCodeAt(2))
+    LIST_OF_ITALIC_MARKS.has(startText.charCodeAt(0)) &&
+    LIST_OF_ITALIC_MARKS.has(startText.charCodeAt(1)) &&
+    LIST_OF_ITALIC_MARKS.has(startText.charCodeAt(2))
   )
     step = 3;
 
@@ -59,7 +57,7 @@ export function checkIsSeveralEmphasis({ node, view }: GetSelectionDecorationOpt
   const text = view.state.doc.sliceString(node.from, node.to);
 
   while (pos <= text.length) {
-    if (MARKS.has(text.charCodeAt(pos))) marks++;
+    if (LIST_OF_ITALIC_MARKS.has(text.charCodeAt(pos))) marks++;
     pos++;
   }
 
@@ -79,7 +77,7 @@ export function splitEmphasis({
   let pos = 0;
 
   while (pos <= text.length && marks < 6) {
-    if (MARKS.has(text.charCodeAt(pos))) marks++;
+    if (LIST_OF_ITALIC_MARKS.has(text.charCodeAt(pos))) marks++;
     pos++;
   }
 

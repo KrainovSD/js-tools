@@ -12,7 +12,7 @@ import { getBoldDecorations, getBoldSelectionDecorations } from "./bold";
 import { getCodeSelectionDecorations } from "./code";
 import { getHeaderDecorations, getHeaderSelectionDecorations } from "./header";
 import { getHorizontalSelectionDecoration } from "./horizontal";
-import { getImageSelectionDecorations } from "./image/image";
+import { getImageSelectionDecorations } from "./image/image-decoration";
 import { getItalicDecorations, getItalicSelectionDecorations } from "./italic";
 import { getAutoLinkSelectionDecorations, getLinkSelectionDecorations } from "./link";
 import { getListSelectionDecorations } from "./list";

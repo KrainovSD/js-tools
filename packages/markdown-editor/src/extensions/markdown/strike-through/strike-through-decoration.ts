@@ -1,11 +1,10 @@
 import { utils } from "@/lib";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
-
-const MARK_FULL = "Strikethrough";
+import { NAME_OF_STRIKE_THROUGH } from "./strike-through-constants";
 
 export function getStrikeThroughDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== MARK_FULL) {
+  if (node.name !== NAME_OF_STRIKE_THROUGH) {
     return;
   }
 
@@ -23,7 +22,7 @@ export function getStrikeThroughSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MARK_FULL) {
+  if (node.name !== NAME_OF_STRIKE_THROUGH) {
     return;
   }
 

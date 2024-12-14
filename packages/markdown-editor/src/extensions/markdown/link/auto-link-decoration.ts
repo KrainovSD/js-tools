@@ -1,8 +1,7 @@
 import { utils } from "@/lib";
 import { type GetSelectionDecorationOptions } from "../markdown-types";
+import { NAME_OF_AUTO_LINK } from "./link-constants";
 import { LinkWidget } from "./link-widget";
-
-const MARK_FULL = "Autolink";
 
 export function getAutoLinkSelectionDecorations({
   decorations,
@@ -10,7 +9,7 @@ export function getAutoLinkSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MARK_FULL) return;
+  if (node.name !== NAME_OF_AUTO_LINK) return;
 
   const url = view.state.doc.sliceString(node.from + 1, node.to - 1);
 

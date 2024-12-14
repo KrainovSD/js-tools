@@ -1,1 +1,1 @@
-export * from "./italic";
+export * from "./italic-decoration";

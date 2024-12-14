@@ -1,12 +1,10 @@
+import clsx from "clsx";
 import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import type { GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
+import { CODE_OF_CODE_MARK, NAME_OF_FENCED_CODE, NAME_OF_INLINE_CODE } from "./code-constants";
 import { CodeWidget } from "./code-widget";
-
-const MARK_CODE = "FencedCode";
-const MARK_INLINE = "InlineCode";
-const CODE_OF_MARK = 96;
 
 export function getCodeSelectionDecorations({
   decorations,
@@ -14,7 +12,7 @@ export function getCodeSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MARK_CODE && node.name !== MARK_INLINE) {
+  if (node.name !== NAME_OF_FENCED_CODE && node.name !== NAME_OF_INLINE_CODE) {
     return;
   }
 
@@ -42,10 +40,10 @@ export function getCodeSelectionDecorations({
     pos++;
     const code = content.charCodeAt(pos);
 
-    if (code !== CODE_OF_MARK && startMarkPosition.from === -1) continue;
-    else if (code === CODE_OF_MARK && startMarkPosition.from === -1)
+    if (code !== CODE_OF_CODE_MARK && startMarkPosition.from === -1) continue;
+    else if (code === CODE_OF_CODE_MARK && startMarkPosition.from === -1)
       startMarkPosition.from = node.from + pos;
-    else if (code !== CODE_OF_MARK && startMarkPosition.from !== -1)
+    else if (code !== CODE_OF_CODE_MARK && startMarkPosition.from !== -1)
       startMarkPosition.to = node.from + pos;
   }
 
@@ -59,14 +57,14 @@ export function getCodeSelectionDecorations({
     pos--;
     const code = content.charCodeAt(pos);
 
-    if (code !== CODE_OF_MARK && endMarkPosition.to === -1) continue;
-    else if (code === CODE_OF_MARK && endMarkPosition.to === -1)
+    if (code !== CODE_OF_CODE_MARK && endMarkPosition.to === -1) continue;
+    else if (code === CODE_OF_CODE_MARK && endMarkPosition.to === -1)
       endMarkPosition.to = node.from + pos + 1;
-    else if (code !== CODE_OF_MARK && endMarkPosition.to !== -1)
+    else if (code !== CODE_OF_CODE_MARK && endMarkPosition.to !== -1)
       endMarkPosition.from = node.from + pos + 1;
   }
 
-  if (node.name === MARK_CODE) {
+  if (node.name === NAME_OF_FENCED_CODE) {
     const codeInfo = node.node.getChild("CodeInfo");
     const codeText = node.node.getChild("CodeText");
 
@@ -77,21 +75,27 @@ export function getCodeSelectionDecorations({
     if (codeText) codeContent = view.state.doc.sliceString(codeText.from, codeText.to);
     else codeContent = "";
   }
-  if (node.name === MARK_INLINE) {
+  if (node.name === NAME_OF_INLINE_CODE) {
     codeContent = view.state.doc.sliceString(startMarkPosition.to, endMarkPosition.from).trim();
   }
   if (!language) language = "copy";
 
   if (lines.length > 1) {
     lines.forEach((line) => {
-      decorations.push(utils.getLineDecoration({ style: styles.code__line, range: [line.from] }));
-      decorations.push(utils.getLineDecoration({ style: CLASSES.code, range: [line.from] }));
+      decorations.push(
+        utils.getLineDecoration({
+          style: clsx(styles.code__line, CLASSES.code),
+          range: [line.from],
+        }),
+      );
     });
   } else {
     decorations.push(
-      utils.getMarkDecoration({ style: styles.code__single, range: [node.from, node.to] }),
+      utils.getMarkDecoration({
+        style: clsx(styles.code__single, CLASSES.code),
+        range: [node.from, node.to],
+      }),
     );
-    decorations.push(utils.getMarkDecoration({ style: CLASSES.code, range: [node.from, node.to] }));
   }
 
   if (

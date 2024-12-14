@@ -1,9 +1,9 @@
+import clsx from "clsx";
 import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import { type GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
-
-const MARK = "HorizontalRule";
+import { NAME_OF_HORIZONTAL } from "./horizontal-constants";
 
 export function getHorizontalSelectionDecoration({
   decorations,
@@ -11,7 +11,7 @@ export function getHorizontalSelectionDecoration({
   node,
   view,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MARK) return;
+  if (node.name !== NAME_OF_HORIZONTAL) return;
 
   const line = view.lineBlockAt(node.from);
 
@@ -22,13 +22,7 @@ export function getHorizontalSelectionDecoration({
   ) {
     decorations.push(
       utils.getLineDecoration({
-        style: styles.horizontal,
-        range: [line.from],
-      }),
-    );
-    decorations.push(
-      utils.getLineDecoration({
-        style: CLASSES.horizontal,
+        style: clsx(styles.horizontal, CLASSES.horizontal),
         range: [line.from],
       }),
     );

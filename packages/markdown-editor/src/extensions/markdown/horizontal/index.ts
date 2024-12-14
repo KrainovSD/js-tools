@@ -1,1 +1,1 @@
-export * from "./horizontal";
+export * from "./horizontal-decoration";

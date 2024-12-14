@@ -1,1 +1,1 @@
-export * from "./bold";
+export * from "./bold-decoration";

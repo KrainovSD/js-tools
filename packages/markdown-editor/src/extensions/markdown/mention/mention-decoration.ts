@@ -3,16 +3,16 @@ import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
-import { MENTION_MARK } from "./mention-constants";
+import { NAME_OF_MENTION } from "./mention-constants";
 
 export function getMentionDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== MENTION_MARK) {
+  if (node.name !== NAME_OF_MENTION) {
     return;
   }
 
   decorations.push(
     utils.getMarkDecoration({
-      style: clsx(styles.mention, CLASSES.mention as string),
+      style: clsx(styles.mention, CLASSES.mention),
       range: [node.from, node.to],
     }),
   );
@@ -24,7 +24,7 @@ export function getMentionSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== MENTION_MARK) {
+  if (node.name !== NAME_OF_MENTION) {
     return;
   }
 
