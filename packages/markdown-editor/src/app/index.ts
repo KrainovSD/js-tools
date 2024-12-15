@@ -3,6 +3,7 @@ import { Editor, type MultiCursorOptions } from "@/module";
 import type { ThemeOptions } from "@/extensions/theme";
 import "./global.css";
 import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } from "./helpers";
+import "./helpers/performace-test";
 
 /** Multi Cursor Mode */
 const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");
@@ -24,8 +25,6 @@ const viewFullExample = true;
 const viewStressTest = true;
 const root = document.querySelector<HTMLElement>("#root");
 if (!root) throw new Error("Hasn't root");
-
-console.log(STRESS_TEST.length);
 
 function initEditor() {
   if (!root) return;
