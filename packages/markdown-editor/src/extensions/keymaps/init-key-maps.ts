@@ -2,10 +2,6 @@ import { historyKeymap, indentWithTab, standardKeymap } from "@codemirror/comman
 import type { Extension } from "@codemirror/state";
 import { type EditorView, keymap } from "@codemirror/view";
 import { yUndoManagerKeymap } from "y-codemirror.next";
-import { boldKeymap } from "./bold-keymap";
-import { italicKeymap } from "./italic-keymap";
-import { lineThroughKeymap } from "./line-through-keymap";
-import { underlineKeymap } from "./underline-keymap";
 
 export type InitKeyMapsOptions = {
   onEnter?: (view: EditorView) => boolean;
@@ -32,10 +28,10 @@ export const initKeyMaps = ({
         return keyMap;
       }),
     ),
-    keymap.of(boldKeymap),
-    keymap.of(italicKeymap),
-    keymap.of(lineThroughKeymap),
-    keymap.of(underlineKeymap),
+    // keymap.of(boldKeymap),
+    // keymap.of(italicKeymap),
+    // keymap.of(lineThroughKeymap),
+    // keymap.of(underlineKeymap),
   ];
 
   if (multiCursorMode) {
