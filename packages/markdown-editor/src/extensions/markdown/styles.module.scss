@@ -91,6 +91,10 @@
   }
 }
 
+.image {
+  display: inline-flex;
+}
+
 .code {
   &__line {
     position: relative;

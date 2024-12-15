@@ -89,10 +89,8 @@ export class ImageWidget extends WidgetType {
     const editor = this.view.dom.querySelector(".cm-content");
 
     if (!selection || !editor || !parent) return;
-    /** find target index for set caret right before widget */
-    const targetIndex = Array.from(parent.childNodes).findIndex((element) => element === target);
-    const prevLine = parent.previousSibling;
 
+    const prevLine = parent.previousSibling;
     let textNode = this.getTextNode(prevLine);
     if (!textNode) textNode = this.getTextNode(parent);
     if (textNode) {
@@ -102,7 +100,7 @@ export class ImageWidget extends WidgetType {
     }
 
     const range = document.createRange();
-    range.setStart(parent, targetIndex);
+    range.selectNode(target);
     range.collapse(true);
     selection.removeAllRanges();
     selection.addRange(range);
@@ -132,7 +130,7 @@ export class ImageWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     this.view = view;
     const image = document.createElement("img");
-    image.classList.add(styles.link);
+    image.classList.add(styles.image);
     image.alt = this.text;
     image.src = this.link;
 

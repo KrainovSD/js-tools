@@ -101,16 +101,21 @@ export class LinkWidget extends WidgetType {
     const selection = window.getSelection();
 
     if (!selection || !editor || !parent) return;
-    /** find target index for set caret right before widget */
-    const targetIndex = Array.from(parent.childNodes).findIndex((element) => element === target);
 
     const range = document.createRange();
-    range.setStart(parent, targetIndex);
-
+    range.selectNode(target);
     range.collapse(true);
 
     selection.removeAllRanges();
     selection.addRange(range);
+
+    /** trick for correct select the link by click when the view is not focused */
+    void utils.tick({ delay: 0 }).then(() => {
+      if (selection && selection.anchorNode?.nodeType !== 3) {
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    });
 
     /** wait for the widget to disappear and link will be visible */
     void utils
@@ -118,7 +123,7 @@ export class LinkWidget extends WidgetType {
         delay: 0,
         maxDeep: 5,
         delayGetter: (deep) => {
-          return deep > 1 ? 10 : 0;
+          return deep > 1 ? 10 : 5;
         },
         recursiveCondition: () => {
           const textNode = this.getTextNode(line);
