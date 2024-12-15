@@ -4,8 +4,10 @@ import { type EditorView, keymap } from "@codemirror/view";
 import { yUndoManagerKeymap } from "y-codemirror.next";
 
 export type InitKeyMapsOptions = {
-  onEnter?: (view: EditorView) => boolean;
+  onEnter?: HandleEnterKeyMapEditorFunction;
 };
+
+export type HandleEnterKeyMapEditorFunction = (view: EditorView) => boolean;
 
 export const initKeyMaps = ({
   onEnter,

@@ -1,3 +1,25 @@
 export type { EditorInterface, EditorArguments, MultiCursorOptions } from "./module";
 export { Editor } from "./module";
-export type { ExtensionsOptions, InitExtensionsOptions } from "./extensions";
+export type {
+  ExtensionsOptions,
+  InitExtensionsOptions,
+  DecorationPlugin,
+  GetDecorationFunction,
+  GetDecorationOptions,
+  GetSelectionDecorationFunction,
+  GetSelectionDecorationOptions,
+  HighlightConfig,
+  InitKeyMapsOptions,
+  InitListenersOptions,
+  InitMarkdownOptions,
+  InitSettingsOptions,
+  InitThemeOptions,
+  ThemeConfig,
+  ThemeOptions,
+  GetChangeEventOptions,
+  GetFocusEventOptions,
+  HandleBlurEditorFunction,
+  HandleChangeEditorFunction,
+  HandleEnterKeyMapEditorFunction,
+  HandleFocusEditorFunction,
+} from "./extensions";

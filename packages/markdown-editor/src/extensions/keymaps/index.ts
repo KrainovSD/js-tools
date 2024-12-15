@@ -1,1 +1,1 @@
-export * from "./init-key-maps";
+export * from "./init-key-map";
