@@ -2,7 +2,7 @@
 import { Editor, type MultiCursorOptions } from "@/module";
 import type { ThemeOptions } from "@/extensions/theme";
 import "./global.css";
-import { fullExample, randomColor, randomString } from "./helpers";
+import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } from "./helpers";
 
 /** Multi Cursor Mode */
 const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");
@@ -21,8 +21,11 @@ let vimMode: boolean = false;
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
 const viewFullExample = true;
+const viewStressTest = true;
 const root = document.querySelector<HTMLElement>("#root");
 if (!root) throw new Error("Hasn't root");
+
+console.log(STRESS_TEST.length);
 
 function initEditor() {
   if (!root) return;
@@ -30,13 +33,8 @@ function initEditor() {
   editor = new Editor({
     root,
     multiCursor,
-    initialText: viewFullExample
-      ? fullExample
-      : `
-@denis
-
-
-  `,
+    // eslint-disable-next-line no-nested-ternary
+    initialText: viewStressTest ? STRESS_TEST : viewFullExample ? FULL_EXAMPLE : COMMON_TEST,
     vimMode,
     readonly,
     dark,

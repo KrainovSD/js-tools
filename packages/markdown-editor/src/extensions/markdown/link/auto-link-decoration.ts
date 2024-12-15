@@ -1,5 +1,9 @@
 import { utils } from "@/lib";
-import { type GetSelectionDecorationOptions } from "../markdown-types";
+import type {
+  DecorationPlugin,
+  GetSelectionDecorationOptions,
+  SelectionDecorationMap,
+} from "../markdown-types";
 import { NAME_OF_AUTO_LINK } from "./link-constants";
 import { LinkWidget } from "./link-widget";
 
@@ -9,8 +13,6 @@ export function getAutoLinkSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_AUTO_LINK) return;
-
   const url = view.state.doc.sliceString(node.from + 1, node.to - 1);
 
   if (
@@ -26,3 +28,10 @@ export function getAutoLinkSelectionDecorations({
     );
   }
 }
+
+const selectionDecorations: SelectionDecorationMap = {
+  [NAME_OF_AUTO_LINK]: getAutoLinkSelectionDecorations,
+};
+export const autoLinkDecorationPlugin: DecorationPlugin = {
+  selectionDecorations,
+};

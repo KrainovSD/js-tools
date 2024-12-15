@@ -1,5 +1,9 @@
 import { utils } from "@/lib";
-import type { GetSelectionDecorationOptions } from "../markdown-types";
+import type {
+  DecorationPlugin,
+  GetSelectionDecorationOptions,
+  SelectionDecorationMap,
+} from "../markdown-types";
 import {
   CODE_OF_ORDERED_LIST_MARK,
   LIST_OF_LIST_MARKS,
@@ -14,10 +18,6 @@ export function getListSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_LIST) {
-    return;
-  }
-
   const content = view.state.doc.sliceString(node.from, node.to);
   const lastCodePoint = content.codePointAt(content.length - 1) || 0;
   if (!LIST_OF_LIST_MARKS.has(lastCodePoint) && CODE_OF_ORDERED_LIST_MARK !== lastCodePoint) {
@@ -50,3 +50,10 @@ export function getListSelectionDecorations({
     );
   }
 }
+
+const selectionDecorations: SelectionDecorationMap = {
+  [NAME_OF_LIST]: getListSelectionDecorations,
+};
+export const listDecorationPlugin: DecorationPlugin = {
+  selectionDecorations,
+};

@@ -1,7 +1,11 @@
 import clsx from "clsx";
 import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
-import type { GetSelectionDecorationOptions } from "../markdown-types";
+import type {
+  DecorationPlugin,
+  GetSelectionDecorationOptions,
+  SelectionDecorationMap,
+} from "../markdown-types";
 import styles from "../styles.module.scss";
 import { CODE_OF_CODE_MARK, NAME_OF_FENCED_CODE, NAME_OF_INLINE_CODE } from "./code-constants";
 import { CodeWidget } from "./code-widget";
@@ -12,10 +16,6 @@ export function getCodeSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_FENCED_CODE && node.name !== NAME_OF_INLINE_CODE) {
-    return;
-  }
-
   let isOverlapLine = false;
   const startMarkPosition = { from: -1, to: -1 };
   const endMarkPosition = { from: -1, to: -1 };
@@ -121,3 +121,11 @@ export function getCodeSelectionDecorations({
     );
   }
 }
+
+const selectionDecorations: SelectionDecorationMap = {
+  [NAME_OF_FENCED_CODE]: getCodeSelectionDecorations,
+  [NAME_OF_INLINE_CODE]: getCodeSelectionDecorations,
+};
+export const codeDecorationPlugin: DecorationPlugin = {
+  selectionDecorations,
+};

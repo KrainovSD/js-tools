@@ -1,13 +1,15 @@
 import { utils } from "@/lib";
-import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
+import type {
+  DecorationMap,
+  DecorationPlugin,
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+  SelectionDecorationMap,
+} from "../markdown-types";
 import styles from "../styles.module.scss";
 import { NAME_OF_STRIKE_THROUGH } from "./strike-through-constants";
 
 export function getStrikeThroughDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== NAME_OF_STRIKE_THROUGH) {
-    return;
-  }
-
   decorations.push(
     utils.getMarkDecoration({
       style: styles["strike-through"],
@@ -22,10 +24,6 @@ export function getStrikeThroughSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_STRIKE_THROUGH) {
-    return;
-  }
-
   if (
     isReadonly ||
     !view.hasFocus ||
@@ -35,3 +33,14 @@ export function getStrikeThroughSelectionDecorations({
     decorations.push(utils.getHideDecoration({ range: [node.to - 2, node.to] }));
   }
 }
+
+const decorations: DecorationMap = {
+  [NAME_OF_STRIKE_THROUGH]: getStrikeThroughDecorations,
+};
+const selectionDecorations: SelectionDecorationMap = {
+  [NAME_OF_STRIKE_THROUGH]: getStrikeThroughSelectionDecorations,
+};
+export const strikeThroughDecorationPlugin: DecorationPlugin = {
+  decorations,
+  selectionDecorations,
+};

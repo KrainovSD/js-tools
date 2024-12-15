@@ -1,7 +1,7 @@
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { languages } from "@codemirror/language-data";
 import { type Extension } from "@codemirror/state";
-import { decorationMarkdownPlugin } from "./decoration-markdown";
+import { markdownDecorationPlugin } from "./markdown-decoration";
 import { mentionParser } from "./mention";
 
 export const initMarkdown = (): Extension => {
@@ -12,6 +12,6 @@ export const initMarkdown = (): Extension => {
       addKeymap: true,
       extensions: [mentionParser],
     }),
-    decorationMarkdownPlugin,
+    markdownDecorationPlugin,
   ];
 };

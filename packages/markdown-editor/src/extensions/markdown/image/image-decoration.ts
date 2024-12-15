@@ -1,7 +1,11 @@
 import { type EditorView } from "@codemirror/view";
 import type { SyntaxNodeRef } from "@lezer/common";
 import { utils } from "@/lib";
-import type { GetSelectionDecorationOptions } from "../markdown-types";
+import type {
+  DecorationPlugin,
+  GetSelectionDecorationOptions,
+  SelectionDecorationMap,
+} from "../markdown-types";
 import {
   CODE_OF_END_IMAGE_TEXT,
   CODE_OF_END_IMAGE_URL,
@@ -17,10 +21,6 @@ export function getImageSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_IMAGE) {
-    return;
-  }
-
   const { text, url } = parseInfo(view, node);
   const line = view.lineBlockAt(node.from);
 
@@ -102,3 +102,10 @@ function parseInfo(view: EditorView, node: SyntaxNodeRef) {
 
   return { text, url };
 }
+
+const selectionDecorations: SelectionDecorationMap = {
+  [NAME_OF_IMAGE]: getImageSelectionDecorations,
+};
+export const imageDecorationPlugin: DecorationPlugin = {
+  selectionDecorations,
+};

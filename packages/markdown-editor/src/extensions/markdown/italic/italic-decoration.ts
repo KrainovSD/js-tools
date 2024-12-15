@@ -1,13 +1,15 @@
 import { utils } from "@/lib";
-import type { GetDecorationOptions, GetSelectionDecorationOptions } from "../markdown-types";
+import type {
+  DecorationMap,
+  DecorationPlugin,
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+  SelectionDecorationMap,
+} from "../markdown-types";
 import styles from "../styles.module.scss";
 import { LIST_OF_ITALIC_MARKS, NAME_OF_ITALIC } from "./italic-constants";
 
 export function getItalicDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== NAME_OF_ITALIC) {
-    return;
-  }
-
   decorations.push(
     utils.getMarkDecoration({
       style: styles.italic,
@@ -22,10 +24,6 @@ export function getItalicSelectionDecorations({
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_ITALIC) {
-    return;
-  }
-
   if (checkIsSeveralEmphasis({ decorations, node, view, isReadonly })) {
     return void splitEmphasis({ decorations, node, view, isReadonly });
   }
@@ -94,3 +92,14 @@ export function splitEmphasis({
     isReadonly,
   });
 }
+
+const decorations: DecorationMap = {
+  [NAME_OF_ITALIC]: getItalicDecorations,
+};
+const selectionDecorations: SelectionDecorationMap = {
+  [NAME_OF_ITALIC]: getItalicSelectionDecorations,
+};
+export const italicDecorationPlugin: DecorationPlugin = {
+  decorations,
+  selectionDecorations,
+};

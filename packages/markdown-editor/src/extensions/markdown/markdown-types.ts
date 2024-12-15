@@ -16,3 +16,16 @@ export type GetSelectionDecorationOptions = {
   view: EditorView;
   isReadonly: boolean;
 };
+
+export type GetDecorationFunction = (options: GetDecorationOptions) => void;
+export type GetSelectionDecorationFunction = (options: GetSelectionDecorationOptions) => void;
+
+export type DecorationMap = Record<string, GetDecorationFunction | GetDecorationFunction[]>;
+export type SelectionDecorationMap = Record<
+  string,
+  GetSelectionDecorationFunction | GetSelectionDecorationFunction[]
+>;
+export type DecorationPlugin = {
+  decorations?: DecorationMap;
+  selectionDecorations?: SelectionDecorationMap;
+};
