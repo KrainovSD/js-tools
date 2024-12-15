@@ -1,16 +1,18 @@
 import { syntaxTree } from "@codemirror/language";
 import { utils } from "@/lib";
 import type {
-  DecorationMap,
   DecorationPlugin,
   GetDecorationOptions,
   GetSelectionDecorationOptions,
-  SelectionDecorationMap,
 } from "../markdown-types";
 import styles from "../styles.module.scss";
 import { LIST_OF_BOLD_MARKS, NAME_OF_BOLD } from "./bold-constants";
 
-export function getBoldDecorations({ decorations, node, view }: GetDecorationOptions) {
+function getBoldDecorations({ decorations, node, view }: GetDecorationOptions) {
+  if (node.name !== NAME_OF_BOLD) {
+    return;
+  }
+
   const step =
     LIST_OF_BOLD_MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
     syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
@@ -25,12 +27,16 @@ export function getBoldDecorations({ decorations, node, view }: GetDecorationOpt
   );
 }
 
-export function getBoldSelectionDecorations({
+function getBoldSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
+  if (node.name !== NAME_OF_BOLD) {
+    return;
+  }
+
   if (
     LIST_OF_BOLD_MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
     syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
@@ -48,13 +54,7 @@ export function getBoldSelectionDecorations({
   }
 }
 
-const decorations: DecorationMap = {
-  [NAME_OF_BOLD]: getBoldDecorations,
-};
-const selectionDecorations: SelectionDecorationMap = {
-  [NAME_OF_BOLD]: getBoldSelectionDecorations,
-};
 export const boldDecorationPlugin: DecorationPlugin = {
-  decorations,
-  selectionDecorations,
+  decorations: [getBoldDecorations],
+  selectionDecorations: [getBoldSelectionDecorations],
 };

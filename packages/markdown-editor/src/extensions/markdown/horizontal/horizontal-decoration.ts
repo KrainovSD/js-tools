@@ -1,20 +1,18 @@
 import clsx from "clsx";
 import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
-import type {
-  DecorationPlugin,
-  GetSelectionDecorationOptions,
-  SelectionDecorationMap,
-} from "../markdown-types";
+import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
 import { NAME_OF_HORIZONTAL } from "./horizontal-constants";
 
-export function getHorizontalSelectionDecoration({
+function getHorizontalSelectionDecoration({
   decorations,
   isReadonly,
   node,
   view,
 }: GetSelectionDecorationOptions) {
+  if (node.name !== NAME_OF_HORIZONTAL) return;
+
   const line = view.lineBlockAt(node.from);
 
   if (
@@ -32,9 +30,6 @@ export function getHorizontalSelectionDecoration({
   }
 }
 
-const selectionDecorations: SelectionDecorationMap = {
-  [NAME_OF_HORIZONTAL]: getHorizontalSelectionDecoration,
-};
 export const horizontalDecorationPlugin: DecorationPlugin = {
-  selectionDecorations,
+  selectionDecorations: [getHorizontalSelectionDecoration],
 };

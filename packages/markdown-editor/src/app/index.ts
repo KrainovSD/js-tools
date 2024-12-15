@@ -3,7 +3,6 @@ import { Editor, type MultiCursorOptions } from "@/module";
 import type { ThemeOptions } from "@/extensions/theme";
 import "./global.css";
 import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } from "./helpers";
-import "./helpers/performace-test";
 
 /** Multi Cursor Mode */
 const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");

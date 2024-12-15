@@ -1,9 +1,5 @@
 import { utils } from "@/lib";
-import type {
-  DecorationPlugin,
-  GetSelectionDecorationOptions,
-  SelectionDecorationMap,
-} from "../markdown-types";
+import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
 import {
   CODE_OF_END_LINK_TEXT,
   CODE_OF_END_LINK_URL,
@@ -14,12 +10,16 @@ import {
 import { getLinkLabelSelectionDecoration } from "./link-label-decoration";
 import { LinkWidget } from "./link-widget";
 
-export function getLinkSelectionDecorations({
+function getLinkSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
+  if (node.name !== NAME_OF_LINK) {
+    return;
+  }
+
   const content = view.state.doc.sliceString(node.from, node.to);
   const textCoordinates = { from: -1, to: -1 };
   const urlCoordinates = { from: -1, to: -1 };
@@ -71,9 +71,6 @@ export function getLinkSelectionDecorations({
   }
 }
 
-const selectionDecorations: SelectionDecorationMap = {
-  [NAME_OF_LINK]: getLinkSelectionDecorations,
-};
 export const linkDecorationPlugin: DecorationPlugin = {
-  selectionDecorations,
+  selectionDecorations: [getLinkSelectionDecorations],
 };

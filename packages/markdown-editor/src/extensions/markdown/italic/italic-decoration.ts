@@ -1,15 +1,17 @@
 import { utils } from "@/lib";
 import type {
-  DecorationMap,
   DecorationPlugin,
   GetDecorationOptions,
   GetSelectionDecorationOptions,
-  SelectionDecorationMap,
 } from "../markdown-types";
 import styles from "../styles.module.scss";
 import { LIST_OF_ITALIC_MARKS, NAME_OF_ITALIC } from "./italic-constants";
 
-export function getItalicDecorations({ decorations, node }: GetDecorationOptions) {
+function getItalicDecorations({ decorations, node }: GetDecorationOptions) {
+  if (node.name !== NAME_OF_ITALIC) {
+    return;
+  }
+
   decorations.push(
     utils.getMarkDecoration({
       style: styles.italic,
@@ -18,12 +20,16 @@ export function getItalicDecorations({ decorations, node }: GetDecorationOptions
   );
 }
 
-export function getItalicSelectionDecorations({
+function getItalicSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
+  if (node.name !== NAME_OF_ITALIC) {
+    return;
+  }
+
   if (checkIsSeveralEmphasis({ decorations, node, view, isReadonly })) {
     return void splitEmphasis({ decorations, node, view, isReadonly });
   }
@@ -48,7 +54,7 @@ export function getItalicSelectionDecorations({
 }
 
 /** Fixed wide italic + italic */
-export function checkIsSeveralEmphasis({ node, view }: GetSelectionDecorationOptions) {
+function checkIsSeveralEmphasis({ node, view }: GetSelectionDecorationOptions) {
   let marks = 0;
   let pos = 0;
 
@@ -64,12 +70,7 @@ export function checkIsSeveralEmphasis({ node, view }: GetSelectionDecorationOpt
   return false;
 }
 
-export function splitEmphasis({
-  decorations,
-  node,
-  view,
-  isReadonly,
-}: GetSelectionDecorationOptions) {
+function splitEmphasis({ decorations, node, view, isReadonly }: GetSelectionDecorationOptions) {
   const text = view.state.doc.sliceString(node.from, node.to);
   let marks = 0;
   let pos = 0;
@@ -93,13 +94,7 @@ export function splitEmphasis({
   });
 }
 
-const decorations: DecorationMap = {
-  [NAME_OF_ITALIC]: getItalicDecorations,
-};
-const selectionDecorations: SelectionDecorationMap = {
-  [NAME_OF_ITALIC]: getItalicSelectionDecorations,
-};
 export const italicDecorationPlugin: DecorationPlugin = {
-  decorations,
-  selectionDecorations,
+  decorations: [getItalicDecorations],
+  selectionDecorations: [getItalicSelectionDecorations],
 };

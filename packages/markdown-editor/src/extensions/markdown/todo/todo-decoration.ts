@@ -1,19 +1,17 @@
 import { utils } from "@/lib";
-import type {
-  DecorationPlugin,
-  GetSelectionDecorationOptions,
-  SelectionDecorationMap,
-} from "../markdown-types";
+import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
 import { LIST_OF_TODO_MARKS, NAME_OF_LIST_MARK, NAME_OF_TODO } from "./todo-constants";
 import { TodoWidget } from "./todo-widget";
 
-export function getTodoSelectionDecoration({
+function getTodoSelectionDecoration({
   decorations,
   node,
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
+  if (node.name !== NAME_OF_TODO) return;
+
   const prevSibling = node.node.prevSibling;
   if (!prevSibling || prevSibling.name !== NAME_OF_LIST_MARK) return;
 
@@ -48,9 +46,6 @@ export function getTodoSelectionDecoration({
   }
 }
 
-const selectionDecorations: SelectionDecorationMap = {
-  [NAME_OF_TODO]: getTodoSelectionDecoration,
-};
 export const todoDecorationPlugin: DecorationPlugin = {
-  selectionDecorations,
+  selectionDecorations: [getTodoSelectionDecoration],
 };

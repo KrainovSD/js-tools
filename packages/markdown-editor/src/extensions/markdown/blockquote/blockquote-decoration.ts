@@ -2,11 +2,9 @@ import clsx from "clsx";
 import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import type {
-  DecorationMap,
   DecorationPlugin,
   GetDecorationOptions,
   GetSelectionDecorationOptions,
-  SelectionDecorationMap,
 } from "../markdown-types";
 import styles from "../styles.module.scss";
 import {
@@ -16,7 +14,11 @@ import {
 } from "./blockquote-constants";
 import { BlockquoteWidget } from "./blockquote-widget";
 
-export function getBlockquoteDecorations({ decorations, node, view }: GetDecorationOptions) {
+function getBlockquoteDecorations({ decorations, node, view }: GetDecorationOptions) {
+  if (node.name !== NAME_OF_BLOCKQUOTE_MARK) {
+    return;
+  }
+
   const line = view.lineBlockAt(node.from);
   let isInner = false;
 
@@ -53,12 +55,16 @@ export function getBlockquoteDecorations({ decorations, node, view }: GetDecorat
   }
 }
 
-export function getBlockquoteSelectionDecorations({
+function getBlockquoteSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
+  if (node.name !== NAME_OF_BLOCKQUOTE_MARK) {
+    return;
+  }
+
   const line = view.lineBlockAt(node.from);
   let isInner = false;
   let isDeepInner = false;
@@ -107,13 +113,7 @@ export function getBlockquoteSelectionDecorations({
   }
 }
 
-const decorations: DecorationMap = {
-  [NAME_OF_BLOCKQUOTE_MARK]: getBlockquoteDecorations,
-};
-const selectionDecorations: SelectionDecorationMap = {
-  [NAME_OF_BLOCKQUOTE_MARK]: getBlockquoteSelectionDecorations,
-};
 export const blockquoteDecorationPlugin: DecorationPlugin = {
-  decorations,
-  selectionDecorations,
+  decorations: [getBlockquoteDecorations],
+  selectionDecorations: [getBlockquoteSelectionDecorations],
 };

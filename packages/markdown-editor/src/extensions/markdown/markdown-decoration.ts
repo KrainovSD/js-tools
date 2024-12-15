@@ -16,7 +16,11 @@ import { imageDecorationPlugin } from "./image/image-decoration";
 import { italicDecorationPlugin } from "./italic";
 import { autoLinkDecorationPlugin, linkDecorationPlugin } from "./link";
 import { listDecorationPlugin } from "./list";
-import type { DecorationMap, DecorationPlugin, SelectionDecorationMap } from "./markdown-types";
+import type {
+  DecorationPlugin,
+  GetDecorationFunction,
+  GetSelectionDecorationFunction,
+} from "./markdown-types";
 import { mentionDecorationPlugin } from "./mention/mention-decoration";
 import { strikeThroughDecorationPlugin } from "./strike-through";
 import { todoDecorationPlugin } from "./todo";
@@ -37,13 +41,13 @@ const decorationPlugins: DecorationPlugin[] = [
   todoDecorationPlugin,
 ];
 
-let decorationsMap: DecorationMap = {};
-let selectionDecorationMap: SelectionDecorationMap = {};
+let decorationFunctions: GetDecorationFunction[] = [];
+let selectionDecorationFunctions: GetSelectionDecorationFunction[] = [];
 
 for (const plugin of decorationPlugins) {
-  if (plugin.decorations) decorationsMap = { ...decorationsMap, ...plugin.decorations };
+  if (plugin.decorations) decorationFunctions = decorationFunctions.concat(plugin.decorations);
   if (plugin.selectionDecorations)
-    selectionDecorationMap = { ...selectionDecorationMap, ...plugin.selectionDecorations };
+    selectionDecorationFunctions = selectionDecorationFunctions.concat(plugin.selectionDecorations);
 }
 
 const SKIP_MARKS = new Set([
@@ -80,25 +84,13 @@ function getDecorations(view: EditorView, isChanged: boolean) {
         if (SKIP_MARKS.has(node.name)) return;
         /** Decoration by change content */
         if (isChanged) {
-          const decorationF = decorationsMap[node.name];
-          if (decorationF) {
-            if (typeof decorationF === "function") decorationF({ decorations, node, view });
-            else decorationF.forEach((f) => f({ decorations, node, view }));
-          }
+          decorationFunctions.forEach((f) => f({ decorations, node, view }));
         }
 
         /** Decoration by selection content  */
-        {
-          const selectionDecorationF = selectionDecorationMap[node.name];
-          if (selectionDecorationF) {
-            if (typeof selectionDecorationF === "function")
-              selectionDecorationF({ decorations: selectionDecorations, node, view, isReadonly });
-            else
-              selectionDecorationF.forEach((f) =>
-                f({ decorations: selectionDecorations, node, view, isReadonly }),
-              );
-          }
-        }
+        selectionDecorationFunctions.forEach((f) =>
+          f({ decorations: selectionDecorations, node, view, isReadonly }),
+        );
       },
     });
   }
@@ -119,13 +111,11 @@ export const markdownDecorationPlugin = ViewPlugin.fromClass(
     }
 
     update(update: ViewUpdate) {
-      console.time("decoration");
       const isDocumentChanged =
         update.docChanged ||
         update.viewportChanged ||
         syntaxTree(update.startState) != syntaxTree(update.state);
       this.decorations = getDecorations(update.view, isDocumentChanged);
-      console.timeEnd("decoration");
     }
   },
   {

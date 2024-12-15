@@ -2,16 +2,18 @@ import clsx from "clsx";
 import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
 import type {
-  DecorationMap,
   DecorationPlugin,
   GetDecorationOptions,
   GetSelectionDecorationOptions,
-  SelectionDecorationMap,
 } from "../markdown-types";
 import styles from "../styles.module.scss";
 import { NAME_OF_MENTION } from "./mention-constants";
 
-export function getMentionDecorations({ decorations, node }: GetDecorationOptions) {
+function getMentionDecorations({ decorations, node }: GetDecorationOptions) {
+  if (node.name !== NAME_OF_MENTION) {
+    return;
+  }
+
   decorations.push(
     utils.getMarkDecoration({
       style: clsx(styles.mention, CLASSES.mention),
@@ -20,12 +22,16 @@ export function getMentionDecorations({ decorations, node }: GetDecorationOption
   );
 }
 
-export function getMentionSelectionDecorations({
+function getMentionSelectionDecorations({
   decorations,
   node,
   view,
   isReadonly,
 }: GetSelectionDecorationOptions) {
+  if (node.name !== NAME_OF_MENTION) {
+    return;
+  }
+
   if (
     isReadonly ||
     !view.hasFocus ||
@@ -35,13 +41,7 @@ export function getMentionSelectionDecorations({
   }
 }
 
-const decorations: DecorationMap = {
-  [NAME_OF_MENTION]: getMentionDecorations,
-};
-const selectionDecorations: SelectionDecorationMap = {
-  [NAME_OF_MENTION]: getMentionSelectionDecorations,
-};
 export const mentionDecorationPlugin: DecorationPlugin = {
-  decorations,
-  selectionDecorations,
+  decorations: [getMentionDecorations],
+  selectionDecorations: [getMentionSelectionDecorations],
 };

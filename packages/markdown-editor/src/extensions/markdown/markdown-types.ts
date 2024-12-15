@@ -20,12 +20,7 @@ export type GetSelectionDecorationOptions = {
 export type GetDecorationFunction = (options: GetDecorationOptions) => void;
 export type GetSelectionDecorationFunction = (options: GetSelectionDecorationOptions) => void;
 
-export type DecorationMap = Record<string, GetDecorationFunction | GetDecorationFunction[]>;
-export type SelectionDecorationMap = Record<
-  string,
-  GetSelectionDecorationFunction | GetSelectionDecorationFunction[]
->;
 export type DecorationPlugin = {
-  decorations?: DecorationMap;
-  selectionDecorations?: SelectionDecorationMap;
+  decorations?: GetDecorationFunction[];
+  selectionDecorations?: GetSelectionDecorationFunction[];
 };
