@@ -89,7 +89,12 @@ function getDecorations(view: EditorView, isChanged: boolean) {
 
         /** Decoration by selection content  */
         selectionDecorationFunctions.forEach((f) =>
-          f({ decorations: selectionDecorations, node, view, isReadonly }),
+          f({
+            decorations: selectionDecorations,
+            node,
+            view,
+            isReadonly,
+          }),
         );
       },
     });

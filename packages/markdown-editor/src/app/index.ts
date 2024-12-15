@@ -20,8 +20,8 @@ let readonly: boolean = false;
 let vimMode: boolean = false;
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
-const viewFullExample = true;
-const viewStressTest = true;
+const viewFullExample = false;
+const viewStressTest = false;
 const root = document.querySelector<HTMLElement>("#root");
 if (!root) throw new Error("Hasn't root");
 

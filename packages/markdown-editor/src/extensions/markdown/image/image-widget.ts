@@ -12,16 +12,31 @@ export class ImageWidget extends WidgetType {
     super();
   }
 
-  getTextNode(parent: ChildNode | Node | null | undefined) {
-    if (!parent) return null;
+  /** recursively find the link text node in line */
+  getTextNode(line: ChildNode | Node | null | undefined): ChildNode | null {
+    if (!line) return null;
 
-    return Array.from(parent.childNodes).find((node) => {
-      if (node.nodeType !== 3) return false;
+    let textNode: ChildNode | null = null;
+
+    for (const node of Array.from(line.childNodes)) {
+      if (node.nodeType !== 3) {
+        const innerNode = this.getTextNode(node);
+        if (innerNode) {
+          textNode = innerNode;
+          break;
+        }
+
+        continue;
+      }
 
       const textContent = node.textContent;
+      if (textContent && textContent.includes(this.link)) {
+        textNode = node;
+        break;
+      }
+    }
 
-      return textContent && textContent.includes(this.link);
-    });
+    return textNode;
   }
 
   getMinLength() {
@@ -64,13 +79,27 @@ export class ImageWidget extends WidgetType {
     event.preventDefault();
     const target = event.target as HTMLElement;
     const parent = target.parentNode;
+    let line: HTMLElement | null = parent as HTMLElement | null;
+
+    /** recursively find line that contains link */
+    while (line && !line.classList.contains("cm-line")) {
+      line = line.parentNode as HTMLElement | null;
+    }
+
     const editor = this.view.dom.querySelector(".cm-content");
 
     if (!selection || !editor || !parent) return;
+    /** find target index for set caret right before widget */
     const targetIndex = Array.from(parent.childNodes).findIndex((element) => element === target);
     const prevLine = parent.previousSibling;
-    if (this.getTextNode(prevLine)) return;
-    if (this.getTextNode(parent)) return;
+
+    let textNode = this.getTextNode(prevLine);
+    if (!textNode) textNode = this.getTextNode(parent);
+    if (textNode) {
+      if (this.isCorrectNode(textNode)) this.selectLink(textNode, selection);
+
+      return;
+    }
 
     const range = document.createRange();
     range.setStart(parent, targetIndex);
@@ -78,6 +107,7 @@ export class ImageWidget extends WidgetType {
     selection.removeAllRanges();
     selection.addRange(range);
 
+    /** wait for the widget to disappear and link will be visible */
     void utils
       .tick({
         delay: 0,
@@ -86,13 +116,13 @@ export class ImageWidget extends WidgetType {
           return deep > 1 ? 10 : 0;
         },
         recursiveCondition: () => {
-          const textNode = this.getTextNode(parent);
+          const textNode = this.getTextNode(line);
 
           return this.isCorrectNode(textNode);
         },
       })
       .then(() => {
-        const textNode = this.getTextNode(parent);
+        const textNode = this.getTextNode(line);
         if (this.isCorrectNode(textNode)) this.selectLink(textNode, selection);
       });
 

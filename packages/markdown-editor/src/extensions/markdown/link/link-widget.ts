@@ -14,16 +14,31 @@ export class LinkWidget extends WidgetType {
     super();
   }
 
-  getTextNode(parent: ChildNode | Node | null | undefined) {
-    if (!parent) return null;
+  /** recursively find the link text node in line */
+  getTextNode(line: ChildNode | Node | null | undefined): ChildNode | null {
+    if (!line) return null;
 
-    return Array.from(parent.childNodes).find((node) => {
-      if (node.nodeType !== 3) return false;
+    let textNode: ChildNode | null = null;
+
+    for (const node of Array.from(line.childNodes)) {
+      if (node.nodeType !== 3) {
+        const innerNode = this.getTextNode(node);
+        if (innerNode) {
+          textNode = innerNode;
+          break;
+        }
+
+        continue;
+      }
 
       const textContent = node.textContent;
+      if (textContent && textContent.includes(this.link)) {
+        textNode = node;
+        break;
+      }
+    }
 
-      return textContent && textContent.includes(this.link);
-    });
+    return textNode;
   }
 
   getMinLength() {
@@ -35,6 +50,7 @@ export class LinkWidget extends WidgetType {
     return endPosition;
   }
 
+  /** check that the text node is correct node */
   isCorrectNode(node: ChildNode | Node | null | undefined): node is ChildNode | Node {
     if (!node) return false;
 
@@ -58,7 +74,10 @@ export class LinkWidget extends WidgetType {
   handleClick(event: MouseEvent) {
     if (!this.view) return;
 
-    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey || !this.view.hasFocus) {
+    /** open the link if has special key or the view is readonly */
+    const contentEditable = this.view.contentDOM.getAttribute("contenteditable");
+    const isReadonly = !contentEditable || contentEditable === "false";
+    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey || isReadonly) {
       if (event.type === "mousedown") {
         const target = event.target as HTMLAnchorElement;
         window.open(target.href, "_blank");
@@ -71,10 +90,18 @@ export class LinkWidget extends WidgetType {
     event.preventDefault();
     const target = event.target as HTMLAnchorElement;
     const parent = target.parentNode;
+    let line: HTMLElement | null = parent as HTMLElement | null;
+
+    /** recursively find line that contains link */
+    while (line && !line.classList.contains("cm-line")) {
+      line = line.parentNode as HTMLElement | null;
+    }
+
     const editor = this.view.dom.querySelector(".cm-content");
     const selection = window.getSelection();
 
     if (!selection || !editor || !parent) return;
+    /** find target index for set caret right before widget */
     const targetIndex = Array.from(parent.childNodes).findIndex((element) => element === target);
 
     const range = document.createRange();
@@ -85,6 +112,7 @@ export class LinkWidget extends WidgetType {
     selection.removeAllRanges();
     selection.addRange(range);
 
+    /** wait for the widget to disappear and link will be visible */
     void utils
       .tick({
         delay: 0,
@@ -93,13 +121,13 @@ export class LinkWidget extends WidgetType {
           return deep > 1 ? 10 : 0;
         },
         recursiveCondition: () => {
-          const textNode = this.getTextNode(parent);
+          const textNode = this.getTextNode(line);
 
           return this.isCorrectNode(textNode);
         },
       })
       .then(() => {
-        const textNode = this.getTextNode(parent);
+        const textNode = this.getTextNode(line);
 
         if (this.isCorrectNode(textNode)) this.selectLink(textNode, selection);
       });
