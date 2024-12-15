@@ -15,6 +15,7 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
+      - run: npm i -g pnpm
       - run: pnpm i
       - run: pnpm lint
       - run: pnpm build
