@@ -4,7 +4,12 @@
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "tmp"
+    "declarationMap": true,
+    "outDir": "tmp",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "./"
   },
   "files": ["src/index.ts"],
   "include": ["src/**/*", "src/types.d.ts"],
