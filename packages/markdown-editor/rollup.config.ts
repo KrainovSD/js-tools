@@ -12,10 +12,12 @@ export default defineConfig({
     {
       file: "./lib/esm/index.js",
       format: "es",
+      sourcemap: true,
     },
     {
       file: "./lib/cjs/bundle.cjs",
       format: "cjs",
+      sourcemap: true,
     },
   ],
   plugins: [
@@ -24,7 +26,6 @@ export default defineConfig({
     terser(),
     typescript(),
     postcss({
-      extract: true,
       modules: {
         generateScopedName: "_[local]_[hash:base64:5]",
       },

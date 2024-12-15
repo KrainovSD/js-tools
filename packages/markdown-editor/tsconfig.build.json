@@ -4,12 +4,12 @@
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "declarationMap": true,
     "outDir": "tmp",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
   },
   "files": ["src/index.ts"],
   "include": ["src/**/*", "src/types.d.ts"],
