@@ -48,6 +48,14 @@ function initEditor() {
     // onChange: () => {
     //   console.log("change");
     // },
+    // onEnter: () => {
+    //   return false;
+    // },
+    onEscape: (view) => {
+      view.contentDOM.blur();
+
+      return true;
+    },
   });
 }
 

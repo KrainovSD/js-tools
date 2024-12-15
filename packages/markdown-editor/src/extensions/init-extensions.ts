@@ -24,6 +24,7 @@ export const initExtensions = ({
   onChange,
   onFocus,
   onEnter,
+  onEscape,
   readonly,
   vimMode,
   multiCursorText,
@@ -39,7 +40,7 @@ export const initExtensions = ({
     InitSettings({ readonly, vimMode }),
     initMarkdown({ languages }),
     initTheme({ theme, dark, light }),
-    initKeyMaps({ onEnter, multiCursorMode }),
+    initKeyMaps({ onEnter, onEscape, multiCursorMode }),
     initListeners({ onBlur, onChange, onFocus }),
   ];
 

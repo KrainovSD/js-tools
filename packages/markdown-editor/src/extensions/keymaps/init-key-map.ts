@@ -25,7 +25,11 @@ export const initKeyMaps = ({
             key: "Enter",
             shift: keyMap.run,
             run: (view) => {
-              return onEnter(view);
+              const response = onEnter(view);
+
+              if (response) keyMap.run?.(view);
+
+              return response;
             },
           };
         }

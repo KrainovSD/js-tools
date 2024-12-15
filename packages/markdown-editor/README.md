@@ -98,3 +98,9 @@ Type: `((view: EditorView) => boolean) | undefined`
 
 Execute by keydown event in root node of editor. <br>
 **Warning!!!** Line break will be canceled If set `false` by return of function. Only `shift + Enter` will be worked.
+
+### onEscape
+
+Type: `((view: EditorView) => boolean) | undefined` 
+
+Execute by keydown event in root node of editor.
