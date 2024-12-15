@@ -1,7 +1,11 @@
 export * from "./compartments";
 export * from "./init-extensions";
 export { getDarkTheme, getLightTheme } from "./theme";
-export type { InitKeyMapsOptions, HandleEnterKeyMapEditorFunction } from "./keymaps";
+export type {
+  InitKeyMapsOptions,
+  HandleEnterKeyMapEditorFunction,
+  HandleEscapeKeyMapEditorFunction,
+} from "./keymaps";
 export type {
   InitListenersOptions,
   GetChangeEventOptions,

@@ -22,4 +22,5 @@ export type {
   HandleChangeEditorFunction,
   HandleEnterKeyMapEditorFunction,
   HandleFocusEditorFunction,
+  HandleEscapeKeyMapEditorFunction,
 } from "./extensions";

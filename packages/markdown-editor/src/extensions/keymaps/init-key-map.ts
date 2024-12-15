@@ -5,12 +5,15 @@ import { yUndoManagerKeymap } from "y-codemirror.next";
 
 export type InitKeyMapsOptions = {
   onEnter?: HandleEnterKeyMapEditorFunction;
+  onEscape?: HandleEscapeKeyMapEditorFunction;
 };
 
 export type HandleEnterKeyMapEditorFunction = (view: EditorView) => boolean;
+export type HandleEscapeKeyMapEditorFunction = (view: EditorView) => boolean;
 
 export const initKeyMaps = ({
   onEnter,
+  onEscape,
   multiCursorMode,
 }: InitKeyMapsOptions & { multiCursorMode: boolean }): Extension => {
   const extensions = [
@@ -30,11 +33,25 @@ export const initKeyMaps = ({
         return keyMap;
       }),
     ),
+
     // keymap.of(boldKeymap),
     // keymap.of(italicKeymap),
     // keymap.of(lineThroughKeymap),
     // keymap.of(underlineKeymap),
   ];
+
+  if (onEscape) {
+    extensions.push(
+      keymap.of([
+        {
+          key: "Escape",
+          run: (view) => {
+            return onEscape(view);
+          },
+        },
+      ]),
+    );
+  }
 
   if (multiCursorMode) {
     extensions.push(keymap.of(yUndoManagerKeymap));

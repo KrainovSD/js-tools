@@ -39,6 +39,15 @@ function initEditor() {
     light,
     theme,
     languages,
+    // onBlur: () => {
+    //   console.log("blur");
+    // },
+    // onFocus: () => {
+    //   console.log("focus");
+    // },
+    // onChange: () => {
+    //   console.log("change");
+    // },
   });
 }
 

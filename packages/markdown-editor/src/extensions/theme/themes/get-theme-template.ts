@@ -14,7 +14,8 @@ export function getThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
       },
       "&.cm-editor.cm-focused": { outline: "none" },
       "&.cm-editor": {
-        height: "100% !important",
+        height: "100%",
+        width: "100%",
       },
       [`.${CLASSES.listCommon}:after`]: {
         background: config.color,
