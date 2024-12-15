@@ -7,6 +7,6 @@
     "outDir": "tmp"
   },
   "files": ["src/index.ts"],
-  "include": [],
+  "include": ["src/**/*", "src/types.d.ts"],
   "exclude": ["**/*.spec.ts"]
 }

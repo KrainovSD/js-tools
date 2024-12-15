@@ -1,10 +1,10 @@
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import { languages } from "@codemirror/language-data";
 import { type Extension } from "@codemirror/state";
 import { markdownDecorationPlugin } from "./markdown-decoration";
+import type { InitMarkdownOptions } from "./markdown-types";
 import { mentionParser } from "./mention";
 
-export const initMarkdown = (): Extension => {
+export const initMarkdown = ({ languages }: InitMarkdownOptions): Extension => {
   return [
     markdown({
       base: markdownLanguage,

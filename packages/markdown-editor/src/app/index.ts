@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+import { languages } from "@codemirror/language-data";
 import { Editor, type MultiCursorOptions } from "@/module";
 import type { ThemeOptions } from "@/extensions/theme";
 import "./global.css";
@@ -20,7 +20,7 @@ let readonly: boolean = false;
 let vimMode: boolean = false;
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
-const viewFullExample = false;
+const viewFullExample = true;
 const viewStressTest = false;
 const root = document.querySelector<HTMLElement>("#root");
 if (!root) throw new Error("Hasn't root");
@@ -38,6 +38,7 @@ function initEditor() {
     dark,
     light,
     theme,
+    languages,
   });
 }
 
