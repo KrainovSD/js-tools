@@ -2,6 +2,7 @@ import { EditorView } from "@codemirror/view";
 import { vim } from "@replit/codemirror-vim";
 import { type WebsocketProvider } from "y-websocket";
 import {
+  type EditorTheme,
   ReadonlyCompartment,
   ThemeCompartment,
   VimModeCompartment,
@@ -39,7 +40,7 @@ export class Editor {
     });
   };
 
-  setTheme = (theme?: "dark" | "light") => {
+  setTheme = (theme?: EditorTheme) => {
     this.view.dispatch({
       effects: ThemeCompartment.reconfigure(
         theme === "dark"

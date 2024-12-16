@@ -23,4 +23,7 @@ export type {
   HandleEnterKeyMapEditorFunction,
   HandleFocusEditorFunction,
   HandleEscapeKeyMapEditorFunction,
+  DefaultKeyMapsOptions,
+  EditorTheme,
+  CustomKeyMap,
 } from "./extensions";

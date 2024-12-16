@@ -1,6 +1,6 @@
 import { languages } from "@codemirror/language-data";
 import { Editor, type MultiCursorOptions } from "@/module";
-import type { ThemeOptions } from "@/extensions/theme";
+import type { EditorTheme, ThemeOptions } from "@/extensions";
 import "./global.css";
 import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } from "./helpers";
 
@@ -14,7 +14,7 @@ const presetMultiCursor: MultiCursorOptions = {
 };
 
 let editor: Editor | undefined;
-let theme: "dark" | "light" = "dark";
+let theme: EditorTheme = "dark";
 let multiCursor: MultiCursorOptions | undefined = roomId ? presetMultiCursor : undefined;
 let readonly: boolean = false;
 let vimMode: boolean = false;
@@ -39,6 +39,11 @@ function initEditor() {
     light,
     theme,
     languages,
+    keyMaps: [],
+    defaultKeyMaps: {
+      theme: true,
+      vim: true,
+    },
     // onBlur: () => {
     //   console.log("blur");
     // },
@@ -48,9 +53,9 @@ function initEditor() {
     // onChange: () => {
     //   console.log("change");
     // },
-    // onEnter: () => {
-    //   return false;
-    // },
+    onEnter: () => {
+      return true;
+    },
     onEscape: (view) => {
       view.contentDOM.blur();
 

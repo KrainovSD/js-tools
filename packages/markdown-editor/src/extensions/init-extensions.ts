@@ -25,14 +25,16 @@ export const initExtensions = ({
   onFocus,
   onEnter,
   onEscape,
-  readonly,
-  vimMode,
+  readonly = true,
+  vimMode = false,
   multiCursorText,
   provider,
-  theme,
+  theme = "light",
   dark,
   light,
   languages,
+  keyMaps,
+  defaultKeyMaps,
 }: InitExtensionsOptions): Extension[] => {
   const multiCursorMode = Boolean(multiCursorText && provider);
 
@@ -40,7 +42,17 @@ export const initExtensions = ({
     InitSettings({ readonly, vimMode }),
     initMarkdown({ languages }),
     initTheme({ theme, dark, light }),
-    initKeyMaps({ onEnter, onEscape, multiCursorMode }),
+    initKeyMaps({
+      onEnter,
+      onEscape,
+      multiCursorMode,
+      keyMaps,
+      vimMode,
+      theme,
+      dark,
+      defaultKeyMaps,
+      light,
+    }),
     initListeners({ onBlur, onChange, onFocus }),
   ];
 

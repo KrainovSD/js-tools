@@ -1,67 +1,134 @@
 import { historyKeymap, indentWithTab, standardKeymap } from "@codemirror/commands";
 import type { Extension } from "@codemirror/state";
-import { type EditorView, keymap } from "@codemirror/view";
+import { type EditorView, type KeyBinding, keymap } from "@codemirror/view";
+import { vim } from "@replit/codemirror-vim";
 import { yUndoManagerKeymap } from "y-codemirror.next";
+import { ThemeCompartment, VimModeCompartment } from "../compartments";
+import { type EditorTheme, type ThemeOptions, getDarkTheme, getLightTheme } from "../theme";
 
 export type InitKeyMapsOptions = {
   onEnter?: HandleEnterKeyMapEditorFunction;
   onEscape?: HandleEscapeKeyMapEditorFunction;
+  keyMaps?: CustomKeyMap[];
+  defaultKeyMaps?: DefaultKeyMapsOptions;
 };
 
+export type CustomKeyMap = KeyBinding;
 export type HandleEnterKeyMapEditorFunction = (view: EditorView) => boolean;
 export type HandleEscapeKeyMapEditorFunction = (view: EditorView) => boolean;
+export type DefaultKeyMapsOptions = {
+  vim: boolean;
+  theme: boolean;
+};
+
+let vimMode = false;
+let theme: EditorTheme = "light";
 
 export const initKeyMaps = ({
   onEnter,
   onEscape,
   multiCursorMode,
-}: InitKeyMapsOptions & { multiCursorMode: boolean }): Extension => {
-  const extensions = [
-    keymap.of([indentWithTab]),
-    keymap.of(
-      standardKeymap.map((keyMap) => {
-        if (keyMap.key === "Enter" && onEnter) {
-          return {
-            key: "Enter",
-            shift: keyMap.run,
-            run: (view) => {
-              const response = onEnter(view);
+  keyMaps,
+  defaultKeyMaps,
+  theme: initialTheme,
+  vimMode: initialVimMode,
+  dark,
+  light,
+}: InitKeyMapsOptions & {
+  multiCursorMode: boolean;
+  vimMode: boolean;
+  theme: EditorTheme;
+  dark?: ThemeOptions;
+  light?: ThemeOptions;
+}): Extension => {
+  vimMode = initialVimMode;
+  theme = initialTheme;
 
-              if (response) keyMap.run?.(view);
+  /** tab */
+  const keyBindings: CustomKeyMap[] = [indentWithTab];
 
-              return response;
-            },
-          };
-        }
-
-        return keyMap;
-      }),
-    ),
-
-    // keymap.of(boldKeymap),
-    // keymap.of(italicKeymap),
-    // keymap.of(lineThroughKeymap),
-    // keymap.of(underlineKeymap),
-  ];
-
-  if (onEscape) {
-    extensions.push(
-      keymap.of([
-        {
-          key: "Escape",
+  /** standard  */
+  keyBindings.push(
+    ...standardKeymap.map<CustomKeyMap>((keyMap) => {
+      if (keyMap.key === "Enter" && onEnter) {
+        return {
+          key: "Enter",
+          shift: keyMap.run,
           run: (view) => {
-            return onEscape(view);
+            const response = onEnter(view);
+
+            if (response) keyMap.run?.(view);
+
+            return response;
           },
-        },
-      ]),
-    );
+        };
+      }
+
+      return keyMap;
+    }),
+  );
+
+  /** vim */
+  if (defaultKeyMaps?.vim)
+    keyBindings.push({
+      key: "Mod-Alt-v",
+      run: (view) => {
+        vimMode = !vimMode;
+        view.dispatch({
+          effects: VimModeCompartment.reconfigure(vimMode ? vim({ status: true }) : []),
+        });
+
+        return true;
+      },
+    });
+
+  /** theme */
+  if (defaultKeyMaps?.theme)
+    keyBindings.push({
+      key: "Mod-Alt-t",
+      run: (view) => {
+        theme = theme === "light" ? "dark" : "light";
+        view.dispatch({
+          effects: ThemeCompartment.reconfigure(
+            theme === "dark"
+              ? getDarkTheme({
+                  dark,
+                  light,
+                  theme,
+                })
+              : getLightTheme({
+                  dark,
+                  light,
+                  theme,
+                }),
+          ),
+        });
+
+        return true;
+      },
+    });
+
+  /** escape */
+  if (onEscape) {
+    keyBindings.push({
+      key: "Escape",
+      run: (view) => {
+        return onEscape(view);
+      },
+    });
   }
 
+  /** custom */
+  if (keyMaps) {
+    keyBindings.push(...keyMaps);
+  }
+
+  /** history */
   if (multiCursorMode) {
-    extensions.push(keymap.of(yUndoManagerKeymap));
+    keyBindings.push(...yUndoManagerKeymap);
   } else {
-    extensions.push(keymap.of(historyKeymap));
+    keyBindings.push(...historyKeymap);
   }
 
-  return extensions;
+  return keymap.of(keyBindings);
 };

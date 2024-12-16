@@ -5,6 +5,8 @@ export type {
   InitKeyMapsOptions,
   HandleEnterKeyMapEditorFunction,
   HandleEscapeKeyMapEditorFunction,
+  DefaultKeyMapsOptions,
+  CustomKeyMap,
 } from "./keymaps";
 export type {
   InitListenersOptions,
@@ -23,4 +25,10 @@ export type {
   InitMarkdownOptions,
 } from "./markdown";
 export type { InitSettingsOptions } from "./settings";
-export type { HighlightConfig, InitThemeOptions, ThemeConfig, ThemeOptions } from "./theme";
+export type {
+  HighlightConfig,
+  InitThemeOptions,
+  ThemeConfig,
+  ThemeOptions,
+  EditorTheme,
+} from "./theme";

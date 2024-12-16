@@ -1,7 +1,9 @@
+export type EditorTheme = "dark" | "light";
+
 export type InitThemeOptions = {
   dark?: ThemeOptions;
   light?: ThemeOptions;
-  theme?: "dark" | "light";
+  theme?: EditorTheme;
 };
 
 export type ThemeOptions = {

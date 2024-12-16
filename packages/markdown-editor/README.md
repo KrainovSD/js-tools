@@ -97,7 +97,7 @@ Execute by change text in editor.
 Type: `((view: EditorView) => boolean) | undefined` 
 
 Execute by keydown event in root node of editor. <br>
-**Warning!!!** Line break will be canceled If set `false` by return of function. Only `shift + Enter` will be worked.
+**Warning!!!** Line break will be canceled If set `true` by return of function. Only `shift + Enter` will be worked.
 
 ### onEscape
 
