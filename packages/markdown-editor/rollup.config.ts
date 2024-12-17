@@ -26,6 +26,8 @@ function defineChunkName(chunkInfo: PreRenderedChunk) {
     }
   }
 
+  if (name === `vendor_${chunkInfo.name}` && chunkInfo.name === "index") name = "editor";
+
   return `${name}-[hash].js`;
 }
 
