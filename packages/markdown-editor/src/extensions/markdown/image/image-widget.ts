@@ -2,7 +2,10 @@ import { type EditorView, WidgetType } from "@codemirror/view";
 import { utils } from "@/lib";
 import styles from "../styles.module.scss";
 
+const INTERVAL_DELAY = 10000;
 const IMAGE_NODES: Record<string, HTMLImageElement> = {};
+const EXISTING_WIDGETS: Set<string> = new Set();
+let interval: NodeJS.Timeout | null = null;
 
 export class ImageWidget extends WidgetType {
   view: EditorView | undefined;
@@ -22,7 +25,9 @@ export class ImageWidget extends WidgetType {
 
   eq(widget: ImageWidget): boolean {
     const image = IMAGE_NODES[this.key];
+
     delete IMAGE_NODES[this.key];
+    EXISTING_WIDGETS.delete(this.key);
 
     if (image.src !== widget.link) image.src = widget.link;
     if (image.alt !== widget.text) image.alt = widget.text;
@@ -33,6 +38,7 @@ export class ImageWidget extends WidgetType {
     this.to = widget.to;
 
     IMAGE_NODES[this.key] = image;
+    EXISTING_WIDGETS.add(this.key);
 
     return true;
   }
@@ -42,6 +48,8 @@ export class ImageWidget extends WidgetType {
   }
 
   toDOM(view: EditorView): HTMLElement {
+    EXISTING_WIDGETS.add(this.key);
+
     if (IMAGE_NODES[this.key]) {
       const image = IMAGE_NODES[this.key];
       if (image.src !== this.link) {
@@ -63,12 +71,30 @@ export class ImageWidget extends WidgetType {
 
     IMAGE_NODES[this.key] = image;
 
+    if (!interval) interval = setInterval(garbageCollectorInterval, INTERVAL_DELAY);
+
     return image;
   }
 
-  // destroy(): void {
-  //   console.log("destroy");
-  // }
+  destroy(): void {
+    EXISTING_WIDGETS.delete(this.key);
+  }
+}
+
+function garbageCollectorInterval() {
+  for (const [key, node] of Object.entries(IMAGE_NODES)) {
+    if (EXISTING_WIDGETS.has(key)) continue;
+
+    delete IMAGE_NODES[key];
+    node.removeEventListener("mousedown", handleClick);
+    node.removeEventListener("click", handleClick);
+    node.remove();
+  }
+
+  if (Object.keys(IMAGE_NODES).length === 0 && interval) {
+    clearInterval(interval);
+    interval = null;
+  }
 }
 
 /** recursively find the link text node in line */

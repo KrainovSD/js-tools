@@ -18,7 +18,7 @@ let multiCursor: MultiCursorOptions | undefined = roomId ? presetMultiCursor : u
 let readonly: boolean = false;
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
-const viewFullExample = false;
+const viewFullExample = true;
 const viewStressTest = false;
 const root = document.querySelector<HTMLElement>("#root");
 if (!root) throw new Error("Hasn't root");
