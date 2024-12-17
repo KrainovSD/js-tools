@@ -12,6 +12,12 @@ export function getThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
       ".cm-content": {
         fontFamily: config.fontFamily || "Montserrat",
       },
+      "&.cm-focused > .cm-scroller > .cm-selectionLayer > .cm-selectionBackground": {
+        background: config.vimSelectionFocused,
+      },
+      "& .cm-selectionBackground": {
+        background: config.vimSelection,
+      },
       "&.cm-editor.cm-focused": { outline: "none" },
       "&.cm-editor": {
         height: "100%",

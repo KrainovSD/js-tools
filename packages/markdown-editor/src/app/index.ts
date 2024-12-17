@@ -31,7 +31,7 @@ function initEditor() {
     multiCursor,
     // eslint-disable-next-line no-nested-ternary
     initialText: viewStressTest ? STRESS_TEST : viewFullExample ? FULL_EXAMPLE : COMMON_TEST,
-    vimMode: false,
+    vimMode: true,
     readonly,
     dark,
     light,

@@ -23,6 +23,8 @@ export type ThemeConfig = {
   linkColor?: string;
   blockquoteColor?: string;
   mentionColor?: string;
+  vimSelectionFocused?: string;
+  vimSelection?: string;
 };
 
 export type HighlightConfig = {

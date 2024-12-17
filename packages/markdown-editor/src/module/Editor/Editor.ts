@@ -1,4 +1,4 @@
-import { EditorView } from "@codemirror/view";
+import { EditorView, drawSelection } from "@codemirror/view";
 import type { WebsocketProvider } from "y-websocket";
 import {
   type EditorTheme,
@@ -73,7 +73,7 @@ export class Editor {
     const { vim } = await import("@replit/codemirror-vim");
 
     this.view.dispatch({
-      effects: VimModeCompartment.reconfigure(mode ? vim({ status: true }) : []),
+      effects: VimModeCompartment.reconfigure(mode ? [vim({ status: true }), drawSelection()] : []),
     });
   };
 

@@ -29,6 +29,8 @@ const THEME_CONFIG: Required<ThemeConfig> = {
   horizontalColor: "#000000",
   linkColor: "#8A5CF5",
   mentionColor: "#8A5CF5",
+  vimSelection: "#d9d9d9",
+  vimSelectionFocused: "#d7d4f0",
 };
 
 export function getLightTheme({ light }: InitThemeOptions) {

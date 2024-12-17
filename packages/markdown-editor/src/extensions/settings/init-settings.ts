@@ -1,6 +1,6 @@
 import { history } from "@codemirror/commands";
 import { type Extension } from "@codemirror/state";
-import { EditorView } from "@codemirror/view";
+import { EditorView, drawSelection } from "@codemirror/view";
 import { ReadonlyCompartment, VimModeCompartment } from "../compartments";
 
 export type InitSettingsOptions = {
@@ -15,7 +15,7 @@ export async function InitSettings({
   let vimExtension: Extension = [];
   if (vimMode) {
     const { vim } = await import("@replit/codemirror-vim");
-    vimExtension = vim({ status: true });
+    vimExtension = [vim({ status: true }), drawSelection()];
   }
 
   return [
