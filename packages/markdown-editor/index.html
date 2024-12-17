@@ -14,24 +14,27 @@
       padding: 20px 10px;
       overflow: hidden;
       background-color: #f3f3f3;
+      display: flex;
+      flex-direction: column;
     "
   >
     <div style="display: flex; gap: 10px; align-items: center; width: 100%">
-      <button class="theme-mode"></button>
       <button class="edit-mode"></button>
-      <button class="vim-mode"></button>
       <button class="multi-mode"></button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px">
+      <span>Переключить vim mode: Mod-Alt-v</span>
+      <span>Переключить тему: Mod-Alt-a</span>
     </div>
     <div
       id="root"
       style="
         margin-top: 20px;
         border: 1px solid black;
-        min-height: 800px;
-        max-height: 800px;
         overflow: auto;
         height: 100%;
         width: 100%;
+        overflow: hidden;
       "
     ></div>
     <script type="module" src="/src/app/index.ts"></script>

@@ -1,6 +1,6 @@
 import { languages } from "@codemirror/language-data";
 import { Editor, type MultiCursorOptions } from "@/module";
-import type { EditorTheme, ThemeOptions } from "@/extensions";
+import type { ThemeOptions } from "@/extensions";
 import "./global.css";
 import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } from "./helpers";
 
@@ -14,10 +14,8 @@ const presetMultiCursor: MultiCursorOptions = {
 };
 
 let editor: Editor | undefined;
-let theme: EditorTheme = "dark";
 let multiCursor: MultiCursorOptions | undefined = roomId ? presetMultiCursor : undefined;
 let readonly: boolean = false;
-let vimMode: boolean = false;
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
 const viewFullExample = true;
@@ -33,11 +31,11 @@ function initEditor() {
     multiCursor,
     // eslint-disable-next-line no-nested-ternary
     initialText: viewStressTest ? STRESS_TEST : viewFullExample ? FULL_EXAMPLE : COMMON_TEST,
-    vimMode,
+    vimMode: false,
     readonly,
     dark,
     light,
-    theme,
+    theme: "dark",
     languages,
     keyMaps: [],
     defaultKeyMaps: {
@@ -64,22 +62,6 @@ function initEditor() {
   });
 }
 
-/** Theme Mode */
-const themeButton = document.querySelector(".theme-mode");
-if (themeButton) {
-  const text = {
-    dark: "Включить светлую тему",
-    light: "Включить темную тему",
-  };
-  themeButton.textContent = text[theme];
-  themeButton.addEventListener("click", () => {
-    if (!editor) return;
-
-    editor.setTheme(theme === "light" ? "dark" : "light");
-    theme = theme === "light" ? "dark" : "light";
-    themeButton.textContent = text[theme];
-  });
-}
 /** Edit Mode */
 const readonlyButton = document.querySelector(".edit-mode");
 if (readonlyButton) {
@@ -94,23 +76,6 @@ if (readonlyButton) {
     editor.setReadonly(!readonly);
     readonly = !readonly;
     readonlyButton.textContent = text[String(readonly)];
-  });
-}
-
-/** Vim Mode */
-const vimButton = document.querySelector(".vim-mode");
-if (vimButton) {
-  const text: Record<string, string> = {
-    false: "Включить Vim",
-    true: "Выключить Vim",
-  };
-  vimButton.textContent = text[String(vimMode)];
-  vimButton.addEventListener("click", () => {
-    if (!editor) return;
-
-    editor.setVimMode(!vimMode);
-    vimMode = !vimMode;
-    vimButton.textContent = text[String(vimMode)];
   });
 }
 

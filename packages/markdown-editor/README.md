@@ -74,6 +74,20 @@ Type: `LanguageDescription[] | undefined`
 
 List of languages for markdown code section. Provided by [@codemirror/language-data](https://github.com/codemirror/language-data)
 
+### keyMaps
+
+Type: `KeyBinding[]`
+
+Array of custom key map combination. Mod is Cmd on mac and Ctrl on other platforms. [More information](https://codemirror.net/docs/ref/#view.keymap) 
+
+### defaultKeyMaps
+
+Type: `object`<br>
+Properties: 
+- theme (`boolean`) - switch theme `Mod-Alt-a`
+- vim (`boolean`) - switch vim mode `Mod-Alt-v`
+
+
 ### onBlur
 
 Type: `((state: EditorState) => void) | undefined` 

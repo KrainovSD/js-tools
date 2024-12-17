@@ -17,8 +17,8 @@ export type CustomKeyMap = KeyBinding;
 export type HandleEnterKeyMapEditorFunction = (view: EditorView) => boolean;
 export type HandleEscapeKeyMapEditorFunction = (view: EditorView) => boolean;
 export type DefaultKeyMapsOptions = {
-  vim: boolean;
-  theme: boolean;
+  vim?: boolean;
+  theme?: boolean;
 };
 
 let vimMode = false;
@@ -85,7 +85,7 @@ export const initKeyMaps = ({
   /** theme */
   if (defaultKeyMaps?.theme)
     keyBindings.push({
-      key: "Mod-Alt-t",
+      key: "Mod-Alt-a",
       run: (view) => {
         theme = theme === "light" ? "dark" : "light";
         view.dispatch({
