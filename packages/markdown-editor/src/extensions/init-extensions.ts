@@ -41,7 +41,7 @@ export const initExtensions = async ({
     await InitSettings({ readonly, vimMode }),
     initMarkdown({ languages }),
     initTheme({ theme, dark, light }),
-    initKeyMaps({
+    await initKeyMaps({
       onEnter,
       onEscape,
       multiCursorMode,

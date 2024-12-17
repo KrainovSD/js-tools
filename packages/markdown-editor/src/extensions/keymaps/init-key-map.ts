@@ -1,7 +1,6 @@
 import { historyKeymap, indentWithTab, standardKeymap } from "@codemirror/commands";
 import type { Extension } from "@codemirror/state";
 import { type EditorView, type KeyBinding, drawSelection, keymap } from "@codemirror/view";
-import { yUndoManagerKeymap } from "y-codemirror.next";
 import { ThemeCompartment, VimModeCompartment } from "../compartments";
 import { type EditorTheme, type ThemeOptions, getDarkTheme, getLightTheme } from "../theme";
 
@@ -23,7 +22,7 @@ export type DefaultKeyMapsOptions = {
 let vimMode = false;
 let theme: EditorTheme = "light";
 
-export const initKeyMaps = ({
+export const initKeyMaps = async ({
   onEnter,
   onEscape,
   multiCursorMode,
@@ -39,7 +38,7 @@ export const initKeyMaps = ({
   theme: EditorTheme;
   dark?: ThemeOptions;
   light?: ThemeOptions;
-}): Extension => {
+}): Promise<Extension> => {
   vimMode = initialVimMode;
   theme = initialTheme;
 
@@ -129,6 +128,7 @@ export const initKeyMaps = ({
 
   /** history */
   if (multiCursorMode) {
+    const { yUndoManagerKeymap } = await import("y-codemirror.next");
     keyBindings.push(...yUndoManagerKeymap);
   } else {
     keyBindings.push(...historyKeymap);
