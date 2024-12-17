@@ -2,9 +2,37 @@
 import nodeResolve from "@rollup/plugin-node-resolve";
 import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
-import { type Plugin, defineConfig } from "rollup";
+import { type OutputOptions, type Plugin, type PreRenderedChunk, defineConfig } from "rollup";
 import externals from "rollup-plugin-peer-deps-external";
 import postcss from "rollup-plugin-postcss";
+
+type ChunkConfig = {
+  overlaps: string[];
+  name: string;
+};
+const CHUNK_CONFIG: ChunkConfig[] = [
+  { overlaps: ["vim", "Vim"], name: "vendor_vim" },
+  { overlaps: ["yCollab"], name: "vendor_y.next" },
+  { overlaps: ["initMarkdown"], name: "markdown_plugin" },
+  { overlaps: ["WebsocketProvider"], name: "vendor_y.websocket" },
+];
+
+function defineChunkName(chunkInfo: PreRenderedChunk) {
+  let name = `vendor_${chunkInfo.name}`;
+  for (const config of CHUNK_CONFIG) {
+    if (config.overlaps.every((overlap) => chunkInfo.exports.includes(overlap))) {
+      name = config.name;
+      break;
+    }
+  }
+
+  return `${name}-[hash].js`;
+}
+
+const outputOptions: OutputOptions = {
+  sourcemap: true,
+  chunkFileNames: defineChunkName,
+};
 
 export default defineConfig({
   input: "./src/index.ts",
@@ -12,12 +40,13 @@ export default defineConfig({
     {
       dir: "./lib/esm",
       format: "es",
-      sourcemap: true,
+      ...outputOptions,
     },
     {
       dir: "./lib/cjs",
       format: "cjs",
       sourcemap: true,
+      ...outputOptions,
     },
   ],
   plugins: [
