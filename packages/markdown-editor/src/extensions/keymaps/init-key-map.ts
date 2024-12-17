@@ -1,7 +1,6 @@
 import { historyKeymap, indentWithTab, standardKeymap } from "@codemirror/commands";
 import type { Extension } from "@codemirror/state";
 import { type EditorView, type KeyBinding, keymap } from "@codemirror/view";
-import { vim } from "@replit/codemirror-vim";
 import { yUndoManagerKeymap } from "y-codemirror.next";
 import { ThemeCompartment, VimModeCompartment } from "../compartments";
 import { type EditorTheme, type ThemeOptions, getDarkTheme, getLightTheme } from "../theme";
@@ -74,8 +73,11 @@ export const initKeyMaps = ({
       key: "Mod-Alt-v",
       run: (view) => {
         vimMode = !vimMode;
-        view.dispatch({
-          effects: VimModeCompartment.reconfigure(vimMode ? vim({ status: true }) : []),
+
+        void import("@replit/codemirror-vim").then(({ vim }) => {
+          view.dispatch({
+            effects: VimModeCompartment.reconfigure(vimMode ? vim({ status: true }) : []),
+          });
         });
 
         return true;

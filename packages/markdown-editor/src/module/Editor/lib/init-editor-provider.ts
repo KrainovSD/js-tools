@@ -1,12 +1,10 @@
-import { WebsocketProvider } from "y-websocket";
-import { Doc } from "yjs";
 import type { MultiCursorOptions } from "../Editor.types";
 
 type InitEditorProviderOptions = {
   initialText?: string;
 } & MultiCursorOptions;
 
-export function initEditorProvider({
+export async function initEditorProvider({
   roomId,
   url,
   userName = "Anonymous",
@@ -14,6 +12,9 @@ export function initEditorProvider({
   initialText,
   onStartProvider,
 }: InitEditorProviderOptions) {
+  const { Doc } = await import("yjs");
+  const { WebsocketProvider } = await import("y-websocket");
+
   const multiCursorDocument = new Doc();
   const multiCursorText = multiCursorDocument.getText(roomId);
 

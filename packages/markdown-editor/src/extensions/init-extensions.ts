@@ -1,7 +1,6 @@
 import type { Extension } from "@codemirror/state";
-import { yCollab } from "y-codemirror.next";
 import type { WebsocketProvider } from "y-websocket";
-import { type Text, UndoManager } from "yjs";
+import type { Text } from "yjs";
 import { type InitKeyMapsOptions, initKeyMaps } from "./keymaps";
 import { type InitListenersOptions, initListeners } from "./listeners";
 import { type InitMarkdownOptions, initMarkdown } from "./markdown";
@@ -19,7 +18,7 @@ export type InitExtensionsOptions = {
   provider: WebsocketProvider | undefined;
 } & ExtensionsOptions;
 
-export const initExtensions = ({
+export const initExtensions = async ({
   onBlur,
   onChange,
   onFocus,
@@ -35,11 +34,11 @@ export const initExtensions = ({
   languages,
   keyMaps,
   defaultKeyMaps,
-}: InitExtensionsOptions): Extension[] => {
+}: InitExtensionsOptions): Promise<Extension[]> => {
   const multiCursorMode = Boolean(multiCursorText && provider);
 
   const extensions = [
-    InitSettings({ readonly, vimMode }),
+    await InitSettings({ readonly, vimMode }),
     initMarkdown({ languages }),
     initTheme({ theme, dark, light }),
     initKeyMaps({
@@ -57,6 +56,9 @@ export const initExtensions = ({
   ];
 
   if (multiCursorText && provider) {
+    const { UndoManager } = await import("yjs");
+    const { yCollab } = await import("y-codemirror.next");
+
     const undoManager = new UndoManager(multiCursorText);
     extensions.push(yCollab(multiCursorText, provider.awareness, { undoManager }));
   }

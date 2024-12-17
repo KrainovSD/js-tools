@@ -10,12 +10,12 @@ export default defineConfig({
   input: "./src/index.ts",
   output: [
     {
-      file: "./lib/esm/index.js",
+      dir: "./lib/esm",
       format: "es",
       sourcemap: true,
     },
     {
-      file: "./lib/cjs/bundle.cjs",
+      dir: "./lib/cjs",
       format: "cjs",
       sourcemap: true,
     },

@@ -1,6 +1,5 @@
 import { EditorView } from "@codemirror/view";
-import { vim } from "@replit/codemirror-vim";
-import { type WebsocketProvider } from "y-websocket";
+import type { WebsocketProvider } from "y-websocket";
 import {
   type EditorTheme,
   ReadonlyCompartment,
@@ -13,34 +12,44 @@ import { type EditorArguments } from "./Editor.types";
 import { initEditor } from "./lib";
 
 export class Editor {
-  view: EditorView;
+  view: EditorView | undefined;
 
   provider: WebsocketProvider | undefined;
 
   arguments: EditorArguments;
 
   constructor(options: EditorArguments) {
-    const editor = initEditor(options);
+    void initEditor(options).then((editor) => {
+      this.view = editor.view;
+      this.provider = editor.provider;
+    });
+
     this.arguments = options;
-    this.view = editor.view;
-    this.provider = editor.provider;
   }
 
   focus = () => {
+    if (!this.view) return;
+
     this.view.focus();
   };
 
   getContent = () => {
+    if (!this.view) return;
+
     return this.view.state.doc.toString();
   };
 
   setReadonly = (readonly: boolean) => {
+    if (!this.view) return;
+
     this.view.dispatch({
       effects: ReadonlyCompartment.reconfigure(EditorView.editable.of(!readonly)),
     });
   };
 
   setTheme = (theme?: EditorTheme) => {
+    if (!this.view) return;
+
     this.view.dispatch({
       effects: ThemeCompartment.reconfigure(
         theme === "dark"
@@ -58,17 +67,25 @@ export class Editor {
     });
   };
 
-  setVimMode = (mode: boolean) => {
+  setVimMode = async (mode: boolean) => {
+    if (!this.view) return;
+
+    const { vim } = await import("@replit/codemirror-vim");
+
     this.view.dispatch({
       effects: VimModeCompartment.reconfigure(mode ? vim({ status: true }) : []),
     });
   };
 
   setUserProvider = (name: string = "Anonymous", color: string = "#000000") => {
-    if (this.provider) this.provider.awareness.setLocalStateField("user", { name, color });
+    if (!this.provider) return;
+
+    this.provider.awareness.setLocalStateField("user", { name, color });
   };
 
   destroy = () => {
+    if (!this.view) return;
+
     this.view.destroy();
     if (this.provider) this.provider.destroy();
   };

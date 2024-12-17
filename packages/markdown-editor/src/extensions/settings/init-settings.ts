@@ -1,7 +1,6 @@
 import { history } from "@codemirror/commands";
 import { type Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
-import { vim } from "@replit/codemirror-vim";
 import { ReadonlyCompartment, VimModeCompartment } from "../compartments";
 
 export type InitSettingsOptions = {
@@ -9,10 +8,19 @@ export type InitSettingsOptions = {
   vimMode?: boolean;
 };
 
-export function InitSettings({ readonly, vimMode }: InitSettingsOptions): Extension[] {
+export async function InitSettings({
+  readonly,
+  vimMode,
+}: InitSettingsOptions): Promise<Extension[]> {
+  let vimExtension: Extension = [];
+  if (vimMode) {
+    const { vim } = await import("@replit/codemirror-vim");
+    vimExtension = vim({ status: true });
+  }
+
   return [
     ReadonlyCompartment.of(EditorView.editable.of(!readonly)),
-    VimModeCompartment.of(vimMode ? vim({ status: true }) : []),
+    VimModeCompartment.of(vimExtension),
     history(),
   ];
 }
