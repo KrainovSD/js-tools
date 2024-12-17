@@ -18,7 +18,7 @@ let multiCursor: MultiCursorOptions | undefined = roomId ? presetMultiCursor : u
 let readonly: boolean = false;
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
-const viewFullExample = true;
+const viewFullExample = false;
 const viewStressTest = false;
 const root = document.querySelector<HTMLElement>("#root");
 if (!root) throw new Error("Hasn't root");
@@ -31,7 +31,7 @@ function initEditor() {
     multiCursor,
     // eslint-disable-next-line no-nested-ternary
     initialText: viewStressTest ? STRESS_TEST : viewFullExample ? FULL_EXAMPLE : COMMON_TEST,
-    vimMode: true,
+    vimMode: false,
     readonly,
     dark,
     light,

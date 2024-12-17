@@ -33,14 +33,14 @@ function getImageSelectionDecorations({
       decorations.push(
         utils.getReplaceDecoration({
           range: [line.from, line.to],
-          widget: new ImageWidget(text, url),
+          widget: new ImageWidget(text, url, node.from, node.to),
         }),
       );
     } else {
       decorations.push(
         utils.getWidgetDecorationOptions({
           range: [node.to + 1],
-          widget: new ImageWidget(text, url),
+          widget: new ImageWidget(text, url, node.from, node.to),
         }),
       );
     }
@@ -52,14 +52,14 @@ function getImageSelectionDecorations({
     decorations.push(
       utils.getReplaceDecoration({
         range: [node.from, node.to],
-        widget: new ImageWidget(text, url),
+        widget: new ImageWidget(text, url, node.from, node.to),
       }),
     );
   } else {
     decorations.push(
       utils.getWidgetDecorationOptions({
         range: [node.to],
-        widget: new ImageWidget(text, url),
+        widget: new ImageWidget(text, url, node.from, node.to),
       }),
     );
   }
