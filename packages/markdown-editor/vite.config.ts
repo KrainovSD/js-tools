@@ -13,6 +13,13 @@ export default defineConfig({
   build: {
     sourcemap: false,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern-compiler",
+      },
+    },
+  },
   server: {
     port: PORT,
   },

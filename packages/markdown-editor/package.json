@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "dev": "vite",
+    "build:dev": "vite build",
     "build": "npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
     "build:types": "tspc -p tsconfig.build.json",
