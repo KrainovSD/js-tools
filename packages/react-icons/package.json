@@ -1,20 +1,20 @@
 {
-  "name": "@krainovsd/icons",
+  "name": "@krainovsd/react-icons",
   "version": "0.0.1",
-  "description": "Krainov icons",
+  "description": "Krainov react icons",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KrainovSD/icons"
+    "url": "https://github.com/KrainovSD/js-tools"
   },
   "sideEffects": false,
   "exports": {
     ".": {
+      "types": "./tmp/index.d.ts",
       "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/bundle.cjs",
-      "types": "./tmp/index.d.ts"
+      "require": "./lib/cjs/index.cjs"
     }
   },
   "keywords": [
@@ -29,7 +29,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:types && npm run build:js",
+    "clear": "rm -rf ./lib",
+    "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
     "build:types": "tsc -p tsconfig.build.json",
     "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
@@ -38,22 +39,21 @@
   },
   "devDependencies": {
     "@krainovsd/eslint-presets": "0.1.0",
-    "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.1",
     "@trivago/prettier-plugin-sort-imports": "4.3.0",
     "@types/node": "22.8.6",
     "@types/react": "18.3.1",
     "@types/react-dom": "18.3.0",
     "@types/rollup-plugin-peer-deps-external": "2.2.5",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "4.3.3",
     "eslint": "9.13.0",
     "prettier": "3.3.3",
     "react": "18.3.1",
-    "react-dom": "^18.3.1",
+    "react-dom": "18.3.1",
     "rollup": "4.21.2",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "typescript": "5.6.3",
-    "vite": "^5.4.10"
+    "vite": "5.4.10"
   },
   "peerDependencies": {
     "react": "^18.0.0"

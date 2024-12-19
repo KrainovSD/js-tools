@@ -3,21 +3,33 @@
   "private": true,
   "scripts": {
     "build:js-helpers": "pnpm --filter=@krainovsd/js-helpers build",
-    "build": "turbo build",
-    "test:js-helpers": "pnpm --filter=@krainovsd/js-helpers test",
-    "test": "turbo test",
-    "lint:js-helpers": "pnpm --filter=@krainovsd/js-helpers lint",
-    "lint": "turbo lint",
+    "build:eslint-presets": "pnpm --filter=@krainovsd/eslint-presets build",
+    "build:react-icons": "pnpm --filter=@krainovsd/react-icons build",
+    "build:react-ui": "pnpm --filter=@krainovsd/react-ui build",
     "format:js-helpers": "pnpm --filter=@krainovsd/js-helpers format",
+    "format:eslint-presets": "pnpm --filter=@krainovsd/eslint-presets format",
+    "format:react-icons": "pnpm --filter=@krainovsd/react-icons format",
+    "format:react-ui": "pnpm --filter=@krainovsd/react-ui format",
+    "lint:js-helpers": "pnpm --filter=@krainovsd/js-helpers lint",
+    "lint:eslint-presets": "pnpm --filter=@krainovsd/eslint-presets lint",
+    "lint:react-icons": "pnpm --filter=@krainovsd/react-icons lint",
+    "lint:react-ui": "pnpm --filter=@krainovsd/react-ui lint",
+    "test:js-helpers": "pnpm --filter=@krainovsd/js-helpers test",
+    "dev:react-icons": "pnpm --filter=@krainovsd/react-icons dev",
+    "start:react-ui": "pnpm --filter=@krainovsd/react-ui start",
+    "publish:js-helpers": "pnpm --filter=@krainovsd/js-helpers publish",
+    "publish:eslint-presets": "pnpm --filter=@krainovsd/eslint-presets publish",
+    "publish:react-icons": "pnpm --filter=@krainovsd/react-icons publish",
+    "publish:react-ui": "pnpm --filter=@krainovsd/react-ui publish",
+    "lint": "turbo lint",
+    "test": "turbo test",
+    "build": "turbo build",
     "format": "turbo format",
-
     "prepare": "husky install"
-
   },
   "devDependencies": {
     "husky": "9.1.0",
     "turbo": "2.2.3"
- 
   },
   "packageManager": "pnpm@9.4.0"
 }

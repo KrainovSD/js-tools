@@ -1,27 +1,23 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import { type Plugin, defineConfig } from "rollup";
 import externals from "rollup-plugin-peer-deps-external";
-// eslint-disable-next-line prettier/prettier
-import pkg from "./package.json" with { type: "json" };
-
 
 export default defineConfig({
   input: "./src/index.ts",
   output: [
     {
-      file: pkg.exports["."].import,
+      file: "./lib/esm/index.js",
       format: "es",
+      generatedCode: "es2015",
+      sourcemap: true,
     },
     {
-      file: pkg.exports["."].require,
+      file: "./lib/cjs/index.cjs",
       format: "cjs",
+      generatedCode: "es2015",
+      sourcemap: true,
     },
   ],
-  plugins: [
-    externals({ includeDependencies: true }) as Plugin,
-    terser(),
-    typescript(),
-  ],
+  plugins: [externals({ includeDependencies: true }) as Plugin, typescript()],
 });

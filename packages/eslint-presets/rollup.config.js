@@ -7,12 +7,16 @@ export default defineConfig({
   plugins: [externals({ includeDependencies: true }), json()],
   output: [
     {
-      format: "esm",
-      file: "./lib/esm/bundle.js",
+      file: "./lib/esm/index.js",
+      format: "es",
+      generatedCode: "es2015",
+      sourcemap: true,
     },
     {
-      format: "commonjs",
-      file: "./lib/cjs/bundle.cjs",
+      file: "./lib/cjs/index.cjs",
+      format: "cjs",
+      generatedCode: "es2015",
+      sourcemap: true,
     },
   ],
 });

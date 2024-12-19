@@ -7,14 +7,14 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KrainovSD/eslint-presets"
+    "url": "https://github.com/KrainovSD/js-tools"
   },
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./lib/esm/bundle.js",
-      "require": "./lib/cjs/bundle.cjs",
-      "types": "./tmp/src/index.d.ts"
+      "types": "./tmp/index.d.ts",
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.cjs"
     }
   },
   "files": [
@@ -22,8 +22,9 @@
     "tmp"
   ],
   "scripts": {
-    "lint:debug": "eslint --debug eslint.config.js",
-    "build": "npm run build:types && npm run build:js",
+    "lint": "eslint --debug eslint.config.js",
+    "clear": "rm -rf ./lib",
+    "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.js --no-stdin",
     "build:types": "tsc -p tsconfig.build.json",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'"
