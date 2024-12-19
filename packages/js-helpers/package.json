@@ -7,7 +7,8 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KrainovSD/js-tools"
+    "url": "https://github.com/KrainovSD/js-tools",
+    "directory": "packages/js-helpers"
   },
   "sideEffects": false,
   "exports": {
@@ -44,7 +45,7 @@
     "lodash": "4.17.21"
   },
   "devDependencies": {
-    "@krainovsd/eslint-presets": "0.1.0",
+    "@krainovsd/eslint-presets": "0.1.2",
     "@rollup/plugin-commonjs": "28.0.1",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.3.0",
