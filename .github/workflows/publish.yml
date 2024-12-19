@@ -15,14 +15,16 @@ jobs:
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org/
-      - run: yarn
+      - run: npm i -g pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm build
       - run: |
           git config user.name krainovsd
           git config user.email krainossd@gmail.com
           npm version ${{ github.event.inputs.version }}
           git push origin main
           git push origin v${{ github.event.inputs.version }}
-      - run: yarn build
       - run: npm publish
     env:
       NODE_AUTH_TOKEN: ${{secrets.npm_token}}

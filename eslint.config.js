@@ -9,6 +9,7 @@ export default [
     ignores: ["rollup.config.ts"],
     rules: {
       "import/no-extraneous-dependencies": "off",
+      "prefer-const": ["error", { destructuring: "all" }],
     },
   },
 ];

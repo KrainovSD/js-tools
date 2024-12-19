@@ -1,3 +1,2 @@
-export * as types from "./types";
-export * from "./lib/index.ts";
+export * from "./lib";
 export * as constants from "./constants";

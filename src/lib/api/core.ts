@@ -30,9 +30,10 @@ export function generateRequestsInstance(
 ) {
   const executeMiddlewares = generateMiddlewares(activeMiddlewares || [], middlewareOptions || {});
 
-  return async function requestApi<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
+  async function handleRequest<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
     request: RequestInterface<T, Incoming, Body, Outcoming>,
-  ): Promise<{ data: T; status: number }> {
+    responseWithStatus?: boolean,
+  ): Promise<{ data: T; status: number } | T> {
     if (request.delay) {
       await wait(request.delay);
     }
@@ -41,7 +42,7 @@ export function generateRequestsInstance(
         ? request.transformIncomingData(request.mock)
         : (request.mock as T);
 
-      return { data: transformedResult, status: 200 };
+      return responseWithStatus ? { data: transformedResult, status: 200 } : transformedResult;
     }
 
     await executeMiddlewares(request);
@@ -119,19 +120,41 @@ export function generateRequestsInstance(
           mimeType,
         });
 
-      return {
-        data: data as T,
-        status: response.status,
-      };
+      return responseWithStatus
+        ? {
+            data: data as T,
+            status: response.status,
+          }
+        : (data as T);
     }
 
-    if (request.withoutResponse) return { data: true as T, status: response.status };
+    if (request.withoutResponse)
+      return responseWithStatus ? { data: true as T, status: response.status } : (true as T);
 
     const result = (await response.json()) as Incoming;
     const transformedResult = request.transformIncomingData
       ? request.transformIncomingData(result)
       : (result as unknown as T);
 
-    return { data: transformedResult, status: response.status };
+    return responseWithStatus
+      ? { data: transformedResult, status: response.status }
+      : transformedResult;
+  }
+
+  async function requestApi<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
+    request: RequestInterface<T, Incoming, Body, Outcoming>,
+  ): Promise<T> {
+    return handleRequest(request, false) as Promise<T>;
+  }
+
+  async function requestApiWithStatus<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
+    request: RequestInterface<T, Incoming, Body, Outcoming>,
+  ): Promise<{ data: T; status: number }> {
+    return handleRequest(request, true) as Promise<{ data: T; status: number }>;
+  }
+
+  return {
+    requestApi,
+    requestApiWithStatus,
   };
 }
