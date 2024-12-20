@@ -1,6 +1,6 @@
 {
   "name": "krainovsd",
-  "private": true,
+  "private": false,
   "scripts": {
     "build:js-helpers": "pnpm --filter=@krainovsd/js-helpers build",
     "build:eslint-presets": "pnpm --filter=@krainovsd/eslint-presets build",

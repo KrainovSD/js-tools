@@ -1,5 +1,5 @@
 /* eslint-disable */
-import plugin from "./lib/esm/bundle.js";
+import plugin from "./lib/esm/index.js";
 import tsPlugin from "typescript-eslint";
 
 export default tsPlugin.config(
@@ -9,5 +9,5 @@ export default tsPlugin.config(
   ...plugin.configs.typescript,
   {
     ignores: ["rollup.config.js"],
-  }
+  },
 );
