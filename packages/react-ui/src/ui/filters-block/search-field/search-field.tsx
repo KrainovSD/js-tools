@@ -1,12 +1,12 @@
-import { Icon } from "@krainovsd/icons";
-import { ksdu } from "@krainovsd/utils";
+import { Close, Search } from "@krainovsd/react-icons";
 import { ConfigProvider, type InputRef, theme } from "antd";
 import clsx from "clsx";
+import debounce from "lodash/debounce";
 import React, { type ChangeEvent, type JSX, memo, useState } from "react";
 import { Button } from "../../button";
 import { Flex } from "../../flex";
 import { Input } from "../../input";
-import * as styles from "./styles";
+import styles from "./search-field.module.scss";
 
 interface SearchFieldProps {
   searchPlaceholder?: string;
@@ -19,8 +19,9 @@ export const SearchField = memo(function SearchField(props: SearchFieldProps): J
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState<string>("");
   const inputRef = React.useRef<InputRef>(null);
+  const isFirstRender = React.useRef(true);
 
-  const onChangeSearchDebounced = ksdu.utils.debounce((value: string) => {
+  const onChangeSearchDebounced = debounce((value: string) => {
     if (onChangeSearch) {
       onChangeSearch(value);
     }
@@ -34,6 +35,7 @@ export const SearchField = memo(function SearchField(props: SearchFieldProps): J
 
   const onOpen = React.useCallback(() => {
     setIsOpen((prev) => !prev);
+    isFirstRender.current = false;
   }, [setIsOpen]);
 
   const handleCleanClick = () => {
@@ -48,15 +50,16 @@ export const SearchField = memo(function SearchField(props: SearchFieldProps): J
   return (
     <Flex gap={10} align="center" className={styles.container}>
       <ConfigProvider wave={{ disabled: true }}>
-        <Button
-          icon={<Icon icon="Search" color={token.colorText} size={16} />}
-          onClick={onOpen}
-          onlyIcon
-        />
+        <Button icon={<Search color={token.colorText} size={16} />} onClick={onOpen} onlyIcon />
       </ConfigProvider>
       <Input
         ref={inputRef}
-        className={clsx(styles.input, isOpen && "showing", !isOpen && "hiding")}
+        className={clsx(
+          styles.input,
+          isOpen && styles.showing,
+          !isOpen && styles.hiding,
+          isFirstRender.current && styles.hide,
+        )}
         placeholder={searchPlaceholder}
         value={inputValue}
         onChange={handleSearchChange}
@@ -64,7 +67,7 @@ export const SearchField = memo(function SearchField(props: SearchFieldProps): J
           isOpen ? (
             <ConfigProvider wave={{ disabled: true }}>
               <Button
-                icon={<Icon icon="Close" color="black" size={12} />}
+                icon={<Close color="black" size={12} />}
                 onClick={handleCleanClick}
                 onlyIcon
                 style={{ display: inputValue ? "flex" : "none" }}

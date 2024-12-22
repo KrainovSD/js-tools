@@ -1,7 +1,7 @@
 import { Skeleton as AntdSkeleton } from "antd";
 import { clsx } from "clsx";
 import type { JSX } from "react";
-import * as styles from "./styles";
+import "./styles.css";
 
 export interface SkeletonTitleProps {
   width?: number | string;
@@ -16,7 +16,7 @@ export function SkeletonTitle(props: SkeletonTitleProps): JSX.Element {
   return (
     <AntdSkeleton
       active={active}
-      className={clsx(className, styles.base)}
+      className={clsx(className)}
       title={{ width: wide ? "100%" : width }}
       paragraph={{ rows: 0 }}
     />

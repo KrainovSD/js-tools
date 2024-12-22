@@ -20,6 +20,12 @@
     "noFallthroughCasesInSwitch": true,
     "noEmit": true
   },
-  "include": ["src/**/*", "eslint.config.js", "rollup.config.ts", ".storybook/**/*"],
+  "include": [
+    "src/**/*",
+    "eslint.config.js",
+    "rollup.config.ts",
+    ".storybook/**/*",
+    "src/types.d.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }

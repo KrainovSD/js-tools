@@ -1,6 +1,6 @@
 import React from "react";
 import { Flex } from "../flex";
-import * as styles from "./styles";
+import styles from "./import.module.scss";
 
 export type ImportPropsInterface = {
   onChange: React.ChangeEventHandler<HTMLInputElement>;

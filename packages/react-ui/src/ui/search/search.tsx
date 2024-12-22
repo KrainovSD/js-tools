@@ -1,11 +1,11 @@
-import { Icon } from "@krainovsd/icons";
+import { Close, Filter, Search as SearchIcon } from "@krainovsd/react-icons";
 import { type InputProps, theme } from "antd";
 import React from "react";
 import { Button } from "../button";
 import { Flex } from "../flex";
 import { Input } from "../input";
 import { Tag } from "../tag";
-import * as styles from "./styles";
+import styles from "./search.module.scss";
 
 export type TagOption = {
   label: string;
@@ -59,7 +59,7 @@ export function Search({
           placeholder={label}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          suffix={<Icon icon="Search" color={"#8893a4"} size={13} />}
+          suffix={<SearchIcon color={"#8893a4"} size={13} />}
           shape={shape}
         />
         {tags && (
@@ -68,9 +68,9 @@ export function Search({
             className={styles.button}
             icon={
               isOpenTags ? (
-                <Icon icon="Close" color={token.colorIcon} size={16} />
+                <Close color={token.colorIcon} size={16} />
               ) : (
-                <Icon icon="Filter" color={token.colorIcon} size={16} />
+                <Filter color={token.colorIcon} size={16} />
               )
             }
             onClick={() => {

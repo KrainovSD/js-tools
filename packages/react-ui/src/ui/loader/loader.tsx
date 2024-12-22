@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { Flex } from "../flex";
 import { Spinner } from "../spinner";
 import { Text } from "../typography";
-import * as styles from "./styles";
+import styles from "./loader.module.scss";
 
 export type LoaderPropsInterface = {
   background?: "page" | "block" | "single";
@@ -44,7 +44,7 @@ export function Loader(props: LoaderPropsInterface) {
     <Flex
       align="center"
       justify="center"
-      className={clsx(styles.background, background)}
+      className={clsx(styles.background, background === "page" && styles.page)}
       style={{ zIndex }}
     >
       <Spinner color={color} zIndex={zIndex} />

@@ -1,7 +1,7 @@
 import type { IconProps } from "../../types";
 
 export function Close(props: IconProps): React.JSX.Element {
-  const { sizeX = 14, sizeY = 14, color = "black", ...rest } = props;
+  const { size = 14, sizeX = size, sizeY = size, color = "black", ...rest } = props;
 
   return (
     <svg

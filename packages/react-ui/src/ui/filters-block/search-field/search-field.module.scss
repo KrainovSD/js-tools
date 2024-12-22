@@ -1,0 +1,39 @@
+.input {
+  padding: 4px;
+
+  &.showing {
+    animation: dropdown 0.5s forwards;
+  }
+  &.hiding {
+    animation: dropdownBack 0.5s forwards;
+  }
+  &.hide {
+    display: none;
+  }
+
+  @keyframes dropdown {
+    from {
+      width: 0;
+      padding: 4px;
+    }
+    to {
+      width: 230px;
+    }
+  }
+
+  @keyframes dropdownBack {
+    from {
+      width: 230px;
+    }
+    to {
+      width: 0;
+      padding: 0;
+      border-color: transparent;
+    }
+  }
+}
+
+.container {
+  height: 32px;
+  min-height: 32px;
+}

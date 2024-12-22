@@ -1,5 +1,5 @@
-import { Icon } from "@krainovsd/icons";
-import { ksdu } from "@krainovsd/utils";
+import { arrayToMapByKey } from "@krainovsd/js-helpers";
+import { Filter } from "@krainovsd/react-icons";
 import { type FormInstance, theme } from "antd";
 import React from "react";
 import { Button } from "../../button";
@@ -7,7 +7,7 @@ import { Flex } from "../../flex";
 import { Popover } from "../../popover";
 import { PopoverField } from "../popover-field";
 import type { FilterFieldType, FilterInputValueType } from "../types";
-import * as styles from "./styles";
+import styles from "./popover-fields.module.scss";
 
 const typedMemo: <T>(c: T) => T = React.memo;
 
@@ -28,7 +28,7 @@ export const PopoverFields = typedMemo(function PopoverFields<
   const [selectedFields, setSelectedFields] = React.useState<FilterFieldType[]>([]);
 
   const selectedFieldsMap = React.useMemo(() => {
-    return ksdu.utils.arrayToMapByKey(selectedFields, "name");
+    return arrayToMapByKey(selectedFields, "name");
   }, [selectedFields]);
 
   const selectedFieldsInfo = React.useMemo(() => {
@@ -65,7 +65,7 @@ export const PopoverFields = typedMemo(function PopoverFields<
   React.useEffect(() => {
     if (!!props.fields?.length && props.initialValues) {
       const initialFields: FilterFieldType[] = [];
-      const fieldsMap = ksdu.utils.arrayToMapByKey(props.fields, "name");
+      const fieldsMap = arrayToMapByKey(props.fields, "name");
 
       for (const [key, value] of Object.entries(props.initialValues)) {
         if (value == undefined) continue;
@@ -112,7 +112,7 @@ export const PopoverFields = typedMemo(function PopoverFields<
         onOpenChange={setOpen}
       >
         <Button
-          icon={<Icon icon="Filter" color={token.colorTextDescription} />}
+          icon={<Filter color={token.colorTextDescription} />}
           disabled={props.isDisabledFields || props.fields.length === selectedFields.length}
           shape="round"
           type="default"

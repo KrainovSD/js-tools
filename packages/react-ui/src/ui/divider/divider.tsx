@@ -1,7 +1,7 @@
 import { Divider as AntdDivider } from "antd";
 import type { DividerProps as AntdDividerProps } from "antd";
 import { clsx } from "clsx";
-import * as styles from "./styles";
+import styles from "./divider.module.scss";
 
 export interface DividerProps extends AntdDividerProps {
   horizontalMargin?: number;

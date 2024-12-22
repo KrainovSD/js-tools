@@ -1,4 +1,4 @@
-import { Icon } from "@krainovsd/icons";
+import { WarningFilled } from "@krainovsd/react-icons";
 import { theme } from "antd";
 import type { JSX } from "react";
 import React from "react";
@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "../button";
 import { Flex } from "../flex";
 import { Text, Title } from "../typography";
-import * as styles from "./styles";
+import styles from "./error-content.module.scss";
 
 export interface ErrorContentProps {
   title?: string;
@@ -32,7 +32,7 @@ export function ErrorContent(props: ErrorContentProps): JSX.Element {
   return (
     <div className={styles.wrapper}>
       <Flex vertical align="center" gap={20} className={styles.content}>
-        <Icon icon="WarningFilled" color={token.colorError} size={60} />
+        <WarningFilled color={token.colorError} size={60} />
         <Flex vertical align="center" gap="large">
           <Flex vertical gap="small" className={styles.text}>
             <Title level={4}>{title}</Title>

@@ -1,4 +1,4 @@
-import { ksdu } from "@krainovsd/utils";
+import { randomString } from "@krainovsd/js-helpers";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { type AnyObject } from "antd/es/_util/type";
 import type { ColumnsType } from "antd/es/table";
@@ -20,9 +20,9 @@ type Story = StoryObj<typeof Table<TableData>>;
 const dataSource = Array.from({ length: 40 }, (_, index) => {
   return {
     id: index,
-    name: ksdu.utils.randomString(6),
-    country: ksdu.utils.randomString(6),
-    email: ksdu.utils.randomString(6),
+    name: randomString(6),
+    country: randomString(6),
+    email: randomString(6),
   };
 });
 

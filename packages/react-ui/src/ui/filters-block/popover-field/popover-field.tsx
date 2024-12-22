@@ -1,4 +1,4 @@
-import { Icon } from "@krainovsd/icons";
+import { Close } from "@krainovsd/react-icons";
 import type { FormInstance } from "antd";
 import { Form, theme } from "antd";
 import type { FC } from "react";
@@ -81,7 +81,7 @@ export const PopoverField: FC<IProps> = (props) => {
             }}
             type="text"
             shape="round"
-            icon={<Icon icon="Close" style={{ opacity: 0.5, fontSize: 12 }} size={12} />}
+            icon={<Close style={{ opacity: 0.5, fontSize: 12 }} size={12} />}
           />
         </Flex>
       </div>

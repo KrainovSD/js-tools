@@ -2,7 +2,7 @@ import { Badge as AntdBadge } from "antd";
 import type { BadgeProps as AntdBadgeProps } from "antd";
 import clsx from "clsx";
 import type { JSX } from "react";
-import * as styles from "./styles";
+import styles from "./badge.module.scss";
 
 export interface BadgeProps extends AntdBadgeProps {
   custom?: boolean;
@@ -16,7 +16,7 @@ export function Badge(props: BadgeProps): JSX.Element {
   if (custom)
     return (
       <div
-        className={clsx(styles.base, custom && "custom")}
+        className={clsx(styles.base, custom && styles.custom)}
         style={{
           backgroundColor: customColor,
           width: customSize,

@@ -1,6 +1,4 @@
-import { css } from "@emotion/css";
-
-export const background = css`
+.background {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -11,13 +9,13 @@ export const background = css`
   &.page {
     position: fixed;
   }
-`;
+}
 
-export const text = css`
+.text {
   position: absolute;
   font-size: 20px;
   font-weight: 600;
   color: "#1d1c2a";
   top: 50%;
   transform: translateY(200%);
-`;
+}

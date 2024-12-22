@@ -6,7 +6,7 @@ import type React from "react";
 import { type ReactElement, useCallback, useMemo } from "react";
 import { Flex } from "../flex";
 import { Spin } from "../spin";
-import * as styles from "./styles";
+import styles from "./select.module.scss";
 
 export interface SelectItemInterface {
   label: string;
@@ -79,7 +79,7 @@ export function Select(props: SelectProps): React.JSX.Element {
       value={props.value === undefined && withEmptyOption ? "" : (props.value as SelectValue)}
       options={selectOptions}
       dropdownRender={dropdownContentRender}
-      className={clsx(styles.base, wide && "wide", className)}
+      className={clsx(styles.base, wide && styles.wide, className)}
     />
   );
 }

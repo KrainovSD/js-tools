@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/react-ui",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Krainov react-ui",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -40,13 +40,15 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
+  "dependencies": {},
   "devDependencies": {
     "@emotion/css": "11.13.4",
     "@krainovsd/eslint-presets": "0.1.2",
-    "@krainovsd/icons": "0.0.1",
-    "@krainovsd/utils": "0.2.1",
+    "@krainovsd/react-icons": "0.2.0",
+    "@krainovsd/js-helpers": "0.3.1",
     "@rollup/plugin-terser": "0.4.4",
     "@rollup/plugin-typescript": "12.1.1",
+    "@rollup/plugin-node-resolve": "15.3.0",
     "@storybook/addon-essentials": "8.4.2",
     "@storybook/addon-interactions": "8.4.2",
     "@storybook/blocks": "8.4.2",
@@ -65,25 +67,26 @@
     "clsx": " 2.1.1",
     "eslint": "9.13.0",
     "i18next": "23.16.5",
-    "lodash": "^4.17.21",
+    "lodash": "4.17.21",
     "prettier": "3.3.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-i18next": "15.1.1",
     "rollup": "4.21.2",
     "rollup-plugin-peer-deps-external": "2.2.4",
+    "rollup-plugin-postcss": "4.0.2",
+    "@rollup/plugin-commonjs": "28.0.2",
+    "sass": "1.83.0",
     "storybook": "8.4.2",
     "typescript": "5.6.3",
     "vite": "5.4.10"
   },
   "peerDependencies": {
-    "@krainovsd/icons": "^0.0.1",
-    "@krainovsd/utils": "^0.2.1",
-    "clsx": "^2.0.0",
+    "@krainovsd/react-icons": "^0.2.0",
+    "@krainovsd/js-helpers": "^0.3.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-i18next": "^15.0.0",
-    "@emotion/css": "^11.0.0",
     "antd": "^5.21.0"
   }
 }

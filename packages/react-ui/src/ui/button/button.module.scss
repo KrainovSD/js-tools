@@ -1,6 +1,4 @@
-import { css } from "@emotion/css";
-
-export const base = css`
+.base {
   display: inline-flex;
   align-items: center;
 
@@ -15,4 +13,4 @@ export const base = css`
     width: fit-content !important;
     height: fit-content;
   }
-`;
+}

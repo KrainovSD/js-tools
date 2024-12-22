@@ -1,5 +1,5 @@
-import { Icon } from "@krainovsd/icons";
-import { ksdu } from "@krainovsd/utils";
+import { isObject } from "@krainovsd/js-helpers";
+import { PlayPause } from "@krainovsd/react-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { type FilterFieldType, FiltersBlock, Flex, Select } from "../ui";
 
@@ -32,10 +32,10 @@ export const Primary: Story = {
       {
         label: "Статус",
         name: "status",
-        icon: <Icon icon="PlayPause" color={"black"} />,
+        icon: <PlayPause color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[] | string[]) =>
-          ksdu.typings.isObject(value[0])
+          isObject(value[0])
             ? (value as Record<string, string>[])
                 .map((item: Record<string, string>) => item.label)
                 .join(", ")
@@ -59,7 +59,7 @@ export const Primary: Story = {
       {
         label: "Тип",
         name: "type",
-        icon: <Icon icon="PlayPause" color={"black"} />,
+        icon: <PlayPause color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) =>
           value.map((item: Record<string, string>) => item.label).join(", "),
@@ -82,7 +82,7 @@ export const Primary: Story = {
       {
         label: "Еще одно",
         name: "other",
-        icon: <Icon icon="PlayPause" color={"black"} />,
+        icon: <PlayPause color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) =>
           value.map((item: Record<string, string>) => item.label).join(", "),
@@ -105,7 +105,7 @@ export const Primary: Story = {
       {
         label: "И Еще одно",
         name: "and_other",
-        icon: <Icon icon="PlayPause" color={"black"} />,
+        icon: <PlayPause color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) =>
           value.map((item: Record<string, string>) => item.label).join(", "),
@@ -130,7 +130,7 @@ export const Primary: Story = {
       {
         label: "Статус",
         name: "status",
-        icon: <Icon icon="PlayPause" color={"black"} />,
+        icon: <PlayPause color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) =>
           value.map((item: Record<string, string>) => item.label).join(", "),

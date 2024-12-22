@@ -1,6 +1,4 @@
-import { css } from "@emotion/css";
-
-export const popoverButton = css`
+.popoverButton {
   width: 100%;
   display: flex;
   align-items: center;
@@ -8,4 +6,4 @@ export const popoverButton = css`
   vertical-align: middle;
   margin-bottom: 2px;
   padding: 5px 8px;
-`;
+}

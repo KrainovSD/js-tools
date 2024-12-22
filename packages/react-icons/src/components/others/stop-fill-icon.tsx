@@ -1,7 +1,7 @@
 import type { IconProps } from "../../types";
 
 export function StopFill(props: IconProps): React.JSX.Element {
-  const { sizeX = 14, sizeY = 14, color = "#FFFFFF", ...rest } = props;
+  const { size = 14, sizeX = size, sizeY = size, color = "#FFFFFF", ...rest } = props;
 
   return (
     <svg
