@@ -39,7 +39,8 @@ export const Primary: Story = {
             ? (value as Record<string, string>[])
                 .map((item: Record<string, string>) => item.label)
                 .join(", ")
-            : value.join(", "),
+            : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+              value.join(", "),
         inputField: (
           <Select
             mode={"multiple"}

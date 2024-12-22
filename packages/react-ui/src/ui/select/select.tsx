@@ -68,7 +68,7 @@ export function Select(props: SelectProps): React.JSX.Element {
     [withEmptyOption, options],
   );
 
-  const handleChange = (value: SelectValue, option: DefaultOptionType | DefaultOptionType[]) => {
+  const handleChange = (value: SelectValue, option?: DefaultOptionType | DefaultOptionType[]) => {
     onChange?.(value === EMPTY_OPTION.value ? undefined : value, option);
   };
 

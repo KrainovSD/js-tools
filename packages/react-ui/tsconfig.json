@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "allowJs": true,
     "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
     /* Linting */
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
