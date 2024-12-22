@@ -41,10 +41,7 @@
     "test:coverage": "jest --coverage",
     "prepare": "husky"
   },
-  "dependencies": {
-    "dayjs": "1.11.13",
-    "lodash": "4.17.21"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@krainovsd/eslint-presets": "0.1.2",
     "@rollup/plugin-commonjs": "28.0.1",

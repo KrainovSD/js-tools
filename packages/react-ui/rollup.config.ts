@@ -11,6 +11,8 @@ export default defineConfig({
       format: "es",
       generatedCode: "es2015",
       sourcemap: true,
+      // preserveModules: true,
+      // preserveModulesRoot: "src",
     },
     {
       file: "./lib/cjs/index.cjs",

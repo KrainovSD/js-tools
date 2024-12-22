@@ -17,8 +17,6 @@ export default defineConfig({
       dir: "./lib/esm",
       format: "es",
       generatedCode: "es2015",
-      preserveModules: true,
-      preserveModulesRoot: "src",
       sourcemap: true,
       plugins: [
         bundleStats({

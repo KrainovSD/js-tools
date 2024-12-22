@@ -94,13 +94,6 @@ importers:
         version: 8.11.0(eslint@9.13.0)(typescript@5.6.3)
 
   packages/js-helpers:
-    dependencies:
-      dayjs:
-        specifier: 1.11.13
-        version: 1.11.13
-      lodash:
-        specifier: 4.17.21
-        version: 4.17.21
     devDependencies:
       '@krainovsd/eslint-presets':
         specifier: 0.1.2
@@ -138,12 +131,18 @@ importers:
       '@types/rollup-plugin-peer-deps-external':
         specifier: 2.2.5
         version: 2.2.5
+      dayjs:
+        specifier: 1.11.13
+        version: 1.11.13
       eslint:
         specifier: 9.13.0
         version: 9.13.0
       jest:
         specifier: 29.7.0
         version: 29.7.0(@types/node@22.8.6)(babel-plugin-macros@3.1.0)
+      lodash:
+        specifier: 4.17.21
+        version: 4.17.21
       node-fetch:
         specifier: 3.3.2
         version: 3.3.2
