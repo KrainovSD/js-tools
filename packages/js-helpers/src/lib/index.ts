@@ -1,5 +1,6 @@
-export * as api from "./api";
-export * as browser from "./browser";
-export * as colors from "./colors";
-export * as date from "./date";
-export * as utils from "./utils";
+export * from "./api";
+export * from "./browser";
+export * from "./colors";
+export * from "./date";
+export * from "./utils";
+export * from "./typings";

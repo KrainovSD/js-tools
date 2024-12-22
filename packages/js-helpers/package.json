@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/js-helpers",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Krainov helpers",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -29,6 +29,7 @@
     "tmp"
   ],
   "scripts": {
+    "publish": "lint && build && npm publish",
     "clear": "rm -rf ./lib",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
