@@ -7,7 +7,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KrainovSD/js-tools",
+    "url": "git+https://github.com/KrainovSD/js-tools.git",
     "directory": "packages/js-helpers"
   },
   "sideEffects": false,
@@ -50,6 +50,8 @@
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "15.3.0",
     "@rollup/plugin-typescript": "12.1.1",
+    "rollup-plugin-bundle-stats": "4.17.0",
+    "rollup-plugin-visualizer": "5.12.0",
     "@swc/core": "1.7.42",
     "@swc/jest": "0.2.37",
     "@trivago/prettier-plugin-sort-imports": "4.3.0",

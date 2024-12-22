@@ -7,7 +7,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KrainovSD/js-tools",
+    "url": "git+https://github.com/KrainovSD/js-tools.git",
     "directory": "packages/react-ui"
   },
   "sideEffects": false,
