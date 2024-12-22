@@ -1,4 +1,4 @@
-import { arrows, others } from "./components";
+import { arrows, others } from "./components/categories";
 import type { IconCategory } from "./types";
 
 export const ICON_CATEGORIES: IconCategory[] = [

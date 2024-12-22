@@ -33,6 +33,8 @@ export default defineConfig({
           template: "flamegraph",
         }),
       ],
+      preserveModules: true,
+      preserveModulesRoot: "src",
     },
     {
       dir: "./lib/cjs",

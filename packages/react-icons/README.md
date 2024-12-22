@@ -1,18 +1,37 @@
-# @krainovsd/icons
+# @krainovsd/react-icons
 
-Пакет с иконками для React приложений. 
+The library of React icon presets.
 
-## Download
+## Installing
 
+### Package manager
+
+Using pnpm:
 ```
-yarn add @krainovsd/icons
+pnpm install @krainovsd/react-icons
 ```
+
+Using yarn:
+```
+yarn add @krainovsd/react-icons
+```
+
+Using npm:
+```
+npm install @krainovsd/react-icons
+```
+
 
 ## Usage
 
-
 ```js
-import { Icon, type IconName } from "@krainovsd/icons"
+import { Icon, type IconName } from "@krainovsd/react-icons"
 
 <Icon icon={"Module" as IconName} size={24} color={"black"} />
+```
+or with tree-shaking 
+```js
+import { Module} from "@krainovsd/react-icons"
+
+<Module size={24} color={"black"} />
 ```

@@ -1,18 +1,31 @@
 # @krainovsd/react-ui
 
-Пакет с компонентами для React приложений. 
+The library of React-UI components based on [Ant Design](https://ant.design/).
 
-## Download
+## Installing
 
+### Package manager
+
+Using pnpm:
+```
+pnpm install @krainovsd/react-ui
+```
+
+Using yarn:
 ```
 yarn add @krainovsd/react-ui
 ```
 
-## Usage
+Using npm:
+```
+npm install @krainovsd/react-ui
+```
 
+
+## Usage
 
 ```js
 import { Flex } from "@krainovsd/react-ui"
 
-<Flex gap={10} vertical></Flex>
+<Flex>text</Flex>
 ```

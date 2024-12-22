@@ -1,4 +1,4 @@
-import { arrows, others } from "./components";
+import { arrows, others } from "./components/categories";
 
 export const Icons = {
   ...arrows,

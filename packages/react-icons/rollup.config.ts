@@ -7,10 +7,12 @@ export default defineConfig({
   input: "./src/index.ts",
   output: [
     {
-      file: "./lib/esm/index.js",
+      dir: "./lib/esm",
       format: "es",
       generatedCode: "es2015",
       sourcemap: true,
+      preserveModules: true,
+      preserveModulesRoot: "src",
     },
     {
       file: "./lib/cjs/index.cjs",

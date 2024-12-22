@@ -1,2 +1,2 @@
-export * as arrows from "./arrows";
-export * as others from "./others";
+export * from "./arrows";
+export * from "./others";

@@ -1,16 +1,29 @@
 # @krainovsd/eslint-presets
 
-Пакет с переиспользуемыми пресетами линтера.
+The library of flat eslint-presets.
 
-## Download
+## Installing
 
+### Package manager
+
+Using pnpm:
 ```
-pnpm i @krainovsd/eslint-presets
+pnpm install @krainovsd/eslint-presets
+```
+
+Using yarn:
+```
+yarn add @krainovsd/eslint-presets
+```
+
+Using npm:
+```
+npm install @krainovsd/eslint-presets
 ```
 
 ## Usage
 
-```
+```js
 const eslintPresets = require('@krainovsd/eslint-presets');
 
 module.exports = [
@@ -24,7 +37,7 @@ module.exports = [
 
 или
 
-```
+```js
 import eslintPresets from "@krainovsd/eslint-presets"
 
 export default [
