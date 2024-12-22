@@ -29,7 +29,7 @@
     "tmp"
   ],
   "scripts": {
-    "publish": "npm run lint && npm run build && npm publish",
+    "publish-package": "npm run lint && npm run build && npm publish",
     "clear": "rm -rf ./lib",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
