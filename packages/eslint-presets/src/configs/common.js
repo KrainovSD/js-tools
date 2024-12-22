@@ -13,6 +13,7 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
+/** @type {import("eslint").Linter.Config[]} */
 export default [
   /** eslint js recommended */
   jsPlugin.configs.recommended,

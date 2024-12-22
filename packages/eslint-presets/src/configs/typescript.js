@@ -2,11 +2,16 @@
 import tsPlugin from "typescript-eslint";
 import parser from "@typescript-eslint/parser";
 
+/** @type {import("eslint").Linter.Config[]} */
+const recommendedTypeChecked = tsPlugin.configs.recommendedTypeChecked;
+/** @type {import("eslint").Linter.Config[]} */
+const strictTypeChecked = tsPlugin.configs.strictTypeChecked;
+
+/** @type {import("eslint").Linter.Config[]} */
 export default [
   /** eslint ts recommended */
-  ...tsPlugin.configs.recommendedTypeChecked,
-  ...tsPlugin.configs.strictTypeChecked,
-  ...tsPlugin.configs.strictTypeChecked,
+  ...recommendedTypeChecked,
+  ...strictTypeChecked,
   {
     languageOptions: {
       parser,

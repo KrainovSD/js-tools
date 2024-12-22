@@ -4,6 +4,7 @@ import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import testingPlugin from "eslint-plugin-testing-library";
 
+/** @type {import("eslint").Linter.Config[]} */
 export default [
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat["jsx-runtime"],

@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/eslint-presets",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Krainov eslint presets",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -23,7 +23,7 @@
     "tmp"
   ],
   "scripts": {
-    "publish-package": "npm run lint && npm run build && npm publish",
+    "publish-package": "npm run build && npm run lint && npm publish",
     "lint": "eslint --debug eslint.config.js",
     "clear": "rm -rf ./lib",
     "build": "npm run clear && npm run build:types && npm run build:js",
@@ -31,32 +31,33 @@
     "build:types": "tsc -p tsconfig.build.json",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "@eslint/eslintrc": "3.1.0",
-    "@eslint/js": "9.13.0",
-    "@typescript-eslint/eslint-plugin": "8.11.0",
-    "@typescript-eslint/parser": "8.11.0",
+  "dependencies": {
+    "@eslint/eslintrc": "3.2.0",
+    "@eslint/js": "9.17.0",
+    "@typescript-eslint/eslint-plugin": "8.18.1",
+    "@typescript-eslint/parser": "8.18.1",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-airbnb-typescript": "18.0.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-import": "2.31.0",
-    "eslint-plugin-jest": "28.8.3",
-    "eslint-plugin-jsx-a11y": "6.10.1",
+    "eslint-plugin-jest": "28.10.0",
+    "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-react": "7.37.2",
-    "eslint-plugin-react-hooks": "5.0.0",
-    "eslint-plugin-testing-library": "6.4.0",
-    "typescript-eslint": "8.11.0",
+    "eslint-plugin-react-hooks": "5.1.0",
+    "eslint-plugin-testing-library": "7.1.1",
+    "typescript-eslint": "8.18.1"
+  },
+  "devDependencies": {
     "@rollup/plugin-json": "6.1.0",
-    "@types/node": "20.12.10",
+    "@types/node": "22.10.2",
     "@types/rollup-plugin-peer-deps-external": "2.2.5",
-    "eslint": "9.13.0",
-    "prettier": "3.3.3",
-    "rollup": "4.24.0",
+    "eslint": "9.17.0",
+    "prettier": "3.4.2",
+    "rollup": "4.29.1",
     "rollup-plugin-peer-deps-external": "2.2.4",
-    "typescript": "5.6.3",
+    "typescript": "5.7.2",
     "react": "18.3.1"
   },
   "peerDependencies": {
