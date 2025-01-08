@@ -77,17 +77,33 @@ export class Graph<
         NodeInterface<NodeData>,
         LinkInterface<NodeData, LinkData>
       >();
-
-      // .force("collide", d3.forceCollide().radius(5).strength(1).iterations(2));
     }
     if (!this.area) {
       this.area = d3
         .select(this.selector)
         .attr("width", this.width)
         .attr("height", this.height)
-        .attr("viewBox", [-this.width / 2, -this.height / 2, this.width, this.height])
-        .attr("style", "max-width: 100%; height: auto;");
+        // .attr("viewBox", [-this.width / 2, -this.height / 2, this.width, this.height])
+        // .attr("style", "max-width: 100%; height: auto;")
+        .call(
+          d3
+            .zoom()
+            .scaleExtent([1, 8])
+            // .translateExtent([
+            //   [0, 0],
+            //   [928, 680],
+            // ])
+            .on("zoom", (event: any) => {
+              if (!this.area) return;
+
+              this.area.attr("transform", event.transform as readonly (string | number)[]);
+            }) as unknown as (
+            selection: d3.Selection<d3.BaseType, unknown, HTMLElement, any>,
+          ) => void,
+        );
     }
+
+    d3.scaleLinear().domain([0, this.width]).range([0, this.width]);
 
     this.updateElements();
 
@@ -95,11 +111,9 @@ export class Graph<
       this.simulation
         .force("x", d3.forceX())
         .force("y", d3.forceY())
-        .force("charge", d3.forceManyBody<NodeInterface<NodeData>>())
-        .force("center", d3.forceCenter().strength(1))
-        // .force("centers", d3.forceCenter(this.width / 2, this.height / 2))
-        // .force("x", d3.forceX(this.width / 2))
-        // .force("y", d3.forceY(this.height / 2))
+        .force("charge", d3.forceManyBody<NodeInterface<NodeData>>().strength(-15))
+        .force("center", d3.forceCenter(this.width / 2, this.height / 2).strength(1))
+        .force("collide", d3.forceCollide().radius(7).strength(1).iterations(1))
         .restart();
     }
   }
