@@ -1,4 +1,5 @@
-import type { GraphInterface, NodeInterface } from "@/module/Graph";
+import type { GraphInterface } from "@/module/Graph";
+import type { NodeInterface } from "@/types";
 import * as json from "./data.json";
 import type { LinkData, NodeData } from "./types";
 

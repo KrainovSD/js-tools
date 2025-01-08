@@ -24,7 +24,7 @@
     },
     "baseUrl": "./"
   },
-  "include": ["src/**/*", "eslint.config.js", "src/types.d.ts", "rollup.config.ts"],
+  "include": ["src/**/*", "eslint.config.js", "src/typings.d.ts", "rollup.config.ts"],
   "exclude": ["node_modules", "dist"],
   "references": [
     {

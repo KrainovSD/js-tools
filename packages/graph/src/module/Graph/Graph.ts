@@ -2,7 +2,9 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from "d3";
-import type { GraphInterface, LinkInterface, NodeInterface } from "./Graph.types";
+import type { LinkInterface } from "@/types/links";
+import type { NodeInterface } from "@/types/nodes";
+import type { GraphInterface } from "./Graph.types";
 
 const POSITION_X_CONSTANT = 0;
 const POSITION_Y_CONSTANT = 0;

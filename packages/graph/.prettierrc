@@ -18,6 +18,7 @@
     "^@/extensions/(.*)$",
     "^@/lib",
     "^@/lib/(.*)$",
+    "^@/(.*)$",
     "^[./]"
   ],
   "importOrderSeparation": false,
