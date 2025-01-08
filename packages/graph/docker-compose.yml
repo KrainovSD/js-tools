@@ -1,0 +1,9 @@
+services:
+  markdown:
+    container_name: markdown_editor
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3004:80"

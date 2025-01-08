@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "useDefineForClassFields": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowJs": true,
+    "verbatimModuleSyntax": true,
+    /* Linting */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "./"
+  },
+  "include": ["src/**/*", "eslint.config.js", "src/types.d.ts", "rollup.config.ts"],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}

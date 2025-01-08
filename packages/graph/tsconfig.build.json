@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "tmp",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "./",
+    "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
+  },
+  "files": ["src/index.ts"],
+  "include": ["src/**/*", "src/types.d.ts"],
+  "exclude": ["**/*.spec.ts"]
+}
