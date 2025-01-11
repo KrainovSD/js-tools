@@ -1,12 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as d3 from "d3";
 import { Viewport } from "pixi-viewport";
-import { Application, BackgroundSystem, Graphics } from "pixi.js";
+import {
+  Application,
+  BackgroundSystem,
+  Circle,
+  type FederatedPointerEvent,
+  Graphics,
+} from "pixi.js";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
 import type { GraphCanvasInterface } from "./GraphCanvas.types";
+
+type GraphicsInterface<NodeData extends Record<string, unknown>> = Graphics & {
+  element?: NodeInterface<NodeData>;
+};
 
 const POSITION_X_CONSTANT = 0;
 const POSITION_Y_CONSTANT = 0;
@@ -80,7 +87,13 @@ export class GraphCanvas<
   destroy() {
     this.stop();
     if (this.viewport) {
+      const newRoot = this.root.cloneNode() as HTMLElement;
+      this.root.parentElement?.appendChild?.(newRoot);
+      this.root.insertAdjacentElement("afterend", newRoot);
+      this.viewport.destroy();
+      this.root.remove();
       this.viewport = undefined;
+      this.root = newRoot;
     }
 
     if (this.core) {
@@ -140,53 +153,51 @@ export class GraphCanvas<
       throw new Error("bad init");
     }
 
-    // const viewport = this.viewport;
-    // const simulation = this.simulation;
+    const viewport = this.viewport;
+    const simulation = this.simulation;
+    const dragRef: { current: Graphics | null } = { current: null };
 
-    // function onDragStart(this: Graphics, event: FederatedPointerEvent) {
-    //   console.log("start");
+    function onDragStart(this: Graphics) {
+      viewport.plugins.pause("drag");
+      simulation.alphaTarget(0.3).restart();
+      this.alpha = 0.5;
+      dragRef.current = this;
+    }
 
-    //   viewport.plugins.pause("drag");
-    //   simulation.alphaTarget(0.3).restart();
-    //   this.alpha = 0.5;
-    //   this.dragging = true;
-    // }
+    function onDragMove(this: GraphicsInterface<NodeData>, event: FederatedPointerEvent) {
+      if (dragRef.current && dragRef.current === this && this.element) {
+        const newPosition = event.getLocalPosition(this.parent);
+        this.element.fx = newPosition.x;
+        this.element.fy = newPosition.y;
+      }
+    }
 
-    // function onDragMove(this: Graphics, event: FederatedPointerEvent) {
-    //   if (this.dragging) {
-    //     console.log(this);
-
-    //     const newPosition = event.getLocalPosition(this.parent);
-    //     this.fx = newPosition.x;
-    //     this.fy = newPosition.y;
-    //   }
-    // }
-
-    // function onDragEnd(this: Graphics, event: FederatedPointerEvent) {
-    //   console.log("end");
-    //   simulation.alphaTarget(0);
-    //   this.alpha = 1;
-    //   this.dragging = false;
-    //   this.isOver = false;
-    //   this.data = null;
-    //   this.fx = null;
-    //   this.fy = null;
-    //   viewport.plugins.resume("drag");
-    // }
+    function onDragEnd(this: Graphics) {
+      simulation.alphaTarget(0);
+      dragRef.current = null;
+      this.alpha = 1;
+      // this.fx = null;
+      // this.fy = null;
+      viewport.plugins.resume("drag");
+    }
 
     // function onMouseOver(this: Graphics, event: FederatedPointerEvent) {}
 
     // function onMouseOut(this: Graphics, event: FederatedPointerEvent) {}
 
     this.nodeElements = this.nodes.map<Graphics>((node) => {
-      const nodeElement = new Graphics()
+      const nodeElement: GraphicsInterface<NodeData> = new Graphics()
         .circle(0, 0, 5)
         .fill(this.color(String(node.group)))
-        .stroke({ width: 1, color: "white" });
-      // .on("pointerdown", onDragStart)
-      // .on("pointerup", onDragEnd)
-      // .on("pointerupoutside", onDragEnd)
-      // .on("pointermove", onDragMove);
+        .stroke({ width: 1, color: "white" })
+        // .on("pointerdown", onDragStart)
+        // .on("pointerup", onDragEnd)
+        // .on("pointerupoutside", onDragEnd)
+        // .on("pointermove", onDragMove)
+        .on("mousedown", onDragStart)
+        .on("mouseup", onDragEnd)
+        .on("mouseupoutside", onDragEnd)
+        .on("mousemove", (event) => onDragMove.bind(nodeElement)(event));
       // .on("pointerover", function onMouseOver() {
       //   console.log(this);
       // })
@@ -196,7 +207,7 @@ export class GraphCanvas<
 
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       // const sprite = new Sprite(this.core!.renderer.generateTexture(nodeElement));
-
+      nodeElement.hitArea = new Circle(0, 0, 24);
       nodeElement.interactive = true;
       nodeElement.cursor = "pointer";
       // nodeElement.hitArea = new Circle(0, 0, 24);
@@ -204,6 +215,7 @@ export class GraphCanvas<
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.viewport!.addChild(nodeElement);
       node.element = nodeElement;
+      nodeElement.element = node;
 
       return nodeElement;
     });
@@ -250,7 +262,7 @@ export class GraphCanvas<
 
       linkElements.clear();
       // linkElements.removeChildren();
-      linkElements.alpha = 1;
+      linkElements.alpha = 0.3;
 
       this.links.forEach((link) => {
         const { source, target } = link;

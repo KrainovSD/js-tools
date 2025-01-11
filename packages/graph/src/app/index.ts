@@ -19,7 +19,7 @@ document
   .querySelector("button#switcher")
   ?.addEventListener?.("click", function click(this: HTMLButtonElement) {
     if (isWorking) {
-      graph.stop();
+      graph.destroy();
       this.textContent = "Запустить";
     } else {
       graph.start();
