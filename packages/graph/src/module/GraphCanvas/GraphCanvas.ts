@@ -24,8 +24,6 @@ export class GraphCanvas<
 
   private area: HTMLCanvasElement | null | undefined;
 
-  private zoomGhost: SVGElement | null | undefined;
-
   private context: CanvasRenderingContext2D | null | undefined;
 
   private linksNode: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> | undefined;
@@ -36,7 +34,7 @@ export class GraphCanvas<
 
   private dpi = devicePixelRatio;
 
-  private transform: d3.ZoomTransform = d3.zoomIdentity;
+  private areaTransform: d3.ZoomTransform = d3.zoomIdentity;
 
   private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
@@ -83,7 +81,6 @@ export class GraphCanvas<
 
     this.root.replaceChildren();
     this.area = undefined;
-    this.zoomGhost = undefined;
   }
 
   private refreshSimulation() {
@@ -98,10 +95,7 @@ export class GraphCanvas<
         .create("canvas")
         .attr("width", this.dpi * this.width)
         .attr("height", this.dpi * this.height)
-        .attr(
-          "style",
-          `position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;`,
-        )
+        .attr("style", `width: 100%; height: 100%; `)
         .node();
 
       if (!this.area) throw new Error("couldn't create canvas");
@@ -111,19 +105,6 @@ export class GraphCanvas<
       this.context.scale(this.dpi, this.dpi);
 
       this.root.appendChild(this.area);
-    }
-    if (!this.zoomGhost) {
-      this.zoomGhost = d3
-        .create("svg")
-        .attr("width", this.width)
-        .attr("height", this.height)
-        .attr("style", `width: 100%; height: 100%; z-index: 0; visibility: hidden;`)
-        .append("g")
-        .node();
-
-      if (!this.zoomGhost || !this.zoomGhost.parentElement)
-        throw new Error("couldn't create zoomGhost");
-      this.root.appendChild(this.zoomGhost.parentElement);
     }
 
     this.simulation
@@ -158,8 +139,8 @@ export class GraphCanvas<
       this.context.save();
 
       this.context.clearRect(0, 0, this.width, this.height);
-      this.context.translate(this.transform.x, this.transform.y);
-      this.context.scale(this.transform.k, this.transform.k);
+      this.context.translate(this.areaTransform.x, this.areaTransform.y);
+      this.context.scale(this.areaTransform.k, this.areaTransform.k);
 
       this.context.globalAlpha = 0.6;
       this.context.strokeStyle = "#999";
@@ -200,7 +181,12 @@ export class GraphCanvas<
 
     function drawNode(this: GraphCanvas<NodeData, LinkData>, d: NodeInterface<NodeData>) {
       if (!this.context || !d.x || !d.y) return;
-
+      /** text */
+      this.context.font = "8px Arial";
+      this.context.fillStyle = "#333";
+      this.context.textAlign = "center";
+      /** circle */
+      this.context.fillText(`${d.index}`, d.x, d.y + 5 * 2 + 3);
       this.context.moveTo(d.x + 5, d.y);
       this.context.arc(d.x, d.y, 5, 0, 2 * Math.PI);
     }
@@ -215,22 +201,29 @@ export class GraphCanvas<
       d3
         .drag()
         .subject((event) => {
-          const [px, py] = d3.pointer(event, this.zoomGhost);
+          const [_px, _py] = d3.pointer(event, this.area);
+          const px = (_px - this.areaTransform.x) / this.areaTransform.k;
+          const py = (_py - this.areaTransform.y) / this.areaTransform.k;
 
           return d3.least(this.nodes, (node) => {
             if (!node.x || !node.y) return undefined;
 
             const dist2 = (node.x - px) ** 2 + (node.y - py) ** 2;
-            if (dist2 < 400) return dist2;
+
+            if (dist2 < 30) return dist2;
           });
         })
         .on("start", (event) => {
           if (!event.active && this.simulation) this.simulation.alphaTarget(0.3).restart();
+
           event.subject.fx = event.subject.x;
           event.subject.fy = event.subject.y;
         })
         .on("drag", (event) => {
-          const [px, py] = d3.pointer(event, this.zoomGhost);
+          const [_px, _py] = d3.pointer(event, this.area);
+          const px = (_px - this.areaTransform.x) / this.areaTransform.k;
+          const py = (_py - this.areaTransform.y) / this.areaTransform.k;
+
           event.subject.fx = px;
           event.subject.fy = py;
         })
@@ -252,11 +245,8 @@ export class GraphCanvas<
         .zoom()
         .scaleExtent([0.5, 10])
         .on("zoom", (event) => {
-          const transform = event.transform as d3.ZoomTransform;
-          this.transform = transform;
-          if (this.zoomGhost) {
-            d3.select(this.zoomGhost).attr("transform", transform as unknown as string);
-          }
+          const areaTransform = event.transform as d3.ZoomTransform;
+          this.areaTransform = areaTransform;
           this.draw();
         }) as unknown as d3.ZoomBehavior<HTMLCanvasElement, unknown>,
     );
