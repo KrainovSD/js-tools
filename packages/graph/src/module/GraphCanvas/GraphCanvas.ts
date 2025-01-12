@@ -24,6 +24,8 @@ export class GraphCanvas<
 
   private area: HTMLCanvasElement | null | undefined;
 
+  private zoomGhost: SVGElement | null | undefined;
+
   private context: CanvasRenderingContext2D | null | undefined;
 
   private linksNode: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> | undefined;
@@ -39,6 +41,9 @@ export class GraphCanvas<
   private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
   constructor({ links, nodes, root }: GraphCanvasInterface<NodeData, LinkData>) {
+    root.style.position = "relative";
+    root.style.overflow = "hidden";
+
     this.root = root;
     const { width, height } = root.getBoundingClientRect();
 
@@ -75,10 +80,10 @@ export class GraphCanvas<
       this.nodesNode.remove();
       this.nodesNode = undefined;
     }
-    if (this.area) {
-      this.area.remove();
-      this.area = undefined;
-    }
+
+    this.root.replaceChildren();
+    this.area = undefined;
+    this.zoomGhost = undefined;
   }
 
   private refreshSimulation() {
@@ -93,33 +98,32 @@ export class GraphCanvas<
         .create("canvas")
         .attr("width", this.dpi * this.width)
         .attr("height", this.dpi * this.height)
-        .attr("style", `width: 100%; height: 100%`)
+        .attr(
+          "style",
+          `position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;`,
+        )
         .node();
 
-      if (!this.area) throw new Error("can't create canvas");
+      if (!this.area) throw new Error("couldn't create canvas");
 
       this.context = this.area.getContext("2d");
-      if (!this.context) throw new Error("can't create canvas context");
+      if (!this.context) throw new Error("couldn't create canvas context");
       this.context.scale(this.dpi, this.dpi);
 
       this.root.appendChild(this.area);
+    }
+    if (!this.zoomGhost) {
+      this.zoomGhost = d3
+        .create("svg")
+        .attr("width", this.width)
+        .attr("height", this.height)
+        .attr("style", `width: 100%; height: 100%; z-index: 0; visibility: hidden;`)
+        .append("g")
+        .node();
 
-      // .call(
-      //   d3
-      //     .zoom()
-      //     .scaleExtent([1, 8])
-      //     // .translateExtent([
-      //     //   [0, 0],
-      //     //   [928, 680],
-      //     // ])
-      //     .on("zoom", (event: any) => {
-      //       if (!this.area) return;
-
-      //       this.area.attr("transform", event.transform as readonly (string | number)[]);
-      //     }) as unknown as (
-      //     selection: d3.Selection<d3.BaseType, unknown, HTMLElement, any>,
-      //   ) => void,
-      // );
+      if (!this.zoomGhost || !this.zoomGhost.parentElement)
+        throw new Error("couldn't create zoomGhost");
+      this.root.appendChild(this.zoomGhost.parentElement);
     }
 
     this.simulation
@@ -211,7 +215,7 @@ export class GraphCanvas<
       d3
         .drag()
         .subject((event) => {
-          const [px, py] = d3.pointer(event, this.area);
+          const [px, py] = d3.pointer(event, this.zoomGhost);
 
           return d3.least(this.nodes, (node) => {
             if (!node.x || !node.y) return undefined;
@@ -226,8 +230,9 @@ export class GraphCanvas<
           event.subject.fy = event.subject.y;
         })
         .on("drag", (event) => {
-          event.subject.fx = event.x;
-          event.subject.fy = event.y;
+          const [px, py] = d3.pointer(event, this.zoomGhost);
+          event.subject.fx = px;
+          event.subject.fy = py;
         })
         .on("end", (event) => {
           if (!event.active && this.simulation) this.simulation.alphaTarget(0);
@@ -245,10 +250,13 @@ export class GraphCanvas<
     d3.select(this.area).call(
       d3
         .zoom()
-        .scaleExtent([0.2, 10])
+        .scaleExtent([0.5, 10])
         .on("zoom", (event) => {
           const transform = event.transform as d3.ZoomTransform;
           this.transform = transform;
+          if (this.zoomGhost) {
+            d3.select(this.zoomGhost).attr("transform", transform as unknown as string);
+          }
           this.draw();
         }) as unknown as d3.ZoomBehavior<HTMLCanvasElement, unknown>,
     );
