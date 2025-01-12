@@ -1,16 +1,15 @@
 /* eslint-disable no-console */
 import { GraphCanvas } from "@/module/GraphCanvas";
 import "./global.css";
-import { dataJson, dataMock } from "./mock";
+import { customMock, d3Mock, stressMock } from "./mock";
 
 let isWorking = true;
-let currentData: "json" | "custom" = "json";
 const root = document.querySelector<HTMLElement>("div#container");
 if (!root) throw new Error("hasn't root");
 
 const graph = new GraphCanvas({
-  links: dataJson.links,
-  nodes: dataJson.nodes,
+  links: d3Mock.links,
+  nodes: d3Mock.nodes,
   root,
 });
 console.log(graph);
@@ -28,17 +27,38 @@ document
 
     isWorking = !isWorking;
   });
-document
-  .querySelector("button#data")
-  ?.addEventListener?.("click", function click(this: HTMLButtonElement) {
-    if (currentData === "json") {
-      graph.changeData({
-        nodes: JSON.parse(JSON.stringify(dataMock.nodes)),
-        links: JSON.parse(JSON.stringify(dataMock.links)),
-      });
-      currentData = "custom";
-    } else {
-      graph.changeData({ nodes: dataJson.nodes, links: dataJson.links });
-      currentData = "json";
+document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) => {
+  i.addEventListener?.("change", function click(this: HTMLInputElement) {
+    switch (this.value) {
+      case "d3": {
+        graph.changeData({ links: d3Mock.links, nodes: d3Mock.nodes });
+
+        break;
+      }
+      case "stress": {
+        graph.changeData({ links: stressMock.links, nodes: stressMock.nodes });
+
+        break;
+      }
+      case "custom": {
+        graph.changeData({ links: customMock.links, nodes: customMock.nodes });
+
+        break;
+      }
+      default: {
+        break;
+      }
     }
+
+    //   if (isWorking) {
+    //     graph.destroy();
+    //     this.textContent = "Запустить";
+    //   } else {
+    //     graph.start();
+    //     this.textContent = "Очистить";
+    //   }
+
+    //   isWorking = !isWorking;
+    // });
   });
+});
