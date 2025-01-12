@@ -49,16 +49,5 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
         break;
       }
     }
-
-    //   if (isWorking) {
-    //     graph.destroy();
-    //     this.textContent = "Запустить";
-    //   } else {
-    //     graph.start();
-    //     this.textContent = "Очистить";
-    //   }
-
-    //   isWorking = !isWorking;
-    // });
   });
 });

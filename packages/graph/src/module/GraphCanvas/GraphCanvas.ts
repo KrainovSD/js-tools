@@ -205,27 +205,23 @@ export class GraphCanvas<
   }
 
   private initDnd() {
-    const area = this.area;
-    const nodes = this.nodes;
-    const simulation = this.simulation;
+    if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
 
-    if (!area || !nodes || !simulation) throw new Error("bad init data");
-
-    d3.select(area).call(
+    d3.select(this.area).call(
       d3
         .drag()
         .subject((event) => {
-          const [px, py] = d3.pointer(event, area);
+          const [px, py] = d3.pointer(event, this.area);
 
-          return d3.least(nodes, ({ x, y }) => {
-            if (!x || !y) return undefined;
+          return d3.least(this.nodes, (node) => {
+            if (!node.x || !node.y) return undefined;
 
-            const dist2 = (x - px) ** 2 + (y - py) ** 2;
+            const dist2 = (node.x - px) ** 2 + (node.y - py) ** 2;
             if (dist2 < 400) return dist2;
           });
         })
         .on("start", (event) => {
-          if (!event.active) simulation.alphaTarget(0.3).restart();
+          if (!event.active && this.simulation) this.simulation.alphaTarget(0.3).restart();
           event.subject.fx = event.subject.x;
           event.subject.fy = event.subject.y;
         })
@@ -234,7 +230,7 @@ export class GraphCanvas<
           event.subject.fy = event.y;
         })
         .on("end", (event) => {
-          if (!event.active) simulation.alphaTarget(0);
+          if (!event.active && this.simulation) this.simulation.alphaTarget(0);
           event.subject.fx = null;
           event.subject.fy = null;
         }) as unknown as (
