@@ -1,8 +1,3 @@
-export type NodeData = {
-  radius: number | undefined;
-  citing_patents_count: number | undefined;
-};
+export type NodeData = {};
 
-export type LinkData = {
-  value: number;
-};
+export type LinkData = {};

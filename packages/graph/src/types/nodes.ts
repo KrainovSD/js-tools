@@ -5,6 +5,6 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   extends SimulationNodeDatum {
   id: number | string;
   group: number | string;
-  data: NodeData;
+  data?: NodeData;
   element?: Graphics;
 }

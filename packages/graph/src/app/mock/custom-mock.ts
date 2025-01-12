@@ -28,7 +28,6 @@ export const customMock: Pick<GraphInterface<NodeData, LinkData>, "nodes" | "lin
     }
 
     return {
-      data: { value: 1 },
       source,
       target,
     };
@@ -36,7 +35,6 @@ export const customMock: Pick<GraphInterface<NodeData, LinkData>, "nodes" | "lin
   nodes: Array.from({ length: NODES_COUNT }, (_, index) => {
     return {
       id: index,
-      data: { citing_patents_count: 0, radius: 2 },
       group: randomNumber(1, GROUPS_COUNT),
     };
   }),

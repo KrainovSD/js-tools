@@ -51,18 +51,25 @@ export class GraphCanvas<
     this.width = width;
     this.draw = this.initDraw();
 
-    this.refreshSimulation();
+    this.init();
+  }
+
+  getData(): Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> {
+    return {
+      links: this.links,
+      nodes: this.nodes,
+    };
   }
 
   changeData(options: Omit<Partial<GraphCanvasInterface<NodeData, LinkData>>, "selector">) {
     if (options.links != undefined) this.links = options.links;
     if (options.nodes != undefined) this.nodes = options.nodes;
 
-    this.refreshSimulation();
+    this.updateData();
   }
 
   start() {
-    this.refreshSimulation();
+    this.init();
   }
 
   destroy() {
@@ -83,13 +90,60 @@ export class GraphCanvas<
     this.area = undefined;
   }
 
-  private refreshSimulation() {
-    if (!this.simulation) {
-      this.simulation = d3.forceSimulation<
-        NodeInterface<NodeData>,
-        LinkInterface<NodeData, LinkData>
-      >();
+  private updateData() {
+    if (this.simulation) {
+      this.simulation
+        .stop()
+        .alpha(1)
+        .nodes(this.nodes)
+        .force(
+          "link",
+          d3
+            .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
+            .id((d) => d.id)
+            .distance(10)
+            .strength(1)
+            .iterations(1),
+        )
+        .restart();
     }
+  }
+
+  private init() {
+    this.initSimulation();
+    this.initArea();
+    this.initDnd();
+    this.initZoom();
+  }
+
+  private initSimulation() {
+    if (!this.simulation) {
+      this.simulation = d3
+        .forceSimulation<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>()
+
+        .nodes(this.nodes)
+        .force(
+          "link",
+          d3
+            .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
+            .id((d) => d.id)
+            .distance(10)
+            .strength(1)
+            .iterations(1),
+        )
+        .force("x", d3.forceX())
+        .force("y", d3.forceY())
+        .force("charge", d3.forceManyBody<NodeInterface<NodeData>>().strength(-65))
+        .force("center", d3.forceCenter(this.width / 2, this.height / 2).strength(0.5))
+        .force("collide", d3.forceCollide().radius(10).strength(1))
+        .on("tick", this.draw.bind(this))
+        .on("end", () => {
+          console.log("simulation ended");
+        });
+    }
+  }
+
+  private initArea() {
     if (!this.area || !this.context) {
       this.area = d3
         .create("canvas")
@@ -106,31 +160,6 @@ export class GraphCanvas<
 
       this.root.appendChild(this.area);
     }
-
-    this.simulation
-      .nodes(this.nodes)
-      .force(
-        "link",
-        d3
-          .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-          .id((d) => d.id)
-          .distance(10)
-          .strength(1),
-      )
-      .force("x", d3.forceX())
-      .force("y", d3.forceY())
-      .force("charge", d3.forceManyBody<NodeInterface<NodeData>>().strength(-15))
-      .force("center", d3.forceCenter(this.width / 2, this.height / 2).strength(1))
-      .force("collide", d3.forceCollide().radius(7).strength(1).iterations(1))
-      .on("tick", this.draw.bind(this))
-      .on("end", () => {
-        console.log("simulation ended");
-      })
-      .restart()
-      .tick();
-
-    this.initDnd();
-    this.initZoom();
   }
 
   private initDraw() {
