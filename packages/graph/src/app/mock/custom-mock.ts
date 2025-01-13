@@ -10,7 +10,7 @@ const GROUPS_COUNT = 10;
 const EXISTING_LINKS = new Map<number, number[]>();
 
 export const customMock: Pick<GraphInterface<NodeData, LinkData>, "nodes" | "links"> = {
-  links: Array.from({ length: (NODES_COUNT / 10) * 5 }, () => {
+  links: Array.from({ length: NODES_COUNT }, () => {
     let source: number | undefined;
     let target: number | undefined;
 

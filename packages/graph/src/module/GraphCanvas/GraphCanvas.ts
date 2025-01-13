@@ -2,7 +2,15 @@
 import * as d3 from "d3";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
-import type { GraphCanvasInterface } from "./GraphCanvas.types";
+import type {
+  ForceOptions,
+  GraphCanvasInterface,
+  GraphSettingInterface,
+  LinkOptions,
+  Listeners,
+  NodeOptions,
+} from "./GraphCanvas.types";
+import { linkIterationExtractor, nodeColorGetter, nodeIdGetter } from "./lib";
 
 export class GraphCanvas<
   NodeData extends Record<string, unknown>,
@@ -38,12 +46,69 @@ export class GraphCanvas<
 
   private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
-  constructor({ links, nodes, root }: GraphCanvasInterface<NodeData, LinkData>) {
+  private settings: Required<GraphSettingInterface>;
+
+  private forceOptions: Required<ForceOptions<NodeData, LinkData>>;
+
+  private nodeOptions: Required<NodeOptions<NodeData>>;
+
+  private linkOptions: Required<LinkOptions<NodeData, LinkData>>;
+
+  private listeners: Required<Listeners>;
+
+  constructor({
+    links,
+    nodes,
+    root,
+    forceOptions,
+    linkOptions,
+    listeners,
+    nodeOptions,
+    settings,
+  }: GraphCanvasInterface<NodeData, LinkData>) {
     root.style.position = "relative";
     root.style.overflow = "hidden";
 
     this.root = root;
     const { width, height } = root.getBoundingClientRect();
+
+    this.forceOptions = {
+      centerPosition: forceOptions?.centerPosition ?? {},
+      centerStrength: forceOptions?.centerStrength ?? 1,
+      collideRadius: forceOptions?.collideRadius ?? 10,
+      collideStrength: forceOptions?.collideStrength ?? 1,
+      collideIterations: forceOptions?.collideIterations ?? 1,
+      collideOffMax: forceOptions?.collideOffMax ?? { links: 0, nodes: 0 },
+      chargeStrength: forceOptions?.chargeStrength ?? -65,
+      chargeDistanceMax: forceOptions?.chargeDistanceMax ?? Infinity,
+      chargeDistanceMin: forceOptions?.chargeDistanceMin ?? 1,
+      xForce: forceOptions?.xForce ?? 0,
+      xStrength: forceOptions?.xStrength ?? 0.1,
+      yForce: forceOptions?.yForce ?? 0,
+      yStrength: forceOptions?.yStrength ?? 0.1,
+      linkDistance: forceOptions?.linkDistance ?? 10,
+      linkIterations: forceOptions?.linkIterations ?? 1,
+      linkStrength: forceOptions?.linkStrength ?? 1,
+    };
+    this.linkOptions = {
+      alpha: linkOptions?.alpha ?? 1,
+      color: linkOptions?.color ?? "#999",
+      width: linkOptions?.width ?? 1,
+    };
+
+    this.nodeOptions = {
+      idGetter: nodeOptions?.idGetter ?? nodeIdGetter,
+      radius: nodeOptions?.radius ?? 5,
+      width: nodeOptions?.width ?? 1,
+      alpha: nodeOptions?.alpha ?? 1,
+      colorInner: nodeOptions?.colorInner ?? nodeColorGetter,
+      colorOuter: nodeOptions?.colorOuter ?? "#fff",
+      font: nodeOptions?.font ?? "8px Arial",
+      fontAlign: nodeOptions?.fontAlign ?? "center",
+      fontColor: nodeOptions?.fontColor ?? "#333",
+    };
+    this.listeners = {};
+    this.settings = {};
 
     this.nodes = nodes;
     this.links = links;
@@ -92,6 +157,8 @@ export class GraphCanvas<
 
   private updateData() {
     if (this.simulation) {
+      if (this.nodes.length + this.links.length > 2000) this.simulation.force("collide", null);
+
       this.simulation
         .stop()
         .alpha(1)
@@ -100,10 +167,10 @@ export class GraphCanvas<
           "link",
           d3
             .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-            .id((d) => d.id)
-            .distance(10)
-            .strength(1)
-            .iterations(1),
+            .id(this.nodeOptions.idGetter)
+            .distance(this.forceOptions.linkDistance)
+            .strength(this.forceOptions.linkStrength)
+            .iterations(this.forceOptions.linkIterations),
         )
         .restart();
     }
@@ -126,20 +193,59 @@ export class GraphCanvas<
           "link",
           d3
             .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-            .id((d) => d.id)
-            .distance(10)
-            .strength(1)
-            .iterations(1),
+            .id(this.nodeOptions.idGetter)
+            .distance(this.forceOptions.linkDistance)
+            .strength(this.forceOptions.linkStrength)
+            .iterations(this.forceOptions.linkIterations),
         )
-        .force("x", d3.forceX())
-        .force("y", d3.forceY())
-        .force("charge", d3.forceManyBody<NodeInterface<NodeData>>().strength(-65))
-        .force("center", d3.forceCenter(this.width / 2, this.height / 2).strength(0.5))
-        .force("collide", d3.forceCollide().radius(10).strength(1))
+        .force(
+          "x",
+          d3
+            .forceX<NodeInterface<NodeData>>(this.forceOptions.xForce)
+            .strength(this.forceOptions.xStrength),
+        )
+        .force(
+          "y",
+          d3
+            .forceY<NodeInterface<NodeData>>(this.forceOptions.yForce)
+            .strength(this.forceOptions.yStrength),
+        )
+        .force(
+          "charge",
+          d3
+            .forceManyBody<NodeInterface<NodeData>>()
+            .strength(this.forceOptions.chargeStrength)
+            .distanceMax(this.forceOptions.chargeDistanceMax)
+            .distanceMin(this.forceOptions.chargeDistanceMin),
+        )
+        .force(
+          "center",
+          d3
+            .forceCenter<
+              NodeInterface<NodeData>
+            >(this.forceOptions.centerPosition.x || this.width / 2, this.forceOptions.centerPosition.y || this.height / 2)
+            .strength(this.forceOptions.centerStrength),
+        )
+        .force(
+          "collide",
+          d3
+            .forceCollide<NodeInterface<NodeData>>()
+            .radius(this.forceOptions.collideRadius)
+            .strength(this.forceOptions.collideStrength)
+            .iterations(this.forceOptions.collideIterations),
+        )
         .on("tick", this.draw.bind(this))
         .on("end", () => {
           console.log("simulation ended");
         });
+
+      const isHasMax =
+        this.forceOptions.collideOffMax.links != 0 && this.forceOptions.collideOffMax.nodes != 0;
+      const isMaxCollideNodes =
+        isHasMax && this.forceOptions.collideOffMax.nodes < this.nodes.length;
+      const isMaxCollideLinks =
+        isHasMax && this.forceOptions.collideOffMax.links < this.links.length;
+      if (isMaxCollideNodes && isMaxCollideLinks) this.simulation.force("collide", null);
     }
   }
 
@@ -171,53 +277,76 @@ export class GraphCanvas<
       this.context.translate(this.areaTransform.x, this.areaTransform.y);
       this.context.scale(this.areaTransform.k, this.areaTransform.k);
 
-      this.context.globalAlpha = 0.6;
-      this.context.strokeStyle = "#999";
+      /** links */
       this.context.beginPath();
       this.links.forEach(drawLink.bind(this));
       this.context.stroke();
 
-      this.context.strokeStyle = "#fff";
-      this.context.globalAlpha = 1;
-      this.nodes.forEach((node) => {
-        if (!this.context) return;
+      /** nodes */
+      this.nodes.forEach(drawNode.bind(this));
 
-        this.context.beginPath();
-        drawNode.bind(this)(node);
-        this.context.fillStyle = this.color(String(node.group));
-        this.context.strokeStyle = "#fff";
-        this.context.fill();
-        this.context.stroke();
-      });
       this.context.restore();
     }
 
-    function drawLink(this: GraphCanvas<NodeData, LinkData>, d: LinkInterface<NodeData, LinkData>) {
+    function drawLink(
+      this: GraphCanvas<NodeData, LinkData>,
+      link: LinkInterface<NodeData, LinkData>,
+      index: number,
+    ) {
       if (
         !this.context ||
-        typeof d.source !== "object" ||
-        typeof d.target !== "object" ||
-        !d.source.x ||
-        !d.source.y ||
-        !d.target.x ||
-        !d.target.y
+        typeof link.source !== "object" ||
+        typeof link.target !== "object" ||
+        !link.source.x ||
+        !link.source.y ||
+        !link.target.x ||
+        !link.target.y
       )
         return;
 
-      this.context.moveTo(d.source.x, d.source.y);
-      this.context.lineTo(d.target.x, d.target.y);
+      this.context.globalAlpha = linkIterationExtractor(
+        link,
+        index,
+        this.links,
+        this.linkOptions.alpha,
+      );
+      this.context.strokeStyle = linkIterationExtractor(
+        link,
+        index,
+        this.links,
+        this.linkOptions.color,
+      );
+      this.context.lineWidth = linkIterationExtractor(
+        link,
+        index,
+        this.links,
+        this.linkOptions.width,
+      );
+      this.context.moveTo(link.source.x, link.source.y);
+      this.context.lineTo(link.target.x, link.target.y);
     }
 
-    function drawNode(this: GraphCanvas<NodeData, LinkData>, d: NodeInterface<NodeData>) {
-      if (!this.context || !d.x || !d.y) return;
+    function drawNode(this: GraphCanvas<NodeData, LinkData>, node: NodeInterface<NodeData>) {
+      if (!this.context || !node.x || !node.y) return;
+
+      this.context.beginPath();
+
       /** text */
       this.context.font = "8px Arial";
       this.context.fillStyle = "#333";
       this.context.textAlign = "center";
       /** circle */
-      this.context.fillText(`${d.index}`, d.x, d.y + 5 * 2 + 3);
-      this.context.moveTo(d.x + 5, d.y);
-      this.context.arc(d.x, d.y, 5, 0, 2 * Math.PI);
+      this.context.strokeStyle = "#fff";
+      this.context.globalAlpha = 1;
+      this.context.lineWidth = 1;
+      this.context.fillText(`${node.index}`, node.x, node.y + 5 * 2 + 3);
+      this.context.moveTo(node.x + 5, node.y);
+      this.context.arc(node.x, node.y, 5, 0, 2 * Math.PI);
+
+      this.context.fillStyle = this.color(String(node.group));
+
+      this.context.fill();
+      this.context.stroke();
     }
 
     return draw;
