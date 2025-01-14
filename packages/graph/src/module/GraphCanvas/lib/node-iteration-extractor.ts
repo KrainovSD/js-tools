@@ -1,5 +1,5 @@
 import type { NodeInterface } from "@/types";
-import type { NodeIterationProps } from "../GraphCanvas.types";
+import type { GraphCanvasNodeIterationProps } from "../GraphCanvas.types";
 
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,
@@ -8,7 +8,7 @@ export function nodeIterationExtractor<
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  option: NodeIterationProps<NodeData, Result> | Result,
+  option: GraphCanvasNodeIterationProps<NodeData, Result> | Result,
 ): Result {
   if (typeof option === "function") return option(node, i, nodes);
 

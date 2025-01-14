@@ -1,5 +1,5 @@
 import type { LinkInterface } from "@/types";
-import type { LinkIterationProps } from "../GraphCanvas.types";
+import type { GraphCanvasLinkIterationProps } from "../GraphCanvas.types";
 
 export function linkIterationExtractor<
   NodeData extends Record<string, unknown>,
@@ -9,8 +9,8 @@ export function linkIterationExtractor<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  option: LinkIterationProps<NodeData, LinkData, Result> | Result,
-) {
+  option: GraphCanvasLinkIterationProps<NodeData, LinkData, Result> | Result,
+): Result {
   if (typeof option === "function") return option(link, i, links);
 
   return option;

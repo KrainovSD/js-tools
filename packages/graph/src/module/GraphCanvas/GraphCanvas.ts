@@ -3,14 +3,22 @@ import * as d3 from "d3";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
 import type {
-  ForceOptions,
+  GraphCanvasForceOptions,
   GraphCanvasInterface,
-  GraphSettingInterface,
-  LinkOptions,
-  Listeners,
-  NodeOptions,
+  GraphCanvasLinkOptions,
+  GraphCanvasLinkSettings,
+  GraphCanvasListeners,
+  GraphCanvasNodeOptions,
+  GraphCanvasNodeSettings,
+  GraphCanvasSettingInterface,
 } from "./GraphCanvas.types";
-import { linkIterationExtractor, nodeColorGetter, nodeIdGetter } from "./lib";
+import {
+  linkIterationExtractor,
+  linkOptionsGetter,
+  nodeIdGetter,
+  nodeIterationExtractor,
+  nodeOptionsGetter,
+} from "./lib";
 
 export class GraphCanvas<
   NodeData extends Record<string, unknown>,
@@ -38,33 +46,33 @@ export class GraphCanvas<
 
   private nodesNode: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> | undefined;
 
-  private color = d3.scaleOrdinal(d3.schemeCategory10);
-
   private dpi = devicePixelRatio;
 
   private areaTransform: d3.ZoomTransform = d3.zoomIdentity;
 
   private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
-  private settings: Required<GraphSettingInterface>;
+  private graphSettings: Required<GraphCanvasSettingInterface>;
 
-  private forceOptions: Required<ForceOptions<NodeData, LinkData>>;
+  private forceSettings: Required<GraphCanvasForceOptions<NodeData, LinkData>>;
 
-  private nodeOptions: Required<NodeOptions<NodeData>>;
+  private nodeSettings: Required<Omit<GraphCanvasNodeSettings<NodeData>, "options">> &
+    Pick<GraphCanvasNodeSettings<NodeData>, "options">;
 
-  private linkOptions: Required<LinkOptions<NodeData, LinkData>>;
+  private linkSettings: Required<Omit<GraphCanvasLinkSettings<NodeData, LinkData>, "options">> &
+    Pick<GraphCanvasLinkSettings<NodeData, LinkData>, "options">;
 
-  private listeners: Required<Listeners>;
+  private listeners: Required<GraphCanvasListeners>;
 
   constructor({
     links,
     nodes,
     root,
-    forceOptions,
-    linkOptions,
+    forceSettings,
+    linkSettings,
     listeners,
-    nodeOptions,
-    settings,
+    nodeSettings,
+    graphSettings,
   }: GraphCanvasInterface<NodeData, LinkData>) {
     root.style.position = "relative";
     root.style.overflow = "hidden";
@@ -72,43 +80,34 @@ export class GraphCanvas<
     this.root = root;
     const { width, height } = root.getBoundingClientRect();
 
-    this.forceOptions = {
-      centerPosition: forceOptions?.centerPosition ?? {},
-      centerStrength: forceOptions?.centerStrength ?? 1,
-      collideRadius: forceOptions?.collideRadius ?? 10,
-      collideStrength: forceOptions?.collideStrength ?? 1,
-      collideIterations: forceOptions?.collideIterations ?? 1,
-      collideOffMax: forceOptions?.collideOffMax ?? { links: 0, nodes: 0 },
-      chargeStrength: forceOptions?.chargeStrength ?? -65,
-      chargeDistanceMax: forceOptions?.chargeDistanceMax ?? Infinity,
-      chargeDistanceMin: forceOptions?.chargeDistanceMin ?? 1,
-      xForce: forceOptions?.xForce ?? 0,
-      xStrength: forceOptions?.xStrength ?? 0.1,
-      yForce: forceOptions?.yForce ?? 0,
-      yStrength: forceOptions?.yStrength ?? 0.1,
-      linkDistance: forceOptions?.linkDistance ?? 10,
-      linkIterations: forceOptions?.linkIterations ?? 1,
-      linkStrength: forceOptions?.linkStrength ?? 1,
+    this.forceSettings = {
+      centerPosition: forceSettings?.centerPosition ?? {},
+      centerStrength: forceSettings?.centerStrength ?? 1,
+      collideRadius: forceSettings?.collideRadius ?? 10,
+      collideStrength: forceSettings?.collideStrength ?? 1,
+      collideIterations: forceSettings?.collideIterations ?? 1,
+      collideOffMax: forceSettings?.collideOffMax ?? { links: 0, nodes: 0 },
+      chargeStrength: forceSettings?.chargeStrength ?? -65,
+      chargeDistanceMax: forceSettings?.chargeDistanceMax ?? Infinity,
+      chargeDistanceMin: forceSettings?.chargeDistanceMin ?? 1,
+      xForce: forceSettings?.xForce ?? 0,
+      xStrength: forceSettings?.xStrength ?? 0.1,
+      yForce: forceSettings?.yForce ?? 0,
+      yStrength: forceSettings?.yStrength ?? 0.1,
+      linkDistance: forceSettings?.linkDistance ?? 10,
+      linkIterations: forceSettings?.linkIterations ?? 1,
+      linkStrength: forceSettings?.linkStrength ?? 1,
     };
-    this.linkOptions = {
-      alpha: linkOptions?.alpha ?? 1,
-      color: linkOptions?.color ?? "#999",
-      width: linkOptions?.width ?? 1,
+    this.linkSettings = {
+      options: linkSettings?.options,
     };
 
-    this.nodeOptions = {
-      idGetter: nodeOptions?.idGetter ?? nodeIdGetter,
-      radius: nodeOptions?.radius ?? 5,
-      width: nodeOptions?.width ?? 1,
-      alpha: nodeOptions?.alpha ?? 1,
-      colorInner: nodeOptions?.colorInner ?? nodeColorGetter,
-      colorOuter: nodeOptions?.colorOuter ?? "#fff",
-      font: nodeOptions?.font ?? "8px Arial",
-      fontAlign: nodeOptions?.fontAlign ?? "center",
-      fontColor: nodeOptions?.fontColor ?? "#333",
+    this.nodeSettings = {
+      idGetter: nodeSettings?.idGetter ?? nodeIdGetter,
+      options: nodeSettings?.options,
     };
     this.listeners = {};
-    this.settings = {};
+    this.graphSettings = {};
 
     this.nodes = nodes;
     this.links = links;
@@ -167,10 +166,10 @@ export class GraphCanvas<
           "link",
           d3
             .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-            .id(this.nodeOptions.idGetter)
-            .distance(this.forceOptions.linkDistance)
-            .strength(this.forceOptions.linkStrength)
-            .iterations(this.forceOptions.linkIterations),
+            .id(this.nodeSettings.idGetter)
+            .distance(this.forceSettings.linkDistance)
+            .strength(this.forceSettings.linkStrength)
+            .iterations(this.forceSettings.linkIterations),
         )
         .restart();
     }
@@ -193,46 +192,46 @@ export class GraphCanvas<
           "link",
           d3
             .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-            .id(this.nodeOptions.idGetter)
-            .distance(this.forceOptions.linkDistance)
-            .strength(this.forceOptions.linkStrength)
-            .iterations(this.forceOptions.linkIterations),
+            .id(this.nodeSettings.idGetter)
+            .distance(this.forceSettings.linkDistance)
+            .strength(this.forceSettings.linkStrength)
+            .iterations(this.forceSettings.linkIterations),
         )
         .force(
           "x",
           d3
-            .forceX<NodeInterface<NodeData>>(this.forceOptions.xForce)
-            .strength(this.forceOptions.xStrength),
+            .forceX<NodeInterface<NodeData>>(this.forceSettings.xForce)
+            .strength(this.forceSettings.xStrength),
         )
         .force(
           "y",
           d3
-            .forceY<NodeInterface<NodeData>>(this.forceOptions.yForce)
-            .strength(this.forceOptions.yStrength),
+            .forceY<NodeInterface<NodeData>>(this.forceSettings.yForce)
+            .strength(this.forceSettings.yStrength),
         )
         .force(
           "charge",
           d3
             .forceManyBody<NodeInterface<NodeData>>()
-            .strength(this.forceOptions.chargeStrength)
-            .distanceMax(this.forceOptions.chargeDistanceMax)
-            .distanceMin(this.forceOptions.chargeDistanceMin),
+            .strength(this.forceSettings.chargeStrength)
+            .distanceMax(this.forceSettings.chargeDistanceMax)
+            .distanceMin(this.forceSettings.chargeDistanceMin),
         )
         .force(
           "center",
           d3
             .forceCenter<
               NodeInterface<NodeData>
-            >(this.forceOptions.centerPosition.x || this.width / 2, this.forceOptions.centerPosition.y || this.height / 2)
-            .strength(this.forceOptions.centerStrength),
+            >(this.forceSettings.centerPosition.x || this.width / 2, this.forceSettings.centerPosition.y || this.height / 2)
+            .strength(this.forceSettings.centerStrength),
         )
         .force(
           "collide",
           d3
             .forceCollide<NodeInterface<NodeData>>()
-            .radius(this.forceOptions.collideRadius)
-            .strength(this.forceOptions.collideStrength)
-            .iterations(this.forceOptions.collideIterations),
+            .radius(this.forceSettings.collideRadius)
+            .strength(this.forceSettings.collideStrength)
+            .iterations(this.forceSettings.collideIterations),
         )
         .on("tick", this.draw.bind(this))
         .on("end", () => {
@@ -240,11 +239,11 @@ export class GraphCanvas<
         });
 
       const isHasMax =
-        this.forceOptions.collideOffMax.links != 0 && this.forceOptions.collideOffMax.nodes != 0;
+        this.forceSettings.collideOffMax.links != 0 && this.forceSettings.collideOffMax.nodes != 0;
       const isMaxCollideNodes =
-        isHasMax && this.forceOptions.collideOffMax.nodes < this.nodes.length;
+        isHasMax && this.forceSettings.collideOffMax.nodes < this.nodes.length;
       const isMaxCollideLinks =
-        isHasMax && this.forceOptions.collideOffMax.links < this.links.length;
+        isHasMax && this.forceSettings.collideOffMax.links < this.links.length;
       if (isMaxCollideNodes && isMaxCollideLinks) this.simulation.force("collide", null);
     }
   }
@@ -304,46 +303,59 @@ export class GraphCanvas<
       )
         return;
 
-      this.context.globalAlpha = linkIterationExtractor(
+      const linkCustomOptions = linkIterationExtractor(
         link,
         index,
         this.links,
-        this.linkOptions.alpha,
+        this.linkSettings.options || {},
       );
-      this.context.strokeStyle = linkIterationExtractor(
-        link,
-        index,
-        this.links,
-        this.linkOptions.color,
-      );
-      this.context.lineWidth = linkIterationExtractor(
-        link,
-        index,
-        this.links,
-        this.linkOptions.width,
-      );
+      const linkConstantOptions = linkOptionsGetter();
+      const linkOptions: Required<GraphCanvasLinkOptions> = {
+        ...linkConstantOptions,
+        ...linkCustomOptions,
+      };
+
+      this.context.globalAlpha = linkOptions.alpha;
+      this.context.strokeStyle = linkOptions.color;
+      this.context.lineWidth = linkOptions.width;
       this.context.moveTo(link.source.x, link.source.y);
       this.context.lineTo(link.target.x, link.target.y);
     }
 
-    function drawNode(this: GraphCanvas<NodeData, LinkData>, node: NodeInterface<NodeData>) {
+    function drawNode(
+      this: GraphCanvas<NodeData, LinkData>,
+      node: NodeInterface<NodeData>,
+      index: number,
+    ) {
       if (!this.context || !node.x || !node.y) return;
+
+      const nodeCustomOptions = nodeIterationExtractor(
+        node,
+        index,
+        this.nodes,
+        this.nodeSettings.options || {},
+      );
+      const nodeConstantOptions = nodeOptionsGetter(node);
+      const nodeOptions: Required<GraphCanvasNodeOptions> = {
+        ...nodeConstantOptions,
+        ...nodeCustomOptions,
+      };
 
       this.context.beginPath();
 
       /** text */
-      this.context.font = "8px Arial";
-      this.context.fillStyle = "#333";
-      this.context.textAlign = "center";
-      /** circle */
-      this.context.strokeStyle = "#fff";
-      this.context.globalAlpha = 1;
-      this.context.lineWidth = 1;
+      this.context.font = nodeOptions.font;
+      this.context.fillStyle = nodeOptions.fontColor;
+      this.context.textAlign = nodeOptions.fontAlign;
       this.context.fillText(`${node.index}`, node.x, node.y + 5 * 2 + 3);
-      this.context.moveTo(node.x + 5, node.y);
-      this.context.arc(node.x, node.y, 5, 0, 2 * Math.PI);
+      /** circle */
+      this.context.strokeStyle = nodeOptions.colorOuter;
+      this.context.globalAlpha = nodeOptions.alpha;
+      this.context.lineWidth = nodeOptions.width;
+      this.context.moveTo(node.x + nodeOptions.radius, node.y);
+      this.context.arc(node.x, node.y, nodeOptions.radius, 0, 2 * Math.PI);
 
-      this.context.fillStyle = this.color(String(node.group));
+      this.context.fillStyle = nodeOptions.colorInner;
 
       this.context.fill();
       this.context.stroke();
