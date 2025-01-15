@@ -1,4 +1,4 @@
-import type { GraphCanvasLinkOptions } from "../GraphCanvas.types";
+import type { GraphCanvasLinkOptions } from "../types";
 
 export function linkOptionsGetter(): Required<GraphCanvasLinkOptions> {
   return {

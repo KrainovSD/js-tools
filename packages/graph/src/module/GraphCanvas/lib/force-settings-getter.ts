@@ -1,11 +1,11 @@
-import type { GraphCanvasForceOptions } from "../GraphCanvas.types";
+import type { GraphCanvasForceSettings } from "../types";
 
 export function forceSettingsGetter<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(
-  settings: GraphCanvasForceOptions<NodeData, LinkData> | undefined,
-): Required<GraphCanvasForceOptions<NodeData, LinkData>> {
+  settings: GraphCanvasForceSettings<NodeData, LinkData> | undefined,
+): Required<GraphCanvasForceSettings<NodeData, LinkData>> {
   return {
     centerPosition: settings?.centerPosition ?? {},
     centerStrength: settings?.centerStrength ?? 1,

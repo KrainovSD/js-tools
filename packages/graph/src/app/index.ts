@@ -14,6 +14,11 @@ const graph = new GraphCanvas({
       radius: 5,
     },
   },
+  listeners: {
+    onSimulationEnd: () => {
+      console.log("simulation ended");
+    },
+  },
   root,
 });
 
@@ -114,12 +119,13 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
   let repelForce: number = 40;
   let linkForce: number = 1;
   let linkDistance: number = 10;
+  let isCollideActive: boolean = true;
 
   document
     .querySelector("#force")
     ?.querySelectorAll("input")
     ?.forEach?.((input) => {
-      input.addEventListener("change", () => {
+      input.addEventListener("input", () => {
         switch (input.id) {
           case "central_force": {
             centralForce = +input.value;
@@ -137,6 +143,10 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
             linkDistance = +input.value;
             break;
           }
+          case "collide": {
+            isCollideActive = input.checked;
+            break;
+          }
           default: {
             break;
           }
@@ -148,6 +158,7 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
             chargeStrength: repelForce * -1,
             linkStrength: linkForce,
             linkDistance,
+            collideOn: isCollideActive,
           },
         });
       });
@@ -170,6 +181,10 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
         case "link_distance": {
           input.value = linkDistance.toString();
 
+          break;
+        }
+        case "collide": {
+          input.checked = isCollideActive;
           break;
         }
         default: {

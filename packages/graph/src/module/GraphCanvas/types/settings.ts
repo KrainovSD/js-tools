@@ -1,23 +1,8 @@
-import type { LinkInterface } from "@/types/links";
-import type { NodeInterface } from "@/types/nodes";
-
-export type GraphCanvasInterface<
-  NodeData extends Record<string, unknown>,
-  LinkData extends Record<string, unknown>,
-> = {
-  nodes: NodeInterface<NodeData>[];
-  links: LinkInterface<NodeData, LinkData>[];
-  root: HTMLElement;
-  graphSettings?: GraphCanvasSettingInterface;
-  forceSettings?: GraphCanvasForceOptions<NodeData, LinkData>;
-  nodeSettings?: GraphCanvasNodeSettings<NodeData>;
-  linkSettings?: GraphCanvasLinkSettings<NodeData, LinkData>;
-  listeners?: GraphCanvasListeners;
-};
+import type { LinkInterface, NodeInterface } from "@/types";
 
 export type GraphCanvasSettingInterface = {};
 
-export type GraphCanvasForceOptions<
+export type GraphCanvasForceSettings<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
@@ -43,6 +28,13 @@ export type GraphCanvasForceOptions<
   yStrength?: GraphCanvasNodeIterationProps<NodeData> | number;
 };
 
+export type GraphCanvasNodeSettings<NodeData extends Record<string, unknown>> = {
+  idGetter?: GraphCanvasNodeIterationProps<NodeData, string | number>;
+  options?:
+    | GraphCanvasNodeIterationProps<NodeData, GraphCanvasNodeOptions>
+    | GraphCanvasNodeOptions;
+};
+
 export type GraphCanvasNodeOptions = {
   radius?: number;
   width?: number;
@@ -55,18 +47,10 @@ export type GraphCanvasNodeOptions = {
   fontAlign?: CanvasTextAlign;
 };
 
-export type GraphCanvasNodeSettings<NodeData extends Record<string, unknown>> = {
-  idGetter?: GraphCanvasNodeIterationProps<NodeData, string | number>;
-  options?:
-    | GraphCanvasNodeIterationProps<NodeData, GraphCanvasNodeOptions>
-    | GraphCanvasNodeOptions;
-};
-
-export type GraphCanvasLinkOptions = {
-  alpha?: number;
-  color?: string;
-  width?: number;
-};
+export type GraphCanvasNodeIterationProps<
+  NodeData extends Record<string, unknown>,
+  Return = number,
+> = (node: NodeInterface<NodeData>, i: number, nodes: NodeInterface<NodeData>[]) => Return;
 
 export type GraphCanvasLinkSettings<
   NodeData extends Record<string, unknown>,
@@ -77,12 +61,11 @@ export type GraphCanvasLinkSettings<
     | GraphCanvasLinkOptions;
 };
 
-export type GraphCanvasListeners = {};
-
-export type GraphCanvasNodeIterationProps<
-  NodeData extends Record<string, unknown>,
-  Return = number,
-> = (node: NodeInterface<NodeData>, i: number, nodes: NodeInterface<NodeData>[]) => Return;
+export type GraphCanvasLinkOptions = {
+  alpha?: number;
+  color?: string;
+  width?: number;
+};
 
 export type GraphCanvasLinkIterationProps<
   NodeData extends Record<string, unknown>,

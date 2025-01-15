@@ -1,17 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import * as d3 from "d3";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
-import type {
-  GraphCanvasForceOptions,
-  GraphCanvasInterface,
-  GraphCanvasLinkOptions,
-  GraphCanvasLinkSettings,
-  GraphCanvasListeners,
-  GraphCanvasNodeOptions,
-  GraphCanvasNodeSettings,
-  GraphCanvasSettingInterface,
-} from "./GraphCanvas.types";
 import {
   forceSettingsGetter,
   graphSettingsGetter,
@@ -23,6 +12,20 @@ import {
   nodeOptionsGetter,
   nodeSettingsGetter,
 } from "./lib";
+import type {
+  GraphCanvasDragEvent,
+  GraphCanvasForceSettings,
+  GraphCanvasInterface,
+  GraphCanvasLinkOptions,
+  GraphCanvasLinkSettings,
+  GraphCanvasListeners,
+  GraphCanvasNodeOptions,
+  GraphCanvasNodeSettings,
+  GraphCanvasSelection,
+  GraphCanvasSettingInterface,
+  GraphCanvasSimulation,
+  GraphCanvasZoomEvent,
+} from "./types";
 
 export class GraphCanvas<
   NodeData extends Record<string, unknown>,
@@ -36,9 +39,7 @@ export class GraphCanvas<
 
   private height: number;
 
-  private simulation:
-    | d3.Simulation<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>
-    | undefined;
+  private simulation: GraphCanvasSimulation<NodeData, LinkData> | undefined;
 
   private root: HTMLElement;
 
@@ -46,9 +47,9 @@ export class GraphCanvas<
 
   private context: CanvasRenderingContext2D | null | undefined;
 
-  private linksNode: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> | undefined;
+  private linksNode: GraphCanvasSelection | undefined;
 
-  private nodesNode: d3.Selection<SVGGElement, unknown, HTMLElement, unknown> | undefined;
+  private nodesNode: GraphCanvasSelection | undefined;
 
   private dpi = devicePixelRatio;
 
@@ -58,7 +59,7 @@ export class GraphCanvas<
 
   private graphSettings: Required<GraphCanvasSettingInterface>;
 
-  private forceSettings: Required<GraphCanvasForceOptions<NodeData, LinkData>>;
+  private forceSettings: Required<GraphCanvasForceSettings<NodeData, LinkData>>;
 
   private nodeSettings: Required<Omit<GraphCanvasNodeSettings<NodeData>, "options">> &
     Pick<GraphCanvasNodeSettings<NodeData>, "options">;
@@ -66,7 +67,7 @@ export class GraphCanvas<
   private linkSettings: Required<Omit<GraphCanvasLinkSettings<NodeData, LinkData>, "options">> &
     Pick<GraphCanvasLinkSettings<NodeData, LinkData>, "options">;
 
-  private listeners: Required<GraphCanvasListeners>;
+  private listeners: GraphCanvasListeners<NodeData, LinkData>;
 
   constructor({
     links,
@@ -198,7 +199,7 @@ export class GraphCanvas<
         )
         .on("tick", this.draw.bind(this))
         .on("end", () => {
-          console.log("simulation ended");
+          this.listeners.onSimulationEnd?.(this.simulation);
         });
       this.initSimulationForces();
     }
@@ -252,6 +253,12 @@ export class GraphCanvas<
   private initCollideForce() {
     if (!this.simulation) return;
 
+    if (!this.forceSettings.collideOn) {
+      if (this.simulation.force("collide")) this.simulation.force("collide", null);
+
+      return;
+    }
+
     const isHasMax =
       this.forceSettings.collideOffMax.links != 0 && this.forceSettings.collideOffMax.nodes != 0;
     const isMaxCollideNodes =
@@ -292,6 +299,11 @@ export class GraphCanvas<
   private initDraw() {
     function draw(this: GraphCanvas<NodeData, LinkData>) {
       if (!this.context) return;
+
+      if (this.listeners.onDraw) {
+        return void this.listeners.onDraw(this.context, this.areaTransform);
+      }
+
       this.context.save();
 
       this.context.clearRect(0, 0, this.width, this.height);
@@ -307,6 +319,8 @@ export class GraphCanvas<
       this.nodes.forEach(drawNode.bind(this));
 
       this.context.restore();
+
+      this.listeners.onDrawFinished?.(this.context, this.areaTransform);
     }
 
     function drawLink(
@@ -391,7 +405,7 @@ export class GraphCanvas<
 
     d3.select(this.area).call(
       d3
-        .drag()
+        .drag<HTMLCanvasElement, unknown>()
         .subject((event) => {
           const [_px, _py] = d3.pointer(event, this.area);
           const px = (_px - this.areaTransform.x) / this.areaTransform.k;
@@ -405,27 +419,43 @@ export class GraphCanvas<
             if (dist2 < 30) return dist2;
           });
         })
-        .on("start", (event) => {
+        .on("start", (event: GraphCanvasDragEvent<NodeData>) => {
+          if (this.listeners.onStartDrag) {
+            return void this.listeners.onStartDrag(event, this.simulation);
+          }
+
           if (!event.active && this.simulation) this.simulation.alphaTarget(0.3).restart();
 
           event.subject.fx = event.subject.x;
           event.subject.fy = event.subject.y;
+
+          this.listeners.onStartDragFinished?.(event, this.simulation);
         })
-        .on("drag", (event) => {
+        .on("drag", (event: GraphCanvasDragEvent<NodeData>) => {
+          if (this.listeners.onMoveDrag) {
+            return void this.listeners.onMoveDrag(event, this.simulation);
+          }
+
           const [_px, _py] = d3.pointer(event, this.area);
           const px = (_px - this.areaTransform.x) / this.areaTransform.k;
           const py = (_py - this.areaTransform.y) / this.areaTransform.k;
 
           event.subject.fx = px;
           event.subject.fy = py;
+
+          this.listeners.onMoveDragFinished?.(event, this.simulation);
         })
-        .on("end", (event) => {
+        .on("end", (event: GraphCanvasDragEvent<NodeData>) => {
+          if (this.listeners.onEndDrag) {
+            return void this.listeners.onEndDrag(event, this.simulation);
+          }
+
           if (!event.active && this.simulation) this.simulation.alphaTarget(0);
           event.subject.fx = null;
           event.subject.fy = null;
-        }) as unknown as (
-        selection: d3.Selection<HTMLCanvasElement, unknown, null, undefined>,
-      ) => void,
+
+          this.listeners.onEndDragFinished?.(event, this.simulation);
+        }),
     );
   }
 
@@ -434,13 +464,13 @@ export class GraphCanvas<
 
     d3.select(this.area).call(
       d3
-        .zoom()
+        .zoom<HTMLCanvasElement, unknown>()
         .scaleExtent([0.5, 10])
-        .on("zoom", (event) => {
-          const areaTransform = event.transform as d3.ZoomTransform;
-          this.areaTransform = areaTransform;
+        .on("zoom", (event: GraphCanvasZoomEvent) => {
+          this.listeners.onZoom?.(event);
+          this.areaTransform = event.transform;
           this.draw();
-        }) as unknown as d3.ZoomBehavior<HTMLCanvasElement, unknown>,
+        }),
     );
   }
 }

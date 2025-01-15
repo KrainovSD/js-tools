@@ -1,5 +1,5 @@
 import type { LinkInterface } from "@/types";
-import type { GraphCanvasLinkIterationProps } from "../GraphCanvas.types";
+import type { GraphCanvasLinkIterationProps } from "../types";
 
 export function linkIterationExtractor<
   NodeData extends Record<string, unknown>,

@@ -1,2 +1,2 @@
 export * from "./GraphCanvas";
-export * from "./GraphCanvas.types";
+export * from "./types";
