@@ -7,8 +7,8 @@ const root = document.querySelector<HTMLElement>("div#container");
 if (!root) throw new Error("hasn't root");
 
 const graph = new GraphCanvas({
-  links: d3Mock.links,
-  nodes: d3Mock.nodes,
+  links: stressMock.links,
+  nodes: stressMock.nodes,
   nodeSettings: {
     options: {
       radius: 5,

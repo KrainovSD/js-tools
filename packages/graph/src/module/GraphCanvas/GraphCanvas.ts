@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { perfTestWrapper } from "@/app/lib";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
 import {
@@ -298,29 +299,31 @@ export class GraphCanvas<
 
   private initDraw() {
     function draw(this: GraphCanvas<NodeData, LinkData>) {
-      if (!this.context) return;
+      perfTestWrapper(() => {
+        if (!this.context) return;
 
-      if (this.listeners.onDraw) {
-        return void this.listeners.onDraw(this.context, this.areaTransform);
-      }
+        if (this.listeners.onDraw) {
+          return void this.listeners.onDraw(this.context, this.areaTransform);
+        }
 
-      this.context.save();
+        this.context.save();
 
-      this.context.clearRect(0, 0, this.width, this.height);
-      this.context.translate(this.areaTransform.x, this.areaTransform.y);
-      this.context.scale(this.areaTransform.k, this.areaTransform.k);
+        this.context.clearRect(0, 0, this.width, this.height);
+        this.context.translate(this.areaTransform.x, this.areaTransform.y);
+        this.context.scale(this.areaTransform.k, this.areaTransform.k);
 
-      /** links */
-      this.context.beginPath();
-      this.links.forEach(drawLink.bind(this));
-      this.context.stroke();
+        /** links */
+        this.context.beginPath();
+        this.links.forEach(drawLink.bind(this));
+        this.context.stroke();
 
-      /** nodes */
-      this.nodes.forEach(drawNode.bind(this));
+        /** nodes */
+        this.nodes.forEach(drawNode.bind(this));
 
-      this.context.restore();
+        this.context.restore();
 
-      this.listeners.onDrawFinished?.(this.context, this.areaTransform);
+        this.listeners.onDrawFinished?.(this.context, this.areaTransform);
+      });
     }
 
     function drawLink(
