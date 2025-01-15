@@ -21,6 +21,7 @@ export type GraphCanvasForceOptions<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
+  collideOn?: boolean;
   collideOffMax?: {
     nodes: number;
     links: number;

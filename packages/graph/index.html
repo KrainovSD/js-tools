@@ -22,20 +22,62 @@
       <fieldset>
         <legend>Select the data source:</legend>
         <div>
-          <input style="margin: 0.4rem" type="radio" id="d3" name="drone" value="d3" checked />
-          <label for="huey">D3</label>
+          <input style="margin: 0.4rem" type="radio" id="d3" value="d3" checked name="mock" />
+          <label for="d3">D3</label>
         </div>
         <div>
-          <input style="margin: 0.4rem" type="radio" id="stress" name="drone" value="stress" />
-          <label for="dewey">Stress</label>
+          <input style="margin: 0.4rem" type="radio" id="stress" value="stress" name="mock" />
+          <label for="stress">Stress</label>
         </div>
         <div>
-          <input style="margin: 0.4rem" type="radio" id="custom" name="drone" value="custom" />
-          <label for="louie">Custom</label>
+          <input style="margin: 0.4rem" type="radio" id="custom" value="custom" name="mock" />
+          <label for="custom">Custom</label>
         </div>
         <div>
-          <input style="margin: 0.4rem" type="radio" id="dynamic" name="drone" value="dynamic" />
-          <label for="louie">Dynamic</label>
+          <input style="margin: 0.4rem" type="radio" id="dynamic" value="dynamic" name="mock" />
+          <label for="dynamic">Dynamic</label>
+        </div>
+      </fieldset>
+      <fieldset id="force">
+        <legend>Change the forces:</legend>
+        <div>
+          <input
+            style="margin: 0.4rem"
+            type="range"
+            id="central_force"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+          />
+          <label for="central_force">Center force</label>
+        </div>
+        <div>
+          <input style="margin: 0.4rem" type="range" id="repel_force" min="0" max="100" value="1" />
+          <label for="repel_force">Repel force</label>
+        </div>
+        <div>
+          <input
+            style="margin: 0.4rem"
+            type="range"
+            id="link_force"
+            min="0"
+            max="1"
+            step="0.01"
+            value="1"
+          />
+          <label for="link_force">Link force</label>
+        </div>
+        <div>
+          <input
+            style="margin: 0.4rem"
+            type="range"
+            id="link_distance"
+            min="0"
+            max="300"
+            value="1"
+          />
+          <label for="link_distance">Link distance</label>
         </div>
       </fieldset>
       <button id="clear" style="display: none">Сбросить</button>

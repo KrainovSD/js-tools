@@ -9,6 +9,11 @@ if (!root) throw new Error("hasn't root");
 const graph = new GraphCanvas({
   links: d3Mock.links,
   nodes: d3Mock.nodes,
+  nodeSettings: {
+    options: {
+      radius: 5,
+    },
+  },
   root,
 });
 
@@ -103,3 +108,73 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
     }
   });
 });
+
+{
+  let centralForce: number = 1;
+  let repelForce: number = 40;
+  let linkForce: number = 1;
+  let linkDistance: number = 10;
+
+  document
+    .querySelector("#force")
+    ?.querySelectorAll("input")
+    ?.forEach?.((input) => {
+      input.addEventListener("change", () => {
+        switch (input.id) {
+          case "central_force": {
+            centralForce = +input.value;
+            break;
+          }
+          case "repel_force": {
+            repelForce = +input.value;
+            break;
+          }
+          case "link_force": {
+            linkForce = +input.value;
+            break;
+          }
+          case "link_distance": {
+            linkDistance = +input.value;
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+
+        graph.changeSettings({
+          forceSettings: {
+            centerStrength: centralForce,
+            chargeStrength: repelForce * -1,
+            linkStrength: linkForce,
+            linkDistance,
+          },
+        });
+      });
+
+      switch (input.id) {
+        case "central_force": {
+          input.value = centralForce.toString();
+          break;
+        }
+        case "repel_force": {
+          input.value = repelForce.toString();
+
+          break;
+        }
+        case "link_force": {
+          input.value = linkForce.toString();
+
+          break;
+        }
+        case "link_distance": {
+          input.value = linkDistance.toString();
+
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    });
+}

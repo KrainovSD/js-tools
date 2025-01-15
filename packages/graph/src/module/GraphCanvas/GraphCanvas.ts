@@ -13,11 +13,15 @@ import type {
   GraphCanvasSettingInterface,
 } from "./GraphCanvas.types";
 import {
+  forceSettingsGetter,
+  graphSettingsGetter,
   linkIterationExtractor,
   linkOptionsGetter,
-  nodeIdGetter,
+  linkSettingsGetter,
+  listenersGetter,
   nodeIterationExtractor,
   nodeOptionsGetter,
+  nodeSettingsGetter,
 } from "./lib";
 
 export class GraphCanvas<
@@ -80,34 +84,11 @@ export class GraphCanvas<
     this.root = root;
     const { width, height } = root.getBoundingClientRect();
 
-    this.forceSettings = {
-      centerPosition: forceSettings?.centerPosition ?? {},
-      centerStrength: forceSettings?.centerStrength ?? 1,
-      collideRadius: forceSettings?.collideRadius ?? 10,
-      collideStrength: forceSettings?.collideStrength ?? 1,
-      collideIterations: forceSettings?.collideIterations ?? 1,
-      collideOffMax: forceSettings?.collideOffMax ?? { links: 0, nodes: 0 },
-      chargeStrength: forceSettings?.chargeStrength ?? -65,
-      chargeDistanceMax: forceSettings?.chargeDistanceMax ?? Infinity,
-      chargeDistanceMin: forceSettings?.chargeDistanceMin ?? 1,
-      xForce: forceSettings?.xForce ?? 0,
-      xStrength: forceSettings?.xStrength ?? 0.1,
-      yForce: forceSettings?.yForce ?? 0,
-      yStrength: forceSettings?.yStrength ?? 0.1,
-      linkDistance: forceSettings?.linkDistance ?? 10,
-      linkIterations: forceSettings?.linkIterations ?? 1,
-      linkStrength: forceSettings?.linkStrength ?? 1,
-    };
-    this.linkSettings = {
-      options: linkSettings?.options,
-    };
-
-    this.nodeSettings = {
-      idGetter: nodeSettings?.idGetter ?? nodeIdGetter,
-      options: nodeSettings?.options,
-    };
-    this.listeners = {};
-    this.graphSettings = {};
+    this.forceSettings = forceSettingsGetter(forceSettings);
+    this.linkSettings = linkSettingsGetter(linkSettings);
+    this.nodeSettings = nodeSettingsGetter(nodeSettings);
+    this.listeners = listenersGetter(listeners);
+    this.graphSettings = graphSettingsGetter(graphSettings);
 
     this.nodes = nodes;
     this.links = links;
@@ -125,11 +106,25 @@ export class GraphCanvas<
     };
   }
 
-  changeData(options: Omit<Partial<GraphCanvasInterface<NodeData, LinkData>>, "selector">) {
+  changeData(options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">) {
     if (options.links != undefined) this.links = options.links;
     if (options.nodes != undefined) this.nodes = options.nodes;
 
     this.updateData();
+  }
+
+  changeSettings(
+    options: Omit<
+      Partial<GraphCanvasInterface<NodeData, LinkData>>,
+      "links" | "nodes" | "listeners"
+    >,
+  ) {
+    if (options.forceSettings) this.forceSettings = forceSettingsGetter(options.forceSettings);
+    if (options.linkSettings) this.linkSettings = linkSettingsGetter(options.linkSettings);
+    if (options.nodeSettings) this.nodeSettings = nodeSettingsGetter(options.nodeSettings);
+    if (options.graphSettings) this.graphSettings = graphSettingsGetter(options.graphSettings);
+
+    this.updateSettings();
   }
 
   start() {
@@ -154,9 +149,17 @@ export class GraphCanvas<
     this.area = undefined;
   }
 
+  private updateSettings() {
+    if (this.simulation) {
+      this.simulation.stop().alpha(1);
+      this.initSimulationForces();
+      this.simulation.restart();
+    }
+  }
+
   private updateData() {
     if (this.simulation) {
-      if (this.nodes.length + this.links.length > 2000) this.simulation.force("collide", null);
+      this.initCollideForce();
 
       this.simulation
         .stop()
@@ -186,66 +189,85 @@ export class GraphCanvas<
     if (!this.simulation) {
       this.simulation = d3
         .forceSimulation<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>()
-
         .nodes(this.nodes)
         .force(
           "link",
           d3
             .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-            .id(this.nodeSettings.idGetter)
-            .distance(this.forceSettings.linkDistance)
-            .strength(this.forceSettings.linkStrength)
-            .iterations(this.forceSettings.linkIterations),
-        )
-        .force(
-          "x",
-          d3
-            .forceX<NodeInterface<NodeData>>(this.forceSettings.xForce)
-            .strength(this.forceSettings.xStrength),
-        )
-        .force(
-          "y",
-          d3
-            .forceY<NodeInterface<NodeData>>(this.forceSettings.yForce)
-            .strength(this.forceSettings.yStrength),
-        )
-        .force(
-          "charge",
-          d3
-            .forceManyBody<NodeInterface<NodeData>>()
-            .strength(this.forceSettings.chargeStrength)
-            .distanceMax(this.forceSettings.chargeDistanceMax)
-            .distanceMin(this.forceSettings.chargeDistanceMin),
-        )
-        .force(
-          "center",
-          d3
-            .forceCenter<
-              NodeInterface<NodeData>
-            >(this.forceSettings.centerPosition.x || this.width / 2, this.forceSettings.centerPosition.y || this.height / 2)
-            .strength(this.forceSettings.centerStrength),
-        )
-        .force(
-          "collide",
-          d3
-            .forceCollide<NodeInterface<NodeData>>()
-            .radius(this.forceSettings.collideRadius)
-            .strength(this.forceSettings.collideStrength)
-            .iterations(this.forceSettings.collideIterations),
+            .id(this.nodeSettings.idGetter),
         )
         .on("tick", this.draw.bind(this))
         .on("end", () => {
           console.log("simulation ended");
         });
-
-      const isHasMax =
-        this.forceSettings.collideOffMax.links != 0 && this.forceSettings.collideOffMax.nodes != 0;
-      const isMaxCollideNodes =
-        isHasMax && this.forceSettings.collideOffMax.nodes < this.nodes.length;
-      const isMaxCollideLinks =
-        isHasMax && this.forceSettings.collideOffMax.links < this.links.length;
-      if (isMaxCollideNodes && isMaxCollideLinks) this.simulation.force("collide", null);
+      this.initSimulationForces();
     }
+  }
+
+  private initSimulationForces() {
+    if (!this.simulation) return;
+
+    const linkForce = this.simulation.force("link") as d3.ForceLink<
+      NodeInterface<NodeData>,
+      LinkInterface<NodeData, LinkData>
+    >;
+    linkForce
+      .distance(this.forceSettings.linkDistance)
+      .strength(this.forceSettings.linkStrength)
+      .iterations(this.forceSettings.linkIterations);
+
+    this.simulation
+      .force(
+        "x",
+        d3
+          .forceX<NodeInterface<NodeData>>(this.forceSettings.xForce)
+          .strength(this.forceSettings.xStrength),
+      )
+      .force(
+        "y",
+        d3
+          .forceY<NodeInterface<NodeData>>(this.forceSettings.yForce)
+          .strength(this.forceSettings.yStrength),
+      )
+      .force(
+        "charge",
+        d3
+          .forceManyBody<NodeInterface<NodeData>>()
+          .strength(this.forceSettings.chargeStrength)
+          .distanceMax(this.forceSettings.chargeDistanceMax)
+          .distanceMin(this.forceSettings.chargeDistanceMin),
+      )
+      .force(
+        "center",
+        d3
+          .forceCenter<
+            NodeInterface<NodeData>
+          >(this.forceSettings.centerPosition.x || this.width / 2, this.forceSettings.centerPosition.y || this.height / 2)
+          .strength(this.forceSettings.centerStrength),
+      );
+
+    this.initCollideForce();
+  }
+
+  private initCollideForce() {
+    if (!this.simulation) return;
+
+    const isHasMax =
+      this.forceSettings.collideOffMax.links != 0 && this.forceSettings.collideOffMax.nodes != 0;
+    const isMaxCollideNodes =
+      isHasMax && this.forceSettings.collideOffMax.nodes < this.nodes.length;
+    const isMaxCollideLinks =
+      isHasMax && this.forceSettings.collideOffMax.links < this.links.length;
+    if (isMaxCollideNodes && isMaxCollideLinks) this.simulation.force("collide", null);
+    else if (!this.simulation.force("collide"))
+      this.simulation.force(
+        "collide",
+        d3
+          .forceCollide<NodeInterface<NodeData>>()
+          .radius(this.forceSettings.collideRadius)
+          .strength(this.forceSettings.collideStrength)
+          .iterations(this.forceSettings.collideIterations),
+      );
   }
 
   private initArea() {
