@@ -15,6 +15,11 @@ export type GraphCanvasListeners<
   LinkData extends Record<string, unknown>,
 > = {
   onZoom?: (event: GraphCanvasZoomEvent) => void;
+  onDragSubject?: (
+    event: unknown,
+    transform: ZoomTransform,
+    nodes: NodeInterface<NodeData>[],
+  ) => NodeInterface<NodeData> | undefined;
   onStartDrag?: (
     event: GraphCanvasDragEvent<NodeData>,
     simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,

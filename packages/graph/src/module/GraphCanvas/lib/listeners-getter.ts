@@ -1,6 +1,10 @@
 import type { GraphCanvasListeners } from "../types";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function listenersGetter(settings: GraphCanvasListeners | undefined): GraphCanvasListeners {
+export function listenersGetter<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+>(
+  settings: GraphCanvasListeners<NodeData, LinkData> | undefined,
+): GraphCanvasListeners<NodeData, LinkData> {
   return settings || {};
 }

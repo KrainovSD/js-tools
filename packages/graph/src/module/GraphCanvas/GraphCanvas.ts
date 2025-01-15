@@ -57,7 +57,7 @@ export class GraphCanvas<
 
   private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
-  private graphSettings: Required<GraphCanvasSettingInterface>;
+  private graphSettings: Required<GraphCanvasSettingInterface<NodeData>>;
 
   private forceSettings: Required<GraphCanvasForceSettings<NodeData, LinkData>>;
 
@@ -407,6 +407,10 @@ export class GraphCanvas<
       d3
         .drag<HTMLCanvasElement, unknown>()
         .subject((event) => {
+          if (this.listeners.onDragSubject) {
+            return this.listeners.onDragSubject(event, this.areaTransform, this.nodes);
+          }
+
           const [_px, _py] = d3.pointer(event, this.area);
           const px = (_px - this.areaTransform.x) / this.areaTransform.k;
           const py = (_py - this.areaTransform.y) / this.areaTransform.k;
@@ -414,9 +418,14 @@ export class GraphCanvas<
           return d3.least(this.nodes, (node) => {
             if (!node.x || !node.y) return undefined;
 
-            const dist2 = (node.x - px) ** 2 + (node.y - py) ** 2;
+            let dragPlaceCoefficient: number | undefined;
+            if (typeof this.graphSettings.dragPlaceCoefficient === "function")
+              dragPlaceCoefficient = this.graphSettings.dragPlaceCoefficient(node, px, py);
+            else dragPlaceCoefficient = this.graphSettings.dragPlaceCoefficient;
 
-            if (dist2 < 30) return dist2;
+            if (dragPlaceCoefficient == undefined) return undefined;
+
+            if (dragPlaceCoefficient < 30) return dragPlaceCoefficient;
           });
         })
         .on("start", (event: GraphCanvasDragEvent<NodeData>) => {
@@ -465,7 +474,7 @@ export class GraphCanvas<
     d3.select(this.area).call(
       d3
         .zoom<HTMLCanvasElement, unknown>()
-        .scaleExtent([0.5, 10])
+        .scaleExtent(this.graphSettings.zoomExtent)
         .on("zoom", (event: GraphCanvasZoomEvent) => {
           this.listeners.onZoom?.(event);
           this.areaTransform = event.transform;

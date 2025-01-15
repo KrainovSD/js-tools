@@ -1,6 +1,13 @@
 import type { LinkInterface, NodeInterface } from "@/types";
 
-export type GraphCanvasSettingInterface = {};
+export type GraphCanvasSettingInterface<NodeData extends Record<string, unknown>> = {
+  zoomExtent?: [number, number];
+  dragPlaceCoefficient: (
+    node: NodeInterface<NodeData>,
+    pxEvent: number,
+    pyEvent: number,
+  ) => number | undefined;
+};
 
 export type GraphCanvasForceSettings<
   NodeData extends Record<string, unknown>,

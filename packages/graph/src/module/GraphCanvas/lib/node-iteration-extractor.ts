@@ -3,7 +3,7 @@ import type { GraphCanvasNodeIterationProps } from "../types";
 
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,
-  Result extends string | number | boolean | Record<string, unknown> | unknown[],
+  Result extends string | number | boolean | Record<string, unknown> | unknown[] | undefined | null,
 >(
   node: NodeInterface<NodeData>,
   i: number,

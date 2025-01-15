@@ -15,7 +15,7 @@ export type GraphCanvasInterface<
   nodes: NodeInterface<NodeData>[];
   links: LinkInterface<NodeData, LinkData>[];
   root: HTMLElement;
-  graphSettings?: GraphCanvasSettingInterface;
+  graphSettings?: GraphCanvasSettingInterface<NodeData>;
   forceSettings?: GraphCanvasForceSettings<NodeData, LinkData>;
   nodeSettings?: GraphCanvasNodeSettings<NodeData>;
   linkSettings?: GraphCanvasLinkSettings<NodeData, LinkData>;
