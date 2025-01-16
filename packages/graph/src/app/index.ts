@@ -2,7 +2,7 @@
 import { GraphCanvas, type GraphCanvasInterface } from "@/module/GraphCanvas";
 import "./global.css";
 import { getLinkCount } from "./lib";
-import { createNewDynamicMock, customMock, d3Mock, stressMock } from "./mock";
+import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
 import type { LinkData, NodeData } from "./types";
 
 const settings = {
@@ -35,10 +35,10 @@ const graph = new GraphCanvas({
   links: data.links,
   nodes: data.nodes,
   nodeSettings: {
-    options: (node) => ({
+    options: (node, _, __, transform) => ({
       initialRadius: settings.initialRadius,
       flexibleRadius: settings.flexibleRadius,
-      text: String(node.index),
+      text: transform && node.data?.name && transform.k > 2 ? String(node.data?.name) : undefined,
     }),
   },
   linkSettings: {},
@@ -115,6 +115,12 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
     switch (this.value) {
       case "d3": {
         proxy.data = d3Mock;
+        graph.changeData({ links: data.links, nodes: data.nodes });
+
+        break;
+      }
+      case "real": {
+        proxy.data = realMock;
         graph.changeData({ links: data.links, nodes: data.nodes });
 
         break;
@@ -214,12 +220,15 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
             yStrength: yForce,
           },
           nodeSettings: {
-            options: (node) => ({
+            options: (node, _, __, transform) => ({
               radiusCoefficient,
               radiusFactor,
               initialRadius: settings.initialRadius,
               flexibleRadius: settings.flexibleRadius,
-              text: String(node.index),
+              text:
+                transform && node.data?.name && transform.k > 2
+                  ? String(node.data?.name)
+                  : undefined,
             }),
           },
         });
