@@ -1,17 +1,37 @@
 /* eslint-disable no-console */
-import { GraphCanvas } from "@/module/GraphCanvas";
+import { GraphCanvas, type GraphCanvasInterface } from "@/module/GraphCanvas";
 import "./global.css";
+import { getLinkCount } from "./lib";
 import { createNewDynamicMock, customMock, d3Mock, stressMock } from "./mock";
+import type { LinkData, NodeData } from "./types";
+
+let data: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
+  links: [],
+  nodes: [],
+};
+const proxy = new Proxy(
+  { data },
+  {
+    set(target, prop, val) {
+      const value = val as Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links">;
+      getLinkCount(value);
+      data = value;
+
+      return true;
+    },
+  },
+);
+proxy.data = d3Mock;
 
 const root = document.querySelector<HTMLElement>("div#container");
 if (!root) throw new Error("hasn't root");
 
 const graph = new GraphCanvas({
-  links: stressMock.links,
-  nodes: stressMock.nodes,
+  links: data.links,
+  nodes: data.nodes,
   nodeSettings: {
     options: {
-      radius: 4,
+      // radius: 4,
     },
   },
   linkSettings: {},
@@ -33,7 +53,7 @@ const dynamicStartText = "Запустить";
 
 function startDynamic() {
   dynamicInterval = setInterval(() => {
-    const data = createNewDynamicMock(graph.getData());
+    proxy.data = createNewDynamicMock(graph.getData());
     console.log(data);
     graph.changeData({ links: data.links, nodes: data.nodes });
   }, 300);
@@ -87,17 +107,20 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
 
     switch (this.value) {
       case "d3": {
-        graph.changeData({ links: d3Mock.links, nodes: d3Mock.nodes });
+        proxy.data = d3Mock;
+        graph.changeData({ links: data.links, nodes: data.nodes });
 
         break;
       }
       case "stress": {
-        graph.changeData({ links: stressMock.links, nodes: stressMock.nodes });
+        proxy.data = stressMock;
+        graph.changeData({ links: data.links, nodes: data.nodes });
 
         break;
       }
       case "custom": {
-        graph.changeData({ links: customMock.links, nodes: customMock.nodes });
+        proxy.data = customMock;
+        graph.changeData({ links: data.links, nodes: data.nodes });
 
         break;
       }
@@ -123,6 +146,8 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
   let isCollideActive: boolean = true;
   let xForce: number = 0.1;
   let yForce: number = 0.1;
+  let radiusCoefficient: number = 5;
+  let radiusFactor: number = 1;
 
   document
     .querySelector("#force")
@@ -154,6 +179,14 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
             yForce = +input.value;
             break;
           }
+          case "radius_coefficient": {
+            radiusCoefficient = +input.value;
+            break;
+          }
+          case "radius_factor": {
+            radiusFactor = +input.value;
+            break;
+          }
           case "collide": {
             isCollideActive = input.checked;
             break;
@@ -172,6 +205,12 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
             collideOn: isCollideActive,
             xStrength: xForce,
             yStrength: yForce,
+          },
+          nodeSettings: {
+            options: {
+              radiusCoefficient,
+              radiusFactor,
+            },
           },
         });
       });
@@ -202,6 +241,14 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
         }
         case "y_force": {
           input.value = yForce.toString();
+          break;
+        }
+        case "radius_coefficient": {
+          input.value = radiusCoefficient.toString();
+          break;
+        }
+        case "radius_factor": {
+          input.value = radiusFactor.toString();
           break;
         }
         case "collide": {

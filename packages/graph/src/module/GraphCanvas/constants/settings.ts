@@ -28,15 +28,17 @@ export const NODE_SETTINGS = {
   font: "8px Arial",
   fontAlign: "center" as CanvasTextAlign,
   fontColor: "#333",
-  radius: 4,
   width: 1,
   zoomTextBorder: 2,
+  initialRadius: 4,
+  radiusCoefficient: 5,
+  radiusFactor: 1,
 };
 
 export const LINK_SETTINGS = {
   alpha: 1,
   colorFar: "#999",
-  colorNear: "#454545FF",
+  colorNear: "#000000FF",
   widthFar: 1,
   widthNear: 0.1,
   zoomWidthBorder: 1,

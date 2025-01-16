@@ -394,11 +394,20 @@ export class GraphCanvas<
         this.context.fillText(`${node.index}`, node.x, node.y + 5 * 2 + 3);
       }
       /** circle */
+      const radius =
+        (node.linkCount ? node.linkCount / nodeOptions.radiusCoefficient : 0) *
+          nodeOptions.radiusFactor +
+        nodeOptions.initialRadius;
+      // bad
+      // const radius = node.linkCount
+      //   ? node.linkCount * nodeOptions.radiusCoefficient + nodeOptions.initialRadius
+      //   : nodeOptions.initialRadius;
+
       this.context.strokeStyle = nodeOptions.colorOuter;
       this.context.globalAlpha = nodeOptions.alpha;
       this.context.lineWidth = nodeOptions.width;
-      this.context.moveTo(node.x + nodeOptions.radius, node.y);
-      this.context.arc(node.x, node.y, nodeOptions.radius, 0, 2 * Math.PI);
+      this.context.moveTo(node.x + radius, node.y);
+      this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
 
       this.context.fillStyle = nodeOptions.colorInner;
 

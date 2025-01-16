@@ -44,7 +44,9 @@ export type GraphCanvasNodeSettings<NodeData extends Record<string, unknown>> = 
 };
 
 export type GraphCanvasNodeOptions = {
-  radius?: number;
+  initialRadius?: number;
+  radiusCoefficient?: number;
+  radiusFactor?: number;
   width?: number;
   alpha?: number;
   colorOuter?: string;
