@@ -7,10 +7,16 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
 
 export function nodeOptionsGetter<NodeData extends Record<string, unknown>>(
   node: NodeInterface<NodeData>,
+  _: number,
+  __: NodeInterface<NodeData>[],
+  transform: d3.ZoomTransform,
 ): Required<GraphCanvasNodeOptions> {
   return {
     ...NODE_SETTINGS,
     colorInner: color(String(node.group)),
-    text: node.index != undefined ? String(node.index) : null,
+    text:
+      node.index != undefined && transform.k > NODE_SETTINGS.zoomTextBorder
+        ? String(node.index)
+        : null,
   };
 }

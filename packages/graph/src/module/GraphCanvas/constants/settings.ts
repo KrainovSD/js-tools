@@ -19,7 +19,7 @@ export const FORCE_SETTINGS = {
 };
 
 export const GRAPH_SETTINGS = {
-  zoomExtent: [0.5, 10] as [number, number],
+  zoomExtent: [0.1, 10] as [number, number],
 };
 
 export const NODE_SETTINGS = {
@@ -28,12 +28,17 @@ export const NODE_SETTINGS = {
   font: "8px Arial",
   fontAlign: "center" as CanvasTextAlign,
   fontColor: "#333",
-  radius: 5,
+  radius: 4,
   width: 1,
+  zoomTextBorder: 2,
 };
 
 export const LINK_SETTINGS = {
   alpha: 1,
-  color: "#999",
-  width: 1,
+  colorFar: "#999",
+  colorNear: "#454545FF",
+  widthFar: 1,
+  widthNear: 0.1,
+  zoomWidthBorder: 1,
+  zoomColorBorder: 1,
 };

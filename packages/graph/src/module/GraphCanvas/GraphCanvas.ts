@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { perfTestWrapper } from "@/app/lib";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
 import {
@@ -69,6 +68,8 @@ export class GraphCanvas<
     Pick<GraphCanvasLinkSettings<NodeData, LinkData>, "options">;
 
   private listeners: GraphCanvasListeners<NodeData, LinkData>;
+
+  private simulationWorking: boolean = false;
 
   constructor({
     links,
@@ -198,9 +199,13 @@ export class GraphCanvas<
             .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
             .id(this.nodeSettings.idGetter),
         )
-        .on("tick", this.draw.bind(this))
+        .on("tick", () => {
+          this.simulationWorking = true;
+          this.draw();
+        })
         .on("end", () => {
           this.listeners.onSimulationEnd?.(this.simulation);
+          this.simulationWorking = false;
         });
       this.initSimulationForces();
     }
@@ -299,31 +304,28 @@ export class GraphCanvas<
 
   private initDraw() {
     function draw(this: GraphCanvas<NodeData, LinkData>) {
-      perfTestWrapper(() => {
-        if (!this.context) return;
+      if (!this.context) return;
 
-        if (this.listeners.onDraw) {
-          return void this.listeners.onDraw(this.context, this.areaTransform);
-        }
+      if (this.listeners.onDraw) {
+        return void this.listeners.onDraw(this.context, this.areaTransform);
+      }
 
-        this.context.save();
+      this.context.save();
+      this.context.clearRect(0, 0, this.width, this.height);
+      this.context.translate(this.areaTransform.x, this.areaTransform.y);
+      this.context.scale(this.areaTransform.k, this.areaTransform.k);
 
-        this.context.clearRect(0, 0, this.width, this.height);
-        this.context.translate(this.areaTransform.x, this.areaTransform.y);
-        this.context.scale(this.areaTransform.k, this.areaTransform.k);
+      /** links */
+      this.context.beginPath();
+      this.links.forEach(drawLink.bind(this));
+      this.context.stroke();
 
-        /** links */
-        this.context.beginPath();
-        this.links.forEach(drawLink.bind(this));
-        this.context.stroke();
+      /** nodes */
+      this.nodes.forEach(drawNode.bind(this));
 
-        /** nodes */
-        this.nodes.forEach(drawNode.bind(this));
+      this.context.restore();
 
-        this.context.restore();
-
-        this.listeners.onDrawFinished?.(this.context, this.areaTransform);
-      });
+      this.listeners.onDrawFinished?.(this.context, this.areaTransform);
     }
 
     function drawLink(
@@ -346,9 +348,10 @@ export class GraphCanvas<
         link,
         index,
         this.links,
+        this.areaTransform,
         this.linkSettings.options || {},
       );
-      const linkConstantOptions = linkOptionsGetter();
+      const linkConstantOptions = linkOptionsGetter(link, index, this.links, this.areaTransform);
       const linkOptions: Required<GraphCanvasLinkOptions> = {
         ...linkConstantOptions,
         ...linkCustomOptions,
@@ -372,9 +375,10 @@ export class GraphCanvas<
         node,
         index,
         this.nodes,
+        this.areaTransform,
         this.nodeSettings.options || {},
       );
-      const nodeConstantOptions = nodeOptionsGetter(node);
+      const nodeConstantOptions = nodeOptionsGetter(node, index, this.nodes, this.areaTransform);
       const nodeOptions: Required<GraphCanvasNodeOptions> = {
         ...nodeConstantOptions,
         ...nodeCustomOptions,
@@ -383,10 +387,12 @@ export class GraphCanvas<
       this.context.beginPath();
 
       /** text */
-      this.context.font = nodeOptions.font;
-      this.context.fillStyle = nodeOptions.fontColor;
-      this.context.textAlign = nodeOptions.fontAlign;
-      this.context.fillText(`${node.index}`, node.x, node.y + 5 * 2 + 3);
+      if (nodeOptions.text) {
+        this.context.font = nodeOptions.font;
+        this.context.fillStyle = nodeOptions.fontColor;
+        this.context.textAlign = nodeOptions.fontAlign;
+        this.context.fillText(`${node.index}`, node.x, node.y + 5 * 2 + 3);
+      }
       /** circle */
       this.context.strokeStyle = nodeOptions.colorOuter;
       this.context.globalAlpha = nodeOptions.alpha;
@@ -481,7 +487,8 @@ export class GraphCanvas<
         .on("zoom", (event: GraphCanvasZoomEvent) => {
           this.listeners.onZoom?.(event);
           this.areaTransform = event.transform;
-          this.draw();
+
+          if (!this.simulationWorking) requestAnimationFrame(() => this.draw());
         }),
     );
   }

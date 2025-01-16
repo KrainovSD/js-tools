@@ -1,3 +1,4 @@
+import type { ZoomTransform } from "d3";
 import type { NodeInterface } from "@/types";
 import type { GraphCanvasNodeIterationProps } from "../types";
 
@@ -8,9 +9,11 @@ export function nodeIterationExtractor<
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
+  transform: ZoomTransform,
+
   option: GraphCanvasNodeIterationProps<NodeData, Result> | Result,
 ): Result {
-  if (typeof option === "function") return option(node, i, nodes);
+  if (typeof option === "function") return option(node, i, nodes, transform);
 
   return option;
 }

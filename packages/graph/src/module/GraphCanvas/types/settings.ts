@@ -1,3 +1,4 @@
+import type { ZoomTransform } from "d3";
 import type { LinkInterface, NodeInterface } from "@/types";
 
 export type GraphCanvasSettingInterface<NodeData extends Record<string, unknown>> = {
@@ -57,7 +58,12 @@ export type GraphCanvasNodeOptions = {
 export type GraphCanvasNodeIterationProps<
   NodeData extends Record<string, unknown>,
   Return = number,
-> = (node: NodeInterface<NodeData>, i: number, nodes: NodeInterface<NodeData>[]) => Return;
+> = (
+  node: NodeInterface<NodeData>,
+  i: number,
+  nodes: NodeInterface<NodeData>[],
+  transform?: ZoomTransform,
+) => Return;
 
 export type GraphCanvasLinkSettings<
   NodeData extends Record<string, unknown>,
@@ -82,4 +88,5 @@ export type GraphCanvasLinkIterationProps<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
+  transform?: ZoomTransform | null,
 ) => Return;

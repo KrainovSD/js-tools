@@ -11,9 +11,10 @@ const graph = new GraphCanvas({
   nodes: stressMock.nodes,
   nodeSettings: {
     options: {
-      radius: 5,
+      radius: 4,
     },
   },
+  linkSettings: {},
   listeners: {
     onSimulationEnd: () => {
       console.log("simulation ended");
@@ -120,6 +121,8 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
   let linkForce: number = 1;
   let linkDistance: number = 10;
   let isCollideActive: boolean = true;
+  let xForce: number = 0.1;
+  let yForce: number = 0.1;
 
   document
     .querySelector("#force")
@@ -143,6 +146,14 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
             linkDistance = +input.value;
             break;
           }
+          case "x_force": {
+            xForce = +input.value;
+            break;
+          }
+          case "y_force": {
+            yForce = +input.value;
+            break;
+          }
           case "collide": {
             isCollideActive = input.checked;
             break;
@@ -159,6 +170,8 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
             linkStrength: linkForce,
             linkDistance,
             collideOn: isCollideActive,
+            xStrength: xForce,
+            yStrength: yForce,
           },
         });
       });
@@ -181,6 +194,14 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
         case "link_distance": {
           input.value = linkDistance.toString();
 
+          break;
+        }
+        case "x_force": {
+          input.value = xForce.toString();
+          break;
+        }
+        case "y_force": {
+          input.value = yForce.toString();
           break;
         }
         case "collide": {
