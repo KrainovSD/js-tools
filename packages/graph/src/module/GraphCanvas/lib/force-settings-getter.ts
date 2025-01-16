@@ -10,7 +10,7 @@ export function forceSettingsGetter<
   return {
     centerPosition: settings?.centerPosition ?? FORCE_SETTINGS.centerPosition,
     centerStrength: settings?.centerStrength ?? FORCE_SETTINGS.centerStrength,
-    collideRadius: settings?.collideRadius ?? FORCE_SETTINGS.collideRadius,
+    collideRadius: settings?.collideRadius ?? null,
     collideStrength: settings?.collideStrength ?? FORCE_SETTINGS.collideStrength,
     collideIterations: settings?.collideIterations ?? FORCE_SETTINGS.collideIterations,
     collideOffMax: settings?.collideOffMax ?? FORCE_SETTINGS.collideOffMax,

@@ -10,16 +10,16 @@ export function linkOptionsGetter<
   _: LinkInterface<NodeData, LinkData>,
   __: number,
   ___: LinkInterface<NodeData, LinkData>[],
-  transform: ZoomTransform,
+  transform?: ZoomTransform | null,
 ): Required<GraphCanvasLinkOptions> {
   return {
     ...LINK_SETTINGS,
     color:
-      transform.k > LINK_SETTINGS.zoomColorBorder
+      transform && transform.k > LINK_SETTINGS.zoomColorBorder
         ? LINK_SETTINGS.colorNear
         : LINK_SETTINGS.colorFar,
     width:
-      transform.k > LINK_SETTINGS.zoomWidthBorder
+      transform && transform.k > LINK_SETTINGS.zoomWidthBorder
         ? LINK_SETTINGS.widthNear
         : LINK_SETTINGS.widthFar,
   };

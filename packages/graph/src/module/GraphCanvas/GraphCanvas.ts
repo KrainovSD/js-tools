@@ -1,6 +1,7 @@
 import * as d3 from "d3";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
+import { FORCE_SETTINGS } from "./constants";
 import {
   forceSettingsGetter,
   graphSettingsGetter,
@@ -10,16 +11,15 @@ import {
   listenersGetter,
   nodeIterationExtractor,
   nodeOptionsGetter,
+  nodeRadiusGetter,
   nodeSettingsGetter,
 } from "./lib";
 import type {
   GraphCanvasDragEvent,
   GraphCanvasForceSettings,
   GraphCanvasInterface,
-  GraphCanvasLinkOptions,
   GraphCanvasLinkSettings,
   GraphCanvasListeners,
-  GraphCanvasNodeOptions,
   GraphCanvasNodeSettings,
   GraphCanvasSelection,
   GraphCanvasSettingInterface,
@@ -277,7 +277,36 @@ export class GraphCanvas<
         "collide",
         d3
           .forceCollide<NodeInterface<NodeData>>()
-          .radius(this.forceSettings.collideRadius)
+          .radius((node, index) => {
+            if (this.forceSettings.collideRadius) {
+              return nodeIterationExtractor(
+                node,
+                index,
+                this.nodes,
+                this.areaTransform,
+                this.forceSettings.collideIterations,
+                undefined,
+              );
+            }
+
+            const nodeOptions = nodeIterationExtractor(
+              node,
+              index,
+              this.nodes,
+              this.areaTransform,
+              this.nodeSettings.options || {},
+              nodeOptionsGetter,
+            );
+            const radius = nodeRadiusGetter({
+              flexibleRadius: nodeOptions.flexibleRadius,
+              initialRadius: nodeOptions.initialRadius,
+              radiusCoefficient: nodeOptions.radiusCoefficient,
+              radiusFactor: nodeOptions.radiusFactor,
+              linkCount: node.linkCount,
+            });
+
+            return radius + FORCE_SETTINGS.collideAdditionalRadius;
+          })
           .strength(this.forceSettings.collideStrength)
           .iterations(this.forceSettings.collideIterations),
       );
@@ -344,18 +373,14 @@ export class GraphCanvas<
       )
         return;
 
-      const linkCustomOptions = linkIterationExtractor(
+      const linkOptions = linkIterationExtractor(
         link,
         index,
         this.links,
         this.areaTransform,
         this.linkSettings.options || {},
+        linkOptionsGetter,
       );
-      const linkConstantOptions = linkOptionsGetter(link, index, this.links, this.areaTransform);
-      const linkOptions: Required<GraphCanvasLinkOptions> = {
-        ...linkConstantOptions,
-        ...linkCustomOptions,
-      };
 
       this.context.globalAlpha = linkOptions.alpha;
       this.context.strokeStyle = linkOptions.color;
@@ -371,18 +396,22 @@ export class GraphCanvas<
     ) {
       if (!this.context || !node.x || !node.y) return;
 
-      const nodeCustomOptions = nodeIterationExtractor(
+      const nodeOptions = nodeIterationExtractor(
         node,
         index,
         this.nodes,
         this.areaTransform,
         this.nodeSettings.options || {},
+        nodeOptionsGetter,
       );
-      const nodeConstantOptions = nodeOptionsGetter(node, index, this.nodes, this.areaTransform);
-      const nodeOptions: Required<GraphCanvasNodeOptions> = {
-        ...nodeConstantOptions,
-        ...nodeCustomOptions,
-      };
+
+      const radius = nodeRadiusGetter({
+        flexibleRadius: nodeOptions.flexibleRadius,
+        initialRadius: nodeOptions.initialRadius,
+        radiusCoefficient: nodeOptions.radiusCoefficient,
+        radiusFactor: nodeOptions.radiusFactor,
+        linkCount: node.linkCount,
+      });
 
       this.context.beginPath();
 
@@ -391,17 +420,9 @@ export class GraphCanvas<
         this.context.font = nodeOptions.font;
         this.context.fillStyle = nodeOptions.fontColor;
         this.context.textAlign = nodeOptions.fontAlign;
-        this.context.fillText(`${node.index}`, node.x, node.y + 5 * 2 + 3);
+        this.context.fillText(nodeOptions.text, node.x, node.y + radius + 10);
       }
       /** circle */
-      const radius =
-        (node.linkCount ? node.linkCount / nodeOptions.radiusCoefficient : 0) *
-          nodeOptions.radiusFactor +
-        nodeOptions.initialRadius;
-      // bad
-      // const radius = node.linkCount
-      //   ? node.linkCount * nodeOptions.radiusCoefficient + nodeOptions.initialRadius
-      //   : nodeOptions.initialRadius;
 
       this.context.strokeStyle = nodeOptions.colorOuter;
       this.context.globalAlpha = nodeOptions.alpha;
@@ -433,17 +454,30 @@ export class GraphCanvas<
           const px = (_px - this.areaTransform.x) / this.areaTransform.k;
           const py = (_py - this.areaTransform.y) / this.areaTransform.k;
 
+          let index = 0;
+
           return d3.least(this.nodes, (node) => {
             if (!node.x || !node.y) return undefined;
 
-            let dragPlaceCoefficient: number | undefined;
-            if (typeof this.graphSettings.dragPlaceCoefficient === "function")
-              dragPlaceCoefficient = this.graphSettings.dragPlaceCoefficient(node, px, py);
-            else dragPlaceCoefficient = this.graphSettings.dragPlaceCoefficient;
+            const nodeOptions = nodeIterationExtractor(
+              node,
+              index,
+              this.nodes,
+              this.areaTransform,
+              this.nodeSettings.options || {},
+              nodeOptionsGetter,
+            );
 
-            if (dragPlaceCoefficient == undefined) return undefined;
+            const radius = nodeRadiusGetter({
+              flexibleRadius: nodeOptions.flexibleRadius,
+              initialRadius: nodeOptions.initialRadius,
+              radiusCoefficient: nodeOptions.radiusCoefficient,
+              radiusFactor: nodeOptions.radiusFactor,
+              linkCount: node.linkCount,
+            });
+            index++;
 
-            if (dragPlaceCoefficient < 30) return dragPlaceCoefficient;
+            return this.graphSettings.dragPlaceCoefficient(node, px, py, radius);
           });
         })
         .on("start", (event: GraphCanvasDragEvent<NodeData>) => {

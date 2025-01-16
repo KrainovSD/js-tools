@@ -1,7 +1,7 @@
 export const FORCE_SETTINGS = {
   centerPosition: {},
   centerStrength: 1,
-  collideRadius: 10,
+  collideAdditionalRadius: 2,
   collideStrength: 1,
   collideIterations: 1,
   collideOffMax: { links: 0, nodes: 0 },
@@ -33,6 +33,7 @@ export const NODE_SETTINGS = {
   initialRadius: 4,
   radiusCoefficient: 5,
   radiusFactor: 1,
+  flexibleRadius: true,
 };
 
 export const LINK_SETTINGS = {

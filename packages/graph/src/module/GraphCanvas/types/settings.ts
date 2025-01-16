@@ -7,6 +7,7 @@ export type GraphCanvasSettingInterface<NodeData extends Record<string, unknown>
     node: NodeInterface<NodeData>,
     pxEvent: number,
     pyEvent: number,
+    radius: number,
   ) => number | undefined;
 };
 
@@ -19,7 +20,7 @@ export type GraphCanvasForceSettings<
     nodes: number;
     links: number;
   };
-  collideRadius?: GraphCanvasNodeIterationProps<NodeData> | number;
+  collideRadius?: GraphCanvasNodeIterationProps<NodeData> | number | null;
   collideStrength?: number;
   collideIterations?: number;
   linkDistance?: GraphCanvasLinkIterationProps<NodeData, LinkData> | number;
@@ -47,6 +48,7 @@ export type GraphCanvasNodeOptions = {
   initialRadius?: number;
   radiusCoefficient?: number;
   radiusFactor?: number;
+  flexibleRadius?: boolean;
   width?: number;
   alpha?: number;
   colorOuter?: string;

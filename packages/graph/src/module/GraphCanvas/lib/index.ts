@@ -9,3 +9,4 @@ export * from "./link-settings-getter";
 export * from "./listeners-getter";
 export * from "./graph-settings-getter";
 export * from "./drag-place-coefficient-getter";
+export * from "./node-radius-getter";

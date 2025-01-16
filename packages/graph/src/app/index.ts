@@ -5,6 +5,11 @@ import { getLinkCount } from "./lib";
 import { createNewDynamicMock, customMock, d3Mock, stressMock } from "./mock";
 import type { LinkData, NodeData } from "./types";
 
+const settings = {
+  initialRadius: 4,
+  flexibleRadius: true,
+};
+
 let data: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
   links: [],
   nodes: [],
@@ -30,9 +35,11 @@ const graph = new GraphCanvas({
   links: data.links,
   nodes: data.nodes,
   nodeSettings: {
-    options: {
-      // radius: 4,
-    },
+    options: (node) => ({
+      initialRadius: settings.initialRadius,
+      flexibleRadius: settings.flexibleRadius,
+      text: String(node.index),
+    }),
   },
   linkSettings: {},
   listeners: {
@@ -207,10 +214,13 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
             yStrength: yForce,
           },
           nodeSettings: {
-            options: {
+            options: (node) => ({
               radiusCoefficient,
               radiusFactor,
-            },
+              initialRadius: settings.initialRadius,
+              flexibleRadius: settings.flexibleRadius,
+              text: String(node.index),
+            }),
           },
         });
       });
