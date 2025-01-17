@@ -50,11 +50,13 @@
     "ts-patch": "3.3.0",
     "typescript": "5.6.3",
     "typescript-transform-paths": "3.5.2",
-    "vite": "6.0.7"
+    "vite": "6.0.7",
+    "@types/lodash": "4.17.14"
   },
   "dependencies": {
     "d3": "7.9.0",
     "pixi-viewport": "6.0.3",
-    "pixi.js": "8.6.6"
+    "pixi.js": "8.6.6",
+    "lodash": "4.17.21"
   }
 }

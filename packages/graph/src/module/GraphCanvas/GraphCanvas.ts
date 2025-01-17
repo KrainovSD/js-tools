@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { debounce } from "@/lib";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
 import { FORCE_SETTINGS } from "./constants";
@@ -71,6 +72,8 @@ export class GraphCanvas<
 
   private simulationWorking: boolean = false;
 
+  private eventAbortController: AbortController;
+
   constructor({
     links,
     nodes,
@@ -92,6 +95,8 @@ export class GraphCanvas<
     this.nodeSettings = nodeSettingsGetter(nodeSettings);
     this.listeners = listenersGetter(listeners);
     this.graphSettings = graphSettingsGetter(graphSettings);
+
+    this.eventAbortController = new AbortController();
 
     this.nodes = nodes;
     this.links = links;
@@ -150,6 +155,8 @@ export class GraphCanvas<
 
     this.root.replaceChildren();
     this.area = undefined;
+    this.eventAbortController.abort();
+    this.eventAbortController = new AbortController();
   }
 
   private updateSettings() {
@@ -186,6 +193,7 @@ export class GraphCanvas<
     this.initArea();
     this.initDnd();
     this.initZoom();
+    this.initResize();
   }
 
   private initSimulation() {
@@ -438,6 +446,51 @@ export class GraphCanvas<
 
     return draw;
   }
+
+  private initResize() {
+    if (!this.area) throw new Error("bad init data");
+
+    const resize = debounce(() => {
+      if (!this.area || !this.simulation) return;
+
+      const { width, height } = this.area.getBoundingClientRect();
+      this.width = width;
+      this.height = height;
+      this.area.width = this.dpi * width;
+      this.area.height = this.dpi * height;
+
+      this.simulation
+        .stop()
+        .alpha(1)
+        .force(
+          "center",
+          d3
+            .forceCenter<
+              NodeInterface<NodeData>
+            >(this.forceSettings.centerPosition.x || this.width / 2, this.forceSettings.centerPosition.y || this.height / 2)
+            .strength(this.forceSettings.centerStrength),
+        )
+        .restart();
+
+      if (!this.simulationWorking) this.draw();
+    }, 10);
+
+    window.addEventListener(
+      "resize",
+      () => {
+        requestAnimationFrame(() => {
+          resize();
+        });
+      },
+      { signal: this.eventAbortController.signal },
+    );
+  }
+
+  // private initClick() {
+  //   if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
+
+  //   d3.select(this.area).call(d3.click);
+  // }
 
   private initDnd() {
     if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
