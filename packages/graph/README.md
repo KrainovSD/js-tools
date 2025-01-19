@@ -12,21 +12,20 @@ pnpm i @krainovsd/graph
 ```ts
 import { Graph } from "@krainovsd/graph";
 
+const root = document.querySelector<HTMLElement>("div#container");
 const graph = new Graph({
-  height: 680,
-  width: 928,
   links,
   nodes,
-  selector: "#root",
+  root,
 });
 ```
 
 ## API
 
-### selector
+### root
 
-Type: `string`<br>
+Type: `HTMLElement`<br>
 Required: `true`
 
-Selector of the node for mounting the graph.
+The node for mounting the graph.
 
