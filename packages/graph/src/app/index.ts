@@ -1,13 +1,14 @@
 /* eslint-disable no-console */
 import { GraphCanvas, type GraphCanvasInterface } from "@/module/GraphCanvas";
 import "./global.css";
-import { getLinkCount } from "./lib";
+import { getLinkCount, getNodeNeighbors } from "./lib";
 import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
 import type { LinkData, NodeData } from "./types";
 
 const settings = {
   initialRadius: 4,
   flexibleRadius: true,
+  highlightByHover: true,
 };
 
 let data: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
@@ -20,6 +21,7 @@ const proxy = new Proxy(
     set(target, prop, val) {
       const value = val as Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links">;
       getLinkCount(value);
+      getNodeNeighbors(value);
       data = value;
 
       return true;
@@ -43,6 +45,7 @@ const graph = new GraphCanvas({
   },
   graphSettings: {
     // stickAfterDrag: true,
+    highlightByHover: settings.highlightByHover,
   },
   linkSettings: {},
   listeners: {
@@ -60,9 +63,6 @@ const graph = new GraphCanvas({
     },
     onContextMenu: (event, node) => {
       console.log("onContext", node);
-    },
-    onMove: (event, node) => {
-      console.log("move", node);
     },
   },
   root,

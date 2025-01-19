@@ -10,5 +10,6 @@ export function graphSettingsGetter<NodeData extends Record<string, unknown>>(
     dragPlaceCoefficient: settings?.dragPlaceCoefficient || dragPlaceCoefficientGetter,
     stickAfterDrag: settings?.stickAfterDrag || GRAPH_SETTINGS.stickAfterDrag,
     highlightByHover: settings?.highlightByHover || GRAPH_SETTINGS.highlightByHover,
+    minFading: settings?.minFading || GRAPH_SETTINGS.minFading,
   };
 }

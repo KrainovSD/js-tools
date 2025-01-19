@@ -24,7 +24,6 @@ import type {
   GraphCanvasLinkSettings,
   GraphCanvasListeners,
   GraphCanvasNodeSettings,
-  GraphCanvasSelection,
   GraphCanvasSettingInterface,
   GraphCanvasSimulation,
   GraphCanvasZoomEvent,
@@ -34,6 +33,8 @@ export class GraphCanvas<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > {
+  /** initial data */
+
   private nodes: NodeInterface<NodeData>[];
 
   private links: LinkInterface<NodeData, LinkData>[];
@@ -42,27 +43,15 @@ export class GraphCanvas<
 
   private height: number;
 
-  private areaRect: DOMRect | undefined;
-
-  private simulation: GraphCanvasSimulation<NodeData, LinkData> | undefined;
-
   private root: HTMLElement;
 
   private container: HTMLDivElement | undefined | null;
 
   private area: HTMLCanvasElement | null | undefined;
 
-  private context: CanvasRenderingContext2D | null | undefined;
-
-  private linksNode: GraphCanvasSelection | undefined;
-
-  private nodesNode: GraphCanvasSelection | undefined;
-
   private dpi = devicePixelRatio;
 
-  private areaTransform: d3.ZoomTransform = d3.zoomIdentity;
-
-  private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
+  /** settings */
 
   private graphSettings: Required<GraphCanvasSettingInterface<NodeData>>;
 
@@ -76,11 +65,29 @@ export class GraphCanvas<
 
   private listeners: GraphCanvasListeners<NodeData, LinkData>;
 
+  /** service */
+
+  private context: CanvasRenderingContext2D | null | undefined;
+
+  private simulation: GraphCanvasSimulation<NodeData, LinkData> | undefined;
+
+  private areaTransform: d3.ZoomTransform = d3.zoomIdentity;
+
+  private areaRect: DOMRect | undefined;
+
+  private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
+
   private simulationWorking: boolean = false;
 
   private isDragging: boolean = false;
 
   private eventAbortController: AbortController;
+
+  private highlightedNode: NodeInterface<NodeData> | null = null;
+
+  private highlightedNeighbors: Set<string | number> | null = null;
+
+  private fading: number = 0;
 
   constructor({
     links,
@@ -150,14 +157,6 @@ export class GraphCanvas<
     if (this.simulation) {
       this.simulation.stop();
       this.simulation = undefined;
-    }
-    if (this.linksNode) {
-      this.linksNode.remove();
-      this.linksNode = undefined;
-    }
-    if (this.nodesNode) {
-      this.nodesNode.remove();
-      this.nodesNode = undefined;
     }
 
     this.root.replaceChildren();
@@ -394,6 +393,10 @@ export class GraphCanvas<
         return void this.listeners.onDraw(this.context, this.areaTransform);
       }
 
+      if (this.highlightedNeighbors && this.highlightedNode) {
+        if (this.fading === 0) this.fading = 1;
+      }
+
       this.context.save();
       this.context.clearRect(0, 0, this.width, this.height);
       this.context.translate(this.areaTransform.x, this.areaTransform.y);
@@ -410,6 +413,13 @@ export class GraphCanvas<
       this.context.restore();
 
       this.listeners.onDrawFinished?.(this.context, this.areaTransform);
+
+      if (this.fading > this.graphSettings.minFading) {
+        this.fading -= 0.1;
+        requestAnimationFrame(() => {
+          this.draw();
+        });
+      }
     }
 
     function drawLink(
@@ -437,11 +447,25 @@ export class GraphCanvas<
         linkOptionsGetter,
       );
 
-      this.context.globalAlpha = linkOptions.alpha;
+      let alpha = linkOptions.alpha;
+      if (this.highlightedNeighbors && this.highlightedNode) {
+        if (
+          this.highlightedNode.id != link.source.id &&
+          this.highlightedNode.id != link.target.id
+        ) {
+          alpha = this.fading;
+        }
+
+        this.context.beginPath();
+      }
+
+      this.context.globalAlpha = alpha;
       this.context.strokeStyle = linkOptions.color;
       this.context.lineWidth = linkOptions.width;
       this.context.moveTo(link.source.x, link.source.y);
       this.context.lineTo(link.target.x, link.target.y);
+
+      if (this.highlightedNeighbors && this.highlightedNode) this.context.stroke();
     }
 
     function drawNode(
@@ -468,7 +492,15 @@ export class GraphCanvas<
         linkCount: node.linkCount,
       });
 
+      let alpha = nodeOptions.alpha;
+      if (this.highlightedNeighbors && this.highlightedNode) {
+        if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
+          alpha = this.fading;
+        }
+      }
+
       this.context.beginPath();
+      this.context.globalAlpha = alpha;
 
       /** text */
       if (nodeOptions.text) {
@@ -480,7 +512,6 @@ export class GraphCanvas<
       /** circle */
 
       this.context.strokeStyle = nodeOptions.colorOuter;
-      this.context.globalAlpha = nodeOptions.alpha;
       this.context.lineWidth = nodeOptions.width;
       this.context.moveTo(node.x + radius, node.y);
       this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
@@ -515,9 +546,52 @@ export class GraphCanvas<
   private initPointer() {
     if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
 
-    this.area.addEventListener("pointermove", () => {}, {
-      signal: this.eventAbortController.signal,
-    });
+    this.area.addEventListener(
+      "pointermove",
+      (event) => {
+        let currentNode: NodeInterface<NodeData> | undefined;
+
+        if (this.graphSettings.highlightByHover) {
+          currentNode = nodeByPointerGetter({
+            nodeCustomOptions: this.nodeSettings.options,
+            areaRect: this.areaRect,
+            areaTransform: this.areaTransform,
+            mouseEvent: event,
+            nodes: this.nodes,
+          });
+
+          if (currentNode && currentNode.neighbors && this.highlightedNode !== currentNode) {
+            this.highlightedNode = currentNode;
+            this.highlightedNeighbors = new Set(this.highlightedNode.neighbors);
+            requestAnimationFrame(() => {
+              this.draw();
+            });
+          } else if (!currentNode && this.highlightedNode) {
+            this.highlightedNode = null;
+            this.highlightedNeighbors = null;
+            requestAnimationFrame(() => {
+              this.draw();
+            });
+          }
+        }
+
+        if (!this.listeners.onMove) return;
+
+        if (!currentNode)
+          currentNode = nodeByPointerGetter({
+            nodeCustomOptions: this.nodeSettings.options,
+            areaRect: this.areaRect,
+            areaTransform: this.areaTransform,
+            mouseEvent: event,
+            nodes: this.nodes,
+          });
+
+        return void this.listeners.onMove(event, currentNode);
+      },
+      {
+        signal: this.eventAbortController.signal,
+      },
+    );
 
     this.area.addEventListener("dblclick", (event) => {
       if (!this.listeners.onDoubleClick) return;
