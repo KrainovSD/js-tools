@@ -1,4 +1,4 @@
-import type { GraphCanvasNodeSettings } from "../types";
+import type { GraphCanvasNodeSettings } from "../../types";
 import { nodeIdGetter } from "./node-id-getter";
 
 export function nodeSettingsGetter<NodeData extends Record<string, unknown>>(

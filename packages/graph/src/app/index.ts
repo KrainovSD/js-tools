@@ -49,14 +49,21 @@ const graph = new GraphCanvas({
     onSimulationEnd: () => {
       console.log("simulation ended");
     },
-    // onEndDragFinished: (event, sim, zoom) => {
-    //   const [_px, _py] = pointer(event, root.children[0]);
-    //   const px = (_px - zoom.x) / zoom.k;
-    //   const py = (_py - zoom.y) / zoom.k;
-
-    //   event.subject.fx = px;
-    //   event.subject.fy = py;
-    // },
+    onDoubleClick: (event, node) => {
+      console.log("dbclick", node);
+    },
+    onClick: (event, node) => {
+      console.log("onClick", node);
+    },
+    onWheelClick: (event, node) => {
+      console.log("onWheel", node);
+    },
+    onContextMenu: (event, node) => {
+      console.log("onContext", node);
+    },
+    onMove: (event, node) => {
+      console.log("move", node);
+    },
   },
   root,
 });

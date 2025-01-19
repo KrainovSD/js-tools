@@ -10,6 +10,7 @@ import {
   linkOptionsGetter,
   linkSettingsGetter,
   listenersGetter,
+  nodeByPointerGetter,
   nodeIterationExtractor,
   nodeOptionsGetter,
   nodeRadiusGetter,
@@ -518,20 +519,49 @@ export class GraphCanvas<
       signal: this.eventAbortController.signal,
     });
 
+    this.area.addEventListener("dblclick", (event) => {
+      if (!this.listeners.onDoubleClick) return;
+
+      const currentNode = nodeByPointerGetter({
+        nodeCustomOptions: this.nodeSettings.options,
+        areaRect: this.areaRect,
+        areaTransform: this.areaTransform,
+        mouseEvent: event,
+        nodes: this.nodes,
+      });
+
+      return void this.listeners.onDoubleClick(event, currentNode);
+    });
+
     this.area.addEventListener(
       "pointerup",
       (event) => {
         if (this.isDragging) return;
-        console.log("pointerup");
-
         if (event.button === 0) {
-          console.log("click");
+          if (!this.listeners.onClick) return;
+
+          const currentNode = nodeByPointerGetter({
+            nodeCustomOptions: this.nodeSettings.options,
+            areaRect: this.areaRect,
+            areaTransform: this.areaTransform,
+            mouseEvent: event,
+            nodes: this.nodes,
+          });
+
+          return void this.listeners.onClick(event, currentNode);
         }
         if (event.button === 1) {
-          console.log("middle click");
-        }
-        if (event.button === 2) {
-          console.log("right click");
+          if (!this.listeners.onWheelClick) return;
+
+          const currentNode = nodeByPointerGetter({
+            nodeCustomOptions: this.nodeSettings.options,
+            areaRect: this.areaRect,
+            areaTransform: this.areaTransform,
+            mouseEvent: event,
+            nodes: this.nodes,
+          });
+
+          return void this.listeners.onWheelClick(event, currentNode);
         }
       },
       {
@@ -542,7 +572,17 @@ export class GraphCanvas<
     this.area.addEventListener(
       "contextmenu",
       (event) => {
-        console.log("contextmenu");
+        if (!this.listeners.onContextMenu) return;
+
+        const currentNode = nodeByPointerGetter({
+          nodeCustomOptions: this.nodeSettings.options,
+          areaRect: this.areaRect,
+          areaTransform: this.areaTransform,
+          mouseEvent: event,
+          nodes: this.nodes,
+        });
+
+        return void this.listeners.onContextMenu(event, currentNode);
       },
       {
         signal: this.eventAbortController.signal,
@@ -564,7 +604,7 @@ export class GraphCanvas<
           if (!this.areaRect) return;
 
           const mouseEvent = event.sourceEvent as MouseEvent;
-          const [px, py] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
+          const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
 
           let index = 0;
 
@@ -589,7 +629,7 @@ export class GraphCanvas<
             });
             index++;
 
-            return this.graphSettings.dragPlaceCoefficient(node, px, py, radius);
+            return this.graphSettings.dragPlaceCoefficient(node, pointerX, pointerY, radius);
           });
         })
         .on("start", (event: GraphCanvasDragEvent<NodeData>) => {
@@ -603,9 +643,9 @@ export class GraphCanvas<
 
           if (!this.areaRect) return;
           const mouseEvent = event.sourceEvent as MouseEvent;
-          const [px, py] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
-          event.subject.fx = px;
-          event.subject.fy = py;
+          const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
+          event.subject.fx = pointerX;
+          event.subject.fy = pointerY;
 
           this.listeners.onMoveDragFinished?.(event, this.simulation, this.areaTransform);
         })
@@ -617,9 +657,13 @@ export class GraphCanvas<
           if (this.graphSettings.stickAfterDrag && this.areaRect) {
             if (!this.areaRect) return;
             const mouseEvent = event.sourceEvent as MouseEvent;
-            const [px, py] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
-            event.subject.fx = px;
-            event.subject.fy = py;
+            const [pointerX, pointerY] = pointerGetter(
+              mouseEvent,
+              this.areaRect,
+              this.areaTransform,
+            );
+            event.subject.fx = pointerX;
+            event.subject.fy = pointerY;
           } else {
             event.subject.fx = null;
             event.subject.fy = null;
@@ -633,16 +677,18 @@ export class GraphCanvas<
   private initZoom() {
     if (!this.area) throw new Error("bad init data");
 
-    d3.select(this.area).call(
-      d3
-        .zoom<HTMLCanvasElement, unknown>()
-        .scaleExtent(this.graphSettings.zoomExtent)
-        .on("zoom", (event: GraphCanvasZoomEvent) => {
-          this.listeners.onZoom?.(event);
-          this.areaTransform = event.transform;
+    d3.select(this.area)
+      .call(
+        d3
+          .zoom<HTMLCanvasElement, unknown>()
+          .scaleExtent(this.graphSettings.zoomExtent)
+          .on("zoom", (event: GraphCanvasZoomEvent) => {
+            this.listeners.onZoom?.(event);
+            this.areaTransform = event.transform;
 
-          if (!this.simulationWorking) requestAnimationFrame(() => this.draw());
-        }),
-    );
+            if (!this.simulationWorking) requestAnimationFrame(() => this.draw());
+          }),
+      )
+      .on("dblclick.zoom", null);
   }
 }

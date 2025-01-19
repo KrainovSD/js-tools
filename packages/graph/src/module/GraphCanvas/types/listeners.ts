@@ -14,6 +14,11 @@ export type GraphCanvasListeners<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
+  onContextMenu?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
+  onClick?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
+  onDoubleClick?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
+  onWheelClick?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
+  onMove?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
   onZoom?: (event: GraphCanvasZoomEvent) => void;
   onDragSubject?: (
     event: GraphCanvasDragEvent<NodeData>,

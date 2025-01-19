@@ -1,7 +1,7 @@
 import type { ZoomTransform } from "d3";
 import { checkType } from "@/lib";
 import type { NodeInterface } from "@/types";
-import type { GraphCanvasNodeIterationProps } from "../types";
+import type { GraphCanvasNodeIterationProps } from "../../types";
 
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,

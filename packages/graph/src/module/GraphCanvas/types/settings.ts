@@ -2,6 +2,7 @@ import type { ZoomTransform } from "d3";
 import type { LinkInterface, NodeInterface } from "@/types";
 
 export type GraphCanvasSettingInterface<NodeData extends Record<string, unknown>> = {
+  highlightByHover?: boolean;
   stickAfterDrag?: boolean;
   zoomExtent?: [number, number];
   dragPlaceCoefficient?: (

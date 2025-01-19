@@ -1,17 +1,16 @@
 import type { NodeInterface } from "@/types";
+import { isOverlapsNode } from "./is-overlaps-node";
 
 export function dragPlaceCoefficientGetter<NodeData extends Record<string, unknown>>(
   node: NodeInterface<NodeData>,
-  pxEvent: number,
-  pyEvent: number,
+  pointerX: number,
+  pointerY: number,
   radius: number,
 ): number | undefined {
   if (!node.x || !node.y) return undefined;
 
-  const isOverX = node.x - radius <= pxEvent && pxEvent <= node.x + radius;
-  const isOverY = node.y - radius <= pyEvent && pyEvent <= node.y + radius;
-
-  if (isOverX && isOverY) return (node.x - pxEvent) ** 2 + (node.y - pyEvent) ** 2;
+  if (isOverlapsNode(node, radius, pointerX, pointerY))
+    return (node.x - pointerX) ** 2 + (node.y - pointerY) ** 2;
 
   return undefined;
 }

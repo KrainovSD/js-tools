@@ -20,6 +20,8 @@ export const FORCE_SETTINGS = {
 
 export const GRAPH_SETTINGS = {
   zoomExtent: [0.1, 10] as [number, number],
+  stickAfterDrag: false,
+  highlightByHover: true,
 };
 
 export const NODE_SETTINGS = {

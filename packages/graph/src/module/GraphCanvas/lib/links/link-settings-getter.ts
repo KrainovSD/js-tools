@@ -1,4 +1,4 @@
-import type { GraphCanvasLinkSettings } from "../types";
+import type { GraphCanvasLinkSettings } from "../../types";
 
 export function linkSettingsGetter<
   NodeData extends Record<string, unknown>,

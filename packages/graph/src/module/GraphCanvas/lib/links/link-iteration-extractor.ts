@@ -1,7 +1,7 @@
 import type { ZoomTransform } from "d3";
 import { checkType } from "@/lib";
 import type { LinkInterface } from "@/types";
-import type { GraphCanvasLinkIterationProps } from "../types";
+import type { GraphCanvasLinkIterationProps } from "../../types";
 
 export function linkIterationExtractor<
   NodeData extends Record<string, unknown>,

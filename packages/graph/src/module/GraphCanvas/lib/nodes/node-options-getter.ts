@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import type { NodeInterface } from "@/types";
-import { NODE_SETTINGS } from "../constants";
-import type { GraphCanvasNodeOptions } from "../types";
+import { NODE_SETTINGS } from "../../constants";
+import type { GraphCanvasNodeOptions } from "../../types";
 
 const color = d3.scaleOrdinal(d3.schemeCategory10);
 
