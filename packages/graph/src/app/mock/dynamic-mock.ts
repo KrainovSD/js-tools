@@ -1,9 +1,9 @@
-import type { GraphInterface } from "@/module/Graph";
+import type { GraphCanvasInterface } from "@/module/GraphCanvas";
 import type { LinkData, NodeData } from "../types";
 
 export function createNewDynamicMock(
-  oldState: Pick<GraphInterface<NodeData, LinkData>, "nodes" | "links">,
-): Pick<GraphInterface<NodeData, LinkData>, "nodes" | "links"> {
+  oldState: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links">,
+): Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> {
   const { nodes, links } = oldState;
   const id = nodes.length;
   const target = Math.round(Math.random() * (id - 1));

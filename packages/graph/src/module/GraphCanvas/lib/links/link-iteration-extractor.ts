@@ -1,4 +1,4 @@
-import type { ZoomTransform } from "d3";
+import type { ZoomTransform } from "d3-zoom";
 import { checkType } from "@/lib";
 import type { LinkInterface } from "@/types";
 import type { GraphCanvasLinkIterationProps } from "../../types";

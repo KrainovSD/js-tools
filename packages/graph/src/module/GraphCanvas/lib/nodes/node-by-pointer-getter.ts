@@ -1,4 +1,4 @@
-import type { ZoomTransform } from "d3";
+import type { ZoomTransform } from "d3-zoom";
 import type { NodeInterface } from "@/types";
 import type { GraphCanvasNodeIterationProps, GraphCanvasNodeOptions } from "../../types";
 import { pointerGetter } from "../pointer-getter";

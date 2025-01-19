@@ -1,4 +1,5 @@
-import type { D3DragEvent, D3ZoomEvent, ZoomTransform } from "d3";
+import type { D3DragEvent } from "d3-drag";
+import type { D3ZoomEvent, ZoomTransform } from "d3-zoom";
 import type { NodeInterface } from "@/types";
 import type { GraphCanvasSimulation } from "./graph";
 

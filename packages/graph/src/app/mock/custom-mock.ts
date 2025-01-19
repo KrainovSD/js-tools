@@ -1,4 +1,4 @@
-import type { GraphInterface } from "@/module/Graph";
+import type { GraphCanvasInterface } from "@/module/GraphCanvas";
 import type { LinkData, NodeData } from "../types";
 
 function randomNumber(min: number, max: number) {
@@ -9,7 +9,7 @@ const NODES_COUNT = 20000;
 const GROUPS_COUNT = 10;
 const EXISTING_LINKS = new Map<number, number[]>();
 
-export const customMock: Pick<GraphInterface<NodeData, LinkData>, "nodes" | "links"> = {
+export const customMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
   links: Array.from({ length: NODES_COUNT }, () => {
     let source: number | undefined;
     let target: number | undefined;

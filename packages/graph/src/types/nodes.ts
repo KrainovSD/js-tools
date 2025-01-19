@@ -1,4 +1,4 @@
-import type { SimulationNodeDatum } from "d3";
+import type { SimulationNodeDatum } from "d3-force";
 
 export interface NodeInterface<NodeData extends Record<string, unknown>>
   extends SimulationNodeDatum {

@@ -1,4 +1,4 @@
-import type { ZoomTransform } from "d3";
+import type { ZoomTransform } from "d3-zoom";
 
 export function pointerGetter(
   mouseEvent: MouseEvent,

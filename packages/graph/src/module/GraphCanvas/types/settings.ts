@@ -1,4 +1,4 @@
-import type { ZoomTransform } from "d3";
+import type { ZoomTransform } from "d3-zoom";
 import type { LinkInterface, NodeInterface } from "@/types";
 
 export type GraphCanvasSettingInterface<NodeData extends Record<string, unknown>> = {

@@ -1,4 +1,17 @@
-import * as d3 from "d3";
+import { least } from "d3-array";
+import { drag as d3Drag } from "d3-drag";
+import {
+  type ForceLink,
+  forceCenter,
+  forceCollide,
+  forceLink,
+  forceManyBody,
+  forceSimulation,
+  forceX,
+  forceY,
+} from "d3-force";
+import { create as d3Create, select as d3Select } from "d3-selection";
+import { type ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
 import { debounce } from "@/lib";
 import type { LinkInterface } from "@/types/links";
 import type { NodeInterface } from "@/types/nodes";
@@ -71,7 +84,7 @@ export class GraphCanvas<
 
   private simulation: GraphCanvasSimulation<NodeData, LinkData> | undefined;
 
-  private areaTransform: d3.ZoomTransform = d3.zoomIdentity;
+  private areaTransform: ZoomTransform = zoomIdentity;
 
   private areaRect: DOMRect | undefined;
 
@@ -185,8 +198,7 @@ export class GraphCanvas<
         .nodes(this.nodes)
         .force(
           "link",
-          d3
-            .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
+          forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
             .id(this.nodeSettings.idGetter)
             .distance(this.forceSettings.linkDistance)
             .strength(this.forceSettings.linkStrength)
@@ -211,11 +223,11 @@ export class GraphCanvas<
       .alpha(1)
       .force(
         "center",
-        d3
-          .forceCenter<
-            NodeInterface<NodeData>
-          >(this.forceSettings.centerPosition.x || this.width / 2, this.forceSettings.centerPosition.y || this.height / 2)
-          .strength(this.forceSettings.centerStrength),
+
+        forceCenter<NodeInterface<NodeData>>(
+          this.forceSettings.centerPosition.x || this.width / 2,
+          this.forceSettings.centerPosition.y || this.height / 2,
+        ).strength(this.forceSettings.centerStrength),
       )
       .restart();
 
@@ -233,14 +245,16 @@ export class GraphCanvas<
 
   private initSimulation() {
     if (!this.simulation) {
-      this.simulation = d3
-        .forceSimulation<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>()
+      this.simulation = forceSimulation<
+        NodeInterface<NodeData>,
+        LinkInterface<NodeData, LinkData>
+      >()
         .nodes(this.nodes)
         .force(
           "link",
-          d3
-            .forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-            .id(this.nodeSettings.idGetter),
+          forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links).id(
+            this.nodeSettings.idGetter,
+          ),
         )
         .on("tick", () => {
           this.simulationWorking = true;
@@ -257,7 +271,7 @@ export class GraphCanvas<
   private initSimulationForces() {
     if (!this.simulation) return;
 
-    const linkForce = this.simulation.force("link") as d3.ForceLink<
+    const linkForce = this.simulation.force("link") as ForceLink<
       NodeInterface<NodeData>,
       LinkInterface<NodeData, LinkData>
     >;
@@ -269,31 +283,29 @@ export class GraphCanvas<
     this.simulation
       .force(
         "x",
-        d3
-          .forceX<NodeInterface<NodeData>>(this.forceSettings.xForce)
-          .strength(this.forceSettings.xStrength),
+        forceX<NodeInterface<NodeData>>(this.forceSettings.xForce).strength(
+          this.forceSettings.xStrength,
+        ),
       )
       .force(
         "y",
-        d3
-          .forceY<NodeInterface<NodeData>>(this.forceSettings.yForce)
-          .strength(this.forceSettings.yStrength),
+        forceY<NodeInterface<NodeData>>(this.forceSettings.yForce).strength(
+          this.forceSettings.yStrength,
+        ),
       )
       .force(
         "charge",
-        d3
-          .forceManyBody<NodeInterface<NodeData>>()
+        forceManyBody<NodeInterface<NodeData>>()
           .strength(this.forceSettings.chargeStrength)
           .distanceMax(this.forceSettings.chargeDistanceMax)
           .distanceMin(this.forceSettings.chargeDistanceMin),
       )
       .force(
         "center",
-        d3
-          .forceCenter<
-            NodeInterface<NodeData>
-          >(this.forceSettings.centerPosition.x || this.width / 2, this.forceSettings.centerPosition.y || this.height / 2)
-          .strength(this.forceSettings.centerStrength),
+        forceCenter<NodeInterface<NodeData>>(
+          this.forceSettings.centerPosition.x || this.width / 2,
+          this.forceSettings.centerPosition.y || this.height / 2,
+        ).strength(this.forceSettings.centerStrength),
       );
 
     this.initCollideForce();
@@ -318,8 +330,7 @@ export class GraphCanvas<
     else if (!this.simulation.force("collide"))
       this.simulation.force(
         "collide",
-        d3
-          .forceCollide<NodeInterface<NodeData>>()
+        forceCollide<NodeInterface<NodeData>>()
           .radius((node, index) => {
             if (this.forceSettings.collideRadius) {
               return nodeIterationExtractor(
@@ -357,8 +368,7 @@ export class GraphCanvas<
 
   private initArea() {
     if (!this.area || !this.context || !this.container) {
-      this.container = d3
-        .create("div")
+      this.container = d3Create("div")
         .attr("style", "padding: 0 !important; width: 100%; height: 100%;")
         .node();
       if (!this.container) throw new Error("couldn't create container");
@@ -368,8 +378,7 @@ export class GraphCanvas<
       this.width = width;
       this.height = height;
 
-      this.area = d3
-        .create("canvas")
+      this.area = d3Create("canvas")
         .attr("width", this.dpi * this.width)
         .attr("height", this.dpi * this.height)
         .attr("style", `width: 100%; height: 100%; border: none !important;`)
@@ -667,9 +676,8 @@ export class GraphCanvas<
   private initDnd() {
     if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
 
-    d3.select(this.area).call(
-      d3
-        .drag<HTMLCanvasElement, unknown>()
+    d3Select(this.area).call(
+      d3Drag<HTMLCanvasElement, unknown>()
         .subject((event: GraphCanvasDragEvent<NodeData>) => {
           if (this.listeners.onDragSubject) {
             return this.listeners.onDragSubject(event, this.areaTransform, this.nodes);
@@ -682,7 +690,7 @@ export class GraphCanvas<
 
           let index = 0;
 
-          return d3.least(this.nodes, (node) => {
+          return least(this.nodes, (node) => {
             if (!node.x || !node.y) return undefined;
 
             const nodeOptions = nodeIterationExtractor(
@@ -751,10 +759,9 @@ export class GraphCanvas<
   private initZoom() {
     if (!this.area) throw new Error("bad init data");
 
-    d3.select(this.area)
+    d3Select(this.area)
       .call(
-        d3
-          .zoom<HTMLCanvasElement, unknown>()
+        zoom<HTMLCanvasElement, unknown>()
           .scaleExtent(this.graphSettings.zoomExtent)
           .on("zoom", (event: GraphCanvasZoomEvent) => {
             this.listeners.onZoom?.(event);

@@ -1,4 +1,4 @@
-import type { Selection, Simulation } from "d3";
+import type { Simulation } from "d3-force";
 import type { LinkInterface, NodeInterface } from "@/types";
 import type { GraphCanvasListeners } from "./listeners";
 import type {
@@ -26,5 +26,3 @@ export type GraphCanvasSimulation<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = Simulation<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>;
-
-export type GraphCanvasSelection = Selection<SVGGElement, unknown, HTMLElement, unknown>;

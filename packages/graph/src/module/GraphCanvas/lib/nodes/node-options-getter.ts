@@ -1,15 +1,16 @@
-import * as d3 from "d3";
+import type { ZoomTransform } from "d3-zoom";
+import { colorGetter } from "@/lib";
 import type { NodeInterface } from "@/types";
 import { NODE_SETTINGS } from "../../constants";
 import type { GraphCanvasNodeOptions } from "../../types";
 
-const color = d3.scaleOrdinal(d3.schemeCategory10);
+const color = colorGetter();
 
 export function nodeOptionsGetter<NodeData extends Record<string, unknown>>(
   node: NodeInterface<NodeData>,
   _: number,
   __: NodeInterface<NodeData>[],
-  transform?: d3.ZoomTransform,
+  transform?: ZoomTransform,
 ): Required<GraphCanvasNodeOptions> {
   return {
     ...NODE_SETTINGS,

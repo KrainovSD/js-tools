@@ -8,7 +8,7 @@ import type { LinkData, NodeData } from "./types";
 const settings = {
   initialRadius: 4,
   flexibleRadius: true,
-  highlightByHover: true,
+  highlightByHover: false,
 };
 
 let data: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
