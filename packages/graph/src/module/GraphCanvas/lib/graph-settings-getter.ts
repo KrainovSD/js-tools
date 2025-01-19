@@ -8,5 +8,6 @@ export function graphSettingsGetter<NodeData extends Record<string, unknown>>(
   return {
     zoomExtent: settings?.zoomExtent || GRAPH_SETTINGS.zoomExtent,
     dragPlaceCoefficient: settings?.dragPlaceCoefficient || dragPlaceCoefficientGetter,
+    stickAfterDrag: settings?.stickAfterDrag || false,
   };
 }

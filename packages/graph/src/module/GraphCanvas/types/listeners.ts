@@ -16,34 +16,25 @@ export type GraphCanvasListeners<
 > = {
   onZoom?: (event: GraphCanvasZoomEvent) => void;
   onDragSubject?: (
-    event: unknown,
+    event: GraphCanvasDragEvent<NodeData>,
     transform: ZoomTransform,
     nodes: NodeInterface<NodeData>[],
   ) => NodeInterface<NodeData> | undefined;
-  onStartDrag?: (
-    event: GraphCanvasDragEvent<NodeData>,
-    simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
-  ) => void;
-  onMoveDrag?: (
-    event: GraphCanvasDragEvent<NodeData>,
-    simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
-  ) => void;
-  onEndDrag?: (
-    event: GraphCanvasDragEvent<NodeData>,
-    simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
-  ) => void;
   onDraw?: (canvasContext: CanvasRenderingContext2D, transform: ZoomTransform) => void;
   onStartDragFinished?: (
     event: GraphCanvasDragEvent<NodeData>,
     simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
+    transform: ZoomTransform,
   ) => void;
   onMoveDragFinished?: (
     event: GraphCanvasDragEvent<NodeData>,
     simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
+    transform: ZoomTransform,
   ) => void;
   onEndDragFinished?: (
     event: GraphCanvasDragEvent<NodeData>,
     simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
+    transform: ZoomTransform,
   ) => void;
   onDrawFinished?: (canvasContext: CanvasRenderingContext2D, transform: ZoomTransform) => void;
   onSimulationEnd?: (simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined) => void;

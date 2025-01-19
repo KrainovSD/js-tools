@@ -14,6 +14,7 @@ import {
   nodeOptionsGetter,
   nodeRadiusGetter,
   nodeSettingsGetter,
+  pointerGetter,
 } from "./lib";
 import type {
   GraphCanvasDragEvent,
@@ -40,9 +41,13 @@ export class GraphCanvas<
 
   private height: number;
 
+  private areaRect: DOMRect | undefined;
+
   private simulation: GraphCanvasSimulation<NodeData, LinkData> | undefined;
 
   private root: HTMLElement;
+
+  private container: HTMLDivElement | undefined | null;
 
   private area: HTMLCanvasElement | null | undefined;
 
@@ -72,6 +77,8 @@ export class GraphCanvas<
 
   private simulationWorking: boolean = false;
 
+  private isDragging: boolean = false;
+
   private eventAbortController: AbortController;
 
   constructor({
@@ -88,7 +95,6 @@ export class GraphCanvas<
     root.style.overflow = "hidden";
 
     this.root = root;
-    const { width, height } = root.getBoundingClientRect();
 
     this.forceSettings = forceSettingsGetter(forceSettings);
     this.linkSettings = linkSettingsGetter(linkSettings);
@@ -100,8 +106,8 @@ export class GraphCanvas<
 
     this.nodes = nodes;
     this.links = links;
-    this.height = height;
-    this.width = width;
+    this.height = 0;
+    this.width = 0;
     this.draw = this.initDraw();
 
     this.init();
@@ -155,6 +161,8 @@ export class GraphCanvas<
 
     this.root.replaceChildren();
     this.area = undefined;
+    this.context = undefined;
+    this.container = undefined;
     this.eventAbortController.abort();
     this.eventAbortController = new AbortController();
   }
@@ -188,12 +196,39 @@ export class GraphCanvas<
     }
   }
 
+  private updateSize() {
+    if (!this.area || !this.simulation || !this.container) return;
+
+    const { width, height } = this.container.getBoundingClientRect();
+    this.width = width;
+    this.height = height;
+    this.area.width = this.dpi * width;
+    this.area.height = this.dpi * height;
+    this.areaRect = this.area.getBoundingClientRect();
+
+    this.simulation
+      .stop()
+      .alpha(1)
+      .force(
+        "center",
+        d3
+          .forceCenter<
+            NodeInterface<NodeData>
+          >(this.forceSettings.centerPosition.x || this.width / 2, this.forceSettings.centerPosition.y || this.height / 2)
+          .strength(this.forceSettings.centerStrength),
+      )
+      .restart();
+
+    if (!this.simulationWorking) this.draw();
+  }
+
   private init() {
-    this.initSimulation();
     this.initArea();
+    this.initSimulation();
     this.initDnd();
     this.initZoom();
     this.initResize();
+    this.initPointer();
   }
 
   private initSimulation() {
@@ -321,21 +356,32 @@ export class GraphCanvas<
   }
 
   private initArea() {
-    if (!this.area || !this.context) {
+    if (!this.area || !this.context || !this.container) {
+      this.container = d3
+        .create("div")
+        .attr("style", "padding: 0 !important; width: 100%; height: 100%;")
+        .node();
+      if (!this.container) throw new Error("couldn't create container");
+      this.root.appendChild(this.container);
+
+      const { width, height } = this.root.getBoundingClientRect();
+      this.width = width;
+      this.height = height;
+
       this.area = d3
         .create("canvas")
         .attr("width", this.dpi * this.width)
         .attr("height", this.dpi * this.height)
-        .attr("style", `width: 100%; height: 100%; `)
+        .attr("style", `width: 100%; height: 100%; border: none !important;`)
         .node();
 
       if (!this.area) throw new Error("couldn't create canvas");
+      this.container.appendChild(this.area);
+      this.areaRect = this.area.getBoundingClientRect();
 
       this.context = this.area.getContext("2d");
       if (!this.context) throw new Error("couldn't create canvas context");
       this.context.scale(this.dpi, this.dpi);
-
-      this.root.appendChild(this.area);
     }
   }
 
@@ -451,28 +497,7 @@ export class GraphCanvas<
     if (!this.area) throw new Error("bad init data");
 
     const resize = debounce(() => {
-      if (!this.area || !this.simulation) return;
-
-      const { width, height } = this.area.getBoundingClientRect();
-      this.width = width;
-      this.height = height;
-      this.area.width = this.dpi * width;
-      this.area.height = this.dpi * height;
-
-      this.simulation
-        .stop()
-        .alpha(1)
-        .force(
-          "center",
-          d3
-            .forceCenter<
-              NodeInterface<NodeData>
-            >(this.forceSettings.centerPosition.x || this.width / 2, this.forceSettings.centerPosition.y || this.height / 2)
-            .strength(this.forceSettings.centerStrength),
-        )
-        .restart();
-
-      if (!this.simulationWorking) this.draw();
+      this.updateSize();
     }, 10);
 
     window.addEventListener(
@@ -486,11 +511,44 @@ export class GraphCanvas<
     );
   }
 
-  // private initClick() {
-  //   if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
+  private initPointer() {
+    if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
 
-  //   d3.select(this.area).call(d3.click);
-  // }
+    this.area.addEventListener("pointermove", () => {}, {
+      signal: this.eventAbortController.signal,
+    });
+
+    this.area.addEventListener(
+      "pointerup",
+      (event) => {
+        if (this.isDragging) return;
+        console.log("pointerup");
+
+        if (event.button === 0) {
+          console.log("click");
+        }
+        if (event.button === 1) {
+          console.log("middle click");
+        }
+        if (event.button === 2) {
+          console.log("right click");
+        }
+      },
+      {
+        signal: this.eventAbortController.signal,
+      },
+    );
+
+    this.area.addEventListener(
+      "contextmenu",
+      (event) => {
+        console.log("contextmenu");
+      },
+      {
+        signal: this.eventAbortController.signal,
+      },
+    );
+  }
 
   private initDnd() {
     if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
@@ -498,14 +556,15 @@ export class GraphCanvas<
     d3.select(this.area).call(
       d3
         .drag<HTMLCanvasElement, unknown>()
-        .subject((event) => {
+        .subject((event: GraphCanvasDragEvent<NodeData>) => {
           if (this.listeners.onDragSubject) {
             return this.listeners.onDragSubject(event, this.areaTransform, this.nodes);
           }
 
-          const [_px, _py] = d3.pointer(event, this.area);
-          const px = (_px - this.areaTransform.x) / this.areaTransform.k;
-          const py = (_py - this.areaTransform.y) / this.areaTransform.k;
+          if (!this.areaRect) return;
+
+          const mouseEvent = event.sourceEvent as MouseEvent;
+          const [px, py] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
 
           let index = 0;
 
@@ -534,41 +593,39 @@ export class GraphCanvas<
           });
         })
         .on("start", (event: GraphCanvasDragEvent<NodeData>) => {
-          if (this.listeners.onStartDrag) {
-            return void this.listeners.onStartDrag(event, this.simulation);
-          }
-
-          if (!event.active && this.simulation) this.simulation.alphaTarget(0.3).restart();
-
-          event.subject.fx = event.subject.x;
-          event.subject.fy = event.subject.y;
-
-          this.listeners.onStartDragFinished?.(event, this.simulation);
+          this.listeners.onStartDragFinished?.(event, this.simulation, this.areaTransform);
         })
         .on("drag", (event: GraphCanvasDragEvent<NodeData>) => {
-          if (this.listeners.onMoveDrag) {
-            return void this.listeners.onMoveDrag(event, this.simulation);
+          if (!this.isDragging) {
+            this.isDragging = true;
+            if (this.simulation) this.simulation.alphaTarget(0.3).restart();
           }
 
-          const [_px, _py] = d3.pointer(event, this.area);
-          const px = (_px - this.areaTransform.x) / this.areaTransform.k;
-          const py = (_py - this.areaTransform.y) / this.areaTransform.k;
-
+          if (!this.areaRect) return;
+          const mouseEvent = event.sourceEvent as MouseEvent;
+          const [px, py] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
           event.subject.fx = px;
           event.subject.fy = py;
 
-          this.listeners.onMoveDragFinished?.(event, this.simulation);
+          this.listeners.onMoveDragFinished?.(event, this.simulation, this.areaTransform);
         })
         .on("end", (event: GraphCanvasDragEvent<NodeData>) => {
-          if (this.listeners.onEndDrag) {
-            return void this.listeners.onEndDrag(event, this.simulation);
-          }
+          this.isDragging = false;
 
           if (!event.active && this.simulation) this.simulation.alphaTarget(0);
-          event.subject.fx = null;
-          event.subject.fy = null;
 
-          this.listeners.onEndDragFinished?.(event, this.simulation);
+          if (this.graphSettings.stickAfterDrag && this.areaRect) {
+            if (!this.areaRect) return;
+            const mouseEvent = event.sourceEvent as MouseEvent;
+            const [px, py] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
+            event.subject.fx = px;
+            event.subject.fy = py;
+          } else {
+            event.subject.fx = null;
+            event.subject.fy = null;
+          }
+
+          this.listeners.onEndDragFinished?.(event, this.simulation, this.areaTransform);
         }),
     );
   }

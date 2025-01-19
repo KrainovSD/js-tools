@@ -2,8 +2,9 @@ import type { ZoomTransform } from "d3";
 import type { LinkInterface, NodeInterface } from "@/types";
 
 export type GraphCanvasSettingInterface<NodeData extends Record<string, unknown>> = {
+  stickAfterDrag?: boolean;
   zoomExtent?: [number, number];
-  dragPlaceCoefficient: (
+  dragPlaceCoefficient?: (
     node: NodeInterface<NodeData>,
     pxEvent: number,
     pyEvent: number,

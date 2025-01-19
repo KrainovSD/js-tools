@@ -41,11 +41,22 @@ const graph = new GraphCanvas({
       text: transform && node.data?.name && transform.k > 2 ? String(node.data?.name) : undefined,
     }),
   },
+  graphSettings: {
+    // stickAfterDrag: true,
+  },
   linkSettings: {},
   listeners: {
     onSimulationEnd: () => {
       console.log("simulation ended");
     },
+    // onEndDragFinished: (event, sim, zoom) => {
+    //   const [_px, _py] = pointer(event, root.children[0]);
+    //   const px = (_px - zoom.x) / zoom.k;
+    //   const py = (_py - zoom.y) / zoom.k;
+
+    //   event.subject.fx = px;
+    //   event.subject.fy = py;
+    // },
   },
   root,
 });
