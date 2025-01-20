@@ -56,10 +56,15 @@ export type GraphCanvasNodeOptions = {
   alpha?: number;
   colorOuter?: string;
   colorInner?: string;
+  textVisible?: boolean;
   text?: string | null;
-  font?: string;
-  fontColor?: string;
-  fontAlign?: CanvasTextAlign;
+  textShiftY?: number;
+  textShiftX?: number;
+  textFont?: string;
+  textSize?: number;
+  textColor?: string;
+  textAlign?: CanvasTextAlign;
+  textWidth?: number;
 };
 
 export type GraphCanvasNodeIterationProps<

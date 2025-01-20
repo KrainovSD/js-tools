@@ -8,3 +8,5 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   neighbors?: (string | number)[];
   data?: NodeData;
 }
+
+export type CachedNodeTextInterface = Record<string | number, string[]>;

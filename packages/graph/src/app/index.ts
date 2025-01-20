@@ -3,6 +3,7 @@ import { GraphCanvas, type GraphCanvasInterface } from "@/module/GraphCanvas";
 import "./global.css";
 import { getLinkCount, getNodeNeighbors } from "./lib";
 import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
+import * as tasks from "./mock/tasks.json";
 import type { LinkData, NodeData } from "./types";
 
 const settings = {
@@ -28,7 +29,7 @@ const proxy = new Proxy(
     },
   },
 );
-proxy.data = d3Mock;
+proxy.data = tasks;
 
 const root = document.querySelector<HTMLElement>("div#container");
 if (!root) throw new Error("hasn't root");
@@ -37,10 +38,10 @@ const graph = new GraphCanvas({
   links: data.links,
   nodes: data.nodes,
   nodeSettings: {
-    options: (node, _, __, transform) => ({
+    options: (node) => ({
       initialRadius: settings.initialRadius,
       flexibleRadius: settings.flexibleRadius,
-      text: transform && node.data?.name && transform.k > 2 ? String(node.data?.name) : undefined,
+      text: String(node.data?.name),
     }),
   },
   graphSettings: {

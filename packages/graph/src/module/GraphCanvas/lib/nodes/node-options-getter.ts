@@ -15,9 +15,7 @@ export function nodeOptionsGetter<NodeData extends Record<string, unknown>>(
   return {
     ...NODE_SETTINGS,
     colorInner: color(String(node.group || "_DEFAULT")),
-    text:
-      transform && node.id != undefined && transform.k > NODE_SETTINGS.zoomTextBorder
-        ? String(node.id)
-        : null,
+    textVisible: Boolean(transform && transform.k > NODE_SETTINGS.zoomTextBorder),
+    text: node.id != undefined ? String(node.id) : null,
   };
 }

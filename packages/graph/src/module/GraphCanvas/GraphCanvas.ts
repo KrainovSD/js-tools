@@ -14,9 +14,10 @@ import { create as d3Create, select as d3Select } from "d3-selection";
 import { type ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
 import { debounce } from "@/lib";
 import type { LinkInterface } from "@/types/links";
-import type { NodeInterface } from "@/types/nodes";
+import type { CachedNodeTextInterface, NodeInterface } from "@/types/nodes";
 import { FORCE_SETTINGS } from "./constants";
 import {
+  drawText,
   forceSettingsGetter,
   graphSettingsGetter,
   linkIterationExtractor,
@@ -89,6 +90,8 @@ export class GraphCanvas<
   private areaRect: DOMRect | undefined;
 
   private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
+
+  private cachedNodeText: CachedNodeTextInterface = {};
 
   private simulationWorking: boolean = false;
 
@@ -512,11 +515,20 @@ export class GraphCanvas<
       this.context.globalAlpha = alpha;
 
       /** text */
-      if (nodeOptions.text) {
-        this.context.font = nodeOptions.font;
-        this.context.fillStyle = nodeOptions.fontColor;
-        this.context.textAlign = nodeOptions.fontAlign;
-        this.context.fillText(nodeOptions.text, node.x, node.y + radius + 10);
+      if (nodeOptions.textVisible && nodeOptions.text) {
+        drawText({
+          id: node.id,
+          cachedNodeText: this.cachedNodeText,
+          context: this.context,
+          text: nodeOptions.text,
+          textAlign: nodeOptions.textAlign,
+          textColor: nodeOptions.textColor,
+          textFont: nodeOptions.textFont,
+          textSize: nodeOptions.textSize,
+          x: node.x + nodeOptions.textShiftX,
+          y: node.y + radius + nodeOptions.textShiftY,
+          maxWidth: nodeOptions.textWidth,
+        });
       }
       /** circle */
 
