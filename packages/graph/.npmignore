@@ -18,6 +18,7 @@ index.html
 
 node_modules/
 src/
+tmp/
 .github/
 .husky/
 .vscode/
