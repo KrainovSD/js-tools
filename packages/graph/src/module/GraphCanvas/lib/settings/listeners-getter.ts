@@ -1,4 +1,4 @@
-import type { GraphCanvasListeners } from "../types";
+import type { GraphCanvasListeners } from "../../types";
 
 export function listenersGetter<
   NodeData extends Record<string, unknown>,

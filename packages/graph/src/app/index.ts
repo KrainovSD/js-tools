@@ -7,7 +7,7 @@ import * as tasks from "./mock/tasks.json";
 import type { LinkData, NodeData } from "./types";
 
 const settings = {
-  initialRadius: 4,
+  radiusInitial: 4,
   flexibleRadius: true,
   highlightByHover: false,
 };
@@ -39,7 +39,7 @@ const graph = new GraphCanvas({
   nodes: data.nodes,
   nodeSettings: {
     options: (node) => ({
-      initialRadius: settings.initialRadius,
+      radiusInitial: settings.radiusInitial,
       flexibleRadius: settings.flexibleRadius,
       text: String(node.data?.name),
     }),
@@ -181,121 +181,120 @@ document.querySelectorAll<HTMLInputElement>(`input[type="radio"`).forEach((i) =>
   let radiusCoefficient: number = 5;
   let radiusFactor: number = 1;
 
-  document
-    .querySelector("#force")
-    ?.querySelectorAll("input")
-    ?.forEach?.((input) => {
-      input.addEventListener("input", () => {
-        switch (input.id) {
-          case "central_force": {
-            centralForce = +input.value;
-            break;
-          }
-          case "repel_force": {
-            repelForce = +input.value;
-            break;
-          }
-          case "link_force": {
-            linkForce = +input.value;
-            break;
-          }
-          case "link_distance": {
-            linkDistance = +input.value;
-            break;
-          }
-          case "x_force": {
-            xForce = +input.value;
-            break;
-          }
-          case "y_force": {
-            yForce = +input.value;
-            break;
-          }
-          case "radius_coefficient": {
-            radiusCoefficient = +input.value;
-            break;
-          }
-          case "radius_factor": {
-            radiusFactor = +input.value;
-            break;
-          }
-          case "collide": {
-            isCollideActive = input.checked;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
+  const forceAdditional =
+    document.querySelector("#force-additional")?.querySelectorAll("input") || [];
+  const forceMain = document.querySelector("#force")?.querySelectorAll("input") || [];
 
-        graph.changeSettings({
-          forceSettings: {
-            centerStrength: centralForce,
-            chargeStrength: repelForce * -1,
-            linkStrength: linkForce,
-            linkDistance,
-            collideOn: isCollideActive,
-            xStrength: xForce,
-            yStrength: yForce,
-          },
-          nodeSettings: {
-            options: (node, _, __, transform) => ({
-              radiusCoefficient,
-              radiusFactor,
-              initialRadius: settings.initialRadius,
-              flexibleRadius: settings.flexibleRadius,
-              text:
-                transform && node.data?.name && transform.k > 2
-                  ? String(node.data?.name)
-                  : undefined,
-            }),
-          },
-        });
-      });
-
+  [...forceAdditional, ...forceMain].forEach?.((input) => {
+    input.addEventListener("input", () => {
       switch (input.id) {
         case "central_force": {
-          input.value = centralForce.toString();
+          centralForce = +input.value;
           break;
         }
         case "repel_force": {
-          input.value = repelForce.toString();
-
+          repelForce = +input.value;
           break;
         }
         case "link_force": {
-          input.value = linkForce.toString();
-
+          linkForce = +input.value;
           break;
         }
         case "link_distance": {
-          input.value = linkDistance.toString();
-
+          linkDistance = +input.value;
           break;
         }
         case "x_force": {
-          input.value = xForce.toString();
+          xForce = +input.value;
           break;
         }
         case "y_force": {
-          input.value = yForce.toString();
+          yForce = +input.value;
           break;
         }
         case "radius_coefficient": {
-          input.value = radiusCoefficient.toString();
+          radiusCoefficient = +input.value;
           break;
         }
         case "radius_factor": {
-          input.value = radiusFactor.toString();
+          radiusFactor = +input.value;
           break;
         }
         case "collide": {
-          input.checked = isCollideActive;
+          isCollideActive = input.checked;
           break;
         }
         default: {
           break;
         }
       }
+
+      graph.changeSettings({
+        forceSettings: {
+          centerStrength: centralForce,
+          chargeStrength: repelForce * -1,
+          linkStrength: linkForce,
+          linkDistance,
+          collideOn: isCollideActive,
+          xStrength: xForce,
+          yStrength: yForce,
+        },
+        nodeSettings: {
+          options: (node, _, __, transform) => ({
+            radiusCoefficient,
+            radiusFactor,
+            radiusInitial: settings.radiusInitial,
+            flexibleRadius: settings.flexibleRadius,
+            text:
+              transform && node.data?.name && transform.k > 2 ? String(node.data?.name) : undefined,
+          }),
+        },
+      });
     });
+
+    switch (input.id) {
+      case "central_force": {
+        input.value = centralForce.toString();
+        break;
+      }
+      case "repel_force": {
+        input.value = repelForce.toString();
+
+        break;
+      }
+      case "link_force": {
+        input.value = linkForce.toString();
+
+        break;
+      }
+      case "link_distance": {
+        input.value = linkDistance.toString();
+
+        break;
+      }
+      case "x_force": {
+        input.value = xForce.toString();
+        break;
+      }
+      case "y_force": {
+        input.value = yForce.toString();
+        break;
+      }
+      case "radius_coefficient": {
+        input.value = radiusCoefficient.toString();
+        break;
+      }
+      case "radius_factor": {
+        input.value = radiusFactor.toString();
+        break;
+      }
+      case "collide": {
+        input.checked = isCollideActive;
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  });
 }

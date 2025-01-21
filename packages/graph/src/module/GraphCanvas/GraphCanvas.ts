@@ -15,7 +15,6 @@ import { type ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
 import { debounce } from "@/lib";
 import type { LinkInterface } from "@/types/links";
 import type { CachedNodeTextInterface, NodeInterface } from "@/types/nodes";
-import { FORCE_SETTINGS } from "./constants";
 import {
   drawText,
   forceSettingsGetter,
@@ -355,14 +354,14 @@ export class GraphCanvas<
               nodeOptionsGetter,
             );
             const radius = nodeRadiusGetter({
-              flexibleRadius: nodeOptions.flexibleRadius,
-              initialRadius: nodeOptions.initialRadius,
+              radiusFlexible: nodeOptions.radiusFlexible,
+              radiusInitial: nodeOptions.radiusInitial,
               radiusCoefficient: nodeOptions.radiusCoefficient,
               radiusFactor: nodeOptions.radiusFactor,
               linkCount: node.linkCount,
             });
 
-            return radius + FORCE_SETTINGS.collideAdditionalRadius;
+            return radius + this.forceSettings.collideAdditionalRadius;
           })
           .strength(this.forceSettings.collideStrength)
           .iterations(this.forceSettings.collideIterations),
@@ -497,8 +496,8 @@ export class GraphCanvas<
       );
 
       const radius = nodeRadiusGetter({
-        flexibleRadius: nodeOptions.flexibleRadius,
-        initialRadius: nodeOptions.initialRadius,
+        radiusFlexible: nodeOptions.radiusFlexible,
+        radiusInitial: nodeOptions.radiusInitial,
         radiusCoefficient: nodeOptions.radiusCoefficient,
         radiusFactor: nodeOptions.radiusFactor,
         linkCount: node.linkCount,
@@ -528,16 +527,16 @@ export class GraphCanvas<
           x: node.x + nodeOptions.textShiftX,
           y: node.y + radius + nodeOptions.textShiftY,
           maxWidth: nodeOptions.textWidth,
+          textStyle: nodeOptions.textStyle,
+          textWeight: nodeOptions.textWeight,
+          textGap: nodeOptions.textGap,
         });
       }
       /** circle */
-
-      this.context.strokeStyle = nodeOptions.colorOuter;
-      this.context.lineWidth = nodeOptions.width;
-      this.context.moveTo(node.x + radius, node.y);
+      this.context.lineWidth = 1;
+      this.context.strokeStyle = "black";
+      this.context.fillStyle = nodeOptions.color;
       this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
-
-      this.context.fillStyle = nodeOptions.colorInner;
 
       this.context.fill();
       this.context.stroke();
@@ -715,8 +714,8 @@ export class GraphCanvas<
             );
 
             const radius = nodeRadiusGetter({
-              flexibleRadius: nodeOptions.flexibleRadius,
-              initialRadius: nodeOptions.initialRadius,
+              radiusFlexible: nodeOptions.radiusFlexible,
+              radiusInitial: nodeOptions.radiusInitial,
               radiusCoefficient: nodeOptions.radiusCoefficient,
               radiusFactor: nodeOptions.radiusFactor,
               linkCount: node.linkCount,
@@ -783,5 +782,10 @@ export class GraphCanvas<
           }),
       )
       .on("dblclick.zoom", null);
+
+    // console.log(zoomTransform(this.area));
+
+    // zoom().scaleTo(d3Select(this.area), 4);
+    // this.areaTransform = zoomIdentity.translate(200, 0).scale(4);
   }
 }

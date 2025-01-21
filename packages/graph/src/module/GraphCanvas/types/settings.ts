@@ -24,6 +24,7 @@ export type GraphCanvasForceSettings<
     links: number;
   };
   collideRadius?: GraphCanvasNodeIterationProps<NodeData> | number | null;
+  collideAdditionalRadius?: number;
   collideStrength?: number;
   collideIterations?: number;
   linkDistance?: GraphCanvasLinkIterationProps<NodeData, LinkData> | number;
@@ -48,14 +49,13 @@ export type GraphCanvasNodeSettings<NodeData extends Record<string, unknown>> = 
 };
 
 export type GraphCanvasNodeOptions = {
-  initialRadius?: number;
+  radiusInitial?: number;
   radiusCoefficient?: number;
   radiusFactor?: number;
-  flexibleRadius?: boolean;
+  radiusFlexible?: boolean;
   width?: number;
   alpha?: number;
-  colorOuter?: string;
-  colorInner?: string;
+  color?: string;
   textVisible?: boolean;
   text?: string | null;
   textShiftY?: number;
@@ -65,6 +65,9 @@ export type GraphCanvasNodeOptions = {
   textColor?: string;
   textAlign?: CanvasTextAlign;
   textWidth?: number;
+  textStyle?: GraphCanvasTextStyle;
+  textWeight?: GraphCanvasTextWeight;
+  textGap?: number;
 };
 
 export type GraphCanvasNodeIterationProps<
@@ -102,3 +105,19 @@ export type GraphCanvasLinkIterationProps<
   links: LinkInterface<NodeData, LinkData>[],
   transform?: ZoomTransform | null,
 ) => Return;
+
+export type GraphCanvasTextStyle = "normal" | "italic" | "oblique";
+export type GraphCanvasTextWeight =
+  | "normal"
+  | "bold"
+  | "bolder"
+  | "lighter"
+  | "100"
+  | "200"
+  | "300"
+  | "400"
+  | "500"
+  | "600"
+  | "700"
+  | "800"
+  | "900";

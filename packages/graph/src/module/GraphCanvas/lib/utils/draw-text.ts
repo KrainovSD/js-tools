@@ -1,4 +1,5 @@
 import type { CachedNodeTextInterface } from "@/types";
+import type { GraphCanvasTextStyle, GraphCanvasTextWeight } from "../../types";
 
 export type DrawTextOptions = {
   id: string | number;
@@ -6,8 +7,11 @@ export type DrawTextOptions = {
   y: number;
   text: string;
   textSize: number;
+  textStyle: GraphCanvasTextStyle;
+  textWeight: GraphCanvasTextWeight;
   textFont: string;
   textColor: string;
+  textGap: number;
   textAlign: CanvasTextAlign;
   context: CanvasRenderingContext2D;
   cachedNodeText: CachedNodeTextInterface;
@@ -22,6 +26,9 @@ export function drawText({
   textAlign,
   textColor,
   textFont,
+  textStyle,
+  textGap,
+  textWeight,
   textSize,
   text,
   x,
@@ -29,14 +36,14 @@ export function drawText({
   cachedNodeText,
   maxWidth,
 }: DrawTextOptions) {
-  context.font = `${textSize}px ${textFont}`;
+  context.font = `${textStyle} normal ${textWeight} ${textSize}px ${textFont}`;
   context.fillStyle = textColor;
   context.textAlign = textAlign;
 
   if (cachedNodeText[id] != undefined) {
-    cachedNodeText[id].forEach((line, index) =>
-      context.fillText(line, x, y + (index + 1) * textSize),
-    );
+    cachedNodeText[id].forEach((line, index) => {
+      context.fillText(line, x, y + index * textSize + index * textGap);
+    });
 
     return;
   }
@@ -75,5 +82,7 @@ export function drawText({
   if (line !== "") lines.push(line);
 
   cachedNodeText[id] = lines;
-  lines.forEach((line, index) => context.fillText(line, x, y + (index + 1) * textSize));
+  lines.forEach((line, index) => {
+    context.fillText(line, x, y + index * textSize + index * textGap);
+  });
 }
