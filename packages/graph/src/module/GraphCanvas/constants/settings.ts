@@ -12,7 +12,7 @@ export const FORCE_SETTINGS: Required<
   centerPosition: {},
   centerStrength: 1,
   collideStrength: 0.1,
-  collideAdditionalRadius: 2,
+  collideAdditionalRadius: 4,
   collideIterations: 2,
   collideOffMax: { links: 0, nodes: 0 },
   collideOn: true,
@@ -33,7 +33,7 @@ export const GRAPH_SETTINGS: Required<GraphCanvasSettingInterface<Record<string,
   zoomExtent: [0.1, 20] as [number, number],
   stickAfterDrag: false,
   highlightByHover: false,
-  minFading: 0.2,
+  minHighlighFading: 0.2,
   dragPlaceCoefficient: dragPlaceCoefficientGetter,
 };
 

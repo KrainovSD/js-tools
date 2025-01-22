@@ -11,7 +11,7 @@ import {
   forceY,
 } from "d3-force";
 import { create as d3Create, select as d3Select } from "d3-selection";
-import { type ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
+import { ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
 import { debounce } from "@/lib";
 import type { LinkInterface } from "@/types/links";
 import type { CachedNodeTextInterface, NodeInterface } from "@/types/nodes";
@@ -102,7 +102,7 @@ export class GraphCanvas<
 
   private highlightedNeighbors: Set<string | number> | null = null;
 
-  private fading: number = 0;
+  private highlighFading: number = 0;
 
   constructor({
     links,
@@ -146,8 +146,7 @@ export class GraphCanvas<
   changeData(options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">) {
     if (options.links != undefined) this.links = options.links;
     if (options.nodes != undefined) this.nodes = options.nodes;
-
-    this.updateData();
+    if (options.nodes != undefined || options.links != undefined) this.updateData();
   }
 
   changeSettings(
@@ -164,7 +163,11 @@ export class GraphCanvas<
     this.updateSettings();
   }
 
-  start() {
+  start() {}
+
+  stop() {}
+
+  create() {
     this.init();
   }
 
@@ -184,19 +187,19 @@ export class GraphCanvas<
 
   private updateSettings() {
     if (this.simulation) {
-      this.simulation.stop().alpha(1);
       this.initSimulationForces();
+      this.simulation.alpha(1);
       this.simulation.restart();
     }
   }
 
   private updateData() {
+    this.cachedNodeText = {};
+
     if (this.simulation) {
       this.initCollideForce();
 
       this.simulation
-        .stop()
-        .alpha(1)
         .nodes(this.nodes)
         .force(
           "link",
@@ -206,6 +209,7 @@ export class GraphCanvas<
             .strength(this.forceSettings.linkStrength)
             .iterations(this.forceSettings.linkIterations),
         )
+        .alpha(0.5)
         .restart();
     }
   }
@@ -220,18 +224,7 @@ export class GraphCanvas<
     this.area.height = this.dpi * height;
     this.areaRect = this.area.getBoundingClientRect();
 
-    this.simulation
-      .stop()
-      .alpha(1)
-      .force(
-        "center",
-
-        forceCenter<NodeInterface<NodeData>>(
-          this.forceSettings.centerPosition.x || this.width / 2,
-          this.forceSettings.centerPosition.y || this.height / 2,
-        ).strength(this.forceSettings.centerStrength),
-      )
-      .restart();
+    this.simulation.alpha(0.1).restart();
 
     if (!this.simulationWorking) this.draw();
   }
@@ -305,8 +298,8 @@ export class GraphCanvas<
       .force(
         "center",
         forceCenter<NodeInterface<NodeData>>(
-          this.forceSettings.centerPosition.x || this.width / 2,
-          this.forceSettings.centerPosition.y || this.height / 2,
+          this.forceSettings.centerPosition.x || 0,
+          this.forceSettings.centerPosition.y || 0,
         ).strength(this.forceSettings.centerStrength),
       );
 
@@ -405,7 +398,7 @@ export class GraphCanvas<
       }
 
       if (this.highlightedNeighbors && this.highlightedNode) {
-        if (this.fading === 0) this.fading = 1;
+        if (this.highlighFading === 0) this.highlighFading = 1;
       }
 
       this.context.save();
@@ -425,8 +418,8 @@ export class GraphCanvas<
 
       this.listeners.onDrawFinished?.(this.context, this.areaTransform);
 
-      if (this.fading > this.graphSettings.minFading) {
-        this.fading -= 0.1;
+      if (this.highlighFading > this.graphSettings.minHighlighFading) {
+        this.highlighFading -= 0.1;
         requestAnimationFrame(() => {
           this.draw();
         });
@@ -464,7 +457,7 @@ export class GraphCanvas<
           this.highlightedNode.id != link.source.id &&
           this.highlightedNode.id != link.target.id
         ) {
-          alpha = this.fading;
+          alpha = this.highlighFading;
         }
 
         this.context.beginPath();
@@ -506,7 +499,7 @@ export class GraphCanvas<
       let alpha = nodeOptions.alpha;
       if (this.highlightedNeighbors && this.highlightedNode) {
         if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
-          alpha = this.fading;
+          alpha = this.highlighFading;
         }
       }
 
@@ -783,9 +776,7 @@ export class GraphCanvas<
       )
       .on("dblclick.zoom", null);
 
-    // console.log(zoomTransform(this.area));
-
-    // zoom().scaleTo(d3Select(this.area), 4);
-    // this.areaTransform = zoomIdentity.translate(200, 0).scale(4);
+    this.areaTransform = new ZoomTransform(1, this.width / 2, this.height / 2);
+    zoom<HTMLCanvasElement, unknown>().transform(d3Select(this.area), this.areaTransform);
   }
 }

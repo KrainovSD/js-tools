@@ -25,78 +25,12 @@
         position: absolute;
         align-items: start;
         top: 0;
-        right: 20px;
+        left: 20px;
         z-index: 2;
         user-select: none;
       "
       id="tools"
     >
-      <fieldset>
-        <legend>Select the data source:</legend>
-        <div>
-          <input style="margin: 0.4rem" type="radio" id="d3" value="d3" checked name="mock" />
-          <label for="d3">D3</label>
-        </div>
-        <div>
-          <input style="margin: 0.4rem" type="radio" id="real" value="real" name="mock" />
-          <label for="real">Real</label>
-        </div>
-        <div>
-          <input style="margin: 0.4rem" type="radio" id="stress" value="stress" name="mock" />
-          <label for="stress">Stress</label>
-        </div>
-        <div>
-          <input style="margin: 0.4rem" type="radio" id="custom" value="custom" name="mock" />
-          <label for="custom">Custom</label>
-        </div>
-        <div>
-          <input style="margin: 0.4rem" type="radio" id="dynamic" value="dynamic" name="mock" />
-          <label for="dynamic">Dynamic</label>
-        </div>
-      </fieldset>
-      <fieldset id="force-additional" style="display: flex; gap: 10px; flex-direction: column">
-        <legend>Change the useless forces:</legend>
-        <div style="display: flex; flex-direction: column">
-          <label for="central_force">Center force</label>
-          <input type="range" id="central_force" min="0" max="1" step="0.01" value="1" />
-        </div>
-        <div style="display: flex; flex-direction: column">
-          <label for="link_force">Link force</label>
-          <input type="range" id="link_force" min="0" max="1" step="0.01" value="1" />
-        </div>
-      </fieldset>
-      <fieldset id="force" style="display: flex; gap: 10px; flex-direction: column">
-        <legend>Change the forces:</legend>
-        <div style="display: flex; flex-direction: column">
-          <label for="repel_force">Charge force</label>
-          <input type="range" id="repel_force" min="0" max="500" value="1" />
-        </div>
-        <div style="display: flex; flex-direction: column">
-          <label for="link_distance">Link distance</label>
-          <input type="range" id="link_distance" min="0" max="300" value="1" />
-        </div>
-        <div style="display: flex; flex-direction: column">
-          <label for="x_force">X force</label>
-          <input type="range" id="x_force" min="0" max="1" step="0.01" value="1" />
-        </div>
-        <div style="display: flex; flex-direction: column">
-          <label for="y_force">Y force</label>
-          <input type="range" id="y_force" min="0" max="1" step="0.01" value="1" />
-        </div>
-        <div style="display: flex; flex-direction: column">
-          <label for="radius_coefficient">Radius coefficient</label>
-          <input type="range" id="radius_coefficient" min="1" max="50" step="1" />
-        </div>
-        <div style="display: flex; flex-direction: column">
-          <label for="radius_factor">Radius factor</label>
-          <input type="range" id="radius_factor" min="0.1" max="30" step="0.1" />
-        </div>
-        <div>
-          <input type="checkbox" id="collide" />
-          <label for="collide">Collide mode</label>
-        </div>
-      </fieldset>
-
       <button id="clear" style="display: none">Сбросить</button>
       <button id="turn" style="display: none">Остановить</button>
       <button id="switcher">Уничтожить</button>
