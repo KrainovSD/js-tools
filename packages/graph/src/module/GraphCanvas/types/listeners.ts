@@ -3,15 +3,15 @@ import type { D3ZoomEvent, ZoomTransform } from "d3-zoom";
 import type { NodeInterface } from "@/types";
 import type { GraphCanvasSimulation } from "./graph";
 
-export type GraphCanvasZoomEvent = D3ZoomEvent<HTMLCanvasElement, unknown>;
+export type ZoomEventInterface = D3ZoomEvent<HTMLCanvasElement, unknown>;
 
-export type GraphCanvasDragEvent<NodeData extends Record<string, unknown>> = D3DragEvent<
+export type DragEventInterface<NodeData extends Record<string, unknown>> = D3DragEvent<
   HTMLElement,
   unknown,
   NodeInterface<NodeData>
 >;
 
-export type GraphCanvasListeners<
+export type ListenersInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
@@ -20,25 +20,25 @@ export type GraphCanvasListeners<
   onDoubleClick?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
   onWheelClick?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
   onMove?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
-  onZoom?: (event: GraphCanvasZoomEvent) => void;
+  onZoom?: (event: ZoomEventInterface) => void;
   onDragSubject?: (
-    event: GraphCanvasDragEvent<NodeData>,
+    event: DragEventInterface<NodeData>,
     transform: ZoomTransform,
     nodes: NodeInterface<NodeData>[],
   ) => NodeInterface<NodeData> | undefined;
   onDraw?: (canvasContext: CanvasRenderingContext2D, transform: ZoomTransform) => void;
   onStartDragFinished?: (
-    event: GraphCanvasDragEvent<NodeData>,
+    event: DragEventInterface<NodeData>,
     simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
     transform: ZoomTransform,
   ) => void;
   onMoveDragFinished?: (
-    event: GraphCanvasDragEvent<NodeData>,
+    event: DragEventInterface<NodeData>,
     simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
     transform: ZoomTransform,
   ) => void;
   onEndDragFinished?: (
-    event: GraphCanvasDragEvent<NodeData>,
+    event: DragEventInterface<NodeData>,
     simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
     transform: ZoomTransform,
   ) => void;

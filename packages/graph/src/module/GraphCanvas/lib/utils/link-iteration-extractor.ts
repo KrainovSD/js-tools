@@ -1,7 +1,7 @@
 import type { ZoomTransform } from "d3-zoom";
 import { checkType } from "@/lib";
 import type { LinkInterface } from "@/types";
-import type { GraphCanvasLinkIterationProps } from "../../types";
+import type { LinkIterationPropsInterface } from "../../types";
 
 export function linkIterationExtractor<
   NodeData extends Record<string, unknown>,
@@ -12,7 +12,7 @@ export function linkIterationExtractor<
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
   transform: ZoomTransform,
-  option: GraphCanvasLinkIterationProps<NodeData, LinkData, Result> | Result,
+  option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter: undefined,
 ): Result;
 
@@ -25,9 +25,9 @@ export function linkIterationExtractor<
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
   transform: ZoomTransform,
-  option: GraphCanvasLinkIterationProps<NodeData, LinkData, Result> | Result,
+  option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter:
-    | GraphCanvasLinkIterationProps<NodeData, LinkData, Required<Result>>
+    | LinkIterationPropsInterface<NodeData, LinkData, Required<Result>>
     | Required<Result>,
 ): Required<Result>;
 
@@ -40,9 +40,9 @@ export function linkIterationExtractor<
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
   transform: ZoomTransform,
-  option: GraphCanvasLinkIterationProps<NodeData, LinkData, Result> | Result,
+  option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter:
-    | GraphCanvasLinkIterationProps<NodeData, LinkData, Required<Result>>
+    | LinkIterationPropsInterface<NodeData, LinkData, Required<Result>>
     | Required<Result>
     | undefined,
 ): Result {

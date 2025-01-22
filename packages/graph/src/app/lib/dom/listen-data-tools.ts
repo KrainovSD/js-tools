@@ -12,6 +12,7 @@ export function listenDataTools(
   initialData: ValueOf<typeof DATA_TYPES>,
 ) {
   let isWorking = true;
+  let isStarted = true;
   let currentDataType: string | null = "stress";
   let dynamicInterval: NodeJS.Timeout | undefined;
   const dynamicClear = document.querySelector<HTMLElement>("button#clear");
@@ -100,6 +101,23 @@ export function listenDataTools(
       }
 
       isWorking = !isWorking;
+    });
+
+  document
+    .querySelector("button#starter")
+    ?.addEventListener?.("click", function click(this: HTMLButtonElement) {
+      if (dynamicInterval) clearInterval(dynamicInterval);
+
+      if (isStarted) {
+        graph.stop();
+        this.textContent = "Запустить";
+      } else {
+        graph.start();
+        this.textContent = "Остановить";
+        if (currentDataType === "dynamic") startDynamic();
+      }
+
+      isStarted = !isStarted;
     });
 
   document

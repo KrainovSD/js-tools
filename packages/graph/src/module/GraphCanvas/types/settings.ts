@@ -1,7 +1,7 @@
 import type { ZoomTransform } from "d3-zoom";
 import type { LinkInterface, NodeInterface } from "@/types";
 
-export type GraphCanvasSettingInterface<NodeData extends Record<string, unknown>> = {
+export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   minHighlighFading?: number;
   highlightByHover?: boolean;
   stickAfterDrag?: boolean;
@@ -12,9 +12,13 @@ export type GraphCanvasSettingInterface<NodeData extends Record<string, unknown>
     pyEvent: number,
     radius: number,
   ) => number | undefined;
+  nodeRadiusInitial?: number;
+  nodeRadiusCoefficient?: number;
+  nodeRadiusFactor?: number;
+  nodeRadiusFlexible?: boolean;
 };
 
-export type GraphCanvasForceSettings<
+export type ForceSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
@@ -23,36 +27,33 @@ export type GraphCanvasForceSettings<
     nodes: number;
     links: number;
   };
-  collideRadius?: GraphCanvasNodeIterationProps<NodeData> | number | null;
+  collideRadius?: NodeIterationPropsInterface<NodeData> | number | null;
   collideAdditionalRadius?: number;
   collideStrength?: number;
   collideIterations?: number;
-  linkDistance?: GraphCanvasLinkIterationProps<NodeData, LinkData> | number;
-  linkStrength?: GraphCanvasLinkIterationProps<NodeData, LinkData> | number;
+  linkDistance?: LinkIterationPropsInterface<NodeData, LinkData> | number;
+  linkStrength?: LinkIterationPropsInterface<NodeData, LinkData> | number;
   linkIterations?: number;
-  chargeStrength?: GraphCanvasNodeIterationProps<NodeData> | number;
+  chargeStrength?: NodeIterationPropsInterface<NodeData> | number;
   chargeDistanceMax?: number;
   chargeDistanceMin?: number;
   centerPosition?: { x?: number; y?: number };
   centerStrength?: number;
-  xForce?: GraphCanvasNodeIterationProps<NodeData> | number;
-  xStrength?: GraphCanvasNodeIterationProps<NodeData> | number;
-  yForce?: GraphCanvasNodeIterationProps<NodeData> | number;
-  yStrength?: GraphCanvasNodeIterationProps<NodeData> | number;
+  xForce?: NodeIterationPropsInterface<NodeData> | number;
+  xStrength?: NodeIterationPropsInterface<NodeData> | number;
+  yForce?: NodeIterationPropsInterface<NodeData> | number;
+  yStrength?: NodeIterationPropsInterface<NodeData> | number;
 };
 
-export type GraphCanvasNodeSettings<NodeData extends Record<string, unknown>> = {
-  idGetter?: GraphCanvasNodeIterationProps<NodeData, string | number>;
-  options?:
-    | GraphCanvasNodeIterationProps<NodeData, GraphCanvasNodeOptions>
-    | GraphCanvasNodeOptions;
+export type NodeSettingsInterface<NodeData extends Record<string, unknown>> = {
+  idGetter?: NodeIterationPropsInterface<NodeData, string | number>;
+  options?: NodeIterationPropsInterface<NodeData, NodeOptionsInterface> | NodeOptionsInterface;
 };
 
-export type GraphCanvasNodeOptions = {
-  radiusInitial?: number;
-  radiusCoefficient?: number;
-  radiusFactor?: number;
-  radiusFlexible?: boolean;
+export type NodeOptionsInterface = {
+  borderColor?: string;
+  borderWidth?: number;
+  radius?: number;
   width?: number;
   alpha?: number;
   color?: string;
@@ -65,12 +66,12 @@ export type GraphCanvasNodeOptions = {
   textColor?: string;
   textAlign?: CanvasTextAlign;
   textWidth?: number;
-  textStyle?: GraphCanvasTextStyle;
-  textWeight?: GraphCanvasTextWeight;
+  textStyle?: TextStyleEnum;
+  textWeight?: TextWeightEnum;
   textGap?: number;
 };
 
-export type GraphCanvasNodeIterationProps<
+export type NodeIterationPropsInterface<
   NodeData extends Record<string, unknown>,
   Return = number,
 > = (
@@ -78,14 +79,15 @@ export type GraphCanvasNodeIterationProps<
   i: number,
   nodes: NodeInterface<NodeData>[],
   transform?: ZoomTransform,
+  // graphSettings?: Required<GraphSettingsInterface<NodeData>>,
 ) => Return;
 
-export type GraphCanvasLinkSettings<
+export type LinkSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
   options?:
-    | GraphCanvasLinkIterationProps<NodeData, LinkData, GraphCanvasLinkOptions>
+    | LinkIterationPropsInterface<NodeData, LinkData, GraphCanvasLinkOptions>
     | GraphCanvasLinkOptions;
 };
 
@@ -95,7 +97,7 @@ export type GraphCanvasLinkOptions = {
   width?: number;
 };
 
-export type GraphCanvasLinkIterationProps<
+export type LinkIterationPropsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
   Return = number,
@@ -106,8 +108,8 @@ export type GraphCanvasLinkIterationProps<
   transform?: ZoomTransform | null,
 ) => Return;
 
-export type GraphCanvasTextStyle = "normal" | "italic" | "oblique";
-export type GraphCanvasTextWeight =
+export type TextStyleEnum = "normal" | "italic" | "oblique";
+export type TextWeightEnum =
   | "normal"
   | "bold"
   | "bolder"

@@ -1,13 +1,13 @@
 import { dragPlaceCoefficientGetter } from "../lib";
 import type {
-  GraphCanvasForceSettings,
+  ForceSettingsInterface,
   GraphCanvasLinkOptions,
-  GraphCanvasNodeOptions,
-  GraphCanvasSettingInterface,
+  GraphSettingsInterface,
+  NodeOptionsInterface,
 } from "../types";
 
 export const FORCE_SETTINGS: Required<
-  GraphCanvasForceSettings<Record<string, unknown>, Record<string, unknown>>
+  ForceSettingsInterface<Record<string, unknown>, Record<string, unknown>>
 > = {
   centerPosition: {},
   centerStrength: 1,
@@ -29,29 +29,32 @@ export const FORCE_SETTINGS: Required<
   collideRadius: null,
 };
 
-export const GRAPH_SETTINGS: Required<GraphCanvasSettingInterface<Record<string, unknown>>> = {
+export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unknown>>> = {
   zoomExtent: [0.1, 20] as [number, number],
   stickAfterDrag: false,
   highlightByHover: false,
   minHighlighFading: 0.2,
   dragPlaceCoefficient: dragPlaceCoefficientGetter,
+  nodeRadiusInitial: 4,
+  nodeRadiusCoefficient: 5,
+  nodeRadiusFactor: 1,
+  nodeRadiusFlexible: true,
 };
 
 export const NODE_SETTINGS: Omit<
-  Required<GraphCanvasNodeOptions>,
-  "radius" | "color" | "text" | "textVisible" | "textSize" | "textShiftY"
+  Required<NodeOptionsInterface>,
+  "color" | "text" | "textVisible" | "textSize" | "textShiftY"
 > = {
   alpha: 1,
+  borderColor: "#000000FF",
+  borderWidth: 0.1,
   textWidth: 20,
   textShiftX: 0,
   textFont: "Arial",
   textAlign: "center" as CanvasTextAlign,
   textColor: "#333",
   width: 1,
-  radiusInitial: 4,
-  radiusCoefficient: 5,
-  radiusFactor: 1,
-  radiusFlexible: true,
+  radius: 4,
   textStyle: "normal",
   textWeight: "500",
   textGap: 1,
@@ -68,7 +71,7 @@ export const COMMON_SETTINGS = {
   linkWidthZoomNear: 0.1,
   linkWidthZoomBorder: 1,
   linkColorZoomBorder: 1,
-  nodeTextScaleMin: 2,
+  nodeTextScaleMin: 1.5,
   nodeTextScaleMax: 20,
   nodeTextSizeMin: 1.5,
   nodeTextSizeMax: 3.5,

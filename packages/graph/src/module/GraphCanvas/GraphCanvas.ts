@@ -31,15 +31,15 @@ import {
   pointerGetter,
 } from "./lib";
 import type {
-  GraphCanvasDragEvent,
-  GraphCanvasForceSettings,
+  DragEventInterface,
+  ForceSettingsInterface,
   GraphCanvasInterface,
-  GraphCanvasLinkSettings,
-  GraphCanvasListeners,
-  GraphCanvasNodeSettings,
-  GraphCanvasSettingInterface,
   GraphCanvasSimulation,
-  GraphCanvasZoomEvent,
+  GraphSettingsInterface,
+  LinkSettingsInterface,
+  ListenersInterface,
+  NodeSettingsInterface,
+  ZoomEventInterface,
 } from "./types";
 
 export class GraphCanvas<
@@ -66,17 +66,17 @@ export class GraphCanvas<
 
   /** settings */
 
-  private graphSettings: Required<GraphCanvasSettingInterface<NodeData>>;
+  private graphSettings: Required<GraphSettingsInterface<NodeData>>;
 
-  private forceSettings: Required<GraphCanvasForceSettings<NodeData, LinkData>>;
+  private forceSettings: Required<ForceSettingsInterface<NodeData, LinkData>>;
 
-  private nodeSettings: Required<Omit<GraphCanvasNodeSettings<NodeData>, "options">> &
-    Pick<GraphCanvasNodeSettings<NodeData>, "options">;
+  private nodeSettings: Required<Omit<NodeSettingsInterface<NodeData>, "options">> &
+    Pick<NodeSettingsInterface<NodeData>, "options">;
 
-  private linkSettings: Required<Omit<GraphCanvasLinkSettings<NodeData, LinkData>, "options">> &
-    Pick<GraphCanvasLinkSettings<NodeData, LinkData>, "options">;
+  private linkSettings: Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
+    Pick<LinkSettingsInterface<NodeData, LinkData>, "options">;
 
-  private listeners: GraphCanvasListeners<NodeData, LinkData>;
+  private listeners: ListenersInterface<NodeData, LinkData>;
 
   /** service */
 
@@ -90,13 +90,13 @@ export class GraphCanvas<
 
   private draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
+  private eventAbortController: AbortController;
+
   private cachedNodeText: CachedNodeTextInterface = {};
 
   private simulationWorking: boolean = false;
 
   private isDragging: boolean = false;
-
-  private eventAbortController: AbortController;
 
   private highlightedNode: NodeInterface<NodeData> | null = null;
 
@@ -155,17 +155,25 @@ export class GraphCanvas<
       "links" | "nodes" | "listeners"
     >,
   ) {
-    if (options.forceSettings) this.forceSettings = forceSettingsGetter(options.forceSettings);
+    if (options.graphSettings)
+      this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
+    if (options.forceSettings)
+      this.forceSettings = forceSettingsGetter(options.forceSettings, this.forceSettings);
     if (options.linkSettings) this.linkSettings = linkSettingsGetter(options.linkSettings);
     if (options.nodeSettings) this.nodeSettings = nodeSettingsGetter(options.nodeSettings);
-    if (options.graphSettings) this.graphSettings = graphSettingsGetter(options.graphSettings);
 
     this.updateSettings();
   }
 
-  start() {}
+  start() {
+    if (this.simulation) this.simulation.alpha(1).restart();
+    if (this.container) this.container.style.display = "block";
+  }
 
-  stop() {}
+  stop() {
+    if (this.simulation) this.simulation.stop();
+    if (this.container) this.container.style.display = "none";
+  }
 
   create() {
     this.init();
@@ -183,6 +191,9 @@ export class GraphCanvas<
     this.container = undefined;
     this.eventAbortController.abort();
     this.eventAbortController = new AbortController();
+
+    this.clearState();
+    this.clearDataDependencies();
   }
 
   private updateSettings() {
@@ -193,8 +204,20 @@ export class GraphCanvas<
     }
   }
 
-  private updateData() {
+  private clearState() {
+    this.isDragging = false;
+    this.simulationWorking = false;
+    this.highlightedNode = null;
+    this.highlightedNeighbors = null;
+    this.highlighFading = 0;
+  }
+
+  private clearDataDependencies() {
     this.cachedNodeText = {};
+  }
+
+  private updateData() {
+    this.clearDataDependencies();
 
     if (this.simulation) {
       this.initCollideForce();
@@ -337,7 +360,6 @@ export class GraphCanvas<
                 undefined,
               );
             }
-
             const nodeOptions = nodeIterationExtractor(
               node,
               index,
@@ -346,13 +368,14 @@ export class GraphCanvas<
               this.nodeSettings.options || {},
               nodeOptionsGetter,
             );
-            const radius = nodeRadiusGetter({
-              radiusFlexible: nodeOptions.radiusFlexible,
-              radiusInitial: nodeOptions.radiusInitial,
-              radiusCoefficient: nodeOptions.radiusCoefficient,
-              radiusFactor: nodeOptions.radiusFactor,
-              linkCount: node.linkCount,
-            });
+            const radius =
+              nodeRadiusGetter({
+                radiusFlexible: this.graphSettings.nodeRadiusFlexible,
+                radiusInitial: this.graphSettings.nodeRadiusInitial,
+                radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
+                radiusFactor: this.graphSettings.nodeRadiusFactor,
+                linkCount: node.linkCount,
+              }) ?? nodeOptions.radius;
 
             return radius + this.forceSettings.collideAdditionalRadius;
           })
@@ -487,14 +510,14 @@ export class GraphCanvas<
         this.nodeSettings.options || {},
         nodeOptionsGetter,
       );
-
-      const radius = nodeRadiusGetter({
-        radiusFlexible: nodeOptions.radiusFlexible,
-        radiusInitial: nodeOptions.radiusInitial,
-        radiusCoefficient: nodeOptions.radiusCoefficient,
-        radiusFactor: nodeOptions.radiusFactor,
-        linkCount: node.linkCount,
-      });
+      const radius =
+        nodeRadiusGetter({
+          radiusFlexible: this.graphSettings.nodeRadiusFlexible,
+          radiusInitial: this.graphSettings.nodeRadiusInitial,
+          radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
+          radiusFactor: this.graphSettings.nodeRadiusFactor,
+          linkCount: node.linkCount,
+        }) ?? nodeOptions.radius;
 
       let alpha = nodeOptions.alpha;
       if (this.highlightedNeighbors && this.highlightedNode) {
@@ -526,8 +549,8 @@ export class GraphCanvas<
         });
       }
       /** circle */
-      this.context.lineWidth = 1;
-      this.context.strokeStyle = "black";
+      this.context.lineWidth = nodeOptions.borderWidth;
+      this.context.strokeStyle = nodeOptions.borderColor;
       this.context.fillStyle = nodeOptions.color;
       this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
 
@@ -682,7 +705,7 @@ export class GraphCanvas<
 
     d3Select(this.area).call(
       d3Drag<HTMLCanvasElement, unknown>()
-        .subject((event: GraphCanvasDragEvent<NodeData>) => {
+        .subject((event: DragEventInterface<NodeData>) => {
           if (this.listeners.onDragSubject) {
             return this.listeners.onDragSubject(event, this.areaTransform, this.nodes);
           }
@@ -705,23 +728,23 @@ export class GraphCanvas<
               this.nodeSettings.options || {},
               nodeOptionsGetter,
             );
-
-            const radius = nodeRadiusGetter({
-              radiusFlexible: nodeOptions.radiusFlexible,
-              radiusInitial: nodeOptions.radiusInitial,
-              radiusCoefficient: nodeOptions.radiusCoefficient,
-              radiusFactor: nodeOptions.radiusFactor,
-              linkCount: node.linkCount,
-            });
+            const radius =
+              nodeRadiusGetter({
+                radiusFlexible: this.graphSettings.nodeRadiusFlexible,
+                radiusInitial: this.graphSettings.nodeRadiusInitial,
+                radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
+                radiusFactor: this.graphSettings.nodeRadiusFactor,
+                linkCount: node.linkCount,
+              }) ?? nodeOptions.radius;
             index++;
 
             return this.graphSettings.dragPlaceCoefficient(node, pointerX, pointerY, radius);
           });
         })
-        .on("start", (event: GraphCanvasDragEvent<NodeData>) => {
+        .on("start", (event: DragEventInterface<NodeData>) => {
           this.listeners.onStartDragFinished?.(event, this.simulation, this.areaTransform);
         })
-        .on("drag", (event: GraphCanvasDragEvent<NodeData>) => {
+        .on("drag", (event: DragEventInterface<NodeData>) => {
           if (!this.isDragging) {
             this.isDragging = true;
             if (this.simulation) this.simulation.alphaTarget(0.3).restart();
@@ -735,7 +758,7 @@ export class GraphCanvas<
 
           this.listeners.onMoveDragFinished?.(event, this.simulation, this.areaTransform);
         })
-        .on("end", (event: GraphCanvasDragEvent<NodeData>) => {
+        .on("end", (event: DragEventInterface<NodeData>) => {
           this.isDragging = false;
 
           if (!event.active && this.simulation) this.simulation.alphaTarget(0);
@@ -767,7 +790,7 @@ export class GraphCanvas<
       .call(
         zoom<HTMLCanvasElement, unknown>()
           .scaleExtent(this.graphSettings.zoomExtent)
-          .on("zoom", (event: GraphCanvasZoomEvent) => {
+          .on("zoom", (event: ZoomEventInterface) => {
             this.listeners.onZoom?.(event);
             this.areaTransform = event.transform;
 

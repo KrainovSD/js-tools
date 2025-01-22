@@ -1,7 +1,7 @@
 import type { ZoomTransform } from "d3-zoom";
 import { checkType } from "@/lib";
 import type { NodeInterface } from "@/types";
-import type { GraphCanvasNodeIterationProps } from "../../types";
+import type { NodeIterationPropsInterface } from "../../types";
 
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,
@@ -11,7 +11,7 @@ export function nodeIterationExtractor<
   i: number,
   nodes: NodeInterface<NodeData>[],
   transform: ZoomTransform,
-  option: GraphCanvasNodeIterationProps<NodeData, Result> | Result,
+  option: NodeIterationPropsInterface<NodeData, Result> | Result,
   optionConstantGetter: undefined,
 ): Result;
 export function nodeIterationExtractor<
@@ -22,8 +22,8 @@ export function nodeIterationExtractor<
   i: number,
   nodes: NodeInterface<NodeData>[],
   transform: ZoomTransform,
-  option: GraphCanvasNodeIterationProps<NodeData, Result> | Result,
-  optionConstantGetter: GraphCanvasNodeIterationProps<NodeData, Result> | Result,
+  option: NodeIterationPropsInterface<NodeData, Result> | Result,
+  optionConstantGetter: NodeIterationPropsInterface<NodeData, Result> | Result,
 ): Required<Result>;
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,
@@ -33,8 +33,8 @@ export function nodeIterationExtractor<
   i: number,
   nodes: NodeInterface<NodeData>[],
   transform: ZoomTransform,
-  option: GraphCanvasNodeIterationProps<NodeData, Result> | Result,
-  optionConstantGetter: GraphCanvasNodeIterationProps<NodeData, Result> | Result | undefined,
+  option: NodeIterationPropsInterface<NodeData, Result> | Result,
+  optionConstantGetter: NodeIterationPropsInterface<NodeData, Result> | Result | undefined,
 ) {
   let customOptions: Result | undefined;
   let constantOptions: Result | undefined;

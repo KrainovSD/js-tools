@@ -1,10 +1,10 @@
-import type { GraphCanvasListeners } from "../../types";
+import type { ListenersInterface } from "../../types";
 
 export function listenersGetter<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(
-  settings: GraphCanvasListeners<NodeData, LinkData> | undefined,
-): GraphCanvasListeners<NodeData, LinkData> {
+  settings: ListenersInterface<NodeData, LinkData> | undefined,
+): ListenersInterface<NodeData, LinkData> {
   return settings || {};
 }

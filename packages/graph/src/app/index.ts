@@ -76,5 +76,5 @@ const graph = new GraphCanvas({
 });
 
 renderTools();
-listenForceTools(graph, false);
+listenForceTools(graph, true);
 listenDataTools(graph, proxy, "");

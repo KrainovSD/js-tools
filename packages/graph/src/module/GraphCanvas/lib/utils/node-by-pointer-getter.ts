@@ -1,6 +1,6 @@
 import type { ZoomTransform } from "d3-zoom";
 import type { NodeInterface } from "@/types";
-import type { GraphCanvasNodeIterationProps, GraphCanvasNodeOptions } from "../../types";
+import type { NodeIterationPropsInterface, NodeOptionsInterface } from "../../types";
 import { nodeOptionsGetter, nodeRadiusGetter } from "../settings";
 import { isOverlapsNode } from "./is-overlaps-node";
 import { nodeIterationExtractor } from "./node-iteration-extractor";
@@ -12,8 +12,8 @@ export type NodeByPointerGetterOptions<NodeData extends Record<string, unknown>>
   areaTransform: ZoomTransform;
   nodes: NodeInterface<NodeData>[];
   nodeCustomOptions:
-    | GraphCanvasNodeIterationProps<NodeData, GraphCanvasNodeOptions>
-    | GraphCanvasNodeOptions
+    | NodeIterationPropsInterface<NodeData, NodeOptionsInterface>
+    | NodeOptionsInterface
     | undefined;
 };
 

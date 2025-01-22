@@ -1,11 +1,11 @@
 import type { Simulation } from "d3-force";
 import type { LinkInterface, NodeInterface } from "@/types";
-import type { GraphCanvasListeners } from "./listeners";
+import type { ListenersInterface } from "./listeners";
 import type {
-  GraphCanvasForceSettings,
-  GraphCanvasLinkSettings,
-  GraphCanvasNodeSettings,
-  GraphCanvasSettingInterface,
+  ForceSettingsInterface,
+  GraphSettingsInterface,
+  LinkSettingsInterface,
+  NodeSettingsInterface,
 } from "./settings";
 
 export type GraphCanvasInterface<
@@ -15,11 +15,11 @@ export type GraphCanvasInterface<
   nodes: NodeInterface<NodeData>[];
   links: LinkInterface<NodeData, LinkData>[];
   root: HTMLElement;
-  graphSettings?: GraphCanvasSettingInterface<NodeData>;
-  forceSettings?: GraphCanvasForceSettings<NodeData, LinkData>;
-  nodeSettings?: GraphCanvasNodeSettings<NodeData>;
-  linkSettings?: GraphCanvasLinkSettings<NodeData, LinkData>;
-  listeners?: GraphCanvasListeners<NodeData, LinkData>;
+  graphSettings?: GraphSettingsInterface<NodeData>;
+  forceSettings?: ForceSettingsInterface<NodeData, LinkData>;
+  nodeSettings?: NodeSettingsInterface<NodeData>;
+  linkSettings?: LinkSettingsInterface<NodeData, LinkData>;
+  listeners?: ListenersInterface<NodeData, LinkData>;
 };
 
 export type GraphCanvasSimulation<

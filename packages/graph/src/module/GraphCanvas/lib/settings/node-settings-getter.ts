@@ -2,12 +2,12 @@ import type { ZoomTransform } from "d3-zoom";
 import { colorGetter } from "@/lib";
 import type { NodeInterface } from "@/types";
 import { COMMON_SETTINGS, NODE_SETTINGS } from "../../constants";
-import type { GraphCanvasNodeOptions, GraphCanvasNodeSettings } from "../../types";
+import type { NodeOptionsInterface, NodeSettingsInterface } from "../../types";
 
 export function nodeSettingsGetter<NodeData extends Record<string, unknown>>(
-  settings: GraphCanvasNodeSettings<NodeData> | undefined,
-): Required<Omit<GraphCanvasNodeSettings<NodeData>, "options">> &
-  Pick<GraphCanvasNodeSettings<NodeData>, "options"> {
+  settings: NodeSettingsInterface<NodeData> | undefined,
+): Required<Omit<NodeSettingsInterface<NodeData>, "options">> &
+  Pick<NodeSettingsInterface<NodeData>, "options"> {
   return {
     idGetter: settings?.idGetter ?? nodeIdGetter,
     options: settings?.options,
@@ -21,7 +21,7 @@ export function nodeOptionsGetter<NodeData extends Record<string, unknown>>(
   _: number,
   __: NodeInterface<NodeData>[],
   transform?: ZoomTransform,
-): Required<GraphCanvasNodeOptions> {
+): Required<NodeOptionsInterface> {
   const { textShiftY, textSize } = nodeTextSizeGetter(transform);
 
   return {

@@ -1,5 +1,5 @@
 import type { CachedNodeTextInterface } from "@/types";
-import type { GraphCanvasTextStyle, GraphCanvasTextWeight } from "../../types";
+import type { TextStyleEnum, TextWeightEnum } from "../../types";
 
 export type DrawTextOptions = {
   id: string | number;
@@ -7,8 +7,8 @@ export type DrawTextOptions = {
   y: number;
   text: string;
   textSize: number;
-  textStyle: GraphCanvasTextStyle;
-  textWeight: GraphCanvasTextWeight;
+  textStyle: TextStyleEnum;
+  textWeight: TextWeightEnum;
   textFont: string;
   textColor: string;
   textGap: number;

@@ -4,7 +4,7 @@ import { CONTROLS, FORCE_TYPES, FORCE_USELESS_TYPES } from "./constants";
 
 export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateSingle: boolean) {
   let centralForce: number = 1;
-  let linkDistance: number = 10;
+  let linkDistance: number = 30;
 
   let chargeForce: number = 40;
   let linkForce: number = 1;
@@ -84,10 +84,8 @@ export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateS
           radiusCoefficient = +input.value;
           if (updateSingle)
             graph.changeSettings({
-              nodeSettings: {
-                options: {
-                  radiusCoefficient,
-                },
+              graphSettings: {
+                nodeRadiusCoefficient: radiusCoefficient,
               },
             });
           break;
@@ -96,10 +94,8 @@ export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateS
           radiusFactor = +input.value;
           if (updateSingle)
             graph.changeSettings({
-              nodeSettings: {
-                options: {
-                  radiusFactor,
-                },
+              graphSettings: {
+                nodeRadiusFactor: radiusFactor,
               },
             });
           break;
@@ -120,11 +116,9 @@ export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateS
             xStrength: xForce,
             yStrength: yForce,
           },
-          nodeSettings: {
-            options: {
-              radiusCoefficient,
-              radiusFactor,
-            },
+          graphSettings: {
+            nodeRadiusCoefficient: radiusCoefficient,
+            nodeRadiusFactor: radiusFactor,
           },
         });
     });

@@ -1,14 +1,15 @@
 import { FORCE_SETTINGS } from "../../constants";
-import type { GraphCanvasForceSettings } from "../../types";
+import type { ForceSettingsInterface } from "../../types";
 
 export function forceSettingsGetter<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(
-  settings: GraphCanvasForceSettings<NodeData, LinkData> | undefined,
-): Required<GraphCanvasForceSettings<NodeData, LinkData>> {
+  settings: ForceSettingsInterface<NodeData, LinkData> | undefined,
+  prevSettings?: Required<ForceSettingsInterface<NodeData, LinkData>>,
+): Required<ForceSettingsInterface<NodeData, LinkData>> {
   return {
-    ...FORCE_SETTINGS,
+    ...(prevSettings ?? FORCE_SETTINGS),
     ...settings,
   };
 }
