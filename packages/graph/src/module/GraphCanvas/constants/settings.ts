@@ -1,8 +1,8 @@
 import { dragPlaceCoefficientGetter } from "../lib";
 import type {
   ForceSettingsInterface,
-  GraphCanvasLinkOptions,
   GraphSettingsInterface,
+  LinkOptionsInterface,
   NodeOptionsInterface,
 } from "../types";
 
@@ -33,7 +33,9 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   zoomExtent: [0.1, 20] as [number, number],
   stickAfterDrag: false,
   highlightByHover: false,
-  minHighlighFading: 0.2,
+  highlightFadingMin: 0.21,
+  highlightDownStep: 0.09,
+  highlightUpStep: 0.09,
   dragPlaceCoefficient: dragPlaceCoefficientGetter,
   nodeRadiusInitial: 4,
   nodeRadiusCoefficient: 5,
@@ -60,7 +62,7 @@ export const NODE_SETTINGS: Omit<
   textGap: 1,
 };
 
-export const LINK_SETTINGS: Omit<Required<GraphCanvasLinkOptions>, "color" | "width"> = {
+export const LINK_SETTINGS: Omit<Required<LinkOptionsInterface>, "color" | "width"> = {
   alpha: 1,
 };
 

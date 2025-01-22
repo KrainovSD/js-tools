@@ -2,8 +2,10 @@ import type { ZoomTransform } from "d3-zoom";
 import type { LinkInterface, NodeInterface } from "@/types";
 
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
-  minHighlighFading?: number;
+  highlightFadingMin?: number;
   highlightByHover?: boolean;
+  highlightDownStep?: number;
+  highlightUpStep?: number;
   stickAfterDrag?: boolean;
   zoomExtent?: [number, number];
   dragPlaceCoefficient?: (
@@ -87,11 +89,11 @@ export type LinkSettingsInterface<
   LinkData extends Record<string, unknown>,
 > = {
   options?:
-    | LinkIterationPropsInterface<NodeData, LinkData, GraphCanvasLinkOptions>
-    | GraphCanvasLinkOptions;
+    | LinkIterationPropsInterface<NodeData, LinkData, LinkOptionsInterface>
+    | LinkOptionsInterface;
 };
 
-export type GraphCanvasLinkOptions = {
+export type LinkOptionsInterface = {
   alpha?: number;
   color?: string;
   width?: number;

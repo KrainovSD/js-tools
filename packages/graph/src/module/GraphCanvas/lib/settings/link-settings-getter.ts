@@ -1,7 +1,7 @@
 import type { ZoomTransform } from "d3-zoom";
 import type { LinkInterface } from "@/types";
 import { COMMON_SETTINGS, LINK_SETTINGS } from "../../constants";
-import type { GraphCanvasLinkOptions, LinkSettingsInterface } from "../../types";
+import type { LinkOptionsInterface, LinkSettingsInterface } from "../../types";
 
 export function linkSettingsGetter<
   NodeData extends Record<string, unknown>,
@@ -21,7 +21,7 @@ export function linkOptionsGetter<
   __: number,
   ___: LinkInterface<NodeData, LinkData>[],
   transform?: ZoomTransform | null,
-): Required<GraphCanvasLinkOptions> {
+): Required<LinkOptionsInterface> {
   return {
     ...LINK_SETTINGS,
     color:

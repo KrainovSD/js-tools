@@ -50,6 +50,7 @@ export const FORCE_TYPES = {
   YForce: "yForce",
   RadiusCoefficient: "radiusCoefficient",
   RadiusFactor: "radiusFactor",
+  Highlight: "highlight",
 };
 
 export const DATA_CONTROLS: ControlInterface[] = [
@@ -100,4 +101,5 @@ export const FORCES_CONTROLS: ControlInterface[] = [
     max: 50,
     step: 0.1,
   },
+  { type: "checkbox", label: "Highlights", id: FORCE_TYPES.Highlight },
 ];

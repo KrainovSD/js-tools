@@ -1,9 +1,8 @@
 import type { ZoomTransform } from "d3-zoom";
 import type { NodeInterface } from "@/types";
-import type { NodeIterationPropsInterface, NodeOptionsInterface } from "../../types";
-import { nodeOptionsGetter, nodeRadiusGetter } from "../settings";
+import type { GraphSettingsInterface } from "../../types";
+import { nodeRadiusGetter } from "../settings";
 import { isOverlapsNode } from "./is-overlaps-node";
-import { nodeIterationExtractor } from "./node-iteration-extractor";
 import { pointerGetter } from "./pointer-getter";
 
 export type NodeByPointerGetterOptions<NodeData extends Record<string, unknown>> = {
@@ -11,10 +10,8 @@ export type NodeByPointerGetterOptions<NodeData extends Record<string, unknown>>
   areaRect: DOMRect | undefined;
   areaTransform: ZoomTransform;
   nodes: NodeInterface<NodeData>[];
-  nodeCustomOptions:
-    | NodeIterationPropsInterface<NodeData, NodeOptionsInterface>
-    | NodeOptionsInterface
-    | undefined;
+
+  graphSettings: Required<GraphSettingsInterface<NodeData>>;
 };
 
 export function nodeByPointerGetter<NodeData extends Record<string, unknown>>({
@@ -22,27 +19,18 @@ export function nodeByPointerGetter<NodeData extends Record<string, unknown>>({
   areaTransform,
   mouseEvent,
   nodes,
-  nodeCustomOptions,
+  graphSettings,
 }: NodeByPointerGetterOptions<NodeData>): NodeInterface<NodeData> | undefined {
   if (!areaRect) return undefined;
 
   const [pointerX, pointerY] = pointerGetter(mouseEvent, areaRect, areaTransform);
 
-  return nodes.find((node, index) => {
-    const nodeOptions = nodeIterationExtractor(
-      node,
-      index,
-      nodes,
-      areaTransform,
-      nodeCustomOptions || {},
-      nodeOptionsGetter,
-    );
-
+  return nodes.find((node) => {
     const radius = nodeRadiusGetter({
-      radiusFlexible: nodeOptions.radiusFlexible,
-      radiusInitial: nodeOptions.radiusInitial,
-      radiusCoefficient: nodeOptions.radiusCoefficient,
-      radiusFactor: nodeOptions.radiusFactor,
+      radiusFlexible: graphSettings.nodeRadiusFlexible,
+      radiusInitial: graphSettings.nodeRadiusInitial,
+      radiusCoefficient: graphSettings.nodeRadiusCoefficient,
+      radiusFactor: graphSettings.nodeRadiusFactor,
       linkCount: node.linkCount,
     });
 

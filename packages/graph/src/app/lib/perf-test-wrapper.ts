@@ -12,5 +12,5 @@ export function perfTestWrapper(cb: () => void) {
 
   const average = countOfTime / countOfOperation;
   // eslint-disable-next-line no-console
-  console.log(average, result);
+  console.log("average: ", average, "perf: ", result);
 }

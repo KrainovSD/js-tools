@@ -10,12 +10,6 @@ import {
 } from "./lib";
 import type { LinkData, NodeData } from "./types";
 
-const settings = {
-  radiusInitial: 4,
-  flexibleRadius: true,
-  highlightByHover: false,
-};
-
 let data: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
   links: [],
   nodes: [],
@@ -45,14 +39,12 @@ const graph = new GraphCanvas({
   nodes: data.nodes,
   nodeSettings: {
     options: (node) => ({
-      radiusInitial: settings.radiusInitial,
-      flexibleRadius: settings.flexibleRadius,
       text: String(node.data?.name),
     }),
   },
   graphSettings: {
     // stickAfterDrag: true,
-    highlightByHover: settings.highlightByHover,
+    highlightByHover: true,
   },
   linkSettings: {},
   listeners: {

@@ -102,7 +102,11 @@ export class GraphCanvas<
 
   private highlightedNeighbors: Set<string | number> | null = null;
 
-  private highlighFading: number = 0;
+  private highlighFading: number = 1;
+
+  private highlightFadingWorking: boolean = false;
+
+  private highlightDrawing: boolean = false;
 
   constructor({
     links,
@@ -209,7 +213,9 @@ export class GraphCanvas<
     this.simulationWorking = false;
     this.highlightedNode = null;
     this.highlightedNeighbors = null;
-    this.highlighFading = 0;
+    this.highlighFading = 1;
+    this.highlightFadingWorking = false;
+    this.highlightDrawing = false;
   }
 
   private clearDataDependencies() {
@@ -413,15 +419,48 @@ export class GraphCanvas<
   }
 
   private initDraw() {
+    function calculateHighlightFading(this: GraphCanvas<NodeData, LinkData>) {
+      this.highlightDrawing = true;
+
+      if (!this.highlightFadingWorking) {
+        switch (true) {
+          case this.highlighFading < 1: {
+            this.highlighFading += this.graphSettings.highlightUpStep;
+            break;
+          }
+          default: {
+            if (this.highlightedNeighbors) this.highlightedNeighbors = null;
+            if (this.highlightedNode) this.highlightedNode = null;
+            break;
+          }
+        }
+
+        if (this.highlighFading < 1 && !this.simulationWorking)
+          return void requestAnimationFrame(() => this.draw());
+      }
+      if (this.highlightFadingWorking) {
+        switch (true) {
+          case this.highlighFading > this.graphSettings.highlightFadingMin: {
+            this.highlighFading -= this.graphSettings.highlightDownStep;
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+
+        if (this.highlighFading > this.graphSettings.highlightFadingMin && !this.simulationWorking)
+          return void requestAnimationFrame(() => this.draw());
+      }
+
+      this.highlightDrawing = false;
+    }
+
     function draw(this: GraphCanvas<NodeData, LinkData>) {
       if (!this.context) return;
 
       if (this.listeners.onDraw) {
         return void this.listeners.onDraw(this.context, this.areaTransform);
-      }
-
-      if (this.highlightedNeighbors && this.highlightedNode) {
-        if (this.highlighFading === 0) this.highlighFading = 1;
       }
 
       this.context.save();
@@ -441,12 +480,7 @@ export class GraphCanvas<
 
       this.listeners.onDrawFinished?.(this.context, this.areaTransform);
 
-      if (this.highlighFading > this.graphSettings.minHighlighFading) {
-        this.highlighFading -= 0.1;
-        requestAnimationFrame(() => {
-          this.draw();
-        });
-      }
+      calculateHighlightFading.bind(this)();
     }
 
     function drawLink(
@@ -587,9 +621,9 @@ export class GraphCanvas<
       (event) => {
         let currentNode: NodeInterface<NodeData> | undefined;
 
-        if (this.graphSettings.highlightByHover) {
+        if (this.graphSettings.highlightByHover && !this.isDragging) {
           currentNode = nodeByPointerGetter({
-            nodeCustomOptions: this.nodeSettings.options,
+            graphSettings: this.graphSettings,
             areaRect: this.areaRect,
             areaTransform: this.areaTransform,
             mouseEvent: event,
@@ -599,15 +633,18 @@ export class GraphCanvas<
           if (currentNode && currentNode.neighbors && this.highlightedNode !== currentNode) {
             this.highlightedNode = currentNode;
             this.highlightedNeighbors = new Set(this.highlightedNode.neighbors);
-            requestAnimationFrame(() => {
-              this.draw();
-            });
+            this.highlightFadingWorking = true;
+
+            if (!this.simulationWorking && !this.highlightDrawing)
+              requestAnimationFrame(() => {
+                this.draw();
+              });
           } else if (!currentNode && this.highlightedNode) {
-            this.highlightedNode = null;
-            this.highlightedNeighbors = null;
-            requestAnimationFrame(() => {
-              this.draw();
-            });
+            this.highlightFadingWorking = false;
+            if (!this.simulationWorking && !this.highlightDrawing)
+              requestAnimationFrame(() => {
+                this.draw();
+              });
           }
         }
 
@@ -615,7 +652,7 @@ export class GraphCanvas<
 
         if (!currentNode)
           currentNode = nodeByPointerGetter({
-            nodeCustomOptions: this.nodeSettings.options,
+            graphSettings: this.graphSettings,
             areaRect: this.areaRect,
             areaTransform: this.areaTransform,
             mouseEvent: event,
@@ -633,7 +670,7 @@ export class GraphCanvas<
       if (!this.listeners.onDoubleClick) return;
 
       const currentNode = nodeByPointerGetter({
-        nodeCustomOptions: this.nodeSettings.options,
+        graphSettings: this.graphSettings,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -651,7 +688,7 @@ export class GraphCanvas<
           if (!this.listeners.onClick) return;
 
           const currentNode = nodeByPointerGetter({
-            nodeCustomOptions: this.nodeSettings.options,
+            graphSettings: this.graphSettings,
             areaRect: this.areaRect,
             areaTransform: this.areaTransform,
             mouseEvent: event,
@@ -664,7 +701,7 @@ export class GraphCanvas<
           if (!this.listeners.onWheelClick) return;
 
           const currentNode = nodeByPointerGetter({
-            nodeCustomOptions: this.nodeSettings.options,
+            graphSettings: this.graphSettings,
             areaRect: this.areaRect,
             areaTransform: this.areaTransform,
             mouseEvent: event,
@@ -685,7 +722,7 @@ export class GraphCanvas<
         if (!this.listeners.onContextMenu) return;
 
         const currentNode = nodeByPointerGetter({
-          nodeCustomOptions: this.nodeSettings.options,
+          graphSettings: this.graphSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,

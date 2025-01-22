@@ -12,6 +12,7 @@ export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateS
   let yForce: number = 0.1;
   let radiusCoefficient: number = 5;
   let radiusFactor: number = 1;
+  let highlight: boolean = true;
 
   const forceUseless =
     document.querySelector(`#${CONTROLS.ForceUseless}`)?.querySelectorAll("input") || [];
@@ -100,6 +101,16 @@ export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateS
             });
           break;
         }
+        case FORCE_TYPES.Highlight: {
+          highlight = input.checked;
+          if (updateSingle)
+            graph.changeSettings({
+              graphSettings: {
+                highlightByHover: highlight,
+              },
+            });
+          break;
+        }
 
         default: {
           break;
@@ -119,6 +130,7 @@ export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateS
           graphSettings: {
             nodeRadiusCoefficient: radiusCoefficient,
             nodeRadiusFactor: radiusFactor,
+            highlightByHover: highlight,
           },
         });
     });
@@ -154,6 +166,10 @@ export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateS
       }
       case FORCE_TYPES.RadiusFactor: {
         input.value = radiusFactor.toString();
+        break;
+      }
+      case FORCE_TYPES.Highlight: {
+        input.checked = highlight;
         break;
       }
 
