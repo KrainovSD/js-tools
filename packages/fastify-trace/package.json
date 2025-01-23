@@ -1,6 +1,6 @@
 {
-  "name": "@krainovsd/js-helpers",
-  "version": "0.3.4",
+  "name": "@krainovsd/fastify-trace",
+  "version": "0.0.2",
   "description": "Krainov helpers",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -8,20 +8,29 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/KrainovSD/js-tools.git",
-    "directory": "packages/js-helpers"
+    "directory": "packages/fastify-trace"
   },
-  "sideEffects": false,
+  "sideEffects": true,
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.cjs"
+      "types": "./lib/tmp/register-fastify-trace.d.ts",
+      "import": "./lib/esm/register-fastify-trace.js",
+      "require": "./lib/cjs/register-fastify-trace.cjs"
+    },
+    "./trace": {
+      "types": "./lib/tmp/register-trace.d.ts",
+      "import": "./lib/esm/register-trace.js",
+      "require": "./lib/cjs/register-trace.cjs"
     }
   },
   "keywords": [
     "helpers",
     "utils",
     "js",
+    "fastify",
+    "trace",
+    "opentelemetry",
+    "otlp",
     "nodejs"
   ],
   "files": [
@@ -30,7 +39,7 @@
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
     "clear": "rm -rf ./lib",
-    "build:dev": "npm run clear && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
+    "build:dev": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
     "build:types": "tspc -p tsconfig.build.json",
@@ -41,10 +50,6 @@
     "test:coverage": "jest --coverage",
     "prepare": "husky"
   },
-  "dependencies": {
-    "dayjs": "1.11.13",
-    "lodash": "4.17.21"
-  },
   "devDependencies": {
     "@krainovsd/eslint-presets": "0.2.1",
     "@rollup/plugin-commonjs": "28.0.2",
@@ -52,32 +57,30 @@
     "@rollup/plugin-node-resolve": "16.0.0",
     "@rollup/plugin-typescript": "12.1.2",
     "rollup-plugin-dts": "6.1.1",
-    "rollup-plugin-bundle-stats": "4.17.0",
-    "rollup-plugin-visualizer": "5.12.0",
-    "@swc/core": "1.10.1",
-    "@swc/jest": "0.2.37",
-    "@trivago/prettier-plugin-sort-imports": "5.2.0",
-    "@types/jest": "29.5.14",
-    "@types/lodash": "4.17.13",
-    "@types/node": "22.10.2",
     "@types/rollup-plugin-peer-deps-external": "2.2.5",
-    "eslint": "9.17.0",
-    "jest": "29.7.0",
-    "node-fetch": "3.3.2",
-    "prettier": "3.4.2",
     "rollup": "4.29.1",
     "rollup-plugin-peer-deps-external": "2.2.4",
-    "ts-jest": "29.2.5",
+    "@trivago/prettier-plugin-sort-imports": "5.2.0",
+    "@types/node": "22.10.2",
+    "eslint": "9.17.0",
+    "prettier": "3.4.2",
     "typescript": "5.7.2",
+    "fastify": "5.2.1",
     "typescript-transform-paths": "3.5.2",
     "ts-patch": "3.3.0"
   },
-  "peerDependencies": {
-    "node-fetch": "3.3.2"
-  },
-  "peerDependenciesMeta": {
-    "node-fetch": {
-      "optional": true
-    }
+  "dependencies": {
+    "@autotelic/fastify-opentelemetry": "0.22.0",
+    "@opentelemetry/api": "1.9.0",
+    "@opentelemetry/exporter-trace-otlp-grpc": "0.57.1",
+    "@opentelemetry/instrumentation": "0.57.1",
+    "@opentelemetry/instrumentation-fastify": "0.44.1",
+    "@opentelemetry/instrumentation-http": "0.57.1",
+    "@opentelemetry/instrumentation-pg": "0.50.0",
+    "@opentelemetry/resources": "1.30.1",
+    "@opentelemetry/sdk-trace-base": "1.30.1",
+    "@opentelemetry/sdk-trace-node": "1.30.1",
+    "@opentelemetry/semantic-conventions": "1.28.0",
+    "dotenv": "16.4.7"
   }
 }

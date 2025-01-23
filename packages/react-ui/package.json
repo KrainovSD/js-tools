@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/react-ui",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Krainov react-ui",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -13,7 +13,7 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./tmp/index.d.ts",
+      "types": "./lib/index.d.ts",
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.cjs"
     }
@@ -25,30 +25,42 @@
     "components"
   ],
   "files": [
-    "lib",
-    "tmp"
+    "lib"
   ],
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
     "clear": "rm -rf ./lib",
+    "build:dev": "npm run clear && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
-    "build:types": "tsc -p tsconfig.build.json",
+    "build:types": "tspc -p tsconfig.build.json",
     "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
     "lint:debug": "eslint --debug eslint.config.js",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "antd": "5.22.5",
+    "clsx": " 2.1.1",
+    "i18next": "24.2.0",
+    "react-i18next": "15.2.0",
+    "lodash": "4.17.21",
+    "@krainovsd/react-icons": "0.2.3",
+    "@krainovsd/js-helpers": "0.3.4",
+    "@emotion/css": "11.13.5"
+  },
   "devDependencies": {
-    "@emotion/css": "11.13.5",
-    "@krainovsd/eslint-presets": "0.2.1",
-    "@krainovsd/react-icons": "0.2.1",
-    "@krainovsd/js-helpers": "0.3.2",
-    "@rollup/plugin-terser": "0.4.4",
-    "@rollup/plugin-typescript": "12.1.2",
+    "@rollup/plugin-commonjs": "28.0.2",
+    "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.0",
+    "@rollup/plugin-typescript": "12.1.2",
+    "rollup-plugin-dts": "6.1.1",
+    "@types/rollup-plugin-peer-deps-external": "2.2.5",
+    "rollup": "4.29.1",
+    "rollup-plugin-peer-deps-external": "2.2.4",
+    "@rollup/plugin-terser": "0.4.4",
+    "@krainovsd/eslint-presets": "0.2.1",
     "@storybook/addon-essentials": "8.4.7",
     "@storybook/addon-interactions": "8.4.7",
     "@storybook/blocks": "8.4.7",
@@ -61,32 +73,21 @@
     "@types/node": "22.10.2",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
-    "@types/rollup-plugin-peer-deps-external": "2.2.5",
     "@vitejs/plugin-react": "4.3.4",
-    "antd": "5.22.5",
-    "clsx": " 2.1.1",
     "eslint": "9.17.0",
-    "i18next": "24.2.0",
-    "lodash": "4.17.21",
     "prettier": "3.4.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-i18next": "15.2.0",
-    "rollup": "4.29.1",
-    "rollup-plugin-peer-deps-external": "2.2.4",
     "rollup-plugin-postcss": "4.0.2",
-    "@rollup/plugin-commonjs": "28.0.2",
     "sass": "1.83.0",
     "storybook": "8.4.7",
     "typescript": "5.7.2",
-    "vite": "6.0.5"
+    "vite": "6.0.5",
+    "typescript-transform-paths": "3.5.2",
+    "ts-patch": "3.3.0"
   },
   "peerDependencies": {
-    "@krainovsd/react-icons": "^0.2.0",
-    "@krainovsd/js-helpers": "^0.3.1",
     "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-i18next": "^15.0.0",
-    "antd": "^5.21.0"
+    "react-dom": "^18.0.0"
   }
 }

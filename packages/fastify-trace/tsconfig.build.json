@@ -4,10 +4,8 @@
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "tmp",
-    "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
+    "outDir": "tmp"
   },
-  "files": ["src/index.ts"],
-  "include": [],
+  "include": ["src/**/*"],
   "exclude": ["**/*.spec.ts"]
 }

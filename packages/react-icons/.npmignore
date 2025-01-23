@@ -3,6 +3,7 @@ eslint.config.js
 .prettierrc
 .prettierrc.json
 .gitignore
+.npmrc
 
 api-extractor.json
 babel.config.json
@@ -11,9 +12,12 @@ rollup.config.js
 
 tsconfig.json
 tsconfig.build.json
+tsconfig.node.json
+
 
 node_modules/
 src/
+tmp/
 .github/
 .husky/
 pnpm-lock.yaml

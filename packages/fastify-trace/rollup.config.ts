@@ -1,47 +1,49 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import commonjs from "@rollup/plugin-commonjs";
+import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
-import { type Plugin, type RollupOptions, defineConfig } from "rollup";
+import { type Plugin, defineConfig } from "rollup";
 import { dts } from "rollup-plugin-dts";
 import externals from "rollup-plugin-peer-deps-external";
 
+const extensions = [".ts", ".js"];
+
 const DEV = process.env.NODE_ENV === "development";
 
-const config: RollupOptions[] = [
+export default defineConfig([
   {
-    input: "./src/index.ts",
+    input: ["./src/register-fastify-trace.ts", "./src/register-trace.ts"],
     output: [
       {
-        dir: "./lib/esm",
-        format: "es",
-        generatedCode: "es2015",
-        sourcemap: true,
-        preserveModules: true,
-        preserveModulesRoot: "src",
-      },
-      {
-        file: "./lib/cjs/index.cjs",
+        dir: "./lib/cjs",
         format: "cjs",
         generatedCode: "es2015",
+        preserveModules: true,
+        sourcemap: true,
+        entryFileNames: (info) => {
+          return `${info.name}.cjs`;
+        },
+      },
+      {
+        dir: "./lib/esm",
+        format: "esm",
+        generatedCode: "es2015",
+        preserveModules: true,
         sourcemap: true,
       },
     ],
     plugins: [
       externals({ includeDependencies: !DEV }) as Plugin,
       typescript(),
-      DEV && nodeResolve({ extensions: [".ts", ".js"] }),
+      json(),
+      DEV && nodeResolve({ extensions }),
       DEV && commonjs(),
     ],
   },
-];
-
-if (!DEV) {
-  config.push({
-    input: ["./tmp/index.d.ts"],
-    output: [{ file: "./lib/index.d.ts", format: "es" }],
+  {
+    input: ["./tmp/register-fastify-trace.d.ts", "./tmp/register-trace.d.ts"],
+    output: [{ dir: "lib", format: "cjs" }],
     plugins: [dts()],
-  });
-}
-
-export default defineConfig(config);
+  },
+]);

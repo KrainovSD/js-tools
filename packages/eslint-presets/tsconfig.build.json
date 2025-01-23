@@ -5,7 +5,8 @@
     "allowJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "tmp"
+    "outDir": "tmp",
+    "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
   },
   "files": ["src/index.js"],
   "include": ["src/index.js"]
