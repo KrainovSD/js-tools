@@ -6,4 +6,6 @@ List of packages for JS development.
 - [react-ui [0.1.4]](https://www.npmjs.com/package/@krainovsd/react-ui)
 - [fastify-trace [0.0.2]](https://www.npmjs.com/package/@krainovsd/fastify-trace)
 - [fastify-logger [0.1.2]](https://www.npmjs.com/package/@krainovsd/fastify-logger)
+- [fastify-health-controller [0.1.3]](https://www.npmjs.com/package/@krainovsd/fastify-health-controller)
+- 
   
