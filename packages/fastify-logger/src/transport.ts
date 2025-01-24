@@ -1,12 +1,9 @@
 import { isNumber, isObject, isString } from "@krainovsd/js-helpers";
 import build from "pino-abstract-transport";
 import { getCorrectLog } from "./lib";
+import type { TransportSettings } from "./logger-types";
 
-type Options = {
-  deniedProperties?: string[];
-} & Record<string, unknown>;
-
-export default function transport(opts: Options = {}) {
+export default function transport(opts: TransportSettings = {}) {
   const deniedProperty = opts.deniedProperties?.map((property) => {
     return String(property).trim().toLowerCase();
   });
@@ -17,7 +14,7 @@ export default function transport(opts: Options = {}) {
 
       obj.time = new Date().toISOString();
       if (isString(obj.level) || isNumber(obj.level)) obj.level = getPinoLevel(obj.level);
-      getCorrectLog(obj, deniedProperty);
+      getCorrectLog(obj, deniedProperty, opts.format);
     }
   });
 }

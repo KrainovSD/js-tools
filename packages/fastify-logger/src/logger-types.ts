@@ -1,4 +1,4 @@
-import type { FastifyBaseLogger } from "fastify";
+import type { FastifyBaseLogger, FastifyError, FastifyReply, FastifyRequest } from "fastify";
 
 export type LoggerServiceConstructorOptions = {
   logger: FastifyBaseLogger;
@@ -28,3 +28,16 @@ type LoggerDefaultOptions = {
 export type LoggerInfoOptions = LoggerDefaultOptions;
 export type LoggerWarnOptions = { error?: unknown } & LoggerDefaultOptions;
 export type LoggerErrorOptions = { error?: unknown } & LoggerDefaultOptions;
+
+export type TransportFormat = "logfmt" | "json";
+export type TransportSettings = {
+  deniedProperties?: string[];
+  format?: TransportFormat;
+};
+
+export type DefineMiddlewareSettings = {
+  onError?: (error: FastifyError, request: FastifyRequest, reply: FastifyReply) => void;
+  onRequest?: (request: FastifyRequest, reply: FastifyReply) => void;
+  onSend?: (request: FastifyRequest, reply: FastifyReply, payload: unknown) => Promise<void>;
+  onResponse?: (request: FastifyRequest, reply: FastifyReply) => void;
+};

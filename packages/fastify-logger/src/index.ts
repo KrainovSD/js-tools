@@ -7,5 +7,6 @@ declare module "fastify" {
 
 export { Logger } from "./logger";
 export * from "./logger-types";
-export { transportGetter } from "./transport-getter";
+export { defineTransport } from "./define-transport";
+export { defineMiddlewares } from "./define-middlewares";
 export * from "./lib";

@@ -2,6 +2,7 @@ import { getByPath } from "@krainovsd/js-helpers";
 import { trace } from "@opentelemetry/api";
 import type { FastifyReply, FastifyRequest } from "fastify";
 import { v4 } from "uuid";
+import type { TransportFormat } from "../logger-types";
 
 export function getTraceId() {
   return trace?.getActiveSpan?.()?.spanContext?.()?.traceId ?? undefined;
@@ -38,22 +39,43 @@ function isHasSpace(str: unknown): str is string {
   return typeof str === "string" && str.includes(" ");
 }
 
-export function getCorrectLog(obj: Record<string, unknown>, deniedProperties?: string[]) {
-  let log = "";
-  for (let [key, value] of Object.entries(obj)) {
-    if (
-      (deniedProperties && deniedProperties.includes(key.toLowerCase())) ||
-      typeof value === "undefined"
-    )
-      continue;
+export function getCorrectLog(
+  obj: Record<string, unknown>,
+  deniedProperties?: string[],
+  format: TransportFormat = "logfmt",
+) {
+  const correctObj = Object.fromEntries(
+    Object.entries(obj).filter(
+      ([key, value]) =>
+        !(
+          (deniedProperties && deniedProperties.includes(key.toLowerCase())) ||
+          typeof value === "undefined"
+        ),
+    ),
+  );
 
-    if (isHasSpace(value)) {
-      value = `"${value}"`;
+  switch (format) {
+    case "logfmt": {
+      let log = "";
+
+      Object.entries(correctObj).forEach(([key, value]) => {
+        if (isHasSpace(value)) {
+          value = `"${value}"`;
+        }
+
+        log += `${key}=${value} `;
+      });
+      // eslint-disable-next-line no-console
+      console.log(log.trim());
+      break;
     }
-
-    log += `${key}=${value} `;
+    case "json": {
+      // eslint-disable-next-line no-console
+      console.log(correctObj);
+      break;
+    }
+    default: {
+      break;
+    }
   }
-
-  // eslint-disable-next-line no-console
-  console.log(log.trim());
 }

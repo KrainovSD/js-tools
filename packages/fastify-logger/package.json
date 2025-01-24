@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/fastify-logger",
-  "version": "0.0.5",
+  "version": "0.1.2",
   "description": "Krainov helpers",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
