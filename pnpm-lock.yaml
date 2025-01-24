@@ -103,6 +103,73 @@ importers:
         specifier: 3.5.2
         version: 3.5.2(typescript@5.7.2)
 
+  packages/fastify-logger:
+    dependencies:
+      '@krainovsd/js-helpers':
+        specifier: 0.3.4
+        version: 0.3.4(node-fetch@3.3.2)
+      '@opentelemetry/api':
+        specifier: 1.9.0
+        version: 1.9.0
+      pino-abstract-transport:
+        specifier: 2.0.0
+        version: 2.0.0
+      uuid:
+        specifier: 11.0.5
+        version: 11.0.5
+    devDependencies:
+      '@krainovsd/eslint-presets':
+        specifier: 0.2.1
+        version: 0.2.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(eslint@9.17.0)(jest@29.7.0(@types/node@22.10.2)(babel-plugin-macros@3.1.0))(prettier@3.4.2)(typescript@5.7.2)
+      '@rollup/plugin-commonjs':
+        specifier: 28.0.2
+        version: 28.0.2(rollup@4.29.1)
+      '@rollup/plugin-json':
+        specifier: 6.1.0
+        version: 6.1.0(rollup@4.29.1)
+      '@rollup/plugin-node-resolve':
+        specifier: 16.0.0
+        version: 16.0.0(rollup@4.29.1)
+      '@rollup/plugin-typescript':
+        specifier: 12.1.2
+        version: 12.1.2(rollup@4.29.1)(tslib@2.8.1)(typescript@5.7.2)
+      '@trivago/prettier-plugin-sort-imports':
+        specifier: 5.2.0
+        version: 5.2.0(prettier@3.4.2)
+      '@types/node':
+        specifier: 22.10.2
+        version: 22.10.2
+      '@types/rollup-plugin-peer-deps-external':
+        specifier: 2.2.5
+        version: 2.2.5
+      eslint:
+        specifier: 9.17.0
+        version: 9.17.0
+      fastify:
+        specifier: 5.2.1
+        version: 5.2.1
+      prettier:
+        specifier: 3.4.2
+        version: 3.4.2
+      rollup:
+        specifier: 4.29.1
+        version: 4.29.1
+      rollup-plugin-dts:
+        specifier: 6.1.1
+        version: 6.1.1(rollup@4.29.1)(typescript@5.7.2)
+      rollup-plugin-peer-deps-external:
+        specifier: 2.2.4
+        version: 2.2.4(rollup@4.29.1)
+      ts-patch:
+        specifier: 3.3.0
+        version: 3.3.0
+      typescript:
+        specifier: 5.7.2
+        version: 5.7.2
+      typescript-transform-paths:
+        specifier: 3.5.2
+        version: 3.5.2(typescript@5.7.2)
+
   packages/fastify-trace:
     dependencies:
       '@autotelic/fastify-opentelemetry':
@@ -5023,6 +5090,10 @@ packages:
 
   util@0.12.5:
     resolution: {integrity: sha512-kZf/K6hEIrWHI6XqOFUiiMa+79wE/D8Q+NCNAWclkyg3b4d2k7s0QGepNjiABc+aR3N1PAyHL7p6UcLY6LmrnA==}
+
+  uuid@11.0.5:
+    resolution: {integrity: sha512-508e6IcKLrhxKdBbcA2b4KQZlLVp2+J5UwQ6F7Drckkc5N9ZJwFa4TgWtsww9UG8fGHbm6gbV19TdM5pQ4GaIA==}
+    hasBin: true
 
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
@@ -10450,6 +10521,8 @@ snapshots:
       is-generator-function: 1.0.10
       is-typed-array: 1.1.15
       which-typed-array: 1.1.18
+
+  uuid@11.0.5: {}
 
   uuid@9.0.1: {}
 
