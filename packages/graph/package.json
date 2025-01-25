@@ -12,7 +12,7 @@
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./lib/esm/index.d.ts",
+      "types": "./lib/index.d.ts",
       "import": "./lib/esm/index.js"
     }
   },

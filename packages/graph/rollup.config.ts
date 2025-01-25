@@ -28,7 +28,7 @@ export default defineConfig([
   },
   {
     input: "./tmp/index.d.ts",
-    output: [{ file: "lib/esm/index.d.ts", format: "es" }],
+    output: [{ file: "lib/index.d.ts", format: "es" }],
     plugins: [dts()],
   },
 ]);

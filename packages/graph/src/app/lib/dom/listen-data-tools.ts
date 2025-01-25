@@ -1,7 +1,7 @@
 import type { LinkData, NodeData } from "@/app/types";
 import type { GraphCanvas, GraphCanvasInterface } from "@/module/GraphCanvas";
 import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "../../mock";
-import * as tasks from "../../mock/tasks.json";
+// import * as tasks from "../../mock/tasks.json";
 import { CONTROLS, DATA_TYPES, type ValueOf } from "./constants";
 
 export function listenDataTools(
@@ -79,7 +79,7 @@ export function listenDataTools(
       break;
     }
     default: {
-      proxy.data = tasks;
+      proxy.data = d3Mock;
       break;
     }
   }

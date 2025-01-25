@@ -69,4 +69,4 @@ const graph = new GraphCanvas({
 
 renderTools();
 listenForceTools(graph, true);
-listenDataTools(graph, proxy, "");
+listenDataTools(graph, proxy, "d3");
