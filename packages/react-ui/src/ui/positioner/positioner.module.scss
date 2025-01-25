@@ -1,0 +1,25 @@
+.base {
+  position: fixed;
+  display: flex;
+
+  &.full {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    transition: 0.5s;
+    overflow: hidden;
+  }
+}
+
+.header {
+  color: #767474;
+  text-transform: uppercase;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 140%;
+  white-space: nowrap;
+  padding: 4px 8px;
+}

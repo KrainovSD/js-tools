@@ -476,8 +476,8 @@ importers:
         specifier: 11.13.5
         version: 11.13.5
       '@krainovsd/js-helpers':
-        specifier: 0.3.4
-        version: 0.3.4(node-fetch@3.3.2)
+        specifier: 0.4.0
+        version: 0.4.0(node-fetch@3.3.2)
       '@krainovsd/markdown-editor':
         specifier: 0.0.4
         version: 0.0.4(@codemirror/search@6.5.8)
@@ -1315,6 +1315,14 @@ packages:
 
   '@krainovsd/js-helpers@0.3.4':
     resolution: {integrity: sha512-+jjUyJYxty5qLbvp1MWQZ+xTOHTn7brkgSGjFtWLMVWf1LpIA8ruBTnsc+RQJYVeoc1jBjfEvqLHIXnzvpAL6g==}
+    peerDependencies:
+      node-fetch: 3.3.2
+    peerDependenciesMeta:
+      node-fetch:
+        optional: true
+
+  '@krainovsd/js-helpers@0.4.0':
+    resolution: {integrity: sha512-tbkMTTBBe8gzWgLAl+IHZC0aPzkvxa72APF7yBEINFbkV4FwV74MVLPUYXQ0GPxSInAOGA+fzkflKWlAulxd9Q==}
     peerDependencies:
       node-fetch: 3.3.2
     peerDependenciesMeta:
@@ -6591,6 +6599,13 @@ snapshots:
       - node-fetch
 
   '@krainovsd/js-helpers@0.3.4(node-fetch@3.3.2)':
+    dependencies:
+      dayjs: 1.11.13
+      lodash: 4.17.21
+    optionalDependencies:
+      node-fetch: 3.3.2
+
+  '@krainovsd/js-helpers@0.4.0(node-fetch@3.3.2)':
     dependencies:
       dayjs: 1.11.13
       lodash: 4.17.21
