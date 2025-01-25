@@ -1,22 +1,23 @@
-import type { AuthMiddleWareOptions } from "../../types";
-import { wait } from "../utils";
-import { tokenRequest } from "./token-request";
+import type { AuthMiddleWareOptions } from "../../../types";
+import { wait } from "../../utils";
+import { getAuthToken } from "./token";
 
 describe("token-request", () => {
   const options: AuthMiddleWareOptions = {
-    authRedirectUrl: "https://jestjs.io/api/auth/callback",
+    authUrl: "https://jestjs.io/api/auth/callback",
     authTokenUrl: "https://jestjs.io/api/auth/token",
-    pathToExpires: "expires",
+    pathToTokenExpires: "expires",
     pathToToken: "token",
-    storageExpiresTokenName: "expires",
+    storageTokenExpiresName: "expires",
     storageTokenName: "token",
+    errorUrl: "/error",
   };
   const data = {
     expires: 10,
     token: "TOKEN",
   };
   const localStorageInstance: Record<string, unknown> = {
-    [options.storageExpiresTokenName]: undefined,
+    [options.storageTokenExpiresName]: undefined,
     [options.storageTokenName]: undefined,
   };
   const spyReplace = jest.fn();
@@ -58,7 +59,7 @@ describe("token-request", () => {
       },
     });
 
-    await expect(tokenRequest(options)).resolves.toBeNull();
+    await expect(getAuthToken(options)).resolves.toBeNull();
     expect(spyReplace).toHaveBeenCalled();
   });
   it("Bad response data object", async () => {
@@ -78,7 +79,7 @@ describe("token-request", () => {
       },
     });
 
-    await expect(tokenRequest(options)).resolves.toBeNull();
+    await expect(getAuthToken(options)).resolves.toBeNull();
     expect(spyReplace).toHaveBeenCalled();
   });
   it("Bad response data value", async () => {
@@ -98,7 +99,7 @@ describe("token-request", () => {
       },
     });
 
-    await expect(tokenRequest(options)).resolves.toBeNull();
+    await expect(getAuthToken(options)).resolves.toBeNull();
     expect(spyReplace).toHaveBeenCalled();
   });
   it("success", async () => {
@@ -118,10 +119,10 @@ describe("token-request", () => {
       },
     });
 
-    await expect(tokenRequest(options)).resolves.toBe(data.token);
+    await expect(getAuthToken(options)).resolves.toBe(data.token);
     expect(spyReplace).not.toHaveBeenCalled();
     expect(spySetItem).toHaveBeenCalledTimes(2);
-    expect(localStorageInstance[options.storageExpiresTokenName]).toBe(String(data.expires));
+    expect(localStorageInstance[options.storageTokenExpiresName]).toBe(String(data.expires));
     expect(localStorageInstance[options.storageTokenName]).toBe(data.token);
   });
 });

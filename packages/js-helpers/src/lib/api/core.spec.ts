@@ -1,9 +1,9 @@
 import { jsonParse, wait } from "../utils";
-import { generateRequestsInstance } from "./core";
+import { createRequestClientInstance } from "./core";
 
 describe("api core", () => {
   it("success", async () => {
-    const request = generateRequestsInstance().requestApiWithStatus;
+    const request = createRequestClientInstance().requestApiWithStatus;
     const outcomingData = {
       mark: 1,
       data: "test1",
@@ -71,7 +71,7 @@ describe("api core", () => {
     expect(receivedInitialOutcomingData).toEqual(outcomingData);
   });
   it("error", async () => {
-    const request = generateRequestsInstance().requestApiWithStatus;
+    const request = createRequestClientInstance().requestApiWithStatus;
     const status = 400;
 
     Object.defineProperty(global, "fetch", {
@@ -98,7 +98,7 @@ describe("api core", () => {
     ).rejects.toThrow(`HTTP error! Status: ${status}`);
   });
   it("without response", async () => {
-    const request = generateRequestsInstance().requestApiWithStatus;
+    const request = createRequestClientInstance().requestApiWithStatus;
     const status = 200;
 
     Object.defineProperty(global, "fetch", {
@@ -126,7 +126,7 @@ describe("api core", () => {
     ).resolves.toEqual({ status, data: true });
   });
   it("download error", async () => {
-    const request = generateRequestsInstance().requestApiWithStatus;
+    const request = createRequestClientInstance().requestApiWithStatus;
     const status = 200;
 
     Object.defineProperty(global, "fetch", {
@@ -174,7 +174,7 @@ describe("api core", () => {
     ).rejects.toThrow(`Download Error! Empty info!`);
   });
   it("download success", async () => {
-    const request = generateRequestsInstance().requestApiWithStatus;
+    const request = createRequestClientInstance().requestApiWithStatus;
     const status = 200;
     const data = 1;
 
@@ -223,7 +223,7 @@ describe("api core", () => {
     ).resolves.toEqual({ status, data });
   });
   it("mock response", async () => {
-    const request = generateRequestsInstance().requestApiWithStatus;
+    const request = createRequestClientInstance().requestApiWithStatus;
     const data = 3;
 
     await expect(
@@ -236,7 +236,7 @@ describe("api core", () => {
     ).resolves.toEqual({ status: 200, data });
   });
   it("hasn't response", async () => {
-    const request = generateRequestsInstance().requestApiWithStatus;
+    const request = createRequestClientInstance().requestApiWithStatus;
 
     Object.defineProperty(global, "fetch", {
       value: async () => {

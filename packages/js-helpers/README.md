@@ -42,7 +42,7 @@ limitStreamOfRequests({
 for NodeJS
 
 ```js
-const { generateRequestsInstance } = require("@krainovsd/js-helpers")
+const { createRequestClientInstance } = require("@krainovsd/js-helpers")
 
-generateRequestsInstance().requestApi({ method: "DELETE", path: "/entity/:id" });
+createRequestClientInstance().requestApi({ method: "DELETE", path: "/entity/:id" });
 ```

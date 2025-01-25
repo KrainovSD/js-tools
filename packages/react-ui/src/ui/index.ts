@@ -36,3 +36,4 @@ export * from "./form";
 export * from "./spinner";
 export * from "./import";
 export * from "./slider";
+export * from "./markdown-editor";

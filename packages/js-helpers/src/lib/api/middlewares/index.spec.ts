@@ -11,16 +11,21 @@ describe("generate-middlewares", () => {
       headers: {},
     };
 
-    const middlewares = generateMiddlewares(["logger", "auth", "test"] as ActiveMiddleware, {
-      auth: {
-        authRedirectUrl: "test",
-        authTokenUrl: "test",
-        pathToExpires: "test",
-        pathToToken: "test",
-        storageExpiresTokenName: "test",
-        storageTokenName: "test",
+    const middlewares = generateMiddlewares(
+      ["logger", "auth", "test"] as ActiveMiddleware,
+      {
+        auth: {
+          authUrl: "test",
+          authTokenUrl: "test",
+          pathToTokenExpires: "test",
+          pathToToken: "test",
+          storageTokenExpiresName: "test",
+          storageTokenName: "test",
+          errorUrl: "/error",
+        },
       },
-    });
+      [],
+    );
     await expect(middlewares(request)).resolves.toBe(1);
     expect(request.headers?.Authorization).toBe(`Bearer ${token}`);
   });

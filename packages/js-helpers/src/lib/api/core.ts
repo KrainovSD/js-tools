@@ -1,6 +1,11 @@
 import type { BodyInit as NodeBodyInit, Response as NodeResponse } from "node-fetch";
 import { IS_BROWSER, IS_JEST, IS_NODE } from "../../constants";
-import type { ActiveMiddleware, MiddlewaresOptions, RequestInterface } from "../../types";
+import type {
+  ActiveMiddleware,
+  Middleware,
+  MiddlewaresOptions,
+  RequestInterface,
+} from "../../types";
 import { downloadFile } from "../browser";
 import { isArray, isObject } from "../typings";
 import { createURLWithParams, wait } from "../utils";
@@ -24,11 +29,22 @@ export class ResponseError extends Error {
   }
 }
 
-export function generateRequestsInstance(
-  activeMiddlewares?: ActiveMiddleware,
-  middlewareOptions?: MiddlewaresOptions,
-) {
-  const executeMiddlewares = generateMiddlewares(activeMiddlewares || [], middlewareOptions || {});
+type CreateRequestClientInstance = {
+  activeMiddlewares?: ActiveMiddleware;
+  middlewareOptions?: MiddlewaresOptions;
+  customMiddlewares?: Middleware[];
+};
+
+export function createRequestClientInstance({
+  activeMiddlewares,
+  middlewareOptions,
+  customMiddlewares,
+}: CreateRequestClientInstance = {}) {
+  const executeMiddlewares = generateMiddlewares(
+    activeMiddlewares || [],
+    middlewareOptions || {},
+    customMiddlewares || [],
+  );
 
   async function handleRequest<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
     request: RequestInterface<T, Incoming, Body, Outcoming>,

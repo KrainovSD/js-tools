@@ -11,8 +11,9 @@ import { consoleMiddleware } from "./console-middleware";
 export function generateMiddlewares(
   activeMiddlewares: ActiveMiddleware,
   middlewareOptions: MiddlewaresOptions,
+  customMiddlewares: Middleware[],
 ) {
-  const selectedMiddlewares: Middleware[] = [];
+  const selectedMiddlewares: Middleware[] = customMiddlewares;
 
   for (const key of activeMiddlewares) {
     switch (key) {

@@ -28,14 +28,35 @@ export type MiddlewareType = ValueOf<typeof API_MIDDLEWARES>;
 export type ActiveMiddleware = MiddlewareType[];
 
 export type AuthMiddleWareOptions = {
-  authRedirectUrl: string;
+  errorUrl: string;
+  authUrl: string;
   authTokenUrl: string;
-  storageExpiresTokenName: string;
+  storageTokenExpiresName: string;
   storageTokenName: string;
   pathToToken: string;
-  pathToExpires: string;
+  pathToTokenExpires: string;
+  tokenRequest?: () => Promise<string | null | undefined>;
 };
 
 export type MiddlewaresOptions = {
   auth?: AuthMiddleWareOptions;
+};
+
+export type AuthUserUpdateRequestOptions<User extends Record<string, unknown>> =
+  AuthUserRequestOptions & {
+    userRequest?: () => Promise<User | null | undefined>;
+    authUrl: string;
+    errorUrl: string;
+  };
+
+export type AuthUserRequestOptions = {
+  authUserUrl: string;
+};
+
+export type AuthTokenRequestOptions = {
+  authTokenUrl: string;
+  storageTokenExpiresName: string;
+  storageTokenName: string;
+  pathToToken: string;
+  pathToTokenExpires: string;
 };
