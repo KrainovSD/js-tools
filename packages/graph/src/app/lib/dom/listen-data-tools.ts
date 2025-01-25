@@ -45,6 +45,7 @@ export function listenDataTools(
   function startDynamic() {
     dynamicInterval = setInterval(() => {
       proxy.data = createNewDynamicMock(graph.getData());
+      // eslint-disable-next-line no-console
       console.log(proxy.data);
       graph.changeData({ links: proxy.data.links, nodes: proxy.data.nodes });
     }, 300);
