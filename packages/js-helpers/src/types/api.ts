@@ -29,7 +29,7 @@ export type ActiveMiddleware = MiddlewareType[];
 
 export type AuthMiddleWareOptions = {
   errorUrl: string;
-  authUrl: string;
+  authUrl: () => string;
   authTokenUrl: string;
   storageTokenExpiresName: string;
   storageTokenName: string;
@@ -45,7 +45,7 @@ export type MiddlewaresOptions = {
 export type AuthUserUpdateRequestOptions<User extends Record<string, unknown>> =
   AuthUserRequestOptions & {
     userRequest?: () => Promise<User | null | undefined>;
-    authUrl: string;
+    authUrl: () => string;
     errorUrl: string;
   };
 

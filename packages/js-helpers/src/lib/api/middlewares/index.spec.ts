@@ -15,7 +15,7 @@ describe("generate-middlewares", () => {
       ["logger", "auth", "test"] as ActiveMiddleware,
       {
         auth: {
-          authUrl: "test",
+          authUrl: () => "test",
           authTokenUrl: "test",
           pathToTokenExpires: "test",
           pathToToken: "test",

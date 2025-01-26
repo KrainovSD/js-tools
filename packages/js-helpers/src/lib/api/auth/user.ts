@@ -6,7 +6,7 @@ export async function updateAuthUser<User extends Record<string, unknown>>(
 ) {
   const userInfo = await (options.userRequest ? options.userRequest() : getAuthUser<User>(options));
   if (isNull(userInfo)) {
-    return void window.location.replace(options.authUrl);
+    return void window.location.replace(options.authUrl());
   }
   if (isUndefined(userInfo)) {
     return void window.location.replace(options.errorUrl);

@@ -4,7 +4,7 @@ import { getAuthToken } from "./token";
 
 describe("token-request", () => {
   const options: AuthMiddleWareOptions = {
-    authUrl: "https://jestjs.io/api/auth/callback",
+    authUrl: () => "https://jestjs.io/api/auth/callback",
     authTokenUrl: "https://jestjs.io/api/auth/token",
     pathToTokenExpires: "expires",
     pathToToken: "token",

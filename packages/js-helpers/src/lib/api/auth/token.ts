@@ -9,7 +9,7 @@ export async function updateAuthToken(options: AuthMiddleWareOptions) {
   if (!token || !expires || Date.now() > +expires) {
     token = await (options.tokenRequest ? options.tokenRequest() : getAuthToken(options));
     if (isNull(token)) {
-      return void window.location.replace(options.authUrl);
+      return void window.location.replace(options.authUrl());
     }
     if (isUndefined(token)) {
       return void window.location.replace(options.errorUrl);

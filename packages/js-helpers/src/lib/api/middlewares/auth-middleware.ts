@@ -43,7 +43,7 @@ export const generateAuthMiddleWare =
       isFetchingAccessToken = false;
 
       if (isNull(token)) {
-        return void window.location.replace(options.authUrl);
+        return void window.location.replace(options.authUrl());
       }
       if (isUndefined(token)) {
         return void window.location.replace(options.errorUrl);
