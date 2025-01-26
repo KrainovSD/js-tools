@@ -4,7 +4,7 @@ import { isNull, isUndefined } from "../../typings";
 export async function updateAuthUser<User extends Record<string, unknown>>(
   options: AuthUserUpdateRequestOptions<User>,
 ) {
-  const userInfo = await (options.userRequest ? options.userRequest() : getAuthUser(options));
+  const userInfo = await (options.userRequest ? options.userRequest() : getAuthUser<User>(options));
   if (isNull(userInfo)) {
     return void window.location.replace(options.authUrl);
   }
