@@ -1,0 +1,7 @@
+{
+  "watch": ["src"],
+  "ignore": ["src/**/*.test.ts"],
+  "ext": "ts,mjs,js,json,graphql",
+  "exec": "swc src --out-dir dist --config-file .swcrc.build && node ./dist/src/index.js",
+  "legacyWatch": true
+}

@@ -37,6 +37,8 @@
     "publish:eslint-presets": "pnpm --filter=@krainovsd/eslint-presets publish-package",
     "publish:react-icons": "pnpm --filter=@krainovsd/react-icons publish-package",
     "publish:react-ui": "pnpm --filter=@krainovsd/react-ui publish-package",
+    "build-template:fastify": "pnpm --filter=@krainovsd/template-fastify build",
+    "start-template:fastify": "pnpm --filter=@krainovsd/template-fastify dev",
     "lint": "turbo lint",
     "test": "turbo test",
     "build": "turbo build",

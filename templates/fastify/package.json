@@ -1,0 +1,46 @@
+{
+  "name": "@krainovsd/template-fastify",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon",
+    "clear": "rm -rf ./dist",
+    "build": "npm run clear && npm run build:types &&  npm run build:js",
+    "build:js": "swc src --out-dir dist --config-file .swcrc.build",
+    "build:types": "tsc -p tsconfig.json",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@krainovsd/fastify-logger": "0.1.2",
+    "@krainovsd/js-helpers": "0.4.1",
+    "@krainovsd/fastify-health-controller": "0.1.4",
+    "@krainovsd/fastify-trace": "0.0.2",
+    "dotenv": "16.4.7",
+    "fastify": "5.2.1",
+    "@fastify/cors": "10.0.2",
+    "@gquittet/graceful-server": "5.2.9",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@fastify/awilix": "7.0.0",
+    "awilix": "12.0.4",
+    "lodash": "4.17.21",
+    "@fastify/swagger": "9.4.2",
+    "@fastify/swagger-ui": "5.2.1",
+    "@fastify/cookie": "11.0.2"
+  },
+  "devDependencies": {
+    "@swc/cli": "0.6.0",
+    "@swc/core": "1.10.9",
+    "@types/node": "22.10.9",
+    "@swc/jest": "0.2.37",
+    "@types/jest": "29.5.14",
+    "jest": "29.7.0",
+    "nodemon": "3.1.9",
+    "@types/json-schema": "7.0.15",
+    "typescript": "5.7.3",
+    "@types/rollup-plugin-peer-deps-external": "2.2.5",
+    "eslint": "9.17.0",
+    "prettier": "3.3.3",
+    "@krainovsd/eslint-presets": "0.2.1",
+    "@types/lodash": "4.17.14"
+  }
+}

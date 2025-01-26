@@ -21,7 +21,7 @@ export const healthController = (
           schema: SCHEMA,
         },
         async (_, reply) => {
-          service.health(route.response, reply);
+          return await service.health(route.response, reply);
         },
       );
     });
