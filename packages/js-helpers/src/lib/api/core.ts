@@ -49,7 +49,7 @@ export function createRequestClientInstance({
   async function handleRequest<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
     request: RequestInterface<T, Incoming, Body, Outcoming>,
     responseWithStatus?: boolean,
-  ): Promise<{ data: T; status: number } | T> {
+  ): Promise<{ data: T; status: number; headers: Record<string, string> } | T> {
     if (request.delay) {
       await wait(request.delay);
     }
@@ -58,7 +58,9 @@ export function createRequestClientInstance({
         ? request.transformIncomingData(request.mock)
         : (request.mock as T);
 
-      return responseWithStatus ? { data: transformedResult, status: 200 } : transformedResult;
+      return responseWithStatus
+        ? { data: transformedResult, status: 200, headers: {} }
+        : transformedResult;
     }
 
     await executeMiddlewares(request);
@@ -140,20 +142,41 @@ export function createRequestClientInstance({
         ? {
             data: data as T,
             status: response.status,
+            headers: Object.fromEntries(response.headers.entries()),
           }
         : (data as T);
     }
 
     if (request.withoutResponse)
-      return responseWithStatus ? { data: true as T, status: response.status } : (true as T);
+      return responseWithStatus
+        ? {
+            data: true as T,
+            status: response.status,
+            headers: Object.fromEntries(response.headers.entries()),
+          }
+        : (true as T);
 
-    const result = (await response.json()) as Incoming;
+    const contentType = response.headers.get("content-type");
+    let result: Incoming;
+
+    if (contentType?.includes?.("text")) {
+      result = (await response.text()) as Incoming;
+    } else if (contentType?.includes?.("json")) {
+      result = (await response.json()) as Incoming;
+    } else {
+      result = (await response.blob()) as Incoming;
+    }
+
     const transformedResult = request.transformIncomingData
       ? request.transformIncomingData(result)
       : (result as unknown as T);
 
     return responseWithStatus
-      ? { data: transformedResult, status: response.status }
+      ? {
+          data: transformedResult,
+          status: response.status,
+          headers: Object.fromEntries(response.headers.entries()),
+        }
       : transformedResult;
   }
 
@@ -163,14 +186,18 @@ export function createRequestClientInstance({
     return handleRequest(request, false) as Promise<T>;
   }
 
-  async function requestApiWithStatus<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
+  async function requestApiWithMeta<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
     request: RequestInterface<T, Incoming, Body, Outcoming>,
-  ): Promise<{ data: T; status: number }> {
-    return handleRequest(request, true) as Promise<{ data: T; status: number }>;
+  ): Promise<{ data: T; status: number; headers: Record<string, string> }> {
+    return handleRequest(request, true) as Promise<{
+      data: T;
+      status: number;
+      headers: Record<string, string>;
+    }>;
   }
 
   return {
     requestApi,
-    requestApiWithStatus,
+    requestApiWithMeta,
   };
 }

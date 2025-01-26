@@ -21,6 +21,8 @@ export function limitStreamOfRequests<T>({
 }: LimitStreamOfRequestsOptions<T>): { promise: Promise<T[]>; cancel: () => void } {
   let isStopped = false;
 
+  if (maxCountInParallel > countRequests) maxCountInParallel = countRequests;
+
   return {
     cancel: () => {
       isStopped = true;

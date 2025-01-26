@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const plugin = require("@krainovsd/eslint-presets");
 
 module.exports = [
@@ -7,7 +9,7 @@ module.exports = [
   {
     ignores: ["rollup.config.ts"],
     rules: {
-      "@typescript-eslint/require-await": "off",
+      "no-empty-function": "off",
       "import/no-extraneous-dependencies": "off",
       "no-empty": "off",
       "prettier/prettier": ["error", { endOfLine: "lf" }, { usePrettierrc: true }],
