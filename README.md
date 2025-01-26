@@ -7,5 +7,5 @@ List of packages for JS development.
 - [fastify-trace [0.0.2]](https://www.npmjs.com/package/@krainovsd/fastify-trace)
 - [fastify-logger [0.1.2]](https://www.npmjs.com/package/@krainovsd/fastify-logger)
 - [fastify-health-controller [0.1.4]](https://www.npmjs.com/package/@krainovsd/fastify-health-controller)
-- 
+- [fastify-auth [0.0.1]](https://www.npmjs.com/package/@krainovsd/fastify-auth)
   
