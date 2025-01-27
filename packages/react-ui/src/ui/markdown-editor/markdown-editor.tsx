@@ -18,6 +18,7 @@ type Props = {
   setEditorInstance?: (editor: Editor | null) => void;
   initialText?: string;
   className?: string;
+  placeholderClassName?: string;
   readonly?: boolean;
   vimMode?: boolean;
   onBlur?: HandleBlurEditorFunction;
@@ -33,7 +34,7 @@ type Props = {
   multiCursor?: MultiCursorOptions;
 };
 
-export function MarkdownEditor(props: Props) {
+export const MarkdownEditor = React.memo(function MarkdownEditor(props: Props) {
   const [placeholder, setPlaceholder] = React.useState(false);
   const placeholderRef = React.useRef(false);
   const editorInstance = React.useRef<Editor | null>(null);
@@ -131,7 +132,11 @@ export function MarkdownEditor(props: Props) {
 
   return (
     <div ref={mountRef} className={clsx(styles.base, props.className)}>
-      {placeholder && <Text className={styles.placeholder}>{props.placeholder}</Text>}
+      {placeholder && (
+        <Text className={styles.placeholder}>
+          {clsx(props.placeholder, props.placeholderClassName)}
+        </Text>
+      )}
     </div>
   );
-}
+});

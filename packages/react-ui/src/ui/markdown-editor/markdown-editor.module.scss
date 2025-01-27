@@ -3,11 +3,12 @@
   height: 100%;
   display: flex;
   position: relative;
+  overflow: hidden;
 }
 
 .placeholder {
   position: absolute;
   z-index: 1;
   left: 7px;
-  top: 7px;
+  top: 3px;
 }
