@@ -8,25 +8,26 @@ export function getTraceId() {
   return trace?.getActiveSpan?.()?.spanContext?.()?.traceId ?? undefined;
 }
 
-export function getErrorInfo(err: unknown) {
+export function getErrorInfo(err: unknown, stack: boolean = true) {
   const error = getByPath(err, "message") ?? undefined;
   const errorStatus = getByPath(err, "status") ?? undefined;
   const errorDescription = getByPath(err, "description") ?? undefined;
-  const errorStack = err instanceof Error ? err.stack : undefined;
+  // eslint-disable-next-line no-nested-ternary
+  const errorStack = stack ? (err instanceof Error ? err.stack : undefined) : undefined;
 
-  const traceId = getTraceId();
+  const traceID = getTraceId();
 
-  return { error, errorStatus, errorDescription, errorStack, traceId };
+  return { error, errorStatus, errorDescription, errorStack, traceID };
 }
 
 export function getRequestInfo(req: FastifyRequest) {
   const host = req.ip;
   const url = req.url;
   const method = req.method;
-  const traceId = req.traceId ?? getTraceId();
+  const traceID = req.traceId ?? getTraceId();
   const operationId = req.operationId ?? v4();
 
-  return { host, url, method, traceId, operationId };
+  return { host, url, method, traceID, operationId };
 }
 
 export function getResponseInfo(res: FastifyReply) {

@@ -31,7 +31,7 @@ export function defineMiddlewares(
 
   fastify.addHook("onRequest", function onRequest(request, reply, done) {
     const requestInfo = getRequestInfo(request);
-    request.traceId = requestInfo.traceId;
+    request.traceId = requestInfo.traceID;
     request.operationId = requestInfo.operationId;
     logger.info({ info: requestInfo, message: "receive request" });
 

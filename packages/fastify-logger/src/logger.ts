@@ -52,7 +52,7 @@ export class Logger {
   }
 
   warn({ info = {}, message = "warn", error }: LoggerWarnOptions) {
-    const errorInfo = getErrorInfo(error);
+    const errorInfo = getErrorInfo(error, false);
     this.logger.warn({ ...errorInfo, ...info }, message);
   }
 
