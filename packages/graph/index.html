@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graph</title>
+  </head>
+  <body
+    style="
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      overflow: hidden;
+      background-color: #f3f3f3;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    "
+  >
+    <div
+      style="
+        padding-top: 20px;
+        display: flex;
+        gap: 10px;
+        position: absolute;
+        align-items: start;
+        top: 0;
+        left: 20px;
+        z-index: 2;
+        user-select: none;
+      "
+      id="tools"
+    >
+      <button id="clear" style="display: none">Сбросить</button>
+      <button id="turn" style="display: none">Остановить</button>
+      <button id="switcher">Уничтожить</button>
+      <button id="starter">Остановить</button>
+    </div>
+    <div
+      id="container"
+      style="
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+        background-color: #e5e5e5;
+        overflow: hidden;
+      "
+    ></div>
+
+    <script type="module" src="/src/app/index.ts"></script>
+  </body>
+</html>
