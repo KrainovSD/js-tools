@@ -1,0 +1,8 @@
+/dist
+/node_modules
+/tmp
+/dev
+.env
+/coverage
+tsconfig.build.tsbuildinfo
+tsconfig.test.tsbuildinfo

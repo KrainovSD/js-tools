@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+
+  "compilerOptions": {
+    "outDir": "./dev"
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dev",
+    "test",
+    "**/*spec.ts",
+    "src/helpers/config"
+  ],
+  "include": ["dev-test/**/*", "src/**/*"]
+}
