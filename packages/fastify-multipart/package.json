@@ -1,0 +1,69 @@
+{
+  "name": "@krainovsd/fastify-multipart",
+  "version": "0.0.1",
+  "description": "Krainov helpers",
+  "type": "module",
+  "author": "KrainovSD <denislosev48@gmail.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KrainovSD/js-tools.git",
+    "directory": "packages/fastify-multipart"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.cjs"
+    }
+  },
+  "keywords": [
+    "helpers",
+    "utils",
+    "js",
+    "fastify",
+    "multipart",
+    "file",
+    "nodejs"
+  ],
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "publish-package": "npm run lint && npm run build && npm publish",
+    "clear": "rm -rf ./lib",
+    "build:dev": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
+    "build": "npm run clear && npm run build:types && npm run build:js",
+    "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
+    "build:types": "tsc -p tsconfig.build.json",
+    "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
+    "lint:debug": "eslint --debug eslint.config.js",
+    "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@krainovsd/eslint-presets": "0.2.1",
+    "@rollup/plugin-json": "6.1.0",
+    "@rollup/plugin-typescript": "12.1.2",
+    "rollup-plugin-dts": "6.1.1",
+    "@types/rollup-plugin-peer-deps-external": "2.2.5",
+    "rollup": "4.29.1",
+    "rollup-plugin-peer-deps-external": "2.2.4",
+    "@trivago/prettier-plugin-sort-imports": "5.2.0",
+    "@types/node": "22.10.2",
+    "eslint": "9.17.0",
+    "prettier": "3.4.2",
+    "typescript": "5.7.2",
+    "fastify": "5.2.1",
+    "ajv": "8.17.1"
+  },
+  "dependencies": {
+    "@fastify/multipart": "9.0.3"
+  },
+  "peerDependencies": {
+    "fastify": "^5"
+  }
+}

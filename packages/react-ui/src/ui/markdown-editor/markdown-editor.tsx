@@ -6,6 +6,7 @@ import type {
   HandleEnterKeyMapEditorFunction,
   HandleEscapeKeyMapEditorFunction,
   HandleFocusEditorFunction,
+  InitMarkdownOptions,
   MultiCursorOptions,
   ThemeOptions,
 } from "@krainovsd/markdown-editor";
@@ -18,9 +19,12 @@ type Props = {
   setEditorInstance?: (editor: Editor | null) => void;
   initialText?: string;
   className?: string;
+  stylesBase?: React.CSSProperties;
+  stylesPlaceholder?: React.CSSProperties;
   placeholderClassName?: string;
   readonly?: boolean;
   vimMode?: boolean;
+  languages?: InitMarkdownOptions["languages"];
   onBlur?: HandleBlurEditorFunction;
   onFocus?: HandleFocusEditorFunction;
   onChange?: HandleChangeEditorFunction;
@@ -71,7 +75,7 @@ export const MarkdownEditor = React.memo(function MarkdownEditor(props: Props) {
         },
         onEnter: props.onEnter,
         onFocus: props.onFocus,
-        languages: [],
+        languages: props.languages,
         multiCursor: props.multiCursor,
         defaultKeyMaps: {
           vim: true,
@@ -131,9 +135,9 @@ export const MarkdownEditor = React.memo(function MarkdownEditor(props: Props) {
   }, [props.vimMode]);
 
   return (
-    <div ref={mountRef} className={clsx(styles.base, props.className)}>
+    <div ref={mountRef} className={clsx(styles.base, props.className)} style={props.stylesBase}>
       {placeholder && (
-        <Text className={styles.placeholder}>
+        <Text className={styles.placeholder} style={props.stylesPlaceholder}>
           {clsx(props.placeholder, props.placeholderClassName)}
         </Text>
       )}
