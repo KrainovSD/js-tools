@@ -24,7 +24,7 @@ export class TodoWidget extends WidgetType {
       insert: this.checked ? " " : "x",
     };
 
-    this.view.dispatch({ changes: change });
+    this.view.dispatch(this.view.state.update({ changes: change }));
 
     this.checked = !this.checked;
     target.checked = this.checked;

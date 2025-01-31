@@ -39,6 +39,23 @@ export class Editor {
     return this.view.state.doc.toString();
   };
 
+  setContent = (content: string, position?: number) => {
+    if (!this.view) return;
+
+    if (position == undefined) {
+      const cursor = this.view.state.selection.main.head;
+      position = cursor;
+    }
+
+    const transaction = this.view.state.update({
+      changes: {
+        from: position,
+        insert: content,
+      },
+    });
+    this.view.dispatch(transaction);
+  };
+
   setReadonly = (readonly: boolean) => {
     if (!this.view) return;
 

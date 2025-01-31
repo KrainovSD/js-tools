@@ -6,12 +6,12 @@ List of packages for JS development.
 ### JS
 - [js-helpers [0.6.0]](https://www.npmjs.com/package/@krainovsd/js-helpers)
 - [graph [0.2.0]](https://www.npmjs.com/package/@krainovsd/graph)
-- [markdown-editor [0.2.0]](https://www.npmjs.com/package/@krainovsd/markdown-editor)
+- [markdown-editor [0.1.1]](https://www.npmjs.com/package/@krainovsd/markdown-editor)
 
 
 ### React
 - [react-icons [0.2.3]](https://www.npmjs.com/package/@krainovsd/react-icons)
-- [react-ui [0.2.1]](https://www.npmjs.com/package/@krainovsd/react-ui)
+- [react-ui [0.4.0]](https://www.npmjs.com/package/@krainovsd/react-ui)
 
 ### Fastify
 - [fastify-trace [0.0.2]](https://www.npmjs.com/package/@krainovsd/fastify-trace)

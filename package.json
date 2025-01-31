@@ -53,6 +53,8 @@
     "lint:react-ui": "pnpm --filter=@krainovsd/react-ui lint",
     "test:js-helpers": "pnpm --filter=@krainovsd/js-helpers test",
     "start:react-icons": "pnpm --filter=@krainovsd/react-icons dev",
+    "start:graph": "pnpm --filter=@krainovsd/graph dev",
+    "start:markdown-editor": "pnpm --filter=@krainovsd/markdown-editor dev",
     "start:react-ui": "pnpm --filter=@krainovsd/react-ui storybook",
     "publish:fastify-logger": "pnpm --filter=@krainovsd/fastify-logger publish-package",
     "publish:graph": "pnpm --filter=@krainovsd/graph publish-package",
