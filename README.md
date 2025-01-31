@@ -5,6 +5,9 @@ List of packages for JS development.
 
 ### JS
 - [js-helpers [0.6.0]](https://www.npmjs.com/package/@krainovsd/js-helpers)
+- [graph [0.2.0]](https://www.npmjs.com/package/@krainovsd/graph)
+- [markdown-editor [0.2.0]](https://www.npmjs.com/package/@krainovsd/markdown-editor)
+
 
 ### React
 - [react-icons [0.2.3]](https://www.npmjs.com/package/@krainovsd/react-icons)
@@ -17,4 +20,10 @@ List of packages for JS development.
 - [fastify-auth [0.0.1]](https://www.npmjs.com/package/@krainovsd/fastify-auth)
 - [fastify-multipart [0.0.1]](https://www.npmjs.com/package/@krainovsd/fastify-multipart)
   
+  
+### Nest
+- [nest-uploading-service [0.1.0]](https://www.npmjs.com/package/@krainovsd/nest-uploading-service)
+- [nest-logger-service [0.2.1]](https://www.npmjs.com/package/@krainovsd/nest-logger-service)
+- [nest-jwt-service [0.2.0]](https://www.npmjs.com/package/@krainovsd/nest-jwt-service)
+- [nest-utils [0.1.0]](https://www.npmjs.com/package/@krainovsd/nest-utils)
   

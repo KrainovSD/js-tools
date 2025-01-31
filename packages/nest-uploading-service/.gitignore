@@ -1,8 +1,9 @@
 /dist
 /node_modules
 /tmp
-/dev
-.env
 /coverage
+/lib
+.npmrc
+.env
 tsconfig.build.tsbuildinfo
 tsconfig.test.tsbuildinfo

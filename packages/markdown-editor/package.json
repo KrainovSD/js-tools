@@ -7,7 +7,8 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/KrainovSD/markdown-editor"
+    "url": "git+https://github.com/KrainovSD/js-tools.git",
+    "directory": "packages/markdown-editor"
   },
   "sideEffects": false,
   "exports": {
@@ -24,18 +25,19 @@
     "js"
   ],
   "files": [
-    "lib",
-    "tmp"
+    "lib"
   ],
   "scripts": {
+    "publish-package": "npm run lint && npm run build && npm publish",
     "dev": "vite",
-    "build:dev": "vite build",
-    "build": "npm run build:types && npm run build:js",
-    "build:js": "rm -rf lib && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
-    "build:types": "tspc -p tsconfig.build.json",
+    "build": "npm run clear && npm run build:types && npm run build:js",
     "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
     "lint:debug": "eslint --debug eslint.config.js",
-    "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'"
+    "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
+    "build:dev": "vite build",
+    "build:js": "rm -rf lib && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
+    "build:types": "tspc -p tsconfig.build.json",
+    "clear": "rm -rf ./lib"
   },
   "devDependencies": {
     "@codemirror/language-data": "6.5.1",
