@@ -1,5 +1,6 @@
 import { EditorSelection, type StateCommand, Text, Transaction } from "@codemirror/state";
 import type { KeyBinding } from "@codemirror/view";
+import { saveDispatch } from "@/lib/utils";
 
 const insertItalicMarker: StateCommand = ({ state, dispatch }) => {
   const changes = state.changeByRange((range) => {
@@ -72,13 +73,14 @@ const insertItalicMarker: StateCommand = ({ state, dispatch }) => {
       range: EditorSelection.range(range.from + extendBefore, range.to + extendAfter),
     };
   });
-
-  dispatch(
-    state.update(changes, {
-      scrollIntoView: true,
-      annotations: Transaction.userEvent.of("input"),
-    }),
-  );
+  saveDispatch(() => {
+    dispatch(
+      state.update(changes, {
+        scrollIntoView: true,
+        annotations: Transaction.userEvent.of("input"),
+      }),
+    );
+  });
 
   return true;
 };

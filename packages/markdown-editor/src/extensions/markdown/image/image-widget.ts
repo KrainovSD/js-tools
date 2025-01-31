@@ -3,7 +3,7 @@ import { utils } from "@/lib";
 import styles from "../styles.module.scss";
 
 const INTERVAL_DELAY = 10000;
-const IMAGE_NODES: Record<string, HTMLImageElement> = {};
+const IMAGE_NODES: Record<string, HTMLImageElement | undefined> = {};
 const EXISTING_WIDGETS: Set<string> = new Set();
 let interval: NodeJS.Timeout | null = null;
 
@@ -25,6 +25,8 @@ export class ImageWidget extends WidgetType {
 
   eq(widget: ImageWidget): boolean {
     const image = IMAGE_NODES[this.key];
+
+    if (!image) return false;
 
     delete IMAGE_NODES[this.key];
     EXISTING_WIDGETS.delete(this.key);
@@ -50,8 +52,8 @@ export class ImageWidget extends WidgetType {
   toDOM(view: EditorView): HTMLElement {
     EXISTING_WIDGETS.add(this.key);
 
-    if (IMAGE_NODES[this.key]) {
-      const image = IMAGE_NODES[this.key];
+    let image = IMAGE_NODES[this.key];
+    if (image) {
       if (image.src !== this.link) {
         image.src = this.link;
       }
@@ -61,7 +63,7 @@ export class ImageWidget extends WidgetType {
     }
 
     this.view = view;
-    const image = document.createElement("img");
+    image = document.createElement("img");
     image.classList.add(styles.image);
     image.alt = this.text;
     image.src = this.link;
@@ -83,7 +85,7 @@ export class ImageWidget extends WidgetType {
 
 function garbageCollectorInterval() {
   for (const [key, node] of Object.entries(IMAGE_NODES)) {
-    if (EXISTING_WIDGETS.has(key)) continue;
+    if (EXISTING_WIDGETS.has(key) || !node) continue;
 
     delete IMAGE_NODES[key];
     node.removeEventListener("mousedown", handleClick);

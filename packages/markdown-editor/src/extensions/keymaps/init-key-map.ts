@@ -1,6 +1,7 @@
 import { historyKeymap, indentWithTab, standardKeymap } from "@codemirror/commands";
 import type { Extension } from "@codemirror/state";
 import { type EditorView, type KeyBinding, drawSelection, keymap } from "@codemirror/view";
+import { saveDispatch } from "@/lib/utils";
 import { ThemeCompartment, VimModeCompartment } from "../compartments";
 import { type EditorTheme, type ThemeOptions, getDarkTheme, getLightTheme } from "../theme";
 
@@ -74,10 +75,12 @@ export const initKeyMaps = async ({
         vimMode = !vimMode;
 
         void import("@replit/codemirror-vim").then(({ vim }) => {
-          view.dispatch({
-            effects: VimModeCompartment.reconfigure(
-              vimMode ? [vim({ status: true }), drawSelection()] : [],
-            ),
+          saveDispatch(() => {
+            view.dispatch({
+              effects: VimModeCompartment.reconfigure(
+                vimMode ? [vim({ status: true }), drawSelection()] : [],
+              ),
+            });
           });
         });
 
@@ -91,20 +94,22 @@ export const initKeyMaps = async ({
       key: "Mod-Alt-a",
       run: (view) => {
         theme = theme === "light" ? "dark" : "light";
-        view.dispatch({
-          effects: ThemeCompartment.reconfigure(
-            theme === "dark"
-              ? getDarkTheme({
-                  dark,
-                  light,
-                  theme,
-                })
-              : getLightTheme({
-                  dark,
-                  light,
-                  theme,
-                }),
-          ),
+        saveDispatch(() => {
+          view.dispatch({
+            effects: ThemeCompartment.reconfigure(
+              theme === "dark"
+                ? getDarkTheme({
+                    dark,
+                    light,
+                    theme,
+                  })
+                : getLightTheme({
+                    dark,
+                    light,
+                    theme,
+                  }),
+            ),
+          });
         });
 
         return true;

@@ -1,5 +1,6 @@
 import { type ChangeSpec } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
+import { saveDispatch } from "@/lib/utils";
 import styles from "../styles.module.scss";
 
 export class TodoWidget extends WidgetType {
@@ -13,7 +14,6 @@ export class TodoWidget extends WidgetType {
   }
 
   onClick(event: MouseEvent) {
-    if (!this.view) return;
     event.stopPropagation();
     event.preventDefault();
 
@@ -24,7 +24,11 @@ export class TodoWidget extends WidgetType {
       insert: this.checked ? " " : "x",
     };
 
-    this.view.dispatch(this.view.state.update({ changes: change }));
+    saveDispatch(() => {
+      if (!this.view) return;
+
+      this.view.dispatch(this.view.state.update({ changes: change }));
+    });
 
     this.checked = !this.checked;
     target.checked = this.checked;

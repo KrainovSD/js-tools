@@ -1,5 +1,6 @@
 import { EditorSelection, type StateCommand, Text, Transaction } from "@codemirror/state";
 import type { KeyBinding } from "@codemirror/view";
+import { saveDispatch } from "@/lib/utils";
 
 const insertLineThroughMarker: StateCommand = ({ state, dispatch }) => {
   const changes = state.changeByRange((range) => {
@@ -43,12 +44,14 @@ const insertLineThroughMarker: StateCommand = ({ state, dispatch }) => {
     };
   });
 
-  dispatch(
-    state.update(changes, {
-      scrollIntoView: true,
-      annotations: Transaction.userEvent.of("input"),
-    }),
-  );
+  saveDispatch(() => {
+    dispatch(
+      state.update(changes, {
+        scrollIntoView: true,
+        annotations: Transaction.userEvent.of("input"),
+      }),
+    );
+  });
 
   return true;
 };

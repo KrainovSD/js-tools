@@ -8,6 +8,7 @@ import {
   getDarkTheme,
   getLightTheme,
 } from "@/extensions";
+import { saveDispatch } from "@/lib/utils";
 import { type EditorArguments } from "./Editor.types";
 import { initEditor } from "./lib";
 
@@ -53,34 +54,40 @@ export class Editor {
         insert: content,
       },
     });
-    this.view.dispatch(transaction);
+    saveDispatch(() => {
+      if (!this.view) return;
+
+      this.view.dispatch(transaction);
+    });
   };
 
   setReadonly = (readonly: boolean) => {
-    if (!this.view) return;
-
-    this.view.dispatch({
-      effects: ReadonlyCompartment.reconfigure(EditorView.editable.of(!readonly)),
+    saveDispatch(() => {
+      if (!this.view) return;
+      this.view.dispatch({
+        effects: ReadonlyCompartment.reconfigure(EditorView.editable.of(!readonly)),
+      });
     });
   };
 
   setTheme = (theme?: EditorTheme) => {
-    if (!this.view) return;
-
-    this.view.dispatch({
-      effects: ThemeCompartment.reconfigure(
-        theme === "dark"
-          ? getDarkTheme({
-              dark: this.arguments.dark,
-              light: this.arguments.light,
-              theme,
-            })
-          : getLightTheme({
-              dark: this.arguments.dark,
-              light: this.arguments.light,
-              theme,
-            }),
-      ),
+    saveDispatch(() => {
+      if (!this.view) return;
+      this.view.dispatch({
+        effects: ThemeCompartment.reconfigure(
+          theme === "dark"
+            ? getDarkTheme({
+                dark: this.arguments.dark,
+                light: this.arguments.light,
+                theme,
+              })
+            : getLightTheme({
+                dark: this.arguments.dark,
+                light: this.arguments.light,
+                theme,
+              }),
+        ),
+      });
     });
   };
 
@@ -89,8 +96,13 @@ export class Editor {
 
     const { vim } = await import("@replit/codemirror-vim");
 
-    this.view.dispatch({
-      effects: VimModeCompartment.reconfigure(mode ? [vim({ status: true }), drawSelection()] : []),
+    saveDispatch(() => {
+      if (!this.view) return;
+      this.view.dispatch({
+        effects: VimModeCompartment.reconfigure(
+          mode ? [vim({ status: true }), drawSelection()] : [],
+        ),
+      });
     });
   };
 
@@ -101,10 +113,13 @@ export class Editor {
   };
 
   destroy = () => {
-    if (!this.view) return;
-
-    this.view.destroy();
-    if (this.provider) this.provider.destroy();
+    saveDispatch(() => {
+      if (!this.view) return;
+      this.view.destroy();
+    });
+    saveDispatch(() => {
+      if (this.provider) this.provider.destroy();
+    });
   };
 }
 
