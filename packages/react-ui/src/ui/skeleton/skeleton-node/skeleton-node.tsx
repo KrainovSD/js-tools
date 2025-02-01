@@ -17,6 +17,7 @@ export function SkeletonNode(props: SkeletonNodeProps): JSX.Element {
     <AntdSkeleton.Node
       active={active}
       className={clsx(
+        styles.base,
         wide && styles.wide,
         full && styles.full,
         !border && styles.square,
