@@ -5,7 +5,7 @@ import type { JSX } from "react";
 export type SkeletonAvatarPropsInterface = GetProps<typeof AntdSkeleton.Avatar>;
 
 export function SkeletonAvatar(props: SkeletonAvatarPropsInterface): JSX.Element {
-  const { active = true, shape, size, style, ...otherProps } = props;
+  const { active = true, shape = "square", size = "small", style, ...otherProps } = props;
 
   let borderRadius: number | undefined;
   if (shape === "square" && size === "small") borderRadius = 4;

@@ -102,5 +102,21 @@ const object = {
 const array = [1, "test"]   
 
 \`\`\`
+
+- Пока нажата кнопка мыши при выделении, декорации не меняются
+- Две картинки друг под другом ломают переход курсора к ссылке
+- Картинка над кодом при выделении ссылки съезжает на него
+
+![test](http://localhost:3000/api/v1/gitlab/attachments/uXIsXa70Hq)
+![test](http://localhost:3000/api/v1/gitlab/attachments/uXIsXa70Hq)
+
+
+
+![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300)
+\`\`\`JS
+
+const test = "string"
+
+\`\`\` 
    
 `;

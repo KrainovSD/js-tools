@@ -1,0 +1,11 @@
+.base {
+  &.wide {
+    width: 100% !important;
+  }
+  &.full {
+    height: 100% !important;
+  }
+  &.square {
+    border-radius: 0 !important;
+  }
+}

@@ -4,3 +4,4 @@ export * from "./skeleton-input";
 export * from "./skeleton-title";
 export * from "./skeleton-avatar";
 export * from "./skeleton-button";
+export * from "./skeleton-node";
