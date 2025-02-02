@@ -8,7 +8,7 @@ import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } fro
 const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");
 const presetMultiCursor: MultiCursorOptions = {
   roomId,
-  url: "ws://192.168.135.150:3001",
+  url: "ws://192.168.135.150:3005",
   userName: randomString(5),
   userColor: randomColor(),
 };
@@ -133,6 +133,21 @@ function initEditor() {
 
       created = !created;
       stateButton.textContent = text[String(Boolean(created))];
+    });
+  }
+}
+
+{
+  const replaceButton = document.querySelector(".replace");
+  if (replaceButton) {
+    replaceButton.addEventListener("click", () => {
+      if (!editor) return;
+
+      const content = Array.from({ length: 20 }, () => {
+        return randomString(20);
+      }).join("\n");
+
+      editor.replaceContent(content);
     });
   }
 }

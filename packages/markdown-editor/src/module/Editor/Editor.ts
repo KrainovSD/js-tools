@@ -1,5 +1,6 @@
 import { EditorView, drawSelection } from "@codemirror/view";
 import type { WebsocketProvider } from "y-websocket";
+import type { Text } from "yjs";
 import {
   type EditorTheme,
   ReadonlyCompartment,
@@ -19,10 +20,13 @@ export class Editor {
 
   arguments: EditorArguments;
 
+  yText: Text | undefined;
+
   constructor(options: EditorArguments) {
     void initEditor(options).then((editor) => {
       this.view = editor.view;
       this.provider = editor.provider;
+      this.yText = editor.multiCursorText;
     });
 
     this.arguments = options;
@@ -53,6 +57,26 @@ export class Editor {
         from: position,
         insert: content,
       },
+    });
+    saveDispatch(() => {
+      if (!this.view) return;
+
+      this.view.dispatch(transaction);
+    });
+  };
+
+  replaceContent = (content: string) => {
+    // if (!this.yText) return;
+
+    // this.yText.delete(0, this.yText.length);
+    // this.yText.insert(0, content);
+
+    // return;
+
+    if (!this.view) return;
+
+    const transaction = this.view.state.update({
+      changes: { from: 0, to: this.view.state.doc.length, insert: content },
     });
     saveDispatch(() => {
       if (!this.view) return;

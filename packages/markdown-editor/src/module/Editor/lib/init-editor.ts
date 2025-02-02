@@ -26,5 +26,5 @@ export async function initEditor({ multiCursor, root, initialText, ...rest }: Ed
     parent: root,
   });
 
-  return { view, provider };
+  return { view, provider, multiCursorText };
 }
