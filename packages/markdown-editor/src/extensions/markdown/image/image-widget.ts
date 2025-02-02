@@ -1,11 +1,16 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
-import { utils } from "@/lib";
+import { saveDispatch } from "@/lib/utils";
+import { openedImageEffect } from "../markdown-state";
 import styles from "../styles.module.scss";
 
 const INTERVAL_DELAY = 10000;
-const IMAGE_NODES: Record<string, HTMLImageElement | undefined> = {};
+const IMAGE_NODES: Record<string, ImageElement | undefined> = {};
 const EXISTING_WIDGETS: Set<string> = new Set();
 let interval: NodeJS.Timeout | null = null;
+
+interface ImageElement extends HTMLImageElement {
+  destroy?: () => void;
+}
 
 export class ImageWidget extends WidgetType {
   view: EditorView | undefined;
@@ -74,12 +79,11 @@ export class ImageWidget extends WidgetType {
     image.src = this.src;
     image.style.maxWidth = "100%";
 
-    image.addEventListener("mousedown", handleClick.bind(this));
-    image.addEventListener("click", handleClick.bind(this));
+    image.addEventListener("mousedown", this.handleClick.bind(this));
 
     IMAGE_NODES[this.key] = image;
 
-    if (!interval) interval = setInterval(garbageCollectorInterval.bind(this), INTERVAL_DELAY);
+    if (!interval) interval = setInterval(this.garbageCollectorInterval.bind(this), INTERVAL_DELAY);
 
     return image;
   }
@@ -87,37 +91,90 @@ export class ImageWidget extends WidgetType {
   destroy(): void {
     EXISTING_WIDGETS.delete(this.key);
   }
-}
 
-function garbageCollectorInterval(this: ImageWidget) {
-  for (const [key, node] of Object.entries(IMAGE_NODES)) {
-    if (EXISTING_WIDGETS.has(key) || !node) continue;
+  handleClick(this: ImageWidget, event: MouseEvent) {
+    const selection = window.getSelection();
 
-    delete IMAGE_NODES[key];
-    node.removeEventListener("mousedown", handleClick.bind(this));
-    node.removeEventListener("click", handleClick.bind(this));
-    node.remove();
+    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {
+      return;
+    }
+
+    event.stopPropagation();
+    event.preventDefault();
+    const target = event.target as HTMLImageElement;
+    const parent = target.parentNode;
+    let line: HTMLElement | null = parent as HTMLElement | null;
+
+    /** recursively find line that contains link */
+    while (line && !line.classList.contains("cm-line")) {
+      line = line.parentNode as HTMLElement | null;
+    }
+
+    const editor = Array.from(document.querySelectorAll(".cm-editor")).find((element) =>
+      element.contains(target),
+    );
+
+    if (!selection || !editor || !parent) return;
+
+    const textNode = getTextNode(this.text, this.link, this.key, line);
+
+    if (textNode) {
+      return void selectLink({ selection, link: this.link, node: textNode });
+    }
+
+    saveDispatch(() => {
+      if (!this.view) return;
+
+      this.view.dispatch(this.view.state.update({ effects: openedImageEffect.of(this.key) }));
+
+      const textNode = getTextNode(this.text, this.link, this.key, line);
+      if (textNode) {
+        selectLink({ selection, link: this.link, node: textNode });
+      }
+
+      requestAnimationFrame(() => {
+        saveDispatch(() => {
+          if (this.view)
+            this.view.dispatch(
+              this.view.state.update({ effects: openedImageEffect.of(undefined) }),
+            );
+        });
+      });
+    });
+
+    return false;
   }
 
-  if (Object.keys(IMAGE_NODES).length === 0 && interval) {
-    clearInterval(interval);
-    interval = null;
+  garbageCollectorInterval(this: ImageWidget) {
+    for (const [key, node] of Object.entries(IMAGE_NODES)) {
+      if (EXISTING_WIDGETS.has(key) || !node) continue;
+
+      delete IMAGE_NODES[key];
+      node.removeEventListener("mousedown", this.handleClick.bind(this));
+      node.remove();
+    }
+
+    if (Object.keys(IMAGE_NODES).length === 0 && interval) {
+      clearInterval(interval);
+      interval = null;
+    }
   }
 }
 
 /** recursively find the link text node in line */
 function getTextNode(
-  imageNode: HTMLImageElement,
+  text: string,
+  link: string,
+  key: string,
   line: ChildNode | Node | null | undefined,
 ): ChildNode | null {
   if (!line) return null;
-  const link = imageNode.src;
   let textNode: ChildNode | null = null;
 
   for (const node of Array.from(line.childNodes)) {
-    if (node.nodeType !== 3) {
-      const innerNode = getTextNode(imageNode, node);
-      if (innerNode) {
+    if (node.nodeType !== 3 && node instanceof HTMLElement) {
+      const innerNode = getTextNode(text, link, key, node);
+      if (innerNode && node.getAttribute("data-id") === key) {
         textNode = innerNode;
         break;
       }
@@ -125,8 +182,7 @@ function getTextNode(
       continue;
     }
 
-    const textContent = node.textContent;
-    if (textContent && textContent.includes(link)) {
+    if (isCorrectNode(text, link, node)) {
       textNode = node;
       break;
     }
@@ -135,36 +191,31 @@ function getTextNode(
   return textNode;
 }
 
-function getMinLength(imageNode: HTMLImageElement) {
-  const text = imageNode.alt || "";
-  const link = imageNode.src;
-
-  const startPosition = 4 + text.length;
-  const endPosition = startPosition + link.length + 1;
-
-  return endPosition;
-}
-
 function isCorrectNode(
-  imageNode: HTMLImageElement,
+  text: string,
+  link: string,
   node: ChildNode | Node | null | undefined,
 ): node is ChildNode | Node {
   if (!node) return false;
 
   const textContent = node?.textContent;
-  const minLength = getMinLength(imageNode);
 
-  return Boolean(node && textContent && node.nodeType === 3 && textContent.length >= minLength);
+  return Boolean(
+    node &&
+      textContent &&
+      node.nodeType === 3 &&
+      textContent.includes(link) &&
+      textContent.includes(text),
+  );
 }
 
 type SelectLinkOptions = {
   node: ChildNode | Node;
   selection: Selection;
   start?: number;
-  imageNode: HTMLImageElement;
+  link: string;
 };
-function selectLink({ imageNode, node, selection, start }: SelectLinkOptions) {
-  const link = imageNode.src;
+function selectLink({ link, node, selection, start }: SelectLinkOptions) {
   const startPosition = start ?? (node.textContent?.indexOf?.(link) || 0);
   const endPosition = startPosition + link.length;
 
@@ -173,67 +224,4 @@ function selectLink({ imageNode, node, selection, start }: SelectLinkOptions) {
   range.setEnd(node, endPosition);
   selection.removeAllRanges();
   selection.addRange(range);
-}
-
-function handleClick(this: ImageWidget, event: MouseEvent) {
-  const selection = window.getSelection();
-
-  if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {
-    return;
-  }
-
-  event.stopPropagation();
-  event.preventDefault();
-  const target = event.target as HTMLImageElement;
-  const parent = target.parentNode;
-  let line: HTMLElement | null = parent as HTMLElement | null;
-
-  /** recursively find line that contains link */
-  while (line && !line.classList.contains("cm-line")) {
-    line = line.parentNode as HTMLElement | null;
-  }
-
-  const editor = Array.from(document.querySelectorAll(".cm-editor")).find((element) =>
-    element.contains(target),
-  );
-
-  if (!selection || !editor || !parent) return;
-
-  const prevLine = parent.previousSibling;
-  let textNode = getTextNode(target, prevLine);
-  if (!textNode) textNode = getTextNode(target, parent);
-  if (textNode) {
-    if (isCorrectNode(target, textNode))
-      selectLink({ selection, imageNode: target, node: textNode });
-
-    return;
-  }
-
-  const range = document.createRange();
-  range.selectNode(target);
-  range.collapse(true);
-  selection.removeAllRanges();
-  selection.addRange(range);
-
-  /** wait for the widget to disappear and link will be visible */
-  void utils
-    .tick({
-      delay: 0,
-      maxDeep: 5,
-      delayGetter: (deep) => {
-        return deep > 1 ? 10 : 0;
-      },
-      recursiveCondition: () => {
-        const textNode = getTextNode(target, line);
-
-        return isCorrectNode(target, textNode);
-      },
-    })
-    .then(() => {
-      const textNode = getTextNode(target, line);
-      if (isCorrectNode(target, textNode))
-        selectLink({ selection, imageNode: target, node: textNode });
-    });
-
-  return false;
 }

@@ -11,12 +11,14 @@ export function getLineDecoration({ style, range }: GetLineDecorationOptions) {
 }
 
 type GetMarkDecorationOptions = {
-  style: string;
+  style?: string;
+  attributes?: Record<string, string>;
   range: [number, number];
 };
-export function getMarkDecoration({ range, style }: GetMarkDecorationOptions) {
+export function getMarkDecoration({ range, style, attributes }: GetMarkDecorationOptions) {
   return Decoration.mark({
     class: style,
+    attributes,
   }).range(range[0], range[1]);
 }
 

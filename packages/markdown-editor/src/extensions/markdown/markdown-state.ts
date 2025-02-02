@@ -1,7 +1,7 @@
 import { StateEffect, StateField } from "@codemirror/state";
 import type { MarkdownState } from "./markdown-types";
 
-export const openedImageEffect = StateEffect.define<string>();
+export const openedImageEffect = StateEffect.define<string | undefined>();
 export const imageSrcGetterEffect = StateEffect.define<((src: string) => string) | undefined>();
 
 export const markdownState = StateField.define<MarkdownState>({

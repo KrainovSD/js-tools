@@ -18,7 +18,7 @@ let multiCursor: MultiCursorOptions | undefined = roomId ? presetMultiCursor : u
 let readonly: boolean = false;
 const dark: ThemeOptions | undefined = undefined;
 const light: ThemeOptions | undefined = undefined;
-const viewFullExample = true;
+const viewFullExample = false;
 const viewStressTest = false;
 const root = document.querySelector<HTMLElement>("#root");
 if (!root) throw new Error("Hasn't root");
@@ -38,9 +38,7 @@ function initEditor() {
     theme: "dark",
     languages,
     imageSrcGetter: (url) => {
-      console.log(url);
-
-      return `https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=400`;
+      return url;
     },
     keyMaps: [],
     defaultKeyMaps: {

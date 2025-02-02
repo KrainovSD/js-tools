@@ -2,7 +2,11 @@ import { type EditorView } from "@codemirror/view";
 import type { SyntaxNodeRef } from "@lezer/common";
 import { utils } from "@/lib";
 import { markdownState } from "../markdown-state";
-import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
+import type {
+  DecorationPlugin,
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+} from "../markdown-types";
 import {
   CODE_OF_END_IMAGE_TEXT,
   CODE_OF_END_IMAGE_URL,
@@ -11,6 +15,22 @@ import {
   NAME_OF_IMAGE,
 } from "./image-constants";
 import { ImageWidget } from "./image-widget";
+
+function getImageDecorations({ decorations, node, view }: GetDecorationOptions) {
+  if (node.name !== NAME_OF_IMAGE) {
+    return;
+  }
+
+  const { text, url } = parseInfo(view, node);
+  const imageSrcGetter = view.state.field(markdownState).imageSrcGetter;
+
+  decorations.push(
+    utils.getWidgetDecorationOptions({
+      range: [node.to],
+      widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
+    }),
+  );
+}
 
 function getImageSelectionDecorations({
   decorations,
@@ -23,45 +43,25 @@ function getImageSelectionDecorations({
   }
 
   const { text, url } = parseInfo(view, node);
-  const line = view.lineBlockAt(node.from);
-  const imageSrcGetter = view.state.field(markdownState).imageSrcGetter;
+  const openedImage = view.state.field(markdownState).openedImage;
+  const key = `${url}:${text}:${node.from}:${node.to}`;
+  const isOpened = openedImage && openedImage === key;
 
-  if (line.from === node.from && line.to === node.to) {
-    if (
-      forceActive ||
-      !view.hasFocus ||
-      !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
-    ) {
-      decorations.push(
-        utils.getReplaceDecoration({
-          range: [line.from, line.to],
-          widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
-        }),
-      );
-    } else {
-      decorations.push(
-        utils.getWidgetDecorationOptions({
-          range: [node.to + 1],
-          widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
-        }),
-      );
-    }
-  } else if (
+  if (isOpened) return;
+
+  if (
     forceActive ||
     !view.hasFocus ||
-    !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
+    !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
-    decorations.push(
-      utils.getReplaceDecoration({
-        range: [node.from, node.to],
-        widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
-      }),
-    );
+    decorations.push(utils.getHideDecoration({ range: [node.from, node.to] }));
   } else {
     decorations.push(
-      utils.getWidgetDecorationOptions({
-        range: [node.to],
-        widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
+      utils.getMarkDecoration({
+        range: [node.from, node.to],
+        attributes: {
+          "data-id": key,
+        },
       }),
     );
   }
@@ -107,4 +107,5 @@ function parseInfo(view: EditorView, node: SyntaxNodeRef) {
 
 export const imageDecorationPlugin: DecorationPlugin = {
   selectionDecorations: [getImageSelectionDecorations],
+  decorations: [getImageDecorations],
 };
