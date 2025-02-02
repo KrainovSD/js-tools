@@ -3,14 +3,12 @@ import { saveDispatch } from "@/lib/utils";
 import { openedImageEffect } from "../markdown-state";
 import styles from "../styles.module.scss";
 
-const INTERVAL_DELAY = 10000;
-const IMAGE_NODES: Record<string, ImageElement | undefined> = {};
-const EXISTING_WIDGETS: Set<string> = new Set();
-let interval: NodeJS.Timeout | null = null;
+const IMAGE_NODES: Record<string, ImageContainerElement | undefined> = {};
 
-interface ImageElement extends HTMLImageElement {
+interface ImageContainerElement extends HTMLSpanElement {
   clearListeners?: () => void;
   destroy?: () => void;
+  image?: HTMLImageElement;
 }
 
 export class ImageWidget extends WidgetType {
@@ -19,6 +17,8 @@ export class ImageWidget extends WidgetType {
     private link: string,
     private from: number,
     private to: number,
+    private uniqueId: string,
+    private fullLine: boolean,
     private imageSrcGetter: ((src: string) => string) | undefined,
     private view: EditorView,
   ) {
@@ -26,7 +26,7 @@ export class ImageWidget extends WidgetType {
   }
 
   get key() {
-    return `${this.link}:${this.text}:${this.from}:${this.to}`;
+    return `${this.link}:${this.text}:${this.uniqueId}:${this.from}:${this.to}`;
   }
 
   get src() {
@@ -34,12 +34,12 @@ export class ImageWidget extends WidgetType {
   }
 
   eq(widget: ImageWidget): boolean {
-    const image = IMAGE_NODES[this.key];
+    const container = IMAGE_NODES[this.key];
+    const image = container?.image;
 
     if (!image) return false;
 
     delete IMAGE_NODES[this.key];
-    EXISTING_WIDGETS.delete(this.key);
 
     if (image.src !== widget.src) image.src = widget.src;
     if (image.alt !== widget.text) image.alt = widget.text;
@@ -51,7 +51,6 @@ export class ImageWidget extends WidgetType {
 
     this.registerListeners(image);
     IMAGE_NODES[this.key] = image;
-    EXISTING_WIDGETS.add(this.key);
 
     return true;
   }
@@ -61,16 +60,16 @@ export class ImageWidget extends WidgetType {
   }
 
   toDOM(): HTMLElement {
-    EXISTING_WIDGETS.add(this.key);
+    let container = IMAGE_NODES[this.key];
+    let image = container?.image;
 
-    let image = IMAGE_NODES[this.key];
-    if (image) {
+    if (image && container) {
       if (image.src !== this.src) {
         image.src = this.src;
       }
       if (image.alt !== this.text) image.alt = this.text;
 
-      return image;
+      return container;
     }
 
     image = document.createElement("img");
@@ -79,19 +78,26 @@ export class ImageWidget extends WidgetType {
     image.src = this.src;
     image.style.maxWidth = "100%";
 
-    this.registerListeners(image);
-    IMAGE_NODES[this.key] = image;
+    container = document.createElement("span") as ImageContainerElement;
+    container.appendChild(image);
+    container.image = image;
+    if (this.fullLine) {
+      container.style.width = "100%";
+      container.style.display = "inline-block";
+    }
 
-    if (!interval) interval = setInterval(garbageCollectorInterval, INTERVAL_DELAY);
+    this.registerListeners(container);
+    IMAGE_NODES[this.key] = container;
 
-    return image;
+    return container;
   }
 
-  destroy(): void {
-    EXISTING_WIDGETS.delete(this.key);
+  destroy(dom: ImageContainerElement): void {
+    delete IMAGE_NODES[this.key];
+    dom.destroy?.();
   }
 
-  registerListeners(image: ImageElement) {
+  registerListeners(image: ImageContainerElement) {
     image.clearListeners?.();
     const abortController = new AbortController();
     image.addEventListener(
@@ -106,20 +112,6 @@ export class ImageWidget extends WidgetType {
       image.clearListeners?.();
       image.remove();
     };
-  }
-}
-
-function garbageCollectorInterval() {
-  for (const [key, node] of Object.entries(IMAGE_NODES)) {
-    if (EXISTING_WIDGETS.has(key) || !node) continue;
-
-    delete IMAGE_NODES[key];
-    node.destroy?.();
-  }
-
-  if (Object.keys(IMAGE_NODES).length === 0 && interval) {
-    clearInterval(interval);
-    interval = null;
   }
 }
 

@@ -14,7 +14,8 @@ function getAutoLinkSelectionDecorations({
 
   const url = view.state.doc.sliceString(node.from + 1, node.to - 1);
   const openedLink = view.state.field(markdownState).openedLink;
-  const key = `${url}:${url}:${node.from}:${node.to}`;
+  const uniqueId = view.state.field(markdownState).uniqueId;
+  const key = `${url}:${url}:${uniqueId}:${node.from}:${node.to}`;
   const isOpened = openedLink && openedLink === key;
 
   if (isOpened) {
@@ -36,7 +37,7 @@ function getAutoLinkSelectionDecorations({
     decorations.push(
       utils.getReplaceDecoration({
         range: [node.from, node.to],
-        widget: new LinkWidget(url, url, node.from, node.to, view),
+        widget: new LinkWidget(url, url, node.from, node.to, uniqueId, view),
       }),
     );
   } else {

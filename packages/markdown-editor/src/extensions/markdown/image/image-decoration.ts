@@ -23,11 +23,23 @@ function getImageDecorations({ decorations, node, view }: GetDecorationOptions) 
 
   const { text, url } = parseInfo(view, node);
   const imageSrcGetter = view.state.field(markdownState).imageSrcGetter;
+  const uniqueId = view.state.field(markdownState).uniqueId;
+  const line = view.lineBlockAt(node.from);
+  const fullLine = line.from === node.from && line.to === node.to;
 
   decorations.push(
     utils.getWidgetDecorationOptions({
       range: [node.to],
-      widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter, view),
+      widget: new ImageWidget(
+        text,
+        url,
+        node.from,
+        node.to,
+        uniqueId,
+        fullLine,
+        imageSrcGetter,
+        view,
+      ),
     }),
   );
 }
@@ -44,7 +56,8 @@ function getImageSelectionDecorations({
 
   const { text, url } = parseInfo(view, node);
   const openedImage = view.state.field(markdownState).openedImage;
-  const key = `${url}:${text}:${node.from}:${node.to}`;
+  const uniqueId = view.state.field(markdownState).uniqueId;
+  const key = `${url}:${text}:${uniqueId}:${node.from}:${node.to}`;
   const isOpened = openedImage && openedImage === key;
 
   if (isOpened) {

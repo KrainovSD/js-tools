@@ -16,13 +16,14 @@ export class LinkWidget extends WidgetType {
     private link: string,
     private from: number,
     private to: number,
+    private uniqueId: string,
     private view: EditorView,
   ) {
     super();
   }
 
   get key() {
-    return `${this.link}:${this.text}:${this.from}:${this.to}`;
+    return `${this.link}:${this.text}:${this.uniqueId}:${this.from}:${this.to}`;
   }
 
   eq(widget: LinkWidget): boolean {

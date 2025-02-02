@@ -33,6 +33,7 @@ export type MarkdownState = {
   imageSrcGetter?: (src: string) => string;
   openedImage: string | undefined;
   openedLink: string | undefined;
+  uniqueId: string;
 };
 
 export type MarkdownStateConfig = {

@@ -6,7 +6,15 @@ export const COMMON_TEST = `
 [Duck Duck Go](https://duckduckgo.com) 
 <https://www.markdownguide.org><https://www.markdownguide.org> 
 
+![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300)
 
+
+![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300)
+
+
+left ![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=200) right
+
+![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=200) ![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=200) 
 
 
 ## Heading level 2

@@ -1,4 +1,5 @@
 import { StateEffect, StateField } from "@codemirror/state";
+import { randomString } from "@/lib/utils";
 import type { MarkdownState } from "./markdown-types";
 
 export const openedImageEffect = StateEffect.define<string | undefined>();
@@ -11,6 +12,7 @@ export const markdownState = StateField.define<MarkdownState>({
       openedImage: undefined,
       imageSrcGetter: undefined,
       openedLink: undefined,
+      uniqueId: randomString(10),
     };
   },
 

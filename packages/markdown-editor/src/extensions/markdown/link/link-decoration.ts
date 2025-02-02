@@ -59,7 +59,8 @@ function getLinkSelectionDecorations({
   const url = content.substring(urlCoordinates.from, urlCoordinates.to);
 
   const openedLink = view.state.field(markdownState).openedLink;
-  const key = `${url}:${text}:${node.from}:${node.to}`;
+  const uniqueId = view.state.field(markdownState).uniqueId;
+  const key = `${url}:${text}:${uniqueId}:${node.from}:${node.to}`;
   const isOpened = openedLink && openedLink === key;
 
   if (isOpened) {
@@ -81,7 +82,7 @@ function getLinkSelectionDecorations({
     decorations.push(
       utils.getReplaceDecoration({
         range: [node.from, node.to],
-        widget: new LinkWidget(text, url, node.from, node.to, view),
+        widget: new LinkWidget(text, url, node.from, node.to, uniqueId, view),
       }),
     );
   } else {
