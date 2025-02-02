@@ -34,6 +34,7 @@ export const initExtensions = async ({
   languages,
   keyMaps,
   defaultKeyMaps,
+  imageSrcGetter,
 }: InitExtensionsOptions): Promise<Extension[]> => {
   const multiCursorMode = Boolean(multiCursorText && provider);
 
@@ -52,7 +53,7 @@ export const initExtensions = async ({
     }),
     new Promise<Extension>((resolve) => {
       void import("./markdown").then(({ initMarkdown }) => {
-        resolve(initMarkdown({ languages }));
+        resolve(initMarkdown({ languages, imageSrcGetter }));
       });
     }),
   ]);

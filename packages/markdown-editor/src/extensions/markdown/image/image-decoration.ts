@@ -1,6 +1,7 @@
 import { type EditorView } from "@codemirror/view";
 import type { SyntaxNodeRef } from "@lezer/common";
 import { utils } from "@/lib";
+import { markdownState } from "../markdown-state";
 import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
 import {
   CODE_OF_END_IMAGE_TEXT,
@@ -21,10 +22,9 @@ function getImageSelectionDecorations({
     return;
   }
 
-  console.log(view.state.selection);
-
   const { text, url } = parseInfo(view, node);
   const line = view.lineBlockAt(node.from);
+  const imageSrcGetter = view.state.field(markdownState).imageSrcGetter;
 
   if (line.from === node.from && line.to === node.to) {
     if (
@@ -35,14 +35,14 @@ function getImageSelectionDecorations({
       decorations.push(
         utils.getReplaceDecoration({
           range: [line.from, line.to],
-          widget: new ImageWidget(text, url, node.from, node.to),
+          widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
         }),
       );
     } else {
       decorations.push(
         utils.getWidgetDecorationOptions({
           range: [node.to + 1],
-          widget: new ImageWidget(text, url, node.from, node.to),
+          widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
         }),
       );
     }
@@ -54,14 +54,14 @@ function getImageSelectionDecorations({
     decorations.push(
       utils.getReplaceDecoration({
         range: [node.from, node.to],
-        widget: new ImageWidget(text, url, node.from, node.to),
+        widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
       }),
     );
   } else {
     decorations.push(
       utils.getWidgetDecorationOptions({
         range: [node.to],
-        widget: new ImageWidget(text, url, node.from, node.to),
+        widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
       }),
     );
   }

@@ -15,12 +15,17 @@ export class ImageWidget extends WidgetType {
     private link: string,
     private from: number,
     private to: number,
+    private imageSrcGetter: ((src: string) => string) | undefined,
   ) {
     super();
   }
 
   get key() {
     return `${this.link}:${this.text}:${this.from}:${this.to}`;
+  }
+
+  get src() {
+    return this.imageSrcGetter ? this.imageSrcGetter(this.link) : this.link;
   }
 
   eq(widget: ImageWidget): boolean {
@@ -31,7 +36,7 @@ export class ImageWidget extends WidgetType {
     delete IMAGE_NODES[this.key];
     EXISTING_WIDGETS.delete(this.key);
 
-    if (image.src !== widget.link) image.src = widget.link;
+    if (image.src !== widget.src) image.src = widget.src;
     if (image.alt !== widget.text) image.alt = widget.text;
 
     this.link = widget.link;
@@ -54,8 +59,8 @@ export class ImageWidget extends WidgetType {
 
     let image = IMAGE_NODES[this.key];
     if (image) {
-      if (image.src !== this.link) {
-        image.src = this.link;
+      if (image.src !== this.src) {
+        image.src = this.src;
       }
       if (image.alt !== this.text) image.alt = this.text;
 
@@ -66,7 +71,7 @@ export class ImageWidget extends WidgetType {
     image = document.createElement("img");
     image.classList.add(styles.image);
     image.alt = this.text;
-    image.src = this.link;
+    image.src = this.src;
     image.style.maxWidth = "100%";
 
     image.addEventListener("mousedown", handleClick.bind(this));

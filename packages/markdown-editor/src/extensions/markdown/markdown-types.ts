@@ -5,6 +5,7 @@ import type { SyntaxNodeRef } from "@lezer/common";
 
 export type InitMarkdownOptions = {
   languages?: LanguageDescription[];
+  imageSrcGetter?: (src: string) => string;
 };
 
 export type GetDecorationOptions = {
@@ -29,5 +30,10 @@ export type DecorationPlugin = {
 };
 
 export type MarkdownState = {
+  imageSrcGetter?: (src: string) => string;
   openedImage: string | undefined;
+};
+
+export type MarkdownStateConfig = {
+  imageSrcGetter?: (src: string) => string;
 };

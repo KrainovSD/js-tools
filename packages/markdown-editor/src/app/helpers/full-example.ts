@@ -1,4 +1,8 @@
-export const FULL_EXAMPLE = `# Heading level 1
+export const FULL_EXAMPLE = `
+![test](https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=300)
+
+
+# Heading level 1
 ## Heading level 2
 ### Heading level 3
 #### Heading level 4

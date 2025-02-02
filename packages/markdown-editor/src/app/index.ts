@@ -37,6 +37,11 @@ function initEditor() {
     light,
     theme: "dark",
     languages,
+    imageSrcGetter: (url) => {
+      console.log(url);
+
+      return `https://mdg.imgix.net/assets/images/san-juan-mountains.jpg?auto=format&fit=clip&q=40&w=400`;
+    },
     keyMaps: [],
     defaultKeyMaps: {
       theme: true,
