@@ -7,7 +7,7 @@ import { NAME_OF_HORIZONTAL } from "./horizontal-constants";
 
 function getHorizontalSelectionDecoration({
   decorations,
-  isReadonly,
+  forceActive,
   node,
   view,
 }: GetSelectionDecorationOptions) {
@@ -16,7 +16,7 @@ function getHorizontalSelectionDecoration({
   const line = view.lineBlockAt(node.from);
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
   ) {

@@ -15,18 +15,20 @@ function getImageSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_IMAGE) {
     return;
   }
+
+  console.log(view.state.selection);
 
   const { text, url } = parseInfo(view, node);
   const line = view.lineBlockAt(node.from);
 
   if (line.from === node.from && line.to === node.to) {
     if (
-      isReadonly ||
+      forceActive ||
       !view.hasFocus ||
       !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
     ) {
@@ -45,7 +47,7 @@ function getImageSelectionDecorations({
       );
     }
   } else if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
   ) {

@@ -62,49 +62,76 @@ function initEditor() {
   });
 }
 
-/** Edit Mode */
-const readonlyButton = document.querySelector(".edit-mode");
-if (readonlyButton) {
-  const text: Record<string, string> = {
-    false: "Выключить режим редактирования",
-    true: "Включить режим редактирования",
-  };
-  readonlyButton.textContent = text[String(readonly)];
-  readonlyButton.addEventListener("click", () => {
-    if (!editor) return;
-
-    editor.setReadonly(!readonly);
-    readonly = !readonly;
+{
+  /** Edit Mode */
+  const readonlyButton = document.querySelector(".edit-mode");
+  if (readonlyButton) {
+    const text: Record<string, string> = {
+      false: "Выключить режим редактирования",
+      true: "Включить режим редактирования",
+    };
     readonlyButton.textContent = text[String(readonly)];
-  });
+    readonlyButton.addEventListener("click", () => {
+      if (!editor) return;
+
+      editor.setReadonly(!readonly);
+      readonly = !readonly;
+      readonlyButton.textContent = text[String(readonly)];
+    });
+  }
 }
 
-/** Multi Cursor Mode */
-const multiButton = document.querySelector(".multi-mode");
-if (multiButton) {
-  const text: Record<string, string> = {
-    false: "Включить совместный режим",
-    true: "Выключить совместный режим",
-  };
-  multiButton.textContent = text[String(Boolean(multiCursor))];
-  multiButton.addEventListener("click", () => {
-    if (!editor) return;
+{
+  /** Multi Cursor Mode */
+  const multiButton = document.querySelector(".multi-mode");
 
-    editor.destroy();
-
-    if (!multiCursor) {
-      if (!presetMultiCursor.roomId) presetMultiCursor.roomId = randomString(10);
-      multiCursor = presetMultiCursor;
-      window.history.pushState({}, "", `${window.location.origin}/${presetMultiCursor.roomId}`);
-    } else {
-      multiCursor = undefined;
-      window.history.pushState({}, "", window.location.origin);
-    }
-
-    initEditor();
-
+  if (multiButton) {
+    const text: Record<string, string> = {
+      false: "Включить совместный режим",
+      true: "Выключить совместный режим",
+    };
     multiButton.textContent = text[String(Boolean(multiCursor))];
-  });
+    multiButton.addEventListener("click", () => {
+      if (!editor) return;
+
+      editor.destroy();
+
+      if (!multiCursor) {
+        if (!presetMultiCursor.roomId) presetMultiCursor.roomId = randomString(10);
+        multiCursor = presetMultiCursor;
+        window.history.pushState({}, "", `${window.location.origin}/${presetMultiCursor.roomId}`);
+      } else {
+        multiCursor = undefined;
+        window.history.pushState({}, "", window.location.origin);
+      }
+
+      initEditor();
+
+      multiButton.textContent = text[String(Boolean(multiCursor))];
+    });
+  }
+}
+
+{
+  const stateButton = document.querySelector(".state");
+  let created = true;
+
+  if (stateButton) {
+    const text: Record<string, string> = {
+      false: "Создать редактор",
+      true: "Очистить редактор",
+    };
+    stateButton.textContent = text[String(Boolean(created))];
+    stateButton.addEventListener("click", () => {
+      if (!editor) return;
+
+      if (created) editor.destroy();
+      if (!created) initEditor();
+
+      created = !created;
+      stateButton.textContent = text[String(Boolean(created))];
+    });
+  }
 }
 
 initEditor();

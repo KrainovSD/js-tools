@@ -26,14 +26,14 @@ function getMentionSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_MENTION) {
     return;
   }
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {

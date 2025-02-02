@@ -24,14 +24,14 @@ function getItalicSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_ITALIC) {
     return;
   }
 
-  if (checkIsSeveralEmphasis({ decorations, node, view, isReadonly })) {
-    return void splitEmphasis({ decorations, node, view, isReadonly });
+  if (checkIsSeveralEmphasis({ decorations, node, view, forceActive })) {
+    return void splitEmphasis({ decorations, node, view, forceActive });
   }
 
   let step = 1;
@@ -44,7 +44,7 @@ function getItalicSelectionDecorations({
     step = 3;
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
@@ -70,7 +70,7 @@ function checkIsSeveralEmphasis({ node, view }: GetSelectionDecorationOptions) {
   return false;
 }
 
-function splitEmphasis({ decorations, node, view, isReadonly }: GetSelectionDecorationOptions) {
+function splitEmphasis({ decorations, node, view, forceActive }: GetSelectionDecorationOptions) {
   const text = view.state.doc.sliceString(node.from, node.to);
   let marks = 0;
   let pos = 0;
@@ -84,13 +84,13 @@ function splitEmphasis({ decorations, node, view, isReadonly }: GetSelectionDeco
     decorations,
     view,
     node: { ...node, name: node.name, from: node.from, to: node.from + pos },
-    isReadonly,
+    forceActive,
   });
   getItalicSelectionDecorations({
     decorations,
     view,
     node: { ...node, name: node.name, from: node.from + pos, to: node.to },
-    isReadonly,
+    forceActive,
   });
 }
 

@@ -17,7 +17,7 @@ export type GetSelectionDecorationOptions = {
   node: SyntaxNodeRef;
   decorations: Range<Decoration>[];
   view: EditorView;
-  isReadonly: boolean;
+  forceActive: boolean;
 };
 
 export type GetDecorationFunction = (options: GetDecorationOptions) => void;
@@ -26,4 +26,8 @@ export type GetSelectionDecorationFunction = (options: GetSelectionDecorationOpt
 export type DecorationPlugin = {
   decorations?: GetDecorationFunction[];
   selectionDecorations?: GetSelectionDecorationFunction[];
+};
+
+export type MarkdownState = {
+  openedImage: string | undefined;
 };

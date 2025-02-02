@@ -14,7 +14,7 @@ function getLinkSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_LINK) {
     return;
@@ -52,13 +52,13 @@ function getLinkSelectionDecorations({
   }
 
   if (urlCoordinates.from === -1 || urlCoordinates.to === -1)
-    return void getLinkLabelSelectionDecoration({ decorations, isReadonly, node, view });
+    return void getLinkLabelSelectionDecoration({ decorations, forceActive, node, view });
 
   const text = content.substring(textCoordinates.from, textCoordinates.to);
   const url = content.substring(urlCoordinates.from, urlCoordinates.to);
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {

@@ -40,7 +40,7 @@ function getHeaderSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   const isHeader = node.name.startsWith(NAME_OF_HEADER);
   const isHeaderUnder = node.name.startsWith(NAME_OF_HEADER_UNDER);
@@ -57,7 +57,7 @@ function getHeaderSelectionDecorations({
     if (line.length < mark.to - mark.from + 1) return;
 
     if (
-      isReadonly ||
+      forceActive ||
       !view.hasFocus ||
       !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
     ) {
@@ -68,7 +68,7 @@ function getHeaderSelectionDecorations({
     const lineMark = view.lineBlockAt(mark.from);
 
     if (
-      isReadonly ||
+      forceActive ||
       !view.hasFocus ||
       !utils.isInRange(view.state.selection.ranges, [lineHeader.from, lineMark.to])
     ) {

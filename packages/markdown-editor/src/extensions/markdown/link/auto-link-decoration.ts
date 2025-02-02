@@ -7,14 +7,14 @@ function getAutoLinkSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_AUTO_LINK) return;
 
   const url = view.state.doc.sliceString(node.from + 1, node.to - 1);
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {

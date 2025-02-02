@@ -67,13 +67,14 @@ export class ImageWidget extends WidgetType {
     image.classList.add(styles.image);
     image.alt = this.text;
     image.src = this.link;
+    image.style.maxWidth = "100%";
 
-    image.addEventListener("mousedown", handleClick);
-    image.addEventListener("click", handleClick);
+    image.addEventListener("mousedown", handleClick.bind(this));
+    image.addEventListener("click", handleClick.bind(this));
 
     IMAGE_NODES[this.key] = image;
 
-    if (!interval) interval = setInterval(garbageCollectorInterval, INTERVAL_DELAY);
+    if (!interval) interval = setInterval(garbageCollectorInterval.bind(this), INTERVAL_DELAY);
 
     return image;
   }
@@ -83,13 +84,13 @@ export class ImageWidget extends WidgetType {
   }
 }
 
-function garbageCollectorInterval() {
+function garbageCollectorInterval(this: ImageWidget) {
   for (const [key, node] of Object.entries(IMAGE_NODES)) {
     if (EXISTING_WIDGETS.has(key) || !node) continue;
 
     delete IMAGE_NODES[key];
-    node.removeEventListener("mousedown", handleClick);
-    node.removeEventListener("click", handleClick);
+    node.removeEventListener("mousedown", handleClick.bind(this));
+    node.removeEventListener("click", handleClick.bind(this));
     node.remove();
   }
 
@@ -169,7 +170,7 @@ function selectLink({ imageNode, node, selection, start }: SelectLinkOptions) {
   selection.addRange(range);
 }
 
-function handleClick(event: MouseEvent) {
+function handleClick(this: ImageWidget, event: MouseEvent) {
   const selection = window.getSelection();
 
   if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {

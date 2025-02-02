@@ -8,7 +8,7 @@ function getTodoSelectionDecoration({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_TODO) return;
 
@@ -20,7 +20,7 @@ function getTodoSelectionDecoration({
   );
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [prevSibling.from, node.from + 3])
   ) {
@@ -36,7 +36,7 @@ function getTodoSelectionDecoration({
     const line = view.lineBlockAt(node.from);
 
     if (
-      isReadonly ||
+      forceActive ||
       !view.hasFocus ||
       !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
     )

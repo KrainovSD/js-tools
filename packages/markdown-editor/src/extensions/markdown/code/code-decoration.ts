@@ -10,7 +10,7 @@ function getCodeSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_FENCED_CODE && node.name !== NAME_OF_INLINE_CODE) {
     return;
@@ -99,7 +99,7 @@ function getCodeSelectionDecorations({
   }
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     (lines.length > 1 && !isOverlapLine) ||
     (lines.length === 1 && !utils.isInRange(view.state.selection.ranges, [node.from, node.to]))

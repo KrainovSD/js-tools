@@ -59,7 +59,7 @@ function getBlockquoteSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_BLOCKQUOTE_MARK) {
     return;
@@ -98,7 +98,7 @@ function getBlockquoteSelectionDecorations({
   }
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
   ) {

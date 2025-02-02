@@ -12,7 +12,7 @@ function getListSelectionDecorations({
   decorations,
   node,
   view,
-  isReadonly,
+  forceActive,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_LIST) {
     return;
@@ -27,7 +27,7 @@ function getListSelectionDecorations({
   const nextSibling = node.node.nextSibling;
   if (nextSibling && nextSibling.name === NAME_OF_TODO) {
     if (
-      isReadonly ||
+      forceActive ||
       !view.hasFocus ||
       !utils.isInRange(view.state.selection.ranges, [node.from, nextSibling.from + 3])
     ) {
@@ -38,7 +38,7 @@ function getListSelectionDecorations({
   }
 
   if (
-    isReadonly ||
+    forceActive ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {

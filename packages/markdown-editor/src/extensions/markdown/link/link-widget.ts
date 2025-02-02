@@ -76,8 +76,8 @@ export class LinkWidget extends WidgetType {
 
     /** open the link if has special key or the view is readonly */
     const contentEditable = this.view.contentDOM.getAttribute("contenteditable");
-    const isReadonly = !contentEditable || contentEditable === "false";
-    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey || isReadonly) {
+    const forceActive = !contentEditable || contentEditable === "false";
+    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey || forceActive) {
       if (event.type === "mousedown") {
         const target = event.target as HTMLAnchorElement;
         window.open(target.href, "_blank");
