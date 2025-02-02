@@ -9,18 +9,18 @@ const EXISTING_WIDGETS: Set<string> = new Set();
 let interval: NodeJS.Timeout | null = null;
 
 interface ImageElement extends HTMLImageElement {
+  clearListeners?: () => void;
   destroy?: () => void;
 }
 
 export class ImageWidget extends WidgetType {
-  view: EditorView | undefined;
-
   constructor(
     private text: string,
     private link: string,
     private from: number,
     private to: number,
     private imageSrcGetter: ((src: string) => string) | undefined,
+    private view: EditorView,
   ) {
     super();
   }
@@ -49,6 +49,7 @@ export class ImageWidget extends WidgetType {
     this.from = widget.from;
     this.to = widget.to;
 
+    this.registerListeners(image);
     IMAGE_NODES[this.key] = image;
     EXISTING_WIDGETS.add(this.key);
 
@@ -79,11 +80,10 @@ export class ImageWidget extends WidgetType {
     image.src = this.src;
     image.style.maxWidth = "100%";
 
-    image.addEventListener("mousedown", this.handleClick.bind(this));
-
+    this.registerListeners(image);
     IMAGE_NODES[this.key] = image;
 
-    if (!interval) interval = setInterval(this.garbageCollectorInterval.bind(this), INTERVAL_DELAY);
+    if (!interval) interval = setInterval(garbageCollectorInterval, INTERVAL_DELAY);
 
     return image;
   }
@@ -92,72 +92,35 @@ export class ImageWidget extends WidgetType {
     EXISTING_WIDGETS.delete(this.key);
   }
 
-  handleClick(this: ImageWidget, event: MouseEvent) {
-    const selection = window.getSelection();
-
-    if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {
-      return;
-    }
-
-    event.stopPropagation();
-    event.preventDefault();
-    const target = event.target as HTMLImageElement;
-    const parent = target.parentNode;
-    let line: HTMLElement | null = parent as HTMLElement | null;
-
-    /** recursively find line that contains link */
-    while (line && !line.classList.contains("cm-line")) {
-      line = line.parentNode as HTMLElement | null;
-    }
-
-    const editor = Array.from(document.querySelectorAll(".cm-editor")).find((element) =>
-      element.contains(target),
+  registerListeners(image: ImageElement) {
+    image.clearListeners?.();
+    const abortController = new AbortController();
+    image.addEventListener(
+      "mousedown",
+      (event) => handleClick(this.view, this.text, this.link, this.key, event),
+      { signal: abortController.signal },
     );
+    image.clearListeners = () => {
+      abortController.abort();
+    };
+    image.destroy = () => {
+      image.clearListeners?.();
+      image.remove();
+    };
+  }
+}
 
-    if (!selection || !editor || !parent) return;
+function garbageCollectorInterval() {
+  for (const [key, node] of Object.entries(IMAGE_NODES)) {
+    if (EXISTING_WIDGETS.has(key) || !node) continue;
 
-    const textNode = getTextNode(this.text, this.link, this.key, line);
-
-    if (textNode) {
-      return void selectLink({ selection, link: this.link, node: textNode });
-    }
-
-    saveDispatch(() => {
-      if (!this.view) return;
-
-      this.view.dispatch(this.view.state.update({ effects: openedImageEffect.of(this.key) }));
-
-      const textNode = getTextNode(this.text, this.link, this.key, line);
-      if (textNode) {
-        selectLink({ selection, link: this.link, node: textNode });
-      }
-
-      requestAnimationFrame(() => {
-        saveDispatch(() => {
-          if (this.view)
-            this.view.dispatch(
-              this.view.state.update({ effects: openedImageEffect.of(undefined) }),
-            );
-        });
-      });
-    });
-
-    return false;
+    delete IMAGE_NODES[key];
+    node.destroy?.();
   }
 
-  garbageCollectorInterval(this: ImageWidget) {
-    for (const [key, node] of Object.entries(IMAGE_NODES)) {
-      if (EXISTING_WIDGETS.has(key) || !node) continue;
-
-      delete IMAGE_NODES[key];
-      node.removeEventListener("mousedown", this.handleClick.bind(this));
-      node.remove();
-    }
-
-    if (Object.keys(IMAGE_NODES).length === 0 && interval) {
-      clearInterval(interval);
-      interval = null;
-    }
+  if (Object.keys(IMAGE_NODES).length === 0 && interval) {
+    clearInterval(interval);
+    interval = null;
   }
 }
 
@@ -224,4 +187,59 @@ function selectLink({ link, node, selection, start }: SelectLinkOptions) {
   range.setEnd(node, endPosition);
   selection.removeAllRanges();
   selection.addRange(range);
+}
+
+function handleClick(
+  view: EditorView | undefined,
+  text: string,
+  link: string,
+  key: string,
+  event: MouseEvent,
+) {
+  const selection = window.getSelection();
+
+  if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {
+    return;
+  }
+
+  event.stopPropagation();
+  event.preventDefault();
+  const target = event.target as HTMLImageElement;
+  const parent = target.parentNode;
+  let line: HTMLElement | null = parent as HTMLElement | null;
+
+  /** recursively find line that contains link */
+  while (line && !line.classList.contains("cm-line")) {
+    line = line.parentNode as HTMLElement | null;
+  }
+
+  const editor = Array.from(document.querySelectorAll(".cm-editor")).find((element) =>
+    element.contains(target),
+  );
+
+  if (!selection || !editor || !parent) return;
+
+  const textNode = getTextNode(text, link, key, line);
+
+  if (textNode) {
+    return void selectLink({ selection, link, node: textNode });
+  }
+
+  saveDispatch(() => {
+    if (!view) return;
+    view.dispatch(view.state.update({ effects: openedImageEffect.of(key) }));
+
+    const textNode = getTextNode(text, link, key, line);
+    if (textNode) {
+      selectLink({ selection, link, node: textNode });
+    }
+
+    requestAnimationFrame(() => {
+      saveDispatch(() => {
+        if (view) view.dispatch(view.state.update({ effects: openedImageEffect.of(undefined) }));
+      });
+    });
+  });
+
+  return false;
 }

@@ -27,7 +27,7 @@ function getImageDecorations({ decorations, node, view }: GetDecorationOptions) 
   decorations.push(
     utils.getWidgetDecorationOptions({
       range: [node.to],
-      widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter),
+      widget: new ImageWidget(text, url, node.from, node.to, imageSrcGetter, view),
     }),
   );
 }
