@@ -132,26 +132,38 @@ function getTextNode(
   line: ChildNode | Node | null | undefined,
 ): ChildNode | null {
   if (!line) return null;
-  let textNode: ChildNode | null = null;
+  const textNodeContainer = getTextNodeContainer(text, link, key, line);
+  if (!textNodeContainer) return null;
 
-  for (const node of Array.from(line.childNodes)) {
-    if (node.nodeType !== 3 && node instanceof HTMLElement) {
-      const innerNode = getTextNode(text, link, key, node);
-      if (innerNode && node.getAttribute("data-id") === key) {
-        textNode = innerNode;
-        break;
-      }
-
-      continue;
-    }
-
+  for (const node of Array.from(textNodeContainer.childNodes)) {
     if (isCorrectNode(text, link, node)) {
-      textNode = node;
-      break;
+      return node;
     }
   }
 
-  return textNode;
+  return null;
+}
+
+function getTextNodeContainer(
+  text: string,
+  link: string,
+  key: string,
+  line: ChildNode | Node | null | undefined,
+): HTMLElement | null {
+  if (!line) return null;
+
+  for (const node of Array.from(line.childNodes)) {
+    if (node instanceof HTMLElement && node.getAttribute("data-id") === key) {
+      return node;
+    }
+
+    if (node.nodeType !== 3) {
+      const inner = getTextNodeContainer(text, link, key, node);
+      if (inner) return inner;
+    }
+  }
+
+  return null;
 }
 
 function isCorrectNode(

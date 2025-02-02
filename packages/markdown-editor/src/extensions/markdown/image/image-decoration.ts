@@ -47,7 +47,16 @@ function getImageSelectionDecorations({
   const key = `${url}:${text}:${node.from}:${node.to}`;
   const isOpened = openedImage && openedImage === key;
 
-  if (isOpened) return;
+  if (isOpened) {
+    return void decorations.push(
+      utils.getMarkDecoration({
+        range: [node.from, node.to],
+        attributes: {
+          "data-id": key,
+        },
+      }),
+    );
+  }
 
   if (
     forceActive ||
