@@ -32,6 +32,7 @@ export type DecorationPlugin = {
 export type MarkdownState = {
   imageSrcGetter?: (src: string) => string;
   openedImage: string | undefined;
+  openedLink: string | undefined;
 };
 
 export type MarkdownStateConfig = {

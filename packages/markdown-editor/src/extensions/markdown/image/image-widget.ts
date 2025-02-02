@@ -60,7 +60,7 @@ export class ImageWidget extends WidgetType {
     return true;
   }
 
-  toDOM(view: EditorView): HTMLElement {
+  toDOM(): HTMLElement {
     EXISTING_WIDGETS.add(this.key);
 
     let image = IMAGE_NODES[this.key];
@@ -73,7 +73,6 @@ export class ImageWidget extends WidgetType {
       return image;
     }
 
-    this.view = view;
     image = document.createElement("img");
     image.classList.add(styles.image);
     image.alt = this.text;

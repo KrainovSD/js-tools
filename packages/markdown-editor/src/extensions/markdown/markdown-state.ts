@@ -2,6 +2,7 @@ import { StateEffect, StateField } from "@codemirror/state";
 import type { MarkdownState } from "./markdown-types";
 
 export const openedImageEffect = StateEffect.define<string | undefined>();
+export const openedLinkEffect = StateEffect.define<string | undefined>();
 export const imageSrcGetterEffect = StateEffect.define<((src: string) => string) | undefined>();
 
 export const markdownState = StateField.define<MarkdownState>({
@@ -9,6 +10,7 @@ export const markdownState = StateField.define<MarkdownState>({
     return {
       openedImage: undefined,
       imageSrcGetter: undefined,
+      openedLink: undefined,
     };
   },
 
@@ -18,6 +20,7 @@ export const markdownState = StateField.define<MarkdownState>({
     for (const effect of transaction.effects) {
       if (effect.is(openedImageEffect)) newValue.openedImage = effect.value;
       if (effect.is(imageSrcGetterEffect)) newValue.imageSrcGetter = effect.value;
+      if (effect.is(openedLinkEffect)) newValue.openedLink = effect.value;
     }
 
     return newValue;

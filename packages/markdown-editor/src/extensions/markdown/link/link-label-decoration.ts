@@ -3,6 +3,8 @@ import { type GetSelectionDecorationOptions } from "../markdown-types";
 import styles from "../styles.module.scss";
 import { CODE_OF_LINK_LABEL_END } from "./link-constants";
 
+// [label]:
+
 export function getLinkLabelSelectionDecoration({
   decorations,
   node,

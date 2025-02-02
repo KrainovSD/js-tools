@@ -1,4 +1,5 @@
 import { utils } from "@/lib";
+import { markdownState } from "../markdown-state";
 import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
 import {
   CODE_OF_END_LINK_TEXT,
@@ -57,6 +58,21 @@ function getLinkSelectionDecorations({
   const text = content.substring(textCoordinates.from, textCoordinates.to);
   const url = content.substring(urlCoordinates.from, urlCoordinates.to);
 
+  const openedLink = view.state.field(markdownState).openedLink;
+  const key = `${url}:${text}:${node.from}:${node.to}`;
+  const isOpened = openedLink && openedLink === key;
+
+  if (isOpened) {
+    return void decorations.push(
+      utils.getMarkDecoration({
+        range: [node.from, node.to],
+        attributes: {
+          "data-id": key,
+        },
+      }),
+    );
+  }
+
   if (
     forceActive ||
     !view.hasFocus ||
@@ -65,7 +81,16 @@ function getLinkSelectionDecorations({
     decorations.push(
       utils.getReplaceDecoration({
         range: [node.from, node.to],
-        widget: new LinkWidget(text, url, "link"),
+        widget: new LinkWidget(text, url, node.from, node.to, view),
+      }),
+    );
+  } else {
+    decorations.push(
+      utils.getMarkDecoration({
+        range: [node.from, node.to],
+        attributes: {
+          "data-id": key,
+        },
       }),
     );
   }
