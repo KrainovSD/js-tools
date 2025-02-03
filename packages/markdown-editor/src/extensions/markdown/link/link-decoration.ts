@@ -16,6 +16,7 @@ function getLinkSelectionDecorations({
   node,
   view,
   forceActive,
+  settings,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_LINK) {
     return;
@@ -53,7 +54,7 @@ function getLinkSelectionDecorations({
   }
 
   if (urlCoordinates.from === -1 || urlCoordinates.to === -1)
-    return void getLinkLabelSelectionDecoration({ decorations, forceActive, node, view });
+    return void getLinkLabelSelectionDecoration({ decorations, forceActive, node, view, settings });
 
   const text = content.substring(textCoordinates.from, textCoordinates.to);
   const url = content.substring(urlCoordinates.from, urlCoordinates.to);

@@ -16,13 +16,12 @@ import {
 } from "./image-constants";
 import { ImageWidget } from "./image-widget";
 
-function getImageDecorations({ decorations, node, view }: GetDecorationOptions) {
+function getImageDecorations({ decorations, node, view, settings }: GetDecorationOptions) {
   if (node.name !== NAME_OF_IMAGE) {
     return;
   }
 
   const { text, url } = parseInfo(view, node);
-  const imageSrcGetter = view.state.field(markdownState).imageSrcGetter;
   const uniqueId = view.state.field(markdownState).uniqueId;
   const line = view.lineBlockAt(node.from);
   const fullLine = line.from === node.from && line.to === node.to;
@@ -37,7 +36,7 @@ function getImageDecorations({ decorations, node, view }: GetDecorationOptions) 
         node.to,
         uniqueId,
         fullLine,
-        imageSrcGetter,
+        settings.imageSrcGetter,
         view,
       ),
     }),

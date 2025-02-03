@@ -25,13 +25,14 @@ function getItalicSelectionDecorations({
   node,
   view,
   forceActive,
+  settings,
 }: GetSelectionDecorationOptions) {
   if (node.name !== NAME_OF_ITALIC) {
     return;
   }
 
-  if (checkIsSeveralEmphasis({ decorations, node, view, forceActive })) {
-    return void splitEmphasis({ decorations, node, view, forceActive });
+  if (checkIsSeveralEmphasis({ decorations, node, view, forceActive, settings })) {
+    return void splitEmphasis({ decorations, node, view, forceActive, settings });
   }
 
   let step = 1;
@@ -70,7 +71,13 @@ function checkIsSeveralEmphasis({ node, view }: GetSelectionDecorationOptions) {
   return false;
 }
 
-function splitEmphasis({ decorations, node, view, forceActive }: GetSelectionDecorationOptions) {
+function splitEmphasis({
+  decorations,
+  node,
+  view,
+  forceActive,
+  settings,
+}: GetSelectionDecorationOptions) {
   const text = view.state.doc.sliceString(node.from, node.to);
   let marks = 0;
   let pos = 0;
@@ -85,12 +92,14 @@ function splitEmphasis({ decorations, node, view, forceActive }: GetSelectionDec
     view,
     node: { ...node, name: node.name, from: node.from, to: node.from + pos },
     forceActive,
+    settings,
   });
   getItalicSelectionDecorations({
     decorations,
     view,
     node: { ...node, name: node.name, from: node.from + pos, to: node.to },
     forceActive,
+    settings,
   });
 }
 

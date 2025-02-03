@@ -17,12 +17,11 @@ import { imageDecorationPlugin } from "./image/image-decoration";
 import { italicDecorationPlugin } from "./italic";
 import { autoLinkDecorationPlugin, linkDecorationPlugin } from "./link";
 import { listDecorationPlugin } from "./list";
-import { imageSrcGetterEffect } from "./markdown-state";
 import type {
   DecorationPlugin,
   GetDecorationFunction,
   GetSelectionDecorationFunction,
-  MarkdownStateConfig,
+  MarkdownDecorationSettings,
 } from "./markdown-types";
 import { mentionDecorationPlugin } from "./mention/mention-decoration";
 import { strikeThroughDecorationPlugin } from "./strike-through";
@@ -71,7 +70,7 @@ const SKIP_MARKS = new Set([
   "TaskMarker",
 ]);
 
-function createDecorationsGetter() {
+function createDecorationsGetter(settings: MarkdownDecorationSettings) {
   let markdownDecorationsCache: Range<Decoration>[] = [];
   let markdownSelectionDecorationsCache: Range<Decoration>[] = [];
 
@@ -94,7 +93,7 @@ function createDecorationsGetter() {
           if (SKIP_MARKS.has(node.name)) return;
           /** Decoration by change content */
           if (processDecorations)
-            decorationFunctions.forEach((f) => f({ decorations, node, view }));
+            decorationFunctions.forEach((f) => f({ decorations, node, view, settings }));
 
           /** Decoration by selection content  */
           if (processSelectionDecorations)
@@ -104,6 +103,7 @@ function createDecorationsGetter() {
                 node,
                 view,
                 forceActive: isReadonly,
+                settings,
               }),
             );
         },
@@ -123,7 +123,7 @@ function createDecorationsGetter() {
   return getDecorations;
 }
 
-export const markdownDecorationPlugin = (stateConfig: MarkdownStateConfig) => {
+export const markdownDecorationPlugin = (settings: MarkdownDecorationSettings) => {
   return ViewPlugin.fromClass(
     class DecorationMarkdown {
       decorations: DecorationSet;
@@ -141,20 +141,12 @@ export const markdownDecorationPlugin = (stateConfig: MarkdownStateConfig) => {
       ) => DecorationSet;
 
       constructor(view: EditorView) {
-        this.decorationGetter = createDecorationsGetter();
+        this.decorationGetter = createDecorationsGetter(settings);
         this.decorations = this.decorationGetter(view, true, this.mouseReleased);
         this.dom = view.dom;
         this.view = view;
         document.addEventListener("mousedown", this.onMouseDown.bind(this));
         document.addEventListener("mouseup", this.onMouseUp.bind(this));
-
-        saveDispatch(() => {
-          this.view.dispatch(
-            this.view.state.update({
-              effects: [imageSrcGetterEffect.of(stateConfig.imageSrcGetter)],
-            }),
-          );
-        });
       }
 
       update(update: ViewUpdate) {

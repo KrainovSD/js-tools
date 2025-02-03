@@ -4,7 +4,9 @@ import { openedImageEffect } from "../markdown-state";
 import styles from "../styles.module.scss";
 
 const IMAGE_NODES: Record<string, ImageContainerElement | undefined> = {};
-
+const INTERVAL_DELAY = 10000;
+const EXISTING_WIDGETS: Set<string> = new Set();
+let interval: NodeJS.Timeout | null = null;
 interface ImageContainerElement extends HTMLSpanElement {
   clearListeners?: () => void;
   destroy?: () => void;
@@ -40,6 +42,7 @@ export class ImageWidget extends WidgetType {
     if (!image) return false;
 
     delete IMAGE_NODES[this.key];
+    EXISTING_WIDGETS.delete(this.key);
 
     if (image.src !== widget.src) image.src = widget.src;
     if (image.alt !== widget.text) image.alt = widget.text;
@@ -51,6 +54,7 @@ export class ImageWidget extends WidgetType {
 
     this.registerListeners(image);
     IMAGE_NODES[this.key] = image;
+    EXISTING_WIDGETS.add(this.key);
 
     return true;
   }
@@ -60,6 +64,7 @@ export class ImageWidget extends WidgetType {
   }
 
   toDOM(): HTMLElement {
+    EXISTING_WIDGETS.add(this.key);
     let container = IMAGE_NODES[this.key];
     let image = container?.image;
 
@@ -89,12 +94,13 @@ export class ImageWidget extends WidgetType {
     this.registerListeners(container);
     IMAGE_NODES[this.key] = container;
 
+    if (!interval) interval = setInterval(garbageCollectorInterval, INTERVAL_DELAY);
+
     return container;
   }
 
-  destroy(dom: ImageContainerElement): void {
-    delete IMAGE_NODES[this.key];
-    dom.destroy?.();
+  destroy(): void {
+    EXISTING_WIDGETS.delete(this.key);
   }
 
   registerListeners(image: ImageContainerElement) {
@@ -112,6 +118,20 @@ export class ImageWidget extends WidgetType {
       image.clearListeners?.();
       image.remove();
     };
+  }
+}
+
+/** for disable cache */
+function garbageCollectorInterval() {
+  for (const [key, node] of Object.entries(IMAGE_NODES)) {
+    if (EXISTING_WIDGETS.has(key) || !node) continue;
+    delete IMAGE_NODES[key];
+    node.destroy?.();
+  }
+
+  if (Object.keys(IMAGE_NODES).length === 0 && interval) {
+    clearInterval(interval);
+    interval = null;
   }
 }
 

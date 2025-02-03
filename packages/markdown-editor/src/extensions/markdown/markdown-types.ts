@@ -12,6 +12,7 @@ export type GetDecorationOptions = {
   node: SyntaxNodeRef;
   decorations: Range<Decoration>[];
   view: EditorView;
+  settings: MarkdownDecorationSettings;
 };
 
 export type GetSelectionDecorationOptions = {
@@ -19,6 +20,7 @@ export type GetSelectionDecorationOptions = {
   decorations: Range<Decoration>[];
   view: EditorView;
   forceActive: boolean;
+  settings: MarkdownDecorationSettings;
 };
 
 export type GetDecorationFunction = (options: GetDecorationOptions) => void;
@@ -30,12 +32,11 @@ export type DecorationPlugin = {
 };
 
 export type MarkdownState = {
-  imageSrcGetter?: (src: string) => string;
   openedImage: string | undefined;
   openedLink: string | undefined;
   uniqueId: string;
 };
 
-export type MarkdownStateConfig = {
+export type MarkdownDecorationSettings = {
   imageSrcGetter?: (src: string) => string;
 };
