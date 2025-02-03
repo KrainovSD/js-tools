@@ -1,6 +1,6 @@
 import type { AuthMiddleWareOptions, Middleware } from "../../../types";
 import { isNull, isUndefined } from "../../typings";
-import { waitUntil } from "../../utils";
+import { startWith, waitUntil } from "../../utils";
 import { getAuthToken } from "../auth";
 
 let isFetchingAccessToken = false;
@@ -20,7 +20,7 @@ export const generateAuthMiddleWare =
       throw new Error("Auth middleware hasn't required options");
     }
 
-    const isSameOrigin = !request.path.includes("http") && !request.path.includes("https");
+    const isSameOrigin = !startWith(request.path, "http");
 
     if (request.token) {
       if (!isSameOrigin)

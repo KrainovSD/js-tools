@@ -66,13 +66,8 @@ export function createRequestClientInstance({
     await executeMiddlewares(request);
 
     const { method, body, path, params, headers } = request;
-    const trimedPath = path.replace(/^\//, "").replace(/\/$/, "");
-    const fullPath =
-      trimedPath.includes("http") || trimedPath.includes("https")
-        ? trimedPath
-        : `${window.location.origin}/${trimedPath}`;
 
-    const url = createURLWithParams({ baseURL: fullPath, params });
+    const url = createURLWithParams({ baseURL: path, params });
     let preparedBody = body;
 
     if (body && !(preparedBody instanceof FormData)) {

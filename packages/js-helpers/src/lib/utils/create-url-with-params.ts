@@ -7,7 +7,7 @@ type CreateURLOptionsInterface = {
 };
 
 export function createURLWithParams(options: CreateURLOptionsInterface): string {
-  const url = options.baseURL.replace(/\/$/, "").replace(/\?$/, "");
+  const url = options.baseURL;
 
   if (!options.params) {
     return url;

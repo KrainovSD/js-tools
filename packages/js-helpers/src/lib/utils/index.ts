@@ -14,3 +14,4 @@ export * from "./sync-object-values";
 export * from "./random-number";
 export * from "./get-file-name-from-header";
 export * from "./limit-stream-of-requests";
+export * from "./start-with";
