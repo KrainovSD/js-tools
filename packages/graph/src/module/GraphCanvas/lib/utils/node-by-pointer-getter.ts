@@ -1,3 +1,4 @@
+import { greatest } from "d3-array";
 import type { ZoomTransform } from "d3-zoom";
 import type { NodeInterface } from "@/types";
 import type { GraphSettingsInterface } from "../../types";
@@ -25,7 +26,7 @@ export function nodeByPointerGetter<NodeData extends Record<string, unknown>>({
 
   const [pointerX, pointerY] = pointerGetter(mouseEvent, areaRect, areaTransform);
 
-  return nodes.find((node) => {
+  return greatest(nodes, (node) => {
     const radius = nodeRadiusGetter({
       radiusFlexible: graphSettings.nodeRadiusFlexible,
       radiusInitial: graphSettings.nodeRadiusInitial,
@@ -34,6 +35,6 @@ export function nodeByPointerGetter<NodeData extends Record<string, unknown>>({
       linkCount: node.linkCount,
     });
 
-    return isOverlapsNode(node, radius, pointerX, pointerY);
+    if (isOverlapsNode(node, radius, pointerX, pointerY)) return node.index;
   });
 }

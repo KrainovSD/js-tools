@@ -46,6 +46,9 @@ const graph = new GraphCanvas({
     // stickAfterDrag: true,
     highlightByHover: true,
   },
+  forceSettings: {
+    collideOn: true,
+  },
   linkSettings: {},
   listeners: {
     onSimulationEnd: () => {
