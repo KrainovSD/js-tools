@@ -54,7 +54,7 @@ export class ImageWidget extends WidgetType {
     this.to = widget.to;
 
     this.registerListeners(image);
-    IMAGE_NODES[this.key] = image;
+    IMAGE_NODES[this.key] = container;
     EXISTING_WIDGETS.add(this.key);
 
     return true;
