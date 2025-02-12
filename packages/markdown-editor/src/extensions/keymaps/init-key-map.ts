@@ -4,6 +4,7 @@ import { type EditorView, type KeyBinding, drawSelection, keymap } from "@codemi
 import { saveDispatch } from "@/lib/utils";
 import { ThemeCompartment, VimModeCompartment } from "../compartments";
 import { type EditorTheme, type ThemeOptions, getDarkTheme, getLightTheme } from "../theme";
+import { boldKeymap, italicKeymap } from "./custom";
 
 export type InitKeyMapsOptions = {
   onEnter?: HandleEnterKeyMapEditorFunction;
@@ -44,7 +45,7 @@ export const initKeyMaps = async ({
   theme = initialTheme;
 
   /** tab */
-  const keyBindings: CustomKeyMap[] = [indentWithTab];
+  const keyBindings: CustomKeyMap[] = [indentWithTab, boldKeymap, italicKeymap];
 
   /** standard  */
   keyBindings.push(
