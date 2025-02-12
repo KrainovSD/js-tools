@@ -1,13 +1,12 @@
 export const COMMON_TEST = `
-     code block on 
-     several rows 
-     check case
+
+![ссылку](test)
+
+
+
+[ссылку](test)
+
      
-_
-
-[ссылку]()
-
-
 
      
 `;

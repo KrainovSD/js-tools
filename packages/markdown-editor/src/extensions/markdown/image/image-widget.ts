@@ -2,6 +2,7 @@ import { type EditorView, WidgetType } from "@codemirror/view";
 import { saveDispatch } from "@/lib/utils";
 import { openedImageEffect } from "../markdown-state";
 import styles from "../styles.module.scss";
+import { CODE_OF_START_IMAGE_URL } from "./image-constants";
 
 const IMAGE_NODES: Record<string, ImageContainerElement | undefined> = {};
 const INTERVAL_DELAY = 10000;
@@ -204,6 +205,30 @@ type SelectLinkOptions = {
 function selectLink({ link, node, selection, start }: SelectLinkOptions) {
   const startPosition = start ?? (node.textContent?.indexOf?.(link) || 0);
   const endPosition = startPosition + link.length;
+
+  if (startPosition === 0 && endPosition === 0) {
+    const content = node.textContent;
+    if (!content) return;
+    let startPosition = 0;
+    let pos = 0;
+
+    while (pos < content.length) {
+      if (content.codePointAt(pos) !== CODE_OF_START_IMAGE_URL) {
+        pos++;
+      } else {
+        startPosition = pos + 1;
+        break;
+      }
+    }
+
+    const range = document.createRange();
+    range.setStart(node, startPosition);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    return;
+  }
 
   const range = document.createRange();
   range.setStart(node, startPosition);
