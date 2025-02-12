@@ -1,6 +1,7 @@
 import type { Extension } from "@codemirror/state";
 import type { WebsocketProvider } from "y-websocket";
 import type { Text } from "yjs";
+import { type InitAutoCompleteOptions, initAutoComplete } from "./auto-completes";
 import { type InitKeyMapsOptions, initKeyMaps } from "./keymaps";
 import { type InitListenersOptions, initListeners } from "./listeners";
 import { type InitMarkdownOptions } from "./markdown";
@@ -11,7 +12,8 @@ export type ExtensionsOptions = InitListenersOptions &
   InitThemeOptions &
   InitSettingsOptions &
   InitMarkdownOptions &
-  InitKeyMapsOptions;
+  InitKeyMapsOptions &
+  InitAutoCompleteOptions;
 
 export type InitExtensionsOptions = {
   multiCursorText: Text | undefined;
@@ -35,6 +37,8 @@ export const initExtensions = async ({
   keyMaps,
   defaultKeyMaps,
   imageSrcGetter,
+  autoCompleteTagOptions,
+  autoCompleteConfig,
 }: InitExtensionsOptions): Promise<Extension[]> => {
   const multiCursorMode = Boolean(multiCursorText && provider);
 
@@ -56,6 +60,7 @@ export const initExtensions = async ({
         resolve(initMarkdown({ languages, imageSrcGetter }));
       });
     }),
+    initAutoComplete({ autoCompleteConfig, autoCompleteTagOptions }),
   ]);
 
   const extensions = [

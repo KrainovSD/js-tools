@@ -40,6 +40,10 @@ function initEditor() {
     imageSrcGetter: (url) => {
       return url;
     },
+    autoCompleteTagOptions: Array.from({ length: 100 }, () => randomString(10)),
+    autoCompleteConfig: {
+      closeOnBlur: true,
+    },
     keyMaps: [],
     defaultKeyMaps: {
       theme: true,

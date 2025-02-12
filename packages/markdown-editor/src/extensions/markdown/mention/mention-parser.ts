@@ -6,12 +6,15 @@ export const mentionParser: MarkdownConfig = {
   parseInline: [
     {
       name: NAME_OF_MENTION,
-      parse(cx, next, pos) {
-        if (next != CODE_OF_START_MENTION) return -1;
+      parse(cx, code, pos) {
+        if (code != CODE_OF_START_MENTION) return -1;
+        const nextCode = cx.char(pos + 1);
+        if (nextCode === -1 || nextCode === CODE_OF_SPACE) return -1;
+
         let end: number = pos + 1;
         for (let i = pos + 1; i < cx.end; i++) {
-          const next = cx.char(i);
-          if (next === CODE_OF_SPACE) break;
+          const nextCode = cx.char(i);
+          if (nextCode === CODE_OF_SPACE) break;
           end++;
         }
 
