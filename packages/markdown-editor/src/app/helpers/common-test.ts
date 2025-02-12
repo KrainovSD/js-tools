@@ -1,6 +1,6 @@
 export const COMMON_TEST = `
 
-![ссылку](test)
+text_for_link
 
      
 `;
