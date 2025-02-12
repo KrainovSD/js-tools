@@ -82,9 +82,9 @@ function findMarkIndex(
           // console.log({ pos, matched, start, minRequired, maxRequired, direction });
         } else if (maxRequired < matched) {
           const posMin = pos - minRequired;
-          const posMax = pos - 1 - maxRequired;
+          const posMax = pos - matched;
 
-          // console.log({ posMin, posMax, pos, minRequired, maxRequired, direction });
+          // console.log({ posMin, posMax, pos, minRequired, maxRequired, direction, matched });
 
           if (direction === "right" && posMin > start) start = posMin;
           if (direction === "left" && (posMax < start || start === -1)) start = posMax;
@@ -104,9 +104,9 @@ function findMarkIndex(
       // console.log({ pos, matched, start, minRequired, maxRequired, direction });
     } else if (maxRequired < matched) {
       const posMin = pos - minRequired;
-      const posMax = pos - 1 - maxRequired;
+      const posMax = pos - matched;
 
-      // console.log({ posMin, posMax, pos, minRequired, maxRequired, direction });
+      // console.log({ posMin, posMax, pos, minRequired, maxRequired, direction, matched });
 
       if (direction === "right" && posMin > start) start = posMin;
       if (direction === "left" && (posMax < start || start === -1)) start = posMax;
@@ -150,25 +150,28 @@ function processShiftContent(state: EditorState, shift: number, marks: (number |
   let shiftBeforeInner = 0;
   pos = 0;
 
-  while (pos < initialText.length) {
-    // eslint-disable-next-line no-loop-func --  https://eslint.org/docs/latest/rules/no-loop-func#known-limitations
-    if (marks.some((m) => m === initialText.codePointAt(pos))) shiftBeforeInner++;
-    else break;
+  if (initialText.length > 1)
+    while (pos < initialText.length) {
+      // eslint-disable-next-line no-loop-func --  https://eslint.org/docs/latest/rules/no-loop-func#known-limitations
+      if (marks.some((m) => m === initialText.codePointAt(pos))) shiftBeforeInner++;
+      else break;
 
-    pos++;
-  }
+      pos++;
+    }
 
   const initialTextWithoutBeforeShift = initialText.substring(shiftBeforeInner + 1);
   let shiftAfterInner = 0;
   pos = initialTextWithoutBeforeShift.length - 1;
 
-  while (pos > -1) {
-    // eslint-disable-next-line no-loop-func --  https://eslint.org/docs/latest/rules/no-loop-func#known-limitations
-    if (marks.some((m) => m === initialTextWithoutBeforeShift.codePointAt(pos))) shiftAfterInner++;
-    else break;
+  if (initialText.length > 1 || shiftBeforeInner > 0)
+    while (pos > -1) {
+      // eslint-disable-next-line no-loop-func --  https://eslint.org/docs/latest/rules/no-loop-func#known-limitations
+      if (marks.some((m) => m === initialTextWithoutBeforeShift.codePointAt(pos)))
+        shiftAfterInner++;
+      else break;
 
-    pos--;
-  }
+      pos--;
+    }
 
   const text = state.sliceDoc(from - shiftBeforeOuter, to + shiftAfterOuter);
 
