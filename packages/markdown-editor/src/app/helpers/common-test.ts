@@ -1,5 +1,8 @@
 export const COMMON_TEST = `
-     ..****test_text_for_hot_keys****.. 
+     code block on 
+     several rows 
+     check case
+     
 _
 
 [ссылку]()

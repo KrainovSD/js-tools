@@ -64,6 +64,12 @@ export function getThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
       [`.${CLASSES.mention}`]: {
         color: config.mentionColor,
       },
+      [`.${CLASSES.codeBlockLine}`]: {
+        borderColor: config.codeBlockBorderColor,
+      },
+      [`.${CLASSES.codeBlock}`]: {
+        background: config.codeBlockBackground,
+      },
     },
     { dark },
   );

@@ -31,6 +31,8 @@ const THEME_CONFIG: Required<ThemeConfig> = {
   mentionColor: "#8A5CF5",
   vimSelection: "#d9d9d9",
   vimSelectionFocused: "#d7d4f0",
+  codeBlockBackground: "#e1e2e7",
+  codeBlockBorderColor: "##CCCCCDFF",
 };
 
 export function getLightTheme({ light }: InitThemeOptions) {

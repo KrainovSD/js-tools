@@ -25,6 +25,8 @@ export type ThemeConfig = {
   mentionColor?: string;
   vimSelectionFocused?: string;
   vimSelection?: string;
+  codeBlockBorderColor?: string;
+  codeBlockBackground?: string;
 };
 
 export type HighlightConfig = {

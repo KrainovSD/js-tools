@@ -1,6 +1,8 @@
 export const CLASSES = {
   listCommon: "cm-list-common",
   code: "cm-code",
+  codeBlockLine: "cm-code-block-line",
+  codeBlock: "cm-code-block",
   codeButton: "cm-code-button",
   codeButtonSuccess: "cm-code-button-success",
   codeButtonFail: "cm-code-button-fail",

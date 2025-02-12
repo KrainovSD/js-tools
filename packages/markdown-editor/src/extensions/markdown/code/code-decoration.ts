@@ -1,9 +1,19 @@
 import clsx from "clsx";
 import { CLASSES } from "@/extensions/theme";
 import { utils } from "@/lib";
-import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
+import type {
+  DecorationPlugin,
+  GetDecorationOptions,
+  GetSelectionDecorationOptions,
+} from "../markdown-types";
 import styles from "../styles.module.scss";
-import { CODE_OF_CODE_MARK, NAME_OF_FENCED_CODE, NAME_OF_INLINE_CODE } from "./code-constants";
+import {
+  CODE_OF_CODE_MARK,
+  CODE_OF_SPACE,
+  NAME_OF_BLOCK_CODE,
+  NAME_OF_FENCED_CODE,
+  NAME_OF_INLINE_CODE,
+} from "./code-constants";
 import { CodeWidget } from "./code-widget";
 
 function getCodeSelectionDecorations({
@@ -122,6 +132,46 @@ function getCodeSelectionDecorations({
   }
 }
 
+function getCodeBlockDecorations({ decorations, node, view }: GetDecorationOptions) {
+  if (node.name !== NAME_OF_BLOCK_CODE) return;
+
+  const lines = view.viewportLineBlocks.filter((line) => {
+    const isOverlap = utils.isRangeOverlap([node.from, node.to], [line.from, line.to]);
+
+    return isOverlap;
+  });
+
+  lines.forEach((line) => {
+    const content = view.state.sliceDoc(line.from, line.to);
+    let startContent = 0;
+    let pos = 0;
+
+    while (pos < content.length) {
+      if (content.codePointAt(pos) === CODE_OF_SPACE) {
+        pos++;
+      } else {
+        startContent = pos;
+        break;
+      }
+    }
+
+    decorations.push(
+      utils.getMarkDecoration({
+        range: [line.from + startContent, line.to],
+        style: clsx(styles.code__block, CLASSES.codeBlock),
+      }),
+    );
+
+    decorations.push(
+      utils.getLineDecoration({
+        range: [line.from],
+        style: clsx(styles.code__block_line, CLASSES.codeBlockLine),
+      }),
+    );
+  });
+}
+
 export const codeDecorationPlugin: DecorationPlugin = {
   selectionDecorations: [getCodeSelectionDecorations],
+  decorations: [getCodeBlockDecorations],
 };

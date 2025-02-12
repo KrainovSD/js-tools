@@ -214,6 +214,14 @@
       opacity: 0;
     }
   }
+
+  &__block {
+    padding: 1px 5px;
+    &_line {
+      border-left: 1px solid;
+      margin-left: 5px;
+    }
+  }
 }
 
 .horizontal {
