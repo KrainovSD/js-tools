@@ -118,7 +118,7 @@ export class GraphCanvas<
     nodeSettings,
     graphSettings,
   }: GraphCanvasInterface<NodeData, LinkData>) {
-    root.style.position = "relative";
+    // root.style.position = "relative";
     root.style.overflow = "hidden";
 
     this.root = root;
