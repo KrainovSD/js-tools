@@ -44,7 +44,7 @@ export function nodeIterationExtractor<
 
   if (customOptions && typeof customOptions === "object" && !Array.isArray(customOptions)) {
     for (const key in customOptions) {
-      if (customOptions[key] == undefined) delete customOptions[key];
+      if (customOptions[key] === undefined) delete customOptions[key];
     }
   }
 
