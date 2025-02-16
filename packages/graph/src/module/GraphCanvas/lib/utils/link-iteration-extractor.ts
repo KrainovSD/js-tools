@@ -52,6 +52,12 @@ export function linkIterationExtractor<
   if (typeof option === "function") customOptions = option(link, i, links, transform);
   else customOptions = option;
 
+  if (customOptions && typeof customOptions === "object" && !Array.isArray(customOptions)) {
+    for (const key in customOptions) {
+      if (customOptions[key] == undefined) delete customOptions[key];
+    }
+  }
+
   if (optionConstantGetter) {
     if (typeof optionConstantGetter === "function")
       constantOptions = optionConstantGetter(link, i, links, transform);

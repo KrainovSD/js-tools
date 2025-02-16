@@ -42,6 +42,12 @@ export function nodeIterationExtractor<
   if (typeof option === "function") customOptions = option(node, i, nodes, transform);
   else customOptions = option;
 
+  if (customOptions && typeof customOptions === "object" && !Array.isArray(customOptions)) {
+    for (const key in customOptions) {
+      if (customOptions[key] == undefined) delete customOptions[key];
+    }
+  }
+
   if (optionConstantGetter) {
     if (typeof optionConstantGetter === "function")
       constantOptions = optionConstantGetter(node, i, nodes, transform);
