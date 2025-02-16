@@ -147,10 +147,13 @@ export class GraphCanvas<
     };
   }
 
-  changeData(options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">) {
+  changeData(
+    options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">,
+    alpha?: number,
+  ) {
     if (options.links != undefined) this.links = options.links;
     if (options.nodes != undefined) this.nodes = options.nodes;
-    if (options.nodes != undefined || options.links != undefined) this.updateData();
+    if (options.nodes != undefined || options.links != undefined) this.updateData(alpha);
   }
 
   changeSettings(
@@ -166,11 +169,17 @@ export class GraphCanvas<
     if (options.linkSettings) this.linkSettings = linkSettingsGetter(options.linkSettings);
     if (options.nodeSettings) this.nodeSettings = nodeSettingsGetter(options.nodeSettings);
 
-    this.updateSettings();
+    if (options.forceSettings) return void this.updateSimulation();
+
+    this.tick();
   }
 
   tick() {
     if (!this.simulationWorking) this.draw();
+  }
+
+  restart(alpha?: number) {
+    if (this.simulation) this.simulation.alpha(alpha ?? 1).restart();
   }
 
   start() {
@@ -204,7 +213,7 @@ export class GraphCanvas<
     this.clearDataDependencies();
   }
 
-  private updateSettings() {
+  private updateSimulation() {
     if (this.simulation) {
       this.initSimulationForces();
       this.simulation.alpha(1);
@@ -226,7 +235,7 @@ export class GraphCanvas<
     this.cachedNodeText = {};
   }
 
-  private updateData() {
+  private updateData(alpha?: number) {
     this.clearDataDependencies();
 
     if (this.simulation) {
@@ -242,7 +251,7 @@ export class GraphCanvas<
             .strength(this.forceSettings.linkStrength)
             .iterations(this.forceSettings.linkIterations),
         )
-        .alpha(0.5)
+        .alpha(alpha ?? 0.5)
         .restart();
     }
   }
