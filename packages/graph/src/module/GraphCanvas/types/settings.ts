@@ -8,6 +8,11 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   highlightUpStep?: number;
   stickAfterDrag?: boolean;
   zoomExtent?: [number, number];
+  zoomInitial?: {
+    k: number;
+    x: number;
+    y: number;
+  } | null;
   dragPlaceCoefficient?: (
     node: NodeInterface<NodeData>,
     pxEvent: number,

@@ -616,20 +616,25 @@ export class GraphCanvas<
       this.updateSize();
     }, 10);
 
-    window.addEventListener(
-      "resize",
-      () => {
-        requestAnimationFrame(() => {
-          resize();
-        });
-      },
-      { signal: this.eventAbortController.signal },
-    );
+    const abortController = this.eventAbortController;
+    const observer = new ResizeObserver(() => {
+      if (abortController.signal.aborted) {
+        observer.disconnect();
+
+        return;
+      }
+
+      requestAnimationFrame(() => {
+        resize();
+      });
+    });
+    observer.observe(this.area);
   }
 
   private initPointer() {
     if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
 
+    /** hover */
     this.area.addEventListener(
       "pointermove",
       (event) => {
@@ -680,6 +685,7 @@ export class GraphCanvas<
       },
     );
 
+    /** dblclick */
     this.area.addEventListener("dblclick", (event) => {
       if (!this.listeners.onDoubleClick) return;
 
@@ -694,42 +700,47 @@ export class GraphCanvas<
       return void this.listeners.onDoubleClick(event, currentNode);
     });
 
+    /** wheel click */
     this.area.addEventListener(
-      "pointerup",
+      "mousedown",
       (event) => {
-        if (this.isDragging) return;
-        if (event.button === 0) {
-          if (!this.listeners.onClick) return;
+        if (this.isDragging || !this.listeners.onWheelClick || event.button !== 1) return;
+        const currentNode = nodeByPointerGetter({
+          graphSettings: this.graphSettings,
+          areaRect: this.areaRect,
+          areaTransform: this.areaTransform,
+          mouseEvent: event,
+          nodes: this.nodes,
+        });
 
-          const currentNode = nodeByPointerGetter({
-            graphSettings: this.graphSettings,
-            areaRect: this.areaRect,
-            areaTransform: this.areaTransform,
-            mouseEvent: event,
-            nodes: this.nodes,
-          });
-
-          return void this.listeners.onClick(event, currentNode);
-        }
-        if (event.button === 1) {
-          if (!this.listeners.onWheelClick) return;
-
-          const currentNode = nodeByPointerGetter({
-            graphSettings: this.graphSettings,
-            areaRect: this.areaRect,
-            areaTransform: this.areaTransform,
-            mouseEvent: event,
-            nodes: this.nodes,
-          });
-
-          return void this.listeners.onWheelClick(event, currentNode);
-        }
+        return void this.listeners.onWheelClick(event, currentNode);
       },
       {
         signal: this.eventAbortController.signal,
       },
     );
 
+    /** click */
+    this.area.addEventListener(
+      "click",
+      (event) => {
+        if (this.isDragging || !this.listeners.onClick || event.button !== 0) return;
+        const currentNode = nodeByPointerGetter({
+          graphSettings: this.graphSettings,
+          areaRect: this.areaRect,
+          areaTransform: this.areaTransform,
+          mouseEvent: event,
+          nodes: this.nodes,
+        });
+
+        return void this.listeners.onClick(event, currentNode);
+      },
+      {
+        signal: this.eventAbortController.signal,
+      },
+    );
+
+    /** right click */
     this.area.addEventListener(
       "contextmenu",
       (event) => {
@@ -850,7 +861,12 @@ export class GraphCanvas<
       )
       .on("dblclick.zoom", null);
 
-    this.areaTransform = new ZoomTransform(1, this.width / 2, this.height / 2);
+    const zoomInitial = this.graphSettings.zoomInitial;
+    this.areaTransform = new ZoomTransform(
+      zoomInitial?.k ?? 1,
+      zoomInitial?.x ?? this.width / 2,
+      zoomInitial?.y ?? this.height / 2,
+    );
     zoom<HTMLCanvasElement, unknown>().transform(d3Select(this.area), this.areaTransform);
   }
 }

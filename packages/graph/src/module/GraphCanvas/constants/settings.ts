@@ -41,6 +41,7 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   nodeRadiusCoefficient: 5,
   nodeRadiusFactor: 1,
   nodeRadiusFlexible: true,
+  zoomInitial: null,
 };
 
 export const NODE_SETTINGS: Omit<

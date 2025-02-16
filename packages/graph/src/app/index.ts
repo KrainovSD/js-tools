@@ -45,6 +45,11 @@ const graph = new GraphCanvas({
   graphSettings: {
     // stickAfterDrag: true,
     highlightByHover: true,
+    // zoomInitial: {
+    //   k: 3.031433133020798,
+    //   x: 636.0638355589793,
+    //   y: 1007.7976358047551,
+    // },
   },
   forceSettings: {
     collideOn: true,
@@ -65,6 +70,9 @@ const graph = new GraphCanvas({
     },
     onContextMenu: (event, node) => {
       console.log("onContext", node);
+    },
+    onZoom: () => {
+      // console.log({ k: event.transform.k, x: event.transform.x, y: event.transform.y });
     },
   },
   root,
