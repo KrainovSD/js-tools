@@ -12,7 +12,6 @@ import {
 } from "d3-force";
 import { create as d3Create, select as d3Select } from "d3-selection";
 import { ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
-import { debounce } from "@/lib";
 import type { LinkInterface } from "@/types/links";
 import type { CachedNodeTextInterface, NodeInterface } from "@/types/nodes";
 import {
@@ -61,8 +60,6 @@ export class GraphCanvas<
   private container: HTMLDivElement | undefined | null;
 
   private area: HTMLCanvasElement | null | undefined;
-
-  private dpi = devicePixelRatio;
 
   /** settings */
 
@@ -140,6 +137,10 @@ export class GraphCanvas<
     this.init();
   }
 
+  get dpi() {
+    return devicePixelRatio;
+  }
+
   getData(): Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> {
     return {
       links: this.links,
@@ -202,15 +203,18 @@ export class GraphCanvas<
       this.simulation = undefined;
     }
 
+    this.clearHTMLElements();
+    this.clearState();
+    this.clearDataDependencies();
+  }
+
+  private clearHTMLElements() {
     this.root.replaceChildren();
     this.area = undefined;
     this.context = undefined;
     this.container = undefined;
     this.eventAbortController.abort();
     this.eventAbortController = new AbortController();
-
-    this.clearState();
-    this.clearDataDependencies();
   }
 
   private updateSimulation() {
@@ -257,16 +261,13 @@ export class GraphCanvas<
   }
 
   private updateSize() {
-    if (!this.area || !this.simulation || !this.container) return;
+    this.clearHTMLElements();
 
-    const { width, height } = this.container.getBoundingClientRect();
-    this.width = width;
-    this.height = height;
-    this.area.width = this.dpi * width;
-    this.area.height = this.dpi * height;
-    this.areaRect = this.area.getBoundingClientRect();
-
-    this.simulation.alpha(0.1).restart();
+    this.initArea();
+    this.initDnd();
+    this.initZoom();
+    this.initResize();
+    this.initPointer();
 
     if (!this.simulationWorking) this.draw();
   }
@@ -621,12 +622,16 @@ export class GraphCanvas<
   private initResize() {
     if (!this.area) throw new Error("bad init data");
 
-    const resize = debounce(() => {
-      this.updateSize();
-    }, 10);
+    let initialResizeCall = true;
 
     const abortController = this.eventAbortController;
     const observer = new ResizeObserver(() => {
+      if (initialResizeCall) {
+        initialResizeCall = false;
+
+        return;
+      }
+
       if (abortController.signal.aborted) {
         observer.disconnect();
 
@@ -634,7 +639,7 @@ export class GraphCanvas<
       }
 
       requestAnimationFrame(() => {
-        resize();
+        this.updateSize();
       });
     });
     observer.observe(this.area);
