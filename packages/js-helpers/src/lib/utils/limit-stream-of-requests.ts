@@ -8,6 +8,8 @@ type LimitStreamOfRequestsOptions<T> = {
   maxTryCount?: number;
   collectResult?: boolean;
   resultCb?: (result: T) => void;
+  throwError?: boolean;
+  errorCb?: (error: unknown, position: number, tryCount: number) => void;
 };
 
 export function limitStreamOfRequests<T>({
@@ -18,6 +20,8 @@ export function limitStreamOfRequests<T>({
   resultCb,
   collectResult,
   maxTryCount = 3,
+  throwError,
+  errorCb,
 }: LimitStreamOfRequestsOptions<T>): { promise: Promise<T[]>; cancel: () => void } {
   let isStopped = false;
 
@@ -51,15 +55,23 @@ export function limitStreamOfRequests<T>({
 
             request(promiseGetter(++currentRequests), currentRequests);
           })
-          .catch(() => {
+          .catch((error: unknown) => {
+            if (errorCb) errorCb(error, position, tryCount);
+
             if (isStopped) return void resolve(results);
 
             if (refetchAfterError && maxTryCount > tryCount) {
-              void wait(1000).then(() => request(promiseGetter(position), position, tryCount + 1));
-            } else {
-              currentResponses++;
-              request(promiseGetter(++currentRequests), currentRequests);
+              return void wait(1000).then(() =>
+                request(promiseGetter(position), position, tryCount + 1),
+              );
             }
+
+            if (throwError) {
+              throw error;
+            }
+
+            currentResponses++;
+            request(promiseGetter(++currentRequests), currentRequests);
           });
       }
     }),
