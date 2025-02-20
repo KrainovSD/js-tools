@@ -9,9 +9,6 @@ module.exports = [
   {
     ignores: ["rollup.config.ts"],
     rules: {
-      "no-empty-function": "off",
-      "import/no-extraneous-dependencies": "off",
-      "no-empty": "off",
       "prettier/prettier": ["error", { endOfLine: "lf" }, { usePrettierrc: true }],
     },
   },

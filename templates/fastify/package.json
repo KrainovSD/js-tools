@@ -11,8 +11,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@krainovsd/fastify-logger": "0.1.4",
-    "@krainovsd/js-helpers": "0.7.2",
+    "@krainovsd/fastify-logger": "0.2.0",
+    "@krainovsd/js-helpers": "0.8.0",
     "@krainovsd/fastify-health-controller": "0.1.4",
     "@krainovsd/fastify-trace": "0.0.2",
     "dotenv": "16.4.7",
@@ -40,7 +40,7 @@
     "@types/rollup-plugin-peer-deps-external": "2.2.5",
     "eslint": "9.17.0",
     "prettier": "3.3.3",
-    "@krainovsd/eslint-presets": "0.2.1",
+    "@krainovsd/eslint-presets": "0.3.0",
     "@types/lodash": "4.17.14"
   }
 }

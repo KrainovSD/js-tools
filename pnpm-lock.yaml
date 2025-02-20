@@ -1457,14 +1457,14 @@ importers:
         specifier: 0.1.4
         version: 0.1.4(fastify@5.2.1)(node-fetch@3.3.2)
       '@krainovsd/fastify-logger':
-        specifier: 0.1.4
-        version: 0.1.4(fastify@5.2.1)(node-fetch@3.3.2)
+        specifier: 0.2.0
+        version: 0.2.0(fastify@5.2.1)(node-fetch@3.3.2)
       '@krainovsd/fastify-trace':
         specifier: 0.0.2
         version: 0.0.2
       '@krainovsd/js-helpers':
-        specifier: 0.7.2
-        version: 0.7.2(node-fetch@3.3.2)
+        specifier: 0.8.0
+        version: 0.8.0(node-fetch@3.3.2)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.3.3)
@@ -1482,8 +1482,8 @@ importers:
         version: 4.17.21
     devDependencies:
       '@krainovsd/eslint-presets':
-        specifier: 0.2.1
-        version: 0.2.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@types/eslint@8.56.7)(eslint@9.17.0)(jest@29.7.0(@types/node@22.10.9)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.10.9)(@types/node@22.10.9)(typescript@5.7.3)))(prettier@3.3.3)(typescript@5.7.3)
+        specifier: 0.3.0
+        version: 0.3.0(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@types/eslint@8.56.7)(eslint@9.17.0)(jest@29.7.0(@types/node@22.10.9)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.10.9)(@types/node@22.10.9)(typescript@5.7.3)))(prettier@3.3.3)(typescript@5.7.3)
       '@swc/cli':
         specifier: 0.6.0
         version: 0.6.0(@swc/core@1.10.9)(chokidar@4.0.3)
@@ -2777,6 +2777,11 @@ packages:
     peerDependencies:
       eslint: 9.13.0
 
+  '@krainovsd/eslint-presets@0.3.0':
+    resolution: {integrity: sha512-LVOKW7WCG3wwfCeACL0ENFQHxFS06SbItrgDq5C3qdLCpAzgdMS12z4MkVMWIUYcNRByE2h2x+vhRdAMc4Er2g==}
+    peerDependencies:
+      eslint: 9.13.0
+
   '@krainovsd/fastify-health-controller@0.1.4':
     resolution: {integrity: sha512-XUzeRH0lXIDauQJ5PruakAL3BjefKywgM+OphHU+PwCXBLKlk79HkiwT+CT7je/aSVr7fg3Qc1HUE0+Q/0VyDw==}
     peerDependencies:
@@ -2787,8 +2792,8 @@ packages:
     peerDependencies:
       fastify: ^5
 
-  '@krainovsd/fastify-logger@0.1.4':
-    resolution: {integrity: sha512-HVtNFiaTSjmigD3nlyNsbSsg6oxvX0LMpgqC17YPtErQUPCdn4QkDt+aKb9C7+qtvNk4UZbVoaukxM2JM7TRSA==}
+  '@krainovsd/fastify-logger@0.2.0':
+    resolution: {integrity: sha512-y6iSaY5HwIca7/07+hO0ffdr5/GCIJREX7GoKR0CVWbv8gdNFQx0i/xbaUw5L0CsDbBsYWnNBO+BHgKpCZmLDg==}
     peerDependencies:
       fastify: ^5
 
@@ -2819,8 +2824,8 @@ packages:
       node-fetch:
         optional: true
 
-  '@krainovsd/js-helpers@0.7.2':
-    resolution: {integrity: sha512-Gatlou84pU5ye9+B5BuQrNMolikwZnsmd4ugbfeXD6TBfsnvLXjYLTQrtRuGhkdMpwgtBHkbr4QAXnjDF1YIKw==}
+  '@krainovsd/js-helpers@0.8.0':
+    resolution: {integrity: sha512-01rhkYDecQHkOpl60U2yQP256tsNK4A5NTdNi3gVe69/S+sEPLbZj41m2nnMXqMR2dvDHpOgSOJxnaW7CvIWZA==}
     peerDependencies:
       node-fetch: 3.3.2
     peerDependenciesMeta:
@@ -10152,8 +10157,8 @@ snapshots:
       '@aws-crypto/sha1-browser': 3.0.0
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.577.0
-      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
+      '@aws-sdk/client-sts': 3.577.0
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-bucket-endpoint': 3.577.0
@@ -10210,11 +10215,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sso-oidc@3.577.0':
+  '@aws-sdk/client-sso-oidc@3.577.0(@aws-sdk/client-sts@3.577.0)':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@aws-sdk/client-sts': 3.577.0
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -10253,6 +10258,7 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
+      - '@aws-sdk/client-sts'
       - aws-crt
 
   '@aws-sdk/client-sso@3.577.0':
@@ -10298,11 +10304,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sts@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)':
+  '@aws-sdk/client-sts@3.577.0':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.577.0
+      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -10341,7 +10347,6 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
-      - '@aws-sdk/client-sso-oidc'
       - aws-crt
 
   '@aws-sdk/core@3.576.0':
@@ -10375,7 +10380,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-ini@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@aws-sdk/client-sts': 3.577.0
       '@aws-sdk/credential-provider-env': 3.577.0
       '@aws-sdk/credential-provider-process': 3.577.0
       '@aws-sdk/credential-provider-sso': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
@@ -10432,7 +10437,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-web-identity@3.577.0(@aws-sdk/client-sts@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@aws-sdk/client-sts': 3.577.0
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.1.11
       '@smithy/types': 3.7.2
@@ -10548,7 +10553,7 @@ snapshots:
 
   '@aws-sdk/token-providers@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sso-oidc': 3.577.0
+      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.1.11
       '@smithy/shared-ini-file-loader': 3.1.12
@@ -12040,36 +12045,6 @@ snapshots:
       - supports-color
       - typescript
 
-  '@krainovsd/eslint-presets@0.2.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@types/eslint@8.56.7)(eslint@9.17.0)(jest@29.7.0(@types/node@22.10.9)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.10.9)(@types/node@22.10.9)(typescript@5.7.3)))(prettier@3.3.3)(typescript@5.7.3)':
-    dependencies:
-      '@eslint/eslintrc': 3.2.0
-      '@eslint/js': 9.17.0
-      '@typescript-eslint/eslint-plugin': 8.18.1(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)(typescript@5.7.3)
-      '@typescript-eslint/parser': 8.18.1(eslint@9.17.0)(typescript@5.7.3)
-      eslint: 9.17.0
-      eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0))(eslint@9.17.0)
-      eslint-config-airbnb-typescript: 18.0.0(@typescript-eslint/eslint-plugin@8.18.1(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)(typescript@5.7.3))(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0))(eslint@9.17.0)
-      eslint-config-prettier: 9.1.0(eslint@9.17.0)
-      eslint-plugin-flowtype: 8.0.3(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(eslint@9.17.0)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)
-      eslint-plugin-jest: 28.10.0(@typescript-eslint/eslint-plugin@8.18.1(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)(jest@29.7.0(@types/node@22.10.9)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.10.9)(@types/node@22.10.9)(typescript@5.7.3)))(typescript@5.7.3)
-      eslint-plugin-jsx-a11y: 6.10.2(eslint@9.17.0)
-      eslint-plugin-prettier: 5.2.1(@types/eslint@8.56.7)(eslint-config-prettier@9.1.0(eslint@9.17.0))(eslint@9.17.0)(prettier@3.3.3)
-      eslint-plugin-react: 7.37.2(eslint@9.17.0)
-      eslint-plugin-react-hooks: 5.1.0(eslint@9.17.0)
-      eslint-plugin-testing-library: 7.1.1(eslint@9.17.0)(typescript@5.7.3)
-      typescript-eslint: 8.18.1(eslint@9.17.0)(typescript@5.7.3)
-    transitivePeerDependencies:
-      - '@babel/plugin-syntax-flow'
-      - '@babel/plugin-transform-react-jsx'
-      - '@types/eslint'
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - jest
-      - prettier
-      - supports-color
-      - typescript
-
   '@krainovsd/eslint-presets@0.2.1(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@types/eslint@8.56.7)(eslint@9.17.0)(jest@29.7.0(@types/node@22.8.6)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.10.9)(@types/node@22.8.6)(typescript@5.6.3)))(prettier@3.3.3)(typescript@5.6.3)':
     dependencies:
       '@eslint/eslintrc': 3.2.0
@@ -12100,6 +12075,36 @@ snapshots:
       - supports-color
       - typescript
 
+  '@krainovsd/eslint-presets@0.3.0(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(@types/eslint@8.56.7)(eslint@9.17.0)(jest@29.7.0(@types/node@22.10.9)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.10.9)(@types/node@22.10.9)(typescript@5.7.3)))(prettier@3.3.3)(typescript@5.7.3)':
+    dependencies:
+      '@eslint/eslintrc': 3.2.0
+      '@eslint/js': 9.17.0
+      '@typescript-eslint/eslint-plugin': 8.18.1(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)(typescript@5.7.3)
+      '@typescript-eslint/parser': 8.18.1(eslint@9.17.0)(typescript@5.7.3)
+      eslint: 9.17.0
+      eslint-config-airbnb-base: 15.0.0(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0))(eslint@9.17.0)
+      eslint-config-airbnb-typescript: 18.0.0(@typescript-eslint/eslint-plugin@8.18.1(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)(typescript@5.7.3))(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0))(eslint@9.17.0)
+      eslint-config-prettier: 9.1.0(eslint@9.17.0)
+      eslint-plugin-flowtype: 8.0.3(@babel/plugin-syntax-flow@7.26.0(@babel/core@7.26.0))(@babel/plugin-transform-react-jsx@7.25.9(@babel/core@7.26.0))(eslint@9.17.0)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)
+      eslint-plugin-jest: 28.10.0(@typescript-eslint/eslint-plugin@8.18.1(@typescript-eslint/parser@8.18.1(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)(typescript@5.7.3))(eslint@9.17.0)(jest@29.7.0(@types/node@22.10.9)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.10.9)(@types/node@22.10.9)(typescript@5.7.3)))(typescript@5.7.3)
+      eslint-plugin-jsx-a11y: 6.10.2(eslint@9.17.0)
+      eslint-plugin-prettier: 5.2.1(@types/eslint@8.56.7)(eslint-config-prettier@9.1.0(eslint@9.17.0))(eslint@9.17.0)(prettier@3.3.3)
+      eslint-plugin-react: 7.37.2(eslint@9.17.0)
+      eslint-plugin-react-hooks: 5.1.0(eslint@9.17.0)
+      eslint-plugin-testing-library: 7.1.1(eslint@9.17.0)(typescript@5.7.3)
+      typescript-eslint: 8.18.1(eslint@9.17.0)(typescript@5.7.3)
+    transitivePeerDependencies:
+      - '@babel/plugin-syntax-flow'
+      - '@babel/plugin-transform-react-jsx'
+      - '@types/eslint'
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - jest
+      - prettier
+      - supports-color
+      - typescript
+
   '@krainovsd/fastify-health-controller@0.1.4(fastify@5.2.1)(node-fetch@3.3.2)':
     dependencies:
       '@krainovsd/fastify-logger': 0.1.2(fastify@5.2.1)(node-fetch@3.3.2)
@@ -12117,7 +12122,7 @@ snapshots:
     transitivePeerDependencies:
       - node-fetch
 
-  '@krainovsd/fastify-logger@0.1.4(fastify@5.2.1)(node-fetch@3.3.2)':
+  '@krainovsd/fastify-logger@0.2.0(fastify@5.2.1)(node-fetch@3.3.2)':
     dependencies:
       '@krainovsd/js-helpers': 0.3.4(node-fetch@3.3.2)
       '@opentelemetry/api': 1.9.0
@@ -12165,7 +12170,7 @@ snapshots:
     optionalDependencies:
       node-fetch: 3.3.2
 
-  '@krainovsd/js-helpers@0.7.2(node-fetch@3.3.2)':
+  '@krainovsd/js-helpers@0.8.0(node-fetch@3.3.2)':
     dependencies:
       dayjs: 1.11.13
       lodash: 4.17.21
