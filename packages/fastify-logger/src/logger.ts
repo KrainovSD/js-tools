@@ -1,4 +1,4 @@
-import { isBoolean, isObject } from "@krainovsd/js-helpers";
+import { ResponseError, isBoolean, isObject } from "@krainovsd/js-helpers";
 import type { FastifyBaseLogger } from "fastify";
 import { getErrorInfo } from "./lib";
 import type {
@@ -38,6 +38,32 @@ export class Logger {
     } catch (error) {
       if (this.isHasLoggerAction(loggerExecute, "error"))
         this.warn({ info: loggerInfo, error, message: `error ${loggerMessage}` });
+
+      throw error;
+    }
+  }
+
+  async controllerLayer<T = unknown>(
+    action: () => Promise<T>,
+    logger: boolean = true,
+  ): Promise<
+    | { data: T; status: 200; success: true }
+    | { data: { message: string }; status: number; success: false }
+  > {
+    try {
+      const result = await action();
+
+      return {
+        data: result,
+        status: 200,
+        success: true,
+      };
+    } catch (error) {
+      if (logger) this.error({ error });
+
+      if (error instanceof ResponseError) {
+        return { data: { message: error.message }, status: error.status, success: false };
+      }
 
       throw error;
     }
