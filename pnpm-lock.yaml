@@ -1457,14 +1457,14 @@ importers:
         specifier: 0.1.4
         version: 0.1.4(fastify@5.2.1)(node-fetch@3.3.2)
       '@krainovsd/fastify-logger':
-        specifier: 0.1.2
-        version: 0.1.2(fastify@5.2.1)(node-fetch@3.3.2)
+        specifier: 0.1.4
+        version: 0.1.4(fastify@5.2.1)(node-fetch@3.3.2)
       '@krainovsd/fastify-trace':
         specifier: 0.0.2
         version: 0.0.2
       '@krainovsd/js-helpers':
-        specifier: 0.4.1
-        version: 0.4.1(node-fetch@3.3.2)
+        specifier: 0.7.2
+        version: 0.7.2(node-fetch@3.3.2)
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^4.3.0
         version: 4.3.0(prettier@3.3.3)
@@ -2787,6 +2787,11 @@ packages:
     peerDependencies:
       fastify: ^5
 
+  '@krainovsd/fastify-logger@0.1.4':
+    resolution: {integrity: sha512-HVtNFiaTSjmigD3nlyNsbSsg6oxvX0LMpgqC17YPtErQUPCdn4QkDt+aKb9C7+qtvNk4UZbVoaukxM2JM7TRSA==}
+    peerDependencies:
+      fastify: ^5
+
   '@krainovsd/fastify-trace@0.0.2':
     resolution: {integrity: sha512-Eik5HVzWXkDXgEhZdc4/t9P2/6ZzUG9h6A02ZotrX74HlCbREy22kVMmYX3j0kv0DAeS+9bSPQeEQeCaC+jMFA==}
 
@@ -2806,16 +2811,16 @@ packages:
       node-fetch:
         optional: true
 
-  '@krainovsd/js-helpers@0.4.1':
-    resolution: {integrity: sha512-n2AkGvqq7bnPGA077yNi81i2hX+5GST59iUfDDUld2cpRiOmq3keNxC7jr5fi5V+OvgD2BlrbAgZxxO+/A13EA==}
+  '@krainovsd/js-helpers@0.5.0':
+    resolution: {integrity: sha512-0Io4rPlccqd7mlz2flfMVI0paD2TFWwewEAK6wW6ywTJfZ4C+XrWgyjeSfmBHW7ySj0agH7PM8mlZKTUpOzTtw==}
     peerDependencies:
       node-fetch: 3.3.2
     peerDependenciesMeta:
       node-fetch:
         optional: true
 
-  '@krainovsd/js-helpers@0.5.0':
-    resolution: {integrity: sha512-0Io4rPlccqd7mlz2flfMVI0paD2TFWwewEAK6wW6ywTJfZ4C+XrWgyjeSfmBHW7ySj0agH7PM8mlZKTUpOzTtw==}
+  '@krainovsd/js-helpers@0.7.2':
+    resolution: {integrity: sha512-Gatlou84pU5ye9+B5BuQrNMolikwZnsmd4ugbfeXD6TBfsnvLXjYLTQrtRuGhkdMpwgtBHkbr4QAXnjDF1YIKw==}
     peerDependencies:
       node-fetch: 3.3.2
     peerDependenciesMeta:
@@ -12112,6 +12117,16 @@ snapshots:
     transitivePeerDependencies:
       - node-fetch
 
+  '@krainovsd/fastify-logger@0.1.4(fastify@5.2.1)(node-fetch@3.3.2)':
+    dependencies:
+      '@krainovsd/js-helpers': 0.3.4(node-fetch@3.3.2)
+      '@opentelemetry/api': 1.9.0
+      fastify: 5.2.1
+      pino-abstract-transport: 2.0.0
+      uuid: 11.0.5
+    transitivePeerDependencies:
+      - node-fetch
+
   '@krainovsd/fastify-trace@0.0.2':
     dependencies:
       '@autotelic/fastify-opentelemetry': 0.22.0(@opentelemetry/api@1.9.0)
@@ -12143,14 +12158,14 @@ snapshots:
     optionalDependencies:
       node-fetch: 3.3.2
 
-  '@krainovsd/js-helpers@0.4.1(node-fetch@3.3.2)':
+  '@krainovsd/js-helpers@0.5.0(node-fetch@3.3.2)':
     dependencies:
       dayjs: 1.11.13
       lodash: 4.17.21
     optionalDependencies:
       node-fetch: 3.3.2
 
-  '@krainovsd/js-helpers@0.5.0(node-fetch@3.3.2)':
+  '@krainovsd/js-helpers@0.7.2(node-fetch@3.3.2)':
     dependencies:
       dayjs: 1.11.13
       lodash: 4.17.21

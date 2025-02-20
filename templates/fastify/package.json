@@ -11,8 +11,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@krainovsd/fastify-logger": "0.1.2",
-    "@krainovsd/js-helpers": "0.4.1",
+    "@krainovsd/fastify-logger": "0.1.4",
+    "@krainovsd/js-helpers": "0.7.2",
     "@krainovsd/fastify-health-controller": "0.1.4",
     "@krainovsd/fastify-trace": "0.0.2",
     "dotenv": "16.4.7",
