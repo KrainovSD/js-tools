@@ -20,7 +20,7 @@ export class Logger {
   async loggerLayer<T>({
     action,
     processData,
-    loggerExecute,
+    loggerExecute = { error: true, start: false, stop: false },
     loggerMessage,
     loggerInfo,
   }: LoggerLayerOptions<T>) {
@@ -66,8 +66,8 @@ export class Logger {
     action: keyof LoggerExecuteOptions,
   ) {
     if (isBoolean(options)) return options;
-    if (isObject(options) && isBoolean(options[action])) return options[action];
+    if (isObject(options)) return Boolean(options[action]);
 
-    return true;
+    return false;
   }
 }
