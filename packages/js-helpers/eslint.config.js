@@ -8,8 +8,10 @@ export default [
   {
     ignores: ["rollup.config.ts"],
     rules: {
-      "import/no-extraneous-dependencies": "off",
+      "no-empty-function": "off",
+      "no-empty": "off",
       "prefer-const": ["error", { destructuring: "all" }],
+      "import/no-extraneous-dependencies": "off",
     },
   },
 ];
