@@ -51,6 +51,8 @@ export default [
         { blankLine: "always", prev: "*", next: "return" },
       ],
       "prefer-const": ["error", { destructuring: "all" }],
+      "no-empty-function": "off",
+      "no-empty": "off",
     },
   },
 ];
