@@ -85,7 +85,7 @@ export function createRequestClientInstance({
         method,
         body: preparedBody as BodyInit,
         headers: {
-          ...(body instanceof FormData
+          ...(body instanceof FormData || !body
             ? {}
             : { "Content-Type": "application/json; charset=UTF-8" }),
           ...headers,
@@ -99,7 +99,7 @@ export function createRequestClientInstance({
         method,
         body: preparedBody as NodeBodyInit,
         headers: {
-          ...(body instanceof FormData
+          ...(body instanceof FormData || !body
             ? {}
             : { "Content-Type": "application/json; charset=UTF-8" }),
           ...headers,
