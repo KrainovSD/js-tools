@@ -2,25 +2,28 @@ import type { BodyInit as NodeBodyInit, Response as NodeResponse } from "node-fe
 import { IS_BROWSER, IS_JEST, IS_NODE } from "../../constants";
 import type {
   ActiveMiddleware,
+  ActivePostMiddleware,
   Middleware,
   MiddlewaresOptions,
+  PostMiddleware,
+  PostMiddlewareOptions,
   RequestInterface,
 } from "../../types";
 import { downloadFile } from "../browser";
 import { isArray, isObject } from "../typings";
 import { createURLWithParams, wait } from "../utils";
-import { generateMiddlewares } from "./middlewares";
+import { generateMiddlewares, generatePostMiddlewares } from "./middlewares";
 
 type ResponseErrorOptions = {
   message: string;
   status: number;
-  description?: string;
+  description?: unknown;
 };
 
 export class ResponseError extends Error {
   status: number;
 
-  description?: string;
+  description?: unknown;
 
   constructor({ message, status, description }: ResponseErrorOptions) {
     super(message);
@@ -33,17 +36,29 @@ type CreateRequestClientInstance = {
   activeMiddlewares?: ActiveMiddleware;
   middlewareOptions?: MiddlewaresOptions;
   customMiddlewares?: Middleware[];
+  activePostMiddlewares?: ActivePostMiddleware;
+  postMiddlewaresOptions?: PostMiddlewareOptions;
+  customPostMiddlewares?: PostMiddleware[];
 };
 
 export function createRequestClientInstance({
-  activeMiddlewares,
-  middlewareOptions,
-  customMiddlewares,
+  activeMiddlewares = [],
+  middlewareOptions = {},
+  customMiddlewares = [],
+  activePostMiddlewares = [],
+  postMiddlewaresOptions = {},
+  customPostMiddlewares = [],
 }: CreateRequestClientInstance = {}) {
   const executeMiddlewares = generateMiddlewares(
-    activeMiddlewares || [],
-    middlewareOptions || {},
-    customMiddlewares || [],
+    activeMiddlewares,
+    middlewareOptions,
+    customMiddlewares,
+  );
+
+  const executePostMiddlewares = generatePostMiddlewares(
+    activePostMiddlewares,
+    postMiddlewaresOptions,
+    customPostMiddlewares,
   );
 
   async function handleRequest<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
@@ -108,14 +123,30 @@ export function createRequestClientInstance({
       });
     }
 
+    await executePostMiddlewares(response);
+
     if (!response) {
       throw new Error("hasn't response");
     }
 
     if (!response.ok) {
+      let result;
+      try {
+        const contentType = response.headers.get("content-type");
+
+        if (contentType?.includes?.("text")) {
+          result = await response.text();
+        } else if (contentType?.includes?.("json")) {
+          result = await response.json();
+        } else {
+          result = await response.blob();
+        }
+      } catch {}
+
       throw new ResponseError({
         status: response.status,
         message: `HTTP error! Status: ${response.status}`,
+        description: result,
       });
     }
 
