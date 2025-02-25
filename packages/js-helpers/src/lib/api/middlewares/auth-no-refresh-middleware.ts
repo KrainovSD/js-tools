@@ -26,7 +26,7 @@ export const generateAuthNoRefreshMiddleWare =
     if (isFetchingAccessToken) await waitUntil(() => isFetchingAccessToken);
 
     const expires = localStorage.getItem(options.storageTokenExpiresName);
-    if (!expires) {
+    if (!expires || Number.isNaN(+expires) || Date.now() > +expires) {
       isFetchingAccessToken = true;
       await (options.tokenRequest ? options.tokenRequest() : getAuthTokenNoRefresh(options));
       isFetchingAccessToken = false;

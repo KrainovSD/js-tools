@@ -76,7 +76,7 @@ function transformData(data: unknown, pathToToken: string, pathToTokenExpires: s
 export async function getAuthTokenNoRefresh(options: AuthTokenNoRefreshRequestOptions) {
   let waiting = true;
   const url = new URL(window.origin);
-  url.searchParams.append(options.queryTokenExpiresName, "true");
+  url.searchParams.append(options.queryIsRefreshTokenName, "true");
   let windowInstance = window.open(
     url.toString(),
     "_blank",
@@ -115,20 +115,21 @@ export async function getAuthTokenNoRefresh(options: AuthTokenNoRefreshRequestOp
 
 export function updateAuthTokenNoRefresh(options: AuthNoRefreshMiddleWareOptions) {
   let expires: string | null | undefined = localStorage.getItem(options.storageTokenExpiresName);
-  if (expires && !Number.isNaN(+expires) && Date.now() > +expires) expires = null;
+  if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
   let hasExpiresQuery = false;
 
   if (!expires) {
+    let lastQuery: string | undefined;
     const queries = window.location.search.substring(1).split("&");
     for (const query of queries) {
       const [key, value] = query.split("=");
       if (key === options.queryTokenExpiresName && value) {
-        expires = value;
+        lastQuery = value;
         hasExpiresQuery = true;
-        break;
       }
     }
-    if (expires && !Number.isNaN(+expires) && Date.now() > +expires) expires = null;
+    expires = lastQuery;
+    if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
   }
 
   if (!expires) {

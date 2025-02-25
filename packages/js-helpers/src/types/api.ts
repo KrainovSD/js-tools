@@ -91,7 +91,6 @@ export type AuthTokenRequestOptions = {
 export type AuthTokenNoRefreshRequestOptions = {
   storageTokenExpiresName: string;
   queryIsRefreshTokenName: string;
-  queryTokenExpiresName: string;
   onWindowOpenError?: () => void;
 };
 
