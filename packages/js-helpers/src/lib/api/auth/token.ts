@@ -5,7 +5,7 @@ import type {
   AuthTokenRequestOptions,
 } from "../../../types";
 import { isNull, isNumber, isObject, isString, isUndefined } from "../../typings";
-import { getByPath, wait, waitUntil } from "../../utils";
+import { getByPath, waitUntil } from "../../utils";
 
 export async function updateAuthToken(options: AuthMiddleWareOptions) {
   let token: string | null | undefined = localStorage.getItem(options.storageTokenName);
@@ -113,7 +113,7 @@ export async function getAuthTokenNoRefresh(options: AuthTokenNoRefreshRequestOp
   await waitUntil(() => waiting);
 }
 
-export async function updateAuthTokenNoRefresh(options: AuthNoRefreshMiddleWareOptions) {
+export function updateAuthTokenNoRefresh(options: AuthNoRefreshMiddleWareOptions) {
   let expires: string | null | undefined = localStorage.getItem(options.storageTokenExpiresName);
   if (expires && !Number.isNaN(+expires) && Date.now() > +expires) expires = null;
   let hasExpiresQuery = false;
@@ -132,7 +132,9 @@ export async function updateAuthTokenNoRefresh(options: AuthNoRefreshMiddleWareO
   }
 
   if (!expires) {
-    return void window.location.replace(options.authUrl());
+    window.location.replace(options.authUrl());
+
+    return null;
   }
 
   localStorage.setItem(options.storageTokenExpiresName, expires);
@@ -153,6 +155,8 @@ export async function updateAuthTokenNoRefresh(options: AuthNoRefreshMiddleWareO
     url.searchParams.delete(options.queryTokenExpiresName);
     window.location.replace(url.toString());
 
-    await wait(300);
+    return null;
   }
+
+  return expires;
 }
