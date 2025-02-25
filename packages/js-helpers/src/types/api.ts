@@ -65,6 +65,7 @@ export type LoggerMiddlewareOptions = {
 
 export type MiddlewaresOptions = {
   auth?: AuthMiddleWareOptions;
+  authNoRefresh?: AuthNoRefreshMiddleWareOptions;
   logger?: LoggerMiddlewareOptions;
 };
 
@@ -85,4 +86,22 @@ export type AuthTokenRequestOptions = {
   storageTokenName: string;
   pathToToken: string;
   pathToTokenExpires: string;
+};
+
+export type AuthTokenNoRefreshRequestOptions = {
+  storageTokenExpiresName: string;
+  queryIsRefreshTokenName: string;
+  queryTokenExpiresName: string;
+  onWindowOpenError?: () => void;
+};
+
+export type AuthNoRefreshMiddleWareOptions = {
+  errorUrl: string;
+  authUrl: () => string;
+  storageTokenName?: string;
+  storageTokenExpiresName: string;
+  queryTokenExpiresName: string;
+  queryIsRefreshTokenName: string;
+  tokenRequest?: () => Promise<string | null | undefined>;
+  onWindowOpenError?: () => void;
 };

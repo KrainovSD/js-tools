@@ -41,25 +41,42 @@ type CreateRequestClientInstance = {
   customPostMiddlewares?: PostMiddleware[];
 };
 
-export function createRequestClientInstance({
-  activeMiddlewares = [],
-  middlewareOptions = {},
-  customMiddlewares = [],
-  activePostMiddlewares = [],
-  postMiddlewaresOptions = {},
-  customPostMiddlewares = [],
-}: CreateRequestClientInstance = {}) {
-  const executeMiddlewares = generateMiddlewares(
-    activeMiddlewares,
-    middlewareOptions,
-    customMiddlewares,
-  );
+export type RequestInstance = {
+  <T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
+    request: RequestInterface<T, Incoming, Body, Outcoming>,
+  ): Promise<T>;
+  setOptions: (options: CreateRequestClientInstance) => void;
+};
 
-  const executePostMiddlewares = generatePostMiddlewares(
-    activePostMiddlewares,
-    postMiddlewaresOptions,
-    customPostMiddlewares,
-  );
+export function createRequestClientInstance(options: CreateRequestClientInstance = {}) {
+  let executeMiddlewares: <T, Incoming, Body, Outcoming>(
+    request: RequestInterface<T, Incoming, Body, Outcoming>,
+  ) => Promise<unknown>;
+
+  let executePostMiddlewares: (response: Response | NodeResponse | undefined) => Promise<unknown>;
+
+  function setMiddlewares({
+    activeMiddlewares = [],
+    middlewareOptions = {},
+    customMiddlewares = [],
+    activePostMiddlewares = [],
+    postMiddlewaresOptions = {},
+    customPostMiddlewares = [],
+  }: CreateRequestClientInstance = {}) {
+    executeMiddlewares = generateMiddlewares(
+      activeMiddlewares,
+      middlewareOptions,
+      customMiddlewares,
+    );
+
+    executePostMiddlewares = generatePostMiddlewares(
+      activePostMiddlewares,
+      postMiddlewaresOptions,
+      customPostMiddlewares,
+    );
+  }
+
+  setMiddlewares(options);
 
   async function handleRequest<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
     request: RequestInterface<T, Incoming, Body, Outcoming>,
@@ -225,5 +242,6 @@ export function createRequestClientInstance({
   return {
     requestApi,
     requestApiWithMeta,
+    setMiddlewares,
   };
 }
