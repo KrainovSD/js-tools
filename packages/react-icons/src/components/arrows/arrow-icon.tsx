@@ -4,7 +4,7 @@ import type { IconProps } from "../../types";
 const CLIP_PATH_ID = getUniqueId();
 
 export function Arrow(props: IconProps): React.JSX.Element {
-  const { size = 14, sizeX = size, sizeY = size, color = "#FFFFFF", ...rest } = props;
+  const { size = 14, sizeX = size, sizeY = size, color = "currentColor", ...rest } = props;
 
   return (
     <svg

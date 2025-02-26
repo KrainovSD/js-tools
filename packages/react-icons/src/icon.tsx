@@ -8,7 +8,7 @@ export type IconComponentProps = {
 } & IconProps;
 
 export function Icon(props: IconComponentProps) {
-  const { icon, defaultIcon = DEFAULT_ICON, ...rest } = props;
+  const { icon, defaultIcon = DEFAULT_ICON, color = "currentColor", ...rest } = props;
   const CurrentIcon = Icons[icon] || Icons[defaultIcon];
   if (!CurrentIcon) return null;
 
@@ -20,6 +20,7 @@ export function Icon(props: IconComponentProps) {
       {...rest}
       sizeX={sizeX}
       sizeY={sizeY}
+      color={color}
       style={{
         fontSize: sizeY == undefined ? undefined : `${sizeY}px`,
         width: sizeX == undefined ? undefined : `${sizeX}px`,
