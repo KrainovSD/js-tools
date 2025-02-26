@@ -17,6 +17,7 @@ import { generateMiddlewares, generatePostMiddlewares } from "./middlewares";
 type ResponseErrorOptions = {
   message: string;
   status: number;
+  code?: number;
   description?: unknown;
 };
 
