@@ -24,12 +24,15 @@ type ResponseErrorOptions = {
 export class ResponseError extends Error {
   status: number;
 
+  code?: number;
+
   description?: unknown;
 
-  constructor({ message, status, description }: ResponseErrorOptions) {
+  constructor({ message, status, description, code }: ResponseErrorOptions) {
     super(message);
     this.status = status;
     this.description = description;
+    this.code = code;
   }
 }
 
