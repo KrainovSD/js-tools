@@ -12,6 +12,7 @@ import type {
 import { downloadFile } from "../browser";
 import { isArray, isObject } from "../typings";
 import { createURLWithParams, wait } from "../utils";
+import { RESPONSE_DATA_SYMBOL } from "./constants";
 import { generateMiddlewares, generatePostMiddlewares } from "./middlewares";
 
 type ResponseErrorOptions = {
@@ -162,7 +163,9 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
         } else {
           result = await response.blob();
         }
-      } catch {}
+      } catch {
+        if (RESPONSE_DATA_SYMBOL in response) result = response[RESPONSE_DATA_SYMBOL];
+      }
 
       throw new ResponseError({
         status: response.status,

@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import type { LoggerPostMiddlewareOptions, PostMiddleware } from "../../../types";
+import { RESPONSE_DATA_SYMBOL } from "../constants";
 
 export function generateConsolePostMiddleware(
   options: LoggerPostMiddlewareOptions = {},
@@ -29,6 +30,13 @@ export function generateConsolePostMiddleware(
           } else {
             result = await response.blob();
           }
+
+          Object.defineProperty(response, RESPONSE_DATA_SYMBOL, {
+            value: result,
+            writable: false,
+            enumerable: false,
+            configurable: true,
+          });
 
           console.log({
             url: response.url,
