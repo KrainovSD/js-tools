@@ -1,7 +1,7 @@
 import type { IconProps } from "../../types";
 
 export function SignOut(props: IconProps): React.JSX.Element {
-  const { size = 14, sizeX = size, sizeY = size, color = "currentColor", ...rest } = props;
+  const { size = 14, sizeX = size, sizeY = size, color = "currentColor", style, ...rest } = props;
 
   return (
     <svg
@@ -10,6 +10,16 @@ export function SignOut(props: IconProps): React.JSX.Element {
       height={sizeY}
       viewBox="0 0 11 12"
       xmlns="http://www.w3.org/2000/svg"
+      style={{
+        fontSize: sizeY == undefined ? undefined : `${sizeY}px`,
+        width: sizeX == undefined ? undefined : `${sizeX}px`,
+        height: sizeY == undefined ? undefined : `${sizeY}px`,
+        minWidth: sizeX == undefined ? undefined : `${sizeX}px`,
+        minHeight: sizeY == undefined ? undefined : `${sizeY}px`,
+        maxWidth: sizeX == undefined ? undefined : `${sizeX}px`,
+        maxHeight: sizeY == undefined ? undefined : `${sizeY}px`,
+        ...style,
+      }}
       {...rest}
     >
       <path
