@@ -30,12 +30,12 @@
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
     "clear": "rm -rf ./lib",
-    "build:dev": "npm run clear && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
+    "build-dev": "npm run clear && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
     "build:types": "tspc -p tsconfig.build.json",
     "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
-    "lint:debug": "eslint --debug eslint.config.js",
+    "lint-debug": "eslint --debug eslint.config.js",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

@@ -29,13 +29,13 @@
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
     "dev": "vite",
-    "build:dev": "vite build",
+    "build-dev": "vite build",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rm -rf lib && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
     "build:js-dev": "rm -rf lib && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
     "build:types": "tspc -p tsconfig.build.json",
     "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
-    "lint:debug": "eslint --debug eslint.config.js",
+    "lint-debug": "eslint --debug eslint.config.js",
     "clear": "rm -rf ./lib",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'"
   },

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import plugin from "@krainovsd/eslint-presets";
+import plugin from "@krainovsd/presets";
 
 export default [
   ...plugin.configs.common,

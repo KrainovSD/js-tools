@@ -15,7 +15,7 @@ COPY ./vite.config.ts ./vite.config.ts
 COPY ./index.html ./index.html
 
 COPY ./src src/
-RUN pnpm build:dev
+RUN pnpm build-dev
 
 
 FROM nginx:1.13-alpine

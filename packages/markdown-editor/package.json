@@ -32,9 +32,9 @@
     "dev": "vite",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
-    "lint:debug": "eslint --debug eslint.config.js",
+    "lint-debug": "eslint --debug eslint.config.js",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
-    "build:dev": "vite build",
+    "build-dev": "vite build",
     "build:js": "rm -rf lib && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
     "build:types": "tspc -p tsconfig.build.json",
     "clear": "rm -rf ./lib"
