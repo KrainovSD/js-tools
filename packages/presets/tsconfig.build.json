@@ -1,13 +1,5 @@
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "noEmit": false,
-    "allowJs": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "outDir": "tmp",
-    "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
-  },
+  "extends": "@krainovsd/presets/typescript/common-build",
   "files": ["src/index.ts"],
   "include": ["src/index.ts"]
 }

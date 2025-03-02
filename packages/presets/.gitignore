@@ -6,4 +6,5 @@
 .vscode
 .npmrc
 eslint-config-rules.json
+typescript-config.json
 airbnb.json

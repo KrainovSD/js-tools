@@ -5,7 +5,5 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "outDir": "tmp"
-  },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.spec.ts"]
+  }
 }

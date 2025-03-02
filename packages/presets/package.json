@@ -22,9 +22,9 @@
       "import": "./lib/prettier/esm/index.js",
       "require": "./lib/prettier/cjs/index.cjs"
     },
-    "./typescript/tsconfig.common": "./lib/typescript/tsconfig.common.json",
-    "./typescript/tsconfig.node": "./lib/typescript/tsconfig.node.json",
-    "./typescript/tsconfig.common-build": "./lib/typescript/tsconfig.common-build.json"
+    "./typescript/common": "./lib/typescript/tsconfig.common.json",
+    "./typescript/node": "./lib/typescript/tsconfig.node.json",
+    "./typescript/common-build": "./lib/typescript/tsconfig.common-build.json"
   },
   "keywords": [
     "eslint",
@@ -41,15 +41,15 @@
   "scripts": {
     "publish-package": "npm run build && npm run lint && npm publish",
     "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
-    "lint-debug": "eslint --debug eslint.config.js",
+    "lint-check": "eslint --debug eslint.config.js",
     "clear": "rm -rf ./lib",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
     "build:types": "tsc -p tsconfig.build.json",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
-    "lint-rules": "npx eslint --print-config eslint.config.js > eslint-config-rules.json",
-    "prettier-debug": "prettier --check .",
-    "type-debug": "tsc --showConfig"
+    "format-check": "prettier --check ./src",
+    "lint-debug": "npx eslint --print-config eslint.config.js > eslint-config-rules.json",
+    "type-debug": "tsc --showConfig > typescript-config.json"
   },
   "dependencies": {
     "@eslint/eslintrc": "3.3.0",
