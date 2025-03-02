@@ -1,0 +1,31 @@
+import type { Config } from "prettier";
+
+export const recommended: Config = {
+  printWidth: 100,
+  tabWidth: 2,
+  useTabs: false,
+  semi: true,
+  trailingComma: "all",
+  bracketSpacing: true,
+  arrowParens: "always",
+  plugins: ["@trivago/prettier-plugin-sort-imports"],
+  importOrder: [
+    "<THIRD_PARTY_MODULES>",
+    "^@/app",
+    "^@/app/(.*)$",
+
+    "^@/pages/(.*)$",
+    "^@/widgets/(.*)$",
+    "^@/features/(.*)$",
+    "^@/entities/(.*)$",
+    "^@/shared/(.*)$",
+
+    "^@/organisms/(.*)$",
+    "^@/molecules/(.*)$",
+    "^@/atoms/(.*)$",
+
+    "^[./]",
+  ],
+  importOrderSeparation: false,
+  importOrderSortSpecifiers: true,
+};

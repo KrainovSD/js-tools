@@ -1,6 +1,6 @@
-# @krainovsd/eslint-presets
+# @krainovsd/presets
 
-The library of flat eslint-presets.
+The library of flat presets.
 
 ## Installing
 
@@ -8,23 +8,23 @@ The library of flat eslint-presets.
 
 Using pnpm:
 ```
-pnpm install @krainovsd/eslint-presets
+pnpm install @krainovsd/presets
 ```
 
 Using yarn:
 ```
-yarn add @krainovsd/eslint-presets
+yarn add @krainovsd/presets
 ```
 
 Using npm:
 ```
-npm install @krainovsd/eslint-presets
+npm install @krainovsd/presets
 ```
 
 ## Usage
 
 ```js
-const eslintPresets = require('@krainovsd/eslint-presets');
+const eslintPresets = require('@krainovsd/presets');
 
 module.exports = [
   ...eslintPresets.configs.common,
@@ -38,7 +38,7 @@ module.exports = [
 или
 
 ```js
-import eslintPresets from "@krainovsd/eslint-presets"
+import eslintPresets from "@krainovsd/presets"
 
 export default [
   ...eslintPresets.configs.common,

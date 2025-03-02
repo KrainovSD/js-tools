@@ -6,7 +6,7 @@ export type ParamValueType = string | number | boolean;
 export type ParamsType = Record<string, ParamValueType | ParamValueType[] | null | undefined>;
 export type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export interface RequestInterface<T, Incoming, Body, Outcoming> {
+export type RequestInterface<T, Incoming, Body, Outcoming> = {
   path: string;
   method: RequestMethod;
   body?: Body | Outcoming;
@@ -20,7 +20,7 @@ export interface RequestInterface<T, Incoming, Body, Outcoming> {
   token?: string;
   withoutResponse?: boolean;
   signal?: AbortSignal;
-}
+};
 
 export type Middleware = <T, Incoming, Body, Outcoming>(
   request: RequestInterface<T, Incoming, Body, Outcoming>,

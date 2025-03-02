@@ -1,13 +1,12 @@
 List of packages for JS development. 
 
 ### Configs
-- [eslint-presets [0.2.2]](https://www.npmjs.com/package/@krainovsd/eslint-presets)
+- [presets [0.0.1]](https://www.npmjs.com/package/@krainovsd/presets)
 
 ### JS
 - [js-helpers [0.6.0]](https://www.npmjs.com/package/@krainovsd/js-helpers)
 - [graph [0.2.0]](https://www.npmjs.com/package/@krainovsd/graph)
 - [markdown-editor [0.1.1]](https://www.npmjs.com/package/@krainovsd/markdown-editor)
-
 
 ### React
 - [react-icons [0.2.3]](https://www.npmjs.com/package/@krainovsd/react-icons)
@@ -19,7 +18,6 @@ List of packages for JS development.
 - [fastify-health-controller [0.1.4]](https://www.npmjs.com/package/@krainovsd/fastify-health-controller)
 - [fastify-auth [0.0.1]](https://www.npmjs.com/package/@krainovsd/fastify-auth)
 - [fastify-multipart [0.0.1]](https://www.npmjs.com/package/@krainovsd/fastify-multipart)
-  
   
 ### Nest
 - [nest-uploading-service [0.1.0]](https://www.npmjs.com/package/@krainovsd/nest-uploading-service)

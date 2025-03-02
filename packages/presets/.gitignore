@@ -5,3 +5,5 @@
 /lib
 .vscode
 .npmrc
+eslint-config-rules.json
+airbnb.json

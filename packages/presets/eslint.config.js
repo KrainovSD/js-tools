@@ -1,12 +1,13 @@
 import tsPlugin from "typescript-eslint";
-import plugin from "./lib/presets/lib/esm/index.js";
+import plugin from "./lib/eslint/esm/index.js";
 
 export default tsPlugin.config(
-  ...plugin.configs.react,
-  ...plugin.configs.testing,
-  ...plugin.configs.common,
-  ...plugin.configs.typescript,
+  ...plugin.presets.react,
+  ...plugin.presets.testing,
+  ...plugin.presets.javascript,
+  ...plugin.presets.typescript,
   {
     ignores: ["rollup.config.js"],
+    rules: {},
   },
 );

@@ -1,22 +1,29 @@
 import json from "@rollup/plugin-json";
 import typescript from "@rollup/plugin-typescript";
 import { type Plugin, defineConfig } from "rollup";
+import copy from "rollup-plugin-copy";
 import { dts } from "rollup-plugin-dts";
 import externals from "rollup-plugin-peer-deps-external";
 
 export default defineConfig([
   {
-    input: "src/index.ts",
-    plugins: [externals({ includeDependencies: true }) as Plugin, json(), typescript()],
+    input: "src/eslint/index.ts",
+    plugins: [
+      externals({ includeDependencies: true }) as Plugin,
+      json(),
+      typescript(),
+      /** Typescript */
+      copy({ targets: [{ src: "src/typescript/**/*", dest: "lib/typescript" }] }),
+    ],
     output: [
       {
-        file: "./lib/esm/index.js",
+        file: "./lib/eslint/esm/index.js",
         format: "es",
         generatedCode: "es2015",
         sourcemap: true,
       },
       {
-        file: "./lib/cjs/index.cjs",
+        file: "./lib/eslint/cjs/index.cjs",
         format: "cjs",
         generatedCode: "es2015",
         sourcemap: true,
@@ -24,8 +31,31 @@ export default defineConfig([
     ],
   },
   {
-    input: ["./tmp/src/index.d.ts"],
-    output: [{ file: "./lib/index.d.ts", format: "es" }],
+    input: ["./tmp/src/eslint/index.d.ts"],
+    output: [{ file: "./lib/eslint/index.d.ts", format: "es" }],
+    plugins: [dts()],
+  },
+  {
+    input: "src/prettier/index.ts",
+    plugins: [externals({ includeDependencies: true }) as Plugin, json(), typescript()],
+    output: [
+      {
+        file: "./lib/prettier/esm/index.js",
+        format: "es",
+        generatedCode: "es2015",
+        sourcemap: true,
+      },
+      {
+        file: "./lib/prettier/cjs/index.cjs",
+        format: "cjs",
+        generatedCode: "es2015",
+        sourcemap: true,
+      },
+    ],
+  },
+  {
+    input: ["./tmp/src/prettier/index.d.ts"],
+    output: [{ file: "./lib/prettier/index.d.ts", format: "es" }],
     plugins: [dts()],
   },
 ]);

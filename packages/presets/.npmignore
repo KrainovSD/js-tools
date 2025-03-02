@@ -18,3 +18,4 @@ src/
 .github/
 .husky/
 pnpm-lock.yaml
+eslint-config-rules.json

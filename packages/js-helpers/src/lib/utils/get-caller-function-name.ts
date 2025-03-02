@@ -6,7 +6,7 @@ export function getCallerFunctionName() {
 
     if (stack[2]) {
       const callerLine = stack[2].trim();
-      const match = callerLine.match(/at (\w+)/);
+      const match = /at (\w+)/.exec(callerLine);
       if (match) {
         return match[1];
       }

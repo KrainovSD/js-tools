@@ -1,3 +1,4 @@
+/* eslint-disable id-length */
 const translitDict: Record<string, string> = {
   А: "A",
   Б: "B",

@@ -2,36 +2,47 @@ import parser from "@typescript-eslint/parser";
 import type { Linter } from "eslint";
 import tsPlugin from "typescript-eslint";
 
-export default [
-  /** eslint ts recommended */
-  ...tsPlugin.configs.recommendedTypeChecked,
-  ...tsPlugin.configs.strictTypeChecked,
-  {
-    languageOptions: {
-      parser,
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+export const TS_LINTER_PLUGIN = {
+  ts: [
+    ...tsPlugin.configs.strictTypeChecked,
+    ...tsPlugin.configs.stylisticTypeChecked,
+    {
+      languageOptions: {
+        parser,
+        parserOptions: {
+          projectService: true,
+          tsconfigRootDir: import.meta.dirname,
+        },
       },
     },
-  },
-  {
-    rules: {
-      "@typescript-eslint/no-unnecessary-condition": "off",
-      "@typescript-eslint/restrict-template-expressions": "off",
-      "@typescript-eslint/no-meaningless-void-operator": "off",
-      "@typescript-eslint/no-unnecessary-type-parameters": "off",
-      "@typescript-eslint/no-empty-object-type": "off",
-      "@typescript-eslint/prefer-promise-reject-errors": "off",
-      "@typescript-eslint/no-unsafe-assignment": "off",
-      "@typescript-eslint/no-dynamic-delete": "off",
-      "@typescript-eslint/unbound-method": "off",
+  ] as Linter.Config[],
+  krainovTS: [
+    {
+      rules: {
+        "@typescript-eslint/no-unnecessary-condition": "off",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/no-meaningless-void-operator": "off",
+        "@typescript-eslint/no-unnecessary-type-parameters": "off",
+        "@typescript-eslint/no-empty-object-type": "off",
+        "@typescript-eslint/prefer-promise-reject-errors": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-dynamic-delete": "off",
+        "@typescript-eslint/unbound-method": "off",
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-empty-function": "off",
 
-      "@typescript-eslint/no-confusing-void-expression": [
-        "error",
-        { ignoreArrowShorthand: true, ignoreVoidOperator: true },
-      ],
-      "@typescript-eslint/consistent-type-imports": ["error", { fixStyle: "inline-type-imports" }],
+        "@typescript-eslint/no-confusing-void-expression": [
+          "error",
+          { ignoreArrowShorthand: true, ignoreVoidOperator: true },
+        ],
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          { fixStyle: "inline-type-imports" },
+        ],
+        "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+      },
     },
-  },
-] as Linter.Config[];
+  ] as Linter.Config[],
+};
+
+export default [...TS_LINTER_PLUGIN.ts, ...TS_LINTER_PLUGIN.krainovTS] as Linter.Config[];

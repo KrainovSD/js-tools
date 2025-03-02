@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/presets",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Krainov presets",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -12,23 +12,44 @@
   },
   "sideEffects": false,
   "exports": {
-    ".": {
-      "types": "./lib/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.cjs"
-    }
+    "./eslint": {
+      "types": "./lib/eslint/index.d.ts",
+      "import": "./lib/eslint/esm/index.js",
+      "require": "./lib/eslint/cjs/index.cjs"
+    },
+    "./prettier": {
+      "types": "./lib/prettier/index.d.ts",
+      "import": "./lib/prettier/esm/index.js",
+      "require": "./lib/prettier/cjs/index.cjs"
+    },
+    "./typescript/tsconfig.common": "./lib/typescript/tsconfig.common.json",
+    "./typescript/tsconfig.node": "./lib/typescript/tsconfig.node.json",
+    "./typescript/tsconfig.common-build": "./lib/typescript/tsconfig.common-build.json"
   },
+  "keywords": [
+    "eslint",
+    "rollup",
+    "prettier",
+    "typescript",
+    "config",
+    "presets",
+    "js"
+  ],
   "files": [
     "lib"
   ],
   "scripts": {
     "publish-package": "npm run build && npm run lint && npm publish",
-    "lint": "eslint --debug eslint.config.js",
+    "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
+    "lint-debug": "eslint --debug eslint.config.js",
     "clear": "rm -rf ./lib",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
     "build:types": "tsc -p tsconfig.build.json",
-    "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'"
+    "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
+    "lint-rules": "npx eslint --print-config eslint.config.js > eslint-config-rules.json",
+    "prettier-debug": "prettier --check .",
+    "type-debug": "tsc --showConfig"
   },
   "dependencies": {
     "@eslint/eslintrc": "3.3.0",
@@ -44,9 +65,9 @@
     "eslint-plugin-react": "7.37.4",
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-testing-library": "7.1.1",
-    "typescript-eslint": "8.25.0"
-  },
-  "devDependencies": {
+    "typescript-eslint": "8.25.0",
+    "@trivago/prettier-plugin-sort-imports": "5.2.2",
+    "rollup-plugin-copy": "3.5.0",
     "@rollup/plugin-commonjs": "28.0.2",
     "@rollup/plugin-json": "6.1.0",
     "@rollup/plugin-node-resolve": "16.0.0",
@@ -54,21 +75,30 @@
     "rollup-plugin-dts": "6.1.1",
     "rollup-plugin-bundle-stats": "4.18.3",
     "rollup-plugin-visualizer": "5.14.0",
-    "@types/rollup-plugin-peer-deps-external": "2.2.5",
-    "rollup": "4.34.9",
-    "rollup-plugin-peer-deps-external": "2.2.4",
-    "ts-patch": "3.3.0",
-    "@types/node": "22.13.8",
-    "prettier": "3.5.2",
-    "@trivago/prettier-plugin-sort-imports": "5.2.2",
-    "typescript": "5.8.2",
+    "rollup-plugin-peer-deps-external": "2.2.4"
+  },
+  "devDependencies": {
     "react": "18.3.1",
-    "typescript-transform-paths": "3.5.3",
+    "rollup": "4.34.9",
+    "prettier": "3.5.2",
     "eslint": "9.21.0",
+    "typescript": "5.7.3",
+    "ts-patch": "3.3.0",
+    "typescript-transform-paths": "3.5.3",
     "@types/eslint-config-prettier": "6.11.3",
-    "@types/eslint-plugin-jsx-a11y": "6.10.0"
+    "@types/eslint-plugin-jsx-a11y": "6.10.0",
+    "@types/rollup-plugin-peer-deps-external": "2.2.5",
+    "@types/node": "22.13.8"
   },
   "peerDependencies": {
-    "eslint": "9.21.0"
+    "rollup": "4.34.9",
+    "eslint": "9.21.0",
+    "prettier": "3.5.2",
+    "typescript": "5.7.3"
+  },
+  "peerDependenciesMeta": {
+    "rollup": {
+      "optional": true
+    }
   }
 }

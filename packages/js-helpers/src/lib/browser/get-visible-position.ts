@@ -87,7 +87,7 @@ export function getVisiblePosition({
     width: nodeWidth,
   } = node.getBoundingClientRect();
 
-  if (initialPosition && initialPosition.targetNode) {
+  if (initialPosition?.targetNode) {
     const {
       top: childTop,
       left: childLeft,
@@ -99,7 +99,7 @@ export function getVisiblePosition({
     targetTopPosition = childTop;
     targetLeftPosition = childLeft;
   }
-  if (initialPosition && initialPosition.position) {
+  if (initialPosition?.position) {
     if (initialPosition.position.x) {
       targetLeftPosition = initialPosition.position.x;
     }
