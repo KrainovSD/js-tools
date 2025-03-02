@@ -22,6 +22,11 @@
       "import": "./lib/prettier/esm/index.js",
       "require": "./lib/prettier/cjs/index.cjs"
     },
+    "./rollup": {
+      "types": "./lib/rollup/index.d.ts",
+      "import": "./lib/rollup/esm/index.js",
+      "require": "./lib/rollup/cjs/index.cjs"
+    },
     "./typescript/common": "./lib/typescript/tsconfig.common.json",
     "./typescript/node": "./lib/typescript/tsconfig.node.json",
     "./typescript/common-build": "./lib/typescript/tsconfig.common-build.json"
@@ -40,7 +45,7 @@
   ],
   "scripts": {
     "publish-package": "npm run build && npm run lint && npm publish",
-    "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
+    "lint": "eslint . -c ./eslint.config.js --color --max-warnings 0",
     "lint-check": "eslint --debug eslint.config.js",
     "clear": "rm -rf ./lib",
     "build": "npm run clear && npm run build:types && npm run build:js",
@@ -75,7 +80,8 @@
     "rollup-plugin-dts": "6.1.1",
     "rollup-plugin-bundle-stats": "4.18.3",
     "rollup-plugin-visualizer": "5.14.0",
-    "rollup-plugin-peer-deps-external": "2.2.4"
+    "rollup-plugin-peer-deps-external": "2.2.4",
+    "rollup-plugin-postcss": "4.0.2"
   },
   "devDependencies": {
     "react": "18.3.1",

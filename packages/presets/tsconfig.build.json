@@ -1,5 +1,7 @@
 {
-  "extends": "@krainovsd/presets/typescript/common-build",
-  "files": ["src/index.ts"],
+  "extends": "./src/typescript/tsconfig.common-build.json",
+  "compilerOptions": {
+    "outDir": "tmp"
+  },
   "include": ["src/index.ts"]
 }

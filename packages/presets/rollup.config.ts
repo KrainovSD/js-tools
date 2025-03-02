@@ -58,4 +58,27 @@ export default defineConfig([
     output: [{ file: "./lib/prettier/index.d.ts", format: "es" }],
     plugins: [dts()],
   },
+  {
+    input: "src/rollup/index.ts",
+    plugins: [externals({ includeDependencies: true }) as Plugin, typescript()],
+    output: [
+      {
+        file: "./lib/rollup/esm/index.js",
+        format: "es",
+        generatedCode: "es2015",
+        sourcemap: true,
+      },
+      {
+        file: "./lib/rollup/cjs/index.cjs",
+        format: "cjs",
+        generatedCode: "es2015",
+        sourcemap: true,
+      },
+    ],
+  },
+  {
+    input: ["./tmp/src/rollup/index.d.ts"],
+    output: [{ file: "./lib/rollup/index.d.ts", format: "es" }],
+    plugins: [dts()],
+  },
 ]);

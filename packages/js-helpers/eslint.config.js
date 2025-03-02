@@ -2,10 +2,10 @@ import plugin from "@krainovsd/presets/eslint";
 
 export default [
   ...plugin.presets.testing,
-  ...plugin.presets.common,
+  ...plugin.presets.javascript,
   ...plugin.presets.typescript,
+
   {
-    ignores: ["rollup.config.ts"],
-    rules: {},
+    ignores: ["tmp/", "node_modules/", "lib/", ".turbo/", "stats/", "coverage/", "dist/"],
   },
 ];

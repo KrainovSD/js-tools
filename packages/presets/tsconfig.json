@@ -1,4 +1,4 @@
 {
-  "extends": "@krainovsd/presets/typescript/common",
+  "extends": "./src/typescript/tsconfig.common.json",
   "include": ["eslint.config.js", "src/**/*", "rollup.config.ts", ".prettierrc.js"]
 }

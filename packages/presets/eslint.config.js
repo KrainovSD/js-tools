@@ -7,7 +7,6 @@ export default tsPlugin.config(
   ...plugin.presets.javascript,
   ...plugin.presets.typescript,
   {
-    ignores: ["rollup.config.js"],
-    rules: {},
+    ignores: ["tmp/", "node_modules/", "lib/", "src/typescript/", ".turbo/"],
   },
 );
