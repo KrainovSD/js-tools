@@ -62,40 +62,42 @@ export function createRollupConfig(configOptions: CreateRollupConfigOptions[]): 
 function getRollupOutput(options: CreateRollupConfigOptions): OutputOptions[] {
   const output: OutputOptions[] = [];
 
-  for (const { format, override = {} } of options.outputs) {
-    const preset = OUTPUT_PRESETS.find((pr) => pr.format === format) ?? {};
-    if (Object.keys(preset).length === 0 && Object.keys(override).length === 0)
-      throw new Error(`Empty preset and override for format ${format}`);
+  for (const option of options.outputs) {
+    const preset = OUTPUT_PRESETS.find((pr) => pr.format === option.format);
+    if (preset == undefined && option.override == undefined)
+      throw new Error(`Empty preset and override for format ${option.format}`);
 
-    const plugins: OutputPlugin[] = override.plugins ?? [];
+    const plugins: OutputPlugin[] = option.override?.plugins ?? [];
 
     /** Bundle stats */
-    if (format === "es" && options.plugins?.bundleStats?.enabled) {
+    if (option.format === "es" && options.plugins?.bundleStats?.enabled) {
       plugins.push(
-        bundleStats({
-          json: true,
-          html: true,
-          baseline: true,
-          baselineFilepath: "./baseline.json",
-          outDir: "../../stats",
-          compare: true,
-          ...options.plugins?.bundleStats?.override,
-        }),
+        bundleStats(
+          options.plugins.bundleStats.override ?? {
+            json: true,
+            html: true,
+            baseline: true,
+            baselineFilepath: "./baseline.json",
+            outDir: "../../stats",
+            compare: true,
+          },
+        ),
       );
     }
     /** Visualizer */
-    if (format === "es" && options.plugins?.visualizer?.enabled) {
+    if (option.format === "es" && options.plugins?.visualizer?.enabled) {
       plugins.push(
-        visualizer({
-          gzipSize: true,
-          filename: "./stats/stats.html",
-          template: "flamegraph",
-          ...options.plugins?.visualizer?.override,
-        }),
+        visualizer(
+          options?.plugins?.visualizer?.override ?? {
+            gzipSize: true,
+            filename: "./stats/stats.html",
+            template: "flamegraph",
+          },
+        ),
       );
     }
 
-    output.push({ ...preset, ...override, plugins });
+    output.push({ ...(option.override ?? preset), plugins });
   }
 
   return output;
@@ -126,21 +128,22 @@ function getRollupPlugins(options: RollupPlugin = {}): InputPluginOption {
 
   if (options.postCSS) {
     plugins.push(
-      postcss({
-        modules: {
-          generateScopedName: "_[local]_[hash:base64:5]",
-        },
-        minimize: true,
-        use: {
-          // Waiting issue
-          sass: {
-            silenceDeprecations: ["legacy-js-api"],
+      postcss(
+        options.postCSS.override ?? {
+          modules: {
+            generateScopedName: "_[local]_[hash:base64:5]",
           },
-          less: undefined,
-          stylus: undefined,
+          minimize: true,
+          use: {
+            // Waiting issue
+            sass: {
+              silenceDeprecations: ["legacy-js-api"],
+            },
+            less: undefined,
+            stylus: undefined,
+          },
         },
-        ...options.postCSS.override,
-      }),
+      ),
     );
   }
 
