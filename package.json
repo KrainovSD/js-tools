@@ -2,7 +2,8 @@
   "name": "krainovsd",
   "private": false,
   "scripts": {
-    "epc": "node scripts/pnpm/exec-package-command",
+    "ksd-exec": "npx ksd exec-package-command",
+    "ksd-check": "npx ksd check-package-duplicate",
     "lint": "turbo lint",
     "test": "turbo test",
     "build": "turbo build",
@@ -10,6 +11,7 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@krainovsd/cli": "0.0.1",
     "husky": "9.1.0",
     "turbo": "2.2.3"
   },

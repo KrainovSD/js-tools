@@ -1,0 +1,58 @@
+{
+  "name": "@krainovsd/cli",
+  "version": "0.0.1",
+  "description": "Krainov cli",
+  "type": "module",
+  "author": "KrainovSD <denislosev48@gmail.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KrainovSD/js-tools.git",
+    "directory": "packages/cli"
+  },
+  "bin": {
+    "ksd": "./lib/index.js"
+  },
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
+  "keywords": [
+    "cli",
+    "js"
+  ],
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "dev": "node lib/index.js",
+    "dev-build": "npm run build && node lib/index.js",
+    "publish-package": "npm run build && npm run lint && npm publish",
+    "lint": "eslint . -c ./eslint.config.js --color --max-warnings 0",
+    "lint-check": "eslint --debug eslint.config.js",
+    "clear": "rm -rf ./lib",
+    "build": "npm run clear && npm run build:types && npm run build:js",
+    "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
+    "build:types": "tsc -p tsconfig.build.json",
+    "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
+    "format-check": "prettier --check ./src",
+    "lint-debug": "npx eslint --print-config eslint.config.js > eslint-config-rules.json",
+    "type-debug": "tsc --showConfig > typescript-config.json"
+  },
+  "dependencies": {
+    "yaml": "2.7.0",
+    "prompts": "2.4.2",
+    "chalk": "5.4.1",
+    "ora": "8.2.0",
+    "execa": "9.5.2",
+    "commander": "13.1.0"
+  },
+  "devDependencies": {
+    "@krainovsd/presets": "0.0.2",
+    "eslint": "9.21.0",
+    "prettier": "3.5.2",
+    "rollup": "4.34.9",
+    "typescript": "5.7.3",
+    "@types/node": "22.13.8",
+    "@types/prompts": "2.4.9"
+  }
+}

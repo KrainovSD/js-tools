@@ -1,0 +1,8 @@
+{
+  "extends": "@krainovsd/presets/typescript/common-build",
+  "compilerOptions": {
+    "outDir": "tmp"
+  },
+  "include": ["src/index.ts"],
+  "exclude": ["**/*.spec.ts"]
+}

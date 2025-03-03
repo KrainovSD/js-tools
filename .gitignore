@@ -7,3 +7,4 @@
 /stats
 .npmrc
 .vscode
+dependency-duplicates.json

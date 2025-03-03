@@ -1,0 +1,7 @@
+{
+  "extends": "@krainovsd/presets/typescript/common",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["src/**/*", "eslint.config.js", "rollup.config.ts", ".prettierrc.mjs"]
+}

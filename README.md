@@ -1,7 +1,7 @@
 List of packages for JS development. 
 
 ### Configs
-- [presets [0.0.1]](https://www.npmjs.com/package/@krainovsd/presets)
+- [presets [0.0.2]](https://www.npmjs.com/package/@krainovsd/presets)
 
 ### JS
 - [js-helpers [0.6.0]](https://www.npmjs.com/package/@krainovsd/js-helpers)

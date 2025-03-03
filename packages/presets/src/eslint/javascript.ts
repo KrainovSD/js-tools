@@ -68,7 +68,7 @@ export const JS_LINTER_PLUGINS = {
             number: true,
           },
         ],
-        "id-length": ["error", { exceptions: ["x", "y", "z", "i", "j"] }],
+        "id-length": ["error", { exceptions: ["x", "y", "z", "i", "j", "_"] }],
       },
     },
   ] as Linter.Config[],
