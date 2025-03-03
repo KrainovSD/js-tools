@@ -12,8 +12,8 @@ export function Icon(props: IconComponentProps) {
   const CurrentIcon = Icons[icon] || Icons[defaultIcon];
   if (!CurrentIcon) return null;
 
-  const sizeX = props.size || props.sizeX || DEFAULT_SIZE_X;
-  const sizeY = props.size || props.sizeY || DEFAULT_SIZE_Y;
+  const sizeX = props.size ?? props.sizeX ?? DEFAULT_SIZE_X;
+  const sizeY = props.size ?? props.sizeY ?? DEFAULT_SIZE_Y;
 
   return (
     <CurrentIcon

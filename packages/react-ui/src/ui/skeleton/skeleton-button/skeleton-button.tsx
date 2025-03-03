@@ -13,7 +13,7 @@ export function SkeletonButton(props: SkeletonButtonPropsInterface): JSX.Element
   return (
     <AntdSkeleton.Button
       active={active}
-      style={{ ...(style || {}), width, minWidth: width, height }}
+      style={{ ...(style ?? {}), width, minWidth: width, height }}
       {...otherProps}
     />
   );

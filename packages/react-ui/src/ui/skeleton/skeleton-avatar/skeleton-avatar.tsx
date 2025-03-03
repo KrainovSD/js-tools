@@ -17,7 +17,7 @@ export function SkeletonAvatar(props: SkeletonAvatarPropsInterface): JSX.Element
       active={active}
       size={size}
       shape={shape}
-      style={{ ...(style || {}), borderRadius }}
+      style={{ ...(style ?? {}), borderRadius }}
       {...otherProps}
     />
   );

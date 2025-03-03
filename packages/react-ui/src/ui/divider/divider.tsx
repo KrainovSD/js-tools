@@ -17,8 +17,8 @@ export function Divider(props: DividerProps) {
     <AntdDivider
       className={clsx(styles.base, className)}
       style={{
-        ...(style || {}),
-        margin: `${verticalMargin || 0}px ${horizontalMargin || 0}px`,
+        ...(style ?? {}),
+        margin: `${verticalMargin ?? 0}px ${horizontalMargin ?? 0}px`,
         borderWidth: size,
         borderColor: color,
       }}

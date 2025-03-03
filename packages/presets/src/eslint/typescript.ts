@@ -42,6 +42,15 @@ export const TS_LINTER_PLUGIN = {
           "error",
           { fixStyle: "inline-type-imports" },
         ],
+        "@typescript-eslint/prefer-nullish-coalescing": [
+          "error",
+          {
+            ignoreTernaryTests: false,
+            ignoreBooleanCoercion: true,
+            ignoreConditionalTests: true,
+            ignorePrimitives: { string: false, number: false, bigint: false, boolean: true },
+          },
+        ],
       },
     },
   ] as Linter.Config[],

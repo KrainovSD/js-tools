@@ -23,7 +23,7 @@ export function Tag(props: TagProps): JSX.Element {
       {...otherProps}
       className={clsx(className)}
       style={{
-        ...(style || {
+        ...(style ?? {
           cursor: "pointer",
           color: mainColor,
           border,

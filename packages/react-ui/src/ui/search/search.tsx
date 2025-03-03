@@ -43,9 +43,9 @@ export function Search({
   const onTagSelect = React.useCallback(
     (selectedTag: string, checked: boolean) => {
       if (checked) {
-        setSelectedTag?.(selectedTags?.filter?.((tag) => tag !== selectedTag) || []);
+        setSelectedTag?.(selectedTags?.filter?.((tag) => tag !== selectedTag) ?? []);
       } else {
-        setSelectedTag?.([...(selectedTags || []), selectedTag]);
+        setSelectedTag?.([...(selectedTags ?? []), selectedTag]);
       }
     },
     [selectedTags, setSelectedTag],
@@ -58,7 +58,7 @@ export function Search({
           variant={variant}
           placeholder={label}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(event) => setSearch(event.target.value)}
           suffix={<SearchIcon color={"#8893a4"} size={13} />}
           shape={shape}
         />
@@ -82,22 +82,21 @@ export function Search({
       </Flex>
       {isOpenTags && (
         <Flex wrap gap={4} align="start">
-          {tags &&
-            tags.map((tag) => {
-              const checked = Boolean(selectedTags && selectedTags.includes(tag.value));
+          {tags?.map?.((tag) => {
+            const checked = Boolean(selectedTags?.includes?.(tag.value));
 
-              return (
-                <Tag
-                  key={tag.value}
-                  onClick={() => onTagSelect(tag.value, checked)}
-                  color={tag.colorBg}
-                  mainColor={tag.color}
-                  checked={checked}
-                >
-                  {tag.label}
-                </Tag>
-              );
-            })}
+            return (
+              <Tag
+                key={tag.value}
+                onClick={() => onTagSelect(tag.value, checked)}
+                color={tag.colorBg}
+                mainColor={tag.color}
+                checked={checked}
+              >
+                {tag.label}
+              </Tag>
+            );
+          })}
         </Flex>
       )}
     </Flex>

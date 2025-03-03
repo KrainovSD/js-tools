@@ -25,7 +25,7 @@ export function Loader(props: LoaderPropsInterface) {
 
   const target = React.useMemo(() => {
     if (props.target) {
-      let element: HTMLElement | null = null;
+      let element: HTMLElement | null;
       try {
         element = document.getElementById(props.target);
       } catch {

@@ -29,7 +29,6 @@ function initEditor() {
   editor = new Editor({
     root,
     multiCursor,
-    // eslint-disable-next-line no-nested-ternary
     initialText: viewStressTest ? STRESS_TEST : viewFullExample ? FULL_EXAMPLE : COMMON_TEST,
     vimMode: false,
     readonly,

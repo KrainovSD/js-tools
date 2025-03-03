@@ -82,7 +82,7 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
     : (modalRoot ?? document.body);
 
   const style: React.CSSProperties = {
-    width: width || "fit-content",
+    width: width ?? "fit-content",
     zIndex,
     top: position.top,
     left: position.left,
@@ -140,7 +140,7 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
           handleClose();
         } else {
           const root =
-            positionerRef.current.querySelector(`[data-popper-content="true"]`) ||
+            positionerRef.current.querySelector(`[data-popper-content="true"]`) ??
             positionerRef.current;
           let currentElement: Element | undefined | null;
           if (

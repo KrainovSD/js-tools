@@ -55,7 +55,7 @@ export function Select(props: SelectProps): React.JSX.Element {
         ) : (
           <>
             {menu}
-            {customOption || null}
+            {customOption ?? null}
           </>
         )}
       </>
@@ -64,7 +64,7 @@ export function Select(props: SelectProps): React.JSX.Element {
   );
 
   const selectOptions = useMemo(
-    () => (withEmptyOption ? [...(options || []), EMPTY_OPTION] : options),
+    () => (withEmptyOption ? [...(options ?? []), EMPTY_OPTION] : options),
     [withEmptyOption, options],
   );
 

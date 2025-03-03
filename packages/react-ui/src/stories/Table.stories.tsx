@@ -55,8 +55,7 @@ const columns: ColumnsType<TableData> = [
     dataIndex: "name",
     filters,
     onFilter: (value, record) => record.name.startsWith(value as string),
-    // eslint-disable-next-line no-nested-ternary
-    sorter: (a, b) => (a.name === b.name ? 0 : a.name > b.name ? 1 : -1),
+    sorter: (itemA, itemB) => (itemA.name === itemB.name ? 0 : itemA.name > itemB.name ? 1 : -1),
     sortDirections: ["ascend"],
     defaultSortOrder: "ascend",
   },
@@ -68,8 +67,8 @@ const columns: ColumnsType<TableData> = [
     filters,
     onFilter: (value, record) =>
       record.country.toLowerCase().startsWith(String(value).toLowerCase()),
-    // eslint-disable-next-line no-nested-ternary
-    sorter: (a, b) => (a.country === b.country ? 0 : a.country > b.country ? 1 : -1),
+    sorter: (itemA, itemB) =>
+      itemA.country === itemB.country ? 0 : itemA.country > itemB.country ? 1 : -1,
   },
   {
     title: "Почта",
@@ -78,8 +77,8 @@ const columns: ColumnsType<TableData> = [
     dataIndex: "email",
     filters,
     onFilter: (value, record) => record.email.startsWith(value as string),
-    // eslint-disable-next-line no-nested-ternary
-    sorter: (a, b) => (a.email === b.email ? 0 : a.email > b.email ? 1 : -1),
+    sorter: (itemA, itemB) =>
+      itemA.email === itemB.email ? 0 : itemA.email > itemB.email ? 1 : -1,
   },
 ];
 

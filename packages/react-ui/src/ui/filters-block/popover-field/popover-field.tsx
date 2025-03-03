@@ -35,7 +35,8 @@ export const PopoverField: FC<IProps> = (props) => {
 
       return props.field.renderDisplayValue
         ? props.field.renderDisplayValue(fieldValue)
-        : `${fieldValue}`;
+        : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+          String(fieldValue);
     }
   }, [fieldValue, props.field]);
 
@@ -61,7 +62,7 @@ export const PopoverField: FC<IProps> = (props) => {
       <div className={styles.popover(token)} style={{ paddingRight: 5 }}>
         {/* Используется для инициализации формы */}
         <Form.Item name={props.field.name} style={{ display: "none" }}>
-          {props.field.inputField || <Input placeholder={props.field.label} />}
+          {props.field.inputField ?? <Input placeholder={props.field.label} />}
         </Form.Item>
         <Flex align="center" wrap={false}>
           <Text type={fieldValue ? "secondary" : undefined}>{props.field.label}</Text>
@@ -75,8 +76,8 @@ export const PopoverField: FC<IProps> = (props) => {
               width: 16,
               height: 16,
             }}
-            onClick={(e) => {
-              e.stopPropagation();
+            onClick={(event) => {
+              event.stopPropagation();
               props.onRemove();
             }}
             type="text"

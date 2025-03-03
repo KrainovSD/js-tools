@@ -12,7 +12,6 @@ export function getErrorInfo(err: unknown, stack: boolean = true) {
   const error = getByPath(err, "message") ?? undefined;
   const errorStatus = getByPath(err, "status") ?? undefined;
   const errorDescription = getByPath(err, "description") ?? undefined;
-  // eslint-disable-next-line no-nested-ternary
   const errorStack = stack ? (err instanceof Error ? err.stack : undefined) : undefined;
 
   const traceID = getTraceId();
@@ -48,7 +47,7 @@ export function getCorrectLog(
   const correctObj = Object.fromEntries(
     Object.entries(obj).filter(
       ([key, value]) =>
-        !(deniedProperties?.includes?.(key.toLowerCase()) ?? typeof value === "undefined"),
+        !(deniedProperties?.includes?.(key.toLowerCase()) || typeof value === "undefined"),
     ),
   );
 

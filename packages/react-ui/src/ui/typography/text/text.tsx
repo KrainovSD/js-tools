@@ -12,7 +12,7 @@ export function Text(props: TextProps): JSX.Element {
     <AntdTypography.Text
       {...otherProps}
       className={clsx(className)}
-      style={{ ...(style || {}), color }}
+      style={{ ...(style ?? {}), color }}
     />
   );
 }

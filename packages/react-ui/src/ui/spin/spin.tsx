@@ -10,5 +10,5 @@ export interface SpinProps extends AntdSpinProps {
 export function Spin(props: SpinProps): React.JSX.Element {
   const { indicator, ...otherProps } = props;
 
-  return <AntdSpin indicator={indicator || <Spinner size="small" />} {...otherProps} />;
+  return <AntdSpin indicator={indicator ?? <Spinner size="small" />} {...otherProps} />;
 }

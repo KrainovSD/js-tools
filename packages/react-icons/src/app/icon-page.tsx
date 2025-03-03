@@ -26,11 +26,11 @@ export function IconPage() {
         <input
           type="text"
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={(event) => setFilter(event.target.value)}
           placeholder="Поиск"
           style={{ fontSize: "18px" }}
         />
-        <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
+        <input type="color" value={color} onChange={(event) => setColor(event.target.value)} />
       </div>
       {ICON_CATEGORIES.map((category) => {
         return (
