@@ -5,7 +5,7 @@ import { type InitAutoCompleteOptions, initAutoComplete } from "./auto-completes
 import { type InitKeyMapsOptions, initKeyMaps } from "./keymaps";
 import { type InitListenersOptions, initListeners } from "./listeners";
 import { type InitMarkdownOptions } from "./markdown";
-import { InitSettings, type InitSettingsOptions } from "./settings";
+import { type InitSettingsOptions, initSettings } from "./settings";
 import { type InitThemeOptions, initTheme } from "./theme";
 
 export type ExtensionsOptions = InitListenersOptions &
@@ -43,7 +43,7 @@ export const initExtensions = async ({
   const multiCursorMode = Boolean(multiCursorText && provider);
 
   const asyncPlugins = await Promise.all([
-    InitSettings({ readonly, vimMode }),
+    initSettings({ readonly, vimMode }),
     initKeyMaps({
       onEnter,
       onEscape,

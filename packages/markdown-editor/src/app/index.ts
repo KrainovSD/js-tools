@@ -1,6 +1,6 @@
 import { languages } from "@codemirror/language-data";
-import { Editor, type MultiCursorOptions } from "@/module";
 import type { ThemeOptions } from "@/extensions";
+import { Editor, type MultiCursorOptions } from "@/module";
 import "./global.css";
 import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } from "./helpers";
 

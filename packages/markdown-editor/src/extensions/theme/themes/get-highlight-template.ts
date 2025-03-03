@@ -1,5 +1,5 @@
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
-import { tags as t } from "@lezer/highlight";
+import { tags } from "@lezer/highlight";
 import type { HighlightConfig } from "../theme-types";
 
 /**
@@ -10,27 +10,30 @@ import type { HighlightConfig } from "../theme-types";
 export function getHighlightTemplate(config: Required<HighlightConfig>) {
   return syntaxHighlighting(
     HighlightStyle.define([
-      { tag: t.keyword, color: config.keyword },
-      { tag: [t.name, t.deleted, t.character, t.macroName], color: config.variable },
-      { tag: [t.propertyName], color: config.function },
+      { tag: tags.keyword, color: config.keyword },
+      { tag: [tags.name, tags.deleted, tags.character, tags.macroName], color: config.variable },
+      { tag: [tags.propertyName], color: config.function },
       {
-        tag: [t.string, t.inserted, t.special(t.string)],
+        tag: [tags.string, tags.inserted, tags.special(tags.string)],
         color: config.string,
       },
-      { tag: [t.function(t.variableName), t.labelName], color: config.function },
-      { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: config.constant },
-      { tag: [t.definition(t.name), t.separator], color: config.variable },
-      { tag: [t.className], color: config.class },
+      { tag: [tags.function(tags.variableName), tags.labelName], color: config.function },
       {
-        tag: [t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace],
+        tag: [tags.color, tags.constant(tags.name), tags.standard(tags.name)],
+        color: config.constant,
+      },
+      { tag: [tags.definition(tags.name), tags.separator], color: config.variable },
+      { tag: [tags.className], color: config.class },
+      {
+        tag: [tags.number, tags.changed, tags.annotation, tags.modifier, tags.self, tags.namespace],
         color: config.number,
       },
-      { tag: [t.typeName], color: config.type, fontStyle: config.type },
-      { tag: [t.operator, t.operatorKeyword], color: config.keyword },
-      { tag: [t.escape, t.regexp], color: config.regexp },
-      { tag: [t.comment], color: config.comment },
-      { tag: [t.atom, t.bool, t.special(t.variableName)], color: config.variable },
-      { tag: t.invalid, color: config.invalid },
+      { tag: [tags.typeName], color: config.type, fontStyle: config.type },
+      { tag: [tags.operator, tags.operatorKeyword], color: config.keyword },
+      { tag: [tags.escape, tags.regexp], color: config.regexp },
+      { tag: [tags.comment], color: config.comment },
+      { tag: [tags.atom, tags.bool, tags.special(tags.variableName)], color: config.variable },
+      { tag: tags.invalid, color: config.invalid },
     ]),
   );
 }

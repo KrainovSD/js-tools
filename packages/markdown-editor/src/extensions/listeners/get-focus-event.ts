@@ -11,9 +11,9 @@ export type HandleBlurEditorFunction = (state: EditorState) => void;
 
 export function getFocusEvent({ onBlur, onFocus }: GetFocusEventOptions) {
   return onFocus || onBlur
-    ? EditorView.focusChangeEffect.of((e, focus) => {
-        if (focus && onFocus) onFocus(e);
-        else if (!focus && onBlur) onBlur(e);
+    ? EditorView.focusChangeEffect.of((event, focus) => {
+        if (focus && onFocus) onFocus(event);
+        else if (!focus && onBlur) onBlur(event);
 
         return null;
       })

@@ -8,7 +8,7 @@ export type InitSettingsOptions = {
   vimMode?: boolean;
 };
 
-export async function InitSettings({
+export async function initSettings({
   readonly,
   vimMode,
 }: InitSettingsOptions): Promise<Extension[]> {

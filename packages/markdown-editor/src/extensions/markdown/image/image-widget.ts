@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { saveDispatch } from "@/lib/utils";
 import { openedImageEffect } from "../markdown-state";
@@ -6,7 +7,7 @@ import { CODE_OF_START_IMAGE_URL } from "./image-constants";
 
 const IMAGE_NODES: Record<string, ImageContainerElement | undefined> = {};
 const INTERVAL_DELAY = 10000;
-const EXISTING_WIDGETS: Set<string> = new Set();
+const EXISTING_WIDGETS = new Set<string>();
 let interval: NodeJS.Timeout | null = null;
 interface ImageContainerElement extends HTMLSpanElement {
   clearListeners?: () => void;
@@ -203,7 +204,7 @@ type SelectLinkOptions = {
   link: string;
 };
 function selectLink({ link, node, selection, start }: SelectLinkOptions) {
-  const startPosition = start ?? (node.textContent?.indexOf?.(link) || 0);
+  const startPosition = start ?? node.textContent?.indexOf?.(link) ?? 0;
   const endPosition = startPosition + link.length;
 
   if (startPosition === 0 && endPosition === 0) {

@@ -17,7 +17,7 @@ export async function initEditor({ multiCursor, root, initialText, ...rest }: Ed
 
   const state = await initEditorState({
     ...rest,
-    text: initialText || "",
+    text: initialText ?? "",
     provider,
     multiCursorText,
   });

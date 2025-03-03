@@ -19,7 +19,7 @@ function getListSelectionDecorations({
   }
 
   const content = view.state.doc.sliceString(node.from, node.to);
-  const lastCodePoint = content.codePointAt(content.length - 1) || 0;
+  const lastCodePoint = content.codePointAt(content.length - 1) ?? 0;
   if (!LIST_OF_LIST_MARKS.has(lastCodePoint) && CODE_OF_ORDERED_LIST_MARK !== lastCodePoint) {
     return;
   }

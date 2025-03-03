@@ -51,6 +51,7 @@ export function overlapMark({ marks, shift, state, requireMatched }: OverlapMark
   };
 }
 
+// eslint-disable-next-line max-params
 function findMarkIndex(
   text: string,
   marks: (number | undefined)[],
@@ -86,7 +87,9 @@ function findMarkIndex(
 
           // console.log({ posMin, posMax, pos, minRequired, maxRequired, direction, matched });
 
+          // eslint-disable-next-line max-depth
           if (direction === "right" && posMin > start) start = posMin;
+          // eslint-disable-next-line max-depth
           if (direction === "left" && (posMax < start || start === -1)) start = posMax;
         }
         matched = 0;
@@ -153,7 +156,7 @@ function processShiftContent(state: EditorState, shift: number, marks: (number |
   if (initialText.length > 1)
     while (pos < initialText.length) {
       // eslint-disable-next-line no-loop-func --  https://eslint.org/docs/latest/rules/no-loop-func#known-limitations
-      if (marks.some((m) => m === initialText.codePointAt(pos))) shiftBeforeInner++;
+      if (marks.some((mark) => mark === initialText.codePointAt(pos))) shiftBeforeInner++;
       else break;
 
       pos++;
@@ -166,7 +169,7 @@ function processShiftContent(state: EditorState, shift: number, marks: (number |
   if (initialText.length > 1 || shiftBeforeInner > 0)
     while (pos > -1) {
       // eslint-disable-next-line no-loop-func --  https://eslint.org/docs/latest/rules/no-loop-func#known-limitations
-      if (marks.some((m) => m === initialTextWithoutBeforeShift.codePointAt(pos)))
+      if (marks.some((mark) => mark === initialTextWithoutBeforeShift.codePointAt(pos)))
         shiftAfterInner++;
       else break;
 

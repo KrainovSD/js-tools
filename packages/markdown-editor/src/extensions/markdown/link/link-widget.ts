@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { CLASSES } from "@/extensions/theme";
 import { saveDispatch } from "@/lib/utils";
@@ -75,7 +76,9 @@ export class LinkWidget extends WidgetType {
       (event) => handleClick(this.view, this.text, this.link, this.key, event),
       { signal: abortController.signal },
     );
-    anchor.addEventListener("click", (e) => e.preventDefault(), { signal: abortController.signal });
+    anchor.addEventListener("click", (event) => event.preventDefault(), {
+      signal: abortController.signal,
+    });
     anchor.clearListeners = () => {
       abortController.abort();
     };
@@ -153,7 +156,7 @@ type SelectLinkOptions = {
   link: string;
 };
 function selectLink({ link, node, selection, start }: SelectLinkOptions) {
-  const startPosition = start ?? (node.textContent?.indexOf?.(link) || 0);
+  const startPosition = start ?? node.textContent?.indexOf?.(link) ?? 0;
   const endPosition = startPosition + link.length;
 
   if (startPosition === 0 && endPosition === 0) {

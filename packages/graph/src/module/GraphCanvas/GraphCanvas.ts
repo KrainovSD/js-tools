@@ -492,7 +492,7 @@ export class GraphCanvas<
       /** nodes */
       const textRenders: (() => void)[] = [];
       this.nodes.forEach(drawNode(textRenders).bind(this));
-      textRenders.forEach((r) => r());
+      textRenders.forEach((render) => render());
 
       this.context.restore();
 
@@ -522,7 +522,7 @@ export class GraphCanvas<
         index,
         this.links,
         this.areaTransform,
-        this.linkSettings.options || {},
+        this.linkSettings.options ?? {},
         linkOptionsGetter,
       );
 
@@ -560,7 +560,7 @@ export class GraphCanvas<
           index,
           this.nodes,
           this.areaTransform,
-          this.nodeSettings.options || {},
+          this.nodeSettings.options ?? {},
           nodeOptionsGetter,
         );
         const radius =
@@ -665,7 +665,7 @@ export class GraphCanvas<
             nodes: this.nodes,
           });
 
-          if (currentNode && currentNode.neighbors && this.highlightedNode !== currentNode) {
+          if (currentNode?.neighbors && this.highlightedNode !== currentNode) {
             this.highlightedNode = currentNode;
             this.highlightedNeighbors = new Set(this.highlightedNode.neighbors);
             this.highlightFadingWorking = true;
@@ -803,7 +803,7 @@ export class GraphCanvas<
               index,
               this.nodes,
               this.areaTransform,
-              this.nodeSettings.options || {},
+              this.nodeSettings.options ?? {},
               nodeOptionsGetter,
             );
             const radius =

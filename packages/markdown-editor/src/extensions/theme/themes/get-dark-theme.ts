@@ -36,8 +36,8 @@ const THEME_CONFIG: Required<ThemeConfig> = {
 };
 
 export function getDarkTheme({ dark }: InitThemeOptions) {
-  const highlightConfig = { ...HIGHLIGHT_CONFIG, ...(dark?.highlightConfig || {}) };
-  const themeConfig = { ...THEME_CONFIG, ...(dark?.themeConfig || {}) };
+  const highlightConfig = { ...HIGHLIGHT_CONFIG, ...(dark?.highlightConfig ?? {}) };
+  const themeConfig = { ...THEME_CONFIG, ...(dark?.themeConfig ?? {}) };
 
   return [getThemeTemplate(true, themeConfig), getHighlightTemplate(highlightConfig)];
 }

@@ -18,8 +18,7 @@ export async function initEditorProvider({
   const multiCursorDocument = new Doc();
   const multiCursorText = multiCursorDocument.getText(roomId);
 
-  if (!userColor || !userColor.startsWith("#")) {
-    // eslint-disable-next-line no-console
+  if (!userColor?.startsWith?.("#")) {
     console.warn("user color must be hex!");
     userColor = "#30bced";
   }

@@ -16,7 +16,7 @@ function getTodoSelectionDecoration({
   if (!prevSibling || prevSibling.name !== NAME_OF_LIST_MARK) return;
 
   const isChecked = LIST_OF_TODO_MARKS.has(
-    view.state.doc.sliceString(node.from + 1, node.from + 2).codePointAt(0) || 0,
+    view.state.doc.sliceString(node.from + 1, node.from + 2).codePointAt(0) ?? 0,
   );
 
   if (

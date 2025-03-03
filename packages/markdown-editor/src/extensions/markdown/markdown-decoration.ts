@@ -93,12 +93,12 @@ function createDecorationsGetter(settings: MarkdownDecorationSettings) {
           if (SKIP_MARKS.has(node.name)) return;
           /** Decoration by change content */
           if (processDecorations)
-            decorationFunctions.forEach((f) => f({ decorations, node, view, settings }));
+            decorationFunctions.forEach((funk) => funk({ decorations, node, view, settings }));
 
           /** Decoration by selection content  */
           if (processSelectionDecorations)
-            selectionDecorationFunctions.forEach((f) =>
-              f({
+            selectionDecorationFunctions.forEach((funk) =>
+              funk({
                 decorations: selectionDecorations,
                 node,
                 view,
