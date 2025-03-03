@@ -13,17 +13,15 @@ export const recommended: Config = {
     "<THIRD_PARTY_MODULES>",
     "^@/app",
     "^@/app/(.*)$",
-
     "^@/pages/(.*)$",
     "^@/widgets/(.*)$",
     "^@/features/(.*)$",
     "^@/entities/(.*)$",
     "^@/shared/(.*)$",
-
     "^@/organisms/(.*)$",
     "^@/molecules/(.*)$",
     "^@/atoms/(.*)$",
-
+    "^@/(.*)$",
     "^[./]",
   ],
   importOrderSeparation: false,

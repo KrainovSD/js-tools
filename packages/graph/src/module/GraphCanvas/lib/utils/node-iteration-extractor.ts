@@ -60,13 +60,12 @@ export function nodeIterationExtractor<
       checkType<Record<string, unknown> | undefined>(
         customOptions,
         customOptions === undefined ||
-          (typeof customOptions === "object" && !Array.isArray(constantOptions)),
+          (typeof customOptions === "object" && !Array.isArray(customOptions)),
       )
     ) {
       return {
-        ...constantOptions,
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-        ...((customOptions as Record<string, unknown> | undefined) || {}),
+        ...(constantOptions as Record<string, unknown> | undefined),
+        ...(customOptions as Record<string, unknown> | undefined),
       } as Result;
     }
   }

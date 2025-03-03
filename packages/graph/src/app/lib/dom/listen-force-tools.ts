@@ -15,8 +15,8 @@ export function listenForceTools(graph: GraphCanvas<NodeData, LinkData>, updateS
   let highlight: boolean = true;
 
   const forceUseless =
-    document.querySelector(`#${CONTROLS.ForceUseless}`)?.querySelectorAll("input") || [];
-  const forceMain = document.querySelector(`#${CONTROLS.Force}`)?.querySelectorAll("input") || [];
+    document.querySelector(`#${CONTROLS.ForceUseless}`)?.querySelectorAll("input") ?? [];
+  const forceMain = document.querySelector(`#${CONTROLS.Force}`)?.querySelectorAll("input") ?? [];
 
   [...forceUseless, ...forceMain].forEach?.((input) => {
     input.addEventListener("input", () => {

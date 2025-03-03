@@ -70,12 +70,12 @@ export function linkIterationExtractor<
       checkType<Record<string, unknown> | undefined>(
         customOptions,
         customOptions === undefined ||
-          (typeof customOptions === "object" && !Array.isArray(constantOptions)),
+          (typeof customOptions === "object" && !Array.isArray(customOptions)),
       )
     ) {
       return {
-        ...constantOptions,
-        ...((customOptions as Record<string, unknown> | undefined) || {}),
+        ...(constantOptions as Record<string, unknown> | undefined),
+        ...(customOptions as Record<string, unknown> | undefined),
       } as Result;
     }
   }

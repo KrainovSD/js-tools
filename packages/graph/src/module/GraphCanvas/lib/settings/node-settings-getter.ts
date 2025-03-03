@@ -26,7 +26,7 @@ export function nodeOptionsGetter<NodeData extends Record<string, unknown>>(
 
   return {
     ...NODE_SETTINGS,
-    color: color(String(node.group || "_DEFAULT")),
+    color: color(String(node.group ?? "_DEFAULT")),
     textVisible: Boolean(transform && transform.k > COMMON_SETTINGS.nodeTextScaleMin),
     text: node.id != undefined ? String(node.id) : null,
     textShiftY,
@@ -84,6 +84,8 @@ export function nodeRadiusGetter({
   );
 }
 
-export function nodeIdGetter<NodeData extends Record<string, unknown>>(d: NodeInterface<NodeData>) {
-  return d.id;
+export function nodeIdGetter<NodeData extends Record<string, unknown>>(
+  node: NodeInterface<NodeData>,
+) {
+  return node.id;
 }

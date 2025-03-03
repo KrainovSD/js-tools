@@ -6,5 +6,5 @@ export function listenersGetter<
 >(
   settings: ListenersInterface<NodeData, LinkData> | undefined,
 ): ListenersInterface<NodeData, LinkData> {
-  return settings || {};
+  return settings ?? {};
 }

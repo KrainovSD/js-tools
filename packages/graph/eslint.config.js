@@ -8,4 +8,9 @@ export default [
   {
     ignores: ["tmp/", "node_modules/", "lib/", ".turbo/", "stats/", "coverage/", "dist/"],
   },
+  {
+    rules: {
+      "max-params": ["off", { max: 4 }],
+    },
+  },
 ];

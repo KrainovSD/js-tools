@@ -309,10 +309,12 @@ export class GraphCanvas<
   private initSimulationForces() {
     if (!this.simulation) return;
 
-    const linkForce = this.simulation.force("link") as ForceLink<
-      NodeInterface<NodeData>,
-      LinkInterface<NodeData, LinkData>
-    >;
+    const linkForce = this.simulation.force("link") as
+      | ForceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>
+      | undefined;
+
+    if (!linkForce) return;
+
     linkForce
       .distance(this.forceSettings.linkDistance)
       .strength(this.forceSettings.linkStrength)
@@ -341,8 +343,8 @@ export class GraphCanvas<
       .force(
         "center",
         forceCenter<NodeInterface<NodeData>>(
-          this.forceSettings.centerPosition.x || 0,
-          this.forceSettings.centerPosition.y || 0,
+          this.forceSettings.centerPosition.x ?? 0,
+          this.forceSettings.centerPosition.y ?? 0,
         ).strength(this.forceSettings.centerStrength),
       );
 
@@ -385,7 +387,7 @@ export class GraphCanvas<
               index,
               this.nodes,
               this.areaTransform,
-              this.nodeSettings.options || {},
+              this.nodeSettings.options ?? {},
               nodeOptionsGetter,
             );
             const radius =

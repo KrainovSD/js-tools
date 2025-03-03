@@ -10,7 +10,7 @@ export function ajvFilePlugin(ajv: Ajv) {
 
       return (field /* MultipartFile */) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        return !!field.file;
+        return !!field?.file;
       };
     },
     error: {

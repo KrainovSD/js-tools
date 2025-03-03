@@ -49,6 +49,9 @@ export const JS_LINTER_PLUGINS = {
         "require-atomic-updates": "off",
         "max-lines": "off",
         "arrow-body-style": "off",
+        "no-inline-comments": "off",
+        "no-negated-condition": "off",
+        "no-invalid-this": "off",
 
         "no-console": ["warn", { allow: ["warn", "error"] }],
         "no-await-in-loop": "error",

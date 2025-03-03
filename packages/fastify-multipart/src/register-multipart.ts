@@ -11,6 +11,6 @@ export async function registerMultipart(
   await fastify.register(fastifyMultipart, {
     attachFieldsToBody: true,
     ...options,
-    limits: { ...(options.limits || {}), fileSize, files },
+    limits: { ...(options.limits ?? {}), fileSize, files },
   });
 }

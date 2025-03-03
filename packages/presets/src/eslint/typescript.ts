@@ -30,6 +30,9 @@ export const TS_LINTER_PLUGIN = {
         "@typescript-eslint/unbound-method": "off",
         "@typescript-eslint/no-inferrable-types": "off",
         "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/consistent-type-definitions": "off",
+        "@typescript-eslint/no-for-in-array": "off",
+        "@typescript-eslint/no-unnecessary-type-assertion": "off",
 
         "@typescript-eslint/no-confusing-void-expression": [
           "error",
@@ -39,7 +42,6 @@ export const TS_LINTER_PLUGIN = {
           "error",
           { fixStyle: "inline-type-imports" },
         ],
-        "@typescript-eslint/consistent-type-definitions": ["error", "type"],
       },
     },
   ] as Linter.Config[],

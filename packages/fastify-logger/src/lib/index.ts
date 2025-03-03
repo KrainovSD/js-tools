@@ -48,10 +48,7 @@ export function getCorrectLog(
   const correctObj = Object.fromEntries(
     Object.entries(obj).filter(
       ([key, value]) =>
-        !(
-          (deniedProperties && deniedProperties.includes(key.toLowerCase())) ||
-          typeof value === "undefined"
-        ),
+        !(deniedProperties?.includes?.(key.toLowerCase()) ?? typeof value === "undefined"),
     ),
   );
 
