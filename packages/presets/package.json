@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/presets",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Krainov presets",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -62,7 +62,6 @@
     "@typescript-eslint/eslint-plugin": "8.25.0",
     "@typescript-eslint/parser": "8.25.0",
     "eslint-config-prettier": "10.0.2",
-    "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-import": "2.31.0",
     "eslint-plugin-jest": "28.11.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
@@ -81,7 +80,9 @@
     "rollup-plugin-bundle-stats": "4.18.3",
     "rollup-plugin-visualizer": "5.14.0",
     "rollup-plugin-peer-deps-external": "2.2.4",
-    "rollup-plugin-postcss": "4.0.2"
+    "rollup-plugin-postcss": "4.0.2",
+    "sass": "1.83.0",
+    "core-js": "3.41.0"
   },
   "devDependencies": {
     "react": "18.3.1",

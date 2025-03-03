@@ -1,15 +1,21 @@
-/* eslint-disable */
-import plugin from "@krainovsd/eslint-presets";
+import plugin from "@krainovsd/presets/eslint";
 
 export default [
-  ...plugin.configs.common,
-  ...plugin.configs.typescript,
-  ...plugin.configs.react,
+  ...plugin.presets.testing,
+  ...plugin.presets.react,
+  ...plugin.presets.javascript,
+  ...plugin.presets.typescript,
 
   {
-    ignores: ["rollup.config.ts"],
-    rules: {
-      "import/no-extraneous-dependencies": "off",
-    },
+    ignores: [
+      "tmp/",
+      "node_modules/",
+      "lib/",
+      ".turbo/",
+      "stats/",
+      "coverage/",
+      "dist/",
+      ".storybook/",
+    ],
   },
 ];

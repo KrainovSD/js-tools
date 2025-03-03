@@ -28,16 +28,18 @@
     "multer"
   ],
   "scripts": {
-    "publish-package": "npm run lint && npm run build && npm publish",
-    "build": "tsc -p tsconfig.build.json",
-    "lint": "eslint src/** -c ./eslint.config.js --color --max-warnings 0",
-    "lint-debug": "eslint --debug eslint.config.js",
-    "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
-    "test": "jest",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test-coverage": "jest --coverage",
-    "clear": "rm -rf ./lib",
-    "prepare": "husky"
+    "publish-package x": "npm run lint && npm run build && npm publish",
+    "build x": "tsc -p tsconfig.build.json",
+    "lint x": "eslint . -c ./eslint.config.js --color --max-warnings 0",
+    "lint-check x": "eslint --debug eslint.config.js",
+    "format x": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
+    "format-check x": "prettier --check ./src",
+    "lint-debug x": "npx eslint --print-config eslint.config.js > eslint-config-rules.json",
+    "type-debug x": "tsc --showConfig > typescript-config.json",
+    "test x": "jest",
+    "test:e2e x": "jest --config ./test/jest-e2e.json",
+    "test-coverage x": "jest --coverage",
+    "clear x": "rm -rf ./lib"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.577.0",

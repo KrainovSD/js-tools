@@ -1,32 +1,15 @@
 {
+  "extends": "@krainovsd/presets/typescript/common",
   "compilerOptions": {
-    "target": "ES2023",
-    "useDefineForClassFields": true,
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["node"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "allowJs": true,
-    "jsx": "react-jsx",
-    "verbatimModuleSyntax": true,
-    /* Linting */
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noFallthroughCasesInSwitch": true,
-    "noEmit": true
+    "types": ["node"]
   },
   "include": [
     "src/**/*",
     "eslint.config.js",
     "rollup.config.ts",
     ".storybook/**/*",
-    "src/types.d.ts"
+    "src/types.d.ts",
+    ".prettierrc.mjs"
   ],
   "exclude": ["node_modules", "dist"]
 }

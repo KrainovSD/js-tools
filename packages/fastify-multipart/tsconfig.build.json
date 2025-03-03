@@ -1,9 +1,6 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "@krainovsd/presets/typescript/common-build",
   "compilerOptions": {
-    "noEmit": false,
-    "declaration": true,
-    "emitDeclarationOnly": true,
     "outDir": "tmp"
   },
   "include": ["src/**/*"],

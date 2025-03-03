@@ -1,26 +1,8 @@
 {
+  "extends": "@krainovsd/presets/typescript/common",
   "compilerOptions": {
-    "target": "ES2023",
-    "useDefineForClassFields": true,
-    "lib": ["ES2023"],
-    "types": ["node"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "allowJs": true,
-    "verbatimModuleSyntax": true,
-    /* Linting */
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noFallthroughCasesInSwitch": true,
-    "noEmit": true,
-    "baseUrl": "./"
+    "types": ["node"]
   },
-  "include": ["src/**/*", "eslint.config.js", "rollup.config.ts"],
+  "include": ["src/**/*", "eslint.config.js", "rollup.config.ts", ".prettierrc.mjs"],
   "exclude": ["node_modules"]
 }
