@@ -7,7 +7,18 @@ export default defineConfig(
   createRollupConfig([
     {
       input: "./src/index.ts",
-      outputs: [{ format: "es" }, { format: "cjs" }],
+      outputs: [
+        { format: "es" },
+        {
+          format: "cjs",
+          override: {
+            dir: "./lib/cjs",
+            format: "cjs",
+            generatedCode: "es2015",
+            sourcemap: true,
+          },
+        },
+      ],
       plugins: {
         externals: { enabled: true, override: { includeDependencies: !DEV } },
         typescript: { enabled: true },
