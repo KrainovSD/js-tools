@@ -4,23 +4,27 @@ The library of helpers for JS in Browser and NodeJS environments.
 
 ## Installing
 
-### Package manager
-
 Using pnpm:
 ```
 pnpm install @krainovsd/js-helpers
 ```
 
-Using yarn:
-```
-yarn add @krainovsd/js-helpers
-```
+## Monorepo
 
-Using npm:
+Using in frontend app with monorepo make sure that node-fetch will be excluded from bundle.
+```js
+export default defineConfig({
+  base: "/",
+  plugins: [
+    react(),
+  ],
+  build: {
+    rollupOptions: {
+      external: ["node-fetch"],
+    },
+  },
+});
 ```
-npm install @krainovsd/js-helpers
-```
-
 
 ## Usage
 

@@ -1,0 +1,18 @@
+{
+  "extends": "@krainovsd/presets/typescript/common",
+  "compilerOptions": {
+    "types": ["node", "jest"],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "./"
+  },
+  "include": [
+    "src/**/*",
+    "eslint.config.js",
+    "rollup.config.ts",
+    "jest.config.js",
+    ".prettierrc.mjs"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

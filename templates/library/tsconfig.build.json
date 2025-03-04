@@ -1,0 +1,14 @@
+{
+  "extends": "@krainovsd/presets/typescript/common-build",
+  "compilerOptions": {
+    "outDir": "tmp",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "./",
+    "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
+  },
+  "files": ["src/index.ts"],
+  "include": [],
+  "exclude": ["**/*.spec.ts"]
+}
