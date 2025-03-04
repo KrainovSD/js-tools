@@ -9,18 +9,20 @@ program
   .description("Exec package command into monorepo by command and package name")
   .argument("<command:package-name>", `Command and package name separated by ":" `)
   .addOption(
-    new Option("-p, --package-manager <pm>", "Package manager for execute command")
+    new Option("--package-manager <pm>", "Package manager for execute command")
       .choices(["pnpm"])
       .default("pnpm"),
   )
+  .option("-p --prefix <prefix>", "Prefix of packages", "")
   .action(
     async (
       args: string,
       options: {
         packageManager: "pnpm" | "yarn" | "npm";
+        prefix: string;
       },
     ) => {
-      await execPackageCommand(args, options.packageManager);
+      await execPackageCommand(args, options.prefix, options.packageManager);
     },
   );
 
