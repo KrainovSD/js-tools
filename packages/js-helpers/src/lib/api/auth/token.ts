@@ -4,7 +4,8 @@ import type {
   AuthTokenNoRefreshRequestOptions,
   AuthTokenRequestOptions,
 } from "../../../types";
-import { isNull, isNumber, isObject, isString, isUndefined } from "../../typings";
+import { getQueryValues } from "../../browser";
+import { isArray, isNull, isNumber, isObject, isString, isUndefined } from "../../typings";
 import { getByPath, waitUntil } from "../../utils";
 
 export async function updateAuthToken(options: AuthMiddleWareOptions) {
@@ -116,19 +117,24 @@ export async function getAuthTokenNoRefresh(options: AuthTokenNoRefreshRequestOp
 export function updateAuthTokenNoRefresh(options: AuthNoRefreshMiddleWareOptions) {
   let expires: string | null | undefined = localStorage.getItem(options.storageTokenExpiresName);
   if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
-  let hasExpiresQuery = false;
 
-  if (!expires) {
-    let lastQuery: string | undefined;
-    const queries = window.location.search.substring(1).split("&");
-    for (const query of queries) {
-      const [key, value] = query.split("=");
-      if (key === options.queryTokenExpiresName && value) {
-        lastQuery = value;
-        hasExpiresQuery = true;
-      }
-    }
-    expires = lastQuery;
+  const queries = getQueryValues([options.queryTokenExpiresName, options.queryIsRefreshTokenName]);
+  const refreshQuery = queries?.[options.queryIsRefreshTokenName];
+  const expiresQuery = queries?.[options.queryTokenExpiresName];
+
+  const isRefresh = isString(refreshQuery)
+    ? refreshQuery === "true"
+    : isArray(refreshQuery)
+      ? refreshQuery[refreshQuery.length - 1] === "true"
+      : false;
+  const expiresFromQuery = isString(expiresQuery)
+    ? expiresQuery
+    : isArray(expiresQuery)
+      ? expiresQuery[expiresQuery.length - 1]
+      : false;
+
+  if (!expires && expiresFromQuery) {
+    expires = expiresFromQuery;
     if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
   }
 
@@ -140,18 +146,14 @@ export function updateAuthTokenNoRefresh(options: AuthNoRefreshMiddleWareOptions
 
   localStorage.setItem(options.storageTokenExpiresName, expires);
 
-  const queries = window.location.search.substring(1).split("&");
-  for (const query of queries) {
-    const [key, value] = query.split("=");
-    if (key === options.queryIsRefreshTokenName && value === "true") {
-      const channel = new BroadcastChannel(options.queryIsRefreshTokenName);
-      channel.postMessage(true);
-      channel.close();
-      window.close();
-    }
+  if (isRefresh) {
+    const channel = new BroadcastChannel(options.queryIsRefreshTokenName);
+    channel.postMessage(true);
+    channel.close();
+    window.close();
   }
 
-  if (hasExpiresQuery) {
+  if (expiresFromQuery) {
     const url = new URL(window.location.href);
     url.searchParams.delete(options.queryTokenExpiresName);
     window.location.replace(url.toString());

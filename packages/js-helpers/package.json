@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/js-helpers",
-  "version": "0.10.7",
+  "version": "0.11.0",
   "description": "Krainov helpers",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -48,7 +48,7 @@
     "lodash": "4.17.21"
   },
   "devDependencies": {
-    "@krainovsd/presets": "0.1.5",
+    "@krainovsd/presets": "0.1.6",
     "eslint": "9.21.0",
     "prettier": "3.5.2",
     "rollup": "4.34.9",
