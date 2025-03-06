@@ -1,15 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-require-imports */
-const plugin = require("@krainovsd/eslint-presets");
+const plugin = require("@krainovsd/presets/eslint");
 
 module.exports = [
-  ...plugin.configs.common,
-  ...plugin.configs.typescript,
+  ...plugin.presets.testing,
+  ...plugin.presets.javascript,
+  ...plugin.presets.typescript,
 
   {
-    ignores: ["rollup.config.ts"],
-    rules: {
-      "prettier/prettier": ["error", { endOfLine: "lf" }, { usePrettierrc: true }],
-    },
+    ignores: ["tmp/", "node_modules/", "lib/", ".turbo/", "stats/", "coverage/", "dist/"],
+  },
+  {
+    rules: {},
   },
 ];

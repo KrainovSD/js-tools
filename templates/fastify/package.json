@@ -7,12 +7,19 @@
     "clear": "rm -rf ./dist",
     "build": "npm run clear && npm run build:types &&  npm run build:js",
     "build:js": "swc src --out-dir dist --config-file .swcrc.build",
-    "build:types": "tsc -p tsconfig.json",
-    "test": "jest"
+    "build:types": "tsc -p tsconfig.build.json",
+    "lint": "eslint . -c ./eslint.config.js --color --max-warnings 0",
+    "lint-check": "eslint --debug eslint.config.js",
+    "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
+    "format-check": "prettier --check ./src",
+    "lint-debug": "npx eslint --print-config eslint.config.js > eslint-config-rules.json",
+    "type-debug": "tsc --showConfig > typescript-config.json",
+    "test": "jest",
+    "test-coverage": "jest --coverage"
   },
   "dependencies": {
     "@krainovsd/fastify-logger": "0.2.0",
-    "@krainovsd/js-helpers": "0.8.0",
+    "@krainovsd/js-helpers": "0.10.6",
     "@krainovsd/fastify-health-controller": "0.1.4",
     "@krainovsd/fastify-trace": "0.0.2",
     "dotenv": "16.4.7",
@@ -27,7 +34,7 @@
     "@fastify/cookie": "11.0.2"
   },
   "devDependencies": {
-    "@krainovsd/presets": "0.1.5",
+    "@krainovsd/presets": "0.1.6",
     "eslint": "9.21.0",
     "prettier": "3.5.2",
     "rollup": "4.34.9",

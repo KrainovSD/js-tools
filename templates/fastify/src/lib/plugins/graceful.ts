@@ -4,6 +4,7 @@ import type { FastifyInstance } from "fastify";
 import { LOG_FORMAT } from "@/constants";
 
 export function initGraceful(fastify: FastifyInstance) {
+  // eslint-disable-next-line new-cap
   const gracefulServer = GracefulServer(fastify.server);
 
   gracefulServer.on(GracefulServer.READY, () => {
