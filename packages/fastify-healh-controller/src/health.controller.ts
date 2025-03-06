@@ -1,8 +1,7 @@
 import { Logger } from "@krainovsd/fastify-logger";
 import type { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { DEFAULT_SETTINGS, SCHEMA } from "./health.constants";
-import { HealthService } from "./health.service";
-import type { RouteOptions } from "./health.types";
+import { DEFAULT_ROUTES } from "./health.constants";
+import type { RouteOptions, Schema } from "./health.types";
 
 export const healthController = (
   fastify: FastifyInstance,
@@ -12,16 +11,17 @@ export const healthController = (
   const logger = new Logger({ logger: fastify.log });
 
   try {
-    const service = new HealthService();
-
-    (options.routes ?? DEFAULT_SETTINGS).forEach((route) => {
+    (options.routes ?? DEFAULT_ROUTES).forEach((route) => {
       fastify.get(
         route.path,
         {
-          schema: SCHEMA,
+          schema: {
+            description: route.description,
+            tags: route.tags,
+          } as Schema,
         },
-        async (_, reply) => {
-          return await service.health(route.response, reply);
+        async (res, reply) => {
+          await route.response(res, reply);
         },
       );
     });

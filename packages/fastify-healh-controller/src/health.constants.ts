@@ -1,11 +1,20 @@
-import type { RouteOptions, Schema } from "./health.types";
+import type { RouteOptions } from "./health.types";
 
-export const HEALTH_TAGS = ["Health"];
-export const SCHEMA: Schema = {
-  description: "Check health",
-  tags: HEALTH_TAGS,
-} as const;
-export const DEFAULT_SETTINGS: RouteOptions[] = [
-  { path: "/api/healthz", response: { message: "ok" } },
-  { path: "/api/ping", response: { message: "pong" } },
+export const DEFAULT_ROUTES: RouteOptions[] = [
+  {
+    path: "/api/healthz",
+    tags: ["Health"],
+    description: "Check health",
+    response: async (_, reply) => {
+      return await reply.code(200).send({ message: "ok" });
+    },
+  },
+  {
+    path: "/api/ping",
+    tags: ["Health"],
+    description: "Check health",
+    response: async (_, reply) => {
+      return await reply.code(200).send({ message: "pong" });
+    },
+  },
 ];

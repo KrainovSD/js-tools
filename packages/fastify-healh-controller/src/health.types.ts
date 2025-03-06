@@ -1,4 +1,4 @@
-import type { FastifySchema } from "fastify";
+import type { FastifyReply, FastifyRequest, FastifySchema } from "fastify";
 import type { JSONSchema7 } from "json-schema";
 
 export type JsonSchema = JSONSchema7 & {
@@ -21,5 +21,7 @@ export type Schema = Omit<FastifySchema, "body" | "params" | "querystring" | "re
 
 export type RouteOptions = {
   path: string;
-  response: unknown;
+  tags: string[];
+  description: string;
+  response: (res: FastifyRequest, rep: FastifyReply) => Promise<void>;
 };
