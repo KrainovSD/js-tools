@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/fastify-health-controller",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Krainov helpers",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -48,7 +48,7 @@
     "test-coverage": "jest --coverage"
   },
   "devDependencies": {
-    "@krainovsd/presets": "0.1.5",
+    "@krainovsd/presets": "0.1.6",
     "eslint": "9.21.0",
     "prettier": "3.5.2",
     "rollup": "4.34.9",
@@ -60,7 +60,7 @@
     "@types/json-schema": "7.0.15"
   },
   "dependencies": {
-    "@krainovsd/fastify-logger": "0.1.2"
+    "@krainovsd/fastify-logger": "0.2.0"
   },
   "peerDependencies": {
     "fastify": "^5"
