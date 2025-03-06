@@ -1257,8 +1257,8 @@ importers:
         specifier: 5.2.9
         version: 5.2.9
       '@krainovsd/fastify-health-controller':
-        specifier: 0.1.4
-        version: 0.1.4(fastify@5.2.1)(node-fetch@3.3.2)
+        specifier: 0.3.0
+        version: 0.3.0(fastify@5.2.1)(node-fetch@3.3.2)
       '@krainovsd/fastify-logger':
         specifier: 0.2.0
         version: 0.2.0(fastify@5.2.1)(node-fetch@3.3.2)
@@ -1266,8 +1266,8 @@ importers:
         specifier: 0.0.2
         version: 0.0.2
       '@krainovsd/js-helpers':
-        specifier: 0.10.6
-        version: 0.10.6(node-fetch@3.3.2)
+        specifier: 0.11.0
+        version: 0.11.0(node-fetch@3.3.2)
       awilix:
         specifier: 12.0.4
         version: 12.0.4
@@ -1280,6 +1280,9 @@ importers:
       lodash:
         specifier: 4.17.21
         version: 4.17.21
+      prom-client:
+        specifier: 15.1.3
+        version: 15.1.3
     devDependencies:
       '@krainovsd/presets':
         specifier: 0.1.6
@@ -2595,13 +2598,8 @@ packages:
     resolution: {integrity: sha512-/cSWK+G1VxLLDdg4wmNddA0/92dvJ9XqGC8MY6C3GqxDIlappnCHVcwEdytUHjhCpsFeAmN/K98s0SsN0Wiilw==}
     hasBin: true
 
-  '@krainovsd/fastify-health-controller@0.1.4':
-    resolution: {integrity: sha512-XUzeRH0lXIDauQJ5PruakAL3BjefKywgM+OphHU+PwCXBLKlk79HkiwT+CT7je/aSVr7fg3Qc1HUE0+Q/0VyDw==}
-    peerDependencies:
-      fastify: ^5
-
-  '@krainovsd/fastify-logger@0.1.2':
-    resolution: {integrity: sha512-ilGZqLERSF2l3pwZ2jg8/AfAJN5PJJ+nmWZzP3bfj7Dgzj7GqNfKlszjjbEhbQQnTDDAuTMuk6M45NN8cjDeaQ==}
+  '@krainovsd/fastify-health-controller@0.3.0':
+    resolution: {integrity: sha512-RSZS9eMZZwZ6qrzzr5jaGXRG5yVV1BNByTENy9fmZBByoZ1fM/nxqNAlS8xdQJ7o31CZ/E5+kHJA1pu3CbkbHg==}
     peerDependencies:
       fastify: ^5
 
@@ -2615,6 +2613,14 @@ packages:
 
   '@krainovsd/js-helpers@0.10.6':
     resolution: {integrity: sha512-olX8rRvxzdbNh9HeLDFE6hSI7rA8oI+2imMv+sdL4t5WfkJ0Hw03ZWizqHt4YWiVa5BIk0AzlqtEUw2Rm6l4hg==}
+    peerDependencies:
+      node-fetch: 3.3.2
+    peerDependenciesMeta:
+      node-fetch:
+        optional: true
+
+  '@krainovsd/js-helpers@0.11.0':
+    resolution: {integrity: sha512-3MAPFCahfGEKaGeSAbOxyVkXyPMZJliiaVxm5b4gw+IXTVt1xm9HYtYw4iLFrLFqwSkapd7AymsSIKeLnboZAA==}
     peerDependencies:
       node-fetch: 3.3.2
     peerDependenciesMeta:
@@ -4822,6 +4828,9 @@ packages:
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
+
+  bintrees@1.0.2:
+    resolution: {integrity: sha512-VOMgTMwjAaUG580SXn3LacVgjurrbMme7ZZNYGSSV7mmtY6QQRh0Eg3pwIcntQ77DErK1L0NxkbetjcoXzVwKw==}
 
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -7885,6 +7894,10 @@ packages:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
 
+  prom-client@15.1.3:
+    resolution: {integrity: sha512-6ZiOBfCywsD4k1BN9IX0uZhF+tJkV8q8llP64G5Hajs4JOeVLPCwpPVcpXy3BwYiUGgyJzsJJQeOIv7+hDSq8g==}
+    engines: {node: ^16 || ^18 || >=20}
+
   promise-inflight@1.0.1:
     resolution: {integrity: sha512-6zWPyEOFaQBJYcGMHBKTKJ3u6TBsnMFOIZSa6ce1e/ZrrsOlnHRHbabMjLiBYKp+n44X9eUI6VUPaukCXHuG4g==}
     peerDependencies:
@@ -8979,6 +8992,9 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
+
+  tdigest@0.1.2:
+    resolution: {integrity: sha512-+G0LLgjjo9BZX2MfdvPfH+MKLCrxlXSYec5DaPYP1fe6Iyhf0/fSmJ0bFiZ1F8BT6cGXl2LpltQptzjXKWEkKA==}
 
   terser-webpack-plugin@4.2.3:
     resolution: {integrity: sha512-jTgXh40RnvOrLQNgIkwEKnQ8rmHjHK4u+6UBEi+W+FPmvb+uo+chJXntKe7/3lW5mNysgSWD60KyesnhW8D6MQ==}
@@ -11712,20 +11728,10 @@ snapshots:
       prompts: 2.4.2
       yaml: 2.7.0
 
-  '@krainovsd/fastify-health-controller@0.1.4(fastify@5.2.1)(node-fetch@3.3.2)':
+  '@krainovsd/fastify-health-controller@0.3.0(fastify@5.2.1)(node-fetch@3.3.2)':
     dependencies:
-      '@krainovsd/fastify-logger': 0.1.2(fastify@5.2.1)(node-fetch@3.3.2)
+      '@krainovsd/fastify-logger': 0.2.0(fastify@5.2.1)(node-fetch@3.3.2)
       fastify: 5.2.1
-    transitivePeerDependencies:
-      - node-fetch
-
-  '@krainovsd/fastify-logger@0.1.2(fastify@5.2.1)(node-fetch@3.3.2)':
-    dependencies:
-      '@krainovsd/js-helpers': 0.3.4(node-fetch@3.3.2)
-      '@opentelemetry/api': 1.9.0
-      fastify: 5.2.1
-      pino-abstract-transport: 2.0.0
-      uuid: 11.0.5
     transitivePeerDependencies:
       - node-fetch
 
@@ -11757,6 +11763,13 @@ snapshots:
       - supports-color
 
   '@krainovsd/js-helpers@0.10.6(node-fetch@3.3.2)':
+    dependencies:
+      dayjs: 1.11.13
+      lodash: 4.17.21
+    optionalDependencies:
+      node-fetch: 3.3.2
+
+  '@krainovsd/js-helpers@0.11.0(node-fetch@3.3.2)':
     dependencies:
       dayjs: 1.11.13
       lodash: 4.17.21
@@ -14685,6 +14698,8 @@ snapshots:
       find-versions: 5.1.0
 
   binary-extensions@2.3.0: {}
+
+  bintrees@1.0.2: {}
 
   bl@4.1.0:
     dependencies:
@@ -18761,6 +18776,11 @@ snapshots:
 
   process@0.11.10: {}
 
+  prom-client@15.1.3:
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      tdigest: 0.1.2
+
   promise-inflight@1.0.1: {}
 
   promise.series@0.2.0: {}
@@ -20062,6 +20082,10 @@ snapshots:
       minizlib: 2.1.2
       mkdirp: 1.0.4
       yallist: 4.0.0
+
+  tdigest@0.1.2:
+    dependencies:
+      bintrees: 1.0.2
 
   terser-webpack-plugin@4.2.3(webpack@5.0.0):
     dependencies:

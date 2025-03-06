@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@krainovsd/fastify-logger": "0.2.0",
-    "@krainovsd/js-helpers": "0.10.6",
-    "@krainovsd/fastify-health-controller": "0.1.4",
+    "@krainovsd/js-helpers": "0.11.0",
+    "@krainovsd/fastify-health-controller": "0.3.0",
     "@krainovsd/fastify-trace": "0.0.2",
     "dotenv": "16.4.7",
     "fastify": "5.2.1",
@@ -31,7 +31,8 @@
     "lodash": "4.17.21",
     "@fastify/swagger": "9.4.2",
     "@fastify/swagger-ui": "5.2.1",
-    "@fastify/cookie": "11.0.2"
+    "@fastify/cookie": "11.0.2",
+    "prom-client": "15.1.3"
   },
   "devDependencies": {
     "@krainovsd/presets": "0.1.6",
