@@ -52,6 +52,7 @@ export function limitStreamOfRequests<T>({
             if (collectResult) results.push(result);
             if (resultCb) resultCb(result);
             currentResponses++;
+            if (currentResponses === countRequests) return void resolve(results);
 
             request(promiseGetter(++currentRequests), currentRequests);
           })

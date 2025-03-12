@@ -1,5 +1,5 @@
-import type { BodyInit as NodeBodyInit, Response as NodeResponse } from "node-fetch";
-import { IS_BROWSER, IS_JEST, IS_NODE } from "../../constants";
+import type { Response as NodeResponse } from "node-fetch";
+import { IS_BROWSER } from "../../constants";
 import type {
   ActiveMiddleware,
   ActivePostMiddleware,
@@ -20,6 +20,7 @@ type ResponseErrorOptions = {
   status: number;
   code?: number;
   description?: unknown;
+  headers?: Record<string, string>;
 };
 
 export class ResponseError extends Error {
@@ -29,15 +30,19 @@ export class ResponseError extends Error {
 
   description?: unknown;
 
-  constructor({ message, status, description, code }: ResponseErrorOptions) {
+  headers?: Record<string, string>;
+
+  constructor({ message, status, description, code, headers }: ResponseErrorOptions) {
     super(message);
     this.status = status;
     this.description = description;
     this.code = code;
+    this.headers = headers;
   }
 }
 
 type CreateRequestClientInstance = {
+  client: typeof fetch;
   activeMiddlewares?: ActiveMiddleware;
   middlewareOptions?: MiddlewaresOptions;
   customMiddlewares?: Middleware[];
@@ -53,7 +58,7 @@ export type RequestInstance = {
   setOptions: (options: CreateRequestClientInstance) => void;
 };
 
-export function createRequestClientInstance(options: CreateRequestClientInstance = {}) {
+export function createRequestClientInstance(options: CreateRequestClientInstance) {
   let executeMiddlewares: <T, Incoming, Body, Outcoming>(
     request: RequestInterface<T, Incoming, Body, Outcoming>,
   ) => Promise<unknown>;
@@ -67,7 +72,7 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
     activePostMiddlewares = [],
     postMiddlewaresOptions = {},
     customPostMiddlewares = [],
-  }: CreateRequestClientInstance = {}) {
+  }: Omit<CreateRequestClientInstance, "client"> = {}) {
     executeMiddlewares = generateMiddlewares(
       activeMiddlewares,
       middlewareOptions,
@@ -115,35 +120,17 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
       if (isObject(body) || isArray(body)) preparedBody = JSON.stringify(preparedBody) as Outcoming;
     }
 
-    let response: Response | NodeResponse | undefined;
-
-    if (IS_BROWSER || IS_JEST) {
-      response = await fetch(url, {
-        method,
-        body: preparedBody as BodyInit,
-        headers: {
-          ...(body instanceof FormData || !body
-            ? {}
-            : { "Content-Type": "application/json; charset=UTF-8" }),
-          ...headers,
-        },
-        signal: request.signal,
-      });
-    }
-    if (IS_NODE && !IS_JEST) {
-      const nodeFetch = (await import("node-fetch")).default;
-      response = await nodeFetch(url, {
-        method,
-        body: preparedBody as NodeBodyInit,
-        headers: {
-          ...(body instanceof FormData || !body
-            ? {}
-            : { "Content-Type": "application/json; charset=UTF-8" }),
-          ...headers,
-        },
-        signal: request.signal,
-      });
-    }
+    const response: Response | NodeResponse | undefined = await options.client(url, {
+      method,
+      body: preparedBody as BodyInit,
+      headers: {
+        ...(body instanceof FormData || !body
+          ? {}
+          : { "Content-Type": "application/json; charset=UTF-8" }),
+        ...headers,
+      },
+      signal: request.signal,
+    });
 
     await executePostMiddlewares(response);
 
@@ -171,6 +158,7 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
         status: response.status,
         message: `HTTP error! Status: ${response.status}`,
         description: result,
+        headers: Object.fromEntries(response.headers.entries()),
       });
     }
 
