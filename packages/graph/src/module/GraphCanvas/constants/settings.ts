@@ -81,6 +81,7 @@ export const NODE_SETTINGS: Omit<
 export const LINK_SETTINGS: Omit<Required<LinkOptionsInterface>, "color" | "width"> = {
   alpha: 1,
   highlightFading: true,
+  pretty: true,
 };
 
 export const COMMON_SETTINGS = {

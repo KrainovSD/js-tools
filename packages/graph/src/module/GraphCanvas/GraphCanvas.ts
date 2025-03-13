@@ -16,6 +16,7 @@ import { colorToRgb, extractRgb, fadeRgb, rgbAnimationByProgress } from "@/lib";
 import type { LinkInterface } from "@/types/links";
 import type { CachedNodeTextInterface, NodeInterface } from "@/types/nodes";
 import {
+  calculateLinkPositionByRadius,
   drawText,
   forceSettingsGetter,
   graphSettingsGetter,
@@ -574,8 +575,21 @@ export class GraphCanvas<
       this.context.globalAlpha = alpha;
       this.context.strokeStyle = linkOptions.color;
       this.context.lineWidth = linkOptions.width;
-      this.context.moveTo(link.source.x, link.source.y);
-      this.context.lineTo(link.target.x, link.target.y);
+
+      if (linkOptions.pretty) {
+        const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(link) ?? {
+          x1: 0,
+          x2: 0,
+          y1: 0,
+          y2: 0,
+        };
+
+        this.context.moveTo(x1, y1);
+        this.context.lineTo(x2, y2);
+      } else {
+        this.context.moveTo(link.source.x, link.source.y);
+        this.context.lineTo(link.target.x, link.target.y);
+      }
 
       if (this.highlightedNeighbors && this.highlightedNode) this.context.stroke();
     }

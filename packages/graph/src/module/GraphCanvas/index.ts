@@ -6,5 +6,6 @@ export {
   drawText,
   linkIterationExtractor,
   linkOptionsGetter,
+  calculateLinkPositionByRadius,
 } from "./lib";
 export * from "./types";

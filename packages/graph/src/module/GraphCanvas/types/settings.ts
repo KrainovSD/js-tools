@@ -123,6 +123,7 @@ export type LinkOptionsInterface = {
   color?: string;
   width?: number;
   highlightFading?: boolean;
+  pretty?: boolean;
 };
 
 export type LinkIterationPropsInterface<

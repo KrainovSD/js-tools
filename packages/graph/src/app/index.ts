@@ -4,6 +4,7 @@ import {
   GraphCanvas,
   type GraphCanvasInterface,
   type GraphState,
+  calculateLinkPositionByRadius,
   drawText,
   linkIterationExtractor,
   linkOptionsGetter,
@@ -53,8 +54,8 @@ const graph = new GraphCanvas({
   nodeSettings: {
     options: () => {
       return {
-        // highlightFading: true,
-        // highlightColor: false,
+        highlightFading: true,
+        highlightColor: false,
       };
     },
   },
@@ -167,8 +168,20 @@ function onDraw(
     state.context.globalAlpha = alpha;
     state.context.strokeStyle = linkOptions.color;
     state.context.lineWidth = linkOptions.width;
-    state.context.moveTo(link.source.x, link.source.y);
-    state.context.lineTo(link.target.x, link.target.y);
+    if (linkOptions.pretty) {
+      const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(link) ?? {
+        x1: 0,
+        x2: 0,
+        y1: 0,
+        y2: 0,
+      };
+
+      state.context.moveTo(x1, y1);
+      state.context.lineTo(x2, y2);
+    } else {
+      state.context.moveTo(link.source.x, link.source.y);
+      state.context.lineTo(link.target.x, link.target.y);
+    }
 
     if (state.highlightedNeighbors && state.highlightedNode) state.context.stroke();
   }
