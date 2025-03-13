@@ -20,36 +20,28 @@ type LockFile = {
       >;
     }
   >;
+  packages: Record<string, unknown>;
 };
 
 export function checkPackageDuplicate(path: string, output: string) {
   const lockFile = fs.readFileSync(path, "utf8");
   const lockFileJSON: LockFile = yaml.parse(lockFile);
-  const packages: Record<string, string> = {};
+  const packages: Record<string, string[]> = {};
   const duplicate: Record<string, string[]> = {};
-  const devDuplicate: Record<string, string[]> = {};
 
-  for (const [, value] of Object.entries(lockFileJSON.importers || {})) {
-    for (const [dep, { version }] of Object.entries(value.dependencies || {})) {
-      if (packages[dep] && packages[dep] !== version) {
-        if (!duplicate[dep]) duplicate[dep] = [packages[dep]];
-        duplicate[dep].push(version);
-      } else {
-        packages[dep] = version;
-      }
-    }
+  for (const packageInfo of Object.keys(lockFileJSON.packages)) {
+    const packageInfoArray = packageInfo.split("@");
+    const version = packageInfoArray.pop();
+    const packageName = packageInfoArray.join("@");
+    if (!version) continue;
 
-    for (const [dep, { version }] of Object.entries(value.devDependencies || {})) {
-      if (packages[dep] && packages[dep] !== version) {
-        if (!devDuplicate[dep]) devDuplicate[dep] = [packages[dep]];
-        devDuplicate[dep].push(version);
-      } else {
-        packages[dep] = version;
-      }
-    }
+    if (!packages[packageName]) packages[packageName] = [];
+    const prev = packages[packageName];
+    if (!prev.includes(version)) prev.push(version);
+    if (prev.length > 1) duplicate[packageName] = prev;
   }
 
-  fs.writeFileSync(output, JSON.stringify({ duplicate, devDuplicate }), {
+  fs.writeFileSync(output, JSON.stringify(duplicate), {
     encoding: "utf8",
   });
 }
