@@ -12,6 +12,7 @@ import {
 } from "d3-force";
 import { create as d3Create, select as d3Select } from "d3-selection";
 import { ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
+import { colorToRgb, extractRgb, fadeRgb, rgbAnimationByProgress } from "@/lib";
 import type { LinkInterface } from "@/types/links";
 import type { CachedNodeTextInterface, NodeInterface } from "@/types/nodes";
 import {
@@ -597,17 +598,38 @@ export class GraphCanvas<
         );
 
         let alpha = nodeOptions.alpha;
+        let textAlpha = nodeOptions.textAlpha;
         let radiusInitial = nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial;
         let textSize = nodeOptions.textSize;
         let textShiftX = nodeOptions.textShiftX;
         let textShiftY = nodeOptions.textShiftY;
+        let color = nodeOptions.color;
         if (this.highlightedNeighbors && this.highlightedNode) {
           /** Not highlighted */
           if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
-            if (nodeOptions.highlightFading)
+            if (nodeOptions.highlightFading) {
               alpha =
                 this.graphSettings.highlightFadingMin +
                 (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlightProgress);
+            }
+            if (nodeOptions.highlightTextFading) {
+              textAlpha =
+                this.graphSettings.highlightTextFadingMin +
+                (textAlpha - this.graphSettings.highlightTextFadingMin) *
+                  (1 - this.highlightProgress);
+            }
+            if (nodeOptions.highlightColor) {
+              const colorRgb = extractRgb(colorToRgb(color));
+              if (colorRgb) {
+                const colorRgbFade = fadeRgb(colorRgb, 0.3);
+                const colorFadeAnimation = rgbAnimationByProgress(
+                  colorRgb,
+                  colorRgbFade,
+                  this.highlightProgress,
+                );
+                color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
+              }
+            }
           } else {
             /** Highlighted */
             if (nodeOptions.highlightSizing) {
@@ -644,7 +666,7 @@ export class GraphCanvas<
           textRenders.push(() => {
             if (!this.context || !node.x || !node.y || !nodeOptions.text) return;
             this.context.beginPath();
-            this.context.globalAlpha = alpha;
+            this.context.globalAlpha = textAlpha;
 
             drawText({
               id: node.id,
@@ -668,7 +690,7 @@ export class GraphCanvas<
         /** circle */
         this.context.lineWidth = nodeOptions.borderWidth;
         this.context.strokeStyle = nodeOptions.borderColor;
-        this.context.fillStyle = nodeOptions.color;
+        this.context.fillStyle = color;
         this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
 
         this.context.fill();

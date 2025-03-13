@@ -72,7 +72,7 @@ const graph = new GraphCanvas({
 
       return {
         text: String(node.data?.name),
-
+        // highlightFading: true,
         // borderColor: "transparent",
         //  highlightFading: false,
         // color,
@@ -80,6 +80,7 @@ const graph = new GraphCanvas({
     },
   },
   graphSettings: {
+    // highlightFadingMin: 0.2,
     zoomExtent: [1, 5],
     zoomInitial: { k: 1 },
     // stickAfterDrag: true,

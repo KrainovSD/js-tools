@@ -58,6 +58,7 @@
     "@types/lodash": "4.17.14"
   },
   "dependencies": {
+    "@krainovsd/js-helpers": "0.12.0",
     "@types/d3-zoom": "3.0.8",
     "@types/d3-force": "3.0.10",
     "@types/d3-drag": "3.0.7",

@@ -278,6 +278,9 @@ importers:
 
   packages/graph:
     dependencies:
+      '@krainovsd/js-helpers':
+        specifier: 0.12.0
+        version: 0.12.0(node-fetch@3.3.2)
       '@types/d3-drag':
         specifier: 3.0.7
         version: 3.0.7
@@ -2624,6 +2627,14 @@ packages:
 
   '@krainovsd/js-helpers@0.11.0':
     resolution: {integrity: sha512-3MAPFCahfGEKaGeSAbOxyVkXyPMZJliiaVxm5b4gw+IXTVt1xm9HYtYw4iLFrLFqwSkapd7AymsSIKeLnboZAA==}
+    peerDependencies:
+      node-fetch: 3.3.2
+    peerDependenciesMeta:
+      node-fetch:
+        optional: true
+
+  '@krainovsd/js-helpers@0.12.0':
+    resolution: {integrity: sha512-C2Wyy8ofC0CVZwwVOO/N4bbUiUH7k8UMsC8sah3Arw2c1EWoGVZjsOXjfniB0UT2hgYdj3IlYhDEPY/h+NuGtg==}
     peerDependencies:
       node-fetch: 3.3.2
     peerDependenciesMeta:
@@ -11796,6 +11807,13 @@ snapshots:
       node-fetch: 3.3.2
 
   '@krainovsd/js-helpers@0.11.0(node-fetch@3.3.2)':
+    dependencies:
+      dayjs: 1.11.13
+      lodash: 4.17.21
+    optionalDependencies:
+      node-fetch: 3.3.2
+
+  '@krainovsd/js-helpers@0.12.0(node-fetch@3.3.2)':
     dependencies:
       dayjs: 1.11.13
       lodash: 4.17.21

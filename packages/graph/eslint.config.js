@@ -11,6 +11,10 @@ export default [
   {
     rules: {
       "max-params": ["off", { max: 4 }],
+      "id-length": [
+        "error",
+        { exceptions: ["x", "y", "z", "i", "j", "_", "t", "r", "g", "b", "k"] },
+      ],
     },
   },
 ];

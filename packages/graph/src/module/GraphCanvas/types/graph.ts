@@ -55,3 +55,9 @@ export type GraphState<
   linkSettings: Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
     Pick<LinkSettingsInterface<NodeData, LinkData>, "options">;
 };
+
+export type RGB = {
+  r: number;
+  g: number;
+  b: number;
+};

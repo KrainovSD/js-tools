@@ -38,6 +38,7 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   stickAfterDrag: false,
   highlightByHover: false,
   highlightFadingMin: 0.21,
+  highlightTextFadingMin: 0.21,
   highlightDownStep: 0.1,
   highlightUpStep: 0.1,
   dragPlaceCoefficient: dragPlaceCoefficientGetter,
@@ -53,6 +54,7 @@ export const NODE_SETTINGS: Omit<
   "color" | "text" | "textVisible" | "textSize" | "textShiftY"
 > = {
   alpha: 1,
+  textAlpha: 1,
   borderColor: "#000000FF",
   borderWidth: 0.1,
   textWidth: 20,
@@ -65,9 +67,11 @@ export const NODE_SETTINGS: Omit<
   textStyle: "normal",
   textWeight: "500",
   textGap: 1,
-  highlightFading: true,
+  highlightFading: false,
+  highlightTextFading: true,
   highlightSizing: true,
   highlightTextSizing: true,
+  highlightColor: true,
 };
 
 export const LINK_SETTINGS: Omit<Required<LinkOptionsInterface>, "color" | "width"> = {
