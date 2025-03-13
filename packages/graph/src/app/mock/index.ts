@@ -10,7 +10,7 @@ export const d3Mock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "l
   links: d3MockIncorrect.links.map((link) => ({ ...link, data: { value: link.value } })),
   nodes: d3MockIncorrect.nodes.map<NodeInterface<NodeData>>((node, index) => ({
     ...node,
-    data: { name: index.toString() },
+    name: `${node.group} ${index}`,
   })),
 };
 export const stressMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
@@ -22,18 +22,14 @@ export const stressMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" 
   nodes: stressMockIncorrect.nodes.map<NodeInterface<NodeData>>((node) => ({
     id: node._id,
     group: 1,
-    data: {
-      name: node.name,
-    },
+    name: node.name,
   })),
 };
 export const realMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
   nodes: Object.entries(realMockIncorrect.entities).map(([id, info]) => ({
     id,
     group: info.entity_type,
-    data: {
-      name: info.entity,
-    },
+    name: info.entity,
   })),
   links: realMockIncorrect.relations.map((link) => ({ source: link.from_id, target: link.to_id })),
 };

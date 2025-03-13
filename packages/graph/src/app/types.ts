@@ -1,5 +1,3 @@
-export type NodeData = {
-  name?: string;
-};
+export type NodeData = {};
 
 export type LinkData = {};

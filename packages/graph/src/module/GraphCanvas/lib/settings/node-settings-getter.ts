@@ -36,7 +36,7 @@ export function nodeOptionsGetter<
     textVisible: Boolean(
       state?.areaTransform && state.areaTransform.k > COMMON_SETTINGS.nodeTextScaleMin,
     ),
-    text: node.id != undefined ? String(node.id) : null,
+    text: node.name ?? node.id.toString(),
     textShiftY,
     textSize,
   };

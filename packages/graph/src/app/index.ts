@@ -1,6 +1,5 @@
-/* eslint-disable no-bitwise */
-/* eslint-disable id-length */
 /* eslint-disable no-console */
+import { colorToRgb, extractRgb, fadeRgb, rgbAnimationByProgress } from "@/lib";
 import {
   GraphCanvas,
   type GraphCanvasInterface,
@@ -47,36 +46,13 @@ const proxy = new Proxy(
 const root = document.querySelector<HTMLElement>("div#container");
 if (!root) throw new Error("hasn't root");
 
-let fadingProgress = 0;
-const fadingStep = 0.1;
-
 const graph = new GraphCanvas({
   links: data.links,
   nodes: data.nodes,
 
   nodeSettings: {
-    options: (node, index, nodes, state) => {
-      const colorStartRgb = { r: 33, g: 37, b: 45 };
-      const colorEndRgb = { r: 181, g: 182, b: 185 };
-      let color = `rgb(${colorStartRgb.r}, ${colorStartRgb.g}, ${colorStartRgb.b})`;
-
-      if (state?.highlightedNeighbors && state.highlightedNode) {
-        if (!state?.highlightedNeighbors.has(node.id) && state?.highlightedNode.id != node.id) {
-          /** color */
-          const r = colorStartRgb.r + (colorEndRgb.r - colorStartRgb.r) * state.highlightProgress;
-          const g = colorStartRgb.g + (colorEndRgb.g - colorStartRgb.g) * state.highlightProgress;
-          const b = colorStartRgb.b + (colorEndRgb.b - colorStartRgb.b) * state.highlightProgress;
-          color = `rgb(${r}, ${g}, ${b})`;
-        }
-      }
-
-      return {
-        text: String(node.data?.name),
-        // highlightFading: true,
-        // borderColor: "transparent",
-        //  highlightFading: false,
-        // color,
-      };
+    options: () => {
+      return {};
     },
   },
   graphSettings: {
@@ -118,7 +94,7 @@ const graph = new GraphCanvas({
     onZoom: () => {
       // console.log({ k: event.transform.k, x: event.transform.x, y: event.transform.y });
     },
-    // onDraw,
+    onDraw,
   },
   root,
 });
@@ -127,33 +103,28 @@ renderTools();
 listenForceTools(graph, true);
 listenDataTools(graph, proxy, "d3");
 
+let fadingProgress = 0;
 function onDraw(
   state: GraphState<NodeData, LinkData>,
   toggleHighlightStatus: (status: boolean) => void,
   clearHighlightState: () => void,
 ) {
   function calculateHighlightFading() {
-    console.log(fadingProgress);
-
     toggleHighlightStatus(true);
     if (!state.highlightWorking && fadingProgress > 0) {
-      fadingProgress -= fadingStep;
+      fadingProgress -= state.graphSettings.highlightDownStep;
 
       if (!state.simulationWorking) return void requestAnimationFrame(() => graph.tick());
     }
     if (state.highlightWorking && fadingProgress < 1) {
-      fadingProgress += fadingStep;
+      fadingProgress += state.graphSettings.highlightUpStep;
       if (!state.simulationWorking) return void requestAnimationFrame(() => graph.tick());
     }
     if (!state.highlightWorking && fadingProgress <= 0) clearHighlightState();
     toggleHighlightStatus(false);
   }
 
-  function drawLink(
-    this: GraphCanvas<NodeData, LinkData>,
-    link: LinkInterface<NodeData, LinkData>,
-    index: number,
-  ) {
+  function drawLink(link: LinkInterface<NodeData, LinkData>, index: number) {
     if (
       !state.context ||
       typeof link.source !== "object" ||
@@ -176,13 +147,15 @@ function onDraw(
 
     let alpha = linkOptions.alpha;
     if (state.highlightedNeighbors && state.highlightedNode) {
+      /** Not highlighted */
       if (
         state.highlightedNode.id != link.source.id &&
         state.highlightedNode.id != link.target.id
       ) {
-        alpha =
-          state.graphSettings.highlightFadingMin +
-          (alpha - state.graphSettings.highlightFadingMin) * (1 - fadingProgress);
+        if (linkOptions.highlightFading)
+          alpha =
+            state.graphSettings.highlightFadingMin +
+            (alpha - state.graphSettings.highlightFadingMin) * (1 - fadingProgress);
       }
 
       state.context.beginPath();
@@ -198,11 +171,7 @@ function onDraw(
   }
 
   const drawNode = (textRenders: (() => void)[]) =>
-    function drawNode(
-      this: GraphCanvas<NodeData, LinkData>,
-      node: NodeInterface<NodeData>,
-      index: number,
-    ) {
+    function drawNode(node: NodeInterface<NodeData>, index: number) {
       if (!state.context || !node.x || !node.y) return;
 
       const nodeOptions = nodeIterationExtractor(
@@ -213,48 +182,85 @@ function onDraw(
         state.nodeSettings.options ?? {},
         nodeOptionsGetter,
       );
-      const radius =
-        nodeRadiusGetter({
-          radiusFlexible: state.graphSettings.nodeRadiusFlexible,
-          radiusInitial: state.graphSettings.nodeRadiusInitial,
-          radiusCoefficient: state.graphSettings.nodeRadiusCoefficient,
-          radiusFactor: state.graphSettings.nodeRadiusFactor,
-          linkCount: node.linkCount,
-        }) ?? nodeOptions.radius;
 
-      const alpha = nodeOptions.alpha;
-      const colorStartRgb = { r: 33, g: 37, b: 45 };
-      const colorEndRgb = { r: 181, g: 182, b: 185 };
-      let color = colorStartRgb;
+      let alpha = nodeOptions.alpha;
+      let color = nodeOptions.color;
+      let radiusInitial = nodeOptions.radius ?? state.graphSettings.nodeRadiusInitial;
+      let textAlpha = nodeOptions.textAlpha;
+      let textSize = nodeOptions.textSize;
+      let textShiftX = nodeOptions.textShiftX;
+      let textShiftY = nodeOptions.textShiftY;
+      let textWeight = nodeOptions.textWeight;
+      let textWidth = nodeOptions.textWidth;
       if (state.highlightedNeighbors && state.highlightedNode) {
+        /** Not highlighted */
         if (!state.highlightedNeighbors.has(node.id) && state.highlightedNode.id != node.id) {
-          const r = colorStartRgb.r + (colorEndRgb.r - colorStartRgb.r) * fadingProgress;
-          const g = colorStartRgb.g + (colorEndRgb.g - colorStartRgb.g) * fadingProgress;
-          const b = colorStartRgb.b + (colorEndRgb.b - colorStartRgb.b) * fadingProgress;
+          if (nodeOptions.highlightFading) {
+            alpha =
+              state.graphSettings.highlightFadingMin +
+              (alpha - state.graphSettings.highlightFadingMin) * (1 - fadingProgress);
+          }
+          if (nodeOptions.highlightTextFading) {
+            textAlpha =
+              state.graphSettings.highlightTextFadingMin +
+              (textAlpha - state.graphSettings.highlightTextFadingMin) * (1 - fadingProgress);
+          }
+          if (nodeOptions.highlightColor) {
+            const colorRgb = extractRgb(colorToRgb(color));
+            if (colorRgb) {
+              const colorRgbFade = fadeRgb(colorRgb, 0.15);
+              const colorFadeAnimation = rgbAnimationByProgress(
+                colorRgb,
+                colorRgbFade,
+                fadingProgress,
+              );
+              color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
+            }
+          }
+        } else if (
+          !state.graphSettings.highlightOnlyRoot ||
+          (state.graphSettings.highlightOnlyRoot && state.highlightedNode.id === node.id)
+        ) {
+          /** Highlighted */
+          if (nodeOptions.highlightSizing) {
+            const radiusMax = radiusInitial + state.graphSettings.highlightSizingAdditional;
+            radiusInitial += ((radiusMax - radiusInitial) / 100) * (fadingProgress * 100);
+          }
+          if (nodeOptions.highlightTextSizing) {
+            const textSizeMax = textSize + state.graphSettings.highlightTextSizingAdditional;
+            const textShiftXMax = textShiftX + state.graphSettings.highlightTextShiftXAdditional;
+            const textShiftYMax = textShiftY + state.graphSettings.highlightTextShiftYAdditional;
+            const textWeightMax = textWeight + state.graphSettings.highlightTextWeightAdditional;
+            const textWidthMax = textWidth + state.graphSettings.highlightTextWidthAdditional;
 
-          color = { b, g, r };
+            textSize += ((textSizeMax - textSize) / 100) * (fadingProgress * 100);
+            textShiftX += ((textShiftXMax - textShiftX) / 100) * (fadingProgress * 100);
+            textShiftY += ((textShiftYMax - textShiftY) / 100) * (fadingProgress * 100);
+            textWeight += ((textWeightMax - textWeight) / 100) * (fadingProgress * 100);
+            textWidth += ((textWidthMax - textWidth) / 100) * (fadingProgress * 100);
+          }
         }
       }
 
+      const radius = nodeRadiusGetter({
+        radiusFlexible: state.graphSettings.nodeRadiusFlexible,
+        radiusInitial,
+        radiusCoefficient: state.graphSettings.nodeRadiusCoefficient,
+        radiusFactor: state.graphSettings.nodeRadiusFactor,
+        linkCount: node.linkCount,
+      });
+
+      node.radius = radius;
+
       state.context.beginPath();
-      state.context.globalAlpha = 1;
+      state.context.globalAlpha = alpha;
 
       /** text */
       if (nodeOptions.textVisible && nodeOptions.text) {
         textRenders.push(() => {
           if (!state.context || !node.x || !node.y || !nodeOptions.text) return;
-
-          let alpha = nodeOptions.alpha;
-          if (state.highlightedNeighbors && state.highlightedNode) {
-            if (!state.highlightedNeighbors.has(node.id) && state.highlightedNode.id != node.id) {
-              alpha =
-                state.graphSettings.highlightFadingMin +
-                (alpha - state.graphSettings.highlightFadingMin) * (1 - fadingProgress);
-            }
-          }
-
           state.context.beginPath();
-          state.context.globalAlpha = alpha;
+          state.context.globalAlpha = textAlpha;
 
           drawText({
             id: node.id,
@@ -264,12 +270,12 @@ function onDraw(
             textAlign: nodeOptions.textAlign,
             textColor: nodeOptions.textColor,
             textFont: nodeOptions.textFont,
-            textSize: nodeOptions.textSize,
-            x: node.x + nodeOptions.textShiftX,
-            y: node.y + radius + nodeOptions.textShiftY,
-            maxWidth: nodeOptions.textWidth,
+            textSize,
+            x: node.x + textShiftX,
+            y: node.y + radius + textShiftY,
+            maxWidth: textWidth,
             textStyle: nodeOptions.textStyle,
-            textWeight: nodeOptions.textWeight,
+            textWeight,
             textGap: nodeOptions.textGap,
           });
         });
@@ -277,8 +283,8 @@ function onDraw(
 
       /** circle */
       state.context.lineWidth = nodeOptions.borderWidth;
-      state.context.strokeStyle = "transparent";
-      state.context.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+      state.context.strokeStyle = nodeOptions.borderColor;
+      state.context.fillStyle = color;
       state.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
 
       state.context.fill();
@@ -306,141 +312,3 @@ function onDraw(
 
   calculateHighlightFading();
 }
-
-// onDraw: (state) => {
-//   function drawLink(
-//     this: GraphCanvas<NodeData, LinkData>,
-//     link: LinkInterface<NodeData, LinkData>,
-//     index: number,
-//   ) {
-//     if (
-//       !state.context ||
-//       typeof link.source !== "object" ||
-//       typeof link.target !== "object" ||
-//       !link.source.x ||
-//       !link.source.y ||
-//       !link.target.x ||
-//       !link.target.y
-//     )
-//       return;
-
-//     const linkOptions = linkIterationExtractor(
-//       link,
-//       index,
-//       state.links,
-//       state,
-//       state.linkSettings.options ?? {},
-//       linkOptionsGetter,
-//     );
-
-//     let alpha = linkOptions.alpha;
-//     if (state.highlightedNeighbors && state.highlightedNode) {
-//       if (
-//         state.highlightedNode.id != link.source.id &&
-//         state.highlightedNode.id != link.target.id
-//       ) {
-//         alpha = state.highlighFading;
-//       }
-
-//       state.context.beginPath();
-//     }
-
-//     state.context.globalAlpha = alpha;
-//     state.context.strokeStyle = linkOptions.color;
-//     state.context.lineWidth = linkOptions.width;
-//     state.context.moveTo(link.source.x, link.source.y);
-//     state.context.lineTo(link.target.x, link.target.y);
-
-//     if (state.highlightedNeighbors && state.highlightedNode) state.context.stroke();
-//   }
-
-//   const drawNode = (textRenders: (() => void)[]) =>
-//     function drawNode(
-//       this: GraphCanvas<NodeData, LinkData>,
-//       node: NodeInterface<NodeData>,
-//       index: number,
-//     ) {
-//       if (!state.context || !node.x || !node.y) return;
-
-//       const nodeOptions = nodeIterationExtractor(
-//         node,
-//         index,
-//         state.nodes,
-//         state,
-//         state.nodeSettings.options ?? {},
-//         nodeOptionsGetter,
-//       );
-//       const radius =
-//         nodeRadiusGetter({
-//           radiusFlexible: state.graphSettings.nodeRadiusFlexible,
-//           radiusInitial: state.graphSettings.nodeRadiusInitial,
-//           radiusCoefficient: state.graphSettings.nodeRadiusCoefficient,
-//           radiusFactor: state.graphSettings.nodeRadiusFactor,
-//           linkCount: node.linkCount,
-//         }) ?? nodeOptions.radius;
-
-//       let alpha = nodeOptions.alpha;
-//       if (state.highlightedNeighbors && state.highlightedNode) {
-//         if (!state.highlightedNeighbors.has(node.id) && state.highlightedNode.id != node.id) {
-//           alpha = state.highlighFading;
-//         }
-//       }
-
-//       state.context.beginPath();
-//       state.context.globalAlpha = alpha;
-
-//       /** text */
-//       if (nodeOptions.textVisible && nodeOptions.text) {
-//         textRenders.push(() => {
-//           if (!state.context || !node.x || !node.y || !nodeOptions.text) return;
-//           state.context.beginPath();
-//           state.context.globalAlpha = alpha;
-
-//           drawText({
-//             id: node.id,
-//             cachedNodeText: state.cachedNodeText,
-//             context: state.context,
-//             text: nodeOptions.text,
-//             textAlign: nodeOptions.textAlign,
-//             textColor: nodeOptions.textColor,
-//             textFont: nodeOptions.textFont,
-//             textSize: nodeOptions.textSize,
-//             x: node.x + nodeOptions.textShiftX,
-//             y: node.y + radius + nodeOptions.textShiftY,
-//             maxWidth: nodeOptions.textWidth,
-//             textStyle: nodeOptions.textStyle,
-//             textWeight: nodeOptions.textWeight,
-//             textGap: nodeOptions.textGap,
-//           });
-//         });
-//       }
-
-//       /** circle */
-//       state.context.lineWidth = nodeOptions.borderWidth;
-//       state.context.strokeStyle = nodeOptions.borderColor;
-//       state.context.fillStyle = nodeOptions.color;
-//       state.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
-
-//       state.context.fill();
-//       state.context.stroke();
-//     };
-
-//   if (!state.context) return;
-
-//   state.context.save();
-//   state.context.clearRect(0, 0, state.width, state.height);
-//   state.context.translate(state.areaTransform.x, state.areaTransform.y);
-//   state.context.scale(state.areaTransform.k, state.areaTransform.k);
-
-//   /** links */
-//   state.context.beginPath();
-//   state.links.forEach(drawLink);
-//   state.context.stroke();
-
-//   /** nodes */
-//   const textRenders: (() => void)[] = [];
-//   state.nodes.forEach(drawNode(textRenders));
-//   textRenders.forEach((render) => render());
-
-//   state.context.restore();
-// },
