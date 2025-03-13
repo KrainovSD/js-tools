@@ -1,6 +1,7 @@
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 import {
   type InputPluginOption,
@@ -126,7 +127,7 @@ function getRollupPlugins(options: RollupPlugin = {}): InputPluginOption {
     plugins.push(commonjs({ ...options.commonJS.override }));
   }
 
-  if (options.postCSS) {
+  if (options.postCSS?.enabled) {
     plugins.push(
       postcss(
         options.postCSS.override ?? {
@@ -147,9 +148,16 @@ function getRollupPlugins(options: RollupPlugin = {}): InputPluginOption {
     );
   }
 
-  if (options.copy) {
+  if (options.copy?.enabled) {
     plugins.push(copy({ ...options.copy.override }));
   }
+
+  if (options.terser?.enabled) {
+    plugins.push(terser({ ...options.terser.override }));
+  }
+
+  if (options.start) plugins.unshift(...options.start);
+  if (options.end) plugins.push(...options.end);
 
   return plugins;
 }

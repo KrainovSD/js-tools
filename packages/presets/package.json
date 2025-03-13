@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/presets",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "description": "Krainov presets",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -81,6 +81,7 @@
     "rollup-plugin-visualizer": "5.14.0",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "rollup-plugin-postcss": "4.0.2",
+    "@rollup/plugin-terser": "0.4.4",
     "sass": "1.83.0",
     "core-js": "3.41.0"
   },

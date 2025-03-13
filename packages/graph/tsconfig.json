@@ -13,6 +13,7 @@
     "eslint.config.js",
     "src/typings.d.ts",
     "rollup.config.ts",
+    "rollup-singleton.config.ts",
     ".prettierrc.mjs"
   ],
   "exclude": ["node_modules", "dist"],

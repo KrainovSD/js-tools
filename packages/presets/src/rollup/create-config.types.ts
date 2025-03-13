@@ -1,8 +1,16 @@
 import type { RollupCommonJSOptions } from "@rollup/plugin-commonjs";
 import type { RollupJsonOptions } from "@rollup/plugin-json";
 import type { RollupNodeResolveOptions } from "@rollup/plugin-node-resolve";
+import type { Options } from "@rollup/plugin-terser";
 import type { RollupTypescriptOptions } from "@rollup/plugin-typescript";
-import type { InputOption, ModuleFormat, OutputOptions, OutputPlugin, RollupOptions } from "rollup";
+import type {
+  InputOption,
+  InputPluginOption,
+  ModuleFormat,
+  OutputOptions,
+  OutputPlugin,
+  RollupOptions,
+} from "rollup";
 import type { bundleStats } from "rollup-plugin-bundle-stats";
 import type { CopyOptions } from "rollup-plugin-copy";
 import type { dts } from "rollup-plugin-dts";
@@ -63,6 +71,11 @@ export type RollupDtsPlugin = {
   override?: Parameters<typeof dts>[0];
 };
 
+export type RollupTerserPlugin = {
+  enabled: boolean;
+  override?: Options;
+};
+
 export type RollupPlugin = {
   typescript?: RollupTypescriptPlugin;
   externals?: RollupExternalsPlugin;
@@ -74,6 +87,9 @@ export type RollupPlugin = {
   postCSS?: RollupPostCSSPlugin;
   dts?: RollupDtsPlugin;
   copy?: RollupCopyPlugin;
+  terser?: RollupTerserPlugin;
+  start?: InputPluginOption[];
+  end?: InputPluginOption[];
 };
 
 export type RollupConfigOutputOptions = {
