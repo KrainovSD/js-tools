@@ -52,7 +52,10 @@ const graph = new GraphCanvas({
 
   nodeSettings: {
     options: () => {
-      return {};
+      return {
+        // highlightFading: true,
+        // highlightColor: false,
+      };
     },
   },
   graphSettings: {
@@ -94,7 +97,7 @@ const graph = new GraphCanvas({
     onZoom: () => {
       // console.log({ k: event.transform.k, x: event.transform.x, y: event.transform.y });
     },
-    onDraw,
+    // onDraw,
   },
   root,
 });

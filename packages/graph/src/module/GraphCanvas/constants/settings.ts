@@ -32,6 +32,7 @@ export const FORCE_SETTINGS: Required<
 export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unknown>>> = {
   zoomExtent: [0.1, 20] as [number, number],
   highlightSizingAdditional: 0.5,
+  highlightColorFadingMin: 0.15,
   highlightTextShiftXAdditional: 0,
   highlightTextShiftYAdditional: 2,
   highlightTextSizingAdditional: 1,

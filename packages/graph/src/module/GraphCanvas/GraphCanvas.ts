@@ -623,7 +623,7 @@ export class GraphCanvas<
             if (nodeOptions.highlightColor) {
               const colorRgb = extractRgb(colorToRgb(color));
               if (colorRgb) {
-                const colorRgbFade = fadeRgb(colorRgb, 0.15);
+                const colorRgbFade = fadeRgb(colorRgb, this.graphSettings.highlightColorFadingMin);
                 const colorFadeAnimation = rgbAnimationByProgress(
                   colorRgb,
                   colorRgbFade,

@@ -4,6 +4,7 @@ import type { GraphState } from "./graph";
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   highlightOnlyRoot?: boolean;
   highlightFadingMin?: number;
+  highlightColorFadingMin?: number;
   highlightTextFadingMin?: number;
   highlightSizingAdditional?: number;
   highlightTextSizingAdditional?: number;
