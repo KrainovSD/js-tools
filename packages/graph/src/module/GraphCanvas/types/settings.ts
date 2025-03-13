@@ -2,12 +2,15 @@ import type { LinkInterface, NodeInterface } from "@/types";
 import type { GraphState } from "./graph";
 
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
+  highlightOnlyRoot?: boolean;
   highlightFadingMin?: number;
   highlightTextFadingMin?: number;
   highlightSizingAdditional?: number;
   highlightTextSizingAdditional?: number;
   highlightTextShiftXAdditional?: number;
   highlightTextShiftYAdditional?: number;
+  highlightTextWeightAdditional?: number;
+  highlightTextWidthAdditional?: number;
   highlightByHover?: boolean;
   highlightDownStep?: number;
   highlightUpStep?: number;
@@ -90,7 +93,7 @@ export type NodeOptionsInterface = {
   textAlign?: CanvasTextAlign;
   textWidth?: number;
   textStyle?: TextStyleEnum;
-  textWeight?: TextWeightEnum;
+  textWeight?: number;
   textGap?: number;
 };
 
@@ -133,17 +136,3 @@ export type LinkIterationPropsInterface<
 ) => Return;
 
 export type TextStyleEnum = "normal" | "italic" | "oblique";
-export type TextWeightEnum =
-  | "normal"
-  | "bold"
-  | "bolder"
-  | "lighter"
-  | "100"
-  | "200"
-  | "300"
-  | "400"
-  | "500"
-  | "600"
-  | "700"
-  | "800"
-  | "900";

@@ -598,12 +598,14 @@ export class GraphCanvas<
         );
 
         let alpha = nodeOptions.alpha;
-        let textAlpha = nodeOptions.textAlpha;
+        let color = nodeOptions.color;
         let radiusInitial = nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial;
+        let textAlpha = nodeOptions.textAlpha;
         let textSize = nodeOptions.textSize;
         let textShiftX = nodeOptions.textShiftX;
         let textShiftY = nodeOptions.textShiftY;
-        let color = nodeOptions.color;
+        let textWeight = nodeOptions.textWeight;
+        let textWidth = nodeOptions.textWidth;
         if (this.highlightedNeighbors && this.highlightedNode) {
           /** Not highlighted */
           if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
@@ -621,7 +623,7 @@ export class GraphCanvas<
             if (nodeOptions.highlightColor) {
               const colorRgb = extractRgb(colorToRgb(color));
               if (colorRgb) {
-                const colorRgbFade = fadeRgb(colorRgb, 0.3);
+                const colorRgbFade = fadeRgb(colorRgb, 0.15);
                 const colorFadeAnimation = rgbAnimationByProgress(
                   colorRgb,
                   colorRgbFade,
@@ -630,7 +632,10 @@ export class GraphCanvas<
                 color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
               }
             }
-          } else {
+          } else if (
+            !this.graphSettings.highlightOnlyRoot ||
+            (this.graphSettings.highlightOnlyRoot && this.highlightedNode.id === node.id)
+          ) {
             /** Highlighted */
             if (nodeOptions.highlightSizing) {
               const radiusMax = radiusInitial + this.graphSettings.highlightSizingAdditional;
@@ -640,10 +645,14 @@ export class GraphCanvas<
               const textSizeMax = textSize + this.graphSettings.highlightTextSizingAdditional;
               const textShiftXMax = textShiftX + this.graphSettings.highlightTextShiftXAdditional;
               const textShiftYMax = textShiftY + this.graphSettings.highlightTextShiftYAdditional;
+              const textWeightMax = textWeight + this.graphSettings.highlightTextWeightAdditional;
+              const textWidthMax = textWidth + this.graphSettings.highlightTextWidthAdditional;
 
               textSize += ((textSizeMax - textSize) / 100) * (this.highlightProgress * 100);
               textShiftX += ((textShiftXMax - textShiftX) / 100) * (this.highlightProgress * 100);
               textShiftY += ((textShiftYMax - textShiftY) / 100) * (this.highlightProgress * 100);
+              textWeight += ((textWeightMax - textWeight) / 100) * (this.highlightProgress * 100);
+              textWidth += ((textWidthMax - textWidth) / 100) * (this.highlightProgress * 100);
             }
           }
         }
@@ -679,9 +688,9 @@ export class GraphCanvas<
               textSize,
               x: node.x + textShiftX,
               y: node.y + radius + textShiftY,
-              maxWidth: nodeOptions.textWidth,
+              maxWidth: textWidth,
               textStyle: nodeOptions.textStyle,
-              textWeight: nodeOptions.textWeight,
+              textWeight,
               textGap: nodeOptions.textGap,
             });
           });
