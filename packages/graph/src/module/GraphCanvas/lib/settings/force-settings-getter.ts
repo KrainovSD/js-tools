@@ -9,7 +9,7 @@ export function forceSettingsGetter<
   prevSettings?: Required<ForceSettingsInterface<NodeData, LinkData>>,
 ): Required<ForceSettingsInterface<NodeData, LinkData>> {
   return {
-    ...(prevSettings ?? FORCE_SETTINGS),
+    ...(prevSettings ?? (FORCE_SETTINGS as Required<ForceSettingsInterface<NodeData, LinkData>>)),
     ...settings,
   };
 }

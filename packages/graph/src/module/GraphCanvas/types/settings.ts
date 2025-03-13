@@ -1,5 +1,5 @@
-import type { ZoomTransform } from "d3-zoom";
 import type { LinkInterface, NodeInterface } from "@/types";
+import type { GraphState } from "./graph";
 
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   highlightFadingMin?: number;
@@ -9,9 +9,9 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   stickAfterDrag?: boolean;
   zoomExtent?: [number, number];
   zoomInitial?: {
-    k: number;
-    x: number;
-    y: number;
+    k?: number;
+    x?: number;
+    y?: number;
   } | null;
   dragPlaceCoefficient?: (
     node: NodeInterface<NodeData>,
@@ -34,27 +34,32 @@ export type ForceSettingsInterface<
     nodes: number;
     links: number;
   };
-  collideRadius?: NodeIterationPropsInterface<NodeData> | number | null;
+  collideRadius?: NodeIterationPropsInterface<NodeData, LinkData> | number | null;
   collideAdditionalRadius?: number;
   collideStrength?: number;
   collideIterations?: number;
   linkDistance?: LinkIterationPropsInterface<NodeData, LinkData> | number;
   linkStrength?: LinkIterationPropsInterface<NodeData, LinkData> | number;
   linkIterations?: number;
-  chargeStrength?: NodeIterationPropsInterface<NodeData> | number;
+  chargeStrength?: NodeIterationPropsInterface<NodeData, LinkData> | number;
   chargeDistanceMax?: number;
   chargeDistanceMin?: number;
   centerPosition?: { x?: number; y?: number };
   centerStrength?: number;
-  xForce?: NodeIterationPropsInterface<NodeData> | number;
-  xStrength?: NodeIterationPropsInterface<NodeData> | number;
-  yForce?: NodeIterationPropsInterface<NodeData> | number;
-  yStrength?: NodeIterationPropsInterface<NodeData> | number;
+  xForce?: NodeIterationPropsInterface<NodeData, LinkData> | number;
+  xStrength?: NodeIterationPropsInterface<NodeData, LinkData> | number;
+  yForce?: NodeIterationPropsInterface<NodeData, LinkData> | number;
+  yStrength?: NodeIterationPropsInterface<NodeData, LinkData> | number;
 };
 
-export type NodeSettingsInterface<NodeData extends Record<string, unknown>> = {
-  idGetter?: NodeIterationPropsInterface<NodeData, string | number>;
-  options?: NodeIterationPropsInterface<NodeData, NodeOptionsInterface> | NodeOptionsInterface;
+export type NodeSettingsInterface<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+> = {
+  idGetter?: NodeIterationPropsInterface<NodeData, LinkData, string | number>;
+  options?:
+    | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface>
+    | NodeOptionsInterface;
 };
 
 export type NodeOptionsInterface = {
@@ -80,13 +85,13 @@ export type NodeOptionsInterface = {
 
 export type NodeIterationPropsInterface<
   NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
   Return = number,
 > = (
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  transform?: ZoomTransform,
-  // graphSettings?: Required<GraphSettingsInterface<NodeData>>,
+  state?: GraphState<NodeData, LinkData>,
 ) => Return;
 
 export type LinkSettingsInterface<
@@ -112,7 +117,7 @@ export type LinkIterationPropsInterface<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  transform?: ZoomTransform | null,
+  state?: GraphState<NodeData, LinkData>,
 ) => Return;
 
 export type TextStyleEnum = "normal" | "italic" | "oblique";

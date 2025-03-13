@@ -1,7 +1,7 @@
 import type { D3DragEvent } from "d3-drag";
 import type { D3ZoomEvent, ZoomTransform } from "d3-zoom";
 import type { NodeInterface } from "@/types";
-import type { GraphCanvasSimulation } from "./graph";
+import type { GraphCanvasSimulation, GraphState } from "./graph";
 
 export type ZoomEventInterface = D3ZoomEvent<HTMLCanvasElement, unknown>;
 
@@ -26,7 +26,11 @@ export type ListenersInterface<
     transform: ZoomTransform,
     nodes: NodeInterface<NodeData>[],
   ) => NodeInterface<NodeData> | undefined;
-  onDraw?: (canvasContext: CanvasRenderingContext2D, transform: ZoomTransform) => void;
+  onDraw?: (
+    state: GraphState<NodeData, LinkData>,
+    toggleHighlightStatus: (status: boolean) => void,
+    clearHighlightState: () => void,
+  ) => void;
   onStartDragFinished?: (
     event: DragEventInterface<NodeData>,
     simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,

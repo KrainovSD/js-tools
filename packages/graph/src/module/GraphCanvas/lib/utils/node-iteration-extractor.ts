@@ -1,45 +1,50 @@
-import type { ZoomTransform } from "d3-zoom";
 import { checkType } from "@/lib";
 import type { NodeInterface } from "@/types";
-import type { NodeIterationPropsInterface } from "../../types";
+import type { GraphState, NodeIterationPropsInterface } from "../../types";
 
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
   Result extends string | number | boolean | Record<string, unknown> | unknown[] | undefined | null,
 >(
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  transform: ZoomTransform,
-  option: NodeIterationPropsInterface<NodeData, Result> | Result,
+  state: GraphState<NodeData, LinkData>,
+  option: NodeIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter: undefined,
 ): Result;
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
   Result extends string | number | boolean | Record<string, unknown> | unknown[] | undefined | null,
 >(
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  transform: ZoomTransform,
-  option: NodeIterationPropsInterface<NodeData, Result> | Result,
-  optionConstantGetter: NodeIterationPropsInterface<NodeData, Result> | Result,
+  state: GraphState<NodeData, LinkData>,
+  option: NodeIterationPropsInterface<NodeData, LinkData, Result> | Result,
+  optionConstantGetter: NodeIterationPropsInterface<NodeData, LinkData, Result> | Result,
 ): Required<Result>;
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
   Result extends string | number | boolean | Record<string, unknown> | unknown[] | undefined | null,
 >(
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  transform: ZoomTransform,
-  option: NodeIterationPropsInterface<NodeData, Result> | Result,
-  optionConstantGetter: NodeIterationPropsInterface<NodeData, Result> | Result | undefined,
+  state: GraphState<NodeData, LinkData>,
+  option: NodeIterationPropsInterface<NodeData, LinkData, Result> | Result,
+  optionConstantGetter:
+    | NodeIterationPropsInterface<NodeData, LinkData, Result>
+    | Result
+    | undefined,
 ) {
   let customOptions: Result | undefined;
   let constantOptions: Result | undefined;
 
-  if (typeof option === "function") customOptions = option(node, i, nodes, transform);
+  if (typeof option === "function") customOptions = option(node, i, nodes, state);
   else customOptions = option;
 
   if (customOptions && typeof customOptions === "object" && !Array.isArray(customOptions)) {
@@ -50,7 +55,7 @@ export function nodeIterationExtractor<
 
   if (optionConstantGetter) {
     if (typeof optionConstantGetter === "function")
-      constantOptions = optionConstantGetter(node, i, nodes, transform);
+      constantOptions = optionConstantGetter(node, i, nodes, state);
     else constantOptions = optionConstantGetter;
 
     if (

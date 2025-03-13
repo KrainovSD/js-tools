@@ -35,6 +35,7 @@ import type {
   GraphCanvasInterface,
   GraphCanvasSimulation,
   GraphSettingsInterface,
+  GraphState,
   LinkSettingsInterface,
   ListenersInterface,
   NodeSettingsInterface,
@@ -67,8 +68,8 @@ export class GraphCanvas<
 
   private forceSettings: Required<ForceSettingsInterface<NodeData, LinkData>>;
 
-  private nodeSettings: Required<Omit<NodeSettingsInterface<NodeData>, "options">> &
-    Pick<NodeSettingsInterface<NodeData>, "options">;
+  private nodeSettings: Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
+    Pick<NodeSettingsInterface<NodeData, LinkData>, "options">;
 
   private linkSettings: Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
     Pick<LinkSettingsInterface<NodeData, LinkData>, "options">;
@@ -104,6 +105,31 @@ export class GraphCanvas<
   private highlightFadingWorking: boolean = false;
 
   private highlightDrawing: boolean = false;
+
+  private get state(): GraphState<NodeData, LinkData> {
+    return {
+      areaTransform: this.areaTransform,
+      cachedNodeText: this.cachedNodeText,
+      context: this.context,
+      eventAbortController: this.eventAbortController,
+      highlighFading: this.highlighFading,
+      highlightDrawing: this.highlightDrawing,
+      highlightedNeighbors: this.highlightedNeighbors,
+      highlightedNode: this.highlightedNode,
+      highlightFadingWorking: this.highlightFadingWorking,
+      isDragging: this.isDragging,
+      simulation: this.simulation,
+      simulationWorking: this.simulationWorking,
+      height: this.height,
+      links: this.links,
+      nodes: this.nodes,
+      width: this.width,
+      forceSettings: this.forceSettings,
+      graphSettings: this.graphSettings,
+      linkSettings: this.linkSettings,
+      nodeSettings: this.nodeSettings,
+    };
+  }
 
   constructor({
     links,
@@ -377,8 +403,8 @@ export class GraphCanvas<
                 node,
                 index,
                 this.nodes,
-                this.areaTransform,
-                this.forceSettings.collideIterations,
+                this.state,
+                this.forceSettings.collideRadius,
                 undefined,
               );
             }
@@ -386,7 +412,7 @@ export class GraphCanvas<
               node,
               index,
               this.nodes,
-              this.areaTransform,
+              this.state,
               this.nodeSettings.options ?? {},
               nodeOptionsGetter,
             );
@@ -476,7 +502,18 @@ export class GraphCanvas<
       if (!this.context) return;
 
       if (this.listeners.onDraw) {
-        return void this.listeners.onDraw(this.context, this.areaTransform);
+        this.listeners.onDraw(
+          this.state,
+          (status) => {
+            this.highlightDrawing = status;
+          },
+          () => {
+            if (this.highlightedNeighbors) this.highlightedNeighbors = null;
+            if (this.highlightedNode) this.highlightedNode = null;
+          },
+        );
+
+        return;
       }
 
       this.context.save();
@@ -521,7 +558,7 @@ export class GraphCanvas<
         link,
         index,
         this.links,
-        this.areaTransform,
+        this.state,
         this.linkSettings.options ?? {},
         linkOptionsGetter,
       );
@@ -559,7 +596,7 @@ export class GraphCanvas<
           node,
           index,
           this.nodes,
-          this.areaTransform,
+          this.state,
           this.nodeSettings.options ?? {},
           nodeOptionsGetter,
         );
@@ -802,7 +839,7 @@ export class GraphCanvas<
               node,
               index,
               this.nodes,
-              this.areaTransform,
+              this.state,
               this.nodeSettings.options ?? {},
               nodeOptionsGetter,
             );

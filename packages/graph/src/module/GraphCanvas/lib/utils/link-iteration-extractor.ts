@@ -1,7 +1,6 @@
-import type { ZoomTransform } from "d3-zoom";
 import { checkType } from "@/lib";
 import type { LinkInterface } from "@/types";
-import type { LinkIterationPropsInterface } from "../../types";
+import type { GraphState, LinkIterationPropsInterface } from "../../types";
 
 export function linkIterationExtractor<
   NodeData extends Record<string, unknown>,
@@ -11,7 +10,7 @@ export function linkIterationExtractor<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  transform: ZoomTransform,
+  state: GraphState<NodeData, LinkData>,
   option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter: undefined,
 ): Result;
@@ -24,7 +23,7 @@ export function linkIterationExtractor<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  transform: ZoomTransform,
+  state: GraphState<NodeData, LinkData>,
   option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter:
     | LinkIterationPropsInterface<NodeData, LinkData, Required<Result>>
@@ -39,7 +38,7 @@ export function linkIterationExtractor<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  transform: ZoomTransform,
+  state: GraphState<NodeData, LinkData>,
   option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter:
     | LinkIterationPropsInterface<NodeData, LinkData, Required<Result>>
@@ -49,7 +48,7 @@ export function linkIterationExtractor<
   let customOptions: Result | undefined;
   let constantOptions: Result | undefined;
 
-  if (typeof option === "function") customOptions = option(link, i, links, transform);
+  if (typeof option === "function") customOptions = option(link, i, links, state);
   else customOptions = option;
 
   if (customOptions && typeof customOptions === "object" && !Array.isArray(customOptions)) {
@@ -60,7 +59,7 @@ export function linkIterationExtractor<
 
   if (optionConstantGetter) {
     if (typeof optionConstantGetter === "function")
-      constantOptions = optionConstantGetter(link, i, links, transform);
+      constantOptions = optionConstantGetter(link, i, links, state);
     else constantOptions = optionConstantGetter;
 
     if (

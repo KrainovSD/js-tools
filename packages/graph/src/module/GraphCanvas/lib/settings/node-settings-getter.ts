@@ -2,12 +2,15 @@ import type { ZoomTransform } from "d3-zoom";
 import { colorGetter } from "@/lib";
 import type { NodeInterface } from "@/types";
 import { COMMON_SETTINGS, NODE_SETTINGS } from "../../constants";
-import type { NodeOptionsInterface, NodeSettingsInterface } from "../../types";
+import type { GraphState, NodeOptionsInterface, NodeSettingsInterface } from "../../types";
 
-export function nodeSettingsGetter<NodeData extends Record<string, unknown>>(
-  settings: NodeSettingsInterface<NodeData> | undefined,
-): Required<Omit<NodeSettingsInterface<NodeData>, "options">> &
-  Pick<NodeSettingsInterface<NodeData>, "options"> {
+export function nodeSettingsGetter<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+>(
+  settings: NodeSettingsInterface<NodeData, LinkData> | undefined,
+): Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
+  Pick<NodeSettingsInterface<NodeData, LinkData>, "options"> {
   return {
     idGetter: settings?.idGetter ?? nodeIdGetter,
     options: settings?.options,
@@ -16,18 +19,23 @@ export function nodeSettingsGetter<NodeData extends Record<string, unknown>>(
 
 const color = colorGetter();
 
-export function nodeOptionsGetter<NodeData extends Record<string, unknown>>(
+export function nodeOptionsGetter<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+>(
   node: NodeInterface<NodeData>,
   _: number,
   __: NodeInterface<NodeData>[],
-  transform?: ZoomTransform,
+  state?: GraphState<NodeData, LinkData>,
 ): Required<NodeOptionsInterface> {
-  const { textShiftY, textSize } = nodeTextSizeGetter(transform);
+  const { textShiftY, textSize } = nodeTextSizeGetter(state?.areaTransform);
 
   return {
     ...NODE_SETTINGS,
     color: color(String(node.group ?? "_DEFAULT")),
-    textVisible: Boolean(transform && transform.k > COMMON_SETTINGS.nodeTextScaleMin),
+    textVisible: Boolean(
+      state?.areaTransform && state.areaTransform.k > COMMON_SETTINGS.nodeTextScaleMin,
+    ),
     text: node.id != undefined ? String(node.id) : null,
     textShiftY,
     textSize,
