@@ -29,7 +29,9 @@ export function getThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
       [`.${CLASSES.code}`]: {
         background: config.codeBackground,
         color: config.codeColor,
-        fontFamily: `${config.codeFontFamily} !important`,
+      },
+      [`div.${CLASSES.code}`]: {
+        fontFamily: config.codeFontFamily,
       },
       [`.${CLASSES.horizontal}`]: {
         borderBottomColor: config.horizontalColor,
