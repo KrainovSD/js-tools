@@ -30,7 +30,7 @@ export function getThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
         background: config.codeBackground,
         color: config.codeColor,
       },
-      [`div.${CLASSES.code}`]: {
+      [`div.${CLASSES.code} *`]: {
         fontFamily: config.codeFontFamily,
       },
       [`.${CLASSES.horizontal}`]: {
