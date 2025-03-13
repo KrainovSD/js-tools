@@ -92,19 +92,26 @@ export class GraphCanvas<
 
   private cachedNodeText: CachedNodeTextInterface = {};
 
-  private simulationWorking: boolean = false;
-
   private isDragging: boolean = false;
 
   private highlightedNode: NodeInterface<NodeData> | null = null;
 
   private highlightedNeighbors: Set<string | number> | null = null;
 
-  private highlighFading: number = 1;
+  private highlighFadingProgress: number = 1;
 
   private highlightFadingWorking: boolean = false;
 
   private highlightDrawing: boolean = false;
+
+  private get simulationWorking() {
+    const simulationAlpha = this.simulation?.alpha?.() ?? 0;
+    const simulationAlphaMin = this.simulation?.alphaMin?.() ?? 0;
+    const simulationAlphaDecay = this.simulation?.alphaDecay?.() ?? 0;
+    const force = (simulationAlpha - simulationAlphaMin) / simulationAlphaDecay;
+
+    return force > 0;
+  }
 
   private get state(): GraphState<NodeData, LinkData> {
     return {
@@ -112,7 +119,7 @@ export class GraphCanvas<
       cachedNodeText: this.cachedNodeText,
       context: this.context,
       eventAbortController: this.eventAbortController,
-      highlighFading: this.highlighFading,
+      highlighFadingProgress: this.highlighFadingProgress,
       highlightDrawing: this.highlightDrawing,
       highlightedNeighbors: this.highlightedNeighbors,
       highlightedNode: this.highlightedNode,
@@ -253,10 +260,9 @@ export class GraphCanvas<
 
   private clearState() {
     this.isDragging = false;
-    this.simulationWorking = false;
     this.highlightedNode = null;
     this.highlightedNeighbors = null;
-    this.highlighFading = 1;
+    this.highlighFadingProgress = 0;
     this.highlightFadingWorking = false;
     this.highlightDrawing = false;
   }
@@ -321,12 +327,10 @@ export class GraphCanvas<
           ),
         )
         .on("tick", () => {
-          this.simulationWorking = true;
           this.draw();
         })
         .on("end", () => {
           this.listeners.onSimulationEnd?.(this.simulation);
-          this.simulationWorking = false;
         });
       this.initSimulationForces();
     }
@@ -464,35 +468,23 @@ export class GraphCanvas<
     function calculateHighlightFading(this: GraphCanvas<NodeData, LinkData>) {
       this.highlightDrawing = true;
 
-      if (!this.highlightFadingWorking) {
-        switch (true) {
-          case this.highlighFading < 1: {
-            this.highlighFading += this.graphSettings.highlightUpStep;
-            break;
-          }
-          default: {
-            if (this.highlightedNeighbors) this.highlightedNeighbors = null;
-            if (this.highlightedNode) this.highlightedNode = null;
-            break;
-          }
-        }
+      if (!this.highlightFadingWorking && this.highlighFadingProgress > 0) {
+        this.highlighFadingProgress -= this.graphSettings.highlightDownStep;
 
-        if (this.highlighFading < 1 && !this.simulationWorking)
-          return void requestAnimationFrame(() => this.draw());
+        if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
+
+        return;
       }
-      if (this.highlightFadingWorking) {
-        switch (true) {
-          case this.highlighFading > this.graphSettings.highlightFadingMin: {
-            this.highlighFading -= this.graphSettings.highlightDownStep;
-            break;
-          }
-          default: {
-            break;
-          }
-        }
+      if (this.highlightFadingWorking && this.highlighFadingProgress < 1) {
+        this.highlighFadingProgress += this.graphSettings.highlightUpStep;
 
-        if (this.highlighFading > this.graphSettings.highlightFadingMin && !this.simulationWorking)
-          return void requestAnimationFrame(() => this.draw());
+        if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
+
+        return;
+      }
+      if (!this.highlightFadingWorking && this.highlighFadingProgress <= 0) {
+        if (this.highlightedNeighbors) this.highlightedNeighbors = null;
+        if (this.highlightedNode) this.highlightedNode = null;
       }
 
       this.highlightDrawing = false;
@@ -569,7 +561,9 @@ export class GraphCanvas<
           this.highlightedNode.id != link.source.id &&
           this.highlightedNode.id != link.target.id
         ) {
-          alpha = this.highlighFading;
+          alpha =
+            this.graphSettings.highlightFadingMin +
+            (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlighFadingProgress);
         }
 
         this.context.beginPath();
@@ -612,7 +606,9 @@ export class GraphCanvas<
         let alpha = nodeOptions.alpha;
         if (this.highlightedNeighbors && this.highlightedNode) {
           if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
-            alpha = this.highlighFading;
+            alpha =
+              this.graphSettings.highlightFadingMin +
+              (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlighFadingProgress);
           }
         }
 
