@@ -53,10 +53,31 @@ const fadingStep = 0.1;
 const graph = new GraphCanvas({
   links: data.links,
   nodes: data.nodes,
+
   nodeSettings: {
-    options: (node) => ({
-      text: String(node.data?.name),
-    }),
+    options: (node, index, nodes, state) => {
+      const colorStartRgb = { r: 33, g: 37, b: 45 };
+      const colorEndRgb = { r: 181, g: 182, b: 185 };
+      let color = `rgb(${colorStartRgb.r}, ${colorStartRgb.g}, ${colorStartRgb.b})`;
+
+      if (state?.highlightedNeighbors && state.highlightedNode) {
+        if (!state?.highlightedNeighbors.has(node.id) && state?.highlightedNode.id != node.id) {
+          /** color */
+          const r = colorStartRgb.r + (colorEndRgb.r - colorStartRgb.r) * state.highlightProgress;
+          const g = colorStartRgb.g + (colorEndRgb.g - colorStartRgb.g) * state.highlightProgress;
+          const b = colorStartRgb.b + (colorEndRgb.b - colorStartRgb.b) * state.highlightProgress;
+          color = `rgb(${r}, ${g}, ${b})`;
+        }
+      }
+
+      return {
+        text: String(node.data?.name),
+
+        // borderColor: "transparent",
+        //  highlightFading: false,
+        // color,
+      };
+    },
   },
   graphSettings: {
     zoomExtent: [1, 5],
@@ -72,7 +93,11 @@ const graph = new GraphCanvas({
   forceSettings: {
     collideOn: true,
   },
-  linkSettings: {},
+  linkSettings: {
+    options: () => {
+      return {};
+    },
+  },
   listeners: {
     onSimulationEnd: () => {
       console.log("simulation ended");
@@ -110,16 +135,16 @@ function onDraw(
     console.log(fadingProgress);
 
     toggleHighlightStatus(true);
-    if (!state.highlightFadingWorking && fadingProgress > 0) {
+    if (!state.highlightWorking && fadingProgress > 0) {
       fadingProgress -= fadingStep;
 
       if (!state.simulationWorking) return void requestAnimationFrame(() => graph.tick());
     }
-    if (state.highlightFadingWorking && fadingProgress < 1) {
+    if (state.highlightWorking && fadingProgress < 1) {
       fadingProgress += fadingStep;
       if (!state.simulationWorking) return void requestAnimationFrame(() => graph.tick());
     }
-    if (!state.highlightFadingWorking && fadingProgress <= 0) clearHighlightState();
+    if (!state.highlightWorking && fadingProgress <= 0) clearHighlightState();
     toggleHighlightStatus(false);
   }
 

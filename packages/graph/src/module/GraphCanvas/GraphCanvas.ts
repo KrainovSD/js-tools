@@ -98,9 +98,9 @@ export class GraphCanvas<
 
   private highlightedNeighbors: Set<string | number> | null = null;
 
-  private highlighFadingProgress: number = 1;
+  private highlightProgress: number = 1;
 
-  private highlightFadingWorking: boolean = false;
+  private highlightWorking: boolean = false;
 
   private highlightDrawing: boolean = false;
 
@@ -119,11 +119,11 @@ export class GraphCanvas<
       cachedNodeText: this.cachedNodeText,
       context: this.context,
       eventAbortController: this.eventAbortController,
-      highlighFadingProgress: this.highlighFadingProgress,
+      highlightProgress: this.highlightProgress,
       highlightDrawing: this.highlightDrawing,
       highlightedNeighbors: this.highlightedNeighbors,
       highlightedNode: this.highlightedNode,
-      highlightFadingWorking: this.highlightFadingWorking,
+      highlightWorking: this.highlightWorking,
       isDragging: this.isDragging,
       simulation: this.simulation,
       simulationWorking: this.simulationWorking,
@@ -262,8 +262,8 @@ export class GraphCanvas<
     this.isDragging = false;
     this.highlightedNode = null;
     this.highlightedNeighbors = null;
-    this.highlighFadingProgress = 0;
-    this.highlightFadingWorking = false;
+    this.highlightProgress = 0;
+    this.highlightWorking = false;
     this.highlightDrawing = false;
   }
 
@@ -420,14 +420,13 @@ export class GraphCanvas<
               this.nodeSettings.options ?? {},
               nodeOptionsGetter,
             );
-            const radius =
-              nodeRadiusGetter({
-                radiusFlexible: this.graphSettings.nodeRadiusFlexible,
-                radiusInitial: this.graphSettings.nodeRadiusInitial,
-                radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
-                radiusFactor: this.graphSettings.nodeRadiusFactor,
-                linkCount: node.linkCount,
-              }) ?? nodeOptions.radius;
+            const radius = nodeRadiusGetter({
+              radiusFlexible: this.graphSettings.nodeRadiusFlexible,
+              radiusInitial: nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial,
+              radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
+              radiusFactor: this.graphSettings.nodeRadiusFactor,
+              linkCount: node.linkCount,
+            });
 
             return radius + this.forceSettings.collideAdditionalRadius;
           })
@@ -468,21 +467,21 @@ export class GraphCanvas<
     function calculateHighlightFading(this: GraphCanvas<NodeData, LinkData>) {
       this.highlightDrawing = true;
 
-      if (!this.highlightFadingWorking && this.highlighFadingProgress > 0) {
-        this.highlighFadingProgress -= this.graphSettings.highlightDownStep;
+      if (!this.highlightWorking && this.highlightProgress > 0) {
+        this.highlightProgress -= this.graphSettings.highlightDownStep;
 
         if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
 
         return;
       }
-      if (this.highlightFadingWorking && this.highlighFadingProgress < 1) {
-        this.highlighFadingProgress += this.graphSettings.highlightUpStep;
+      if (this.highlightWorking && this.highlightProgress < 1) {
+        this.highlightProgress += this.graphSettings.highlightUpStep;
 
         if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
 
         return;
       }
-      if (!this.highlightFadingWorking && this.highlighFadingProgress <= 0) {
+      if (!this.highlightWorking && this.highlightProgress <= 0) {
         if (this.highlightedNeighbors) this.highlightedNeighbors = null;
         if (this.highlightedNode) this.highlightedNode = null;
       }
@@ -557,13 +556,15 @@ export class GraphCanvas<
 
       let alpha = linkOptions.alpha;
       if (this.highlightedNeighbors && this.highlightedNode) {
+        /** Not highlighted */
         if (
           this.highlightedNode.id != link.source.id &&
           this.highlightedNode.id != link.target.id
         ) {
-          alpha =
-            this.graphSettings.highlightFadingMin +
-            (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlighFadingProgress);
+          if (linkOptions.highlightFading)
+            alpha =
+              this.graphSettings.highlightFadingMin +
+              (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlightProgress);
         }
 
         this.context.beginPath();
@@ -594,23 +595,46 @@ export class GraphCanvas<
           this.nodeSettings.options ?? {},
           nodeOptionsGetter,
         );
-        const radius =
-          nodeRadiusGetter({
-            radiusFlexible: this.graphSettings.nodeRadiusFlexible,
-            radiusInitial: this.graphSettings.nodeRadiusInitial,
-            radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
-            radiusFactor: this.graphSettings.nodeRadiusFactor,
-            linkCount: node.linkCount,
-          }) ?? nodeOptions.radius;
 
         let alpha = nodeOptions.alpha;
+        let radiusInitial = nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial;
+        let textSize = nodeOptions.textSize;
+        let textShiftX = nodeOptions.textShiftX;
+        let textShiftY = nodeOptions.textShiftY;
         if (this.highlightedNeighbors && this.highlightedNode) {
+          /** Not highlighted */
           if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
-            alpha =
-              this.graphSettings.highlightFadingMin +
-              (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlighFadingProgress);
+            if (nodeOptions.highlightFading)
+              alpha =
+                this.graphSettings.highlightFadingMin +
+                (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlightProgress);
+          } else {
+            /** Highlighted */
+            if (nodeOptions.highlightSizing) {
+              const radiusMax = radiusInitial + this.graphSettings.highlightSizingAdditional;
+              radiusInitial += ((radiusMax - radiusInitial) / 100) * (this.highlightProgress * 100);
+            }
+            if (nodeOptions.highlightTextSizing) {
+              const textSizeMax = textSize + this.graphSettings.highlightTextSizingAdditional;
+              const textShiftXMax = textShiftX + this.graphSettings.highlightTextShiftXAdditional;
+              const textShiftYMax = textShiftY + this.graphSettings.highlightTextShiftYAdditional;
+
+              textSize += ((textSizeMax - textSize) / 100) * (this.highlightProgress * 100);
+              textShiftX += ((textShiftXMax - textShiftX) / 100) * (this.highlightProgress * 100);
+              textShiftY += ((textShiftYMax - textShiftY) / 100) * (this.highlightProgress * 100);
+            }
           }
         }
+
+        const radius = nodeRadiusGetter({
+          radiusFlexible: this.graphSettings.nodeRadiusFlexible,
+          radiusInitial,
+          radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
+          radiusFactor: this.graphSettings.nodeRadiusFactor,
+          linkCount: node.linkCount,
+        });
+
+        node.radius = radius;
 
         this.context.beginPath();
         this.context.globalAlpha = alpha;
@@ -630,9 +654,9 @@ export class GraphCanvas<
               textAlign: nodeOptions.textAlign,
               textColor: nodeOptions.textColor,
               textFont: nodeOptions.textFont,
-              textSize: nodeOptions.textSize,
-              x: node.x + nodeOptions.textShiftX,
-              y: node.y + radius + nodeOptions.textShiftY,
+              textSize,
+              x: node.x + textShiftX,
+              y: node.y + radius + textShiftY,
               maxWidth: nodeOptions.textWidth,
               textStyle: nodeOptions.textStyle,
               textWeight: nodeOptions.textWeight,
@@ -701,14 +725,14 @@ export class GraphCanvas<
           if (currentNode?.neighbors && this.highlightedNode !== currentNode) {
             this.highlightedNode = currentNode;
             this.highlightedNeighbors = new Set(this.highlightedNode.neighbors);
-            this.highlightFadingWorking = true;
+            this.highlightWorking = true;
 
             if (!this.simulationWorking && !this.highlightDrawing)
               requestAnimationFrame(() => {
                 this.draw();
               });
           } else if (!currentNode && this.highlightedNode) {
-            this.highlightFadingWorking = false;
+            this.highlightWorking = false;
             if (!this.simulationWorking && !this.highlightDrawing)
               requestAnimationFrame(() => {
                 this.draw();
@@ -831,22 +855,25 @@ export class GraphCanvas<
           return greatest(this.nodes, (node) => {
             if (!node.x || !node.y) return undefined;
 
-            const nodeOptions = nodeIterationExtractor(
-              node,
-              index,
-              this.nodes,
-              this.state,
-              this.nodeSettings.options ?? {},
-              nodeOptionsGetter,
-            );
-            const radius =
-              nodeRadiusGetter({
+            let radius = node.radius;
+            if (!radius) {
+              const nodeOptions = nodeIterationExtractor(
+                node,
+                index,
+                this.nodes,
+                this.state,
+                this.nodeSettings.options ?? {},
+                nodeOptionsGetter,
+              );
+              radius = nodeRadiusGetter({
                 radiusFlexible: this.graphSettings.nodeRadiusFlexible,
-                radiusInitial: this.graphSettings.nodeRadiusInitial,
+                radiusInitial: nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial,
                 radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
                 radiusFactor: this.graphSettings.nodeRadiusFactor,
                 linkCount: node.linkCount,
-              }) ?? nodeOptions.radius;
+              });
+            }
+
             index++;
 
             return this.graphSettings.dragPlaceCoefficient(node, pointerX, pointerY, radius);

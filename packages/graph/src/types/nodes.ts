@@ -6,6 +6,8 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   linkCount?: number;
   group?: number | string;
   neighbors?: (string | number)[];
+  radius?: number;
+  name?: string;
   data?: NodeData;
 }
 

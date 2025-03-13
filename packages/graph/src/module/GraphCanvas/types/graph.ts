@@ -41,8 +41,8 @@ export type GraphState<
   isDragging: boolean;
   highlightedNode: NodeInterface<NodeData> | null;
   highlightedNeighbors: Set<string | number> | null;
-  highlighFadingProgress: number;
-  highlightFadingWorking: boolean;
+  highlightProgress: number;
+  highlightWorking: boolean;
   highlightDrawing: boolean;
   width: number;
   height: number;

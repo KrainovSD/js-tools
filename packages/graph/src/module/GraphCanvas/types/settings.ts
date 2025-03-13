@@ -3,6 +3,10 @@ import type { GraphState } from "./graph";
 
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   highlightFadingMin?: number;
+  highlightSizingAdditional?: number;
+  highlightTextSizingAdditional?: number;
+  highlightTextShiftXAdditional?: number;
+  highlightTextShiftYAdditional?: number;
   highlightByHover?: boolean;
   highlightDownStep?: number;
   highlightUpStep?: number;
@@ -63,6 +67,9 @@ export type NodeSettingsInterface<
 };
 
 export type NodeOptionsInterface = {
+  highlightFading?: boolean;
+  highlightSizing?: boolean;
+  highlightTextSizing?: boolean;
   borderColor?: string;
   borderWidth?: number;
   radius?: number;
@@ -107,6 +114,7 @@ export type LinkOptionsInterface = {
   alpha?: number;
   color?: string;
   width?: number;
+  highlightFading?: boolean;
 };
 
 export type LinkIterationPropsInterface<

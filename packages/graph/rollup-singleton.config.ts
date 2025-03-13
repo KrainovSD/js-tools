@@ -22,6 +22,7 @@ export default defineConfig(
         json: { enabled: true },
         nodeResolver: { enabled: true },
         commonJS: { enabled: true },
+        terser: { enabled: true },
         dts: { enabled: true, input: "./tmp/index.d.ts", output: "./dist/index.d.ts" },
       },
     },

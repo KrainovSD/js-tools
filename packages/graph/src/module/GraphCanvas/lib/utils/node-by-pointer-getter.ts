@@ -11,7 +11,6 @@ export type NodeByPointerGetterOptions<NodeData extends Record<string, unknown>>
   areaRect: DOMRect | undefined;
   areaTransform: ZoomTransform;
   nodes: NodeInterface<NodeData>[];
-
   graphSettings: Required<GraphSettingsInterface<NodeData>>;
 };
 
@@ -27,13 +26,15 @@ export function nodeByPointerGetter<NodeData extends Record<string, unknown>>({
   const [pointerX, pointerY] = pointerGetter(mouseEvent, areaRect, areaTransform);
 
   return greatest(nodes, (node) => {
-    const radius = nodeRadiusGetter({
-      radiusFlexible: graphSettings.nodeRadiusFlexible,
-      radiusInitial: graphSettings.nodeRadiusInitial,
-      radiusCoefficient: graphSettings.nodeRadiusCoefficient,
-      radiusFactor: graphSettings.nodeRadiusFactor,
-      linkCount: node.linkCount,
-    });
+    const radius =
+      node.radius ??
+      nodeRadiusGetter({
+        radiusFlexible: graphSettings.nodeRadiusFlexible,
+        radiusInitial: graphSettings.nodeRadiusInitial,
+        radiusCoefficient: graphSettings.nodeRadiusCoefficient,
+        radiusFactor: graphSettings.nodeRadiusFactor,
+        linkCount: node.linkCount,
+      });
 
     if (isOverlapsNode(node, radius, pointerX, pointerY)) return node.index;
   });

@@ -31,6 +31,10 @@ export const FORCE_SETTINGS: Required<
 
 export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unknown>>> = {
   zoomExtent: [0.1, 20] as [number, number],
+  highlightSizingAdditional: 0.5,
+  highlightTextShiftXAdditional: 0,
+  highlightTextShiftYAdditional: 1,
+  highlightTextSizingAdditional: 0.5,
   stickAfterDrag: false,
   highlightByHover: false,
   highlightFadingMin: 0.21,
@@ -61,10 +65,14 @@ export const NODE_SETTINGS: Omit<
   textStyle: "normal",
   textWeight: "500",
   textGap: 1,
+  highlightFading: true,
+  highlightSizing: true,
+  highlightTextSizing: true,
 };
 
 export const LINK_SETTINGS: Omit<Required<LinkOptionsInterface>, "color" | "width"> = {
   alpha: 1,
+  highlightFading: true,
 };
 
 export const COMMON_SETTINGS = {
