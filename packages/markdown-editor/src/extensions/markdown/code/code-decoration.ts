@@ -102,7 +102,7 @@ function getCodeSelectionDecorations({
   } else {
     decorations.push(
       utils.getMarkDecoration({
-        style: clsx(styles.code__single, CLASSES.code),
+        style: clsx(CLASSES.code),
         range: [node.from, node.to],
       }),
     );

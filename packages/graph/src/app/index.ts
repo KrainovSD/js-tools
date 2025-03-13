@@ -108,6 +108,9 @@ listenForceTools(graph, true);
 listenDataTools(graph, proxy, "d3");
 
 let fadingProgress = 0;
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function onDraw(
   state: GraphState<NodeData, LinkData>,
   toggleHighlightStatus: (status: boolean) => void,

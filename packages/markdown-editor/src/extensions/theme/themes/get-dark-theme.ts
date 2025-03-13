@@ -26,6 +26,7 @@ const THEME_CONFIG: Required<ThemeConfig> = {
   codeColor: "#DDDDDD",
   color: "#DDDDDD",
   fontFamily: "Montserrat",
+  codeFontFamily: "Consolas",
   horizontalColor: "#DDDDDD",
   linkColor: "#8A5CF5",
   mentionColor: "#8A5CF5",

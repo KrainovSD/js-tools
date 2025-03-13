@@ -15,6 +15,7 @@ export type ThemeConfig = {
   fontFamily?: string;
   color?: string;
   background?: string;
+  codeFontFamily?: string;
   codeBackground?: string;
   codeColor?: string;
   codeButtonColor?: string;

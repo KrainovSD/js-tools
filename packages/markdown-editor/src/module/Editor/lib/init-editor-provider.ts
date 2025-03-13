@@ -36,7 +36,7 @@ export async function initEditorProvider({
       onStartProvider(event?.status);
     });
 
-  if (provider && multiCursorText)
+  if (provider)
     provider.on("sync", (isSynced: boolean) => {
       if (isSynced && !multiCursorText.length && initialText) {
         multiCursorText.insert(0, initialText);

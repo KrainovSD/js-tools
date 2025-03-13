@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/markdown-editor",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Krainov markdown-editor",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -29,7 +29,7 @@
   ],
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
-    "dev": "vite",
+    "dev": "vite --host",
     "clear": "rm -rf ./lib",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "lint": "eslint . -c ./eslint.config.js --color --max-warnings 0",
@@ -68,6 +68,6 @@
     "clsx": "2.1.1",
     "y-codemirror.next": "0.3.5",
     "y-websocket": "2.1.0",
-    "yjs": "13.6.23"
+    "yjs": "13.6.24"
   }
 }

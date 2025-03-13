@@ -432,13 +432,13 @@ importers:
         version: 2.1.1
       y-codemirror.next:
         specifier: 0.3.5
-        version: 0.3.5(@codemirror/state@6.5.1)(@codemirror/view@6.36.2)(yjs@13.6.23)
+        version: 0.3.5(@codemirror/state@6.5.1)(@codemirror/view@6.36.2)(yjs@13.6.24)
       y-websocket:
         specifier: 2.1.0
-        version: 2.1.0(yjs@13.6.23)
+        version: 2.1.0(yjs@13.6.24)
       yjs:
-        specifier: 13.6.23
-        version: 13.6.23
+        specifier: 13.6.24
+        version: 13.6.24
     devDependencies:
       '@codemirror/language-data':
         specifier: 6.5.1
@@ -9702,8 +9702,8 @@ packages:
     resolution: {integrity: sha512-Ow9nuGZE+qp1u4JIPvg+uCiUr7xGQWdff7JQSk5VGYTAZMDe2q8lxJ10ygv10qmSj031Ty/6FNJpLO4o1Sgc+w==}
     engines: {node: '>=12'}
 
-  yjs@13.6.23:
-    resolution: {integrity: sha512-ExtnT5WIOVpkL56bhLeisG/N5c4fmzKn4k0ROVfJa5TY2QHbH7F0Wu2T5ZhR7ErsFWQEFafyrnSI8TPKVF9Few==}
+  yjs@13.6.24:
+    resolution: {integrity: sha512-xn/pYLTZa3uD1uDG8lpxfLRo5SR/rp0frdASOl2a71aYNvUXdWcLtVL91s2y7j+Q8ppmjZ9H3jsGVgoFMbT2VA==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
 
   yn@3.1.1:
@@ -20985,34 +20985,34 @@ snapshots:
 
   xtend@4.0.2: {}
 
-  y-codemirror.next@0.3.5(@codemirror/state@6.5.1)(@codemirror/view@6.36.2)(yjs@13.6.23):
+  y-codemirror.next@0.3.5(@codemirror/state@6.5.1)(@codemirror/view@6.36.2)(yjs@13.6.24):
     dependencies:
       '@codemirror/state': 6.5.1
       '@codemirror/view': 6.36.2
       lib0: 0.2.99
-      yjs: 13.6.23
+      yjs: 13.6.24
 
-  y-leveldb@0.1.2(yjs@13.6.23):
+  y-leveldb@0.1.2(yjs@13.6.24):
     dependencies:
       level: 6.0.1
       lib0: 0.2.99
-      yjs: 13.6.23
+      yjs: 13.6.24
     optional: true
 
-  y-protocols@1.0.6(yjs@13.6.23):
+  y-protocols@1.0.6(yjs@13.6.24):
     dependencies:
       lib0: 0.2.99
-      yjs: 13.6.23
+      yjs: 13.6.24
 
-  y-websocket@2.1.0(yjs@13.6.23):
+  y-websocket@2.1.0(yjs@13.6.24):
     dependencies:
       lib0: 0.2.99
       lodash.debounce: 4.0.8
-      y-protocols: 1.0.6(yjs@13.6.23)
-      yjs: 13.6.23
+      y-protocols: 1.0.6(yjs@13.6.24)
+      yjs: 13.6.24
     optionalDependencies:
       ws: 6.2.3
-      y-leveldb: 0.1.2(yjs@13.6.23)
+      y-leveldb: 0.1.2(yjs@13.6.24)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -21044,7 +21044,7 @@ snapshots:
       buffer-crc32: 0.2.13
       pend: 1.2.0
 
-  yjs@13.6.23:
+  yjs@13.6.24:
     dependencies:
       lib0: 0.2.99
 
