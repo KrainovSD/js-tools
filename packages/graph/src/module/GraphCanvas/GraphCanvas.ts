@@ -1,4 +1,4 @@
-import { isArray } from "@krainovsd/js-helpers";
+import { isArray, isBoolean } from "@krainovsd/js-helpers";
 import { greatest } from "d3-array";
 import { drag as d3Drag } from "d3-drag";
 import {
@@ -333,7 +333,7 @@ export class GraphCanvas<
           this.draw();
         })
         .on("end", () => {
-          this.listeners.onSimulationEnd?.(this.simulation);
+          this.listeners.onSimulationEnd?.(this.state);
         });
       this.initSimulationForces();
     }
@@ -527,7 +527,7 @@ export class GraphCanvas<
 
       this.context.restore();
 
-      this.listeners.onDrawFinished?.(this.context, this.areaTransform);
+      this.listeners.onDrawFinished?.(this.state);
 
       calculateHighlightFading.bind(this)();
     }
@@ -680,7 +680,7 @@ export class GraphCanvas<
           linkCount: node.linkCount,
         });
 
-        node.radius = radius;
+        node._radius = radius;
 
         this.context.beginPath();
         this.context.globalAlpha = alpha;
@@ -887,7 +887,7 @@ export class GraphCanvas<
       d3Drag<HTMLCanvasElement, unknown>()
         .subject((event: DragEventInterface<NodeData>) => {
           if (this.listeners.onDragSubject) {
-            return this.listeners.onDragSubject(event, this.areaTransform, this.nodes);
+            return this.listeners.onDragSubject(event, this.state);
           }
 
           if (!this.areaRect) return;
@@ -898,9 +898,9 @@ export class GraphCanvas<
           let index = 0;
 
           return greatest(this.nodes, (node) => {
-            if (!node.x || !node.y) return undefined;
+            if (!node.x || !node.y || (isBoolean(node.drag) && !node.drag)) return undefined;
 
-            let radius = node.radius;
+            let radius = node._radius;
             if (!radius) {
               const nodeOptions = nodeIterationExtractor(
                 node,
@@ -910,6 +910,7 @@ export class GraphCanvas<
                 this.nodeSettings.options ?? {},
                 nodeOptionsGetter,
               );
+
               radius = nodeRadiusGetter({
                 radiusFlexible: this.graphSettings.nodeRadiusFlexible,
                 radiusInitial: nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial,
@@ -925,7 +926,7 @@ export class GraphCanvas<
           });
         })
         .on("start", (event: DragEventInterface<NodeData>) => {
-          this.listeners.onStartDragFinished?.(event, this.simulation, this.areaTransform);
+          this.listeners.onStartDragFinished?.(event, this.state);
         })
         .on("drag", (event: DragEventInterface<NodeData>) => {
           if (!this.isDragging) {
@@ -939,7 +940,7 @@ export class GraphCanvas<
           event.subject.fx = pointerX;
           event.subject.fy = pointerY;
 
-          this.listeners.onMoveDragFinished?.(event, this.simulation, this.areaTransform);
+          this.listeners.onMoveDragFinished?.(event, this.state);
         })
         .on("end", (event: DragEventInterface<NodeData>) => {
           this.isDragging = false;
@@ -961,7 +962,7 @@ export class GraphCanvas<
             event.subject.fy = null;
           }
 
-          this.listeners.onEndDragFinished?.(event, this.simulation, this.areaTransform);
+          this.listeners.onEndDragFinished?.(event, this.state);
         }),
     );
   }

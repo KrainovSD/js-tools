@@ -27,7 +27,7 @@ export function nodeByPointerGetter<NodeData extends Record<string, unknown>>({
 
   return greatest(nodes, (node) => {
     const radius =
-      node.radius ??
+      node._radius ??
       nodeRadiusGetter({
         radiusFlexible: graphSettings.nodeRadiusFlexible,
         radiusInitial: graphSettings.nodeRadiusInitial,

@@ -269,7 +269,7 @@ function onDraw(
         linkCount: node.linkCount,
       });
 
-      node.radius = radius;
+      node._radius = radius;
 
       state.context.beginPath();
       state.context.globalAlpha = alpha;

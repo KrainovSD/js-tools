@@ -15,6 +15,7 @@ export default [
         "error",
         { exceptions: ["x", "y", "z", "i", "j", "_", "t", "r", "g", "b", "k"] },
       ],
+      "no-underscore-dangle": "off",
     },
   },
 ];

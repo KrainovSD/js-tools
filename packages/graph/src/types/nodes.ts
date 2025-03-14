@@ -6,9 +6,10 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   linkCount?: number;
   group?: number | string;
   neighbors?: (string | number)[];
-  radius?: number;
+  _radius?: number;
   name?: string;
   data?: NodeData;
+  drag?: boolean;
 }
 
 export type CachedNodeTextInterface = Record<string | number, string[]>;

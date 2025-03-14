@@ -1,7 +1,7 @@
 import type { D3DragEvent } from "d3-drag";
-import type { D3ZoomEvent, ZoomTransform } from "d3-zoom";
+import type { D3ZoomEvent } from "d3-zoom";
 import type { NodeInterface } from "@/types";
-import type { GraphCanvasSimulation, GraphState } from "./graph";
+import type { GraphState } from "./graph";
 
 export type ZoomEventInterface = D3ZoomEvent<HTMLCanvasElement, unknown>;
 
@@ -23,8 +23,7 @@ export type ListenersInterface<
   onZoom?: (event: ZoomEventInterface) => void;
   onDragSubject?: (
     event: DragEventInterface<NodeData>,
-    transform: ZoomTransform,
-    nodes: NodeInterface<NodeData>[],
+    state: GraphState<NodeData, LinkData>,
   ) => NodeInterface<NodeData> | undefined;
   onDraw?: (
     state: GraphState<NodeData, LinkData>,
@@ -33,19 +32,16 @@ export type ListenersInterface<
   ) => void;
   onStartDragFinished?: (
     event: DragEventInterface<NodeData>,
-    simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
-    transform: ZoomTransform,
+    state: GraphState<NodeData, LinkData>,
   ) => void;
   onMoveDragFinished?: (
     event: DragEventInterface<NodeData>,
-    simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
-    transform: ZoomTransform,
+    state: GraphState<NodeData, LinkData>,
   ) => void;
   onEndDragFinished?: (
     event: DragEventInterface<NodeData>,
-    simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined,
-    transform: ZoomTransform,
+    state: GraphState<NodeData, LinkData>,
   ) => void;
-  onDrawFinished?: (canvasContext: CanvasRenderingContext2D, transform: ZoomTransform) => void;
-  onSimulationEnd?: (simulations: GraphCanvasSimulation<NodeData, LinkData> | undefined) => void;
+  onDrawFinished?: (state: GraphState<NodeData, LinkData>) => void;
+  onSimulationEnd?: (state: GraphState<NodeData, LinkData>) => void;
 };
