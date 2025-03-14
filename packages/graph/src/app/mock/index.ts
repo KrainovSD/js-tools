@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import type { GraphCanvasInterface } from "@/module/GraphCanvas";
 import type { NodeInterface } from "@/types";
 import type { LinkData, NodeData } from "../types";
