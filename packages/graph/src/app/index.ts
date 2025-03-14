@@ -61,7 +61,7 @@ const graph = new GraphCanvas({
   },
   graphSettings: {
     // highlightFadingMin: 0.2,
-    zoomExtent: [1, 5],
+    zoomExtent: [0.1, 5],
     zoomInitial: { k: 1 },
     // stickAfterDrag: true,
     highlightByHover: true,

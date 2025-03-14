@@ -1,3 +1,4 @@
+import { isArray } from "@krainovsd/js-helpers";
 import { greatest } from "d3-array";
 import { drag as d3Drag } from "d3-drag";
 import {
@@ -766,10 +767,9 @@ export class GraphCanvas<
             mouseEvent: event,
             nodes: this.nodes,
           });
-
-          if (currentNode?.neighbors && this.highlightedNode !== currentNode) {
+          if (currentNode && this.highlightedNode !== currentNode) {
             this.highlightedNode = currentNode;
-            this.highlightedNeighbors = new Set(this.highlightedNode.neighbors);
+            this.highlightedNeighbors = new Set(this.highlightedNode?.neighbors ?? []);
             this.highlightWorking = true;
 
             if (!this.simulationWorking && !this.highlightDrawing)
@@ -969,18 +969,33 @@ export class GraphCanvas<
   private initZoom() {
     if (!this.area) throw new Error("bad init data");
 
-    d3Select(this.area)
-      .call(
-        zoom<HTMLCanvasElement, unknown>()
-          .scaleExtent(this.graphSettings.zoomExtent)
-          .on("zoom", (event: ZoomEventInterface) => {
-            this.listeners.onZoom?.(event);
-            this.areaTransform = event.transform;
+    const zoomInstance = zoom<HTMLCanvasElement, unknown>()
+      .scaleExtent(this.graphSettings.zoomExtent)
+      .on("zoom", (event: ZoomEventInterface) => {
+        this.listeners.onZoom?.(event);
+        this.areaTransform = event.transform;
 
-            if (!this.simulationWorking) requestAnimationFrame(() => this.draw());
-          }),
-      )
-      .on("dblclick.zoom", null);
+        if (!this.simulationWorking) requestAnimationFrame(() => this.draw());
+      });
+
+    if (this.graphSettings.translateExtentEnable) {
+      const coefficient = this.graphSettings.translateExtentCoefficient;
+      const [coefficientX, coefficientY] = isArray(coefficient)
+        ? coefficient
+        : [coefficient, coefficient];
+
+      const [
+        [minX = -this.width * coefficientX, minY = -this.height * coefficientX],
+        [maxX = this.width * coefficientY, maxY = this.height * coefficientY],
+      ] = this.graphSettings.translateExtent;
+
+      zoomInstance.translateExtent([
+        [minX, minY],
+        [maxX, maxY],
+      ]);
+    }
+
+    d3Select(this.area).call(zoomInstance).on("dblclick.zoom", null);
 
     const zoomInitial = this.graphSettings.zoomInitial;
     this.areaTransform = new ZoomTransform(

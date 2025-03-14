@@ -17,6 +17,9 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   highlightUpStep?: number;
   stickAfterDrag?: boolean;
   zoomExtent?: [number, number];
+  translateExtent?: [[number?, number?], [number?, number?]];
+  translateExtentCoefficient?: number | [number, number];
+  translateExtentEnable?: boolean;
   zoomInitial?: {
     k?: number;
     x?: number;
