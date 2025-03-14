@@ -44,6 +44,7 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   highlightOnlyRoot: true,
   stickAfterDrag: false,
   highlightByHover: false,
+  highlightLinkFadingMin: 0.21,
   highlightFadingMin: 0.21,
   highlightTextFadingMin: 0.21,
   highlightDownStep: 0.1,

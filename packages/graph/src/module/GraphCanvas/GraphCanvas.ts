@@ -566,8 +566,8 @@ export class GraphCanvas<
         ) {
           if (linkOptions.highlightFading)
             alpha =
-              this.graphSettings.highlightFadingMin +
-              (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlightProgress);
+              this.graphSettings.highlightLinkFadingMin +
+              (alpha - this.graphSettings.highlightLinkFadingMin) * (1 - this.highlightProgress);
         }
 
         this.context.beginPath();
