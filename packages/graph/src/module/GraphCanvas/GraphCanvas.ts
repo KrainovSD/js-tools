@@ -986,8 +986,8 @@ export class GraphCanvas<
         : [coefficient, coefficient];
 
       const [
-        [minX = -this.width * coefficientX, minY = -this.height * coefficientX],
-        [maxX = this.width * coefficientY, maxY = this.height * coefficientY],
+        [minX = -this.width * coefficientX, minY = -this.height * coefficientY],
+        [maxX = this.width * coefficientX, maxY = this.height * coefficientY],
       ] = this.graphSettings.translateExtent;
 
       zoomInstance.translateExtent([
