@@ -56,21 +56,21 @@ const graph = new GraphCanvas({
       return {
         highlightFading: true,
         highlightColor: false,
-        nodeExtraDraw: (node, options, state) => {
-          if (!state.context || node.x == undefined || node.y == undefined) return;
+        // nodeExtraDraw: (node, options, state) => {
+        //   if (!state.context || node.x == undefined || node.y == undefined) return;
 
-          state.context.beginPath();
-          state.context.fillStyle = "black";
-          state.context.arc(
-            node.x + options.radius * 0.66,
-            node.y - options.radius * 0.66,
-            options.radius * 0.5,
-            0,
-            2 * Math.PI,
-          );
-          state.context.fill();
-          state.context.stroke();
-        },
+        //   state.context.beginPath();
+        //   state.context.fillStyle = "black";
+        //   state.context.arc(
+        //     node.x + options.radius * 0.66,
+        //     node.y - options.radius * 0.66,
+        //     options.radius * 0.5,
+        //     0,
+        //     2 * Math.PI,
+        //   );
+        //   state.context.fill();
+        //   state.context.stroke();
+        // },
       };
     },
   },
