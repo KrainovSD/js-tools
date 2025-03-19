@@ -58,8 +58,16 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
 };
 
 export const NODE_SETTINGS: Omit<
-  Required<NodeOptionsInterface>,
-  "color" | "text" | "textVisible" | "textSize" | "textShiftY"
+  Required<NodeOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
+  | "color"
+  | "text"
+  | "textVisible"
+  | "textSize"
+  | "textShiftY"
+  | "nodeDraw"
+  | "nodeExtraDraw"
+  | "textDraw"
+  | "textExtraDraw"
 > = {
   alpha: 1,
   textAlpha: 1,
@@ -82,7 +90,10 @@ export const NODE_SETTINGS: Omit<
   highlightTextSizing: true,
 };
 
-export const LINK_SETTINGS: Omit<Required<LinkOptionsInterface>, "color" | "width"> = {
+export const LINK_SETTINGS: Omit<
+  Required<LinkOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
+  "color" | "width" | "drawLink" | "drawExtraLink"
+> = {
   alpha: 1,
   highlightFading: true,
   pretty: true,

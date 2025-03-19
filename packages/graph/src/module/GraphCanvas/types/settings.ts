@@ -71,11 +71,42 @@ export type NodeSettingsInterface<
 > = {
   idGetter?: NodeIterationPropsInterface<NodeData, LinkData, string | number>;
   options?:
-    | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface>
-    | NodeOptionsInterface;
+    | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface<NodeData, LinkData>>
+    | NodeOptionsInterface<NodeData, LinkData>;
 };
 
-export type NodeOptionsInterface = {
+export type NodeOptionsInterface<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+> = {
+  nodeDraw?:
+    | ((
+        node: NodeInterface<NodeData>,
+        options: Required<NodeOptionsInterface<NodeData, LinkData>>,
+        state: GraphState<NodeData, LinkData>,
+      ) => void)
+    | null;
+  textDraw?:
+    | ((
+        node: NodeInterface<NodeData>,
+        options: Required<NodeOptionsInterface<NodeData, LinkData>>,
+        state: GraphState<NodeData, LinkData>,
+      ) => void)
+    | null;
+  nodeExtraDraw?:
+    | ((
+        node: NodeInterface<NodeData>,
+        options: Required<NodeOptionsInterface<NodeData, LinkData>>,
+        state: GraphState<NodeData, LinkData>,
+      ) => void)
+    | null;
+  textExtraDraw?:
+    | ((
+        node: NodeInterface<NodeData>,
+        options: Required<NodeOptionsInterface<NodeData, LinkData>>,
+        state: GraphState<NodeData, LinkData>,
+      ) => void)
+    | null;
   highlightFading?: boolean;
   highlightSizing?: boolean;
   highlightTextFading?: boolean;
@@ -118,11 +149,28 @@ export type LinkSettingsInterface<
   LinkData extends Record<string, unknown>,
 > = {
   options?:
-    | LinkIterationPropsInterface<NodeData, LinkData, LinkOptionsInterface>
-    | LinkOptionsInterface;
+    | LinkIterationPropsInterface<NodeData, LinkData, LinkOptionsInterface<NodeData, LinkData>>
+    | LinkOptionsInterface<NodeData, LinkData>;
 };
 
-export type LinkOptionsInterface = {
+export type LinkOptionsInterface<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+> = {
+  drawLink?:
+    | ((
+        link: LinkInterface<NodeData, LinkData>,
+        options: Required<LinkOptionsInterface<NodeData, LinkData>>,
+        state: GraphState<NodeData, LinkData>,
+      ) => void)
+    | null;
+  drawExtraLink?:
+    | ((
+        link: LinkInterface<NodeData, LinkData>,
+        options: Required<LinkOptionsInterface<NodeData, LinkData>>,
+        state: GraphState<NodeData, LinkData>,
+      ) => void)
+    | null;
   alpha?: number;
   color?: string;
   width?: number;

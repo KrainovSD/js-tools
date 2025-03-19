@@ -27,11 +27,15 @@ export function nodeOptionsGetter<
   _: number,
   __: NodeInterface<NodeData>[],
   state?: GraphState<NodeData, LinkData>,
-): Required<NodeOptionsInterface> {
+): Required<NodeOptionsInterface<NodeData, LinkData>> {
   const { textShiftY, textSize } = nodeTextSizeGetter(state?.areaTransform);
 
   return {
     ...NODE_SETTINGS,
+    nodeDraw: null,
+    nodeExtraDraw: null,
+    textDraw: null,
+    textExtraDraw: null,
     color: color(String(node.group ?? "_DEFAULT")),
     textVisible: Boolean(
       state?.areaTransform && state.areaTransform.k > COMMON_SETTINGS.nodeTextScaleMin,

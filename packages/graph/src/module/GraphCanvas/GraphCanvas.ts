@@ -494,10 +494,11 @@ export class GraphCanvas<
 
     function draw(this: GraphCanvas<NodeData, LinkData>) {
       if (!this.context) return;
+      const state = this.state;
 
       if (this.listeners.onDraw) {
         this.listeners.onDraw(
-          this.state,
+          state,
           (status) => {
             this.highlightDrawing = status;
           },
@@ -517,86 +518,98 @@ export class GraphCanvas<
 
       /** links */
       this.context.beginPath();
-      this.links.forEach(drawLink.bind(this));
+      this.links.forEach(getDrawLink(state).bind(this));
       this.context.stroke();
 
       /** nodes */
       const textRenders: (() => void)[] = [];
-      this.nodes.forEach(drawNode(textRenders).bind(this));
+      this.nodes.forEach(getDrawNode(textRenders, state).bind(this));
       textRenders.forEach((render) => render());
 
       this.context.restore();
 
-      this.listeners.onDrawFinished?.(this.state);
+      this.listeners.onDrawFinished?.(state);
 
       calculateHighlightFading.bind(this)();
     }
 
-    function drawLink(
-      this: GraphCanvas<NodeData, LinkData>,
-      link: LinkInterface<NodeData, LinkData>,
-      index: number,
-    ) {
-      if (
-        !this.context ||
-        typeof link.source !== "object" ||
-        typeof link.target !== "object" ||
-        !link.source.x ||
-        !link.source.y ||
-        !link.target.x ||
-        !link.target.y
-      )
-        return;
-
-      const linkOptions = linkIterationExtractor(
-        link,
-        index,
-        this.links,
-        this.state,
-        this.linkSettings.options ?? {},
-        linkOptionsGetter,
-      );
-
-      let alpha = linkOptions.alpha;
-      if (this.highlightedNeighbors && this.highlightedNode) {
-        /** Not highlighted */
+    function getDrawLink(state: GraphState<NodeData, LinkData>) {
+      return function drawLink(
+        this: GraphCanvas<NodeData, LinkData>,
+        link: LinkInterface<NodeData, LinkData>,
+        index: number,
+      ) {
         if (
-          this.highlightedNode.id != link.source.id &&
-          this.highlightedNode.id != link.target.id
-        ) {
-          if (linkOptions.highlightFading)
-            alpha =
-              this.graphSettings.highlightLinkFadingMin +
-              (alpha - this.graphSettings.highlightLinkFadingMin) * (1 - this.highlightProgress);
+          !this.context ||
+          typeof link.source !== "object" ||
+          typeof link.target !== "object" ||
+          !link.source.x ||
+          !link.source.y ||
+          !link.target.x ||
+          !link.target.y
+        )
+          return;
+
+        const linkOptions = linkIterationExtractor(
+          link,
+          index,
+          this.links,
+          state,
+          this.linkSettings.options ?? {},
+          linkOptionsGetter,
+        );
+
+        if (linkOptions.drawLink) {
+          linkOptions.drawLink(link, linkOptions, state);
+
+          return;
         }
 
-        this.context.beginPath();
-      }
+        let alpha = linkOptions.alpha;
+        if (this.highlightedNeighbors && this.highlightedNode) {
+          /** Not highlighted */
+          if (
+            this.highlightedNode.id != link.source.id &&
+            this.highlightedNode.id != link.target.id
+          ) {
+            if (linkOptions.highlightFading)
+              alpha =
+                this.graphSettings.highlightLinkFadingMin +
+                (alpha - this.graphSettings.highlightLinkFadingMin) * (1 - this.highlightProgress);
+          }
 
-      this.context.globalAlpha = alpha;
-      this.context.strokeStyle = linkOptions.color;
-      this.context.lineWidth = linkOptions.width;
+          this.context.beginPath();
+        }
 
-      if (linkOptions.pretty) {
-        const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(link) ?? {
-          x1: 0,
-          x2: 0,
-          y1: 0,
-          y2: 0,
-        };
+        this.context.globalAlpha = alpha;
+        this.context.strokeStyle = linkOptions.color;
+        this.context.lineWidth = linkOptions.width;
 
-        this.context.moveTo(x1, y1);
-        this.context.lineTo(x2, y2);
-      } else {
-        this.context.moveTo(link.source.x, link.source.y);
-        this.context.lineTo(link.target.x, link.target.y);
-      }
+        if (linkOptions.pretty) {
+          const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(link) ?? {
+            x1: 0,
+            x2: 0,
+            y1: 0,
+            y2: 0,
+          };
 
-      if (this.highlightedNeighbors && this.highlightedNode) this.context.stroke();
+          this.context.moveTo(x1, y1);
+          this.context.lineTo(x2, y2);
+        } else {
+          this.context.moveTo(link.source.x, link.source.y);
+          this.context.lineTo(link.target.x, link.target.y);
+        }
+
+        if (this.highlightedNeighbors && this.highlightedNode) this.context.stroke();
+
+        if (linkOptions.drawExtraLink) {
+          linkOptions.drawExtraLink(link, linkOptions, state);
+        }
+      };
     }
 
-    const drawNode = (textRenders: (() => void)[]) =>
-      function drawNode(
+    function getDrawNode(textRenders: (() => void)[], state: GraphState<NodeData, LinkData>) {
+      return function drawNode(
         this: GraphCanvas<NodeData, LinkData>,
         node: NodeInterface<NodeData>,
         index: number,
@@ -607,10 +620,16 @@ export class GraphCanvas<
           node,
           index,
           this.nodes,
-          this.state,
+          state,
           this.nodeSettings.options ?? {},
           nodeOptionsGetter,
         );
+
+        if (nodeOptions.nodeDraw) {
+          nodeOptions.nodeDraw(node, nodeOptions, state);
+
+          return;
+        }
 
         let alpha = nodeOptions.alpha;
         let color = nodeOptions.color;
@@ -688,6 +707,12 @@ export class GraphCanvas<
         /** text */
         if (nodeOptions.textVisible && nodeOptions.text) {
           textRenders.push(() => {
+            if (nodeOptions.textDraw) {
+              nodeOptions.textDraw(node, nodeOptions, state);
+
+              return;
+            }
+
             if (!this.context || !node.x || !node.y || !nodeOptions.text) return;
             this.context.beginPath();
             this.context.globalAlpha = textAlpha;
@@ -708,6 +733,25 @@ export class GraphCanvas<
               textWeight,
               textGap: nodeOptions.textGap,
             });
+
+            if (nodeOptions.textExtraDraw) {
+              nodeOptions.textExtraDraw(
+                node,
+                {
+                  ...nodeOptions,
+                  radius,
+                  alpha,
+                  color,
+                  textAlpha,
+                  textSize,
+                  textShiftX,
+                  textShiftY,
+                  textWeight,
+                  textWidth,
+                },
+                state,
+              );
+            }
           });
         }
 
@@ -719,7 +763,27 @@ export class GraphCanvas<
 
         this.context.fill();
         this.context.stroke();
+
+        if (nodeOptions.nodeExtraDraw) {
+          nodeOptions.nodeExtraDraw(
+            node,
+            {
+              ...nodeOptions,
+              radius,
+              alpha,
+              color,
+              textAlpha,
+              textSize,
+              textShiftX,
+              textShiftY,
+              textWeight,
+              textWidth,
+            },
+            state,
+          );
+        }
       };
+    }
 
     return draw;
   }

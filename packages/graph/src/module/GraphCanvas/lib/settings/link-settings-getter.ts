@@ -20,9 +20,11 @@ export function linkOptionsGetter<
   __: number,
   ___: LinkInterface<NodeData, LinkData>[],
   state?: GraphState<NodeData, LinkData>,
-): Required<LinkOptionsInterface> {
+): Required<LinkOptionsInterface<NodeData, LinkData>> {
   return {
     ...LINK_SETTINGS,
+    drawExtraLink: null,
+    drawLink: null,
     color:
       state?.areaTransform && state?.areaTransform.k > COMMON_SETTINGS.linkColorZoomBorder
         ? COMMON_SETTINGS.linkColorZoomNear
