@@ -603,7 +603,7 @@ export class GraphCanvas<
         if (this.highlightedNeighbors && this.highlightedNode) this.context.stroke();
 
         if (linkOptions.drawExtraLink) {
-          linkOptions.drawExtraLink(link, linkOptions, state);
+          linkOptions.drawExtraLink(link, { ...linkOptions, alpha }, state);
         }
       };
     }
@@ -708,7 +708,22 @@ export class GraphCanvas<
         if (nodeOptions.textVisible && nodeOptions.text) {
           textRenders.push(() => {
             if (nodeOptions.textDraw) {
-              nodeOptions.textDraw(node, nodeOptions, state);
+              nodeOptions.textDraw(
+                node,
+                {
+                  ...nodeOptions,
+                  radius,
+                  alpha,
+                  color,
+                  textAlpha,
+                  textSize,
+                  textShiftX,
+                  textShiftY,
+                  textWeight,
+                  textWidth,
+                },
+                state,
+              );
 
               return;
             }
