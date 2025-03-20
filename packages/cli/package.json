@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/cli",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Krainov cli",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -24,6 +24,7 @@
     "lib"
   ],
   "scripts": {
+    "check-duplicate": "pnpm dev-build check-package-duplicate -f ../../pnpm-lock.yaml",
     "dev": "node lib/index.js",
     "dev-build": "npm run build && node lib/index.js",
     "publish-package": "npm run build && npm run lint && npm publish",

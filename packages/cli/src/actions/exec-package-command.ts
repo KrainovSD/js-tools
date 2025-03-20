@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { execa } from "execa";
+import type { PackageManager } from "../types";
 
-export async function execPackageCommand(arg: string, prefix: string, pm: "npm" | "pnpm" | "yarn") {
+export async function execPackageCommand(arg: string, prefix: string, pm: PackageManager) {
   const [command, packageName] = arg.split(":");
 
   if (!packageName || !command) {

@@ -1,7 +1,8 @@
 import { Option, program } from "commander";
 import ora from "ora";
 import { resolve } from "path";
-import { checkPackageDuplicate, execPackageCommand } from "./actions";
+import { checkPackageDuplicate, clearDependencies, execPackageCommand } from "./actions";
+import type { PackageManager } from "./types";
 
 program.name("ksd").description("Krainov CLI").version("0.0.1");
 program
@@ -18,7 +19,7 @@ program
     async (
       args: string,
       options: {
-        packageManager: "pnpm" | "yarn" | "npm";
+        packageManager: PackageManager;
         prefix: string;
       },
     ) => {
@@ -38,13 +39,31 @@ program
       .choices(["pnpm"])
       .default("pnpm"),
   )
-  .action((options: { packageManager: "pnpm" | "yarn" | "npm"; file: string; output: string }) => {
+  .action((options: { packageManager: PackageManager; file: string; output: string }) => {
     const file = resolve(process.cwd(), options.file);
     const output = resolve(process.cwd(), options.output);
     console.log({ file, output });
 
     const spinner = ora("Executing...").start();
     checkPackageDuplicate(file, output);
+    spinner.stop();
+  });
+
+program
+  .command("clear-dependencies")
+  .description("Clear all dependencies in monorepo")
+  .addOption(new Option("-s, --src <path>", "Path to root").default(""))
+  .addOption(
+    new Option("-p, --package-manager <pm>", "Package manager for execute command")
+      .choices(["pnpm"])
+      .default("pnpm"),
+  )
+  .action((options: { packageManager: PackageManager; src: string }) => {
+    const root = resolve(process.cwd(), options.src);
+    console.log({ root });
+
+    const spinner = ora("Executing...").start();
+    clearDependencies(root, options.packageManager);
     spinner.stop();
   });
 
