@@ -12,13 +12,7 @@
   import type { GraphSettingsInputInterface } from "@/types/controls";
   import { graphStore, linksStore, nodesStore } from "./store";
   // import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "../../mock";
-  import {
-    getForceControls,
-    getGraphControls,
-    getLinkControls,
-    getNodeControls,
-    getTextControls,
-  } from "@/lib";
+  import { getForceControls, getGraphControls, getLinkControls, getNodeControls } from "@/lib";
   import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
   import type {
     ForceSettingsInterface,
@@ -191,7 +185,7 @@
             onChange(input.id, +event.currentTarget.value);
           }}
           value={settings[input.id] ?? input.initialValue}
-          data-tooltip={settings[input.id]?.toString?.()}
+          data-tooltip={settings[input.id]?.toString?.() ?? input.initialValue.toString()}
         />
         <span>{input.label ?? input.id}</span>
       {/if}
@@ -283,9 +277,6 @@
       <span>Параметры нод:</span>
       <Flex vertical gap={10}>
         {@render inputs(getNodeControls(), nodeOptions, (key, value) => {
-          nodeOptions = { ...nodeOptions, [key]: value };
-        })}
-        {@render inputs(getTextControls(), nodeOptions, (key, value) => {
           nodeOptions = { ...nodeOptions, [key]: value };
         })}
         <button class={styles.settings__button} onclick={clearNode}>Сбросить</button>

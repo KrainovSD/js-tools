@@ -340,36 +340,6 @@ export function getNodeControls<
       label: "Цвет",
     },
     {
-      id: "highlightFading",
-      type: "checkbox",
-      initialValue: true,
-      label: "Анимация затухания",
-    },
-    {
-      id: "highlightColor",
-      type: "checkbox",
-      initialValue: false,
-      label: "Анимация затухания цвета",
-    },
-    {
-      id: "highlightSizing",
-      type: "checkbox",
-      initialValue: true,
-      label: "Анимация размера",
-    },
-  ];
-
-  return keys ? NODE_CONTROLS.filter((control) => keys.includes(control.id)) : NODE_CONTROLS;
-}
-
-export function getTextControls<
-  NodeData extends Record<string, unknown>,
-  LinkData extends Record<string, unknown>,
->(keys?: (keyof NodeOptionsInterface<NodeData, LinkData>)[]) {
-  const NODE_CONTROLS: GraphSettingsInputInterface<
-    keyof NodeOptionsInterface<NodeData, LinkData>
-  >[] = [
-    {
       id: "textAlpha",
       type: "range",
       max: 1,
@@ -390,20 +360,20 @@ export function getTextControls<
     {
       id: "textShiftX",
       type: "range",
-      max: 1000,
+      max: 100,
       min: 0,
-      step: 1,
+      step: 0.1,
       label: "Смещение X текста",
       initialValue: 0,
     },
     {
       id: "textShiftY",
       type: "range",
-      max: 1000,
+      max: 100,
       min: 0,
-      step: 1,
+      step: 0.1,
       label: "Смещение Y текста",
-      initialValue: 15,
+      initialValue: 4,
     },
     {
       id: "textWeight",
@@ -417,13 +387,30 @@ export function getTextControls<
     {
       id: "textGap",
       type: "range",
-      max: 100,
+      max: 30,
       min: 0,
-      step: 1,
-      label: "Расстояние между текстом",
+      step: 0.1,
+      label: "Расстояние между строками",
       initialValue: 1,
     },
-
+    {
+      id: "highlightFading",
+      type: "checkbox",
+      initialValue: true,
+      label: "Анимация затухания",
+    },
+    {
+      id: "highlightColor",
+      type: "checkbox",
+      initialValue: false,
+      label: "Анимация затухания цвета",
+    },
+    {
+      id: "highlightSizing",
+      type: "checkbox",
+      initialValue: true,
+      label: "Анимация размера",
+    },
     {
       id: "highlightTextFading",
       type: "checkbox",

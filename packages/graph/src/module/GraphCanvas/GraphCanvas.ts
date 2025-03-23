@@ -208,17 +208,24 @@ export class GraphCanvas<
       "links" | "nodes" | "listeners"
     >,
   ) {
-    if (options.graphSettings)
-      this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
-    if (options.forceSettings)
-      this.forceSettings = forceSettingsGetter(options.forceSettings, this.forceSettings);
-    if (options.linkSettings) this.linkSettings = linkSettingsGetter(options.linkSettings);
-    if (options.nodeSettings) this.nodeSettings = nodeSettingsGetter(options.nodeSettings);
-
-    if (options.forceSettings) return void this.updateSimulation();
     if (options.graphSettings) {
+      this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
       this.draw = this.initDraw();
       this.initZoom(this.areaTransform);
+    }
+    if (options.forceSettings) {
+      this.forceSettings = forceSettingsGetter(options.forceSettings, this.forceSettings);
+    }
+    if (options.linkSettings) {
+      this.linkSettings = linkSettingsGetter(options.linkSettings);
+    }
+    if (options.nodeSettings) {
+      this.nodeSettings = nodeSettingsGetter(options.nodeSettings);
+      this.cachedNodeText = {};
+    }
+
+    if (options.forceSettings) {
+      return void this.updateSimulation();
     }
 
     this.tick();

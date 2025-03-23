@@ -9,5 +9,4 @@ export {
   getGraphControls,
   getLinkControls,
   getNodeControls,
-  getTextControls,
 } from "./lib";
