@@ -601,11 +601,11 @@ export class GraphCanvas<
             this.highlightedNode.id != link.target.id
           ) {
             if (linkOptions.highlightFading) {
-              alpha = animationByProgress(
-                this.graphSettings.highlightLinkFadingMin,
-                alpha - this.graphSettings.highlightLinkFadingMin,
-                1 - this.highlightProgress,
-              );
+              const min =
+                this.graphSettings.highlightLinkFadingMin < alpha
+                  ? this.graphSettings.highlightLinkFadingMin
+                  : alpha;
+              alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
             }
           }
         }
@@ -679,18 +679,18 @@ export class GraphCanvas<
           /** Not highlighted */
           if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
             if (nodeOptions.highlightFading) {
-              alpha = animationByProgress(
-                this.graphSettings.highlightFadingMin,
-                alpha - this.graphSettings.highlightFadingMin,
-                1 - this.highlightProgress,
-              );
+              const min =
+                this.graphSettings.highlightFadingMin < alpha
+                  ? this.graphSettings.highlightFadingMin
+                  : alpha;
+              alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
             }
             if (nodeOptions.highlightTextFading) {
-              textAlpha = animationByProgress(
-                this.graphSettings.highlightTextFadingMin,
-                textAlpha - this.graphSettings.highlightTextFadingMin,
-                1 - this.highlightProgress,
-              );
+              const min =
+                this.graphSettings.highlightTextFadingMin < textAlpha
+                  ? this.graphSettings.highlightTextFadingMin
+                  : textAlpha;
+              textAlpha = animationByProgress(min, textAlpha - min, 1 - this.highlightProgress);
             }
             if (nodeOptions.highlightColor) {
               const colorRgb = extractRgb(colorToRgb(color));
