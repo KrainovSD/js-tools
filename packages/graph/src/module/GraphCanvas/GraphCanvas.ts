@@ -29,6 +29,7 @@ import {
   drawText,
   forceSettingsGetter,
   graphSettingsGetter,
+  isNodeVisible,
   linkIterationExtractor,
   linkOptionsGetter,
   linkSettingsGetter,
@@ -530,12 +531,16 @@ export class GraphCanvas<
       this.context.translate(this.areaTransform.x, this.areaTransform.y);
       this.context.scale(this.areaTransform.k, this.areaTransform.k);
 
+      const textRenders: (() => void)[] = [];
+      const nodeRenders: (() => void)[] = [];
+      this.nodes.forEach(getDrawNode(nodeRenders, textRenders, state).bind(this));
+
       /** links */
       this.links.forEach(getDrawLink(state).bind(this));
 
       /** nodes */
-      const textRenders: (() => void)[] = [];
-      this.nodes.forEach(getDrawNode(textRenders, state).bind(this));
+
+      nodeRenders.forEach((render) => render());
       textRenders.forEach((render) => render());
 
       this.context.restore();
@@ -561,6 +566,8 @@ export class GraphCanvas<
           !link.target.y
         )
           return;
+
+        if (!link.source._visible && !link.target._visible) return;
 
         const linkOptions = linkIterationExtractor(
           link,
@@ -623,7 +630,11 @@ export class GraphCanvas<
       };
     }
 
-    function getDrawNode(textRenders: (() => void)[], state: GraphState<NodeData, LinkData>) {
+    function getDrawNode(
+      nodeRenders: (() => void)[],
+      textRenders: (() => void)[],
+      state: GraphState<NodeData, LinkData>,
+    ) {
       return function drawNode(
         this: GraphCanvas<NodeData, LinkData>,
         node: NodeInterface<NodeData>,
@@ -736,10 +747,38 @@ export class GraphCanvas<
         });
 
         node._radius = radius;
+        if (
+          !isNodeVisible({
+            height: this.height,
+            width: this.width,
+            x: node.x,
+            y: node.y,
+            radius,
+            transform: this.areaTransform,
+          })
+        ) {
+          node._visible = false;
 
-        this.context.beginPath();
+          return;
+        }
+        node._visible = true;
 
-        this.context.globalAlpha = alpha;
+        nodeRenders.push(() => {
+          if (!this.context || !node.x || !node.y) return;
+
+          this.context.beginPath();
+
+          this.context.globalAlpha = alpha;
+
+          /** circle */
+          this.context.lineWidth = nodeOptions.borderWidth;
+          this.context.strokeStyle = nodeOptions.borderColor;
+          this.context.fillStyle = color;
+          this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+
+          this.context.fill();
+          this.context.stroke();
+        });
 
         /** text */
         if (nodeOptions.textVisible && nodeOptions.text) {
@@ -806,15 +845,6 @@ export class GraphCanvas<
             }
           });
         }
-
-        /** circle */
-        this.context.lineWidth = nodeOptions.borderWidth;
-        this.context.strokeStyle = nodeOptions.borderColor;
-        this.context.fillStyle = color;
-        this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
-
-        this.context.fill();
-        this.context.stroke();
 
         if (nodeOptions.nodeExtraDraw) {
           nodeOptions.nodeExtraDraw(

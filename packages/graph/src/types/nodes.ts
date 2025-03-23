@@ -7,6 +7,7 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   group?: number | string;
   neighbors?: (string | number)[];
   _radius?: number;
+  _visible?: boolean;
   name?: string;
   data?: NodeData;
   drag?: boolean;

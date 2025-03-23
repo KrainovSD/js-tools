@@ -75,8 +75,8 @@
         root,
         listeners: {
           onClick: untrack(() => onClick),
-          onDoubleClick: () => {
-            console.log(graphInstance?.getData?.());
+          onDoubleClick: (event, node) => {
+            console.log({ ...graphInstance?.getData?.(), node });
           },
           onSimulationEnd: () => {
             console.log("simulation end");
