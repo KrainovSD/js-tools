@@ -396,10 +396,10 @@ export class GraphCanvas<
         ).strength(this.forceSettings.centerStrength),
       );
 
-    this.initCollideForce();
+    this.initCollideForce(true);
   }
 
-  private initCollideForce() {
+  private initCollideForce(forceUpdate?: boolean) {
     if (!this.simulation) return;
 
     if (!this.forceSettings.collideOn) {
@@ -414,8 +414,9 @@ export class GraphCanvas<
       isHasMax && this.forceSettings.collideOffMax.nodes < this.nodes.length;
     const isMaxCollideLinks =
       isHasMax && this.forceSettings.collideOffMax.links < this.links.length;
-    if (isMaxCollideNodes && isMaxCollideLinks) this.simulation.force("collide", null);
-    else if (!this.simulation.force("collide"))
+    if (isMaxCollideNodes && isMaxCollideLinks) {
+      this.simulation.force("collide", null);
+    } else if (!this.simulation.force("collide") || forceUpdate) {
       this.simulation.force(
         "collide",
         forceCollide<NodeInterface<NodeData>>()
@@ -451,6 +452,7 @@ export class GraphCanvas<
           .strength(this.forceSettings.collideStrength)
           .iterations(this.forceSettings.collideIterations),
       );
+    }
   }
 
   private initArea() {

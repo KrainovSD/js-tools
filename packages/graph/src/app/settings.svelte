@@ -39,7 +39,7 @@
     { data: customMock, id: 4, label: "Кастомный" },
     { data: createNewDynamicMock({ links: [], nodes: [] }), id: 5, label: "Динамически" },
   ];
-  let selectedDataId: number = $state(2);
+  let selectedDataId: number = $state(1);
   let forceSettings: Partial<ForceSettingsInterface<NodeData, LinkData>> = $state.raw({
     ...FORCE_SETTINGS,
   });
@@ -138,7 +138,7 @@
 
     if (store) {
       store.changeSettings({
-        graphSettings: { ...graphSettings, showDrawTimeEveryTick: true },
+        graphSettings: { ...graphSettings, showDrawTimeEveryTick: false },
       });
     }
   });
