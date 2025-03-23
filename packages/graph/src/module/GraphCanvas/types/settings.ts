@@ -115,7 +115,6 @@ export type NodeOptionsInterface<
   borderColor?: string;
   borderWidth?: number;
   radius?: number;
-  width?: number;
   alpha?: number;
   color?: string;
   textVisible?: boolean;

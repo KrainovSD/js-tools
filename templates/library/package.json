@@ -31,11 +31,9 @@
     "test": "jest",
     "test-coverage": "jest --coverage"
   },
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@krainovsd/presets": "0.1.6",
+    "@krainovsd/presets": "0.2.0",
     "eslint": "9.21.0",
     "prettier": "3.5.2",
     "rollup": "4.34.9",

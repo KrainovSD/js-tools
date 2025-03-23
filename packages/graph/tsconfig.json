@@ -6,15 +6,21 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "moduleDetection": "force",
+    "allowJs": true,
+    "checkJs": true
   },
   "include": [
-    "src/**/*",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte",
     "eslint.config.js",
     "src/typings.d.ts",
     "rollup.config.ts",
     "rollup-singleton.config.ts",
-    ".prettierrc.mjs"
+    ".prettierrc.mjs",
+    "svelte.config.js"
   ],
   "exclude": ["node_modules", "dist"],
   "references": [

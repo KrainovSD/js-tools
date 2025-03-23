@@ -1,3 +1,13 @@
 export * from "./module/GraphCanvas";
 export * from "./types";
-export { colorToRgb, extractRgb, rgbAnimationByProgress, fadeRgb } from "./lib";
+export {
+  colorToRgb,
+  extractRgb,
+  rgbAnimationByProgress,
+  fadeRgb,
+  getForceControls,
+  getGraphControls,
+  getLinkControls,
+  getNodeControls,
+  getTextControls,
+} from "./lib";

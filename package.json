@@ -2,8 +2,8 @@
   "name": "krainovsd",
   "private": false,
   "scripts": {
-    "ksd-exec": "npx ksd exec-package-command",
-    "ksd-check": "npx ksd check-package-duplicate",
+    "pkg-exec": "npx ksd exec-package-command",
+    "dep-check": "npx ksd check-package-duplicate",
     "lint": "turbo lint --ui tui --parallel",
     "test": "turbo test --ui tui --parallel",
     "build": "turbo build --ui tui --parallel",

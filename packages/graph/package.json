@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/graph",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Krainov graph",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -55,7 +55,9 @@
     "@types/d3-drag": "3.0.7",
     "@types/d3-array": "3.2.1",
     "vite": "6.0.11",
-    "@types/lodash": "4.17.14"
+    "@types/lodash": "4.17.14",
+    "@sveltejs/vite-plugin-svelte": "5.0.3",
+    "svelte": "5.23.2"
   },
   "dependencies": {
     "@krainovsd/js-helpers": "0.12.0",
