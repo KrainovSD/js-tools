@@ -48,8 +48,10 @@ import type {
   GraphCanvasSimulation,
   GraphSettingsInterface,
   GraphState,
+  LinkOptionsInterface,
   LinkSettingsInterface,
   ListenersInterface,
+  NodeOptionsInterface,
   NodeSettingsInterface,
   ZoomEventInterface,
 } from "./types";
@@ -103,6 +105,10 @@ export class GraphCanvas<
   private eventAbortController: AbortController;
 
   private cachedNodeText: CachedNodeTextInterface = {};
+
+  private linkOptionsCache: Record<string, Required<LinkOptionsInterface<NodeData, LinkData>>> = {};
+
+  private nodeOptionsCache: Record<string, Required<NodeOptionsInterface<NodeData, LinkData>>> = {};
 
   private isDragging: boolean = false;
 
@@ -217,11 +223,13 @@ export class GraphCanvas<
       this.forceSettings = forceSettingsGetter(options.forceSettings, this.forceSettings);
     }
     if (options.linkSettings) {
-      this.linkSettings = linkSettingsGetter(options.linkSettings);
+      this.linkSettings = linkSettingsGetter(options.linkSettings, this.linkSettings);
+      this.linkOptionsCache = {};
     }
     if (options.nodeSettings) {
-      this.nodeSettings = nodeSettingsGetter(options.nodeSettings);
+      this.nodeSettings = nodeSettingsGetter(options.nodeSettings, this.nodeSettings);
       this.cachedNodeText = {};
+      this.nodeOptionsCache = {};
     }
 
     if (options.forceSettings) {
@@ -229,6 +237,12 @@ export class GraphCanvas<
     }
 
     this.tick();
+  }
+
+  clearCache() {
+    this.nodeOptionsCache = {};
+    this.linkOptionsCache = {};
+    this.cachedNodeText = {};
   }
 
   tick() {
@@ -292,6 +306,8 @@ export class GraphCanvas<
 
   private clearDataDependencies() {
     this.cachedNodeText = {};
+    this.nodeOptionsCache = {};
+    this.linkOptionsCache = {};
   }
 
   private updateData(alpha?: number) {
@@ -578,14 +594,23 @@ export class GraphCanvas<
 
         if (!link.source._visible && !link.target._visible) return;
 
-        const linkOptions = linkIterationExtractor(
-          link,
-          index,
-          this.links,
-          state,
-          this.linkSettings.options ?? {},
-          linkOptionsGetter,
-        );
+        const id = `${link.target.id}${link.source.id}`;
+        let linkOptions: Required<LinkOptionsInterface<NodeData, LinkData>>;
+        if (this.linkSettings.cache && this.linkOptionsCache[id]) {
+          linkOptions = this.linkOptionsCache[id];
+        } else {
+          linkOptions = linkIterationExtractor(
+            link,
+            index,
+            this.links,
+            state,
+            this.linkSettings.options ?? {},
+            linkOptionsGetter,
+          );
+          if (this.linkSettings.cache) {
+            this.linkOptionsCache[id] = linkOptions;
+          }
+        }
 
         if (linkOptions.drawLink) {
           linkOptions.drawLink(link, linkOptions, state);
@@ -635,63 +660,41 @@ export class GraphCanvas<
         this.context.strokeStyle = linkOptions.color;
         this.context.lineWidth = linkOptions.width;
 
-        let xStart = link.source.x;
-        let xEnd = link.target.x;
-        let yStart = link.source.y;
-        let yEnd = link.target.y;
-
-        // if (linkOptions.pretty) {
-        //   const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(link) ?? {
-        //     x1: 0,
-        //     x2: 0,
-        //     y1: 0,
-        //     y2: 0,
-        //   };
-
-        //   this.context.moveTo(x1, y1);
-        //   this.context.lineTo(x2, y2);
-        // } else {
-        //   this.context.moveTo(link.source.x, link.source.y);
-        //   this.context.lineTo(link.target.x, link.target.y);
-        // }
-        // this.context.stroke();
-
         if (linkOptions.pretty) {
-          const isHasArrow = linkOptions.arrow && arrowAlpha > 0;
-          const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(
-            link,
-            isHasArrow ? linkOptions.arrowSize : 0,
-          ) ?? {
+          const {
+            x1: xStart,
+            x2: xEnd,
+            y1: yStart,
+            y2: yEnd,
+          } = calculateLinkPositionByRadius(link) ?? {
             x1: 0,
             x2: 0,
             y1: 0,
             y2: 0,
           };
 
-          xStart = x1;
-          xEnd = x2;
-          yStart = y1;
-          yEnd = y2;
+          this.context.moveTo(xStart, yStart);
+          this.context.lineTo(xEnd, yEnd);
+        } else {
+          this.context.moveTo(link.source.x, link.source.y);
+          this.context.lineTo(link.target.x, link.target.y);
         }
-
-        this.context.moveTo(xStart, yStart);
-        this.context.lineTo(xEnd, yEnd);
         this.context.stroke();
 
         /** Arrow */
 
         if (linkOptions.arrow && arrowAlpha > 0) {
-          const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(link) ?? {
+          const {
+            x1: xStart,
+            x2: xEnd,
+            y1: yStart,
+            y2: yEnd,
+          } = calculateLinkPositionByRadius(link) ?? {
             x1: 0,
             x2: 0,
             y1: 0,
             y2: 0,
           };
-
-          xStart = x1;
-          xEnd = x2;
-          yStart = y1;
-          yEnd = y2;
 
           const angle = Math.atan2(yEnd - yStart, xEnd - xStart);
           this.context.beginPath();
@@ -729,14 +732,22 @@ export class GraphCanvas<
       ) {
         if (!this.context || !node.x || !node.y) return;
 
-        const nodeOptions = nodeIterationExtractor(
-          node,
-          index,
-          this.nodes,
-          state,
-          this.nodeSettings.options ?? {},
-          nodeOptionsGetter,
-        );
+        let nodeOptions: Required<NodeOptionsInterface<NodeData, LinkData>>;
+        if (this.nodeSettings.cache && this.nodeOptionsCache[node.id]) {
+          nodeOptions = this.nodeOptionsCache[node.id];
+        } else {
+          nodeOptions = nodeIterationExtractor(
+            node,
+            index,
+            this.nodes,
+            state,
+            this.nodeSettings.options ?? {},
+            nodeOptionsGetter,
+          );
+          if (this.nodeSettings.cache) {
+            this.nodeOptionsCache[node.id] = nodeOptions;
+          }
+        }
 
         if (nodeOptions.nodeDraw) {
           nodeOptions.nodeDraw(node, nodeOptions, state);
@@ -1212,6 +1223,8 @@ export class GraphCanvas<
       .on("zoom", (event: ZoomEventInterface) => {
         this.listeners.onZoom?.(event);
         this.areaTransform = event.transform;
+        this.linkOptionsCache = {};
+        this.nodeOptionsCache = {};
 
         if (!this.simulationWorking) requestAnimationFrame(() => this.draw());
       });

@@ -1,9 +1,12 @@
+import type { LinkData, NodeData } from "@/app/types";
 import { dragPlaceCoefficientGetter } from "../lib";
 import type {
   ForceSettingsInterface,
   GraphSettingsInterface,
   LinkOptionsInterface,
+  LinkSettingsInterface,
   NodeOptionsInterface,
+  NodeSettingsInterface,
 } from "../types";
 
 export const FORCE_SETTINGS: Required<
@@ -61,6 +64,13 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
 };
 
 export const NODE_SETTINGS: Omit<
+  Required<NodeSettingsInterface<NodeData, LinkData>>,
+  "options" | "idGetter"
+> = {
+  cache: false,
+};
+
+export const NODE_OPTIONS: Omit<
   Required<NodeOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
   | "color"
   | "text"
@@ -92,7 +102,11 @@ export const NODE_SETTINGS: Omit<
   highlightTextSizing: true,
 };
 
-export const LINK_SETTINGS: Omit<
+export const LINK_SETTINGS: Omit<Required<LinkSettingsInterface<NodeData, LinkData>>, "options"> = {
+  cache: false,
+};
+
+export const LINK_OPTIONS: Omit<
   Required<LinkOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
   "color" | "width" | "drawLink" | "drawExtraLink" | "arrowColor"
 > = {

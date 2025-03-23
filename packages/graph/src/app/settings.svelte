@@ -6,8 +6,8 @@
   import {
     FORCE_SETTINGS,
     GRAPH_SETTINGS,
-    LINK_SETTINGS,
-    NODE_SETTINGS,
+    LINK_OPTIONS,
+    NODE_OPTIONS,
   } from "@/module/GraphCanvas/constants";
   import type { GraphSettingsInputInterface } from "@/types/controls";
   import { graphStore, linksStore, nodesStore } from "./store";
@@ -38,8 +38,8 @@
     ...FORCE_SETTINGS,
   });
   let graphSettings: Partial<GraphSettingsInterface<NodeData>> = $state({ ...GRAPH_SETTINGS });
-  let nodeOptions: Partial<NodeOptionsInterface<NodeData, LinkData>> = $state({ ...NODE_SETTINGS });
-  let linkOptions: Partial<LinkOptionsInterface<NodeData, LinkData>> = $state({ ...LINK_SETTINGS });
+  let nodeOptions: Partial<NodeOptionsInterface<NodeData, LinkData>> = $state({ ...NODE_OPTIONS });
+  let linkOptions: Partial<LinkOptionsInterface<NodeData, LinkData>> = $state({ ...LINK_OPTIONS });
 
   let openForce = $state(false);
   let openGraph = $state(false);
@@ -88,10 +88,10 @@
     graphSettings = { ...GRAPH_SETTINGS };
   }
   function clearNode() {
-    nodeOptions = { ...NODE_SETTINGS };
+    nodeOptions = { ...NODE_OPTIONS };
   }
   function clearLink() {
-    linkOptions = { ...LINK_SETTINGS };
+    linkOptions = { ...LINK_OPTIONS };
   }
 
   $effect(() => {
@@ -143,6 +143,7 @@
     if (store) {
       store.changeSettings({
         nodeSettings: {
+          cache: true,
           options: (node) => {
             return options;
           },
@@ -157,6 +158,7 @@
     if (store) {
       store.changeSettings({
         linkSettings: {
+          cache: true,
           options: (link) => {
             return options;
           },

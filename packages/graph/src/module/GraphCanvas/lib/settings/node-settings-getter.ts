@@ -1,7 +1,7 @@
 import type { ZoomTransform } from "d3-zoom";
 import { colorGetter } from "@/lib";
 import type { NodeInterface } from "@/types";
-import { COMMON_SETTINGS, NODE_SETTINGS } from "../../constants";
+import { COMMON_SETTINGS, NODE_OPTIONS, NODE_SETTINGS } from "../../constants";
 import type { GraphState, NodeOptionsInterface, NodeSettingsInterface } from "../../types";
 
 export function nodeSettingsGetter<
@@ -9,11 +9,14 @@ export function nodeSettingsGetter<
   LinkData extends Record<string, unknown>,
 >(
   settings: NodeSettingsInterface<NodeData, LinkData> | undefined,
+  prevNodeSettings?: Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
+    Pick<NodeSettingsInterface<NodeData, LinkData>, "options">,
 ): Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
   Pick<NodeSettingsInterface<NodeData, LinkData>, "options"> {
   return {
-    idGetter: settings?.idGetter ?? nodeIdGetter,
-    options: settings?.options,
+    ...(prevNodeSettings ?? NODE_SETTINGS),
+    idGetter: nodeIdGetter,
+    ...settings,
   };
 }
 
@@ -31,7 +34,7 @@ export function nodeOptionsGetter<
   const { textShiftY, textSize } = nodeTextSizeGetter(state?.areaTransform);
 
   return {
-    ...NODE_SETTINGS,
+    ...NODE_OPTIONS,
     nodeDraw: null,
     nodeExtraDraw: null,
     textDraw: null,

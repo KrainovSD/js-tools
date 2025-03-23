@@ -72,6 +72,7 @@ export type NodeSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
+  cache?: boolean;
   idGetter?: NodeIterationPropsInterface<NodeData, LinkData, string | number>;
   options?:
     | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface<NodeData, LinkData>>
@@ -150,6 +151,7 @@ export type LinkSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
+  cache?: boolean;
   options?:
     | LinkIterationPropsInterface<NodeData, LinkData, LinkOptionsInterface<NodeData, LinkData>>
     | LinkOptionsInterface<NodeData, LinkData>;

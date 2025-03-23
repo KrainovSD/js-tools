@@ -1,5 +1,5 @@
 import type { LinkInterface } from "@/types";
-import { COMMON_SETTINGS, LINK_SETTINGS } from "../../constants";
+import { COMMON_SETTINGS, LINK_OPTIONS, LINK_SETTINGS } from "../../constants";
 import type { GraphState, LinkOptionsInterface, LinkSettingsInterface } from "../../types";
 
 export function linkSettingsGetter<
@@ -7,9 +7,11 @@ export function linkSettingsGetter<
   LinkData extends Record<string, unknown>,
 >(
   settings: LinkSettingsInterface<NodeData, LinkData> | undefined,
+  prevSettings?: Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
+    Pick<LinkSettingsInterface<NodeData, LinkData>, "options">,
 ): Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
   Pick<LinkSettingsInterface<NodeData, LinkData>, "options"> {
-  return { options: settings?.options };
+  return { ...(prevSettings ?? LINK_SETTINGS), ...settings };
 }
 
 export function linkOptionsGetter<
@@ -22,7 +24,7 @@ export function linkOptionsGetter<
   state?: GraphState<NodeData, LinkData>,
 ): Required<LinkOptionsInterface<NodeData, LinkData>> {
   return {
-    ...LINK_SETTINGS,
+    ...LINK_OPTIONS,
     drawExtraLink: null,
     drawLink: null,
     color:
