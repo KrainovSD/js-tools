@@ -138,41 +138,33 @@
 
     if (store) {
       store.changeSettings({
-        graphSettings: { ...graphSettings },
+        graphSettings: { ...graphSettings, showDrawTimeEveryTick: true },
       });
     }
   });
   $effect(() => {
-    nodeOptions;
-
     const store = untrack(() => $graphStore);
+    const options = JSON.parse(JSON.stringify(nodeOptions));
 
     if (store) {
       store.changeSettings({
         nodeSettings: {
           options: (node) => {
-            return {
-              ...nodeOptions,
-            };
+            return options;
           },
         },
       });
     }
   });
   $effect(() => {
-    linkOptions;
-
-    console.log(linkOptions);
-
     const store = untrack(() => $graphStore);
+    const options = JSON.parse(JSON.stringify(linkOptions));
 
     if (store) {
       store.changeSettings({
         linkSettings: {
           options: (link) => {
-            return {
-              ...linkOptions,
-            };
+            return options;
           },
         },
       });
@@ -196,7 +188,7 @@
           max={input.max}
           step={input.step}
           oninput={(event) => {
-            onChange(input.id, event.currentTarget.value);
+            onChange(input.id, +event.currentTarget.value);
           }}
           value={settings[input.id] ?? input.initialValue}
           data-tooltip={settings[input.id]?.toString?.()}

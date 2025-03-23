@@ -6,3 +6,4 @@ export * from "./node-by-pointer-getter";
 export * from "./node-iteration-extractor";
 export * from "./draw-text";
 export * from "./calculate-link-position-by-radius";
+export * from "./animation-by-progress";

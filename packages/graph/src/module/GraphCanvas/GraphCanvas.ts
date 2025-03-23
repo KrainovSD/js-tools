@@ -13,10 +13,18 @@ import {
 } from "d3-force";
 import { create as d3Create, select as d3Select } from "d3-selection";
 import { ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
-import { colorToRgb, extractRgb, fadeRgb, rgbAnimationByProgress } from "@/lib";
+import {
+  colorToRgb,
+  extractRgb,
+  fadeRgb,
+  getDrawTime,
+  rgbAnimationByProgress,
+  setDrawTime,
+} from "@/lib";
 import type { LinkInterface } from "@/types/links";
 import type { CachedNodeTextInterface, NodeInterface } from "@/types/nodes";
 import {
+  animationByProgress,
   calculateLinkPositionByRadius,
   drawText,
   forceSettingsGetter,
@@ -207,6 +215,10 @@ export class GraphCanvas<
     if (options.nodeSettings) this.nodeSettings = nodeSettingsGetter(options.nodeSettings);
 
     if (options.forceSettings) return void this.updateSimulation();
+    if (options.graphSettings) {
+      this.draw = this.initDraw();
+      this.initZoom(this.areaTransform);
+    }
 
     this.tick();
   }
@@ -334,6 +346,8 @@ export class GraphCanvas<
         })
         .on("end", () => {
           this.listeners.onSimulationEnd?.(this.state);
+
+          if (this.graphSettings.showDrawTime) getDrawTime();
         });
       this.initSimulationForces();
     }
@@ -517,9 +531,7 @@ export class GraphCanvas<
       this.context.scale(this.areaTransform.k, this.areaTransform.k);
 
       /** links */
-      this.context.beginPath();
       this.links.forEach(getDrawLink(state).bind(this));
-      this.context.stroke();
 
       /** nodes */
       const textRenders: (() => void)[] = [];
@@ -572,14 +584,17 @@ export class GraphCanvas<
             this.highlightedNode.id != link.source.id &&
             this.highlightedNode.id != link.target.id
           ) {
-            if (linkOptions.highlightFading)
-              alpha =
-                this.graphSettings.highlightLinkFadingMin +
-                (alpha - this.graphSettings.highlightLinkFadingMin) * (1 - this.highlightProgress);
+            if (linkOptions.highlightFading) {
+              alpha = animationByProgress(
+                this.graphSettings.highlightLinkFadingMin,
+                alpha - this.graphSettings.highlightLinkFadingMin,
+                1 - this.highlightProgress,
+              );
+            }
           }
-
-          this.context.beginPath();
         }
+
+        this.context.beginPath();
 
         this.context.globalAlpha = alpha;
         this.context.strokeStyle = linkOptions.color;
@@ -600,7 +615,7 @@ export class GraphCanvas<
           this.context.lineTo(link.target.x, link.target.y);
         }
 
-        if (this.highlightedNeighbors && this.highlightedNode) this.context.stroke();
+        this.context.stroke();
 
         if (linkOptions.drawExtraLink) {
           linkOptions.drawExtraLink(link, { ...linkOptions, alpha }, state);
@@ -644,15 +659,18 @@ export class GraphCanvas<
           /** Not highlighted */
           if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
             if (nodeOptions.highlightFading) {
-              alpha =
-                this.graphSettings.highlightFadingMin +
-                (alpha - this.graphSettings.highlightFadingMin) * (1 - this.highlightProgress);
+              alpha = animationByProgress(
+                this.graphSettings.highlightFadingMin,
+                alpha - this.graphSettings.highlightFadingMin,
+                1 - this.highlightProgress,
+              );
             }
             if (nodeOptions.highlightTextFading) {
-              textAlpha =
-                this.graphSettings.highlightTextFadingMin +
-                (textAlpha - this.graphSettings.highlightTextFadingMin) *
-                  (1 - this.highlightProgress);
+              textAlpha = animationByProgress(
+                this.graphSettings.highlightTextFadingMin,
+                textAlpha - this.graphSettings.highlightTextFadingMin,
+                1 - this.highlightProgress,
+              );
             }
             if (nodeOptions.highlightColor) {
               const colorRgb = extractRgb(colorToRgb(color));
@@ -671,22 +689,40 @@ export class GraphCanvas<
             (this.graphSettings.highlightOnlyRoot && this.highlightedNode.id === node.id)
           ) {
             /** Highlighted */
+
             if (nodeOptions.highlightSizing) {
-              const radiusMax = radiusInitial + this.graphSettings.highlightSizingAdditional;
-              radiusInitial += ((radiusMax - radiusInitial) / 100) * (this.highlightProgress * 100);
+              radiusInitial = animationByProgress(
+                radiusInitial,
+                this.graphSettings.highlightSizingAdditional,
+                this.highlightProgress,
+              );
             }
             if (nodeOptions.highlightTextSizing) {
-              const textSizeMax = textSize + this.graphSettings.highlightTextSizingAdditional;
-              const textShiftXMax = textShiftX + this.graphSettings.highlightTextShiftXAdditional;
-              const textShiftYMax = textShiftY + this.graphSettings.highlightTextShiftYAdditional;
-              const textWeightMax = textWeight + this.graphSettings.highlightTextWeightAdditional;
-              const textWidthMax = textWidth + this.graphSettings.highlightTextWidthAdditional;
-
-              textSize += ((textSizeMax - textSize) / 100) * (this.highlightProgress * 100);
-              textShiftX += ((textShiftXMax - textShiftX) / 100) * (this.highlightProgress * 100);
-              textShiftY += ((textShiftYMax - textShiftY) / 100) * (this.highlightProgress * 100);
-              textWeight += ((textWeightMax - textWeight) / 100) * (this.highlightProgress * 100);
-              textWidth += ((textWidthMax - textWidth) / 100) * (this.highlightProgress * 100);
+              textSize = animationByProgress(
+                textSize,
+                this.graphSettings.highlightTextSizingAdditional,
+                this.highlightProgress,
+              );
+              textShiftX = animationByProgress(
+                textShiftX,
+                this.graphSettings.highlightTextShiftXAdditional,
+                this.highlightProgress,
+              );
+              textShiftY = animationByProgress(
+                textShiftY,
+                this.graphSettings.highlightTextShiftYAdditional,
+                this.highlightProgress,
+              );
+              textWeight = animationByProgress(
+                textWeight,
+                this.graphSettings.highlightTextWeightAdditional,
+                this.highlightProgress,
+              );
+              textWidth = animationByProgress(
+                textWidth,
+                this.graphSettings.highlightTextWidthAdditional,
+                this.highlightProgress,
+              );
             }
           }
         }
@@ -702,6 +738,7 @@ export class GraphCanvas<
         node._radius = radius;
 
         this.context.beginPath();
+
         this.context.globalAlpha = alpha;
 
         /** text */
@@ -798,6 +835,10 @@ export class GraphCanvas<
           );
         }
       };
+    }
+
+    if (this.graphSettings.showDrawTime) {
+      return setDrawTime(draw.bind(this), this.graphSettings.showDrawTimeEveryTick);
     }
 
     return draw;
@@ -1046,7 +1087,7 @@ export class GraphCanvas<
     );
   }
 
-  private initZoom() {
+  private initZoom(currentZoom?: ZoomTransform) {
     if (!this.area) throw new Error("bad init data");
 
     const zoomInstance = zoom<HTMLCanvasElement, unknown>()
@@ -1077,7 +1118,7 @@ export class GraphCanvas<
 
     d3Select(this.area).call(zoomInstance).on("dblclick.zoom", null);
 
-    const zoomInitial = this.graphSettings.zoomInitial;
+    const zoomInitial = currentZoom ?? this.graphSettings.zoomInitial;
     this.areaTransform = new ZoomTransform(
       zoomInitial?.k ?? 1,
       zoomInitial?.x ?? this.width / 2,

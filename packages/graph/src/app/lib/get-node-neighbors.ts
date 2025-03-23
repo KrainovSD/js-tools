@@ -19,6 +19,9 @@ export function getNodeNeighbors(
   });
 
   data.nodes.forEach((node) => {
-    if (neighbors[node.id]) node.neighbors = [...new Set(neighbors[node.id])];
+    if (neighbors[node.id]) {
+      node.neighbors = [...new Set(neighbors[node.id])];
+      node.linkCount = neighbors[node.id].length;
+    }
   });
 }

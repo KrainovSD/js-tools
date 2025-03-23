@@ -36,6 +36,8 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   nodeRadiusCoefficient?: number;
   nodeRadiusFactor?: number;
   nodeRadiusFlexible?: boolean;
+  showDrawTime?: boolean;
+  showDrawTimeEveryTick?: boolean;
 };
 
 export type ForceSettingsInterface<

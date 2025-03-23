@@ -7,5 +7,6 @@ export {
   linkIterationExtractor,
   linkOptionsGetter,
   calculateLinkPositionByRadius,
+  animationByProgress,
 } from "./lib";
 export * from "./types";

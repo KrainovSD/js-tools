@@ -461,7 +461,7 @@ export function getLinkControls<
       id: "width",
       type: "range",
       max: 10,
-      min: 0,
+      min: 0.1,
       step: 0.1,
       label: "Толщина",
       initialValue: 0,

@@ -1,5 +1,6 @@
 import type { GraphCanvasInterface } from "@/module/GraphCanvas";
 import type { NodeInterface } from "@/types";
+import { getNodeNeighbors } from "../lib";
 import type { LinkData, NodeData } from "../types";
 import * as d3MockIncorrect from "./d3-mock.json";
 import * as realMockIncorrect from "./real.json";
@@ -32,5 +33,9 @@ export const realMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | 
   })),
   links: realMockIncorrect.relations.map((link) => ({ source: link.from_id, target: link.to_id })),
 };
+getNodeNeighbors(d3Mock);
+getNodeNeighbors(stressMock);
+getNodeNeighbors(realMock);
+
 export * from "./custom-mock";
 export * from "./dynamic-mock";

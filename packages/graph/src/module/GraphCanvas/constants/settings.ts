@@ -55,6 +55,8 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   nodeRadiusFactor: 1,
   nodeRadiusFlexible: true,
   zoomInitial: null,
+  showDrawTime: true,
+  showDrawTimeEveryTick: false,
 };
 
 export const NODE_SETTINGS: Omit<
