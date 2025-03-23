@@ -594,6 +594,7 @@ export class GraphCanvas<
         }
 
         let alpha = linkOptions.alpha;
+        let arrowAlpha = linkOptions.arrowReverseAppear ? 0 : linkOptions.arrowAlpha;
         if (this.highlightedNeighbors && this.highlightedNode) {
           /** Not highlighted */
           if (
@@ -607,16 +608,79 @@ export class GraphCanvas<
                   : alpha;
               alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
             }
+            if (
+              linkOptions.arrow &&
+              linkOptions.arrowHighlightFading &&
+              !linkOptions.arrowReverseAppear
+            ) {
+              const min =
+                this.graphSettings.highlightArrowFadingMin < arrowAlpha
+                  ? this.graphSettings.highlightArrowFadingMin
+                  : arrowAlpha;
+              arrowAlpha = animationByProgress(min, arrowAlpha - min, 1 - this.highlightProgress);
+            }
+          } else {
+            // eslint-disable-next-line no-lonely-if
+            if (linkOptions.arrow && linkOptions.arrowReverseAppear) {
+              /** Highlighted */
+              arrowAlpha = animationByProgress(0, linkOptions.arrowAlpha, this.highlightProgress);
+            }
           }
         }
 
+        /** Link */
         this.context.beginPath();
 
         this.context.globalAlpha = alpha;
         this.context.strokeStyle = linkOptions.color;
         this.context.lineWidth = linkOptions.width;
 
+        let xStart = link.source.x;
+        let xEnd = link.target.x;
+        let yStart = link.source.y;
+        let yEnd = link.target.y;
+
+        // if (linkOptions.pretty) {
+        //   const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(link) ?? {
+        //     x1: 0,
+        //     x2: 0,
+        //     y1: 0,
+        //     y2: 0,
+        //   };
+
+        //   this.context.moveTo(x1, y1);
+        //   this.context.lineTo(x2, y2);
+        // } else {
+        //   this.context.moveTo(link.source.x, link.source.y);
+        //   this.context.lineTo(link.target.x, link.target.y);
+        // }
+        // this.context.stroke();
+
         if (linkOptions.pretty) {
+          const isHasArrow = linkOptions.arrow && arrowAlpha > 0;
+          const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(
+            link,
+            isHasArrow ? linkOptions.arrowSize : 0,
+          ) ?? {
+            x1: 0,
+            x2: 0,
+            y1: 0,
+            y2: 0,
+          };
+
+          xStart = x1;
+          xEnd = x2;
+          yStart = y1;
+          yEnd = y2;
+        }
+
+        this.context.moveTo(xStart, yStart);
+        this.context.lineTo(xEnd, yEnd);
+        this.context.stroke();
+
+        /** Arrow */
+
+        if (linkOptions.arrow && arrowAlpha > 0) {
           const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(link) ?? {
             x1: 0,
             x2: 0,
@@ -624,14 +688,28 @@ export class GraphCanvas<
             y2: 0,
           };
 
-          this.context.moveTo(x1, y1);
-          this.context.lineTo(x2, y2);
-        } else {
-          this.context.moveTo(link.source.x, link.source.y);
-          this.context.lineTo(link.target.x, link.target.y);
-        }
+          xStart = x1;
+          xEnd = x2;
+          yStart = y1;
+          yEnd = y2;
 
-        this.context.stroke();
+          const angle = Math.atan2(yEnd - yStart, xEnd - xStart);
+          this.context.beginPath();
+          this.context.globalAlpha = arrowAlpha;
+          this.context.moveTo(xEnd, yEnd);
+          this.context.lineTo(
+            xEnd - linkOptions.arrowSize * Math.cos(angle - Math.PI / 6),
+            yEnd - linkOptions.arrowSize * Math.sin(angle - Math.PI / 6),
+          );
+          this.context.lineTo(
+            xEnd - linkOptions.arrowSize * Math.cos(angle + Math.PI / 6),
+            yEnd - linkOptions.arrowSize * Math.sin(angle + Math.PI / 6),
+          );
+          this.context.closePath();
+          this.context.fillStyle = linkOptions.arrowColor;
+          this.context.fill();
+          this.context.stroke();
+        }
 
         if (linkOptions.drawExtraLink) {
           linkOptions.drawExtraLink(link, { ...linkOptions, alpha }, state);

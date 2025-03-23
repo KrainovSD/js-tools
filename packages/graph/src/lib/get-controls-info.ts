@@ -217,7 +217,15 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
       type: "range",
       label: "Граница затухания ноды при анимации",
     },
-
+    {
+      id: "highlightArrowFadingMin",
+      initialValue: 0.21,
+      max: 1,
+      min: 0,
+      step: 0.01,
+      type: "range",
+      label: "Граница затухания стрелки при анимации",
+    },
     {
       id: "highlightDownStep",
       initialValue: 0.2,
@@ -453,12 +461,35 @@ export function getLinkControls<
       label: "Толщина",
       initialValue: 0,
     },
-
+    {
+      id: "arrowAlpha",
+      type: "range",
+      max: 1,
+      min: 0,
+      step: 0.1,
+      label: "Прозрачность стрелки",
+      initialValue: 1,
+    },
+    {
+      id: "arrowSize",
+      type: "range",
+      max: 10,
+      min: 0.1,
+      step: 0.1,
+      label: "Размер стрелки",
+      initialValue: 2,
+    },
     {
       id: "color",
       type: "color",
       initialValue: "#000000FF",
       label: "Цвет",
+    },
+    {
+      id: "arrowColor",
+      type: "color",
+      initialValue: "#000000FF",
+      label: "Цвет стрелки",
     },
     {
       id: "highlightFading",
@@ -470,6 +501,24 @@ export function getLinkControls<
       id: "pretty",
       type: "checkbox",
       label: "Обсчет соединения",
+      initialValue: true,
+    },
+    {
+      id: "arrow",
+      type: "checkbox",
+      label: "Стрелка",
+      initialValue: true,
+    },
+    {
+      id: "arrowHighlightFading",
+      type: "checkbox",
+      label: "Анимация затухания стрелки",
+      initialValue: true,
+    },
+    {
+      id: "arrowReverseAppear",
+      type: "checkbox",
+      label: "Появление стрелки при анимации",
       initialValue: true,
     },
   ];

@@ -3,7 +3,7 @@ import type { LinkInterface } from "@/types";
 export function calculateLinkPositionByRadius<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
->(link: LinkInterface<NodeData, LinkData>) {
+>(link: LinkInterface<NodeData, LinkData>, arrowSize = 0) {
   const source = link.source;
   const target = link.target;
 
@@ -13,7 +13,7 @@ export function calculateLinkPositionByRadius<
   const dy = (target.y ?? 0) - (source.y ?? 0);
   const dr = Math.sqrt(dx * dx + dy * dy);
   const sourceRadius = source._radius ?? 0;
-  const targetRadius = target._radius ?? 0;
+  const targetRadius = (target._radius ?? 0) + (arrowSize > 0 ? arrowSize - 0.2 : 0);
 
   return {
     x1: (source.x ?? 0) + (dx * sourceRadius) / dr,

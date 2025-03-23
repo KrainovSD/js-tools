@@ -47,6 +47,7 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   highlightLinkFadingMin: 0.21,
   highlightFadingMin: 0.21,
   highlightTextFadingMin: 0.21,
+  highlightArrowFadingMin: 0.21,
   highlightDownStep: 0.2,
   highlightUpStep: 0.2,
   dragPlaceCoefficient: dragPlaceCoefficientGetter,
@@ -93,11 +94,16 @@ export const NODE_SETTINGS: Omit<
 
 export const LINK_SETTINGS: Omit<
   Required<LinkOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
-  "color" | "width" | "drawLink" | "drawExtraLink"
+  "color" | "width" | "drawLink" | "drawExtraLink" | "arrowColor"
 > = {
   alpha: 1,
   highlightFading: true,
   pretty: true,
+  arrow: true,
+  arrowAlpha: 1,
+  arrowSize: 2,
+  arrowHighlightFading: true,
+  arrowReverseAppear: true,
 };
 
 export const COMMON_SETTINGS = {

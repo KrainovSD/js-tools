@@ -5,6 +5,7 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   highlightOnlyRoot?: boolean;
   highlightFadingMin?: number;
   highlightLinkFadingMin?: number;
+  highlightArrowFadingMin?: number;
   highlightColorFadingMin?: number;
   highlightTextFadingMin?: number;
   highlightSizingAdditional?: number;
@@ -177,6 +178,12 @@ export type LinkOptionsInterface<
   width?: number;
   highlightFading?: boolean;
   pretty?: boolean;
+  arrow?: boolean;
+  arrowAlpha?: number;
+  arrowColor?: string;
+  arrowSize?: number;
+  arrowHighlightFading?: boolean;
+  arrowReverseAppear?: boolean;
 };
 
 export type LinkIterationPropsInterface<

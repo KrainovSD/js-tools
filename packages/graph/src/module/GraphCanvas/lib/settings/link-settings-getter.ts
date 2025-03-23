@@ -29,6 +29,10 @@ export function linkOptionsGetter<
       state?.areaTransform && state?.areaTransform.k > COMMON_SETTINGS.linkColorZoomBorder
         ? COMMON_SETTINGS.linkColorZoomNear
         : COMMON_SETTINGS.linkColorZoomFar,
+    arrowColor:
+      state?.areaTransform && state?.areaTransform.k > COMMON_SETTINGS.linkColorZoomBorder
+        ? COMMON_SETTINGS.linkColorZoomNear
+        : COMMON_SETTINGS.linkColorZoomFar,
     width:
       state?.areaTransform && state?.areaTransform.k > COMMON_SETTINGS.linkWidthZoomBorder
         ? COMMON_SETTINGS.linkWidthZoomNear
