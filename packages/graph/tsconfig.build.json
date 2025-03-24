@@ -10,5 +10,5 @@
   },
   "files": ["src/index.ts"],
   "include": ["src/**/*", "src/typings.d.ts"],
-  "exclude": ["**/*.spec.ts"]
+  "exclude": ["**/*.spec.ts", "src/app"]
 }

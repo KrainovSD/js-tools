@@ -1,4 +1,4 @@
-import type { LinkInterface, NodeInterface } from "@krainovsd/graph";
+import type { LinkInterface, NodeInterface } from "@/types";
 
 export type NodeData = {};
 export type LinkData = {};
