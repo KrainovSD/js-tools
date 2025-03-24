@@ -28,6 +28,7 @@ import {
   calculateLinkPositionByRadius,
   drawText,
   forceSettingsGetter,
+  getParticlePosition,
   graphSettingsGetter,
   isNodeVisible,
   linkIterationExtractor,
@@ -46,6 +47,7 @@ import type {
   ForceSettingsInterface,
   GraphCanvasInterface,
   GraphCanvasSimulation,
+  GraphParticle,
   GraphSettingsInterface,
   GraphState,
   LinkOptionsInterface,
@@ -65,6 +67,8 @@ export class GraphCanvas<
   private nodes: NodeInterface<NodeData>[];
 
   private links: LinkInterface<NodeData, LinkData>[];
+
+  private particles: Record<string, GraphParticle[]> = {};
 
   private width: number;
 
@@ -246,7 +250,7 @@ export class GraphCanvas<
   }
 
   tick() {
-    if (!this.simulationWorking) this.draw();
+    if (!this.simulationWorking && !this.highlightWorking) this.draw();
   }
 
   restart(alpha?: number) {
@@ -340,7 +344,7 @@ export class GraphCanvas<
     this.initResize();
     this.initPointer();
 
-    if (!this.simulationWorking) this.draw();
+    if (!this.simulationWorking && !this.highlightWorking) this.draw();
   }
 
   private init() {
@@ -515,18 +519,28 @@ export class GraphCanvas<
 
         if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
 
-        return;
+        if (!this.linkSettings.particles) return;
       }
       if (this.highlightWorking && this.highlightProgress < 1) {
         this.highlightProgress += this.graphSettings.highlightUpStep;
 
         if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
 
-        return;
+        if (!this.linkSettings.particles) return;
       }
+
+      if (this.linkSettings.particles && this.highlightWorking && !this.simulationWorking) {
+        return void requestAnimationFrame(() => this.draw());
+      }
+
       if (!this.highlightWorking && this.highlightProgress <= 0) {
-        if (this.highlightedNeighbors) this.highlightedNeighbors = null;
-        if (this.highlightedNode) this.highlightedNode = null;
+        if (this.highlightedNeighbors || this.highlightedNode) {
+          this.highlightedNeighbors = null;
+          this.highlightedNode = null;
+          this.particles = {};
+
+          if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
+        }
       }
 
       this.highlightDrawing = false;
@@ -660,29 +674,73 @@ export class GraphCanvas<
         this.context.strokeStyle = linkOptions.color;
         this.context.lineWidth = linkOptions.width;
 
+        let xStart = link.source.x;
+        let yStart = link.source.y;
+        let xEnd = link.target.x;
+        let yEnd = link.target.y;
         if (linkOptions.pretty) {
-          const {
-            x1: xStart,
-            x2: xEnd,
-            y1: yStart,
-            y2: yEnd,
-          } = calculateLinkPositionByRadius(link) ?? {
+          const isHasArrow = linkOptions.arrow && arrowAlpha > 0;
+
+          const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(
+            link,
+            isHasArrow ? linkOptions.arrowSize : 0,
+          ) ?? {
             x1: 0,
             x2: 0,
             y1: 0,
             y2: 0,
           };
 
-          this.context.moveTo(xStart, yStart);
-          this.context.lineTo(xEnd, yEnd);
-        } else {
-          this.context.moveTo(link.source.x, link.source.y);
-          this.context.lineTo(link.target.x, link.target.y);
+          xStart = x1;
+          xEnd = x2;
+          yStart = y1;
+          yEnd = y2;
         }
+
+        this.context.moveTo(xStart, yStart);
+        this.context.lineTo(xEnd, yEnd);
         this.context.stroke();
 
-        /** Arrow */
+        /** Particle */
+        if (
+          this.linkSettings.particles &&
+          this.highlightedNode &&
+          (this.highlightedNode.id === link.source.id || this.highlightedNode.id === link.target.id)
+        ) {
+          if (!this.particles[id]) {
+            const sourceId = link.source.id;
+            const targetId = link.target.id;
+            this.particles[id] = Array.from({ length: linkOptions.particleCount }, (_, index) => {
+              return {
+                step: 0,
+                wait: index * (linkOptions.particleSteps / linkOptions.particleCount),
+                sourceId,
+                targetId,
+              };
+            }) as GraphParticle[];
+          }
+          this.particles[id].forEach((particle) => {
+            if (!this.context) return;
 
+            getParticlePosition({
+              particle,
+              totalSteps: linkOptions.particleSteps,
+              xEnd,
+              xStart,
+              yEnd,
+              yStart,
+            });
+            if (particle.x != undefined && particle.y != undefined) {
+              this.context.beginPath();
+              this.context.arc(particle.x, particle.y, linkOptions.particleRadius, 0, Math.PI * 2);
+              this.context.fillStyle = linkOptions.particleColor;
+              this.context.fill();
+              this.context.stroke();
+            }
+          });
+        }
+
+        /** Arrow */
         if (linkOptions.arrow && arrowAlpha > 0) {
           const {
             x1: xStart,
@@ -1226,7 +1284,8 @@ export class GraphCanvas<
         this.linkOptionsCache = {};
         this.nodeOptionsCache = {};
 
-        if (!this.simulationWorking) requestAnimationFrame(() => this.draw());
+        if (!this.simulationWorking && !this.highlightWorking)
+          requestAnimationFrame(() => this.draw());
       });
 
     if (this.graphSettings.translateExtentEnable) {

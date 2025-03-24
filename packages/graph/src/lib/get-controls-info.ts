@@ -1,3 +1,9 @@
+import {
+  FORCE_SETTINGS,
+  GRAPH_SETTINGS,
+  LINK_OPTIONS,
+  NODE_OPTIONS,
+} from "@/module/GraphCanvas/constants";
 import type {
   ForceSettingsInterface,
   GraphSettingsInterface,
@@ -15,7 +21,7 @@ export function getForceControls<
   >[] = [
     {
       id: "centerStrength",
-      initialValue: 1,
+      initialValue: FORCE_SETTINGS.centerStrength,
       label: "Граница центра",
       max: 1,
       min: 0,
@@ -24,7 +30,7 @@ export function getForceControls<
     },
     {
       id: "collideStrength",
-      initialValue: 0.1,
+      initialValue: FORCE_SETTINGS.collideStrength,
       label: "Сила отталкивания",
       max: 1,
       min: 0,
@@ -33,7 +39,7 @@ export function getForceControls<
     },
     {
       id: "collideAdditionalRadius",
-      initialValue: 4,
+      initialValue: FORCE_SETTINGS.collideAdditionalRadius,
       label: "Радиус отталкивания",
       max: 300,
       min: 0,
@@ -42,7 +48,7 @@ export function getForceControls<
     },
     {
       id: "collideIterations",
-      initialValue: 2,
+      initialValue: FORCE_SETTINGS.collideIterations,
       label: "Итерации отталкивания",
       max: 10,
       min: 0,
@@ -51,7 +57,8 @@ export function getForceControls<
     },
     {
       id: "chargeStrength",
-      initialValue: 2,
+      initialValue:
+        typeof FORCE_SETTINGS.chargeStrength === "number" ? FORCE_SETTINGS.chargeStrength : 0,
       label: "Гравитация",
       max: 0,
       min: -300,
@@ -65,7 +72,7 @@ export function getForceControls<
       max: 1,
       step: 0.01,
       label: "Граница X",
-      initialValue: 0,
+      initialValue: typeof FORCE_SETTINGS.xForce === "number" ? FORCE_SETTINGS.xForce : 0,
     },
     {
       type: "range",
@@ -74,7 +81,7 @@ export function getForceControls<
       max: 1,
       step: 0.01,
       label: "Граница Y",
-      initialValue: 0,
+      initialValue: typeof FORCE_SETTINGS.yForce === "number" ? FORCE_SETTINGS.yForce : 0,
     },
     {
       type: "range",
@@ -83,7 +90,7 @@ export function getForceControls<
       max: 1,
       step: 0.01,
       label: "Гравитация X",
-      initialValue: 0.1,
+      initialValue: typeof FORCE_SETTINGS.xStrength === "number" ? FORCE_SETTINGS.xStrength : 0,
     },
     {
       type: "range",
@@ -92,7 +99,7 @@ export function getForceControls<
       max: 1,
       step: 0.01,
       label: "Гравитация Y",
-      initialValue: 0.1,
+      initialValue: typeof FORCE_SETTINGS.yStrength === "number" ? FORCE_SETTINGS.yStrength : 0,
     },
     {
       type: "range",
@@ -101,7 +108,8 @@ export function getForceControls<
       max: 1,
       step: 0.01,
       label: "Натяжение связей",
-      initialValue: 1,
+      initialValue:
+        typeof FORCE_SETTINGS.linkStrength === "number" ? FORCE_SETTINGS.linkStrength : 0,
     },
     {
       type: "range",
@@ -110,12 +118,13 @@ export function getForceControls<
       max: 300,
       step: 0.1,
       label: "Расстояние связей",
-      initialValue: 30,
+      initialValue:
+        typeof FORCE_SETTINGS.linkDistance === "number" ? FORCE_SETTINGS.linkDistance : 30,
     },
     {
       id: "collideOn",
       type: "checkbox",
-      initialValue: true,
+      initialValue: FORCE_SETTINGS.collideOn,
       label: "Отталкивание",
     },
   ];
@@ -129,7 +138,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
   const GRAPH_CONTROLS: GraphSettingsInputInterface<keyof GraphSettingsInterface<NodeData>>[] = [
     {
       id: "highlightSizingAdditional",
-      initialValue: 0.5,
+      initialValue: GRAPH_SETTINGS.highlightSizingAdditional,
       max: 10,
       min: 0.1,
       step: 0.01,
@@ -138,7 +147,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightColorFadingMin",
-      initialValue: 0.15,
+      initialValue: GRAPH_SETTINGS.highlightColorFadingMin,
       max: 1,
       min: 0.01,
       step: 0.01,
@@ -147,7 +156,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightTextShiftXAdditional",
-      initialValue: 0,
+      initialValue: GRAPH_SETTINGS.highlightTextShiftXAdditional,
       max: 50,
       min: 0,
       step: 0.1,
@@ -156,7 +165,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightTextShiftYAdditional",
-      initialValue: 2,
+      initialValue: GRAPH_SETTINGS.highlightTextShiftYAdditional,
       max: 50,
       min: 0,
       step: 0.1,
@@ -165,7 +174,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightTextSizingAdditional",
-      initialValue: 1,
+      initialValue: GRAPH_SETTINGS.highlightTextSizingAdditional,
       max: 10,
       min: 0.1,
       step: 0.1,
@@ -174,7 +183,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightTextWeightAdditional",
-      initialValue: 0,
+      initialValue: GRAPH_SETTINGS.highlightTextWeightAdditional,
       max: 1000,
       min: 0,
       step: 100,
@@ -183,7 +192,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightTextWidthAdditional",
-      initialValue: 0,
+      initialValue: GRAPH_SETTINGS.highlightTextWidthAdditional,
       max: 100,
       min: 0,
       step: 0.1,
@@ -192,7 +201,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightTextFadingMin",
-      initialValue: 0.21,
+      initialValue: GRAPH_SETTINGS.highlightTextFadingMin,
       max: 1,
       min: 0,
       step: 0.01,
@@ -201,7 +210,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightLinkFadingMin",
-      initialValue: 0.21,
+      initialValue: GRAPH_SETTINGS.highlightLinkFadingMin,
       max: 1,
       min: 0,
       step: 0.01,
@@ -210,7 +219,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightFadingMin",
-      initialValue: 0.21,
+      initialValue: GRAPH_SETTINGS.highlightFadingMin,
       max: 1,
       min: 0,
       step: 0.01,
@@ -219,7 +228,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightArrowFadingMin",
-      initialValue: 0.21,
+      initialValue: GRAPH_SETTINGS.highlightArrowFadingMin,
       max: 1,
       min: 0,
       step: 0.01,
@@ -228,7 +237,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightDownStep",
-      initialValue: 0.2,
+      initialValue: GRAPH_SETTINGS.highlightDownStep,
       max: 1,
       min: 0.01,
       step: 0.01,
@@ -237,7 +246,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "highlightUpStep",
-      initialValue: 0.2,
+      initialValue: GRAPH_SETTINGS.highlightUpStep,
       max: 1,
       min: 0.01,
       step: 0.01,
@@ -246,7 +255,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "nodeRadiusInitial",
-      initialValue: 4,
+      initialValue: GRAPH_SETTINGS.nodeRadiusInitial,
       max: 50,
       min: 0.1,
       step: 0.1,
@@ -255,7 +264,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "nodeRadiusCoefficient",
-      initialValue: 5,
+      initialValue: GRAPH_SETTINGS.nodeRadiusCoefficient,
       max: 100,
       min: 0.1,
       step: 0.1,
@@ -264,7 +273,7 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     },
     {
       id: "nodeRadiusFactor",
-      initialValue: 1,
+      initialValue: GRAPH_SETTINGS.nodeRadiusFactor,
       max: 50,
       min: 0.1,
       step: 0.1,
@@ -274,25 +283,25 @@ export function getGraphControls<NodeData extends Record<string, unknown>>(
     {
       id: "highlightOnlyRoot",
       type: "checkbox",
-      initialValue: true,
+      initialValue: GRAPH_SETTINGS.highlightOnlyRoot,
       label: "Дополнительная анимация только главное цели",
     },
     {
       id: "stickAfterDrag",
       type: "checkbox",
-      initialValue: true,
+      initialValue: GRAPH_SETTINGS.stickAfterDrag,
       label: "Фиксировании ноды после перетаскивания",
     },
     {
       id: "highlightByHover",
       type: "checkbox",
-      initialValue: true,
+      initialValue: GRAPH_SETTINGS.highlightByHover,
       label: "Анимации при наведении",
     },
     {
       id: "nodeRadiusFlexible",
       type: "checkbox",
-      initialValue: true,
+      initialValue: GRAPH_SETTINGS.nodeRadiusFlexible,
       label: "Гибкий радиус ноды",
     },
   ];
@@ -314,7 +323,7 @@ export function getNodeControls<
       min: 0,
       step: 0.1,
       label: "Прозрачность",
-      initialValue: 1,
+      initialValue: NODE_OPTIONS.alpha,
     },
 
     {
@@ -324,7 +333,7 @@ export function getNodeControls<
       min: 1,
       step: 1,
       label: "Радиус",
-      initialValue: 4,
+      initialValue: NODE_OPTIONS.radius,
     },
     {
       id: "borderWidth",
@@ -333,7 +342,7 @@ export function getNodeControls<
       min: 0,
       step: 0.1,
       label: "Толщина границы",
-      initialValue: 1,
+      initialValue: NODE_OPTIONS.borderWidth,
     },
     {
       id: "borderColor",
@@ -354,7 +363,7 @@ export function getNodeControls<
       min: 0,
       step: 0.1,
       label: "Прозрачность текста",
-      initialValue: 1,
+      initialValue: NODE_OPTIONS.textAlpha,
     },
     {
       id: "textWidth",
@@ -363,7 +372,7 @@ export function getNodeControls<
       min: 5,
       step: 1,
       label: "Ширина текста",
-      initialValue: 20,
+      initialValue: NODE_OPTIONS.textWidth,
     },
     {
       id: "textShiftX",
@@ -372,7 +381,7 @@ export function getNodeControls<
       min: 0,
       step: 0.1,
       label: "Смещение X текста",
-      initialValue: 0,
+      initialValue: NODE_OPTIONS.textShiftX,
     },
     {
       id: "textShiftY",
@@ -390,7 +399,7 @@ export function getNodeControls<
       min: 100,
       step: 100,
       label: "Жирность текста",
-      initialValue: 500,
+      initialValue: NODE_OPTIONS.textWeight,
     },
     {
       id: "textGap",
@@ -399,36 +408,36 @@ export function getNodeControls<
       min: 0,
       step: 0.1,
       label: "Расстояние между строками",
-      initialValue: 1,
+      initialValue: NODE_OPTIONS.textGap,
     },
     {
       id: "highlightFading",
       type: "checkbox",
-      initialValue: true,
+      initialValue: NODE_OPTIONS.highlightFading,
       label: "Анимация затухания",
     },
     {
       id: "highlightColor",
       type: "checkbox",
-      initialValue: false,
+      initialValue: NODE_OPTIONS.highlightColor,
       label: "Анимация затухания цвета",
     },
     {
       id: "highlightSizing",
       type: "checkbox",
-      initialValue: true,
+      initialValue: NODE_OPTIONS.highlightSizing,
       label: "Анимация размера",
     },
     {
       id: "highlightTextFading",
       type: "checkbox",
-      initialValue: true,
+      initialValue: NODE_OPTIONS.highlightTextFading,
       label: "Анимация затухания текста",
     },
     {
       id: "highlightTextSizing",
       type: "checkbox",
-      initialValue: true,
+      initialValue: NODE_OPTIONS.highlightTextSizing,
       label: "Анимация размера текста",
     },
   ];
@@ -450,7 +459,7 @@ export function getLinkControls<
       min: 0,
       step: 0.1,
       label: "Прозрачность",
-      initialValue: 1,
+      initialValue: LINK_OPTIONS.alpha,
     },
     {
       id: "width",
@@ -459,7 +468,7 @@ export function getLinkControls<
       min: 0.1,
       step: 0.1,
       label: "Толщина",
-      initialValue: 0,
+      initialValue: 0.1,
     },
     {
       id: "arrowAlpha",
@@ -468,7 +477,7 @@ export function getLinkControls<
       min: 0,
       step: 0.1,
       label: "Прозрачность стрелки",
-      initialValue: 1,
+      initialValue: LINK_OPTIONS.arrowAlpha,
     },
     {
       id: "arrowSize",
@@ -477,7 +486,43 @@ export function getLinkControls<
       min: 0.1,
       step: 0.1,
       label: "Размер стрелки",
-      initialValue: 2,
+      initialValue: LINK_OPTIONS.arrowSize,
+    },
+    {
+      id: "particleAlpha",
+      type: "range",
+      max: 1,
+      min: 0,
+      step: 0.1,
+      label: "Прозрачность частиц",
+      initialValue: LINK_OPTIONS.particleAlpha,
+    },
+    {
+      id: "particleRadius",
+      type: "range",
+      max: 10,
+      min: 0.1,
+      step: 0.1,
+      label: "Радиус частиц",
+      initialValue: LINK_OPTIONS.particleRadius,
+    },
+    {
+      id: "particleCount",
+      type: "range",
+      max: 20,
+      min: 1,
+      step: 1,
+      label: "Количество частиц",
+      initialValue: LINK_OPTIONS.particleCount,
+    },
+    {
+      id: "particleSteps",
+      type: "range",
+      max: 200,
+      min: 1,
+      step: 1,
+      label: "Количество кадров у частиц",
+      initialValue: LINK_OPTIONS.particleSteps,
     },
     {
       id: "color",
@@ -492,34 +537,40 @@ export function getLinkControls<
       label: "Цвет стрелки",
     },
     {
+      id: "particleColor",
+      type: "color",
+      initialValue: "#000000FF",
+      label: "Цвет частиц",
+    },
+    {
       id: "highlightFading",
       type: "checkbox",
       label: "Анимация Затухания",
-      initialValue: true,
+      initialValue: LINK_OPTIONS.highlightFading,
     },
     {
       id: "pretty",
       type: "checkbox",
       label: "Обсчет соединения",
-      initialValue: true,
+      initialValue: LINK_OPTIONS.pretty,
     },
     {
       id: "arrow",
       type: "checkbox",
       label: "Стрелка",
-      initialValue: true,
+      initialValue: LINK_OPTIONS.arrow,
     },
     {
       id: "arrowHighlightFading",
       type: "checkbox",
       label: "Анимация затухания стрелки",
-      initialValue: true,
+      initialValue: LINK_OPTIONS.arrowHighlightFading,
     },
     {
       id: "arrowReverseAppear",
       type: "checkbox",
       label: "Появление стрелки при анимации",
-      initialValue: true,
+      initialValue: LINK_OPTIONS.arrowReverseAppear,
     },
   ];
 

@@ -104,6 +104,7 @@ export const NODE_OPTIONS: Omit<
 
 export const LINK_SETTINGS: Omit<Required<LinkSettingsInterface<NodeData, LinkData>>, "options"> = {
   cache: false,
+  particles: true,
 };
 
 export const LINK_OPTIONS: Omit<
@@ -118,6 +119,11 @@ export const LINK_OPTIONS: Omit<
   arrowSize: 2,
   arrowHighlightFading: true,
   arrowReverseAppear: true,
+  particleAlpha: 1,
+  particleColor: "#000000FF",
+  particleCount: 2,
+  particleRadius: 0.5,
+  particleSteps: 60,
 };
 
 export const COMMON_SETTINGS = {

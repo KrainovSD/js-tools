@@ -61,3 +61,12 @@ export type RGB = {
   g: number;
   b: number;
 };
+
+export type GraphParticle = {
+  step: number;
+  wait: number;
+  x?: number;
+  y?: number;
+  sourceId: number;
+  targetId: number;
+};

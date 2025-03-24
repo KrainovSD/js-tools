@@ -151,6 +151,7 @@ export type LinkSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
+  particles?: boolean;
   cache?: boolean;
   options?:
     | LinkIterationPropsInterface<NodeData, LinkData, LinkOptionsInterface<NodeData, LinkData>>
@@ -186,6 +187,11 @@ export type LinkOptionsInterface<
   arrowSize?: number;
   arrowHighlightFading?: boolean;
   arrowReverseAppear?: boolean;
+  particleAlpha?: number;
+  particleColor?: string;
+  particleRadius?: number;
+  particleCount?: number;
+  particleSteps?: number;
 };
 
 export type LinkIterationPropsInterface<
