@@ -1,0 +1,54 @@
+.header {
+  &__common {
+    border-block-end: 1px solid var(--table-border);
+    border-inline-end: 1px solid var(--table-border);
+    padding: 0 8px;
+    font-weight: 500;
+    border-spacing: 0px;
+    overflow: hidden;
+    white-space: pre-wrap;
+    background: var(--table-header-cell-bg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    color: var(--table-text-color);
+    font-weight: 500;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  &__empty {
+    border-inline-end: none;
+  }
+
+  &__nowrap {
+    white-space: nowrap;
+  }
+}
+
+.cell {
+  &__common {
+    border-block-end: 1px solid var(--table-border);
+    border-inline-end: 1px solid var(--table-border);
+    border-spacing: 0px;
+    border-collapse: collapse;
+    padding: 2px 8px;
+    background: var(--table-cell-bg);
+    overflow: hidden;
+    white-space: pre-wrap;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    color: var(--table-text-color);
+    font-weight: 500;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  &__empty {
+    border-inline-end: none;
+  }
+
+  &__nowrap {
+    white-space: nowrap;
+  }
+}

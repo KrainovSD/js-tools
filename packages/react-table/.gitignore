@@ -1,0 +1,8 @@
+dist/
+node_modules/
+tmp/
+coverage/
+lib/
+stats/
+.npmrc
+libraryGrid/

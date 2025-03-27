@@ -1,0 +1,193 @@
+.base {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  --table-box-shadow-left: -2px 0px 5px -2px rgba(136, 136, 136, 0.3);
+  --table-box-shadow-right: 2px 0 5px -2px rgba(136, 136, 136, 0.3);
+  --table-box-shadow-bottom: 0px 3px 5px -2px rgba(136, 136, 136, 0.3);
+  --table-cell-bg: #ffffff;
+  --table-header-cell-bg: #f9f9f9;
+  --table-body-bg: #ffffff;
+  --table-header-bg: #f9f9f9;
+  --table-border: #ddd;
+  --table-text-color: rgba(0, 0, 0, 0.75);
+  --table-link-color: #a870e8;
+  --table-active-sort: #1e90ff;
+  --table-row-hover-bg: #f3faff;
+  --table-transition: all 0.1s ease;
+
+  // @media (prefers-color-scheme: dark) {
+  //   --table-box-shadow-left: -2px 0px 5px -2px rgba(136, 136, 136, 0.3);
+  //   --table-box-shadow-right: 2px 0 5px -2px rgba(136, 136, 136, 0.3);
+  //   --table-box-shadow-bottom: 0px 3px 5px -2px rgba(136, 136, 136, 0.3);
+  //   --table-cell-bg: #1e1e1e;
+  //   --table-header-cell-bg: #333333;
+  //   --table-body-bg: #1e1e1e;
+  //   --table-header-bg: #333333;
+  //   --table-border: #292929;
+  //   --table-text-color: rgba(255, 255, 255, 0.85);
+  //   --table-link-color: #a870e8;
+  //   --table-active-sort: #1e90ff;
+  //   --table-row-hover-bg: #f3faff;
+  //   --table-transition: all 0.1s ease;
+  // }
+
+  // @media (prefers-color-scheme: light) {
+  //   --table-box-shadow-left: -2px 0px 5px -2px rgba(136, 136, 136, 0.3);
+  //   --table-box-shadow-right: 2px 0 5px -2px rgba(136, 136, 136, 0.3);
+  //   --table-box-shadow-bottom: 0px 3px 5px -2px rgba(136, 136, 136, 0.3);
+  //   --table-cell-bg: #ffffff;
+  //   --table-header-cell-bg: #f9f9f9;
+  //   --table-body-bg: #ffffff;
+  //   --table-header-bg: #f9f9f9;
+  //   --table-border: #ddd;
+  //   --table-text-color: rgba(0, 0, 0, 0.75);
+  //   --table-link-color: #a870e8;
+  //   --table-active-sort: #1e90ff;
+  //   --table-row-hover-bg: #f3faff;
+  //   --table-transition: all 0.1s ease;
+  // }
+}
+
+.container {
+  overflow: auto;
+  position: relative;
+  width: 100%;
+  border: 1px solid var(--table-border);
+  height: 100%;
+}
+
+.table {
+  display: grid;
+  border-spacing: 0px;
+  table-layout: fixed;
+  border-collapse: collapse;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: grid;
+
+  display: flex;
+  flex-direction: column;
+
+  &__frozen {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+}
+
+.headerRow {
+  background-color: var(--table-header-bg);
+  overflow: initial;
+  display: flex;
+}
+
+.headerCell {
+  position: relative;
+  display: flex;
+
+  &__frozen {
+    &_left {
+      position: sticky;
+      z-index: 2;
+
+      &_last {
+        box-shadow: var(--table-box-shadow-right);
+      }
+    }
+
+    &_right {
+      position: sticky;
+      z-index: 2;
+
+      &_first {
+        box-shadow: var(--table-box-shadow-left);
+        border-left: 1px solid var(--table-border);
+      }
+    }
+  }
+}
+
+.headerResize {
+  position: absolute;
+  right: 0px;
+  top: 0;
+  height: 100%;
+  width: 10px;
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.body {
+  display: grid;
+  position: relative;
+  background-color: var(--table-body-bg);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+
+  &:hover {
+    background-color: var(--table-row-hover-bg);
+
+    & > td {
+      background-color: var(--table-row-hover-bg);
+    }
+  }
+
+  &__virtual {
+    position: absolute;
+  }
+}
+
+.cell {
+  transition: var(--table-transition);
+
+  &__frozen {
+    &_left {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+
+      &_last {
+        box-shadow: var(--table-box-shadow-right);
+      }
+    }
+
+    &_right {
+      position: sticky;
+      right: 0;
+      z-index: 1;
+
+      &_first {
+        box-shadow: var(--table-box-shadow-left);
+        border-left: 1px solid var(--table-border);
+      }
+    }
+  }
+}
+
+.paginationContainer {
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pageSelect {
+  width: fit-content;
+}
+
+.filterContainer {
+  padding: 20px 0;
+}

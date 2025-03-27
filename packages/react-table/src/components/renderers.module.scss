@@ -1,0 +1,22 @@
+.expander {
+  &__button {
+    padding: 7px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    cursor: pointer;
+    color: var(--table-text-color);
+    font-weight: 500;
+    font-family: "Times New Roman", Times, serif;
+  }
+  &__icon {
+    transition: all 0.15s ease;
+    transform: rotate(90deg);
+    &_open {
+      transform: rotate(180deg);
+    }
+  }
+}

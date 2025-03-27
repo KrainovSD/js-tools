@@ -1,0 +1,17 @@
+.common {
+  &__container {
+    min-height: 35px;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  &__base {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

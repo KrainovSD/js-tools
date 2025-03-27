@@ -1,0 +1,44 @@
+:root {
+  color-scheme: light !important;
+}
+
+*,
+*::before,
+*::after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: rgb(208, 207, 205);
+
+  & div {
+    scrollbar-width: initial !important;
+
+    &::-webkit-scrollbar-thumb {
+      border: 4px solid transparent;
+      border-radius: 10px;
+
+      background-clip: padding-box;
+      background-color: #e0e0e0;
+    }
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+  }
+}

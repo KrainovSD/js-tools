@@ -1,0 +1,53 @@
+a.container {
+  color: var(--table-link-color);
+}
+
+.container {
+  min-height: 35px;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  overflow: hidden;
+  width: 100%;
+}
+
+.base {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text {
+  color: var(--table-text-color);
+  font-weight: 500;
+  font-family: "Times New Roman", Times, serif;
+
+  &__tooltip {
+    &::before {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      white-space: nowrap;
+      z-index: 100;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: calc(100% + 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #333;
+    }
+  }
+}

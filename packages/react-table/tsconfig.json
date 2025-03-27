@@ -1,0 +1,15 @@
+{
+  "extends": "@krainovsd/presets/typescript/common",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": [
+    "src/**/*",
+    "eslint.config.js",
+    "rollup.config.ts",
+    ".prettierrc.mjs",
+    "vite.config.ts",
+    "vite-env.d.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

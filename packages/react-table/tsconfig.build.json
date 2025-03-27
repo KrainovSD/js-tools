@@ -1,0 +1,9 @@
+{
+  "extends": "@krainovsd/presets/typescript/common-build",
+  "compilerOptions": {
+    "outDir": "tmp"
+  },
+  "files": ["src/index.ts"],
+  "include": ["vite-env.d.ts"],
+  "exclude": ["**/*.spec.ts"]
+}
