@@ -18,15 +18,8 @@
       "require": "./lib/cjs/index.cjs"
     }
   },
-  "keywords": [
-    "ui-kit",
-    "js",
-    "react",
-    "components"
-  ],
-  "files": [
-    "lib"
-  ],
+  "keywords": ["ui-kit", "js", "react", "components"],
+  "files": ["lib"],
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
     "clear": "rm -rf ./lib",
@@ -51,7 +44,9 @@
     "lodash": "4.17.21",
     "@krainovsd/react-icons": "0.2.3",
     "@krainovsd/js-helpers": "0.12.0",
-    "@emotion/css": "11.13.5"
+    "@emotion/css": "11.13.5",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@krainovsd/presets": "0.1.5",
@@ -73,14 +68,8 @@
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@vitejs/plugin-react": "4.3.4",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
     "sass-embedded": "1.81.0",
     "storybook": "8.4.7",
     "vite": "6.0.11"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
   }
 }

@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  react-ui-kit:
+    container_name: krainov
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: 'unless-stopped'
+    ports:
+      - 4020:80
