@@ -16,6 +16,7 @@ export default [
       "coverage/",
       "dist/",
       ".storybook/",
+      "storybook-static",
     ],
   },
   {

@@ -24,10 +24,9 @@ interface FiltersBlockProps<T extends Record<string, FilterInputValueType>> {
   showSearchField?: boolean;
   searchPlaceholder?: string;
   isDisabledFields?: boolean;
-  onValuesChange: (values: T) => void;
+  onValuesChange: (values: T, field: keyof T, value: T[keyof T] | undefined) => void;
   initialValues?: Partial<T>;
   onChangeSearch?: (value: string) => void;
-  position: "vertical" | "horizontal";
 }
 
 export function FiltersBlock<T extends Record<string, FilterInputValueType>>(
@@ -53,8 +52,9 @@ export function FiltersBlock<T extends Record<string, FilterInputValueType>>(
   }, [initialValues, form]);
 
   const onChangeFormValues = React.useCallback(
-    (_: unknown, values: T) => {
-      onValuesChange(values);
+    (changedValue: Record<string, unknown>, values: T) => {
+      const [key, value] = Object.entries(changedValue)[0];
+      onValuesChange(values, key, value as T[keyof T]);
     },
     [onValuesChange],
   );

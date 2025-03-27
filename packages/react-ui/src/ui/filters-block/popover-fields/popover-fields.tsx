@@ -14,7 +14,7 @@ const typedMemo: <T>(c: T) => T = React.memo;
 type Props<T extends Record<string, FilterInputValueType>> = {
   fields: FilterFieldType[];
   initialValues?: Partial<T>;
-  onValuesChange: (values: T) => void;
+  onValuesChange?: (values: T, field: keyof T, value: T[keyof T] | undefined) => void;
   form: FormInstance<T>;
   isDisabledFields?: boolean;
   filterLabel: string;
@@ -50,12 +50,14 @@ export const PopoverFields = typedMemo(function PopoverFields<
       setOpen(false);
       setNewFilter("");
       setSelectedFields((prev) => prev.filter((prevField) => prevField.name !== field.name));
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-      props.form.setFieldValue(field.name as any, undefined);
+      props.form.setFieldValue(
+        field.name as Parameters<FormInstance<T>["setFieldValue"]>[0],
+        undefined,
+      );
 
       if (props.onValuesChange) {
         const currentValues = props.form.getFieldsValue();
-        props.onValuesChange(currentValues);
+        props.onValuesChange(currentValues, field.name as keyof T, undefined);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
