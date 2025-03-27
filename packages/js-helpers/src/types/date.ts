@@ -1,3 +1,4 @@
+import type { Dayjs } from "dayjs";
 import { type DATE_TYPES } from "../constants";
 import { type ValueOf } from "./common";
 
@@ -6,3 +7,5 @@ export type DateGetterRule = {
   increment: number;
   type: DateType;
 };
+
+export type DayJS = Dayjs;

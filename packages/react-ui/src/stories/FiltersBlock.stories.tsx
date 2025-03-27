@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import { isObject } from "@krainovsd/js-helpers";
 import { PlayPause } from "@krainovsd/react-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { type FilterFieldType, FiltersBlock, Flex, Input, Select } from "../ui";
@@ -35,17 +34,9 @@ export const Primary: Story = {
         name: "status2",
         icon: <PlayPause color={"black"} />,
         labelInValue: true,
-        renderDisplayValue: (value: Record<string, string>[] | string[]) =>
-          isObject(value[0])
-            ? (value as Record<string, string>[])
-                .map((item: Record<string, string>) => item.label)
-                .join(", ")
-            : // eslint-disable-next-line @typescript-eslint/no-base-to-string
-              value.join(", "),
+        renderDisplayValue: (value: Record<string, string>[] | string[]) => value,
         inputField: (
           <Select
-            mode={"multiple"}
-            labelInValue={true}
             variant="outlined"
             size="middle"
             style={{ width: "fit-content", minWidth: 200 }}
@@ -68,7 +59,6 @@ export const Primary: Story = {
         inputField: (
           <Select
             mode={"multiple"}
-            labelInValue={true}
             variant="outlined"
             size="middle"
             style={{ width: "fit-content", minWidth: 200, maxWidth: 600 }}
@@ -91,7 +81,6 @@ export const Primary: Story = {
         inputField: (
           <Select
             mode={"multiple"}
-            labelInValue={true}
             variant="outlined"
             size="middle"
             style={{ width: "fit-content", minWidth: 200 }}
@@ -114,7 +103,6 @@ export const Primary: Story = {
         inputField: (
           <Select
             mode={"multiple"}
-            labelInValue={true}
             variant="outlined"
             size="middle"
             style={{ width: "fit-content", minWidth: 200 }}
@@ -131,7 +119,6 @@ export const Primary: Story = {
         label: "Текстовое",
         name: "text",
         icon: <PlayPause color={"black"} />,
-        labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) => value,
         inputField: <Input placeholder={"Введите значение"} variant="outlined" size="middle" />,
       },

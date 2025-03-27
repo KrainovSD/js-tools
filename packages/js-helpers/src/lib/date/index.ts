@@ -7,3 +7,4 @@ export * from "./is-today";
 export * from "./is-tomorrow";
 export * from "./is-yesterday";
 export * from "./date-format";
+export * from "./transform-to-dayjs";
