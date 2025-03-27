@@ -808,7 +808,9 @@ export class GraphCanvas<
         }
 
         if (nodeOptions.nodeDraw) {
-          nodeOptions.nodeDraw(node, nodeOptions, state);
+          nodeRenders.push(() => {
+            nodeOptions?.nodeDraw?.(node, nodeOptions, state);
+          });
 
           return;
         }
@@ -1003,22 +1005,24 @@ export class GraphCanvas<
         }
 
         if (nodeOptions.nodeExtraDraw) {
-          nodeOptions.nodeExtraDraw(
-            node,
-            {
-              ...nodeOptions,
-              radius,
-              alpha,
-              color,
-              textAlpha,
-              textSize,
-              textShiftX,
-              textShiftY,
-              textWeight,
-              textWidth,
-            },
-            state,
-          );
+          nodeRenders.push(() => {
+            nodeOptions?.nodeExtraDraw?.(
+              node,
+              {
+                ...nodeOptions,
+                radius,
+                alpha,
+                color,
+                textAlpha,
+                textSize,
+                textShiftX,
+                textShiftY,
+                textWeight,
+                textWidth,
+              },
+              state,
+            );
+          });
         }
       };
     }
