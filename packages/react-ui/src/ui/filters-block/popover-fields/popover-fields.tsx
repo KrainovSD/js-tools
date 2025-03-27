@@ -1,6 +1,6 @@
 import { arrayToMapByKey } from "@krainovsd/js-helpers";
 import { Filter } from "@krainovsd/react-icons";
-import { type FormInstance, theme } from "antd";
+import { type FormInstance } from "antd";
 import React from "react";
 import { Button } from "../../button";
 import { Flex } from "../../flex";
@@ -22,7 +22,6 @@ type Props<T extends Record<string, FilterInputValueType>> = {
 export const PopoverFields = typedMemo(function PopoverFields<
   T extends Record<string, FilterInputValueType>,
 >(props: Props<T>) {
-  const { token } = theme.useToken();
   const [open, setOpen] = React.useState(false);
   const [newFilter, setNewFilter] = React.useState("");
   const [selectedFields, setSelectedFields] = React.useState<FilterFieldType[]>([]);
@@ -114,7 +113,7 @@ export const PopoverFields = typedMemo(function PopoverFields<
         onOpenChange={setOpen}
       >
         <Button
-          icon={<Filter color={token.colorTextDescription} />}
+          icon={<Filter />}
           disabled={props.isDisabledFields || props.fields.length === selectedFields.length}
           shape="round"
           type="default"

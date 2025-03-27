@@ -1,6 +1,6 @@
 import { Select as AntdSelect, theme } from "antd";
 import type { SelectProps as AntdSelectProps } from "antd";
-import type { DefaultOptionType, SelectValue } from "antd/es/select";
+import type { BaseOptionType, DefaultOptionType } from "antd/es/select";
 import clsx from "clsx";
 import type React from "react";
 import { type ReactElement, useCallback, useMemo } from "react";
@@ -16,7 +16,8 @@ export interface SelectItemInterface {
 
 export type SelectItems = SelectItemInterface[];
 
-export interface SelectProps extends AntdSelectProps {
+export interface SelectProps<ValueType, OptionType extends BaseOptionType = DefaultOptionType>
+  extends AntdSelectProps<ValueType, OptionType> {
   customOption?: React.JSX.Element;
   withEmptyOption?: boolean;
   wide?: boolean;
@@ -27,7 +28,9 @@ const EMPTY_OPTION = {
   value: "EMPTY_VALUE",
 };
 
-export function Select(props: SelectProps): React.JSX.Element {
+export function Select<ValueType, OptionType extends BaseOptionType = DefaultOptionType>(
+  props: SelectProps<ValueType, OptionType>,
+): React.JSX.Element {
   const {
     withEmptyOption,
     loading,
@@ -68,16 +71,20 @@ export function Select(props: SelectProps): React.JSX.Element {
     [withEmptyOption, options],
   );
 
-  const handleChange = (value: SelectValue, option?: DefaultOptionType | DefaultOptionType[]) => {
-    onChange?.(value === EMPTY_OPTION.value ? undefined : value, option);
+  const handleChange = (value: ValueType, option?: OptionType | OptionType[]) => {
+    onChange?.(value === EMPTY_OPTION.value ? (undefined as ValueType) : value, option);
   };
 
   return (
-    <AntdSelect
+    <AntdSelect<ValueType, OptionType>
       {...otherProps}
       onChange={handleChange}
-      value={props.value === undefined && withEmptyOption ? "" : (props.value as SelectValue)}
-      options={selectOptions}
+      value={
+        props.value === undefined && withEmptyOption
+          ? ("" as ValueType)
+          : (props.value as ValueType)
+      }
+      options={selectOptions as OptionType[]}
       dropdownRender={dropdownContentRender}
       className={clsx(styles.base, wide && styles.wide, className)}
     />

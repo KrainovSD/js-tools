@@ -38,3 +38,4 @@ export * from "./import";
 export * from "./slider";
 export * from "./popper";
 export * from "./positioner";
+export * from "./pagination";
