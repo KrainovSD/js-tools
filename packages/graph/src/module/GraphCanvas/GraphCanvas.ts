@@ -807,9 +807,13 @@ export class GraphCanvas<
           }
         }
 
-        if (nodeOptions.nodeDraw) {
+        if (nodeOptions.nodeDraw && nodeOptions.textDraw) {
           nodeRenders.push(() => {
             nodeOptions?.nodeDraw?.(node, nodeOptions, state);
+          });
+
+          textRenders.push(() => {
+            nodeOptions?.textDraw?.(node, nodeOptions, state);
           });
 
           return;
@@ -938,6 +942,27 @@ export class GraphCanvas<
           this.context.stroke();
         });
 
+        if (nodeOptions.nodeExtraDraw) {
+          nodeRenders.push(() => {
+            nodeOptions?.nodeExtraDraw?.(
+              node,
+              {
+                ...nodeOptions,
+                radius,
+                alpha,
+                color,
+                textAlpha,
+                textSize,
+                textShiftX,
+                textShiftY,
+                textWeight,
+                textWidth,
+              },
+              state,
+            );
+          });
+        }
+
         /** text */
         if (nodeOptions.textVisible && nodeOptions.text) {
           textRenders.push(() => {
@@ -1001,27 +1026,6 @@ export class GraphCanvas<
                 state,
               );
             }
-          });
-        }
-
-        if (nodeOptions.nodeExtraDraw) {
-          nodeRenders.push(() => {
-            nodeOptions?.nodeExtraDraw?.(
-              node,
-              {
-                ...nodeOptions,
-                radius,
-                alpha,
-                color,
-                textAlpha,
-                textSize,
-                textShiftX,
-                textShiftY,
-                textWeight,
-                textWidth,
-              },
-              state,
-            );
           });
         }
       };
