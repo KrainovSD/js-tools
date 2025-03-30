@@ -1,8 +1,6 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from "react";
-import { ICON_CATEGORIES } from "../categories";
 import { Icon } from "../icon";
+import { Icons } from "../icons";
 import type { IconName } from "../types";
 
 export function IconPage() {
@@ -20,6 +18,7 @@ export function IconPage() {
         fontSize: "18px",
         gap: "20px",
         boxSizing: "border-box",
+        overflow: "hidden",
       }}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
@@ -31,53 +30,40 @@ export function IconPage() {
           style={{ fontSize: "18px" }}
         />
         <input type="color" value={color} onChange={(event) => setColor(event.target.value)} />
+        <span>Всего элементов: {Object.keys(Icons).length}</span>
       </div>
-      {ICON_CATEGORIES.map((category) => {
-        return (
-          <div key={category.id} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <span>{category.text}</span>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                rowGap: "10px",
-                columnGap: "20px",
-              }}
-            >
-              {category.icons.map((icon) => {
-                if (
-                  filter.trim().length !== 0 &&
-                  !icon.toLowerCase().trim().includes(filter.toLowerCase().trim())
-                )
-                  return null;
+      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", overflow: "auto" }}>
+        {Object.keys(Icons).map((name) => {
+          if (
+            (filter.trim().length !== 0 &&
+              name.toLowerCase().trim().includes(filter.toLowerCase().trim())) ||
+            filter.trim().length === 0
+          )
+            return (
+              <button
+                key={name}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "5px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid black",
+                  padding: "5px",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  void window.navigator.clipboard.writeText(name);
+                }}
+              >
+                <Icon icon={name as IconName} size={24} color={color} />
+                <span>{name}</span>
+              </button>
+            );
 
-                return (
-                  <div
-                    key={icon}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "5px",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      border: "1px solid black",
-                      padding: "5px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      void navigator.clipboard.writeText(icon);
-                    }}
-                  >
-                    <Icon icon={icon as IconName} size={24} color={color} />
-                    <span>{icon}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
+          return null;
+        })}
+      </div>
     </div>
   );
 }

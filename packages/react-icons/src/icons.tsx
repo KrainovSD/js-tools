@@ -1,6 +1,5 @@
-import { arrows, others } from "./components/categories";
+import * as icons from "./components";
 
 export const Icons = {
-  ...arrows,
-  ...others,
+  ...icons,
 } as const;

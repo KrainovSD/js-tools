@@ -1,6 +1,4 @@
-:root {
-  color-scheme: light !important;
-}
+@import url("/fonts/Nunito/fonts.css");
 
 *,
 *::before,
@@ -23,8 +21,7 @@ body {
   height: 100vh;
   min-width: 320px;
   min-height: 100vh;
-  background-color: rgb(208, 207, 205);
-
+  background-color: #f0f0f0;
   & div {
     scrollbar-width: initial !important;
 

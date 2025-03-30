@@ -114,6 +114,7 @@ export const PopoverFields = typedMemo(function PopoverFields<
       >
         <Button
           icon={<Filter />}
+          className={styles.filterButton}
           disabled={props.isDisabledFields || props.fields.length === selectedFields.length}
           shape="round"
           type="default"

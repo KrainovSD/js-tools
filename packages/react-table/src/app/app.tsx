@@ -127,6 +127,9 @@ export function App() {
     <ConfigProvider
       theme={{
         cssVar: true, // Включение CSS-переменных
+        token: {
+          fontFamily: "Nunito",
+        },
         // algorithm: theme.darkAlgorithm, // Тёмная тема
       }}
     >
