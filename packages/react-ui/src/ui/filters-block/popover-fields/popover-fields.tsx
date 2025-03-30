@@ -1,5 +1,5 @@
 import { arrayToMapByKey } from "@krainovsd/js-helpers";
-import { Filter } from "@krainovsd/react-icons";
+import { FilterOutlined } from "@krainovsd/react-icons";
 import { type FormInstance } from "antd";
 import React from "react";
 import { Button } from "../../button";
@@ -81,15 +81,6 @@ export const PopoverFields = typedMemo(function PopoverFields<
 
   return (
     <>
-      {selectedFieldsInfo.map((field) => (
-        <PopoverField
-          key={field.name}
-          form={props.form}
-          newFilter={newFilter === field.name}
-          onRemove={() => handleRemoveField(field)}
-          field={field}
-        />
-      ))}
       <Popover
         placement="bottomLeft"
         arrow={false}
@@ -113,15 +104,25 @@ export const PopoverFields = typedMemo(function PopoverFields<
         onOpenChange={setOpen}
       >
         <Button
-          icon={<Filter />}
+          icon={<FilterOutlined size={18} />}
           className={styles.filterButton}
           disabled={props.isDisabledFields || props.fields.length === selectedFields.length}
-          shape="round"
+          shape="default"
           type="default"
+          size="middle"
         >
           {props.filterLabel}
         </Button>
       </Popover>
+      {selectedFieldsInfo.map((field) => (
+        <PopoverField
+          key={field.name}
+          form={props.form}
+          newFilter={newFilter === field.name}
+          onRemove={() => handleRemoveField(field)}
+          field={field}
+        />
+      ))}
     </>
   );
 });

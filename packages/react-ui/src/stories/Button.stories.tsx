@@ -1,4 +1,4 @@
-import { Module } from "@krainovsd/react-icons";
+import { ModuleLegacy } from "@krainovsd/react-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Button } from "../ui";
@@ -24,7 +24,7 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 const Template: StoryFn<typeof Button> = (args) => {
-  return <Button {...args} icon={<Module color="black" size={16} />} />;
+  return <Button {...args} icon={<ModuleLegacy color="black" size={16} />} />;
 };
 
 export const Primary: Story = {

@@ -7,8 +7,8 @@ export const popover = (token: GlobalToken) => css`
   justify-content: flex-start;
   vertical-align: middle;
   padding: 5px 20px;
-  border: 1px solid ${token.colorBorderSecondary};
-  border-radius: 20px;
+  border: 1px solid ${token.colorBorder};
+  border-radius: ${token.borderRadius}px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 

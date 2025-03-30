@@ -1,4 +1,4 @@
-import { Close } from "@krainovsd/react-icons";
+import { CloseLegacy } from "@krainovsd/react-icons";
 import type { FormInstance } from "antd";
 import { Form, theme } from "antd";
 import type { FC } from "react";
@@ -65,7 +65,7 @@ export const PopoverField: FC<IProps> = (props) => {
           {props.field.inputField ?? <Input placeholder={props.field.label} />}
         </Form.Item>
         <Flex align="center" wrap={false}>
-          <Text type={fieldValue ? "secondary" : undefined}>{props.field.label}</Text>
+          <Text type={fieldValue ? "secondary" : undefined}>{props.field.label}:</Text>
           <Text ellipsis={{ tooltip: displayValue }} style={{ maxWidth: 200, marginLeft: 5 }}>
             {displayValue}
           </Text>
@@ -81,8 +81,8 @@ export const PopoverField: FC<IProps> = (props) => {
               props.onRemove();
             }}
             type="text"
-            shape="round"
-            icon={<Close style={{ opacity: 0.5, fontSize: 12 }} size={12} />}
+            shape="default"
+            icon={<CloseLegacy style={{ opacity: 0.5, fontSize: 12 }} size={12} />}
           />
         </Flex>
       </div>

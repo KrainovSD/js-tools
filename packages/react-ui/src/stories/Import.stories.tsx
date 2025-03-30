@@ -1,4 +1,4 @@
-import { ArrowTo } from "@krainovsd/react-icons";
+import { ArrowToLegacy } from "@krainovsd/react-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 import { Button, Import } from "../ui";
@@ -24,7 +24,7 @@ type Story = StoryObj<typeof Import>;
 const Template: StoryFn<typeof Import> = (args) => {
   return (
     <Import {...args}>
-      <Button size="large" type="text" icon={<ArrowTo size={30} color="black" />} />
+      <Button size="large" type="text" icon={<ArrowToLegacy size={30} color="black" />} />
     </Import>
   );
 };

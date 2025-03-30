@@ -1239,8 +1239,8 @@ importers:
         specifier: 0.12.0
         version: 0.12.0(node-fetch@3.3.2)
       '@krainovsd/react-icons':
-        specifier: 0.3.0
-        version: 0.3.0(react@18.3.1)
+        specifier: 0.4.0
+        version: 0.4.0(react@18.3.1)
       antd:
         specifier: 5.22.5
         version: 5.22.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2782,6 +2782,11 @@ packages:
 
   '@krainovsd/react-icons@0.3.0':
     resolution: {integrity: sha512-K9WrZFi8LStvh+QkugdrW4uddGgFjCI+IX4sKeyg1LK0RO6MFTvjjhgpRgt8KvkJO4dUyX2EumsvUgtb4yTB8Q==}
+    peerDependencies:
+      react: ^18.0.0
+
+  '@krainovsd/react-icons@0.4.0':
+    resolution: {integrity: sha512-xEoR/9oyr7dWPvRDLCAXf0oHhCcj3RtlPUnCHSQ0kbCTilQMWudtkcAvot1+KW7QwKCOhmtolTCYUJ64EyrhYg==}
     peerDependencies:
       react: ^18.0.0
 
@@ -12456,6 +12461,10 @@ snapshots:
       react: 18.3.1
 
   '@krainovsd/react-icons@0.3.0(react@18.3.1)':
+    dependencies:
+      react: 18.3.1
+
+  '@krainovsd/react-icons@0.4.0(react@18.3.1)':
     dependencies:
       react: 18.3.1
 

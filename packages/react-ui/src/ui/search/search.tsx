@@ -1,4 +1,4 @@
-import { Close, Filter, Search as SearchIcon } from "@krainovsd/react-icons";
+import { CloseLegacy, FilterLegacy, SearchLegacy as SearchIcon } from "@krainovsd/react-icons";
 import { type InputProps, theme } from "antd";
 import React from "react";
 import { Button } from "../button";
@@ -68,9 +68,9 @@ export function Search({
             className={styles.button}
             icon={
               isOpenTags ? (
-                <Close color={token.colorIcon} size={16} />
+                <CloseLegacy color={token.colorIcon} size={16} />
               ) : (
-                <Filter color={token.colorIcon} size={16} />
+                <FilterLegacy color={token.colorIcon} size={16} />
               )
             }
             onClick={() => {

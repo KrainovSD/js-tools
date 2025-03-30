@@ -1,4 +1,4 @@
-import { Close, Search } from "@krainovsd/react-icons";
+import { CloseLegacy, SearchLegacy } from "@krainovsd/react-icons";
 import { ConfigProvider, type InputRef, theme } from "antd";
 import clsx from "clsx";
 import debounce from "lodash/debounce";
@@ -50,7 +50,11 @@ export const SearchField = memo(function SearchField(props: SearchFieldProps): J
   return (
     <Flex gap={10} align="center" className={styles.container}>
       <ConfigProvider wave={{ disabled: true }}>
-        <Button icon={<Search color={token.colorText} size={16} />} onClick={onOpen} onlyIcon />
+        <Button
+          icon={<SearchLegacy color={token.colorText} size={16} />}
+          onClick={onOpen}
+          onlyIcon
+        />
       </ConfigProvider>
       <Input
         ref={inputRef}
@@ -67,7 +71,7 @@ export const SearchField = memo(function SearchField(props: SearchFieldProps): J
           isOpen ? (
             <ConfigProvider wave={{ disabled: true }}>
               <Button
-                icon={<Close color="black" size={12} />}
+                icon={<CloseLegacy color="black" size={12} />}
                 onClick={handleCleanClick}
                 onlyIcon
                 style={{ display: inputValue ? "flex" : "none" }}

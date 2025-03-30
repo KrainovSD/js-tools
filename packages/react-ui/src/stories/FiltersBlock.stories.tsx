@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { PlayPause } from "@krainovsd/react-icons";
+import { PlayPauseLegacy } from "@krainovsd/react-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import { type FilterFieldType, FiltersBlock, Flex, Input, Select } from "../ui";
 
@@ -32,7 +32,7 @@ export const Primary: Story = {
       {
         label: "Статус",
         name: "status2",
-        icon: <PlayPause color={"black"} />,
+        icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[] | string[]) => value,
         inputField: (
@@ -52,10 +52,9 @@ export const Primary: Story = {
       {
         label: "Тип",
         name: "type",
-        icon: <PlayPause color={"black"} />,
+        icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
-        renderDisplayValue: (value: Record<string, string>[]) =>
-          value.map((item: Record<string, string>) => item.label).join(", "),
+        renderDisplayValue: (value: string[]) => value.join(", "),
         inputField: (
           <Select
             mode={"multiple"}
@@ -74,7 +73,7 @@ export const Primary: Story = {
       {
         label: "Еще одно",
         name: "other",
-        icon: <PlayPause color={"black"} />,
+        icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) =>
           value.map((item: Record<string, string>) => item.label).join(", "),
@@ -96,7 +95,7 @@ export const Primary: Story = {
       {
         label: "И Еще одно",
         name: "and_other",
-        icon: <PlayPause color={"black"} />,
+        icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) =>
           value.map((item: Record<string, string>) => item.label).join(", "),
@@ -118,7 +117,7 @@ export const Primary: Story = {
       {
         label: "Текстовое",
         name: "text",
-        icon: <PlayPause color={"black"} />,
+        icon: <PlayPauseLegacy color={"black"} />,
         renderDisplayValue: (value: Record<string, string>[]) => value,
         inputField: <Input placeholder={"Введите значение"} variant="outlined" size="middle" />,
       },

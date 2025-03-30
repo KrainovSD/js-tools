@@ -1,4 +1,4 @@
-import { WarningFilled } from "@krainovsd/react-icons";
+import { WarningFilledLegacy } from "@krainovsd/react-icons";
 import { theme } from "antd";
 import type { JSX } from "react";
 import React from "react";
@@ -32,7 +32,7 @@ export function ErrorContent(props: ErrorContentProps): JSX.Element {
   return (
     <div className={styles.wrapper}>
       <Flex vertical align="center" gap={20} className={styles.content}>
-        <WarningFilled color={token.colorError} size={60} />
+        <WarningFilledLegacy color={token.colorError} size={60} />
         <Flex vertical align="center" gap="large">
           <Flex vertical gap="small" className={styles.text}>
             <Title level={4}>{title}</Title>
