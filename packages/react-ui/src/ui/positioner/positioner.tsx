@@ -59,7 +59,7 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
     isCloseByEscape = true,
     header,
     isCloseByScroll = true,
-    modalRoot = "#modal",
+    modalRoot = ".modal-root",
     placement = "bottom-center",
     size = "common",
     stepX,
