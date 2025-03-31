@@ -1,7 +1,16 @@
 /* eslint-disable no-console */
 import { PlayPauseLegacy } from "@krainovsd/react-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
-import { type FilterFieldType, FiltersBlock, Flex, Input, Select } from "../ui";
+import {
+  DatePicker,
+  DateRangePicker,
+  type FilterFieldType,
+  FiltersBlock,
+  Flex,
+  Input,
+  InputNumber,
+  Select,
+} from "../ui";
 
 const meta = {
   title: "Antd/FiltersBlock",
@@ -30,14 +39,15 @@ export const Primary: Story = {
     filterLabel: "Фильтр",
     fields: [
       {
-        label: "Статус",
-        name: "status2",
+        label: "Select",
+        name: "select",
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[] | string[]) => value,
         inputField: (
           <Select
             variant="outlined"
+            showSearch
             size="middle"
             style={{ width: "fit-content", minWidth: 200 }}
             options={[
@@ -50,14 +60,16 @@ export const Primary: Story = {
         ),
       },
       {
-        label: "Тип",
-        name: "type",
+        label: "MultiSelect",
+        name: "multiSelect",
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
+        popover: true,
         renderDisplayValue: (value: string[]) => value.join(", "),
         inputField: (
           <Select
             mode={"multiple"}
+            showSearch
             variant="outlined"
             size="middle"
             style={{ width: "fit-content", minWidth: 200, maxWidth: 600 }}
@@ -71,55 +83,38 @@ export const Primary: Story = {
         ),
       },
       {
-        label: "Еще одно",
-        name: "other",
+        label: "DatePicker",
+        name: "datePicker",
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) =>
           value.map((item: Record<string, string>) => item.label).join(", "),
-        inputField: (
-          <Select
-            mode={"multiple"}
-            variant="outlined"
-            size="middle"
-            style={{ width: "fit-content", minWidth: 200 }}
-            options={[
-              { value: "Супер длинное название", label: "Супер длинное название" },
-              { value: "Супер длинное название 2", label: "Супер длинное название 2" },
-              { value: "Стоп", label: "Стоп" },
-            ]}
-            placeholder={"Выберите статус"}
-          />
-        ),
+        inputField: <DatePicker format={"DD/MM/YYYY"} />,
       },
       {
-        label: "И Еще одно",
-        name: "and_other",
+        label: "DateRangePicker",
+        name: "dateRangePicker",
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
         renderDisplayValue: (value: Record<string, string>[]) =>
           value.map((item: Record<string, string>) => item.label).join(", "),
-        inputField: (
-          <Select
-            mode={"multiple"}
-            variant="outlined"
-            size="middle"
-            style={{ width: "fit-content", minWidth: 200 }}
-            options={[
-              { value: "Супер длинное название", label: "Супер длинное название" },
-              { value: "Супер длинное название 2", label: "Супер длинное название 2" },
-              { value: "Стоп", label: "Стоп" },
-            ]}
-            placeholder={"Выберите статус"}
-          />
-        ),
+        inputField: <DateRangePicker format={"DD/MM/YYYY"} />,
       },
       {
-        label: "Текстовое",
-        name: "text",
+        label: "String",
+        name: "string",
         icon: <PlayPauseLegacy color={"black"} />,
         renderDisplayValue: (value: Record<string, string>[]) => value,
         inputField: <Input placeholder={"Введите значение"} variant="outlined" size="middle" />,
+      },
+      {
+        label: "Number",
+        name: "number",
+        icon: <PlayPauseLegacy color={"black"} />,
+        renderDisplayValue: (value: Record<string, string>[]) => value,
+        inputField: (
+          <InputNumber placeholder={"Введите значение"} variant="outlined" size="middle" />
+        ),
       },
     ] as unknown as FilterFieldType[],
     // fixedFields: [

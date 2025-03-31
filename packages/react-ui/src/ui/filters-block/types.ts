@@ -21,4 +21,5 @@ export type FilterFieldType = {
   renderDisplayValue?: (value: FilterInputValueType) => string;
   icon?: JSX.Element;
   inputField?: JSX.Element;
+  popover?: boolean;
 };

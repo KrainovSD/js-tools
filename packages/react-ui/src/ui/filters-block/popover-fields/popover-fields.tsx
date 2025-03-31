@@ -5,6 +5,7 @@ import React from "react";
 import { Button } from "../../button";
 import { Flex } from "../../flex";
 import { Popover } from "../../popover";
+import { CommonField } from "../common-field";
 import { PopoverField } from "../popover-field";
 import type { FilterFieldType, FilterInputValueType } from "../types";
 import styles from "./popover-fields.module.scss";
@@ -114,15 +115,29 @@ export const PopoverFields = typedMemo(function PopoverFields<
           {props.filterLabel}
         </Button>
       </Popover>
-      {selectedFieldsInfo.map((field) => (
-        <PopoverField
-          key={field.name}
-          form={props.form}
-          newFilter={newFilter === field.name}
-          onRemove={() => handleRemoveField(field)}
-          field={field}
-        />
-      ))}
+      {selectedFieldsInfo.map((field) => {
+        if (field.popover) {
+          return (
+            <PopoverField
+              key={field.name}
+              form={props.form}
+              newFilter={newFilter === field.name}
+              onRemove={() => handleRemoveField(field)}
+              field={field}
+            />
+          );
+        }
+
+        return (
+          <CommonField
+            key={field.name}
+            form={props.form}
+            newFilter={newFilter === field.name}
+            onRemove={() => handleRemoveField(field)}
+            field={field}
+          />
+        );
+      })}
     </>
   );
 });
