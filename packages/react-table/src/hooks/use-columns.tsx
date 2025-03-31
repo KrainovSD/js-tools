@@ -256,7 +256,6 @@ export function useColumns<
     const filterOptions: FilterFieldType[] = [];
     for (let i = 0; i < columns.length; i++) {
       const column = columns[i];
-      const FilterRender = column.filterRender;
 
       if (!column.enableColumnFilter || !column.id) continue;
 
@@ -302,7 +301,7 @@ export function useColumns<
 
           return String(value);
         },
-        inputField: <FilterRender column={column} />,
+        inputField: column.filterRender(column) as React.JSX.Element,
       });
     }
 

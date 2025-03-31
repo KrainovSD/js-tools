@@ -16,10 +16,8 @@ export type SelectFilterRenderProps = {
   options: SelectItemInterface[];
   multiple?: boolean;
 };
-export function SelectFilterRender<Row extends Record<string, unknown>>(props: {
-  column: ColumnDef<Row>;
-}) {
-  const filterRenderProps = props.column.filterRenderProps as SelectFilterRenderProps | undefined;
+export function SelectFilterRender<Row extends Record<string, unknown>>(props: ColumnDef<Row>) {
+  const filterRenderProps = props.filterRenderProps as SelectFilterRenderProps | undefined;
 
   return (
     <Select
@@ -36,17 +34,13 @@ export function SelectFilterRender<Row extends Record<string, unknown>>(props: {
 export type DateFilterRenderProps = {
   format: string;
 };
-export function DateRangeFilterRender<Row extends Record<string, unknown>>(props: {
-  column: ColumnDef<Row>;
-}) {
-  const filterRenderProps = props.column.filterRenderProps as DateFilterRenderProps | undefined;
+export function DateRangeFilterRender<Row extends Record<string, unknown>>(props: ColumnDef<Row>) {
+  const filterRenderProps = props.filterRenderProps as DateFilterRenderProps | undefined;
 
   return <DateRangePicker format={filterRenderProps?.format} />;
 }
-export function DateFilterRender<Row extends Record<string, unknown>>(props: {
-  column: ColumnDef<Row>;
-}) {
-  const filterRenderProps = props.column.filterRenderProps as DateFilterRenderProps | undefined;
+export function DateFilterRender<Row extends Record<string, unknown>>(props: ColumnDef<Row>) {
+  const filterRenderProps = props.filterRenderProps as DateFilterRenderProps | undefined;
 
   return <DatePicker format={filterRenderProps?.format} />;
 }

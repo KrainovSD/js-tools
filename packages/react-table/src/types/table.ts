@@ -156,7 +156,7 @@ export type TableColumnsSettings<
     ? Record<HeaderRender, (props: { context: HeaderContext<Row, unknown> }) => ReactNode>
     : undefined;
   filterRenders?: FilterRender extends string
-    ? Record<FilterRender, (props: { column: ColumnDef<Row> }) => ReactNode>
+    ? Record<FilterRender, (props: ColumnDef<Row>) => ReactNode>
     : undefined;
   sortRenders?: SortRender extends string
     ? Record<SortRender, (props: { context: HeaderContext<Row, unknown> }) => ReactNode>
@@ -202,7 +202,7 @@ export type TableHeaderRenders<Row> = Record<
 >;
 export type TableFilterRenders<Row> = Record<
   TableFilterRenderKey,
-  (props: { column: ColumnDef<Row> }) => ReactNode
+  (props: ColumnDef<Row>) => ReactNode
 >;
 export type TableSortRenders<Row> = Record<
   TableSortRenderKey,

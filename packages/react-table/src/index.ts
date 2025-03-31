@@ -7,7 +7,7 @@ declare module "@tanstack/react-table" {
   interface ColumnDefBase<TData extends RowData, TValue = unknown> {
     cellRender: (props: { context: CellContext<TData, unknown> }) => ReactNode;
     headerRender: (props: { context: HeaderContext<TData, unknown> }) => ReactNode;
-    filterRender: (props: { column: ColumnDef<TData> }) => ReactNode;
+    filterRender: (props: ColumnDef<TData>) => ReactNode;
     sortRender: (props: { context: HeaderContext<TData, unknown> }) => ReactNode;
     headerClass: (string | ((props: HeaderContext<TData, unknown>) => string))[];
     cellClass: (string | ((props: CellContext<TData, unknown>) => string))[];
