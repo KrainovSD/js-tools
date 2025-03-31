@@ -59,7 +59,7 @@ export function useVirtualizer<
       (column) =>
         !column.leftFrozen && !column.rightFrozen && !column.grouping && props.virtualColumn,
     );
-  }, [props.initialColumns]);
+  }, [props.initialColumns, props.virtualColumn]);
   const visibleColumns = props.table.getVisibleLeafColumns();
   const columnVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLTableCellElement>({
     count: visibleColumns.length,

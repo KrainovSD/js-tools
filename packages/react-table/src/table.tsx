@@ -190,6 +190,7 @@ export function Table<
           {header.column.columnDef.headerRender(headerContext)}
           {canSort && header.column.columnDef.sortRender(headerContext)}
           {header.column.getCanResize() && (
+            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
             <div
               onMouseDown={header.getResizeHandler()}
               onTouchStart={header.getResizeHandler()}
@@ -247,7 +248,7 @@ export function Table<
   try {
     return (
       <div className={clsx(styles.base, props.className)}>
-        {props.withFilters && (
+        {props.withFilters && filterOptions.length > 0 && (
           <div className={styles.filterContainer}>
             <FiltersBlock
               filterLabel="Фильтр"

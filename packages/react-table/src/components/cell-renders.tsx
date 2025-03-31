@@ -93,13 +93,13 @@ export function DateCellRender<Row extends Record<string, unknown>>(
   props: CellContext<Row, unknown>,
 ): ReactNode {
   const cellRenderProps = props.column.columnDef.cellRenderProps as DateCellRenderProps | undefined;
+  const { isVisible, extraPadding } = useVisibleCell(props);
   if (!cellRenderProps) return;
 
   const content = getData(props.row.original, props.column.id);
   const date = isId(content) ? dateFormat(content, cellRenderProps.format) : null;
   const isExpandable = cellRenderProps?.expanded && props.row.getCanExpand();
 
-  const { isVisible, extraPadding } = useVisibleCell(props);
   if (!isVisible) return;
 
   return (

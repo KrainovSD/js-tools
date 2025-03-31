@@ -183,6 +183,7 @@ export function useTableOptions<
     }
 
     return tableOptions;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     props.rows,
     props.initialState.columns,

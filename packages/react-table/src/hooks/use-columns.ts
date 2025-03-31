@@ -310,14 +310,17 @@ export function useColumns<
     }
 
     return { columns, grouping, columnPinning, filterOptions };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     props.columns,
-    props.cellClasses,
-    props.headerClasses,
     props.cellRenders,
     props.headerRenders,
     props.filterRenders,
     props.sortRenders,
+    props.sortTypes,
+    props.filterTypes,
+    props.cellClasses,
+    props.headerClasses,
   ]);
 
   return { columns, grouping, columnPinning, filterOptions };
