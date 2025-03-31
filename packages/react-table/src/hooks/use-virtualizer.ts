@@ -56,7 +56,8 @@ export function useVirtualizer<
 ) {
   const columnVirtualEnabled = React.useMemo(() => {
     return props.initialColumns.every(
-      (column) => !column.leftFrozen && !column.rightFrozen && !column.grouping,
+      (column) =>
+        !column.leftFrozen && !column.rightFrozen && !column.grouping && props.virtualColumn,
     );
   }, [props.initialColumns]);
   const visibleColumns = props.table.getVisibleLeafColumns();
@@ -66,7 +67,7 @@ export function useVirtualizer<
     getScrollElement: () => props.tableContainerRef.current,
     horizontal: true,
     overscan: 2,
-    enabled: columnVirtualEnabled && props.virtualColumn,
+    enabled: columnVirtualEnabled,
   });
   const columnsVirtual = columnVirtualizer.getVirtualItems();
   //different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right

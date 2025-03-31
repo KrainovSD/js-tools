@@ -3,7 +3,6 @@
     border-block-end: 1px solid var(--table-border);
     border-inline-end: 1px solid var(--table-border);
     padding: 0 8px;
-    font-weight: 500;
     border-spacing: 0px;
     overflow: hidden;
     white-space: pre-wrap;
@@ -13,8 +12,11 @@
     align-items: center;
     gap: 15px;
     color: var(--table-text-color);
+    line-height: 22px;
+    font-size: 14px;
     font-weight: 500;
-    font-family: "Times New Roman", Times, serif;
+    font-family: var(--table-font-family);
+    min-height: 35px;
   }
 
   &__empty {
@@ -32,16 +34,18 @@
     border-inline-end: 1px solid var(--table-border);
     border-spacing: 0px;
     border-collapse: collapse;
-    padding: 2px 8px;
+    padding: 12px 8px;
     background: var(--table-cell-bg);
     overflow: hidden;
     white-space: pre-wrap;
     display: flex;
     gap: 5px;
-    align-items: center;
+    align-items: flex-start;
     color: var(--table-text-color);
+    line-height: 22px;
+    font-size: 14px;
     font-weight: 500;
-    font-family: "Times New Roman", Times, serif;
+    font-family: var(--table-font-family);
   }
 
   &__empty {
@@ -50,5 +54,15 @@
 
   &__nowrap {
     white-space: nowrap;
+  }
+
+  &__lineClamp {
+    & span {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      align-self: stretch;
+    }
   }
 }

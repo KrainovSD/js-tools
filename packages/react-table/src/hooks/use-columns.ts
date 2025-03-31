@@ -80,8 +80,8 @@ export function useColumns<
     cellRender = "text",
     headerRender = "common",
     filterRender = "string",
-    sortRender = "single-arrow",
-    cellClass = ["common"],
+    sortRender = "double-arrow",
+    cellClass = ["common", "empty"],
     headerClass = ["common"],
     draggable = true,
     filterable = false,
@@ -136,6 +136,7 @@ export function useColumns<
       common: classes.cell__common,
       empty: classes.cell__empty,
       nowrap: classes.cell_nowrap,
+      lineClamp: classes.cell__lineClamp,
     }),
     [],
   );

@@ -69,7 +69,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(
           className={clsx(styles.container)}
           style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
         >
-          <span className={styles.base}>{node}</span>
+          {node}
         </div>
       )}
     </>

@@ -5,7 +5,7 @@ WORKDIR /app
 RUN npm i -g pnpm@9.4.0
 
 ADD . .
-RUN pnpm i --frozen-lockfile
+RUN pnpm i
 RUN pnpm build-storybook
 
 

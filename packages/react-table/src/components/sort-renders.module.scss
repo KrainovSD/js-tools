@@ -32,3 +32,48 @@
     min-width: 20px;
   }
 }
+
+.doubleArrow {
+  &__button {
+    padding: 7px 0px 7px 7px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    width: fit-content;
+    height: fit-content;
+    display: flex;
+    cursor: pointer;
+    height: 100%;
+    align-items: center;
+  }
+
+  &__iconContainer {
+    position: relative;
+  }
+
+  &__icon {
+    transition: all 0.15s ease;
+    position: relative;
+    fill: var(--table-off-sort);
+
+    &_asc {
+      top: 2px;
+    }
+
+    &_desc {
+      top: -2px;
+    }
+
+    &_active {
+      fill: var(--table-active-sort);
+    }
+  }
+
+  &__index {
+    min-width: 20px;
+
+    &_active {
+      color: var(--table-active-sort);
+    }
+  }
+}

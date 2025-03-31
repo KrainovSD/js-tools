@@ -1154,11 +1154,11 @@ importers:
         specifier: 0.13.0
         version: 0.13.0(node-fetch@3.3.2)
       '@krainovsd/react-icons':
-        specifier: 0.3.0
-        version: 0.3.0(react@18.3.1)
+        specifier: 0.4.0
+        version: 0.4.0(react@18.3.1)
       '@krainovsd/react-ui':
-        specifier: 0.7.2
-        version: 0.7.2(node-fetch@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
+        specifier: 0.7.3
+        version: 0.7.3(node-fetch@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
       '@tanstack/react-table':
         specifier: 8.21.2
         version: 8.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2775,23 +2775,13 @@ packages:
       rollup:
         optional: true
 
-  '@krainovsd/react-icons@0.2.3':
-    resolution: {integrity: sha512-o2gw2xWG762aODEnzoOxIVHHMZNOjd6qXBThe34EJmxFJb/yhz4oL+MMtQpDlMoYxGW4NvrfTtc/wCZ7nyVsRw==}
-    peerDependencies:
-      react: ^18.0.0
-
-  '@krainovsd/react-icons@0.3.0':
-    resolution: {integrity: sha512-K9WrZFi8LStvh+QkugdrW4uddGgFjCI+IX4sKeyg1LK0RO6MFTvjjhgpRgt8KvkJO4dUyX2EumsvUgtb4yTB8Q==}
-    peerDependencies:
-      react: ^18.0.0
-
   '@krainovsd/react-icons@0.4.0':
     resolution: {integrity: sha512-xEoR/9oyr7dWPvRDLCAXf0oHhCcj3RtlPUnCHSQ0kbCTilQMWudtkcAvot1+KW7QwKCOhmtolTCYUJ64EyrhYg==}
     peerDependencies:
       react: ^18.0.0
 
-  '@krainovsd/react-ui@0.7.2':
-    resolution: {integrity: sha512-BH29G4ixxqsOeypDOqJnbuDv6K84WDMLVqkxK1aup+nacmIIg/hyeM4RWNnzIZgOuiS86MBTd3eWexlwHsY+yQ==}
+  '@krainovsd/react-ui@0.7.3':
+    resolution: {integrity: sha512-DH73qSoaTAHQh7sFM9CY28WAVY4o6w5m6sd80lPQLeP0mb5dNMsqsdPt+9YY8xr+aPfNLSRqDAPoFQGaMUcqXg==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -10205,8 +10195,8 @@ snapshots:
       '@aws-crypto/sha1-browser': 3.0.0
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.577.0
-      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
+      '@aws-sdk/client-sts': 3.577.0
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-bucket-endpoint': 3.577.0
@@ -10263,11 +10253,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sso-oidc@3.577.0':
+  '@aws-sdk/client-sso-oidc@3.577.0(@aws-sdk/client-sts@3.577.0)':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@aws-sdk/client-sts': 3.577.0
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -10306,6 +10296,7 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
+      - '@aws-sdk/client-sts'
       - aws-crt
 
   '@aws-sdk/client-sso@3.577.0':
@@ -10351,11 +10342,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sts@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)':
+  '@aws-sdk/client-sts@3.577.0':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.577.0
+      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -10394,7 +10385,6 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
-      - '@aws-sdk/client-sso-oidc'
       - aws-crt
 
   '@aws-sdk/core@3.576.0':
@@ -10428,7 +10418,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-ini@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@aws-sdk/client-sts': 3.577.0
       '@aws-sdk/credential-provider-env': 3.577.0
       '@aws-sdk/credential-provider-process': 3.577.0
       '@aws-sdk/credential-provider-sso': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
@@ -10485,7 +10475,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-web-identity@3.577.0(@aws-sdk/client-sts@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
+      '@aws-sdk/client-sts': 3.577.0
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.1.11
       '@smithy/types': 3.7.2
@@ -10601,7 +10591,7 @@ snapshots:
 
   '@aws-sdk/token-providers@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sso-oidc': 3.577.0
+      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.1.11
       '@smithy/shared-ini-file-loader': 3.1.12
@@ -12091,7 +12081,7 @@ snapshots:
       eslint: 9.21.0
       eslint-config-prettier: 10.0.2(eslint@9.21.0)
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)
-      eslint-plugin-jest: 28.11.0(@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(jest@29.7.0(@types/node@22.13.8))(typescript@5.7.3)
+      eslint-plugin-jest: 28.11.0(@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(jest@29.7.0(@types/node@22.13.8)(ts-node@10.9.1(@types/node@22.13.8)(typescript@5.7.3)))(typescript@5.7.3)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.21.0)
       eslint-plugin-prettier: 5.2.3(@types/eslint@8.56.7)(eslint-config-prettier@10.0.2(eslint@9.21.0))(eslint@9.21.0)(prettier@3.5.2)
       eslint-plugin-react: 7.37.4(eslint@9.21.0)
@@ -12456,23 +12446,15 @@ snapshots:
       - ts-node
       - tslib
 
-  '@krainovsd/react-icons@0.2.3(react@18.3.1)':
-    dependencies:
-      react: 18.3.1
-
-  '@krainovsd/react-icons@0.3.0(react@18.3.1)':
-    dependencies:
-      react: 18.3.1
-
   '@krainovsd/react-icons@0.4.0(react@18.3.1)':
     dependencies:
       react: 18.3.1
 
-  '@krainovsd/react-ui@0.7.2(node-fetch@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)':
+  '@krainovsd/react-ui@0.7.3(node-fetch@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)':
     dependencies:
       '@emotion/css': 11.13.5
       '@krainovsd/js-helpers': 0.12.0(node-fetch@3.3.2)
-      '@krainovsd/react-icons': 0.2.3(react@18.3.1)
+      '@krainovsd/react-icons': 0.4.0(react@18.3.1)
       antd: 5.22.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx: 2.1.1
       i18next: 24.2.0(typescript@5.7.3)
@@ -16362,17 +16344,6 @@ snapshots:
       - typescript
 
   eslint-plugin-jest@28.11.0(@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(jest@29.7.0(@types/node@22.13.8)(ts-node@10.9.1(@types/node@22.13.8)(typescript@5.7.3)))(typescript@5.7.3):
-    dependencies:
-      '@typescript-eslint/utils': 8.28.0(eslint@9.21.0)(typescript@5.7.3)
-      eslint: 9.21.0
-    optionalDependencies:
-      '@typescript-eslint/eslint-plugin': 8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3)
-      jest: 29.7.0(@types/node@22.13.8)(ts-node@10.9.1(@types/node@22.13.8)(typescript@5.7.3))
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-
-  eslint-plugin-jest@28.11.0(@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(jest@29.7.0(@types/node@22.13.8))(typescript@5.7.3):
     dependencies:
       '@typescript-eslint/utils': 8.28.0(eslint@9.21.0)(typescript@5.7.3)
       eslint: 9.21.0

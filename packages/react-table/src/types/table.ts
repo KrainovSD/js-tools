@@ -189,7 +189,7 @@ export type TableFilterRenderKey =
   | "date"
   | "date-range";
 export type TableSortRenderKey = "single-arrow" | "double-arrow";
-export type TableCellClassKey = "common" | "empty" | "nowrap";
+export type TableCellClassKey = "common" | "empty" | "nowrap" | "lineClamp";
 export type TableHeaderClassKey = "common" | "empty" | "nowrap";
 
 export type TableCellRenders<Row> = Record<

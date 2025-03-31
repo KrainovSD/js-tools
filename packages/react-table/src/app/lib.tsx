@@ -5,6 +5,7 @@ export type Row = {
   country: string;
   firstName: string;
   lastName: string;
+  description?: string;
   date: string;
   colors: string[];
   age: number;
@@ -60,6 +61,8 @@ export function createRows(): Row[] {
       colors: Array.from({ length: 1 + faker.number.int(3) }, () => faker.color.human()),
       age: faker.number.int({ min: 18, max: 80 }),
       checked: faker.datatype.boolean(),
+      description:
+        "Бурение эксплуатационное на месторождении. Эксплуатационные газовые скважины Чаяндинского НГКМ",
       children:
         i % 10 === 0
           ? Array.from({ length: 5 }, (_, childId) => {

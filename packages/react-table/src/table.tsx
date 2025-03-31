@@ -1,4 +1,4 @@
-import { FiltersBlock, Pagination, Select } from "@krainovsd/react-ui";
+import { FiltersBlock, Pagination } from "@krainovsd/react-ui";
 import type {
   Cell,
   Header,
@@ -392,6 +392,24 @@ export function Table<
         </div>
         {props.withPagination && (
           <div className={styles.paginationContainer}>
+            <div className={styles.paginationTotal}>{`Всего: ${filteredRowsCount}`}</div>
+            <Pagination
+              className={styles.pagination}
+              defaultCurrent={tableState.pagination.pageIndex + 1}
+              total={filteredRowsCount}
+              pageSize={tableState.pagination.pageSize}
+              onChange={(page, pageSize) => {
+                table.setPageIndex(page - 1);
+                table.setPageSize(pageSize);
+              }}
+              defaultPageSize={tableState.pagination.pageSize}
+              pageSizeOptions={props.pageSizes ?? [10, 25, 50, 100, 150, 200]}
+            />
+          </div>
+        )}
+
+        {/* {props.withPagination && (
+          <div className={styles.paginationContainer}>
             <span>
               Найдено: <span>{filteredRowsCount}</span>
             </span>
@@ -417,7 +435,7 @@ export function Table<
               }}
             />
           </div>
-        )}
+        )} */}
       </div>
     );
   } catch (error) {

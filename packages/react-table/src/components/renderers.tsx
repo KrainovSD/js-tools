@@ -1,4 +1,4 @@
-import { ArrowUpFill } from "@krainovsd/react-icons";
+import { ArrowUpFillLegacy } from "@krainovsd/react-icons";
 import type { CellContext } from "@tanstack/react-table";
 import clsx from "clsx";
 import styles from "./renderers.module.scss";
@@ -15,7 +15,7 @@ export function Expander<Row extends Record<string, unknown>>(props: CellContext
       }}
       onDoubleClick={(event) => event.stopPropagation()}
     >
-      <ArrowUpFill
+      <ArrowUpFillLegacy
         className={clsx(styles.expander__icon, isExpanded && styles.expander__icon_open)}
       />
     </button>

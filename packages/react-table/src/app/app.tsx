@@ -12,9 +12,8 @@ const columns: TableColumn<"test">[] = [
     name: "ID",
     width: 120,
     resizable: true,
-    cellClass: ["common"],
     sortType: "string-with-number",
-    leftFrozen: true,
+    // leftFrozen: true,
   },
   {
     key: "firstName",
@@ -28,7 +27,7 @@ const columns: TableColumn<"test">[] = [
     filterType: "includes-string",
     cellRenderProps: {
       expanded: true,
-      pathToLink: "country",
+      // pathToLink: "country",
       pathToTooltip: "lastName",
     },
   },
@@ -42,6 +41,19 @@ const columns: TableColumn<"test">[] = [
     resizable: true,
     draggable: true,
     sortable: true,
+    // leftFrozen: true,
+  },
+  {
+    key: "description",
+    name: "Description",
+    width: 234,
+    filterable: true,
+    filterRender: "string",
+    filterType: "includes-string",
+    resizable: true,
+    draggable: true,
+    sortable: true,
+    cellClass: ["common", "empty", "lineClamp"],
     // leftFrozen: true,
   },
   {
@@ -126,11 +138,10 @@ export function App() {
   return (
     <ConfigProvider
       theme={{
-        cssVar: true, // Включение CSS-переменных
+        cssVar: true,
         token: {
           fontFamily: "Nunito",
         },
-        // algorithm: theme.darkAlgorithm, // Тёмная тема
       }}
     >
       <div
@@ -138,8 +149,9 @@ export function App() {
           width: "100%",
           height: "100%",
           display: "flex",
-          padding: "0px 20px 0px 20px",
+          padding: "24px",
           overflow: "hidden",
+          background: "#F0F0F0",
         }}
       >
         <Table<
