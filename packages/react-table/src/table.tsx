@@ -80,6 +80,7 @@ export type TableProps<
     pageSizes?: number[];
     virtualColumn?: boolean;
     virtualRows?: boolean;
+    virtualRowSize?: number;
     onClickRow?: (row: TableRow<Row>, event: React.MouseEvent<HTMLTableRowElement>) => void;
     onDoubleClickRow?: (row: TableRow<Row>, event: React.MouseEvent<HTMLTableRowElement>) => void;
   };
@@ -150,6 +151,7 @@ export function Table<
     tableContainerRef,
     virtualColumn: props.virtualColumn,
     virtualRows: props.virtualRows,
+    virtualRowSize: props.virtualRowSize,
   });
 
   const getHeader = React.useCallback(
@@ -301,7 +303,12 @@ export function Table<
                 );
               })}
             </thead>
-            <tbody className={styles.body} style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
+            <tbody
+              className={styles.body}
+              style={{
+                height: rowVirtualEnabled ? `${rowVirtualizer.getTotalSize()}px` : undefined,
+              }}
+            >
               {rowVirtualEnabled &&
                 rowVirtual.map((virtualRow) => {
                   const row = rows[virtualRow.index];

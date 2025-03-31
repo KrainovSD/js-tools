@@ -29,6 +29,7 @@ type UseVirtualizerProps<
   tableContainerRef: React.RefObject<HTMLDivElement | null>;
   virtualColumn?: boolean;
   virtualRows?: boolean;
+  virtualRowSize?: number;
 };
 
 export function useVirtualizer<
@@ -83,7 +84,7 @@ export function useVirtualizer<
   const rowVirtualEnabled = Boolean(props.virtualRows);
   const rowVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: () => 35,
+    estimateSize: () => props.virtualRowSize ?? 35,
     getScrollElement: () => props.tableContainerRef.current,
     //measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:

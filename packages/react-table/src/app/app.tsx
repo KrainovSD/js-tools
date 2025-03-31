@@ -183,6 +183,7 @@ export function App() {
           pageSizes={[25, 50, 100, 150, 250]}
           withFilters={true}
           virtualRows={true}
+          virtualRowSize={69}
           virtualColumn={false}
         />
       </div>
