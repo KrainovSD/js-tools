@@ -3,15 +3,17 @@ import type { CellContext } from "@tanstack/react-table";
 import clsx from "clsx";
 import styles from "./renderers.module.scss";
 
-export function Expander<Row extends Record<string, unknown>>(props: CellContext<Row, unknown>) {
-  const isExpanded = props.row.getIsExpanded();
+export function Expander<Row extends Record<string, unknown>>(props: {
+  context: CellContext<Row, unknown>;
+}) {
+  const isExpanded = props.context.row.getIsExpanded();
 
   return (
     <button
       className={styles.expander__button}
       onClick={(event) => {
         event.stopPropagation();
-        props.row.toggleExpanded(!isExpanded);
+        props.context.row.toggleExpanded(!isExpanded);
       }}
       onDoubleClick={(event) => event.stopPropagation()}
     >

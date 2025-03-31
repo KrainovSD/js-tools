@@ -150,16 +150,16 @@ export type TableColumnsSettings<
     SortType
   >[];
   cellRenders?: CellRender extends string
-    ? Record<CellRender, (props: CellContext<Row, unknown>) => ReactNode>
+    ? Record<CellRender, (props: { context: CellContext<Row, unknown> }) => ReactNode>
     : undefined;
   headerRenders?: HeaderRender extends string
-    ? Record<HeaderRender, (props: HeaderContext<Row, unknown>) => ReactNode>
+    ? Record<HeaderRender, (props: { context: HeaderContext<Row, unknown> }) => ReactNode>
     : undefined;
   filterRenders?: FilterRender extends string
-    ? Record<FilterRender, (props: ColumnDef<Row>) => ReactNode>
+    ? Record<FilterRender, (props: { column: ColumnDef<Row> }) => ReactNode>
     : undefined;
   sortRenders?: SortRender extends string
-    ? Record<SortRender, (props: HeaderContext<Row, unknown>) => ReactNode>
+    ? Record<SortRender, (props: { context: HeaderContext<Row, unknown> }) => ReactNode>
     : undefined;
   cellClasses?: CellClass extends string
     ? Record<CellClass, string | ((props: CellContext<Row, unknown>) => string)>
@@ -194,19 +194,19 @@ export type TableHeaderClassKey = "common" | "empty" | "nowrap";
 
 export type TableCellRenders<Row> = Record<
   TableCellRenderKey,
-  (props: CellContext<Row, unknown>) => ReactNode
+  (props: { context: CellContext<Row, unknown> }) => ReactNode
 >;
 export type TableHeaderRenders<Row> = Record<
   TableHeaderRenderKey,
-  (props: HeaderContext<Row, unknown>) => ReactNode
+  (props: { context: HeaderContext<Row, unknown> }) => ReactNode
 >;
 export type TableFilterRenders<Row> = Record<
   TableFilterRenderKey,
-  (props: ColumnDef<Row>) => ReactNode
+  (props: { column: ColumnDef<Row> }) => ReactNode
 >;
 export type TableSortRenders<Row> = Record<
   TableSortRenderKey,
-  (props: HeaderContext<Row, unknown>) => ReactNode
+  (props: { context: HeaderContext<Row, unknown> }) => ReactNode
 >;
 export type TableCellClasses<Row> = Record<
   TableCellClassKey,
@@ -218,7 +218,7 @@ export type TableHeaderClasses<Row> = Record<
 >;
 
 export type TableRenderers<Row extends RowData> = {
-  expander?: (props: CellContext<Row, unknown>) => ReactNode;
+  expander?: (props: { context: CellContext<Row, unknown> }) => ReactNode;
 };
 
 export type SortingKey = "number" | "string" | "boolean" | "date" | "array" | "string-with-number";

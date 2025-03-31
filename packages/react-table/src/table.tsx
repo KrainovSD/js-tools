@@ -162,6 +162,8 @@ export function Table<
       const frozenPosition = header.column.getIsPinned();
       const prevFrozen = getPrevFrozenWidthHeader({ frozenPosition, headers, index });
       const canSort = header.column.getCanSort();
+      const HeaderRender = header.column.columnDef.headerRender;
+      const SortRender = header.column.columnDef.sortRender;
 
       return (
         <th
@@ -187,8 +189,8 @@ export function Table<
             right: frozenPosition === "right" ? prevFrozen : 0,
           }}
         >
-          {header.column.columnDef.headerRender(headerContext)}
-          {canSort && header.column.columnDef.sortRender(headerContext)}
+          <HeaderRender context={headerContext} />
+          {canSort && <SortRender context={headerContext} />}
           {header.column.getCanResize() && (
             // eslint-disable-next-line jsx-a11y/no-static-element-interactions
             <div
@@ -214,6 +216,8 @@ export function Table<
       const frozenPosition = cell.column.getIsPinned();
       const prevFrozen = getPrevFrozenWidthCell({ frozenPosition, cells, index });
       const renderers = cellContext.table.options.meta?.renderers;
+      const CellRender = cell.column.columnDef.cellRender;
+      const Expander = renderers?.expander;
 
       return (
         <td
@@ -237,8 +241,8 @@ export function Table<
             right: frozenPosition === "right" ? prevFrozen : 0,
           }}
         >
-          {isGroupCell && renderers?.expander?.(cellContext)}
-          {cell.column.columnDef.cellRender(cellContext)}
+          {isGroupCell && Expander && <Expander context={cellContext} />}
+          <CellRender context={cellContext} />
         </td>
       );
     },

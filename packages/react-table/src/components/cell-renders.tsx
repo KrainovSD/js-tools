@@ -18,28 +18,30 @@ type BooleanMapping = {
   false: string | ReactNode;
 };
 
-export function TextCellRender<Row extends Record<string, unknown>>(
-  props: CellContext<Row, unknown>,
-): ReactNode {
-  const cellRenderProps = props.column.columnDef.cellRenderProps as TextCellRenderProps | undefined;
+export function TextCellRender<Row extends Record<string, unknown>>(props: {
+  context: CellContext<Row, unknown>;
+}): ReactNode {
+  const cellRenderProps = props.context.column.columnDef.cellRenderProps as
+    | TextCellRenderProps
+    | undefined;
   const link = cellRenderProps?.pathToLink
-    ? getData(props.row.original, cellRenderProps.pathToLink)
+    ? getData(props.context.row.original, cellRenderProps.pathToLink)
     : undefined;
   const tooltip = cellRenderProps?.pathToTooltip
-    ? getData(props.row.original, cellRenderProps.pathToTooltip)
+    ? getData(props.context.row.original, cellRenderProps.pathToTooltip)
     : undefined;
   const booleanMapping: BooleanMapping = cellRenderProps?.booleanMapping ?? {
     false: "Нет",
     true: "Да",
   };
 
-  const content = getData(props.row.original, props.column.id);
-  const isExpandable = cellRenderProps?.expanded && props.row.getCanExpand();
+  const content = getData(props.context.row.original, props.context.column.id);
+  const isExpandable = cellRenderProps?.expanded && props.context.row.getCanExpand();
 
-  const { isVisible, extraPadding } = useVisibleCell(props);
+  const { isVisible, extraPadding } = useVisibleCell(props.context);
   if (!isVisible) return;
 
-  const node = (
+  const Node = (
     <span className={styles.base}>
       {isId(content)
         ? content
@@ -51,7 +53,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(
     </span>
   );
 
-  const container = (
+  const Container = (
     <>
       {isString(link) && (
         <a
@@ -60,7 +62,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(
           className={clsx(styles.container)}
           style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
         >
-          {node}
+          {Node}
         </a>
       )}
       {!isString(link) && (
@@ -69,17 +71,18 @@ export function TextCellRender<Row extends Record<string, unknown>>(
           className={clsx(styles.container)}
           style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
         >
-          {node}
+          {Node}
         </div>
       )}
     </>
   );
+  const Expander = props.context.table.options.meta?.renderers?.expander;
 
   return (
     <>
-      {!isString(tooltip) && container}
-      {isString(tooltip) && container}
-      {isExpandable && props.table.options.meta?.renderers?.expander?.(props)}
+      {!isString(tooltip) && Container}
+      {isString(tooltip) && Container}
+      {isExpandable && Expander && <Expander context={props.context} />}
     </>
   );
 }
@@ -89,18 +92,22 @@ export type DateCellRenderProps = {
   expanded?: boolean;
 };
 
-export function DateCellRender<Row extends Record<string, unknown>>(
-  props: CellContext<Row, unknown>,
-): ReactNode {
-  const cellRenderProps = props.column.columnDef.cellRenderProps as DateCellRenderProps | undefined;
-  const { isVisible, extraPadding } = useVisibleCell(props);
+export function DateCellRender<Row extends Record<string, unknown>>(props: {
+  context: CellContext<Row, unknown>;
+}): ReactNode {
+  const cellRenderProps = props.context.column.columnDef.cellRenderProps as
+    | DateCellRenderProps
+    | undefined;
+  const { isVisible, extraPadding } = useVisibleCell(props.context);
   if (!cellRenderProps) return;
 
-  const content = getData(props.row.original, props.column.id);
+  const content = getData(props.context.row.original, props.context.column.id);
   const date = isId(content) ? dateFormat(content, cellRenderProps.format) : null;
-  const isExpandable = cellRenderProps?.expanded && props.row.getCanExpand();
+  const isExpandable = cellRenderProps?.expanded && props.context.row.getCanExpand();
 
   if (!isVisible) return;
+
+  const Expander = props.context.table.options.meta?.renderers?.expander;
 
   return (
     <>
@@ -110,7 +117,7 @@ export function DateCellRender<Row extends Record<string, unknown>>(
       >
         <span className={styles.base}>{date}</span>
       </div>
-      {isExpandable && props.table.options.meta?.renderers?.expander?.(props)}
+      {isExpandable && Expander && <Expander context={props.context} />}
     </>
   );
 }

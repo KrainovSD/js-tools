@@ -4,20 +4,20 @@ import type { HeaderContext } from "@tanstack/react-table";
 import clsx from "clsx";
 import styles from "./sort-renders.module.scss";
 
-export function SingleArrowSortRender<Row extends Record<string, unknown>>(
-  props: HeaderContext<Row, unknown>,
-) {
-  const sortIndex = props.column.getSortIndex();
-  const direction = props.column.getIsSorted();
-  const firstDirection = props.column.getFirstSortDir();
+export function SingleArrowSortRender<Row extends Record<string, unknown>>(props: {
+  context: HeaderContext<Row, unknown>;
+}) {
+  const sortIndex = props.context.column.getSortIndex();
+  const direction = props.context.column.getIsSorted();
+  const firstDirection = props.context.column.getFirstSortDir();
 
   function onSort() {
     if (!direction) {
-      props.column.toggleSorting(firstDirection === "desc", true);
+      props.context.column.toggleSorting(firstDirection === "desc", true);
     } else if (direction !== firstDirection) {
-      props.column.clearSorting();
+      props.context.column.clearSorting();
     } else {
-      props.column.toggleSorting(direction === "asc", true);
+      props.context.column.toggleSorting(direction === "asc", true);
     }
   }
 
@@ -40,20 +40,20 @@ export function SingleArrowSortRender<Row extends Record<string, unknown>>(
   );
 }
 
-export function DoubleArrowSortRender<Row extends Record<string, unknown>>(
-  props: HeaderContext<Row, unknown>,
-) {
-  const sortIndex = props.column.getSortIndex();
-  const direction = props.column.getIsSorted();
-  const firstDirection = props.column.getFirstSortDir();
+export function DoubleArrowSortRender<Row extends Record<string, unknown>>(props: {
+  context: HeaderContext<Row, unknown>;
+}) {
+  const sortIndex = props.context.column.getSortIndex();
+  const direction = props.context.column.getIsSorted();
+  const firstDirection = props.context.column.getFirstSortDir();
 
   function onSort() {
     if (!direction) {
-      props.column.toggleSorting(firstDirection === "desc", true);
+      props.context.column.toggleSorting(firstDirection === "desc", true);
     } else if (direction !== firstDirection) {
-      props.column.clearSorting();
+      props.context.column.clearSorting();
     } else {
-      props.column.toggleSorting(direction === "asc", true);
+      props.context.column.toggleSorting(direction === "asc", true);
     }
   }
 
