@@ -4,8 +4,15 @@ import {
   getVisiblePosition,
   isString,
 } from "@krainovsd/js-helpers";
+import {
+  CaretDownOutlined,
+  CaretLeftOutlined,
+  CaretRightOutlined,
+  CaretUpOutlined,
+  type IconProps,
+} from "@krainovsd/react-icons";
 import clsx from "clsx";
-import React from "react";
+import React, { type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import type { PopperSize, PopperTargetNodePosition } from "../popper";
 import styles from "./positioner.module.scss";
@@ -20,7 +27,7 @@ type Props = {
   // custom initial modal position
   targetNodePosition?: PopperTargetNodePosition;
   className?: string;
-
+  arrow?: boolean;
   // placement of modal from initial position
   placement?: Exclude<PositionPlacements, "flex">;
   flexPlacement?: boolean;
@@ -187,6 +194,116 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  let transformArrow: string | undefined;
+  let topArrow: string | undefined;
+  let bottomArrow: string | undefined;
+  let leftArrow: string | undefined;
+  let rightArrow: string | undefined;
+  let Arrow: ((props: IconProps) => ReactNode) | undefined;
+  if (props.arrow) {
+    switch (position.placement) {
+      case "bottom-center":
+      case "top-center": {
+        if (position.placement === "bottom-center") {
+          Arrow = CaretUpOutlined;
+          topArrow = "-11px";
+        }
+        if (position.placement === "top-center") {
+          Arrow = CaretDownOutlined;
+          bottomArrow = "-11px";
+        }
+
+        transformArrow = "translateX(-50%)";
+        leftArrow = "50%";
+
+        break;
+      }
+      case "bottom-left":
+      case "top-left": {
+        if (position.placement === "bottom-left") {
+          Arrow = CaretUpOutlined;
+          topArrow = "-11px";
+        }
+        if (position.placement === "top-left") {
+          Arrow = CaretDownOutlined;
+          bottomArrow = "-11px";
+        }
+
+        transformArrow = "translateX(-50%)";
+        leftArrow = "5%";
+
+        break;
+      }
+      case "bottom-right":
+      case "top-right": {
+        if (position.placement === "bottom-right") {
+          Arrow = CaretUpOutlined;
+          topArrow = "-11px";
+        }
+        if (position.placement === "top-right") {
+          Arrow = CaretDownOutlined;
+          bottomArrow = "-11px";
+        }
+
+        transformArrow = "translateX(-50%)";
+        leftArrow = "95%";
+
+        break;
+      }
+
+      case "left-center":
+      case "right-center": {
+        if (position.placement === "left-center") {
+          Arrow = CaretRightOutlined;
+          rightArrow = "-11px";
+        }
+        if (position.placement === "right-center") {
+          Arrow = CaretLeftOutlined;
+          leftArrow = "-11px";
+        }
+
+        transformArrow = "translateY(-50%)";
+        topArrow = "50%";
+
+        break;
+      }
+      case "left-top":
+      case "right-top": {
+        if (position.placement === "left-top") {
+          Arrow = CaretRightOutlined;
+          rightArrow = "-11px";
+        }
+        if (position.placement === "right-top") {
+          Arrow = CaretLeftOutlined;
+          leftArrow = "-11px";
+        }
+
+        topArrow = "5%";
+
+        break;
+      }
+      case "left-bottom":
+      case "right-bottom": {
+        if (position.placement === "left-bottom") {
+          Arrow = CaretRightOutlined;
+          rightArrow = "-11px";
+        }
+        if (position.placement === "right-bottom") {
+          Arrow = CaretLeftOutlined;
+          leftArrow = "-11px";
+        }
+
+        transformArrow = "translateY(-100%)";
+        topArrow = "95%";
+
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+  }
+
   return createPortal(
     <div
       data-testid={testid}
@@ -197,6 +314,19 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
       }}
       style={style}
     >
+      {props.arrow && Arrow && (
+        <Arrow
+          className={styles.arrow}
+          size={16}
+          style={{
+            top: topArrow,
+            left: leftArrow,
+            bottom: bottomArrow,
+            right: rightArrow,
+            transform: transformArrow,
+          }}
+        />
+      )}
       {header && <div className={styles.header}>{header}</div>}
       {children}
     </div>,

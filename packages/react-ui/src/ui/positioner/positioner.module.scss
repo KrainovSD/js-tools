@@ -9,8 +9,12 @@
     left: 0;
     top: 0;
     transition: 0.5s;
-    overflow: hidden;
+    overflow: visible;
   }
+}
+
+.arrow {
+  position: absolute;
 }
 
 .header {

@@ -18,6 +18,7 @@ type Props = {
   full?: boolean;
 
   header?: string;
+  arrow?: boolean;
 
   // the area of the node where visibility is checked
   visibleArea?: HTMLDivElement;
@@ -46,7 +47,7 @@ type Props = {
   openDelay?: number;
   closeDelay?: number;
 
-  openEvent?: "click" | "hover" | "custom";
+  openEvent?: "click" | "hover" | "custom" | "tooltip";
   onClose?: () => void;
 
   widthByParent?: boolean;
@@ -130,7 +131,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
 
   /** hover effect */
   React.useEffect(() => {
-    if (!baseRef.current || openEvent !== "hover") return;
+    if (!baseRef.current || (openEvent !== "hover" && openEvent !== "tooltip")) return;
 
     const base = baseRef.current;
 
@@ -207,6 +208,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
           visibleArea={visibleArea}
           wrapperInstance={wrapperInstance}
           zIndex={zIndex}
+          arrow={props.arrow}
         >
           {content}
         </Positioner>
