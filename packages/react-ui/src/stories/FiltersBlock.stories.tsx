@@ -1,15 +1,19 @@
 /* eslint-disable no-console */
 import { PlayPauseLegacy } from "@krainovsd/react-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
+import React from "react";
 import {
+  Button,
   DatePicker,
   DateRangePicker,
   type FilterFieldType,
+  type FilterInputValueType,
   FiltersBlock,
   Flex,
   Input,
   InputNumber,
   Select,
+  Text,
 } from "../ui";
 
 const meta = {
@@ -26,9 +30,21 @@ export default meta;
 type Story = StoryObj<typeof FiltersBlock>;
 
 const Template: StoryFn<typeof FiltersBlock> = (args) => {
+  const [filter, setFilter] = React.useState<Record<string, FilterInputValueType>>({});
+
   return (
-    <Flex style={{ width: "90vw", height: "90vh", overflow: "hidden" }}>
-      <FiltersBlock {...args} />
+    <Flex style={{ width: "90vw", height: "90vh", overflow: "hidden" }} vertical gap={20}>
+      <Button onClick={() => setFilter((prev) => ({ ...prev, string: "test" }))}>
+        Добавить фильтр текста
+      </Button>
+      <FiltersBlock
+        {...args}
+        filter={filter}
+        onValuesChange={(values, field, value) => {
+          console.log(values, field, value);
+          setFilter(values);
+        }}
+      />
     </Flex>
   );
 };
@@ -49,13 +65,21 @@ export const Primary: Story = {
             variant="outlined"
             showSearch
             size="middle"
-            style={{ width: "fit-content", minWidth: 200 }}
+            style={{ width: "fit-content", minWidth: 200, maxWidth: 300 }}
             options={[
               { value: "Тест", label: "Тест" },
               { value: "Старт", label: "Старт" },
               { value: "Стоп", label: "Стоп" },
+              {
+                value: "Супер длинное название которо точно не поместится",
+                label: "Супер длинное название которо точно не поместится",
+              },
             ]}
-            placeholder={"Выберите статус"}
+            placeholder={"Select:"}
+            labelRender={(props) => {
+              // eslint-disable-next-line @typescript-eslint/no-base-to-string
+              return <Text>{`Select: ${props.label?.toString?.()}`}</Text>;
+            }}
           />
         ),
       },
@@ -64,7 +88,6 @@ export const Primary: Story = {
         name: "multiSelect",
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
-        popover: true,
         renderDisplayValue: (value: string[]) => value.join(", "),
         inputField: (
           <Select
@@ -105,7 +128,14 @@ export const Primary: Story = {
         name: "string",
         icon: <PlayPauseLegacy color={"black"} />,
         renderDisplayValue: (value: Record<string, string>[]) => value,
-        inputField: <Input placeholder={"Введите значение"} variant="outlined" size="middle" />,
+        inputField: (
+          <Input
+            placeholder={"Введите значение"}
+            variant="outlined"
+            size="middle"
+            style={{ width: "fit-content", minWidth: 200, maxWidth: 600 }}
+          />
+        ),
       },
       {
         label: "Number",
@@ -143,7 +173,7 @@ export const Primary: Story = {
     //   },
     // ] as unknown as FilterFieldType[],
     initialValues: {
-      status: ["Старт"],
+      // select: ["Старт"],
     },
     showSearchField: true,
 

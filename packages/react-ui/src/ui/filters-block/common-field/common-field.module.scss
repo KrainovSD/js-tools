@@ -1,0 +1,13 @@
+.form {
+  display: flex;
+  gap: 10;
+  align-items: center;
+}
+
+.delete {
+  color: var(--ant-button-text-text-color);
+
+  &:hover {
+    color: var(--ant-button-text-text-color);
+  }
+}

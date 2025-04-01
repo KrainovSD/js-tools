@@ -15,6 +15,7 @@ const typedMemo: <T>(c: T) => T = React.memo;
 type Props<T extends Record<string, FilterInputValueType>> = {
   fields: FilterFieldType[];
   initialValues?: Partial<T>;
+  filter?: Partial<T>;
   onValuesChange?: (values: T, field: keyof T, value: T[keyof T] | undefined) => void;
   form: FormInstance<T>;
   isDisabledFields?: boolean;
@@ -25,31 +26,31 @@ export const PopoverFields = typedMemo(function PopoverFields<
 >(props: Props<T>) {
   const [open, setOpen] = React.useState(false);
   const [newFilter, setNewFilter] = React.useState("");
-  const [selectedFields, setSelectedFields] = React.useState<FilterFieldType[]>([]);
+  const [selectedFields, setSelectedFields] = React.useState<string[]>([]);
 
-  const selectedFieldsMap = React.useMemo(() => {
-    return arrayToMapByKey(selectedFields, "name");
-  }, [selectedFields]);
+  const fieldsMap = React.useMemo(() => {
+    return arrayToMapByKey(props.fields, "name");
+  }, [props.fields]);
 
   const selectedFieldsInfo = React.useMemo(() => {
-    return props.fields.filter((field) => selectedFieldsMap[field.name] != undefined);
-  }, [props.fields, selectedFieldsMap]);
+    return selectedFields.map((name) => fieldsMap[name]);
+  }, [fieldsMap, selectedFields]);
 
   const noSelectedFieldsInfo = React.useMemo(() => {
-    return props.fields.filter((field) => selectedFieldsMap[field.name] == undefined);
-  }, [props.fields, selectedFieldsMap]);
+    return props.fields.filter((field) => !selectedFields.includes(field.name));
+  }, [props.fields, selectedFields]);
 
   const handleSelectChange = React.useCallback((field: FilterFieldType) => {
     setOpen(false);
     setNewFilter(field.name);
-    setSelectedFields((prev) => [...prev, field]);
+    setSelectedFields((prev) => [...prev, field.name]);
   }, []);
 
   const handleRemoveField = React.useCallback(
     (field: FilterFieldType) => {
       setOpen(false);
       setNewFilter("");
-      setSelectedFields((prev) => prev.filter((prevField) => prevField.name !== field.name));
+      setSelectedFields((prev) => prev.filter((prevField) => prevField !== field.name));
       props.form.setFieldValue(
         field.name as Parameters<FormInstance<T>["setFieldValue"]>[0],
         undefined,
@@ -65,18 +66,19 @@ export const PopoverFields = typedMemo(function PopoverFields<
   );
 
   React.useEffect(() => {
+    if (!!props.fields?.length && props.filter) {
+      setSelectedFields((prev) => [
+        ...new Set([
+          ...prev,
+          ...Object.keys(props.filter ?? {}).filter((key) => props.filter?.[key] != undefined),
+        ]).values(),
+      ]);
+    }
+  }, [props.fields, props.filter]);
+
+  React.useEffect(() => {
     if (!!props.fields?.length && props.initialValues) {
-      const initialFields: FilterFieldType[] = [];
-      const fieldsMap = arrayToMapByKey(props.fields, "name");
-
-      for (const [key, value] of Object.entries(props.initialValues)) {
-        if (value == undefined) continue;
-
-        const currentField = fieldsMap[key];
-        if (currentField) initialFields.push(currentField);
-      }
-
-      setSelectedFields([...initialFields]);
+      setSelectedFields(Object.keys(props.initialValues));
     }
   }, [props.fields, props.initialValues]);
 

@@ -24,39 +24,41 @@ interface FiltersBlockProps<T extends Record<string, FilterInputValueType>> {
   showSearchField?: boolean;
   searchPlaceholder?: string;
   isDisabledFields?: boolean;
-  onValuesChange: (values: T, field: keyof T, value: T[keyof T] | undefined) => void;
+  onValuesChange: (values: Partial<T>, field: keyof T, value: T[keyof T] | undefined) => void;
   initialValues?: Partial<T>;
+  filter?: Partial<T>;
   onChangeSearch?: (value: string) => void;
 }
 
 export function FiltersBlock<T extends Record<string, FilterInputValueType>>(
   props: FiltersBlockProps<T>,
 ): React.JSX.Element {
-  const {
-    fields,
-    fixedFields,
-    showSearchField,
-    searchPlaceholder,
-    isDisabledFields,
-    onValuesChange,
-    initialValues,
-    filterLabel,
-    onChangeSearch,
-  } = props;
   const [form] = Form.useForm<T>();
 
   React.useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues as RecursivePartial<T>);
+    if (props.initialValues) {
+      form.setFieldsValue(props.initialValues as RecursivePartial<T>);
+      Object.entries(props.initialValues).forEach(([key, value]: [string, T[keyof T]]) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        props.onValuesChange(props.initialValues!, key, value);
+      });
     }
-  }, [initialValues, form]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.initialValues, form]);
+
+  React.useEffect(() => {
+    if (props.filter) {
+      form.setFieldsValue(props.filter as RecursivePartial<T>);
+    }
+  }, [props.filter, form]);
 
   const onChangeFormValues = React.useCallback(
     (changedValue: Record<string, unknown>, values: T) => {
       const [key, value] = Object.entries(changedValue)[0];
-      onValuesChange(values, key, value as T[keyof T]);
+      props.onValuesChange(values, key, value as T[keyof T]);
     },
-    [onValuesChange],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [props.onValuesChange],
   );
 
   return (
@@ -64,26 +66,30 @@ export function FiltersBlock<T extends Record<string, FilterInputValueType>>(
       form={form}
       name="filters_form"
       onValuesChange={onChangeFormValues}
-      initialValues={initialValues}
+      initialValues={props.initialValues}
       style={{ width: "100%" }}
     >
       <Flex justify="space-between" gap={12} align="flex-start">
-        <Flex gap={12} wrap>
-          {!!fixedFields?.length && <FixedFields fields={fixedFields} />}
-          {fields && fields?.length > 0 && (
+        <Flex gap={8} wrap>
+          {!!props.fixedFields?.length && <FixedFields fields={props.fixedFields} />}
+          {props.fields && props.fields?.length > 0 && (
             <PopoverFields<T>
-              fields={fields}
-              filterLabel={filterLabel}
+              fields={props.fields}
+              filterLabel={props.filterLabel}
               form={form}
-              onValuesChange={onValuesChange}
-              initialValues={initialValues}
-              isDisabledFields={isDisabledFields}
+              onValuesChange={props.onValuesChange}
+              initialValues={props.initialValues}
+              isDisabledFields={props.isDisabledFields}
+              filter={props.filter}
             />
           )}
         </Flex>
 
-        {showSearchField && (
-          <SearchField searchPlaceholder={searchPlaceholder} onChangeSearch={onChangeSearch} />
+        {props.showSearchField && (
+          <SearchField
+            searchPlaceholder={props.searchPlaceholder}
+            onChangeSearch={props.onChangeSearch}
+          />
         )}
       </Flex>
     </Form>
