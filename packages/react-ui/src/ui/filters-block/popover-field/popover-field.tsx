@@ -1,10 +1,10 @@
-import { CloseLegacy } from "@krainovsd/react-icons";
+import { CloseCircleFilled } from "@krainovsd/react-icons";
 import type { FormInstance } from "antd";
 import { Form, theme } from "antd";
 import type { FC } from "react";
 import React from "react";
-import { Button } from "../../button";
 import { Flex } from "../../flex";
+import { IconWrapper } from "../../icon-wrapper";
 import { Input } from "../../input";
 import { Popover } from "../../popover";
 import { Text } from "../../typography";
@@ -59,31 +59,28 @@ export const PopoverField: FC<IProps> = (props) => {
       open={open}
       onOpenChange={setOpen}
     >
-      <div className={styles.popover(token)} style={{ paddingRight: 5 }}>
+      <div className={styles.popover(token)}>
         {/* Используется для инициализации формы */}
         <Form.Item name={props.field.name} style={{ display: "none" }}>
           {props.field.inputField ?? <Input placeholder={props.field.label} />}
         </Form.Item>
-        <Flex align="center" wrap={false}>
-          <Text type={fieldValue ? "secondary" : undefined}>{props.field.label}:</Text>
-          <Text ellipsis={{ tooltip: displayValue }} style={{ maxWidth: 200, marginLeft: 5 }}>
+        <Flex align="center" wrap={false} style={{ color: "currentColor" }} gap={8}>
+          {/* <Text type={fieldValue ? "secondary" : undefined}>{props.field.label}:</Text> */}
+          <Text color="currentColor">{props.field.label}:</Text>
+          <Text color="currentColor" ellipsis={{ tooltip: displayValue }} style={{ maxWidth: 200 }}>
             {displayValue}
           </Text>
-          <Button
+          <IconWrapper
             style={{
-              marginLeft: 8,
-              padding: 8,
-              width: 16,
-              height: 16,
+              color: "currentColor",
             }}
             onClick={(event) => {
               event.stopPropagation();
               props.onRemove();
             }}
-            type="text"
-            shape="default"
-            icon={<CloseLegacy style={{ opacity: 0.5, fontSize: 12 }} size={12} />}
-          />
+          >
+            <CloseCircleFilled style={{ opacity: 0.5, transition: "none" }} size={16} />
+          </IconWrapper>
         </Flex>
       </div>
     </Popover>

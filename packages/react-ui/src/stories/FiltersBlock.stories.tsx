@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import { dateFormat } from "@krainovsd/js-helpers";
 import { PlayPauseLegacy } from "@krainovsd/react-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import React from "react";
@@ -33,7 +34,11 @@ const Template: StoryFn<typeof FiltersBlock> = (args) => {
   const [filter, setFilter] = React.useState<Record<string, FilterInputValueType>>({});
 
   return (
-    <Flex style={{ width: "90vw", height: "90vh", overflow: "hidden" }} vertical gap={20}>
+    <Flex
+      style={{ width: "90vw", height: "90vh", overflow: "hidden", background: "#e8e7e7" }}
+      vertical
+      gap={20}
+    >
       <Button onClick={() => setFilter((prev) => ({ ...prev, string: "test" }))}>
         Добавить фильтр текста
       </Button>
@@ -59,6 +64,7 @@ export const Primary: Story = {
         name: "select",
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
+        popover: true,
         renderDisplayValue: (value: Record<string, string>[] | string[]) => value,
         inputField: (
           <Select
@@ -88,6 +94,7 @@ export const Primary: Story = {
         name: "multiSelect",
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
+        popover: true,
         renderDisplayValue: (value: string[]) => value.join(", "),
         inputField: (
           <Select
@@ -108,24 +115,26 @@ export const Primary: Story = {
       {
         label: "DatePicker",
         name: "datePicker",
+        popover: true,
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
-        renderDisplayValue: (value: Record<string, string>[]) =>
-          value.map((item: Record<string, string>) => item.label).join(", "),
+        renderDisplayValue: (value: string) => dateFormat(value, "DD/MM/YYYY"),
         inputField: <DatePicker format={"DD/MM/YYYY"} />,
       },
       {
         label: "DateRangePicker",
         name: "dateRangePicker",
+        popover: true,
         icon: <PlayPauseLegacy color={"black"} />,
         labelInValue: true,
-        renderDisplayValue: (value: Record<string, string>[]) =>
-          value.map((item: Record<string, string>) => item.label).join(", "),
+        renderDisplayValue: (value: string[]) =>
+          value.map((val) => dateFormat(val, "DD/MM/YYYY")).join(" - "),
         inputField: <DateRangePicker format={"DD/MM/YYYY"} />,
       },
       {
         label: "String",
         name: "string",
+        popover: true,
         icon: <PlayPauseLegacy color={"black"} />,
         renderDisplayValue: (value: Record<string, string>[]) => value,
         inputField: (
@@ -140,6 +149,7 @@ export const Primary: Story = {
       {
         label: "Number",
         name: "number",
+        popover: true,
         icon: <PlayPauseLegacy color={"black"} />,
         renderDisplayValue: (value: Record<string, string>[]) => value,
         inputField: (

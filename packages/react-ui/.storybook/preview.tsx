@@ -12,6 +12,11 @@ const preview: Preview = {
             token: {
               fontFamily: "Nunito",
             },
+            components: {
+              Button: {
+                defaultBg: "white",
+              },
+            },
           }}
         >
           <Story />

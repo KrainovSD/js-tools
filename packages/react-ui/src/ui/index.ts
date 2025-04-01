@@ -39,3 +39,4 @@ export * from "./slider";
 export * from "./popper";
 export * from "./positioner";
 export * from "./pagination";
+export * from "./icon-wrapper";

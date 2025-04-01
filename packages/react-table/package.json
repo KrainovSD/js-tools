@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/react-table",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "description": "Krainov react-table",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -45,7 +45,7 @@
     "test-coverage": "jest --coverage"
   },
   "dependencies": {
-    "@krainovsd/react-ui": "0.8.3",
+    "@krainovsd/react-ui": "0.8.4",
     "@krainovsd/react-icons": "0.4.0",
     "@krainovsd/js-helpers": "0.13.0",
     "lodash": "4.17.21",

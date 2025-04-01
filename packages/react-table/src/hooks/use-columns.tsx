@@ -264,6 +264,7 @@ export function useColumns<
         name: column.id,
         icon: column.icon as React.JSX.Element,
         labelInValue: true,
+        popover: true,
         renderDisplayValue: (value) => {
           const filterKey = props.columns[i].filterType;
 
