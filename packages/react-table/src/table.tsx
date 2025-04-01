@@ -1,4 +1,4 @@
-import { FiltersBlock, Pagination } from "@krainovsd/react-ui";
+import { type FilterInputValueType, FiltersBlock, Pagination } from "@krainovsd/react-ui";
 import type {
   Cell,
   Header,
@@ -135,6 +135,12 @@ export function Table<
   const tableState = table.getState();
   const filteredRowsCount = table.getFilteredRowModel().rows.length;
 
+  const filters = React.useMemo(() => {
+    return Object.fromEntries(
+      tableState.columnFilters.map((filter) => [filter.id, filter.value]),
+    ) as Record<string, FilterInputValueType>;
+  }, [tableState.columnFilters]);
+
   const {
     columnsVirtual,
     rowVirtual,
@@ -257,10 +263,11 @@ export function Table<
         {props.withFilters && filterOptions.length > 0 && (
           <div className={styles.filterContainer}>
             <FiltersBlock
+              filter={filters}
               filterLabel="Фильтр"
               fields={filterOptions}
               onValuesChange={(_, field, value) => {
-                table.getColumn(field)?.setFilterValue?.(value);
+                table.getColumn(field.toString())?.setFilterValue?.(value);
               }}
             />
           </div>
