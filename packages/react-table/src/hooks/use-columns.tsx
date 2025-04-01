@@ -89,7 +89,7 @@ export function useColumns<
     sortDirectionFirst = "asc",
     sortable = true,
     sortType = "string",
-    filterType = "arrIncludes",
+    filterType = "includes-string",
   } = props.defaultColumnOptions ?? {};
 
   const cellRenders = React.useMemo<TableCellRenders<Row>>(
@@ -135,7 +135,7 @@ export function useColumns<
     () => ({
       common: classes.cell__common,
       empty: classes.cell__empty,
-      nowrap: classes.cell_nowrap,
+      nowrap: classes.cell__nowrap,
       lineClamp: classes.cell__lineClamp,
     }),
     [],
