@@ -1,11 +1,5 @@
 import { type FilterInputValueType, FiltersBlock, Pagination } from "@krainovsd/react-ui";
-import type {
-  Cell,
-  Header,
-  TableOptions,
-  Row as TableRow,
-  TableState,
-} from "@tanstack/react-table";
+import type { Cell, Header, Row, TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
 import { useColumns, useTableOptions, useVirtualizer } from "./hooks";
@@ -14,7 +8,7 @@ import styles from "./table.module.scss";
 import type { TableColumnsSettings, TableRenderers } from "./types";
 
 export type TableProps<
-  Row extends Record<string, unknown>,
+  RowData extends Record<string, unknown>,
   CellRender = undefined,
   HeaderRender = undefined,
   FilterRender = undefined,
@@ -24,7 +18,7 @@ export type TableProps<
   FilterType = undefined,
   SortType = undefined,
 > = TableColumnsSettings<
-  Row,
+  RowData,
   CellRender,
   HeaderRender,
   FilterRender,
@@ -35,7 +29,7 @@ export type TableProps<
   SortType
 > &
   Pick<
-    TableOptions<Row>,
+    TableOptions<RowData>,
     | "getSubRows"
     | "onExpandedChange"
     | "columnResizeMode"
@@ -69,11 +63,11 @@ export type TableProps<
     | "pagination"
     | "rowSelection"
   > & {
-    rows: Row[];
+    rows: RowData[];
     frozenHeader?: boolean;
     showPerf?: boolean;
     className?: string;
-    renderers?: TableRenderers<Row>;
+    renderers?: TableRenderers<RowData>;
     withPagination?: boolean;
     withFilters?: boolean;
     initialPageSize?: number;
@@ -81,8 +75,8 @@ export type TableProps<
     virtualColumn?: boolean;
     virtualRows?: boolean;
     virtualRowSize?: number;
-    onClickRow?: (row: TableRow<Row>, event: React.MouseEvent<HTMLTableRowElement>) => void;
-    onDoubleClickRow?: (row: TableRow<Row>, event: React.MouseEvent<HTMLTableRowElement>) => void;
+    onClickRow?: (row: Row<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
+    onDoubleClickRow?: (row: Row<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
   };
 
 export function Table<
