@@ -1,8 +1,8 @@
 dist/
-node_modules/
 tmp/
-coverage/
-lib/
-stats/
+/stats
+node_modules/
+/coverage/
+/lib
 .npmrc
 libraryGrid/

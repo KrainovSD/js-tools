@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/react-table",
-  "version": "0.2.8",
+  "version": "0.2.10",
   "description": "Krainov react-table",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -45,14 +45,14 @@
     "test-coverage": "jest --coverage"
   },
   "dependencies": {
-    "@krainovsd/react-ui": "0.8.7",
-    "@krainovsd/js-helpers": "0.13.0",
-    "@krainovsd/react-icons": "0.4.0",
-    "lodash": "4.17.21",
-    "clsx": "2.1.1",
+    "@krainovsd/react-ui": "^0.8.7",
+    "@krainovsd/js-helpers": "^0.13.0",
+    "@krainovsd/react-icons": "^0.4.0",
+    "lodash": "^4.17.21",
+    "clsx": "^2.1.1",
     "@tanstack/react-table": "8.21.2",
     "@tanstack/react-virtual": "3.13.5",
-    "dayjs": "1.11.13"
+    "dayjs": "^1.11.13"
   },
   "devDependencies": {
     "antd": "5.22.5",

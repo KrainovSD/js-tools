@@ -22,7 +22,7 @@ div.popper {
   &__container {
     max-width: 100%;
     overflow: hidden;
-    cursor: default;
+    cursor: inherit;
   }
 }
 
