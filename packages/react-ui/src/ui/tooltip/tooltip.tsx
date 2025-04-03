@@ -18,14 +18,15 @@ export type TooltipProps = {
   modalRoot?: string | HTMLElement | undefined;
   modalRootInner?: boolean;
   placement?: Exclude<PositionPlacements, "flex">;
+  autoTooltip?: boolean;
 };
 
 export function Tooltip(props: React.PropsWithChildren<TooltipProps>): React.JSX.Element {
   return (
     <Popper
       classContent={clsx(styles.popper__content, props.classNameContentContainer)}
-      classBase={clsx(props.classNameBase)}
-      classBaseContainer={clsx(props.classNameBaseContainer)}
+      classBase={clsx(styles.popper__base, props.classNameBase)}
+      classBaseContainer={clsx(styles.popper__container, props.classNameBaseContainer)}
       content={
         props.render?.(props.text) ?? (
           <Flex className={clsx(styles.content, props.classNameContent)}>{props.text}</Flex>
@@ -37,6 +38,7 @@ export function Tooltip(props: React.PropsWithChildren<TooltipProps>): React.JSX
       modalRootInner={props.modalRootInner}
       openEvent="tooltip"
       arrow
+      autoTooltip={props.autoTooltip}
       placement={props.placement}
     >
       {props.children}

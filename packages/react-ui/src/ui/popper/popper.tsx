@@ -48,6 +48,7 @@ type Props = {
   closeDelay?: number;
 
   openEvent?: "click" | "hover" | "custom" | "tooltip";
+  autoTooltip?: boolean;
   onClose?: () => void;
 
   widthByParent?: boolean;
@@ -138,6 +139,17 @@ export function Popper(props: React.PropsWithChildren<Props>) {
     function onHover() {
       clearTimeout(closeTimer.current);
       openTimer.current = setTimeout(() => {
+        if (props.autoTooltip && props.openEvent === "tooltip") {
+          if (!baseRef.current) return;
+
+          const node = baseRef.current.firstChild?.firstChild;
+
+          if (!node || !(node instanceof HTMLElement)) return;
+
+          if (!(node.scrollWidth > node.clientWidth || node.scrollHeight > node.clientHeight))
+            return;
+        }
+
         setLocalOpen(true);
         setIsOpen?.(true);
       }, openDelay);

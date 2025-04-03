@@ -1,6 +1,7 @@
-import type { CellContext, HeaderContext } from "@tanstack/react-table";
+import type { CellContext, HeaderContext, Row } from "@tanstack/react-table";
 
-export type TableTypesGetter<Row extends Record<string, unknown>> = {
-  headerContext: HeaderContext<Row, unknown>;
-  cellContext: CellContext<Row, unknown>;
+export type TableTypesGetter<RowData extends Record<string, unknown>> = {
+  headerContext: HeaderContext<RowData, unknown>;
+  cellContext: CellContext<RowData, unknown>;
+  row: Row<RowData>;
 };

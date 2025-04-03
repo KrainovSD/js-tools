@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 import type { Meta, StoryFn, StoryObj } from "@storybook/react";
-import { Flex, Tooltip } from "../ui";
+import { Flex, Text, Tooltip } from "../ui";
 
 const meta = {
   title: "Antd/Tooltip",
@@ -103,6 +103,32 @@ const Template: StoryFn<typeof Tooltip> = () => {
           text="Пение весеннее в перелеске. Весенние птичьи трели заросшего сада."
         >
           <div className={button}>RBottom</div>
+        </Tooltip>
+      </Flex>
+
+      <Flex style={{ maxWidth: "100px", overflow: "hidden" }}>
+        <Tooltip text="Очень длинный текст который не поместился" autoTooltip>
+          <Text ellipsis>Очень длинный текст который не поместился</Text>
+        </Tooltip>
+      </Flex>
+      <Flex style={{ maxWidth: "100px", overflow: "hidden" }}>
+        <Tooltip text="Очень длинный текст который не поместился" autoTooltip>
+          <Text
+            className={css`
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              line-clamp: 2;
+              align-self: stretch;
+              display: -webkit-box;
+            `}
+          >
+            Очень длинный текст который не поместился
+          </Text>
+        </Tooltip>
+      </Flex>
+      <Flex style={{ maxWidth: "100px", overflow: "hidden" }}>
+        <Tooltip text="Очень длинный текст который поместился" autoTooltip>
+          <Text>Очень длинный текст который поместился</Text>
         </Tooltip>
       </Flex>
     </Flex>

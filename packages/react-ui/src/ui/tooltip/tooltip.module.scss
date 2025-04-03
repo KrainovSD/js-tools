@@ -13,8 +13,20 @@ div.popper {
     color: #262626;
     overflow: visible;
   }
+
+  &__base {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  &__container {
+    max-width: 100%;
+    overflow: hidden;
+    cursor: default;
+  }
 }
 
 .content {
   color: #ffffff;
+  font-size: 14px;
 }
