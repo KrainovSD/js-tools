@@ -1,11 +1,16 @@
-import { type FilterInputValueType, FiltersBlock, Pagination } from "@krainovsd/react-ui";
+import {
+  type FilterFieldType,
+  type FilterInputValueType,
+  FiltersBlock,
+  Pagination,
+} from "@krainovsd/react-ui";
 import type { Cell, Header, Row, TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
 import { useColumns, useTableOptions, useVirtualizer } from "./hooks";
 import { getPrevFrozenWidthCell, getPrevFrozenWidthHeader } from "./lib";
 import styles from "./table.module.scss";
-import type { TableColumnsSettings, TableRenderers } from "./types";
+import type { TableColumnsSettings, TableInterface, TableRenderers } from "./types";
 
 export type TableProps<
   RowData extends Record<string, unknown>,
@@ -77,6 +82,12 @@ export type TableProps<
     virtualRowSize?: number;
     onClickRow?: (row: Row<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
     onDoubleClickRow?: (row: Row<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
+    Filter?: React.FC<{
+      table: TableInterface<RowData>;
+      filters: Record<string, FilterInputValueType>;
+      filterOptions: FilterFieldType[];
+    }>;
+    Pagination?: React.FC<{ table: TableInterface<RowData> }>;
   };
 
 export function Table<
@@ -255,16 +266,23 @@ export function Table<
     return (
       <div className={clsx(styles.base, props.className)}>
         {props.withFilters && filterOptions.length > 0 && (
-          <div className={styles.filterContainer}>
-            <FiltersBlock
-              filter={filters}
-              filterLabel="Фильтр"
-              fields={filterOptions}
-              onValuesChange={(_, field, value) => {
-                table.getColumn(field.toString())?.setFilterValue?.(value);
-              }}
-            />
-          </div>
+          <>
+            {!props.Filter && (
+              <div className={styles.filterContainer}>
+                <FiltersBlock
+                  filter={filters}
+                  filterLabel="Фильтр"
+                  fields={filterOptions}
+                  onValuesChange={(_, field, value) => {
+                    table.getColumn(field.toString())?.setFilterValue?.(value);
+                  }}
+                />
+              </div>
+            )}
+            {props.Filter && (
+              <props.Filter filters={filters} filterOptions={filterOptions} table={table} />
+            )}
+          </>
         )}
         <div ref={tableContainerRef} className={styles.container}>
           <table
@@ -404,51 +422,27 @@ export function Table<
           </table>
         </div>
         {props.withPagination && (
-          <div className={styles.paginationContainer}>
-            <div className={styles.paginationTotal}>{`Всего: ${filteredRowsCount}`}</div>
-            <Pagination
-              className={styles.pagination}
-              defaultCurrent={tableState.pagination.pageIndex + 1}
-              total={filteredRowsCount}
-              pageSize={tableState.pagination.pageSize}
-              onChange={(page, pageSize) => {
-                table.setPageIndex(page - 1);
-                table.setPageSize(pageSize);
-              }}
-              defaultPageSize={tableState.pagination.pageSize}
-              pageSizeOptions={props.pageSizes ?? [10, 25, 50, 100, 150, 200]}
-            />
-          </div>
+          <>
+            {!props.Pagination && (
+              <div className={styles.paginationContainer}>
+                <div className={styles.paginationTotal}>{`Всего: ${filteredRowsCount}`}</div>
+                <Pagination
+                  className={styles.pagination}
+                  defaultCurrent={tableState.pagination.pageIndex + 1}
+                  total={filteredRowsCount}
+                  pageSize={tableState.pagination.pageSize}
+                  onChange={(page, pageSize) => {
+                    table.setPageIndex(page - 1);
+                    table.setPageSize(pageSize);
+                  }}
+                  defaultPageSize={tableState.pagination.pageSize}
+                  pageSizeOptions={props.pageSizes ?? [10, 25, 50, 100, 150, 200]}
+                />
+              </div>
+            )}
+            {props.Pagination && <props.Pagination table={table} />}
+          </>
         )}
-
-        {/* {props.withPagination && (
-          <div className={styles.paginationContainer}>
-            <span>
-              Найдено: <span>{filteredRowsCount}</span>
-            </span>
-            <Pagination
-              defaultCurrent={tableState.pagination.pageIndex + 1}
-              total={filteredRowsCount}
-              pageSize={tableState.pagination.pageSize}
-              showSizeChanger={false}
-              onChange={(page) => {
-                table.setPageIndex(page - 1);
-              }}
-              showLessItems
-            />
-            <Select
-              className={styles.pageSelect}
-              value={tableState.pagination.pageSize}
-              options={(props.pageSizes ?? [10, 25, 50, 100, 150, 200]).map((page) => ({
-                value: page,
-                label: page,
-              }))}
-              onChange={(value) => {
-                table.setPageSize(value);
-              }}
-            />
-          </div>
-        )} */}
       </div>
     );
   } catch (error) {

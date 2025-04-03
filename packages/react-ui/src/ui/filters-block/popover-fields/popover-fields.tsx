@@ -107,13 +107,13 @@ export const PopoverFields = typedMemo(function PopoverFields<
         onOpenChange={setOpen}
       >
         <Button
-          icon={<FilterOutlined size={18} />}
           className={styles.filterButton}
           disabled={props.isDisabledFields || props.fields.length === selectedFields.length}
           shape="default"
           type="default"
           size="middle"
         >
+          <FilterOutlined size={16} />
           {props.filterLabel}
         </Button>
       </Popover>

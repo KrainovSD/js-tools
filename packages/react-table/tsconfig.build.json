@@ -4,12 +4,6 @@
     "outDir": "tmp"
   },
   "files": ["src/index.ts"],
-  "include": [
-    "eslint.config.js",
-    "rollup.config.ts",
-    ".prettierrc.mjs",
-    "vite.config.ts",
-    "vite-env.d.ts"
-  ],
+  "include": ["vite-env.d.ts"],
   "exclude": ["**/*.spec.ts"]
 }

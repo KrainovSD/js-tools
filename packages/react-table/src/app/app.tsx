@@ -54,6 +54,11 @@ const columns: TableColumn<"test">[] = [
     draggable: true,
     sortable: true,
     cellClass: ["common", "empty", "lineClamp"],
+    cellRender: "text",
+    cellRenderProps: {
+      pathToTooltip: "description",
+      autoTooltip: true,
+    },
     // leftFrozen: true,
   },
   {
@@ -62,6 +67,18 @@ const columns: TableColumn<"test">[] = [
     width: 200,
     resizable: true,
     sortType: "array",
+    filterable: true,
+    filterType: "includes-array-all",
+    filterRender: "select",
+    filterRenderProps: {
+      multiple: true,
+      options: [
+        { label: "gold", value: "gold" },
+        { label: "pink", value: "pink" },
+        { label: "white", value: "white" },
+        { label: "teal", value: "teal" },
+      ],
+    },
   },
   {
     key: "year",
@@ -69,9 +86,17 @@ const columns: TableColumn<"test">[] = [
     width: 200,
     resizable: true,
     filterable: true,
-    filterType: "equals",
+    filterType: "includes-string-one-of-array",
     filterRender: "select",
-    filterRenderProps: { options: [{ label: "2017", value: 2017 }] },
+    filterRenderProps: {
+      multiple: true,
+      options: [
+        { label: "2018", value: 2018 },
+        { label: "2017", value: 2017 },
+        { label: "2016", value: 2016 },
+        { label: "2015", value: 2015 },
+      ],
+    },
     // grouping: true,
   },
   {
@@ -82,7 +107,7 @@ const columns: TableColumn<"test">[] = [
     sortType: "number",
     filterable: true,
     filterRender: "number-range",
-    filterType: "number-in-range",
+    filterType: "equals",
   },
   {
     key: "checked",
@@ -141,6 +166,11 @@ export function App() {
         cssVar: true,
         token: {
           fontFamily: "Nunito",
+        },
+        components: {
+          Button: {
+            defaultBg: "white",
+          },
         },
       }}
     >

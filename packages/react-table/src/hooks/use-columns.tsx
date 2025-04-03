@@ -25,6 +25,7 @@ import {
   TextCellRender,
 } from "../components";
 import {
+  arrayAllFilter,
   arraySort,
   booleanSort,
   dateFilter,
@@ -32,6 +33,7 @@ import {
   dateSort,
   isDayjsDate,
   numberSort,
+  stringByArrayFilter,
   stringSort,
 } from "../lib";
 import {
@@ -155,9 +157,11 @@ export function useColumns<
   const filters = React.useMemo<Record<FilterKey, FilterFnOption<Row>>>(
     () => ({
       "date-in-range": dateRangeFilter,
-      "includes-array": "arrIncludes",
-      "includes-array-all": "arrIncludesAll",
+      "includes-array-every": "arrIncludesAll",
+      "includes-array-some": "arrIncludesSome",
+      "includes-array-all": arrayAllFilter,
       "includes-string": "includesString",
+      "includes-string-one-of-array": stringByArrayFilter,
       date: dateFilter,
       equals: "equals",
       "number-in-range": "inNumberRange",

@@ -5,6 +5,7 @@ import type {
   HeaderContext,
   RowData,
   SortingFn,
+  Table,
 } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import type {
@@ -228,5 +229,9 @@ export type FilterKey =
   | "date"
   | "number-in-range"
   | "includes-string"
-  | "includes-array"
-  | "includes-array-all";
+  | "includes-string-one-of-array"
+  | "includes-array-every"
+  | "includes-array-all"
+  | "includes-array-some";
+
+export type TableInterface<TData extends RowData> = Table<TData>;

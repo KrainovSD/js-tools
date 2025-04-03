@@ -1,4 +1,5 @@
 import { dateFormat, isArray, isBoolean, isId, isString } from "@krainovsd/js-helpers";
+import { Tooltip } from "@krainovsd/react-ui";
 import type { CellContext } from "@tanstack/react-table";
 import clsx from "clsx";
 import type { ReactNode } from "react";
@@ -10,6 +11,7 @@ export type TextCellRenderProps = {
   expanded?: boolean;
   pathToLink?: string;
   pathToTooltip?: string;
+  autoTooltip?: boolean;
   booleanMapping?: BooleanMapping;
 };
 
@@ -53,7 +55,9 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
     </span>
   );
 
-  const Container = (
+  const Expander = props.context.table.options.meta?.renderers?.expander;
+
+  return (
     <>
       {isString(link) && (
         <a
@@ -62,6 +66,16 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
           className={clsx(styles.container)}
           style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
         >
+          {isString(tooltip) && (
+            <Tooltip
+              classNameContent={styles.text__tooltip}
+              text={tooltip}
+              autoTooltip={cellRenderProps?.autoTooltip}
+            >
+              {Node}
+            </Tooltip>
+          )}
+          {!isString(tooltip) && Node}
           {Node}
         </a>
       )}
@@ -71,17 +85,18 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
           className={clsx(styles.container)}
           style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
         >
-          {Node}
+          {isString(tooltip) && (
+            <Tooltip
+              classNameContent={styles.text__tooltip}
+              text={tooltip}
+              autoTooltip={cellRenderProps?.autoTooltip}
+            >
+              {Node}
+            </Tooltip>
+          )}
+          {!isString(tooltip) && Node}
         </div>
       )}
-    </>
-  );
-  const Expander = props.context.table.options.meta?.renderers?.expander;
-
-  return (
-    <>
-      {!isString(tooltip) && Container}
-      {isString(tooltip) && Container}
       {isExpandable && Expander && <Expander context={props.context} />}
     </>
   );
