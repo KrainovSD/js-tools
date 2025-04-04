@@ -1,16 +1,14 @@
-import {
-  type FilterFieldType,
-  type FilterInputValueType,
-  FiltersBlock,
-  Pagination,
-} from "@krainovsd/react-ui";
-import type { Cell, Header, Row, TableOptions, TableState } from "@tanstack/react-table";
+import { type FilterFieldType, type FilterInputValueType } from "@krainovsd/react-ui";
+import type { TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
 import { useColumns, useTableOptions, useVirtualizer } from "./hooks";
-import { getPrevFrozenWidthCell, getPrevFrozenWidthHeader } from "./lib";
+import { TableContainer } from "./table-container";
+import { TableFilter } from "./table-filter";
+import { TableFooter } from "./table-footer";
+import { TableGantt } from "./table-gantt";
 import styles from "./table.module.scss";
-import type { TableColumnsSettings, TableInterface, TableRenderers } from "./types";
+import type { RowInterface, TableColumnsSettings, TableInterface, TableRenderers } from "./types";
 
 export type TableProps<
   RowData extends Record<string, unknown>,
@@ -75,13 +73,18 @@ export type TableProps<
     renderers?: TableRenderers<RowData>;
     withPagination?: boolean;
     withFilters?: boolean;
+    withTotal?: boolean;
+    withGantt?: boolean;
     initialPageSize?: number;
     pageSizes?: number[];
     virtualColumn?: boolean;
     virtualRows?: boolean;
     virtualRowSize?: number;
-    onClickRow?: (row: Row<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
-    onDoubleClickRow?: (row: Row<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
+    onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
+    onDoubleClickRow?: (
+      row: RowInterface<RowData>,
+      event: React.MouseEvent<HTMLTableRowElement>,
+    ) => void;
     Filter?: React.FC<{
       table: TableInterface<RowData>;
       filters: Record<string, FilterInputValueType>;
@@ -165,284 +168,75 @@ export function Table<
     virtualRowSize: props.virtualRowSize,
   });
 
-  const getHeader = React.useCallback(
-    (header: Header<Row, unknown>, index: number, headers: Header<Row, unknown>[]) => {
-      const headerContext = header.getContext();
-      const headerClass = header.column.columnDef.headerClass;
-      const headerClasses = headerClass.map((style) =>
-        typeof style === "function" ? style(headerContext) : style,
-      );
-      const frozenPosition = header.column.getIsPinned();
-      const prevFrozen = getPrevFrozenWidthHeader({ frozenPosition, headers, index });
-      const canSort = header.column.getCanSort();
-      const HeaderRender = header.column.columnDef.headerRender;
-      const SortRender = header.column.columnDef.sortRender;
-
-      return (
-        <th
-          key={header.id}
-          colSpan={header.colSpan}
-          className={clsx(
-            styles.headerCell,
-            frozenPosition === "left" && styles.headerCell__frozen_left,
-            frozenPosition === "right" && styles.headerCell__frozen_right,
-            frozenPosition === "left" &&
-              header.column.getIsLastColumn("left") &&
-              styles.headerCell__frozen_left_last,
-            frozenPosition === "right" &&
-              header.column.getIsFirstColumn("right") &&
-              styles.headerCell__frozen_right_first,
-            headerClasses,
-          )}
-          style={{
-            width: header.getSize(),
-            maxWidth: header.getSize(),
-            minWidth: header.getSize(),
-            left: frozenPosition === "left" ? prevFrozen : 0,
-            right: frozenPosition === "right" ? prevFrozen : 0,
-          }}
-        >
-          <HeaderRender context={headerContext} />
-          {canSort && <SortRender context={headerContext} />}
-          {header.column.getCanResize() && (
-            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-            <div
-              onMouseDown={header.getResizeHandler()}
-              onTouchStart={header.getResizeHandler()}
-              className={styles.headerResize}
-            />
-          )}
-        </th>
-      );
-    },
-    [],
-  );
-
-  const getCell = React.useCallback(
-    (cell: Cell<Row, unknown>, index: number, cells: Cell<Row, unknown>[]) => {
-      const cellContext = cell.getContext();
-      const cellClass = cell.column.columnDef.cellClass;
-      const cellClasses = cellClass.map((style) =>
-        typeof style === "function" ? style(cellContext) : style,
-      );
-      const isGroupCell = cell.row.getIsGrouped() && cell.row.groupingColumnId === cell.column.id;
-      const frozenPosition = cell.column.getIsPinned();
-      const prevFrozen = getPrevFrozenWidthCell({ frozenPosition, cells, index });
-      const renderers = cellContext.table.options.meta?.renderers;
-      const CellRender = cell.column.columnDef.cellRender;
-      const Expander = renderers?.expander;
-
-      return (
-        <td
-          key={cell.id}
-          className={clsx(
-            styles.cell,
-            frozenPosition === "left" && styles.cell__frozen_left,
-            frozenPosition === "right" && styles.cell__frozen_right,
-            frozenPosition === "left" &&
-              cell.column.getIsLastColumn("left") &&
-              styles.cell__frozen_left_last,
-            frozenPosition === "right" &&
-              cell.column.getIsFirstColumn("right") &&
-              styles.cell__frozen_right_first,
-            cellClasses,
-          )}
-          style={{
-            width: cell.column.getSize(),
-            maxWidth: cell.column.getSize(),
-            left: frozenPosition === "left" ? prevFrozen : 0,
-            right: frozenPosition === "right" ? prevFrozen : 0,
-          }}
-        >
-          {isGroupCell && Expander && <Expander context={cellContext} />}
-          <CellRender context={cellContext} />
-        </td>
-      );
-    },
-    [],
-  );
-
   try {
     return (
       <div className={clsx(styles.base, props.className)}>
-        {props.withFilters && filterOptions.length > 0 && (
-          <>
-            {!props.Filter && (
-              <div className={styles.filterContainer}>
-                <FiltersBlock
-                  filter={filters}
-                  filterLabel="Фильтр"
-                  fields={filterOptions}
-                  onValuesChange={(_, field, value) => {
-                    table.getColumn(field.toString())?.setFilterValue?.(value);
-                  }}
-                />
-              </div>
-            )}
-            {props.Filter && (
-              <props.Filter filters={filters} filterOptions={filterOptions} table={table} />
-            )}
-          </>
-        )}
+        <TableFilter
+          filterOptions={filterOptions}
+          filters={filters}
+          table={table}
+          withFilters={props.withFilters ?? false}
+          Filter={props.Filter}
+        />
         <div ref={tableContainerRef} className={styles.container}>
-          <table
-            className={styles.table}
-            style={{
-              width: table.getTotalSize(),
-            }}
-          >
-            <thead
-              className={clsx(
-                styles.header,
-                (props.frozenHeader || props.frozenHeader == undefined) && styles.header__frozen,
-              )}
-            >
-              {table.getHeaderGroups().map((headerGroup) => {
-                /** ROW HEADER */
-                return (
-                  <tr key={headerGroup.id} className={styles.headerRow}>
-                    {columnVirtualEnabled && (
-                      <>
-                        {virtualPaddingLeft ? (
-                          <th style={{ display: "flex", width: virtualPaddingLeft }} />
-                        ) : null}
-                        {columnsVirtual.map((virtualColumn) => {
-                          /** CELL HEADER  */
-                          const header = headerGroup.headers[virtualColumn.index];
-
-                          return getHeader(header, virtualColumn.index, headerGroup.headers);
-                        })}
-                        {virtualPaddingRight ? (
-                          <th style={{ display: "flex", width: virtualPaddingRight }} />
-                        ) : null}
-                      </>
-                    )}
-                    {!columnVirtualEnabled && headerGroup.headers.map(getHeader)}
-                  </tr>
-                );
-              })}
-            </thead>
-            <tbody
-              className={styles.body}
-              style={{
-                height: rowVirtualEnabled ? `${rowVirtualizer.getTotalSize()}px` : undefined,
-              }}
-            >
-              {rowVirtualEnabled &&
-                rowVirtual.map((virtualRow) => {
-                  const row = rows[virtualRow.index];
-                  const visibleCells = row.getVisibleCells();
-
-                  /** ROW */
-                  return (
-                    <tr
-                      key={row.id}
-                      className={clsx(styles.row, styles.row__virtual)}
-                      data-index={virtualRow.index}
-                      ref={(node) => rowVirtualizer.measureElement(node)}
-                      style={{
-                        transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scrolls
-                      }}
-                      onClick={(event) => {
-                        props.onClickRow?.(row, event);
-                      }}
-                      onDoubleClick={(event) => {
-                        props.onDoubleClickRow?.(row, event);
-                      }}
-                    >
-                      {columnVirtualEnabled && (
-                        <>
-                          {virtualPaddingLeft ? (
-                            <td style={{ display: "flex", width: virtualPaddingLeft }} />
-                          ) : null}
-                          {columnsVirtual.map((virtualColumn) => {
-                            /** CELL */
-                            const cell = visibleCells[virtualColumn.index];
-
-                            return getCell(cell, virtualColumn.index, visibleCells);
-                          })}
-                          {virtualPaddingRight ? (
-                            <th style={{ display: "flex", width: virtualPaddingRight }} />
-                          ) : null}
-                        </>
-                      )}
-                      {!columnVirtualEnabled &&
-                        visibleCells.map((cell, index, cells) => {
-                          /** CELL */
-
-                          return getCell(cell, index, cells);
-                        })}
-                    </tr>
-                  );
-                })}
-              {!rowVirtualEnabled &&
-                rows.map((row) => {
-                  const visibleCells = row.getVisibleCells();
-
-                  /** ROW */
-                  return (
-                    <tr
-                      key={row.id}
-                      className={styles.row}
-                      data-index={row.index}
-                      ref={(node) => rowVirtualizer.measureElement(node)}
-                      onClick={(event) => {
-                        props.onClickRow?.(row, event);
-                      }}
-                      onDoubleClick={(event) => {
-                        props.onDoubleClickRow?.(row, event);
-                      }}
-                    >
-                      {columnVirtualEnabled && (
-                        <>
-                          {virtualPaddingLeft ? (
-                            <td style={{ display: "flex", width: virtualPaddingLeft }} />
-                          ) : null}
-                          {columnsVirtual.map((virtualColumn) => {
-                            /** CELL */
-                            const cell = visibleCells[virtualColumn.index];
-
-                            return getCell(cell, virtualColumn.index, visibleCells);
-                          })}
-                          {virtualPaddingRight ? (
-                            <th style={{ display: "flex", width: virtualPaddingRight }} />
-                          ) : null}
-                        </>
-                      )}
-                      {!columnVirtualEnabled &&
-                        visibleCells.map((cell, index, cells) => {
-                          /** CELL */
-
-                          return getCell(cell, index, cells);
-                        })}
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
+          {!props.withGantt && (
+            <TableContainer
+              columnVirtualEnabled={columnVirtualEnabled}
+              rowVirtualEnabled={rowVirtualEnabled}
+              columnsVirtual={columnsVirtual}
+              rowsVirtual={rowVirtual}
+              frozenHeader={props.frozenHeader ?? true}
+              rowVirtualizer={rowVirtualizer}
+              rows={rows}
+              table={table}
+              virtualPaddingLeft={virtualPaddingLeft}
+              virtualPaddingRight={virtualPaddingRight}
+              onClickRow={props.onClickRow}
+              onDoubleClickRow={props.onDoubleClickRow}
+            />
+          )}
+          {props.withGantt && (
+            <div style={{ display: "flex" }}>
+              <TableContainer
+                columnVirtualEnabled={columnVirtualEnabled}
+                rowVirtualEnabled={rowVirtualEnabled}
+                columnsVirtual={columnsVirtual}
+                rowsVirtual={rowVirtual}
+                frozenHeader={props.frozenHeader ?? true}
+                rowVirtualizer={rowVirtualizer}
+                rows={rows}
+                table={table}
+                virtualPaddingLeft={virtualPaddingLeft}
+                virtualPaddingRight={virtualPaddingRight}
+                onClickRow={props.onClickRow}
+                onDoubleClickRow={props.onDoubleClickRow}
+              />
+              <div></div>
+              <TableGantt
+                columnVirtualEnabled={columnVirtualEnabled}
+                rowVirtualEnabled={rowVirtualEnabled}
+                columnsVirtual={columnsVirtual}
+                rowsVirtual={rowVirtual}
+                frozenHeader={props.frozenHeader ?? true}
+                rowVirtualizer={rowVirtualizer}
+                rows={rows}
+                table={table}
+                virtualPaddingLeft={virtualPaddingLeft}
+                virtualPaddingRight={virtualPaddingRight}
+                onClickRow={props.onClickRow}
+                onDoubleClickRow={props.onDoubleClickRow}
+              />
+            </div>
+          )}
         </div>
-        {props.withPagination && (
-          <>
-            {!props.Pagination && (
-              <div className={styles.paginationContainer}>
-                <div className={styles.paginationTotal}>{`Всего: ${filteredRowsCount}`}</div>
-                <Pagination
-                  className={styles.pagination}
-                  defaultCurrent={tableState.pagination.pageIndex + 1}
-                  total={filteredRowsCount}
-                  pageSize={tableState.pagination.pageSize}
-                  onChange={(page, pageSize) => {
-                    table.setPageIndex(page - 1);
-                    table.setPageSize(pageSize);
-                  }}
-                  defaultPageSize={tableState.pagination.pageSize}
-                  pageSizeOptions={props.pageSizes ?? [10, 25, 50, 100, 150, 200]}
-                />
-              </div>
-            )}
-            {props.Pagination && <props.Pagination table={table} />}
-          </>
-        )}
+        <TableFooter
+          filteredRowsCount={filteredRowsCount}
+          pageSizes={props.pageSizes}
+          Pagination={props.Pagination}
+          table={table}
+          withPagination={props.withPagination}
+          withTotal={props.withTotal}
+        />
       </div>
     );
   } catch (error) {

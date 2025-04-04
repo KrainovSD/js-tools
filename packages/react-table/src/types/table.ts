@@ -3,6 +3,7 @@ import type {
   ColumnDef,
   FilterFn,
   HeaderContext,
+  Row,
   RowData,
   SortingFn,
   Table,
@@ -243,3 +244,4 @@ export type FilterKey =
   | "includes-array-some";
 
 export type TableInterface<TData extends RowData> = Table<TData>;
+export type RowInterface<TData extends RowData> = Row<TData>;

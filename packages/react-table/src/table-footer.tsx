@@ -1,0 +1,51 @@
+import { Pagination } from "@krainovsd/react-ui";
+import styles from "./table-footer.module.scss";
+import type { TableInterface } from "./types";
+
+type TableFooterProps<RowData extends Record<string, unknown>> = {
+  Pagination: React.FC<{ table: TableInterface<RowData> }> | undefined;
+  withPagination: boolean | undefined;
+  withTotal: boolean | undefined;
+  table: TableInterface<RowData>;
+  filteredRowsCount: number;
+  pageSizes: number[] | undefined;
+};
+
+export function TableFooter<RowData extends Record<string, unknown>>(
+  props: TableFooterProps<RowData>,
+) {
+  const tableState = props.table.getState();
+
+  return (
+    <>
+      {(props.withPagination || props.withTotal) && (
+        <>
+          <div className={styles.paginationContainer}>
+            {props.withTotal && (
+              <div className={styles.paginationTotal}>{`Всего: ${props.filteredRowsCount}`}</div>
+            )}
+            {props.withPagination && (
+              <>
+                {!props.Pagination && (
+                  <Pagination
+                    className={styles.pagination}
+                    defaultCurrent={tableState.pagination.pageIndex + 1}
+                    total={props.filteredRowsCount}
+                    pageSize={tableState.pagination.pageSize}
+                    onChange={(page, pageSize) => {
+                      props.table.setPageIndex(page - 1);
+                      props.table.setPageSize(pageSize);
+                    }}
+                    defaultPageSize={tableState.pagination.pageSize}
+                    pageSizeOptions={props.pageSizes ?? [10, 25, 50, 100, 150, 200]}
+                  />
+                )}
+                {props.Pagination && <props.Pagination table={props.table} />}
+              </>
+            )}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
