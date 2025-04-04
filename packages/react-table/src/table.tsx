@@ -3,6 +3,7 @@ import type { TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
 import { useColumns, useTableOptions, useVirtualizer } from "./hooks";
+import { useSplitter } from "./hooks/use-splitter";
 import { TableContainer } from "./table-container";
 import { TableFilter } from "./table-filter";
 import { TableFooter } from "./table-footer";
@@ -75,8 +76,10 @@ export type TableProps<
     withFilters?: boolean;
     withTotal?: boolean;
     withGantt?: boolean;
+    instantGanttSplitter?: boolean;
     initialPageSize?: number;
     pageSizes?: number[];
+    fullSize?: boolean;
     virtualColumn?: boolean;
     virtualRows?: boolean;
     virtualRowSize?: number;
@@ -168,6 +171,10 @@ export function Table<
     virtualRowSize: props.virtualRowSize,
   });
 
+  const { sizes, startDrag, splitterRef, splitterGhostRef, isDragging } = useSplitter(
+    props.instantGanttSplitter,
+  );
+
   try {
     return (
       <div className={clsx(styles.base, props.className)}>
@@ -178,25 +185,42 @@ export function Table<
           withFilters={props.withFilters ?? false}
           Filter={props.Filter}
         />
-        <div ref={tableContainerRef} className={styles.container}>
-          {!props.withGantt && (
-            <TableContainer
-              columnVirtualEnabled={columnVirtualEnabled}
-              rowVirtualEnabled={rowVirtualEnabled}
-              columnsVirtual={columnsVirtual}
-              rowsVirtual={rowVirtual}
-              frozenHeader={props.frozenHeader ?? true}
-              rowVirtualizer={rowVirtualizer}
-              rows={rows}
-              table={table}
-              virtualPaddingLeft={virtualPaddingLeft}
-              virtualPaddingRight={virtualPaddingRight}
-              onClickRow={props.onClickRow}
-              onDoubleClickRow={props.onDoubleClickRow}
-            />
+
+        <div
+          className={clsx(
+            styles.splitter__container,
+            props.fullSize && styles.splitter__container_full,
           )}
-          {props.withGantt && (
-            <div style={{ display: "flex" }}>
+        >
+          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+          <div
+            className={clsx(styles.splitter, isDragging && styles.splitter__ghost)}
+            ref={splitterRef}
+            onMouseDown={startDrag}
+          >
+            <div className={styles.splitter__trigger}></div>
+          </div>
+          {!props.instantGanttSplitter && (
+            <div
+              className={clsx(
+                styles.splitter__overflow,
+                isDragging && styles.splitter__overflow_active,
+              )}
+            ></div>
+          )}
+          {!props.instantGanttSplitter && (
+            <div
+              className={styles.splitter__ghost}
+              ref={splitterGhostRef}
+              style={{ left: 0 }}
+            ></div>
+          )}
+          <div
+            ref={tableContainerRef}
+            className={clsx(styles.container, props.withGantt && styles.container__gantt)}
+            data-id={"container"}
+          >
+            {!props.withGantt && (
               <TableContainer
                 columnVirtualEnabled={columnVirtualEnabled}
                 rowVirtualEnabled={rowVirtualEnabled}
@@ -211,31 +235,51 @@ export function Table<
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
               />
-              <div></div>
-              <TableGantt
-                columnVirtualEnabled={columnVirtualEnabled}
-                rowVirtualEnabled={rowVirtualEnabled}
-                columnsVirtual={columnsVirtual}
-                rowsVirtual={rowVirtual}
-                frozenHeader={props.frozenHeader ?? true}
-                rowVirtualizer={rowVirtualizer}
-                rows={rows}
-                table={table}
-                virtualPaddingLeft={virtualPaddingLeft}
-                virtualPaddingRight={virtualPaddingRight}
-                onClickRow={props.onClickRow}
-                onDoubleClickRow={props.onDoubleClickRow}
-              />
-            </div>
-          )}
+            )}
+            {props.withGantt && (
+              <div className={styles.ganttContainer}>
+                <TableContainer
+                  width={sizes[0]}
+                  columnVirtualEnabled={columnVirtualEnabled}
+                  rowVirtualEnabled={rowVirtualEnabled}
+                  columnsVirtual={columnsVirtual}
+                  rowsVirtual={rowVirtual}
+                  frozenHeader={props.frozenHeader ?? true}
+                  rowVirtualizer={rowVirtualizer}
+                  rows={rows}
+                  table={table}
+                  virtualPaddingLeft={virtualPaddingLeft}
+                  virtualPaddingRight={virtualPaddingRight}
+                  onClickRow={props.onClickRow}
+                  onDoubleClickRow={props.onDoubleClickRow}
+                />
+
+                <TableGantt
+                  width={sizes[1]}
+                  columnVirtualEnabled={columnVirtualEnabled}
+                  rowVirtualEnabled={rowVirtualEnabled}
+                  columnsVirtual={columnsVirtual}
+                  rowsVirtual={rowVirtual}
+                  frozenHeader={props.frozenHeader ?? true}
+                  rowVirtualizer={rowVirtualizer}
+                  rows={rows}
+                  table={table}
+                  virtualPaddingLeft={virtualPaddingLeft}
+                  virtualPaddingRight={virtualPaddingRight}
+                  onClickRow={props.onClickRow}
+                  onDoubleClickRow={props.onDoubleClickRow}
+                />
+              </div>
+            )}
+          </div>
         </div>
         <TableFooter
           filteredRowsCount={filteredRowsCount}
           pageSizes={props.pageSizes}
           Pagination={props.Pagination}
           table={table}
-          withPagination={props.withPagination}
-          withTotal={props.withTotal}
+          withPagination={props.withPagination && !props.withGantt}
+          withTotal={props.withTotal && !props.withGantt}
         />
       </div>
     );

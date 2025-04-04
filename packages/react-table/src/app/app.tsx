@@ -88,9 +88,11 @@ export function App() {
           }}
           pageSizes={[25, 50, 100, 150, 250]}
           withFilters={true}
+          instantGanttSplitter={false}
           virtualRows={true}
           virtualRowSize={60}
           virtualColumn={false}
+          fullSize={false}
         />
       </div>
     </ConfigProvider>

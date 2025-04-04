@@ -39,4 +39,22 @@ body {
       background-color: #ffffff;
     }
   }
+
+  & table {
+    scrollbar-width: initial !important;
+
+    &::-webkit-scrollbar-thumb {
+      border: 4px solid #ffffff;
+      border-radius: 10px;
+
+      background-clip: padding-box;
+      background-color: #e0e0e0;
+    }
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+      background-color: #ffffff;
+    }
+  }
 }

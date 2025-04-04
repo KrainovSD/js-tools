@@ -3,15 +3,7 @@ import type { TableColumn } from "../types";
 
 export const columns: TableColumn<Row, "test">[] = [
   //   SelectColumn,
-  {
-    key: "id",
-    name: "ID",
-    width: 120,
-    resizable: true,
 
-    sortType: "string-with-number",
-    // leftFrozen: true,
-  },
   {
     key: "id",
     name: "ID",

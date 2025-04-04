@@ -7,6 +7,7 @@ import styles from "./table-container.module.scss";
 import type { RowInterface, TableInterface } from "./types";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
+  width?: number;
   columnVirtualEnabled: boolean;
   rowVirtualEnabled: boolean;
   table: TableInterface<RowData>;
@@ -128,7 +129,7 @@ export function TableContainer<RowData extends Record<string, unknown>>(
     <table
       className={styles.table}
       style={{
-        width: props.columnVirtualEnabled ? props.table.getTotalSize() : "100%",
+        width: props.width ?? (props.columnVirtualEnabled ? props.table.getTotalSize() : "100%"),
       }}
     >
       <thead

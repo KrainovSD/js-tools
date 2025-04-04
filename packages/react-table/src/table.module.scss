@@ -8,6 +8,7 @@
   --table-box-shadow-left: -2px 0px 5px -2px rgba(136, 136, 136, 0.3);
   --table-box-shadow-right: 2px 0 5px -2px rgba(136, 136, 136, 0.3);
   --table-box-shadow-bottom: 0px 3px 5px -2px rgba(136, 136, 136, 0.3);
+  --table-container-color: #ffffff;
   --table-cell-bg: #ffffff;
   --table-header-cell-bg: #fafafa;
   --table-body-bg: #ffffff;
@@ -20,8 +21,8 @@
   --table-active-sort: #1e90ff;
   --table-row-hover-bg: #f5f5f5;
   --table-transition: all 0.1s ease;
-
-  // @media (prefers-color-scheme: dark) {
+  --table-splitter-ghost-color: #1e90ff;
+  --table-splitter-overflow-color: #26262610; // @media (prefers-color-scheme: dark) {
   //   --table-box-shadow-left: -2px 0px 5px -2px rgba(136, 136, 136, 0.3);
   //   --table-box-shadow-right: 2px 0 5px -2px rgba(136, 136, 136, 0.3);
   //   --table-box-shadow-bottom: 0px 3px 5px -2px rgba(136, 136, 136, 0.3);
@@ -36,7 +37,6 @@
   //   --table-row-hover-bg: #f3faff;
   //   --table-transition: all 0.1s ease;
   // }
-
   // @media (prefers-color-scheme: light) {
   //   --table-box-shadow-left: -2px 0px 5px -2px rgba(136, 136, 136, 0.3);
   //   --table-box-shadow-right: 2px 0 5px -2px rgba(136, 136, 136, 0.3);
@@ -50,8 +50,7 @@
   //   --table-link-color: #a870e8;
   //   --table-active-sort: #1e90ff;
   //   --table-row-hover-bg: #f3faff;
-  //   --table-transition: all 0.1s ease;
-  // }
+  //   --table-transition: all 0.1s ease; // }
 }
 
 .container {
@@ -60,4 +59,68 @@
   width: 100%;
   border: 1px solid var(--table-border);
   height: 100%;
+  background-color: var(--table-container-color);
+
+  &__gantt {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+
+.ganttContainer {
+  display: flex;
+  height: 100%;
+}
+
+.splitter {
+  display: flex;
+  margin-right: -1px;
+  width: 1px;
+  height: 100%;
+  overflow: visible;
+  cursor: col-resize;
+  background-color: var(--table-border);
+  position: absolute;
+  top: 0;
+  z-index: 3;
+
+  &__container {
+    display: flex;
+    width: 100%;
+    height: fit-content;
+    overflow: hidden;
+    position: relative;
+
+    &_full {
+      height: 100%;
+    }
+  }
+
+  &__trigger {
+    position: absolute;
+    width: 12px;
+    height: 100%;
+    margin-left: -2px;
+    top: 0;
+    left: 0;
+  }
+
+  &__ghost {
+    background: var(--table-splitter-ghost-color);
+  }
+
+  &__overflow {
+    background-color: var(--table-splitter-overflow-color);
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: none;
+
+    &_active {
+      display: flex;
+    }
+  }
 }
