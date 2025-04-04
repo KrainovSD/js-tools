@@ -16,6 +16,7 @@ import type {
 } from "../components";
 
 export type TableColumn<
+  RowData extends Record<string, unknown>,
   CellRender = undefined,
   HeaderRender = undefined,
   FilterRender = undefined,
@@ -43,14 +44,17 @@ export type TableColumn<
   sortType?: SortType | SortingKey;
   filterType?: FilterType | FilterKey;
   props?: unknown;
-} & TableCellRendersProps<CellRender> &
+} & TableCellRendersProps<RowData, CellRender> &
   TableHeaderRendersProps<HeaderRender> &
   TableFilterRendersProps<FilterRender> &
   TableSortRendersProps<SortRender> &
   TableCellClassesProps<CellClass> &
   TableHeaderClassesProps<HeaderClass>;
 
-export type TableCellRendersProps<CellRender = undefined> =
+export type TableCellRendersProps<
+  RowData extends Record<string, unknown>,
+  CellRender = undefined,
+> =
   | {
       cellRender?: CellRender;
       cellRenderProps?: unknown;
@@ -59,7 +63,7 @@ export type TableCellRendersProps<CellRender = undefined> =
       cellRender: "date";
       cellRenderProps: DateCellRenderProps;
     }
-  | { cellRender: "text"; cellRenderProps: TextCellRenderProps };
+  | { cellRender: "text"; cellRenderProps: TextCellRenderProps<RowData> };
 export type TableHeaderRendersProps<HeaderRender = undefined> = {
   headerRender?: HeaderRender | TableHeaderRenderKey;
   headerRenderProps?: unknown;
@@ -95,6 +99,7 @@ export type TableHeaderClassesProps<HeaderClass = undefined> = {
 };
 
 export type TableDefaultColumnOptions<
+  RowData extends Record<string, unknown>,
   CellRender = undefined,
   HeaderRender = undefined,
   FilterRender = undefined,
@@ -105,6 +110,7 @@ export type TableDefaultColumnOptions<
   SortType = undefined,
 > = Pick<
   TableColumn<
+    RowData,
     CellRender,
     HeaderRender,
     FilterRender,
@@ -141,6 +147,7 @@ export type TableColumnsSettings<
   SortType = undefined,
 > = {
   columns: TableColumn<
+    Row,
     CellRender,
     HeaderRender,
     FilterRender,
@@ -171,6 +178,7 @@ export type TableColumnsSettings<
   filterTypes?: FilterType extends string ? Record<FilterType, FilterFn<Row>> : undefined;
   sortTypes?: SortType extends string ? Record<SortType, SortingFn<Row>> : undefined;
   defaultColumnOptions?: TableDefaultColumnOptions<
+    Row,
     CellRender,
     HeaderRender,
     FilterRender,

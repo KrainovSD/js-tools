@@ -16,6 +16,7 @@ type UseVirtualizerProps<
 > = {
   rows: Row[];
   initialColumns: TableColumn<
+    Row,
     CellRender,
     HeaderRender,
     FilterRender,

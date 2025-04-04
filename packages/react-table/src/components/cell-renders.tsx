@@ -7,12 +7,15 @@ import { useVisibleCell } from "../hooks/use-visible-cell";
 import { getData } from "../lib";
 import styles from "./cell-renders.module.scss";
 
-export type TextCellRenderProps = {
+export type CellRenderClasses = "center";
+
+export type TextCellRenderProps<RowData extends Record<string, unknown>> = {
   expanded?: boolean;
-  pathToLink?: string;
   pathToTooltip?: string;
+  linkGetter?: (row: RowData) => string;
   autoTooltip?: boolean;
   booleanMapping?: BooleanMapping;
+  classes?: Record<CellRenderClasses, boolean>;
 };
 
 type BooleanMapping = {
@@ -24,11 +27,9 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as
-    | TextCellRenderProps
+    | TextCellRenderProps<Row>
     | undefined;
-  const link = cellRenderProps?.pathToLink
-    ? getData(props.context.row.original, cellRenderProps.pathToLink)
-    : undefined;
+  const link = cellRenderProps?.linkGetter?.(props.context.row.original);
   const tooltip = cellRenderProps?.pathToTooltip
     ? getData(props.context.row.original, cellRenderProps.pathToTooltip)
     : undefined;
@@ -60,29 +61,35 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
   return (
     <>
       {isString(link) && (
-        <a
+        <div
           data-tooltip={isString(tooltip) ? tooltip : undefined}
-          href={link}
-          className={clsx(styles.container)}
+          className={clsx(
+            styles.container,
+            cellRenderProps?.classes?.center && styles.container__center,
+          )}
           style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
         >
-          {isString(tooltip) && (
-            <Tooltip
-              classNameContent={styles.text__tooltip}
-              text={tooltip}
-              autoTooltip={cellRenderProps?.autoTooltip}
-            >
-              {Node}
-            </Tooltip>
-          )}
-          {!isString(tooltip) && Node}
-          {Node}
-        </a>
+          <a href={link} className={clsx(styles.text__link)}>
+            {isString(tooltip) && (
+              <Tooltip
+                classNameContent={styles.text__tooltip}
+                text={tooltip}
+                autoTooltip={cellRenderProps?.autoTooltip}
+              >
+                {Node}
+              </Tooltip>
+            )}
+            {!isString(tooltip) && Node}
+          </a>
+        </div>
       )}
       {!isString(link) && (
         <div
           data-tooltip={isString(tooltip) ? tooltip : undefined}
-          className={clsx(styles.container)}
+          className={clsx(
+            styles.container,
+            cellRenderProps?.classes?.center && styles.container__center,
+          )}
           style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
         >
           {isString(tooltip) && (
@@ -105,6 +112,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
 export type DateCellRenderProps = {
   format: string;
   expanded?: boolean;
+  classes?: Record<CellRenderClasses, boolean>;
 };
 
 export function DateCellRender<Row extends Record<string, unknown>>(props: {
@@ -127,7 +135,49 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
   return (
     <>
       <div
-        className={styles.container}
+        className={clsx(
+          styles.container,
+          cellRenderProps?.classes?.center && styles.container__center,
+        )}
+        style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
+      >
+        <span className={styles.base}>{date}</span>
+      </div>
+      {isExpandable && Expander && <Expander context={props.context} />}
+    </>
+  );
+}
+
+export type TagCellRenderProps = {
+  color?: string;
+  filterable?: boolean;
+  classes?: Record<CellRenderClasses, boolean>;
+};
+
+export function TagCellRender<Row extends Record<string, unknown>>(props: {
+  context: CellContext<Row, unknown>;
+}): ReactNode {
+  const cellRenderProps = props.context.column.columnDef.cellRenderProps as
+    | DateCellRenderProps
+    | undefined;
+  const { isVisible, extraPadding } = useVisibleCell(props.context);
+  if (!cellRenderProps) return;
+
+  const content = getData(props.context.row.original, props.context.column.id);
+  const date = isId(content) ? dateFormat(content, cellRenderProps.format) : null;
+  const isExpandable = cellRenderProps?.expanded && props.context.row.getCanExpand();
+
+  if (!isVisible) return;
+
+  const Expander = props.context.table.options.meta?.renderers?.expander;
+
+  return (
+    <>
+      <div
+        className={clsx(
+          styles.container,
+          cellRenderProps?.classes?.center && styles.container__center,
+        )}
         style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
       >
         <span className={styles.base}>{date}</span>

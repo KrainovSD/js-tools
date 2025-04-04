@@ -5,8 +5,17 @@ import { Table } from "../table";
 import type { TableColumn } from "../types";
 import { type Row, createRows } from "./lib";
 
-const columns: TableColumn<"test">[] = [
+const columns: TableColumn<Row, "test">[] = [
   //   SelectColumn,
+  {
+    key: "id",
+    name: "ID",
+    width: 120,
+    resizable: true,
+
+    sortType: "string-with-number",
+    // leftFrozen: true,
+  },
   {
     key: "id",
     name: "ID",
@@ -38,6 +47,12 @@ const columns: TableColumn<"test">[] = [
     filterable: true,
     filterRender: "string",
     filterType: "includes-string",
+    cellRender: "text",
+    cellRenderProps: {
+      classes: {
+        center: true,
+      },
+    },
     resizable: true,
     draggable: true,
     sortable: true,
@@ -58,6 +73,7 @@ const columns: TableColumn<"test">[] = [
     cellRenderProps: {
       pathToTooltip: "description",
       autoTooltip: true,
+      linkGetter: (row) => row.country,
     },
     // leftFrozen: true,
   },

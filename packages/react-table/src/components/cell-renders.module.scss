@@ -10,6 +10,11 @@ a.container {
   max-width: 100%;
   overflow: hidden;
   width: 100%;
+
+  &__center {
+    height: 100%;
+    align-items: center;
+  }
 }
 
 .base {
@@ -26,5 +31,9 @@ a.container {
 
   &__tooltip {
     font-family: Nunito;
+  }
+
+  &__link {
+    color: var(--table-link-color);
   }
 }
