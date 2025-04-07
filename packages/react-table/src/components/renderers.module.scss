@@ -1,16 +1,15 @@
 .expander {
   &__button {
-    padding: 4px 7px 7px 7px;
     background-color: transparent;
     outline: none;
-    border: none;
     width: fit-content;
     height: fit-content;
     display: flex;
     cursor: pointer;
     color: var(--table-text-color);
-    font-weight: 500;
-    font-family: "Times New Roman", Times, serif;
+    font-weight: 400;
+    border: 1px solid #b3b3b3;
+    padding: 0;
   }
   &__icon {
     transition: all 0.15s ease;

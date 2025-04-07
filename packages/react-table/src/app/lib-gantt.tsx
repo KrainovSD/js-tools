@@ -9,7 +9,9 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
     resizable: true,
     draggable: true,
     sortable: false,
+    width: 300,
     cellRender: "text",
+    cellClass: ["common", "empty", "lineClamp"],
     filterRender: "string",
     filterable: false,
     filterType: "includes-string",
@@ -71,7 +73,7 @@ export function createRowsGantt(): RowGantt[] {
   );
   rows.push({
     id: `id_-1`,
-    name: faker.person.firstName("male"),
+    name: "Очень длинное имя которое не поместится в две строчки даже",
     start: start.toISOString(),
     end: end.toISOString(),
     children: [],

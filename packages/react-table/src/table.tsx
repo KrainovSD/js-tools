@@ -9,7 +9,13 @@ import { TableFilter } from "./table-filter";
 import { TableFooter } from "./table-footer";
 import { TableGantt } from "./table-gantt";
 import styles from "./table.module.scss";
-import type { RowInterface, TableColumnsSettings, TableInterface, TableRenderers } from "./types";
+import type {
+  GanttInfo,
+  RowInterface,
+  TableColumnsSettings,
+  TableInterface,
+  TableRenderers,
+} from "./types";
 
 export type TableProps<
   RowData extends Record<string, unknown>,
@@ -76,6 +82,9 @@ export type TableProps<
     withFilters?: boolean;
     withTotal?: boolean;
     withGantt?: boolean;
+    firstGanttDate?: string;
+    lastGanttDate?: string;
+    ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
     instantGanttSplitter?: boolean;
     initialPageSize?: number;
     pageSizes?: number[];
@@ -137,6 +146,7 @@ export function Table<
     defaultColumnOptions: props.defaultColumnOptions,
     filterTypes: props.filterTypes,
     sortTypes: props.sortTypes,
+    withGantt: props.withGantt,
   });
 
   const table = useTableOptions({
@@ -169,6 +179,7 @@ export function Table<
     virtualColumn: props.virtualColumn,
     virtualRows: props.virtualRows,
     virtualRowSize: props.virtualRowSize,
+    gantt: props.withGantt,
   });
 
   const { sizes, startDrag, splitterRef, isDragging, splitterGhostRef, splitterOverflowRef } =
@@ -196,6 +207,7 @@ export function Table<
         >
           {!props.withGantt && (
             <TableContainer
+              gantt={props.withGantt}
               columnVirtualEnabled={columnVirtualEnabled}
               rowVirtualEnabled={rowVirtualEnabled}
               columnsVirtual={columnsVirtual}
@@ -214,6 +226,7 @@ export function Table<
             <>
               <div className={styles.ganttContainer}>
                 <TableContainer
+                  gantt={props.withGantt}
                   width={sizes[0]}
                   columnVirtualEnabled={columnVirtualEnabled}
                   rowVirtualEnabled={rowVirtualEnabled}
@@ -257,6 +270,9 @@ export function Table<
                   virtualPaddingRight={virtualPaddingRight}
                   onClickRow={props.onClickRow}
                   onDoubleClickRow={props.onDoubleClickRow}
+                  firstGanttDate={props.firstGanttDate}
+                  lastGanttDate={props.lastGanttDate}
+                  ganttInfoGetter={props.ganttInfoGetter}
                 />
               </div>
             </>

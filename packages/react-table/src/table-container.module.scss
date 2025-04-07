@@ -26,6 +26,7 @@
   background-color: var(--table-header-bg);
   overflow: initial;
   display: flex;
+  width: 100%;
 }
 
 .headerCell {
@@ -76,6 +77,8 @@
 
 .row {
   display: flex;
+  width: 100%;
+  transition: var(--table-transition);
 
   &:hover {
     background-color: var(--table-row-hover-bg);

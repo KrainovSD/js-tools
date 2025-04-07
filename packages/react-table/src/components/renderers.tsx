@@ -1,6 +1,5 @@
-import { ArrowUpFillLegacy } from "@krainovsd/react-icons";
+import { MinusOutlined, PlusOutlined } from "@krainovsd/react-icons";
 import type { CellContext } from "@tanstack/react-table";
-import clsx from "clsx";
 import styles from "./renderers.module.scss";
 
 export function Expander<Row extends Record<string, unknown>>(props: {
@@ -10,16 +9,14 @@ export function Expander<Row extends Record<string, unknown>>(props: {
 
   return (
     <button
-      className={styles.expander__button}
       onClick={(event) => {
         event.stopPropagation();
         props.context.row.toggleExpanded(!isExpanded);
       }}
-      onDoubleClick={(event) => event.stopPropagation()}
+      className={styles.expander__button}
     >
-      <ArrowUpFillLegacy
-        className={clsx(styles.expander__icon, isExpanded && styles.expander__icon_open)}
-      />
+      {isExpanded && <MinusOutlined size={16} />}
+      {!isExpanded && <PlusOutlined size={16} />}
     </button>
   );
 }

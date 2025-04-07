@@ -76,7 +76,7 @@ export function useColumns<
     HeaderClass,
     FilterType,
     SortType
-  >,
+  > & { withGantt: boolean | undefined },
 ) {
   const {
     cellRender = "text",
@@ -242,9 +242,9 @@ export function useColumns<
         props: column.props,
 
         enableResizing: column.rightFrozen ? false : (column.resizable ?? resizable),
-        enableColumnFilter: column.filterable ?? filterable,
-        enableSorting: column.sortable ?? sortable,
-        enableMultiSort: column.sortable ?? sortable,
+        enableColumnFilter: props.withGantt ? false : (column.filterable ?? filterable),
+        enableSorting: props.withGantt ? false : (column.sortable ?? sortable),
+        enableMultiSort: props.withGantt ? false : (column.sortable ?? sortable),
         enableHiding: true,
         enablePinning: true,
         enableGrouping: true,

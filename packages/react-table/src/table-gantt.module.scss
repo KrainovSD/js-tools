@@ -9,8 +9,6 @@
 }
 
 .header {
-  display: grid;
-
   display: flex;
   flex-direction: column;
 
@@ -30,6 +28,23 @@
 .headerCell {
   position: relative;
   display: flex;
+
+  border-block-end: 1px solid var(--table-border);
+  border-inline-end: 1px solid var(--table-border);
+  padding: 0 8px;
+  border-spacing: 0px;
+  overflow: hidden;
+  white-space: pre-wrap;
+  background: var(--table-header-cell-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  color: var(--table-text-color);
+  line-height: 22px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--table-font-family);
 
   &__frozen {
     &_left {
@@ -75,6 +90,8 @@
 
 .row {
   display: flex;
+  width: 100%;
+  border-bottom: 1px solid var(--table-border);
 
   &:hover {
     background-color: var(--table-row-hover-bg);
@@ -91,6 +108,8 @@
 
 .cell {
   transition: var(--table-transition);
+  width: 100%;
+  padding: 8px 8px;
 
   &__frozen {
     &_left {

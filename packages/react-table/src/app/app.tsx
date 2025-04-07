@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 import { ConfigProvider } from "antd";
+import React from "react";
 import { Table } from "../table";
 import type { TableColumn } from "../types";
 import { type Row, columns, createRows } from "./lib";
@@ -22,6 +23,33 @@ type FilterTypeKeys = undefined;
 type SortTypeKeys = undefined;
 
 export function App() {
+  const { firstDate, lastDate } = React.useMemo(() => {
+    if (!withGantt) return {};
+
+    let firstDate: Date | undefined;
+    let lastDate: Date | undefined;
+
+    function checkRows(children: RowGantt[]) {
+      for (const row of children) {
+        const currentStartDate = new Date(row.start);
+        const currentEndDate = new Date(row.end);
+
+        if (!firstDate || currentStartDate < firstDate) {
+          firstDate = currentStartDate;
+        }
+        if (!lastDate || currentEndDate > lastDate) {
+          lastDate = currentEndDate;
+        }
+
+        if (row.children && row.children.length > 0) checkRows(row.children);
+      }
+    }
+
+    checkRows(rowsGantt);
+
+    return { firstDate, lastDate };
+  }, [withGantt]);
+
   return (
     <ConfigProvider
       theme={{
@@ -93,6 +121,18 @@ export function App() {
           virtualRowSize={60}
           virtualColumn={false}
           fullSize={false}
+          ganttInfoGetter={
+            withGantt
+              ? (row) => ({
+                  end: row.original.end,
+                  id: row.original.id,
+                  start: row.original.start,
+                  dependencies: [],
+                })
+              : undefined
+          }
+          firstGanttDate={firstDate?.toISOString?.()}
+          lastGanttDate={lastDate?.toDateString?.()}
         />
       </div>
     </ConfigProvider>

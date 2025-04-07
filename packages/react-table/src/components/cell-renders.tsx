@@ -67,8 +67,9 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
             styles.container,
             cellRenderProps?.classes?.center && styles.container__center,
           )}
-          style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
+          style={{ paddingLeft: extraPadding }}
         >
+          {isExpandable && Expander && <Expander context={props.context} />}
           <a href={link} className={clsx(styles.text__link)}>
             {isString(tooltip) && (
               <Tooltip
@@ -90,8 +91,9 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
             styles.container,
             cellRenderProps?.classes?.center && styles.container__center,
           )}
-          style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
+          style={{ paddingLeft: extraPadding }}
         >
+          {isExpandable && Expander && <Expander context={props.context} />}
           {isString(tooltip) && (
             <Tooltip
               classNameContent={styles.text__tooltip}
@@ -104,7 +106,6 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
           {!isString(tooltip) && Node}
         </div>
       )}
-      {isExpandable && Expander && <Expander context={props.context} />}
     </>
   );
 }
@@ -139,11 +140,11 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
           styles.container,
           cellRenderProps?.classes?.center && styles.container__center,
         )}
-        style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
+        style={{ paddingLeft: extraPadding }}
       >
+        {isExpandable && Expander && <Expander context={props.context} />}
         <span className={styles.base}>{date}</span>
       </div>
-      {isExpandable && Expander && <Expander context={props.context} />}
     </>
   );
 }
@@ -178,11 +179,11 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
           styles.container,
           cellRenderProps?.classes?.center && styles.container__center,
         )}
-        style={{ width: isExpandable ? "80%" : undefined, paddingLeft: extraPadding }}
+        style={{ paddingLeft: extraPadding }}
       >
+        {isExpandable && Expander && <Expander context={props.context} />}
         <span className={styles.base}>{date}</span>
       </div>
-      {isExpandable && Expander && <Expander context={props.context} />}
     </>
   );
 }

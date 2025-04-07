@@ -245,3 +245,16 @@ export type FilterKey =
 
 export type TableInterface<TData extends RowData> = Table<TData>;
 export type RowInterface<TData extends RowData> = Row<TData>;
+
+export type GanttInfo = {
+  id: number | string;
+  start: string;
+  end: string;
+  dependencies?: (string | number)[];
+};
+
+export type GanttDate = {
+  year: number;
+  month: number;
+  day: number;
+};
