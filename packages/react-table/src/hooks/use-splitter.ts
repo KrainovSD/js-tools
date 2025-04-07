@@ -5,6 +5,8 @@ const MIN_WIDTH = 10;
 export function useSplitter(instantSizing: boolean = false) {
   const splitterRef = React.useRef<HTMLDivElement | null>(null);
   const splitterGhostRef = React.useRef<HTMLDivElement | null>(null);
+  const splitterOverflowRef = React.useRef<HTMLDivElement | null>(null);
+
   const parentWidthRef = React.useRef(0);
   const sizesRef = React.useRef([10, 10]);
   const tempSizesRef = React.useRef([10, 10]);
@@ -17,12 +19,9 @@ export function useSplitter(instantSizing: boolean = false) {
     document.body.style.userSelect = "none";
 
     if (!instantSizing) {
-      // if (splitterGhostRef.current) {
-      //   const containerRect = getContainerRect();
-      //   if (!containerRect) return;
-      //   splitterGhostRef.current.style.left = `${sizesRef.current[0] + containerRect.left}px`;
-      //   splitterGhostRef.current.style.visibility = "visible";
-      // }
+      if (splitterGhostRef.current) {
+        splitterGhostRef.current.style.visibility = "visible";
+      }
     }
   }, [instantSizing]);
 
@@ -32,27 +31,35 @@ export function useSplitter(instantSizing: boolean = false) {
     document.body.style.userSelect = "";
 
     if (!instantSizing) {
-      // if (splitterGhostRef.current) {
-      //   splitterGhostRef.current.style.visibility = "hidden";
-      // }
-
       setSizes(tempSizesRef.current);
       sizesRef.current = tempSizesRef.current;
+
+      if (splitterGhostRef.current) {
+        splitterGhostRef.current.style.visibility = "hidden";
+        splitterGhostRef.current.style.left = "0px";
+      }
+
+      if (splitterOverflowRef.current) {
+        const containerRect = getContainerRect();
+        if (!containerRect) return;
+        splitterOverflowRef.current.style.width = `${containerRect.width}px`;
+        splitterOverflowRef.current.style.left = `-${containerRect.width - tempSizesRef.current[1]}px`;
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instantSizing]);
 
-  function getParent() {
+  function getContainer() {
     if (!splitterRef.current) return;
     const parent = splitterRef.current.parentElement;
 
     return parent;
   }
 
-  function getContainer() {
-    const parent = getParent();
-    if (!parent) return;
+  function getSplitterRect() {
+    if (!splitterRef.current) return;
 
-    return parent.querySelector<HTMLDivElement>(`[data-id="container"]`);
+    return splitterRef.current.getBoundingClientRect();
   }
 
   function getContainerRect() {
@@ -87,9 +94,10 @@ export function useSplitter(instantSizing: boolean = false) {
       if (!sizes) return;
 
       if (!instantSizing) {
-        const container = getContainer();
-        if (!splitterRef.current || !container) return;
-        splitterRef.current.style.left = `${sizes[0] - (container.offsetWidth - container.clientWidth - 2)}px`;
+        const splitter = getSplitterRect();
+        const container = getContainerRect();
+        if (!splitterGhostRef.current || !splitter || !container) return;
+        splitterGhostRef.current.style.left = `${sizes[0] - splitter.left + container.left}px`;
         tempSizesRef.current = sizes;
       } else {
         setSizes(sizes);
@@ -112,13 +120,16 @@ export function useSplitter(instantSizing: boolean = false) {
       if (!sizes) return;
       setSizes(sizes);
       if (!instantSizing) {
-        if (splitterRef.current) {
-          const container = getContainer();
-          if (!container) return;
-          splitterRef.current.style.left = `${sizes[0] - (container.offsetWidth - container.clientWidth)}px`;
-        }
+        const contentRect = entities[0].contentRect;
         sizesRef.current = sizes;
         tempSizesRef.current = sizes;
+        if (splitterGhostRef.current) {
+          splitterGhostRef.current.style.left = "0px";
+        }
+        if (splitterOverflowRef.current) {
+          splitterOverflowRef.current.style.width = `${contentRect.width}px`;
+          splitterOverflowRef.current.style.left = `-${contentRect.width - sizes[1]}px`;
+        }
       }
     });
 
@@ -141,5 +152,5 @@ export function useSplitter(instantSizing: boolean = false) {
     };
   }, [onDrag, stopDrag]);
 
-  return { sizes, startDrag, splitterRef, splitterGhostRef, isDragging };
+  return { sizes, startDrag, splitterRef, splitterGhostRef, splitterOverflowRef, isDragging };
 }

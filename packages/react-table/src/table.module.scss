@@ -58,43 +58,33 @@
   position: relative;
   width: 100%;
   border: 1px solid var(--table-border);
-  height: 100%;
   background-color: var(--table-container-color);
+  height: fit-content;
 
   &__gantt {
     overflow-y: auto;
     overflow-x: hidden;
   }
+
+  &_full {
+    height: 100%;
+  }
 }
 
 .ganttContainer {
   display: flex;
-  height: 100%;
 }
 
 .splitter {
   display: flex;
   margin-right: -1px;
   width: 1px;
-  height: 100%;
   overflow: visible;
   cursor: col-resize;
   background-color: var(--table-border);
-  position: absolute;
+  position: relative;
   top: 0;
   z-index: 3;
-
-  &__container {
-    display: flex;
-    width: 100%;
-    height: fit-content;
-    overflow: hidden;
-    position: relative;
-
-    &_full {
-      height: 100%;
-    }
-  }
 
   &__trigger {
     position: absolute;
@@ -107,20 +97,29 @@
 
   &__ghost {
     background: var(--table-splitter-ghost-color);
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    visibility: hidden;
   }
 
-  &__overflow {
-    background-color: var(--table-splitter-overflow-color);
-    position: absolute;
+  &__overflowContainer {
+    position: relative;
     top: 0px;
     left: 0px;
-    width: 100%;
-    height: 100%;
+    width: 0px;
     z-index: 2;
     display: none;
 
     &_active {
       display: flex;
     }
+  }
+
+  &__overflow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--table-splitter-overflow-color);
   }
 }

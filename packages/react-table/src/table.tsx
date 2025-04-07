@@ -171,9 +171,8 @@ export function Table<
     virtualRowSize: props.virtualRowSize,
   });
 
-  const { sizes, startDrag, splitterRef, splitterGhostRef, isDragging } = useSplitter(
-    props.instantGanttSplitter,
-  );
+  const { sizes, startDrag, splitterRef, isDragging, splitterGhostRef, splitterOverflowRef } =
+    useSplitter(props.instantGanttSplitter);
 
   try {
     return (
@@ -187,56 +186,32 @@ export function Table<
         />
 
         <div
+          ref={tableContainerRef}
           className={clsx(
-            styles.splitter__container,
-            props.fullSize && styles.splitter__container_full,
+            styles.container,
+            props.withGantt && styles.container__gantt,
+            props.fullSize && styles.container_full,
           )}
+          data-id={"container"}
         >
-          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-          <div
-            className={clsx(styles.splitter, isDragging && styles.splitter__ghost)}
-            ref={splitterRef}
-            onMouseDown={startDrag}
-          >
-            <div className={styles.splitter__trigger}></div>
-          </div>
-          {!props.instantGanttSplitter && (
-            <div
-              className={clsx(
-                styles.splitter__overflow,
-                isDragging && styles.splitter__overflow_active,
-              )}
-            ></div>
+          {!props.withGantt && (
+            <TableContainer
+              columnVirtualEnabled={columnVirtualEnabled}
+              rowVirtualEnabled={rowVirtualEnabled}
+              columnsVirtual={columnsVirtual}
+              rowsVirtual={rowVirtual}
+              frozenHeader={props.frozenHeader ?? true}
+              rowVirtualizer={rowVirtualizer}
+              rows={rows}
+              table={table}
+              virtualPaddingLeft={virtualPaddingLeft}
+              virtualPaddingRight={virtualPaddingRight}
+              onClickRow={props.onClickRow}
+              onDoubleClickRow={props.onDoubleClickRow}
+            />
           )}
-          {!props.instantGanttSplitter && (
-            <div
-              className={styles.splitter__ghost}
-              ref={splitterGhostRef}
-              style={{ left: 0 }}
-            ></div>
-          )}
-          <div
-            ref={tableContainerRef}
-            className={clsx(styles.container, props.withGantt && styles.container__gantt)}
-            data-id={"container"}
-          >
-            {!props.withGantt && (
-              <TableContainer
-                columnVirtualEnabled={columnVirtualEnabled}
-                rowVirtualEnabled={rowVirtualEnabled}
-                columnsVirtual={columnsVirtual}
-                rowsVirtual={rowVirtual}
-                frozenHeader={props.frozenHeader ?? true}
-                rowVirtualizer={rowVirtualizer}
-                rows={rows}
-                table={table}
-                virtualPaddingLeft={virtualPaddingLeft}
-                virtualPaddingRight={virtualPaddingRight}
-                onClickRow={props.onClickRow}
-                onDoubleClickRow={props.onDoubleClickRow}
-              />
-            )}
-            {props.withGantt && (
+          {props.withGantt && (
+            <>
               <div className={styles.ganttContainer}>
                 <TableContainer
                   width={sizes[0]}
@@ -253,7 +228,21 @@ export function Table<
                   onClickRow={props.onClickRow}
                   onDoubleClickRow={props.onDoubleClickRow}
                 />
-
+                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+                <div className={clsx(styles.splitter)} ref={splitterRef} onMouseDown={startDrag}>
+                  <div className={styles.splitter__trigger}></div>
+                  <div ref={splitterGhostRef} className={styles.splitter__ghost}></div>
+                </div>
+                {!props.instantGanttSplitter && (
+                  <div
+                    className={clsx(
+                      styles.splitter__overflowContainer,
+                      isDragging && styles.splitter__overflowContainer_active,
+                    )}
+                  >
+                    <div className={styles.splitter__overflow} ref={splitterOverflowRef}></div>
+                  </div>
+                )}
                 <TableGantt
                   width={sizes[1]}
                   columnVirtualEnabled={columnVirtualEnabled}
@@ -270,8 +259,8 @@ export function Table<
                   onDoubleClickRow={props.onDoubleClickRow}
                 />
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
         <TableFooter
           filteredRowsCount={filteredRowsCount}
