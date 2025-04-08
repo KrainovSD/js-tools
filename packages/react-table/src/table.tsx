@@ -10,7 +10,7 @@ import { TableFooter } from "./table-footer";
 import { TableGantt } from "./table-gantt";
 import styles from "./table.module.scss";
 import type {
-  GanttInfo,
+  GanttProps,
   RowInterface,
   TableColumnsSettings,
   TableInterface,
@@ -81,11 +81,6 @@ export type TableProps<
     withPagination?: boolean;
     withFilters?: boolean;
     withTotal?: boolean;
-    withGantt?: boolean;
-    firstGanttDate?: string;
-    lastGanttDate?: string;
-    ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
-    instantGanttSplitter?: boolean;
     initialPageSize?: number;
     pageSizes?: number[];
     fullSize?: boolean;
@@ -103,7 +98,7 @@ export type TableProps<
       filterOptions: FilterFieldType[];
     }>;
     Pagination?: React.FC<{ table: TableInterface<RowData> }>;
-  };
+  } & GanttProps<RowData>;
 
 export function Table<
   Row extends Record<string, unknown>,
@@ -180,6 +175,7 @@ export function Table<
     virtualRows: props.virtualRows,
     virtualRowSize: props.virtualRowSize,
     gantt: props.withGantt,
+    ganttMini: props.ganttRowMini,
   });
 
   const { sizes, startDrag, splitterRef, isDragging, splitterGhostRef, splitterOverflowRef } =
@@ -220,6 +216,7 @@ export function Table<
               virtualPaddingRight={virtualPaddingRight}
               onClickRow={props.onClickRow}
               onDoubleClickRow={props.onDoubleClickRow}
+              ganttRowMini={props.ganttRowMini}
             />
           )}
           {props.withGantt && (
@@ -240,6 +237,7 @@ export function Table<
                   virtualPaddingRight={virtualPaddingRight}
                   onClickRow={props.onClickRow}
                   onDoubleClickRow={props.onDoubleClickRow}
+                  ganttRowMini={props.ganttRowMini}
                 />
                 {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
                 <div className={clsx(styles.splitter)} ref={splitterRef} onMouseDown={startDrag}>
@@ -273,6 +271,8 @@ export function Table<
                   firstGanttDate={props.firstGanttDate}
                   lastGanttDate={props.lastGanttDate}
                   ganttInfoGetter={props.ganttInfoGetter}
+                  ganttRowMini={props.ganttRowMini}
+                  GanttTooltip={props.GanttTooltip}
                 />
               </div>
             </>

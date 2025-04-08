@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { getDateByRules } from "@krainovsd/js-helpers";
-import type { TableColumn } from "../types";
+import type { GanttTypeShapes, TableColumn } from "../types";
 
 export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   {
@@ -60,7 +60,9 @@ export type RowGantt = {
   id: string;
   name: string;
   start: string;
+  type?: GanttTypeShapes;
   end: string;
+  dependencies?: string[];
   children?: RowGantt[];
 };
 
@@ -111,7 +113,86 @@ export function createRowsGantt(): RowGantt[] {
     });
   }
 
-  return rows;
+  return [
+    {
+      id: "1",
+      name: "Construction plans",
+      start: "2025-05-01",
+      end: "2025-12-07",
+      children: [
+        {
+          id: "1.1",
+          name: "Johnson's house",
+          start: "2025-05-01",
+          end: "2025-10-08",
+          children: [
+            {
+              id: "1.1.1",
+              name: "Contract",
+              start: "2025-05-01",
+              end: "2025-06-02",
+              children: [],
+            },
+            {
+              id: "1.1.2",
+              name: "Design",
+              start: "2025-05-30",
+              end: "2025-07-01",
+              children: [
+                {
+                  id: "1.1.2.1",
+                  name: "Outline Design",
+                  start: "2025-05-30",
+                  end: "2025-06-15",
+                  dependencies: ["1.1.2.2"],
+                },
+                {
+                  id: "1.1.2.2",
+                  name: "Outline Design",
+                  start: "2025-06-15",
+                  end: "2025-07-01",
+                },
+              ],
+            },
+            {
+              id: "1.1.3",
+              name: "Obtain permits",
+              start: "2025-06-30",
+              end: "2025-07-10",
+              children: [],
+            },
+          ],
+        },
+        {
+          id: "1.2",
+          name: "Joplin's house",
+          start: "2025-10-08",
+          end: "2025-12-07",
+          children: [
+            {
+              id: "1.2.1",
+              name: "Tender",
+              start: "2025-10-08",
+              end: "2025-10-30",
+            },
+            {
+              id: "1.2.2",
+              name: "Contract",
+              start: "2025-10-31",
+              end: "2025-12-07",
+            },
+            {
+              id: "1.2.3",
+              name: "Finish",
+              start: "2025-12-07",
+              end: "2025-12-07",
+              type: "milestone",
+            },
+          ],
+        },
+      ],
+    },
+  ];
 }
 
 // export const cellRenders = {

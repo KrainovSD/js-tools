@@ -4,12 +4,13 @@ import clsx from "clsx";
 import React from "react";
 import { getPrevFrozenWidthCell, getPrevFrozenWidthHeader } from "./lib";
 import styles from "./table-container.module.scss";
-import { GANTT_HEADER_HEIGHT, GANTT_ROW_HEIGHT } from "./table.constants";
+import { GANTT_HEADER_HEIGHT, GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "./table.constants";
 import type { RowInterface, TableInterface } from "./types";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   gantt: boolean | undefined;
   width?: number;
+  ganttRowMini?: boolean;
   columnVirtualEnabled: boolean;
   rowVirtualEnabled: boolean;
   table: TableInterface<RowData>;
@@ -192,8 +193,16 @@ export function TableContainer<RowData extends Record<string, unknown>>(
                 ref={(node) => props.rowVirtualizer.measureElement(node)}
                 style={{
                   transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scrolls
-                  minHeight: props.gantt ? GANTT_ROW_HEIGHT : undefined,
-                  maxHeight: props.gantt ? GANTT_ROW_HEIGHT : undefined,
+                  minHeight: props.gantt
+                    ? props.ganttRowMini
+                      ? GANTT_ROW_HEIGHT_MINI
+                      : GANTT_ROW_HEIGHT
+                    : undefined,
+                  maxHeight: props.gantt
+                    ? props.ganttRowMini
+                      ? GANTT_ROW_HEIGHT_MINI
+                      : GANTT_ROW_HEIGHT
+                    : undefined,
                 }}
                 onClick={(event) => {
                   props.onClickRow?.(row, event);
@@ -245,8 +254,16 @@ export function TableContainer<RowData extends Record<string, unknown>>(
                   props.onDoubleClickRow?.(row, event);
                 }}
                 style={{
-                  minHeight: props.gantt ? GANTT_ROW_HEIGHT : undefined,
-                  maxHeight: props.gantt ? GANTT_ROW_HEIGHT : undefined,
+                  minHeight: props.gantt
+                    ? props.ganttRowMini
+                      ? GANTT_ROW_HEIGHT_MINI
+                      : GANTT_ROW_HEIGHT
+                    : undefined,
+                  maxHeight: props.gantt
+                    ? props.ganttRowMini
+                      ? GANTT_ROW_HEIGHT_MINI
+                      : GANTT_ROW_HEIGHT
+                    : undefined,
                 }}
               >
                 {props.columnVirtualEnabled && (

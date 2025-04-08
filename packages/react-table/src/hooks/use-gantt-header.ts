@@ -9,8 +9,8 @@ type UseGanttHeaderProps<RowData extends Record<string, unknown>> = {
 };
 
 type HeaderItem = {
-  main: number;
-  inner: number[];
+  year: number;
+  months: number[];
 };
 
 export function useGanttHeader<RowData extends Record<string, unknown>>(
@@ -65,28 +65,28 @@ export function useGanttHeader<RowData extends Record<string, unknown>>(
       const startMonth = firstGanttDate.year === i ? firstGanttDate.month : 0;
       const endMonth = lastGanttDate.year === i ? lastGanttDate.month : 11;
       const diff = endMonth - startMonth;
-      const inner: number[] = [];
+      const months: number[] = [];
 
       for (let j = 0; j <= diff; j++) {
-        inner.push(startMonth + j);
+        months.push(startMonth + j);
       }
 
-      items.push({ main: i, inner });
+      items.push({ year: i, months });
     }
 
-    if (items[0].inner[0] > 0) {
-      items[0].inner.unshift(items[0].inner[0] - 1);
+    if (items[0].months[0] > 0) {
+      items[0].months.unshift(items[0].months[0] - 1);
     } else {
-      items.unshift({ main: items[0].main - 1, inner: [11] });
+      items.unshift({ year: items[0].year - 1, months: [11] });
     }
 
     const itemsLastIndex = items.length - 1;
-    if (items[itemsLastIndex].inner[items[itemsLastIndex].inner.length - 1] < 11) {
-      items[itemsLastIndex].inner.push(
-        items[itemsLastIndex].inner[items[itemsLastIndex].inner.length - 1] + 1,
+    if (items[itemsLastIndex].months[items[itemsLastIndex].months.length - 1] < 11) {
+      items[itemsLastIndex].months.push(
+        items[itemsLastIndex].months[items[itemsLastIndex].months.length - 1] + 1,
       );
     } else {
-      items.push({ main: items[itemsLastIndex].main + 1, inner: [0] });
+      items.push({ year: items[itemsLastIndex].year + 1, months: [0] });
     }
 
     return items;

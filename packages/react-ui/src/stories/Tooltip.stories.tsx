@@ -131,6 +131,28 @@ const Template: StoryFn<typeof Tooltip> = () => {
           <Text>Очень длинный текст который поместился</Text>
         </Tooltip>
       </Flex>
+      <Tooltip
+        text={
+          <div
+            className={css`
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+            `}
+          >
+            <span>Задача:</span>
+            <span>Очень длинное имя которое не поместится в две строчки даже</span>
+            <span>Начало:</span>
+            <span>02.02.2024</span>
+            <span>Оконание:</span>
+            <span>03.04.2025</span>
+            <span>Продолжительность:</span>
+            <span>{24}</span>
+          </div>
+        }
+      >
+        Тултип
+      </Tooltip>
     </Flex>
   );
 };

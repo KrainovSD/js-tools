@@ -1,6 +1,7 @@
 import type { Table } from "@tanstack/react-table";
 import { useVirtualizer as useVirtualizerLibrary } from "@tanstack/react-virtual";
 import React from "react";
+import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../table.constants";
 import type { TableColumn } from "../types";
 
 type UseVirtualizerProps<
@@ -32,6 +33,7 @@ type UseVirtualizerProps<
   virtualRows?: boolean;
   virtualRowSize?: number;
   gantt?: boolean;
+  ganttMini?: boolean;
 };
 
 export function useVirtualizer<
@@ -86,7 +88,12 @@ export function useVirtualizer<
   const rowVirtualEnabled = Boolean(props.virtualRows);
   const rowVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLTableRowElement>({
     count: rows.length,
-    estimateSize: () => (props.gantt ? 69 : (props.virtualRowSize ?? 35)),
+    estimateSize: () =>
+      props.gantt
+        ? props.ganttMini
+          ? GANTT_ROW_HEIGHT_MINI
+          : GANTT_ROW_HEIGHT
+        : (props.virtualRowSize ?? 35),
     getScrollElement: () => props.tableContainerRef.current,
     //measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:

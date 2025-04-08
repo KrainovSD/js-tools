@@ -127,12 +127,15 @@ export function App() {
                   end: row.original.end,
                   id: row.original.id,
                   start: row.original.start,
+                  name: row.original.name,
+                  type: row.original.type ?? (row.original.children ? "group" : "task"),
                   dependencies: [],
                 })
               : undefined
           }
           firstGanttDate={firstDate?.toISOString?.()}
           lastGanttDate={lastDate?.toDateString?.()}
+          ganttRowMini={false}
         />
       </div>
     </ConfigProvider>

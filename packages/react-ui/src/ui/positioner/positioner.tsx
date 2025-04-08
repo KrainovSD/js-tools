@@ -12,7 +12,7 @@ import {
   type IconProps,
 } from "@krainovsd/react-icons";
 import clsx from "clsx";
-import React, { type ReactNode } from "react";
+import React, { type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import type { PopperSize, PopperTargetNodePosition } from "../popper";
 import styles from "./positioner.module.scss";
@@ -27,6 +27,7 @@ type Props = {
   // custom initial modal position
   targetNodePosition?: PopperTargetNodePosition;
   className?: string;
+  style?: CSSProperties;
   arrow?: boolean;
   // placement of modal from initial position
   placement?: Exclude<PositionPlacements, "flex">;
@@ -312,7 +313,7 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
         positionerRef.current = node;
         if (wrapperInstance != undefined) wrapperInstance.current = node;
       }}
-      style={style}
+      style={{ ...props.style, ...style }}
     >
       {props.arrow && Arrow && (
         <Arrow

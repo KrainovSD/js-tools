@@ -1,6 +1,6 @@
 import type { PositionPlacements } from "@krainovsd/js-helpers";
 import clsx from "clsx";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type React from "react";
 import { Flex } from "../flex";
 import { Popper } from "../popper";
@@ -11,14 +11,19 @@ export type TooltipProps = {
   classNameBaseContainer?: string;
   classNameContentContainer?: string;
   classNameContent?: string;
-  text: string;
-  render?: (text: string) => ReactNode;
+  styleBase?: CSSProperties;
+  styleBaseContainer?: CSSProperties;
+  styleContent?: CSSProperties;
+  styleContentContainer?: CSSProperties;
+  text: string | ReactNode;
+  render?: () => ReactNode;
   closeDelay?: number;
   openDelay?: number;
   modalRoot?: string | HTMLElement | undefined;
   modalRootInner?: boolean;
   placement?: Exclude<PositionPlacements, "flex">;
   autoTooltip?: boolean;
+  zIndex?: number;
 };
 
 export function Tooltip(props: React.PropsWithChildren<TooltipProps>): React.JSX.Element {
@@ -28,10 +33,15 @@ export function Tooltip(props: React.PropsWithChildren<TooltipProps>): React.JSX
       classBase={clsx(styles.popper__base, props.classNameBase)}
       classBaseContainer={clsx(styles.popper__container, props.classNameBaseContainer)}
       content={
-        props.render?.(props.text) ?? (
-          <Flex className={clsx(styles.content, props.classNameContent)}>{props.text}</Flex>
+        props.render?.() ?? (
+          <Flex className={clsx(styles.content, props.classNameContent)} style={props.styleContent}>
+            {props.text}
+          </Flex>
         )
       }
+      styleBase={props.styleBase}
+      styleBaseContainer={props.styleBaseContainer}
+      styleContent={props.styleContentContainer}
       closeDelay={props.closeDelay}
       openDelay={props.openDelay}
       modalRoot={props.modalRoot}
@@ -40,6 +50,7 @@ export function Tooltip(props: React.PropsWithChildren<TooltipProps>): React.JSX
       arrow
       autoTooltip={props.autoTooltip}
       placement={props.placement}
+      zIndex={props.zIndex}
     >
       {props.children}
     </Popper>

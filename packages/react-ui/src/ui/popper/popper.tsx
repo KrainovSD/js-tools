@@ -1,6 +1,6 @@
 import type { PositionPlacements } from "@krainovsd/js-helpers";
 import clsx from "clsx";
-import React from "react";
+import React, { type CSSProperties } from "react";
 import { Positioner } from "../positioner";
 import styles from "./popper.module.scss";
 import type { PopperSize, PopperTargetNodePosition } from "./popper.types";
@@ -14,6 +14,9 @@ type Props = {
   classBase?: string;
   classBaseContainer?: string;
   classContent?: string;
+  styleBase?: CSSProperties;
+  styleBaseContainer?: CSSProperties;
+  styleContent?: CSSProperties;
   wide?: boolean;
   full?: boolean;
 
@@ -179,6 +182,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
       <div
         ref={baseRef}
         className={clsx(styles.base, wide && styles.wide, full && styles.full, classBase)}
+        style={props.styleBase}
       >
         <div
           className={clsx(
@@ -187,6 +191,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
             full && styles.full,
             classBaseContainer,
           )}
+          style={props.styleBaseContainer}
           onClick={onBaseClick}
           data-test-id={testid}
           onKeyDown={(event) => {
@@ -221,6 +226,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
           wrapperInstance={wrapperInstance}
           zIndex={zIndex}
           arrow={props.arrow}
+          style={props.styleContent}
         >
           {content}
         </Positioner>
