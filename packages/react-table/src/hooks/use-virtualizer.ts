@@ -86,7 +86,7 @@ export function useVirtualizer<
 
   const { rows } = props.table.getRowModel();
   const rowVirtualEnabled = Boolean(props.virtualRows);
-  const rowVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLTableRowElement>({
+  const rowVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLElement>({
     count: rows.length,
     estimateSize: () =>
       props.gantt

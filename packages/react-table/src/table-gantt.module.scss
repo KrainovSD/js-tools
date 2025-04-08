@@ -8,15 +8,22 @@
   flex-direction: column;
 }
 
-.header {
+.headerContainer {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 
   &__frozen {
     position: sticky;
     top: 0;
     z-index: 5;
   }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
 }
 
 .headerRow {
@@ -58,8 +65,14 @@
   touch-action: none;
 }
 
+.bodyContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
 .body {
-  display: grid;
   position: relative;
   background-color: var(--table-body-bg);
 

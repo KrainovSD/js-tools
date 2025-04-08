@@ -75,6 +75,12 @@
   display: flex;
 }
 
+.tableContainer {
+  height: fit-content;
+  display: flex;
+  overflow: hidden;
+}
+
 .splitter {
   display: flex;
   margin-right: -1px;

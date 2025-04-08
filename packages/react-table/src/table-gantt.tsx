@@ -9,7 +9,9 @@ import { useGanttHeader } from "./hooks";
 import { getMonthDifference } from "./lib";
 import styles from "./table-gantt.module.scss";
 import {
+  GANTT_BODY_ID,
   GANTT_HEADER_HEIGHT,
+  GANTT_HEADER_ID,
   GANTT_HEADER_WIDTH,
   GANTT_ROW_HEIGHT,
   GANTT_ROW_HEIGHT_MINI,
@@ -19,6 +21,7 @@ import type { GanttInfo, GanttRowInfo, RowInterface, TableInterface } from "./ty
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   width?: number;
+  tableRef?: React.LegacyRef<HTMLTableElement>;
   firstGanttDate?: string;
   lastGanttDate?: string;
   ganttRowMini?: boolean;
@@ -32,12 +35,9 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   virtualPaddingRight: number | undefined;
   columnsVirtual: VirtualItem[];
   rowsVirtual: VirtualItem[];
-  rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>;
-  onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
-  onDoubleClickRow?: (
-    row: RowInterface<RowData>,
-    event: React.MouseEvent<HTMLTableRowElement>,
-  ) => void;
+  rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
+  onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
+  onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
 };
 
@@ -132,7 +132,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
     if (!rowInfo) return null;
 
     return (
-      <td key={opts.row.id} className={clsx(styles.cell)}>
+      <div key={opts.row.id} className={clsx(styles.cell)} data-id="cell">
         <Tooltip
           styleBase={{
             left: rowInfo.left,
@@ -199,7 +199,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
             />,
             arrowContainerRef.current,
           )}
-      </td>
+      </div>
     );
   }, []);
 
@@ -210,141 +210,168 @@ export function TableGantt<RowData extends Record<string, unknown>>(
   }
 
   return (
-    <table
+    <div
+      data-id="table"
+      ref={props.tableRef}
       className={styles.table}
       style={{
-        width: props.width ?? (props.columnVirtualEnabled ? props.table.getTotalSize() : "100%"),
+        width: props.width,
       }}
     >
-      <thead
+      <div
+        data-id="header-container"
+        id={GANTT_HEADER_ID}
         className={clsx(
-          styles.header,
-          (props.frozenHeader || props.frozenHeader == undefined) && styles.header__frozen,
+          styles.headerContainer,
+          (props.frozenHeader || props.frozenHeader == undefined) && styles.headerContainer__frozen,
         )}
-        style={{ minHeight: 60 }}
       >
-        <tr
-          className={styles.headerRow}
-          style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
-        >
-          {headerItems.map((item) => {
-            return (
-              <th
-                className={styles.headerCell}
-                key={item.year}
-                style={{
-                  minWidth: GANTT_HEADER_WIDTH * item.months.length,
-                  maxWidth: GANTT_HEADER_WIDTH * item.months.length,
-                }}
-              >
-                {item.year}
-              </th>
-            );
-          })}
-        </tr>
-        <tr
-          className={styles.headerRow}
-          style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
-        >
-          {headerItems.map((item) => {
-            return item.months.map((month) => {
+        <div className={clsx(styles.header)} style={{ minHeight: 60 }} data-id="header">
+          {/** HEADER ROW */}
+          <div
+            className={styles.headerRow}
+            style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+            data-id="header-row"
+          >
+            {headerItems.map((item) => {
               return (
-                <th
+                <div
+                  data-id="header-cell"
                   className={styles.headerCell}
-                  key={`${item.year}${month}`}
-                  style={{ minWidth: GANTT_HEADER_WIDTH }}
+                  key={item.year}
+                  style={{
+                    minWidth: GANTT_HEADER_WIDTH * item.months.length,
+                    maxWidth: GANTT_HEADER_WIDTH * item.months.length,
+                  }}
                 >
-                  {month}
-                </th>
+                  {item.year}
+                </div>
               );
-            });
-          })}
-        </tr>
-      </thead>
-      <tbody
-        ref={arrowContainerRef}
-        className={styles.body}
-        style={{
-          height: props.rowVirtualEnabled ? `${props.rowVirtualizer.getTotalSize()}px` : undefined,
-        }}
-      >
-        {props.rowVirtualEnabled &&
-          props.rowsVirtual.map((virtualRow) => {
-            return (
-              <div
-                key={virtualRow.index}
-                className={styles.fake__row}
-                style={{
-                  transform: `translateY(${virtualRow.start}px)`,
-                  minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                  maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                }}
-              ></div>
-            );
-          })}
+            })}
+          </div>
+          {/** HEADER ROW */}
+          <div
+            data-id="header-row"
+            className={styles.headerRow}
+            style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+          >
+            {headerItems.map((item) => {
+              return item.months.map((month) => {
+                return (
+                  <div
+                    data-id="header-cell"
+                    className={styles.headerCell}
+                    key={`${item.year}${month}`}
+                    style={{ minWidth: GANTT_HEADER_WIDTH }}
+                  >
+                    {month}
+                  </div>
+                );
+              });
+            })}
+          </div>
+        </div>
+      </div>
+      <div id={GANTT_BODY_ID} className={styles.bodyContainer} data-id="body-container">
+        <div
+          data-id="body"
+          ref={arrowContainerRef}
+          className={styles.body}
+          style={{
+            height: props.rowVirtualEnabled
+              ? `${props.rowVirtualizer.getTotalSize()}px`
+              : undefined,
+            width:
+              headerItems.reduce((acc, item) => {
+                acc += item.months.length;
 
-        {props.rowVirtualEnabled &&
-          props.rowsVirtual.map((virtualRow) => {
-            const row = props.rows[virtualRow.index];
+                return acc;
+              }, 0) * GANTT_HEADER_WIDTH,
+          }}
+        >
+          {/** FAKE VIRTUAL ROWS */}
+          {props.rowVirtualEnabled &&
+            props.rowsVirtual.map((virtualRow) => {
+              return (
+                <div
+                  data-id="row"
+                  key={virtualRow.index}
+                  className={styles.fake__row}
+                  style={{
+                    transform: `translateY(${virtualRow.start}px)`,
+                    minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+                    maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+                  }}
+                ></div>
+              );
+            })}
+          {/** VIRTUAL ROWS */}
+          {props.rowVirtualEnabled &&
+            props.rowsVirtual.map((virtualRow) => {
+              const row = props.rows[virtualRow.index];
 
-            /** ROW */
-            return (
-              <tr
-                key={row.id}
-                className={clsx(styles.row, styles.row__virtual)}
-                data-index={virtualRow.index}
-                style={{
-                  transform: `translateY(${virtualRow.start}px)`,
-                  minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                  maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                }}
-                onClick={(event) => {
-                  props.onClickRow?.(row, event);
-                }}
-                onDoubleClick={(event) => {
-                  props.onDoubleClickRow?.(row, event);
-                }}
-              >
-                {getCell({
-                  row,
-                  ganttInfoGetter: props.ganttInfoGetter,
-                  GanttTooltip: props.GanttTooltip,
-                  rowsMap,
-                  mini: props.ganttRowMini ?? false,
-                })}
-              </tr>
-            );
-          })}
-        {!props.rowVirtualEnabled &&
-          props.rows.map((row) => {
-            /** ROW */
-            return (
-              <tr
-                key={row.id}
-                className={styles.row}
-                data-index={row.index}
-                onClick={(event) => {
-                  props.onClickRow?.(row, event);
-                }}
-                onDoubleClick={(event) => {
-                  props.onDoubleClickRow?.(row, event);
-                }}
-                style={{
-                  minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                  maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                }}
-              >
-                {getCell({
-                  row,
-                  ganttInfoGetter: props.ganttInfoGetter,
-                  GanttTooltip: props.GanttTooltip,
-                  rowsMap,
-                  mini: props.ganttRowMini ?? false,
-                })}
-              </tr>
-            );
-          })}
-      </tbody>
-    </table>
+              return (
+                // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+                <div
+                  data-id="row"
+                  key={row.id}
+                  className={clsx(styles.row, styles.row__virtual)}
+                  data-index={virtualRow.index}
+                  style={{
+                    transform: `translateY(${virtualRow.start}px)`,
+                    minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+                    maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+                  }}
+                  onClick={(event) => {
+                    props.onClickRow?.(row, event);
+                  }}
+                  onDoubleClick={(event) => {
+                    props.onDoubleClickRow?.(row, event);
+                  }}
+                >
+                  {getCell({
+                    row,
+                    ganttInfoGetter: props.ganttInfoGetter,
+                    GanttTooltip: props.GanttTooltip,
+                    rowsMap,
+                    mini: props.ganttRowMini ?? false,
+                  })}
+                </div>
+              );
+            })}
+          {/** ROWS */}
+          {!props.rowVirtualEnabled &&
+            props.rows.map((row) => {
+              return (
+                // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+                <div
+                  data-id="row"
+                  key={row.id}
+                  className={styles.row}
+                  data-index={row.index}
+                  onClick={(event) => {
+                    props.onClickRow?.(row, event);
+                  }}
+                  onDoubleClick={(event) => {
+                    props.onDoubleClickRow?.(row, event);
+                  }}
+                  style={{
+                    minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+                    maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+                  }}
+                >
+                  {getCell({
+                    row,
+                    ganttInfoGetter: props.ganttInfoGetter,
+                    GanttTooltip: props.GanttTooltip,
+                    rowsMap,
+                    mini: props.ganttRowMini ?? false,
+                  })}
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </div>
   );
 }

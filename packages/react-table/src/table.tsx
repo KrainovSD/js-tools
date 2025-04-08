@@ -2,9 +2,11 @@ import { type FilterFieldType, type FilterInputValueType } from "@krainovsd/reac
 import type { TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
-import { useColumns, useTableOptions, useVirtualizer } from "./hooks";
+import { Scroll } from "./components";
+import { useColumns, useScroll, useTableOptions, useVirtualizer } from "./hooks";
 import { useSplitter } from "./hooks/use-splitter";
-import { TableContainer } from "./table-container";
+import { TableCommon } from "./table-common";
+import { TableCommonGantt } from "./table-common-gantt";
 import { TableFilter } from "./table-filter";
 import { TableFooter } from "./table-footer";
 import { TableGantt } from "./table-gantt";
@@ -87,11 +89,8 @@ export type TableProps<
     virtualColumn?: boolean;
     virtualRows?: boolean;
     virtualRowSize?: number;
-    onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLTableRowElement>) => void;
-    onDoubleClickRow?: (
-      row: RowInterface<RowData>,
-      event: React.MouseEvent<HTMLTableRowElement>,
-    ) => void;
+    onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
+    onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
     Filter?: React.FC<{
       table: TableInterface<RowData>;
       filters: Record<string, FilterInputValueType>;
@@ -181,6 +180,8 @@ export function Table<
   const { sizes, startDrag, splitterRef, isDragging, splitterGhostRef, splitterOverflowRef } =
     useSplitter(props.instantGanttSplitter);
 
+  const { tableGanttRef, tableGanttScrollRef, tableRef, tableScrollRef } = useScroll();
+
   try {
     return (
       <div className={clsx(styles.base, props.className)}>
@@ -202,8 +203,7 @@ export function Table<
           data-id={"container"}
         >
           {!props.withGantt && (
-            <TableContainer
-              gantt={props.withGantt}
+            <TableCommon
               columnVirtualEnabled={columnVirtualEnabled}
               rowVirtualEnabled={rowVirtualEnabled}
               columnsVirtual={columnsVirtual}
@@ -216,13 +216,13 @@ export function Table<
               virtualPaddingRight={virtualPaddingRight}
               onClickRow={props.onClickRow}
               onDoubleClickRow={props.onDoubleClickRow}
-              ganttRowMini={props.ganttRowMini}
             />
           )}
           {props.withGantt && (
             <>
               <div className={styles.ganttContainer}>
-                <TableContainer
+                <TableCommonGantt
+                  tableRef={tableRef}
                   gantt={props.withGantt}
                   width={sizes[0]}
                   columnVirtualEnabled={columnVirtualEnabled}
@@ -256,6 +256,7 @@ export function Table<
                 )}
                 <TableGantt
                   width={sizes[1]}
+                  tableRef={tableGanttRef}
                   columnVirtualEnabled={columnVirtualEnabled}
                   rowVirtualEnabled={rowVirtualEnabled}
                   columnsVirtual={columnsVirtual}
@@ -278,6 +279,13 @@ export function Table<
             </>
           )}
         </div>
+        {props.withGantt && (
+          <Scroll
+            tableGanttScrollRef={tableGanttScrollRef}
+            tableScrollRef={tableScrollRef}
+            sizes={sizes}
+          />
+        )}
         <TableFooter
           filteredRowsCount={filteredRowsCount}
           pageSizes={props.pageSizes}

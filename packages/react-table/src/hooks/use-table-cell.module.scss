@@ -1,34 +1,3 @@
-.table {
-  display: grid;
-  border-spacing: 0px;
-  table-layout: fixed;
-  border-collapse: collapse;
-  height: fit-content;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
-  display: grid;
-
-  display: flex;
-  flex-direction: column;
-
-  &__frozen {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-}
-
-.headerRow {
-  background-color: var(--table-header-bg);
-  overflow: initial;
-  display: flex;
-  width: 100%;
-}
-
 .headerCell {
   position: relative;
   display: flex;
@@ -64,33 +33,6 @@
   cursor: col-resize;
   user-select: none;
   touch-action: none;
-}
-
-.body {
-  display: grid;
-  position: relative;
-  background-color: var(--table-body-bg);
-
-  display: flex;
-  flex-direction: column;
-}
-
-.row {
-  display: flex;
-  width: 100%;
-  transition: var(--table-transition);
-
-  &:hover {
-    background-color: var(--table-row-hover-bg);
-
-    & > td {
-      background-color: var(--table-row-hover-bg);
-    }
-  }
-
-  &__virtual {
-    position: absolute;
-  }
 }
 
 .cell {
