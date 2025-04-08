@@ -182,6 +182,9 @@ export function useTableOptions<
       }
     }
 
+    /** FIXME: DELETE AFTER COMPLETE */
+    if (tableOptions.state) tableOptions.state.expanded = true;
+
     return tableOptions;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

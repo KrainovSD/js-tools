@@ -273,3 +273,11 @@ export type GanttDate = {
   month: number;
   day: number;
 };
+
+export type GanttRowInfo = {
+  index: number;
+  left: number;
+  width: number;
+  height: number;
+  textWidth: number;
+};

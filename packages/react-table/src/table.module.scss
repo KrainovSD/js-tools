@@ -84,7 +84,7 @@
   background-color: var(--table-border);
   position: relative;
   top: 0;
-  z-index: 3;
+  z-index: 7;
 
   &__trigger {
     position: absolute;
@@ -108,7 +108,7 @@
     top: 0px;
     left: 0px;
     width: 0px;
-    z-index: 2;
+    z-index: 6;
     display: none;
 
     &_active {

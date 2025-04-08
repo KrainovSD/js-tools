@@ -8,7 +8,7 @@ type UseGanttHeaderProps<RowData extends Record<string, unknown>> = {
   rows: RowInterface<RowData>[];
 };
 
-type HeaderItem = {
+export type HeaderItem = {
   year: number;
   months: number[];
 };
@@ -91,8 +91,6 @@ export function useGanttHeader<RowData extends Record<string, unknown>>(
 
     return items;
   }, [firstGanttDate, lastGanttDate]);
-
-  console.log(firstGanttDate, lastGanttDate, headerItems);
 
   return headerItems;
 }

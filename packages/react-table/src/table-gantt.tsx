@@ -3,6 +3,8 @@ import { Tooltip } from "@krainovsd/react-ui";
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
+import { createPortal } from "react-dom";
+import { GanttArrow } from "./components";
 import { useGanttHeader } from "./hooks";
 import { getMonthDifference } from "./lib";
 import styles from "./table-gantt.module.scss";
@@ -11,8 +13,9 @@ import {
   GANTT_HEADER_WIDTH,
   GANTT_ROW_HEIGHT,
   GANTT_ROW_HEIGHT_MINI,
+  GANTT_ROW_PADDING,
 } from "./table.constants";
-import type { GanttInfo, RowInterface, TableInterface } from "./types";
+import type { GanttInfo, GanttRowInfo, RowInterface, TableInterface } from "./types";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   width?: number;
@@ -38,9 +41,23 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
 };
 
+type GetCellOptions<RowData extends Record<string, unknown>> = {
+  ganttInfoGetter: ((row: RowInterface<RowData>) => GanttInfo) | undefined;
+  GanttTooltip:
+    | React.FC<{
+        row: RowInterface<RowData>;
+      }>
+    | undefined;
+  rowsMap: Record<string | number, GanttRowInfo>;
+  row: RowInterface<RowData>;
+  mini: boolean;
+};
+
 export function TableGantt<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
 ) {
+  const arrowContainerRef = React.useRef<HTMLTableSectionElement | null>(null);
+
   const headerItems = useGanttHeader({
     rows: props.rows,
     firstGanttDate: props.firstGanttDate,
@@ -48,14 +65,16 @@ export function TableGantt<RowData extends Record<string, unknown>>(
     lastGanttDate: props.lastGanttDate,
   });
 
-  const getCell = React.useCallback(
-    (row: RowInterface<RowData>, table: TableInterface<RowData>) => {
+  const rowsMap = React.useMemo(() => {
+    const rowsMap: Record<string | number, GanttRowInfo> = {};
+
+    for (let i = 0; i < props.rows.length; i++) {
+      const row = props.rows[i];
       const ganttInfo = props.ganttInfoGetter?.(row);
-      if (!ganttInfo || !headerItems) return null;
+      if (!ganttInfo || !headerItems) continue;
 
       const startDate = new Date(ganttInfo.start);
       const endDate = new Date(ganttInfo.end);
-      const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
 
       const monthWidth = getMonthDifference(startDate, endDate) * GANTT_HEADER_WIDTH;
       const startWidth = (GANTT_HEADER_WIDTH / 30) * startDate.getDate();
@@ -88,56 +107,101 @@ export function TableGantt<RowData extends Record<string, unknown>>(
         }
       }
 
-      return (
-        <td key={row.id} className={clsx(styles.cell)}>
-          <Tooltip
-            styleBase={{
-              left: startCell * GANTT_HEADER_WIDTH + startWidth - 8,
-              width: "fit-content",
-              position: "relative",
+      rowsMap[ganttInfo.id] = {
+        index: i,
+        left: startCell * GANTT_HEADER_WIDTH + startWidth - GANTT_ROW_PADDING,
+        height,
+        width,
+        textWidth,
+      };
+    }
+
+    return rowsMap;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.rows, headerItems, props.ganttInfoGetter, props.ganttRowMini]);
+
+  const getCell = React.useCallback((opts: GetCellOptions<RowData>) => {
+    const ganttInfo = opts.ganttInfoGetter?.(opts.row);
+    if (!ganttInfo) return null;
+
+    const startDate = new Date(ganttInfo.start);
+    const endDate = new Date(ganttInfo.end);
+    const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+    const rowInfo = opts.rowsMap[ganttInfo.id];
+
+    if (!rowInfo) return null;
+
+    return (
+      <td key={opts.row.id} className={clsx(styles.cell)}>
+        <Tooltip
+          styleBase={{
+            left: rowInfo.left,
+            width: "fit-content",
+            position: "relative",
+          }}
+          classNameBaseContainer={styles.item__container}
+          zIndex={10}
+          text={
+            opts.GanttTooltip ? (
+              <opts.GanttTooltip row={opts.row} />
+            ) : (
+              <div className={styles.tooltip}>
+                <span className={styles.tooltip__header}>Задача:</span>
+                <span>{ganttInfo.name}</span>
+                <span className={styles.tooltip__header}>Начало:</span>
+                <span>{dateFormat(startDate, "DD-MM-YYYY")}</span>
+                <span className={styles.tooltip__header}>Оконание:</span>
+                <span>{dateFormat(endDate, "DD-MM-YYYY")}</span>
+                <span className={styles.tooltip__header}>Продолжительность:</span>
+                <span>{duration}</span>
+              </div>
+            )
+          }
+        >
+          <div
+            className={clsx(
+              styles.item,
+              ganttInfo.type === "group" && styles.item__group,
+              ganttInfo.type === "task" && styles.item__task,
+              ganttInfo.type === "milestone" && styles.item__milestone,
+            )}
+            style={{
+              height: rowInfo.height,
+              width: rowInfo.width,
+              minWidth: rowInfo.width,
+              maxWidth: rowInfo.width,
             }}
-            classNameBaseContainer={styles.item__container}
-            zIndex={10}
-            text={
-              props.GanttTooltip ? (
-                <props.GanttTooltip row={row} />
-              ) : (
-                <div className={styles.tooltip}>
-                  <span className={styles.tooltip__header}>Задача:</span>
-                  <span>{ganttInfo.name}</span>
-                  <span className={styles.tooltip__header}>Начало:</span>
-                  <span>{dateFormat(startDate, "DD-MM-YYYY")}</span>
-                  <span className={styles.tooltip__header}>Оконание:</span>
-                  <span>{dateFormat(endDate, "DD-MM-YYYY")}</span>
-                  <span className={styles.tooltip__header}>Продолжительность:</span>
-                  <span>{duration}</span>
-                </div>
-              )
-            }
           >
-            <div
+            {rowInfo.textWidth <= rowInfo.width && (
+              <span className={styles.item__text}>{ganttInfo.name}</span>
+            )}
+          </div>
+          {rowInfo.textWidth > rowInfo.width && (
+            <span
               className={clsx(
-                styles.item,
-                ganttInfo.type === "group" && styles.item__group,
-                ganttInfo.type === "task" && styles.item__task,
-                ganttInfo.type === "milestone" && styles.item__milestone,
+                styles.item__text,
+                !!ganttInfo.dependencies?.length && styles.item__text_shift,
               )}
-              style={{
-                height,
-                width,
-                minWidth: width,
-                maxWidth: width,
-              }}
             >
-              {textWidth <= width && <span className={styles.item__text}>{ganttInfo.name}</span>}
-            </div>
-            {textWidth > width && <span className={styles.item__text}>{ganttInfo.name}</span>}
-          </Tooltip>
-        </td>
-      );
-    },
-    [headerItems, props.ganttInfoGetter],
-  );
+              {ganttInfo.name}
+            </span>
+          )}
+        </Tooltip>
+        {!!ganttInfo.dependencies?.length &&
+          arrowContainerRef.current &&
+          createPortal(
+            <GanttArrow
+              dependencies={ganttInfo.dependencies}
+              rowsMap={opts.rowsMap}
+              currentRowId={ganttInfo.id}
+              mini={opts.mini}
+              key={ganttInfo.id}
+            />,
+            arrowContainerRef.current,
+          )}
+      </td>
+    );
+  }, []);
 
   if (!headerItems || !props.ganttInfoGetter) {
     console.warn("Required ganttInfoGetter");
@@ -198,11 +262,27 @@ export function TableGantt<RowData extends Record<string, unknown>>(
         </tr>
       </thead>
       <tbody
+        ref={arrowContainerRef}
         className={styles.body}
         style={{
           height: props.rowVirtualEnabled ? `${props.rowVirtualizer.getTotalSize()}px` : undefined,
         }}
       >
+        {props.rowVirtualEnabled &&
+          props.rowsVirtual.map((virtualRow) => {
+            return (
+              <div
+                key={virtualRow.index}
+                className={styles.fake__row}
+                style={{
+                  transform: `translateY(${virtualRow.start}px)`,
+                  minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+                  maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+                }}
+              ></div>
+            );
+          })}
+
         {props.rowVirtualEnabled &&
           props.rowsVirtual.map((virtualRow) => {
             const row = props.rows[virtualRow.index];
@@ -214,7 +294,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                 className={clsx(styles.row, styles.row__virtual)}
                 data-index={virtualRow.index}
                 style={{
-                  transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scrolls
+                  transform: `translateY(${virtualRow.start}px)`,
                   minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
                   maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
                 }}
@@ -225,7 +305,13 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                   props.onDoubleClickRow?.(row, event);
                 }}
               >
-                {getCell(row, props.table)}
+                {getCell({
+                  row,
+                  ganttInfoGetter: props.ganttInfoGetter,
+                  GanttTooltip: props.GanttTooltip,
+                  rowsMap,
+                  mini: props.ganttRowMini ?? false,
+                })}
               </tr>
             );
           })}
@@ -248,7 +334,13 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                   maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
                 }}
               >
-                {getCell(row, props.table)}
+                {getCell({
+                  row,
+                  ganttInfoGetter: props.ganttInfoGetter,
+                  GanttTooltip: props.GanttTooltip,
+                  rowsMap,
+                  mini: props.ganttRowMini ?? false,
+                })}
               </tr>
             );
           })}

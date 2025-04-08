@@ -62,8 +62,8 @@ export function TableContainer<RowData extends Record<string, unknown>>(
           )}
           style={{
             width: header.getSize(),
-            maxWidth: header.getSize(),
-            minWidth: header.getSize(),
+            maxWidth: header.column.columnDef.maxSize,
+            minWidth: header.column.columnDef.minSize,
             left: frozenPosition === "left" ? prevFrozen : 0,
             right: frozenPosition === "right" ? prevFrozen : 0,
           }}
@@ -115,7 +115,8 @@ export function TableContainer<RowData extends Record<string, unknown>>(
           )}
           style={{
             width: cell.column.getSize(),
-            maxWidth: cell.column.getSize(),
+            maxWidth: cell.column.columnDef.maxSize,
+            minWidth: cell.column.columnDef.minSize,
             left: frozenPosition === "left" ? prevFrozen : 0,
             right: frozenPosition === "right" ? prevFrozen : 0,
           }}
