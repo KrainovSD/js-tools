@@ -106,7 +106,6 @@ export function App() {
           // manualSorting
           withPagination
           withTotal
-          withGantt={withGantt}
           initialPageSize={150}
           onClickRow={(row) => {
             console.log(row, "click");
@@ -116,11 +115,12 @@ export function App() {
           }}
           pageSizes={[25, 50, 100, 150, 250]}
           withFilters={true}
-          instantGanttSplitter={false}
           virtualRows={true}
           virtualRowSize={60}
           virtualColumn={false}
           fullSize={false}
+          withGantt={withGantt}
+          instantGanttSplitter={false}
           ganttInfoGetter={
             withGantt
               ? (row) => ({
@@ -136,6 +136,7 @@ export function App() {
           firstGanttDate={firstDate?.toISOString?.()}
           lastGanttDate={lastDate?.toDateString?.()}
           ganttRowMini={true}
+          ganttGrid={true}
         />
       </div>
     </ConfigProvider>

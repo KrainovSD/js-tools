@@ -33,7 +33,6 @@ export type TableColumn<
   width?: number;
   minWidth?: number;
   maxWidth?: number;
-
   leftFrozen?: boolean;
   rightFrozen?: boolean;
   resizable?: boolean;
@@ -253,6 +252,7 @@ export type GanttProps<RowData extends Record<string, unknown>> = {
   ganttRowMini?: boolean;
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
   instantGanttSplitter?: boolean;
+  ganttGrid?: boolean;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
 };
 

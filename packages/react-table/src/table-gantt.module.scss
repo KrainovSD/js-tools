@@ -144,4 +144,12 @@
     position: absolute;
     z-index: 1;
   }
+  &__column {
+    width: 0;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    background-color: var(--table-border);
+    border-left: 1px solid var(--table-border);
+  }
 }

@@ -84,7 +84,7 @@ export function createRowsGantt(): RowGantt[] {
     children: [],
   });
 
-  for (let i = 0; i < 1000; i++) {
+  for (let i = 0; i < 10000; i++) {
     const start = faker.date.past({ years: 2 });
     const end = getDateByRules(
       [{ increment: faker.number.int({ min: 1, max: 4 }), type: "months" }],
@@ -115,6 +115,8 @@ export function createRowsGantt(): RowGantt[] {
           : undefined,
     });
   }
+
+  // return rows;
 
   return [
     {

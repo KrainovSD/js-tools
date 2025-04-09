@@ -6,7 +6,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { GanttArrow } from "./components";
 import { useGanttHeader } from "./hooks";
-import { getMonthDifference } from "./lib";
+import { getMonthDifference, getShortMonthName } from "./lib";
 import styles from "./table-gantt.module.scss";
 import {
   GANTT_BODY_ID,
@@ -25,7 +25,9 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   firstGanttDate?: string;
   lastGanttDate?: string;
   ganttRowMini?: boolean;
+  ganttGrid?: boolean;
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
+  locale?: string;
   rows: RowInterface<RowData>[];
   columnVirtualEnabled: boolean;
   rowVirtualEnabled: boolean;
@@ -53,6 +55,8 @@ type GetCellOptions<RowData extends Record<string, unknown>> = {
   mini: boolean;
 };
 
+const MIN_ITEM_WIDTH = 10;
+
 export function TableGantt<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
 ) {
@@ -64,6 +68,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
     ganttInfoGetter: props.ganttInfoGetter,
     lastGanttDate: props.lastGanttDate,
   });
+  let columnCount = 0;
 
   const rowsMap = React.useMemo(() => {
     const rowsMap: Record<string | number, GanttRowInfo> = {};
@@ -85,7 +90,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
       }
 
       let width = monthWidth + endWidth - startWidth;
-      if (width < 15) width = 15;
+      if (width < MIN_ITEM_WIDTH) width = MIN_ITEM_WIDTH;
       if (ganttInfo.type === "milestone") {
         width = height;
       }
@@ -268,9 +273,9 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                     data-id="header-cell"
                     className={styles.headerCell}
                     key={`${item.year}${month}`}
-                    style={{ minWidth: GANTT_HEADER_WIDTH }}
+                    style={{ minWidth: GANTT_HEADER_WIDTH, maxWidth: GANTT_HEADER_WIDTH }}
                   >
-                    {month}
+                    {getShortMonthName(month, props.locale)}
                   </div>
                 );
               });
@@ -345,6 +350,22 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                   ></div>
                 </React.Fragment>
               );
+            })}
+
+          {/** FAKE VERTICAL ROWS */}
+          {props.ganttGrid &&
+            headerItems.map((item) => {
+              return item.months.map((month) => {
+                columnCount += 1;
+
+                return (
+                  <div
+                    key={`${item.year}${month}`}
+                    className={styles.fake__column}
+                    style={{ left: columnCount * GANTT_HEADER_WIDTH - 1 }}
+                  ></div>
+                );
+              });
             })}
         </div>
       </div>

@@ -158,7 +158,7 @@ export function useTableOptions<
         tableOptions.getFilteredRowModel = getFilteredRowModel();
       }
 
-      if (props.withPagination) {
+      if (props.withPagination && !props.withGantt) {
         /** paginating */
         if (props.pagination != undefined && props.onPaginationChange != undefined) {
           tableOptions.state.pagination = props.pagination;

@@ -89,6 +89,7 @@ export type TableProps<
     virtualColumn?: boolean;
     virtualRows?: boolean;
     virtualRowSize?: number;
+    locale?: string;
     onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
     onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
     Filter?: React.FC<{
@@ -274,6 +275,8 @@ export function Table<
                   ganttInfoGetter={props.ganttInfoGetter}
                   ganttRowMini={props.ganttRowMini}
                   GanttTooltip={props.GanttTooltip}
+                  ganttGrid={props.ganttGrid}
+                  locale={props.locale}
                 />
               </div>
             </>
