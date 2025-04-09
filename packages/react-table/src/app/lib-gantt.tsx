@@ -5,56 +5,70 @@ import type { GanttTypeShapes, TableColumn } from "../types";
 export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   {
     key: "name",
-    name: "name",
-    resizable: true,
-    draggable: true,
-    sortable: false,
+    name: "Название",
+    resizable: false,
     width: 300,
     minWidth: 200,
     cellRender: "text",
     cellClass: ["common", "empty", "lineClamp"],
-    filterRender: "string",
-    filterable: false,
-    filterType: "includes-string",
     cellRenderProps: {
       expanded: true,
       pathToTooltip: "lastName",
+      shift: 15,
+      // Link: (props) => {
+      //   // eslint-disable-next-line react/prop-types
+      //   return <a href={props.row.id}>{props.children}</a>;
+      // },
     },
   },
   {
     key: "start",
-    name: "Start",
+    name: "Начало",
     width: 150,
     minWidth: 150,
-    sortType: "date",
+    cellClass: ["common", "empty", "nowrap"],
     resizable: false,
     cellRender: "date",
     cellRenderProps: {
-      format: "DD/MM/YYYY",
-    },
-    filterable: true,
-    filterRender: "date-range",
-    filterType: "date-in-range",
-    filterRenderProps: {
       format: "DD/MM/YYYY",
     },
   },
   {
     key: "end",
-    name: "End",
+    name: "Окончание",
     width: 150,
     minWidth: 150,
-    sortType: "date",
+    cellClass: ["common", "empty", "nowrap"],
     resizable: false,
     cellRender: "date",
     cellRenderProps: {
       format: "DD/MM/YYYY",
     },
-    filterable: true,
-    filterRender: "date-range",
-    filterType: "date-in-range",
-    filterRenderProps: {
-      format: "DD/MM/YYYY",
+  },
+  {
+    key: "deviations",
+    name: "Отклонения",
+    width: 100,
+    cellClass: ["common", "empty", "nowrap"],
+    resizable: true,
+    cellRender: "tag",
+    cellRenderProps: {
+      bordered: true,
+      color: "red",
+      tooltip: true,
+      autoTooltip: true,
+    },
+  },
+  {
+    key: "risks",
+    name: "Риски",
+    width: 100,
+    cellClass: ["common", "empty", "nowrap"],
+    resizable: false,
+    cellRender: "tag",
+    cellRenderProps: {
+      bordered: true,
+      color: "purple",
     },
   },
 ];
@@ -65,6 +79,8 @@ export type RowGantt = {
   start: string;
   type?: GanttTypeShapes;
   end: string;
+  risks?: number;
+  deviations?: number;
   dependencies?: string[];
   children?: RowGantt[];
 };
@@ -130,12 +146,15 @@ export function createRowsGantt(): RowGantt[] {
           name: "Johnson's house",
           start: "2025-05-01",
           end: "2025-10-08",
+          risks: 4,
+          deviations: 5,
           children: [
             {
               id: "1.1.1",
               name: "Contract",
               start: "2025-05-01",
               end: "2025-06-02",
+              risks: 2,
               children: [],
             },
             {
@@ -143,6 +162,8 @@ export function createRowsGantt(): RowGantt[] {
               name: "Design",
               start: "2025-05-30",
               end: "2025-07-01",
+              risks: 2,
+              deviations: 3,
               children: [
                 {
                   id: "1.1.2.1",
@@ -150,11 +171,13 @@ export function createRowsGantt(): RowGantt[] {
                   start: "2025-05-30",
                   end: "2025-06-15",
                   dependencies: ["1.1.2.2", "1.1.3", "1.2"],
+                  risks: 2,
                 },
                 {
                   id: "1.1.2.2",
                   name: "Outline Design",
                   start: "2025-06-15",
+                  deviations: 2,
                   end: "2025-07-01",
                 },
               ],

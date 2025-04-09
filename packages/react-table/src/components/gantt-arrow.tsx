@@ -12,23 +12,26 @@ type Props = {
   mini: boolean;
 };
 
-const ADDITIONAL_SHIFT = -8;
-
 const DEFAULT_LINK_SIZE = 2;
 const DEFAULT_CORNER_SIZE = 4;
 const DEFAULT_ARROW_SIZE = 16;
 
 const LEFT_TO_RIGHT_FIRST = 22;
-const TOP_TO_BOTTOM_EXTRA_BIG = 25;
+const TOP_TO_BOTTOM_EXTRA_MAX = 25;
 const TOP_TO_BOTTOM_EXTRA_MINI = 13;
 
 const LEFT_TO_RIGHT_SECOND_DEFAULT = 22;
+
+const TOP_SHIT_MAX = 5;
+const TOP_SHIT_MINI = -2;
+const END_ARROW_SHIFT = -8;
 
 export function GanttArrow(props: Props) {
   const rowInfo = props.rowsMap[props.currentRowId];
   if (!rowInfo) return;
 
-  const startTop = rowInfo.top - 2;
+  const TOP_SHIFT = props.mini ? TOP_SHIT_MINI : TOP_SHIT_MAX;
+  const startTop = rowInfo.top + TOP_SHIFT;
   const startLeft = rowInfo.left + rowInfo.width + GANTT_ROW_PADDING - 2;
 
   return (
@@ -46,17 +49,17 @@ export function GanttArrow(props: Props) {
         let TOP_TO_BOTTOM =
           indexDiff * (props.mini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT) -
           DEFAULT_CORNER_SIZE * 2;
-        const TOP_TO_BOTTOM_EXTRA = props.mini ? TOP_TO_BOTTOM_EXTRA_MINI : TOP_TO_BOTTOM_EXTRA_BIG;
+        const TOP_TO_BOTTOM_EXTRA = props.mini ? TOP_TO_BOTTOM_EXTRA_MINI : TOP_TO_BOTTOM_EXTRA_MAX;
         if (requireExtraCorner) TOP_TO_BOTTOM -= TOP_TO_BOTTOM_EXTRA + DEFAULT_CORNER_SIZE * 2;
 
         let LEFT_TO_RIGHT_SECOND =
-          dependLeft - startLeft - LEFT_TO_RIGHT_FIRST - DEFAULT_CORNER_SIZE * 2 + ADDITIONAL_SHIFT;
+          dependLeft - startLeft - LEFT_TO_RIGHT_FIRST - DEFAULT_CORNER_SIZE * 2 + END_ARROW_SHIFT;
         if (requireExtraCorner) {
           LEFT_TO_RIGHT_SECOND =
             dependLeft -
             (startLeft + LEFT_TO_RIGHT_FIRST - RIGHT_TO_LEFT - DEFAULT_CORNER_SIZE) -
             DEFAULT_CORNER_SIZE +
-            ADDITIONAL_SHIFT;
+            END_ARROW_SHIFT;
         }
 
         if (indexDiff <= 0) return null;

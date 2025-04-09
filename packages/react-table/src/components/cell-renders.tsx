@@ -1,8 +1,10 @@
-import { dateFormat, isArray, isBoolean, isId, isString } from "@krainovsd/js-helpers";
-import { Tooltip } from "@krainovsd/react-ui";
+import { dateFormat, isArray, isBoolean, isId, isObject, isString } from "@krainovsd/js-helpers";
+import { Tag, Tooltip } from "@krainovsd/react-ui";
 import type { CellContext } from "@tanstack/react-table";
+import type { PresetColorType } from "antd/es/theme/internal";
 import clsx from "clsx";
 import type { ReactNode } from "react";
+import type React from "react";
 import { useVisibleCell } from "../hooks/use-visible-cell";
 import { getData } from "../lib";
 import styles from "./cell-renders.module.scss";
@@ -11,8 +13,9 @@ export type CellRenderClasses = "center";
 
 export type TextCellRenderProps<RowData extends Record<string, unknown>> = {
   expanded?: boolean;
+  shift?: number;
   pathToTooltip?: string;
-  linkGetter?: (row: RowData) => string;
+  Link?: (props: { children?: React.ReactNode; row: RowData }) => ReactNode;
   autoTooltip?: boolean;
   booleanMapping?: BooleanMapping;
   classes?: Record<CellRenderClasses, boolean>;
@@ -29,7 +32,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as
     | TextCellRenderProps<Row>
     | undefined;
-  const link = cellRenderProps?.linkGetter?.(props.context.row.original);
+  const Link = cellRenderProps?.Link;
   const tooltip = cellRenderProps?.pathToTooltip
     ? getData(props.context.row.original, cellRenderProps.pathToTooltip)
     : undefined;
@@ -60,17 +63,19 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
 
   return (
     <>
-      {isString(link) && (
+      {Link && (
         <div
           data-tooltip={isString(tooltip) ? tooltip : undefined}
           className={clsx(
             styles.container,
             cellRenderProps?.classes?.center && styles.container__center,
           )}
-          style={{ paddingLeft: extraPadding }}
+          style={{
+            paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
+          }}
         >
           {isExpandable && Expander && <Expander context={props.context} />}
-          <a href={link} className={clsx(styles.text__link)}>
+          <Link row={props.context.row.original}>
             {isString(tooltip) && (
               <Tooltip
                 classNameContent={styles.text__tooltip}
@@ -81,22 +86,24 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
               </Tooltip>
             )}
             {!isString(tooltip) && Node}
-          </a>
+          </Link>
         </div>
       )}
-      {!isString(link) && (
+      {!Link && (
         <div
           data-tooltip={isString(tooltip) ? tooltip : undefined}
           className={clsx(
             styles.container,
             cellRenderProps?.classes?.center && styles.container__center,
           )}
-          style={{ paddingLeft: extraPadding }}
+          style={{
+            paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
+          }}
         >
           {isExpandable && Expander && <Expander context={props.context} />}
           {isString(tooltip) && (
             <Tooltip
-              classNameContent={styles.text__tooltip}
+              classNameContent={styles.tooltip}
               text={tooltip}
               autoTooltip={cellRenderProps?.autoTooltip}
             >
@@ -113,6 +120,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
 export type DateCellRenderProps = {
   format: string;
   expanded?: boolean;
+  shift?: number;
   classes?: Record<CellRenderClasses, boolean>;
 };
 
@@ -140,7 +148,9 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
           styles.container,
           cellRenderProps?.classes?.center && styles.container__center,
         )}
-        style={{ paddingLeft: extraPadding }}
+        style={{
+          paddingLeft: cellRenderProps.shift ? extraPadding * cellRenderProps.shift : undefined,
+        }}
       >
         {isExpandable && Expander && <Expander context={props.context} />}
         <span className={styles.base}>{date}</span>
@@ -150,27 +160,68 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
 }
 
 export type TagCellRenderProps = {
-  color?: string;
+  color?: keyof PresetColorType;
+  bordered?: boolean;
   filterable?: boolean;
   classes?: Record<CellRenderClasses, boolean>;
+  tooltip?: boolean;
+  autoTooltip?: boolean;
 };
 
 export function TagCellRender<Row extends Record<string, unknown>>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as
-    | DateCellRenderProps
+    | TagCellRenderProps
     | undefined;
-  const { isVisible, extraPadding } = useVisibleCell(props.context);
+  const { isVisible } = useVisibleCell(props.context);
   if (!cellRenderProps) return;
 
-  const content = getData(props.context.row.original, props.context.column.id);
-  const date = isId(content) ? dateFormat(content, cellRenderProps.format) : null;
-  const isExpandable = cellRenderProps?.expanded && props.context.row.getCanExpand();
+  const rowContent = getData(props.context.row.original, props.context.column.id);
+  const renderContent = isArray(rowContent) ? rowContent : [rowContent];
 
-  if (!isVisible) return;
+  if (!isVisible || !isArray(renderContent)) return null;
 
-  const Expander = props.context.table.options.meta?.renderers?.expander;
+  const Node = renderContent.map((content, index) => {
+    if (!isId(content)) return null;
+
+    return (
+      <Tag
+        key={`${content}${index}`}
+        className={styles.tag}
+        bordered={cellRenderProps?.bordered}
+        color={cellRenderProps?.color}
+        style={{
+          cursor:
+            !props.context.column.columnDef.enableColumnFilter || !cellRenderProps.filterable
+              ? "inherit"
+              : "pointer",
+        }}
+        onClick={(event) => {
+          if (!props.context.column.columnDef.enableColumnFilter || !cellRenderProps.filterable)
+            return;
+
+          event.stopPropagation();
+
+          const filterRenderProps = props.context.column.columnDef.filterRenderProps;
+          const multiple =
+            isObject(filterRenderProps) && "multiple" in filterRenderProps
+              ? filterRenderProps.multiple
+              : false;
+          if (multiple) {
+            const values: (string | number)[] = [];
+            values.push(content);
+
+            if (values.length > 0) props.context.column.setFilterValue(values);
+          } else {
+            props.context.column.setFilterValue(content);
+          }
+        }}
+      >
+        {content}
+      </Tag>
+    );
+  });
 
   return (
     <>
@@ -179,10 +230,17 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
           styles.container,
           cellRenderProps?.classes?.center && styles.container__center,
         )}
-        style={{ paddingLeft: extraPadding }}
       >
-        {isExpandable && Expander && <Expander context={props.context} />}
-        <span className={styles.base}>{date}</span>
+        {cellRenderProps.tooltip && (
+          <Tooltip
+            classNameContent={styles.tooltip}
+            text={renderContent.join(", ")}
+            autoTooltip={cellRenderProps?.autoTooltip}
+          >
+            {Node}
+          </Tooltip>
+        )}
+        {!cellRenderProps.tooltip && Node}
       </div>
     </>
   );

@@ -22,6 +22,7 @@ import {
   SelectFilterRender,
   SingleArrowSortRender,
   StringFilterRender,
+  TagCellRender,
   TextCellRender,
 } from "../components";
 import {
@@ -98,6 +99,7 @@ export function useColumns<
     () => ({
       date: DateCellRender,
       text: TextCellRender,
+      tag: TagCellRender,
       empty: () => "",
     }),
     [],

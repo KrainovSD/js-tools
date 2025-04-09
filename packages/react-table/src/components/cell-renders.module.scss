@@ -18,6 +18,10 @@ a.container {
   }
 }
 
+.tooltip {
+  font-family: Nunito;
+}
+
 .base {
   display: block;
   max-width: 100%;
@@ -29,12 +33,12 @@ a.container {
   color: var(--table-text-color);
   font-weight: 500;
   font-family: Nunito;
+}
 
-  &__tooltip {
-    font-family: Nunito;
-  }
-
-  &__link {
-    color: var(--table-link-color);
-  }
+.tag {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: pointer;
 }

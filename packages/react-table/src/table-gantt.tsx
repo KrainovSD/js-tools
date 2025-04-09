@@ -56,6 +56,8 @@ type GetCellOptions<RowData extends Record<string, unknown>> = {
 };
 
 const MIN_ITEM_WIDTH = 10;
+const COLUMN_LEFT_SHIFT_MAX = 2;
+const COLUMN_LEFT_SHIFT_MIN = 2;
 
 export function TableGantt<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
@@ -362,7 +364,11 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                   <div
                     key={`${item.year}${month}`}
                     className={styles.fake__column}
-                    style={{ left: columnCount * GANTT_HEADER_WIDTH - 1 }}
+                    style={{
+                      left:
+                        columnCount * GANTT_HEADER_WIDTH -
+                        (props.ganttRowMini ? COLUMN_LEFT_SHIFT_MIN : COLUMN_LEFT_SHIFT_MAX),
+                    }}
                   ></div>
                 );
               });

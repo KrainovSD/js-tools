@@ -13,6 +13,7 @@ import type {
   DateCellRenderProps,
   DateFilterRenderProps,
   SelectFilterRenderProps,
+  TagCellRenderProps,
   TextCellRenderProps,
 } from "../components";
 
@@ -56,14 +57,15 @@ export type TableCellRendersProps<
   CellRender = undefined,
 > =
   | {
-      cellRender?: CellRender;
+      cellRender?: CellRender | Exclude<TableCellRenderKey, "date" | "text" | "tag">;
       cellRenderProps?: unknown;
     }
   | {
       cellRender: "date";
       cellRenderProps: DateCellRenderProps;
     }
-  | { cellRender: "text"; cellRenderProps: TextCellRenderProps<RowData> };
+  | { cellRender: "text"; cellRenderProps: TextCellRenderProps<RowData> }
+  | { cellRender: "tag"; cellRenderProps: TagCellRenderProps };
 export type TableHeaderRendersProps<HeaderRender = undefined> = {
   headerRender?: HeaderRender | TableHeaderRenderKey;
   headerRenderProps?: unknown;
@@ -188,7 +190,7 @@ export type TableColumnsSettings<
   >;
 };
 
-export type TableCellRenderKey = "date" | "text" | "empty";
+export type TableCellRenderKey = "date" | "text" | "empty" | "tag";
 export type TableHeaderRenderKey = "common";
 export type TableFilterRenderKey =
   | "number"
