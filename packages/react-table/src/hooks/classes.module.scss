@@ -26,6 +26,16 @@
   &__nowrap {
     white-space: nowrap;
   }
+
+  &__lineClamp {
+    & span {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      align-self: stretch;
+    }
+  }
 }
 
 .cell {

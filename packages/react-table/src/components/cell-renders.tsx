@@ -78,7 +78,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
           <Link row={props.context.row.original}>
             {isString(tooltip) && (
               <Tooltip
-                classNameContent={styles.text__tooltip}
+                classNameContent={styles.tooltip}
                 text={tooltip}
                 autoTooltip={cellRenderProps?.autoTooltip}
               >

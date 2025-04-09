@@ -132,6 +132,7 @@ export function useColumns<
       common: classes.header__common,
       empty: classes.header__empty,
       nowrap: classes.header__nowrap,
+      lineClamp: classes.header__lineClamp,
     }),
     [],
   );

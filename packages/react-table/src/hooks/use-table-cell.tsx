@@ -38,8 +38,8 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
             )}
             style={{
               width: header.getSize(),
-              maxWidth: header.column.columnDef.maxSize,
-              minWidth: header.column.columnDef.minSize,
+              maxWidth: header.getSize(),
+              minWidth: header.getSize(),
               left: frozenPosition === "left" ? prevFrozen : 0,
               right: frozenPosition === "right" ? prevFrozen : 0,
             }}
@@ -131,8 +131,8 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
             )}
             style={{
               width: cell.column.getSize(),
-              maxWidth: cell.column.columnDef.maxSize,
-              minWidth: cell.column.columnDef.minSize,
+              maxWidth: cell.column.getSize(),
+              minWidth: cell.column.getSize(),
               left: frozenPosition === "left" ? prevFrozen : 0,
               right: frozenPosition === "right" ? prevFrozen : 0,
             }}

@@ -22,6 +22,7 @@ export const columns: TableColumn<Row, "test">[] = [
     filterRender: "string",
     filterable: true,
     filterType: "includes-string",
+    headerClass: ["common"],
     cellRenderProps: {
       expanded: true,
       // pathToLink: "country",
@@ -61,7 +62,11 @@ export const columns: TableColumn<Row, "test">[] = [
     cellRenderProps: {
       pathToTooltip: "description",
       autoTooltip: true,
-      linkGetter: (row) => row.country,
+      // eslint-disable-next-line react/prop-types
+      Link: ({ row, children }) => {
+        // eslint-disable-next-line react/prop-types
+        return <a href={row.country}>{children}</a>;
+      },
     },
     // leftFrozen: true,
   },
