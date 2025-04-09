@@ -9,5 +9,5 @@ export const GANTT_TOP_SHIFT = 4;
 
 export const GANTT_COLUMN_WIDTH_MONTH = 54;
 export const GANTT_COLUMN_WIDTH_YEAR = 230;
-export const GANTT_COLUMN_WIDTH_QUARTER = 100;
+export const GANTT_COLUMN_WIDTH_QUARTER = 54;
 export const GANTT_COLUMN_WIDTH_WEEK = 100;

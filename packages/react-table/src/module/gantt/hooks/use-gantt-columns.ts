@@ -84,9 +84,7 @@ export function useGanttColumns<RowData extends Record<string, unknown>>(
         });
         break;
       }
-      case "quarters": {
-        break;
-      }
+      case "quarters":
       case "months": {
         if (items[0].months[0] > 0) {
           items[0].months.unshift(items[0].months[0] - 1);
@@ -121,6 +119,7 @@ export function useGanttColumns<RowData extends Record<string, unknown>>(
       case "years": {
         return headerItems.length;
       }
+      case "quarters":
       case "months": {
         return headerItems.reduce((acc, item) => {
           acc += item.months.length;
@@ -128,9 +127,7 @@ export function useGanttColumns<RowData extends Record<string, unknown>>(
           return acc;
         }, 0);
       }
-      case "quarters": {
-        return 0;
-      }
+
       case "weeks": {
         return 0;
       }

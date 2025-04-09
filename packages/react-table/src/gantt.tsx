@@ -54,7 +54,11 @@ export function Gantt<RowData extends Record<string, unknown>>(props: GanttProps
       >
         <div className={styles.ganttContainer}>
           <TableCommonGantt
-            rowHeaderHeight={GANTT_HEADER_HEIGHT * 2}
+            rowHeaderHeight={
+              props.ganttView === "months" || props.ganttView === "years"
+                ? GANTT_HEADER_HEIGHT * 2
+                : GANTT_HEADER_HEIGHT * 3
+            }
             tableRef={tableRef}
             gantt={props.withGantt}
             width={sizes[0]}

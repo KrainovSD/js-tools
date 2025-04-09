@@ -50,6 +50,7 @@ export function getGanttInitialCoordinates(opts: GetGanttInitialCoordinates): {
 
       break;
     }
+    case "quarters":
     case "months": {
       diffWidth = getMonthDifference(startDate, endDate) * GANTT_COLUMN_WIDTH;
       startWidth = (GANTT_COLUMN_WIDTH / 31) * startDate.getDate();
