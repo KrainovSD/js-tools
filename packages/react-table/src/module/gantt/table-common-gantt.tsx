@@ -3,16 +3,13 @@ import clsx from "clsx";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../table.constants";
 import type { RowInterface, TableInterface } from "../../types";
 import { useTableCell } from "../table/hooks";
-import {
-  GANTT_COMMON_TABLE_BODY_ID,
-  GANTT_COMMON_TABLE_HEADER_ID,
-  GANTT_HEADER_HEIGHT,
-} from "./gantt.constants";
+import { GANTT_COMMON_TABLE_BODY_ID, GANTT_COMMON_TABLE_HEADER_ID } from "./gantt.constants";
 import styles from "./table-common-gantt.module.scss";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   gantt: boolean | undefined;
   width?: number;
+  rowHeaderHeight: number;
   tableRef?: React.LegacyRef<HTMLTableElement>;
   ganttRowMini?: boolean;
   columnVirtualEnabled: boolean;
@@ -59,8 +56,8 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                 key={headerGroup.id}
                 className={styles.headerRow}
                 style={{
-                  minHeight: props.gantt ? GANTT_HEADER_HEIGHT * 2 : undefined,
-                  maxHeight: props.gantt ? GANTT_HEADER_HEIGHT * 2 : undefined,
+                  minHeight: props.rowHeaderHeight,
+                  maxHeight: props.rowHeaderHeight,
                 }}
                 data-id="header-row"
               >

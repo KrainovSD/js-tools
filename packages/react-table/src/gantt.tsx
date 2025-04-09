@@ -2,6 +2,7 @@ import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import styles from "./gantt.module.scss";
 import { Scroll } from "./module/gantt/components";
+import { GANTT_HEADER_HEIGHT } from "./module/gantt/gantt.constants";
 import { useScroll, useSplitter } from "./module/gantt/hooks";
 import { TableCommonGantt } from "./module/gantt/table-common-gantt";
 import { TableGantt } from "./module/gantt/table-gantt";
@@ -53,6 +54,7 @@ export function Gantt<RowData extends Record<string, unknown>>(props: GanttProps
       >
         <div className={styles.ganttContainer}>
           <TableCommonGantt
+            rowHeaderHeight={GANTT_HEADER_HEIGHT * 2}
             tableRef={tableRef}
             gantt={props.withGantt}
             width={sizes[0]}

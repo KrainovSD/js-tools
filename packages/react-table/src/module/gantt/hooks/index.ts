@@ -1,3 +1,3 @@
-export * from "./use-gantt-header";
+export * from "./use-gantt-columns";
 export * from "./use-scroll";
 export * from "./use-splitter";

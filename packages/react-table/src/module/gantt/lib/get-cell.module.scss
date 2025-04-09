@@ -1,0 +1,50 @@
+.tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: Nunito;
+
+  &__header {
+    font-weight: 700;
+  }
+}
+
+.item {
+  display: flex;
+  border-radius: 4px;
+  position: relative;
+  align-items: center;
+  width: 100%;
+  z-index: 4;
+
+  &__container {
+    width: fit-content;
+    align-items: center;
+    padding: 4px 0;
+  }
+
+  &__task {
+    background-color: #537cfa;
+  }
+
+  &__group {
+    background-color: #20b56d;
+  }
+
+  &__milestone {
+    background-color: #d071ef;
+    transform: rotate(45deg);
+    border-radius: 0;
+    margin-left: 4px;
+  }
+
+  &__text {
+    margin-left: 10px;
+    font-size: 14px;
+    font-family: Nunito;
+
+    &_shift {
+      transform: translateY(-50%);
+    }
+  }
+}

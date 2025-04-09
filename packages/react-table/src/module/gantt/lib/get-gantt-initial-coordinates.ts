@@ -2,6 +2,7 @@ import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constant
 import type { GanttInfo, GanttViewType } from "../../../types";
 import { GANTT_LEFT_SHIFT } from "../gantt.constants";
 import type { HeaderItem } from "../hooks";
+import { getDayOfYear } from "./get-day-of-year";
 import { getGanttColumnWidth } from "./get-gantt-column-width";
 import { getMonthDifference } from "./get-month-difference";
 
@@ -32,40 +33,40 @@ export function getGanttInitialCoordinates(opts: GetGanttInitialCoordinates): {
     height /= 1.5;
   }
 
-  let width = 0;
-  let left = 0;
+  let diffWidth = 0;
+  let startWidth = 0;
+  let endWidth = 0;
+  let startCell = 0;
 
+  const startDate = new Date(opts.ganttInfo.start);
+  const endDate = new Date(opts.ganttInfo.end);
   switch (opts.ganttView) {
+    case "years": {
+      diffWidth = (endDate.getFullYear() - startDate.getFullYear()) * GANTT_COLUMN_WIDTH;
+      startWidth = (GANTT_COLUMN_WIDTH / 365) * getDayOfYear(startDate);
+      endWidth = (GANTT_COLUMN_WIDTH / 365) * getDayOfYear(endDate);
+
+      startCell = startDate.getFullYear() - opts.headerItems[0].year;
+
+      break;
+    }
     case "months": {
-      const startDate = new Date(opts.ganttInfo.start);
-      const endDate = new Date(opts.ganttInfo.end);
-      const monthWidth = getMonthDifference(startDate, endDate) * GANTT_COLUMN_WIDTH;
-      const startWidth = (GANTT_COLUMN_WIDTH / 31) * startDate.getDate();
-      const endWidth = (GANTT_COLUMN_WIDTH / 31) * endDate.getDate();
+      diffWidth = getMonthDifference(startDate, endDate) * GANTT_COLUMN_WIDTH;
+      startWidth = (GANTT_COLUMN_WIDTH / 31) * startDate.getDate();
+      endWidth = (GANTT_COLUMN_WIDTH / 31) * endDate.getDate();
 
-      width = monthWidth + endWidth - startWidth;
-      if (width < MIN_ITEM_WIDTH) width = MIN_ITEM_WIDTH;
-      if (opts.ganttInfo.type === "milestone") {
-        width = height;
-      }
-
-      let startCell;
-      {
-        const startYear = startDate.getFullYear();
-        const startMonth = startDate.getMonth();
-        if (opts.headerItems[0].year < startYear) {
-          startCell = opts.headerItems[0].months.length;
-          const diff = startYear - opts.headerItems[0].year - 1;
-          for (let i = 0; i < diff; i++) {
-            startCell += 12;
-          }
-          startCell += startMonth;
-        } else {
-          startCell = startMonth - opts.headerItems[0].months[0];
+      const startYear = startDate.getFullYear();
+      const startMonth = startDate.getMonth();
+      if (opts.headerItems[0].year < startYear) {
+        startCell = opts.headerItems[0].months.length;
+        const diff = startYear - opts.headerItems[0].year - 1;
+        for (let i = 0; i < diff; i++) {
+          startCell += 12;
         }
+        startCell += startMonth;
+      } else {
+        startCell = startMonth - opts.headerItems[0].months[0];
       }
-
-      left = startCell * GANTT_COLUMN_WIDTH + startWidth - GANTT_LEFT_SHIFT;
 
       break;
     }
@@ -73,6 +74,14 @@ export function getGanttInitialCoordinates(opts: GetGanttInitialCoordinates): {
       break;
     }
   }
+
+  let width = diffWidth + endWidth - startWidth;
+  if (width < MIN_ITEM_WIDTH) width = MIN_ITEM_WIDTH;
+  if (opts.ganttInfo.type === "milestone") {
+    width = height;
+  }
+
+  const left = startCell * GANTT_COLUMN_WIDTH + startWidth - GANTT_LEFT_SHIFT;
 
   return {
     width,

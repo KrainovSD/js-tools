@@ -1,0 +1,27 @@
+.headerRow {
+  background-color: var(--table-header-bg);
+  overflow: initial;
+  display: flex;
+}
+
+.headerCell {
+  position: relative;
+  display: flex;
+
+  border-block-end: 1px solid var(--table-border);
+  border-inline-end: 1px solid var(--table-border);
+  padding: 0 8px;
+  border-spacing: 0px;
+  overflow: hidden;
+  white-space: pre-wrap;
+  background: var(--table-header-cell-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  color: var(--table-text-color);
+  line-height: 22px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--table-font-family);
+}

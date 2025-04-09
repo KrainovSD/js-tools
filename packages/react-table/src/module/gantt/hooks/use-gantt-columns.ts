@@ -1,11 +1,12 @@
 import React from "react";
-import type { GanttDate, GanttInfo, RowInterface } from "../../../types";
+import type { GanttDate, GanttInfo, GanttViewType, RowInterface } from "../../../types";
 
-type UseGanttHeaderProps<RowData extends Record<string, unknown>> = {
+type UseGanttColumnsProps<RowData extends Record<string, unknown>> = {
   firstGanttDate?: string;
   lastGanttDate?: string;
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
   rows: RowInterface<RowData>[];
+  ganttView: GanttViewType;
 };
 
 export type HeaderItem = {
@@ -13,8 +14,8 @@ export type HeaderItem = {
   months: number[];
 };
 
-export function useGanttHeader<RowData extends Record<string, unknown>>(
-  props: UseGanttHeaderProps<RowData>,
+export function useGanttColumns<RowData extends Record<string, unknown>>(
+  props: UseGanttColumnsProps<RowData>,
 ) {
   const firstGanttDate = React.useMemo<GanttDate | null>(() => {
     const firstDate = props.firstGanttDate ?? props.ganttInfoGetter?.(props.rows[0])?.start;
@@ -74,23 +75,70 @@ export function useGanttHeader<RowData extends Record<string, unknown>>(
       items.push({ year: i, months });
     }
 
-    if (items[0].months[0] > 0) {
-      items[0].months.unshift(items[0].months[0] - 1);
-    } else {
-      items.unshift({ year: items[0].year - 1, months: [11] });
-    }
+    switch (props.ganttView) {
+      case "years": {
+        items.unshift({ year: items[0].year - 1, months: Array.from({ length: 12 }, (_, i) => i) });
+        items.push({
+          year: items[items.length - 1].year + 1,
+          months: Array.from({ length: 12 }, (_, i) => i),
+        });
+        break;
+      }
+      case "quarters": {
+        break;
+      }
+      case "months": {
+        if (items[0].months[0] > 0) {
+          items[0].months.unshift(items[0].months[0] - 1);
+        } else {
+          items.unshift({ year: items[0].year - 1, months: [11] });
+        }
 
-    const itemsLastIndex = items.length - 1;
-    if (items[itemsLastIndex].months[items[itemsLastIndex].months.length - 1] < 11) {
-      items[itemsLastIndex].months.push(
-        items[itemsLastIndex].months[items[itemsLastIndex].months.length - 1] + 1,
-      );
-    } else {
-      items.push({ year: items[itemsLastIndex].year + 1, months: [0] });
+        const itemsLastIndex = items.length - 1;
+        if (items[itemsLastIndex].months[items[itemsLastIndex].months.length - 1] < 11) {
+          items[itemsLastIndex].months.push(
+            items[itemsLastIndex].months[items[itemsLastIndex].months.length - 1] + 1,
+          );
+        } else {
+          items.push({ year: items[itemsLastIndex].year + 1, months: [0] });
+        }
+        break;
+      }
+      case "weeks": {
+        break;
+      }
+      default: {
+        break;
+      }
     }
 
     return items;
-  }, [firstGanttDate, lastGanttDate]);
+  }, [firstGanttDate, lastGanttDate, props.ganttView]);
+  const columnsCount = React.useMemo(() => {
+    if (!headerItems) return 0;
 
-  return headerItems;
+    switch (props.ganttView) {
+      case "years": {
+        return headerItems.length;
+      }
+      case "months": {
+        return headerItems.reduce((acc, item) => {
+          acc += item.months.length;
+
+          return acc;
+        }, 0);
+      }
+      case "quarters": {
+        return 0;
+      }
+      case "weeks": {
+        return 0;
+      }
+      default: {
+        return 0;
+      }
+    }
+  }, [headerItems, props.ganttView]);
+
+  return { headerItems, columnsCount };
 }
