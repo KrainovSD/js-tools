@@ -1,8 +1,8 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
+import type { RowInterface, TableInterface } from "../../types";
 import { useTableCell } from "./hooks";
 import styles from "./table-common.module.scss";
-import type { RowInterface, TableInterface } from "./types";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   columnVirtualEnabled: boolean;

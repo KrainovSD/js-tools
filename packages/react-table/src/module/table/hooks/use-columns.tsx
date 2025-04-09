@@ -12,6 +12,23 @@ import type {
 } from "@tanstack/react-table";
 import React from "react";
 import {
+  type FilterKey,
+  type SortingKey,
+  type TableCellClassKey,
+  type TableCellClasses,
+  type TableCellRenderKey,
+  type TableCellRenders,
+  type TableColumnsSettings,
+  type TableFilterRenderKey,
+  type TableFilterRenders,
+  type TableHeaderClassKey,
+  type TableHeaderClasses,
+  type TableHeaderRenderKey,
+  type TableHeaderRenders,
+  type TableSortRenderKey,
+  type TableSortRenders,
+} from "../../../types";
+import {
   CommonHeaderRender,
   DateCellRender,
   DateFilterRender,
@@ -37,23 +54,6 @@ import {
   stringByArrayFilter,
   stringSort,
 } from "../lib";
-import {
-  type FilterKey,
-  type SortingKey,
-  type TableCellClassKey,
-  type TableCellClasses,
-  type TableCellRenderKey,
-  type TableCellRenders,
-  type TableColumnsSettings,
-  type TableFilterRenderKey,
-  type TableFilterRenders,
-  type TableHeaderClassKey,
-  type TableHeaderClasses,
-  type TableHeaderRenderKey,
-  type TableHeaderRenders,
-  type TableSortRenderKey,
-  type TableSortRenders,
-} from "../types";
 import classes from "./classes.module.scss";
 
 export function useColumns<

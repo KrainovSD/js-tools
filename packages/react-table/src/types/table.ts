@@ -256,9 +256,11 @@ export type GanttProps<RowData extends Record<string, unknown>> = {
   instantGanttSplitter?: boolean;
   ganttGrid?: boolean;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
+  ganttView?: GanttViewType;
 };
 
 export type GanttTypeShapes = "task" | "group" | "milestone";
+export type GanttViewType = "years" | "months" | "quarters" | "weeks";
 
 export type GanttInfo = {
   id: number | string;

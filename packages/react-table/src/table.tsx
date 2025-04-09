@@ -2,14 +2,9 @@ import { type FilterFieldType, type FilterInputValueType } from "@krainovsd/reac
 import type { TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
-import { Scroll } from "./components";
-import { useColumns, useScroll, useTableOptions, useVirtualizer } from "./hooks";
-import { useSplitter } from "./hooks/use-splitter";
-import { TableCommon } from "./table-common";
-import { TableCommonGantt } from "./table-common-gantt";
-import { TableFilter } from "./table-filter";
-import { TableFooter } from "./table-footer";
-import { TableGantt } from "./table-gantt";
+import { Gantt } from "./gantt";
+import { TableCommon, TableFilter, TableFooter } from "./module/table";
+import { useColumns, useTableOptions, useVirtualizer } from "./module/table/hooks";
 import styles from "./table.module.scss";
 import type {
   GanttProps,
@@ -178,11 +173,6 @@ export function Table<
     ganttMini: props.ganttRowMini,
   });
 
-  const { sizes, startDrag, splitterRef, isDragging, splitterGhostRef, splitterOverflowRef } =
-    useSplitter(props.instantGanttSplitter);
-
-  const { tableGanttRef, tableGanttScrollRef, tableRef, tableScrollRef } = useScroll();
-
   try {
     return (
       <div className={clsx(styles.base, props.className)}>
@@ -193,17 +183,12 @@ export function Table<
           withFilters={props.withFilters ?? false}
           Filter={props.Filter}
         />
-
-        <div
-          ref={tableContainerRef}
-          className={clsx(
-            styles.container,
-            props.withGantt && styles.container__gantt,
-            props.fullSize && styles.container_full,
-          )}
-          data-id={"container"}
-        >
-          {!props.withGantt && (
+        {!props.withGantt && (
+          <div
+            ref={tableContainerRef}
+            className={clsx(styles.container, props.fullSize && styles.container_full)}
+            data-id={"container"}
+          >
             <TableCommon
               columnVirtualEnabled={columnVirtualEnabled}
               rowVirtualEnabled={rowVirtualEnabled}
@@ -218,77 +203,37 @@ export function Table<
               onClickRow={props.onClickRow}
               onDoubleClickRow={props.onDoubleClickRow}
             />
-          )}
-          {props.withGantt && (
-            <>
-              <div className={styles.ganttContainer}>
-                <TableCommonGantt
-                  tableRef={tableRef}
-                  gantt={props.withGantt}
-                  width={sizes[0]}
-                  columnVirtualEnabled={columnVirtualEnabled}
-                  rowVirtualEnabled={rowVirtualEnabled}
-                  columnsVirtual={columnsVirtual}
-                  rowsVirtual={rowVirtual}
-                  frozenHeader={props.frozenHeader ?? true}
-                  rowVirtualizer={rowVirtualizer}
-                  rows={rows}
-                  table={table}
-                  virtualPaddingLeft={virtualPaddingLeft}
-                  virtualPaddingRight={virtualPaddingRight}
-                  onClickRow={props.onClickRow}
-                  onDoubleClickRow={props.onDoubleClickRow}
-                  ganttRowMini={props.ganttRowMini}
-                />
-                {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
-                <div className={clsx(styles.splitter)} ref={splitterRef} onMouseDown={startDrag}>
-                  <div className={styles.splitter__trigger}></div>
-                  <div ref={splitterGhostRef} className={styles.splitter__ghost}></div>
-                </div>
-                {!props.instantGanttSplitter && (
-                  <div
-                    className={clsx(
-                      styles.splitter__overflowContainer,
-                      isDragging && styles.splitter__overflowContainer_active,
-                    )}
-                  >
-                    <div className={styles.splitter__overflow} ref={splitterOverflowRef}></div>
-                  </div>
-                )}
-                <TableGantt
-                  width={sizes[1]}
-                  tableRef={tableGanttRef}
-                  columnVirtualEnabled={columnVirtualEnabled}
-                  rowVirtualEnabled={rowVirtualEnabled}
-                  columnsVirtual={columnsVirtual}
-                  rowsVirtual={rowVirtual}
-                  frozenHeader={props.frozenHeader ?? true}
-                  rowVirtualizer={rowVirtualizer}
-                  rows={rows}
-                  table={table}
-                  virtualPaddingLeft={virtualPaddingLeft}
-                  virtualPaddingRight={virtualPaddingRight}
-                  onClickRow={props.onClickRow}
-                  onDoubleClickRow={props.onDoubleClickRow}
-                  firstGanttDate={props.firstGanttDate}
-                  lastGanttDate={props.lastGanttDate}
-                  ganttInfoGetter={props.ganttInfoGetter}
-                  ganttRowMini={props.ganttRowMini}
-                  GanttTooltip={props.GanttTooltip}
-                  ganttGrid={props.ganttGrid}
-                  locale={props.locale}
-                />
-              </div>
-            </>
-          )}
-        </div>
+          </div>
+        )}
         {props.withGantt && (
-          <Scroll
-            tableGanttScrollRef={tableGanttScrollRef}
-            tableScrollRef={tableScrollRef}
-            sizes={sizes}
+          <Gantt
+            columnVirtualEnabled={columnVirtualEnabled}
+            columnsVirtual={columnsVirtual}
+            frozenHeader={props.frozenHeader ?? true}
+            fullSize={props.fullSize}
+            ganttRowMini={props.ganttRowMini}
+            instantGanttSplitter={props.instantGanttSplitter}
+            rowVirtualEnabled={rowVirtualEnabled}
+            rowVirtualizer={rowVirtualizer}
+            rows={rows}
+            rowsVirtual={rowVirtual}
+            table={table}
+            virtualPaddingLeft={virtualPaddingLeft}
+            virtualPaddingRight={virtualPaddingRight}
+            withGantt={props.withGantt}
+            GanttTooltip={props.GanttTooltip}
+            firstGanttDate={props.firstGanttDate}
+            ganttGrid={props.ganttGrid}
+            ganttInfoGetter={props.ganttInfoGetter}
+            ganttView={props.ganttView}
+            lastGanttDate={props.lastGanttDate}
+            locale={props.locale}
+            onClickRow={props.onClickRow}
+            onDoubleClickRow={props.onDoubleClickRow}
+            tableContainerRef={tableContainerRef}
           />
         )}
+
         <TableFooter
           filteredRowsCount={filteredRowsCount}
           pageSizes={props.pageSizes}

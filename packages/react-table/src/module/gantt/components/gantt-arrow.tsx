@@ -1,8 +1,8 @@
 import { CaretRightFilled } from "@krainovsd/react-icons";
 import clsx from "clsx";
 import React from "react";
-import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI, GANTT_ROW_PADDING } from "../table.constants";
-import type { GanttRowInfo } from "../types";
+import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
+import type { GanttRowInfo } from "../../../types";
 import styles from "./gantt-arrow.module.scss";
 
 type Props = {
@@ -22,24 +22,25 @@ const TOP_TO_BOTTOM_EXTRA_MINI = 13;
 
 const LEFT_TO_RIGHT_SECOND_DEFAULT = 22;
 
-const TOP_SHIT_MAX = 5;
-const TOP_SHIT_MINI = -2;
+const TOP_SHIFT_MAX = -1;
+const TOP_SHIFT_MINI = -2;
 const END_ARROW_SHIFT = -8;
+const TOP_ARROW_SHIFT = 1;
 
 export function GanttArrow(props: Props) {
   const rowInfo = props.rowsMap[props.currentRowId];
   if (!rowInfo) return;
 
-  const TOP_SHIFT = props.mini ? TOP_SHIT_MINI : TOP_SHIT_MAX;
+  const TOP_SHIFT = props.mini ? TOP_SHIFT_MINI : TOP_SHIFT_MAX;
   const startTop = rowInfo.top + TOP_SHIFT;
-  const startLeft = rowInfo.left + rowInfo.width + GANTT_ROW_PADDING - 2;
+  const startLeft = rowInfo.left + rowInfo.width - 2;
 
   return (
     <div className={styles.base} style={{ left: startLeft, top: startTop }}>
       {props.dependencies.map((depend) => {
         const dependRow = props.rowsMap[depend];
 
-        const dependLeft = dependRow.left + GANTT_ROW_PADDING;
+        const dependLeft = dependRow.left;
         const fullFirstCorner =
           startLeft + LEFT_TO_RIGHT_FIRST + DEFAULT_CORNER_SIZE + LEFT_TO_RIGHT_SECOND_DEFAULT;
         const RIGHT_TO_LEFT = fullFirstCorner - dependLeft;
@@ -191,7 +192,7 @@ export function GanttArrow(props: Props) {
                     TOP_TO_BOTTOM +
                     DEFAULT_CORNER_SIZE * 4 -
                     DEFAULT_ARROW_SIZE / 2 +
-                    0.5,
+                    TOP_ARROW_SHIFT,
                 }}
                 size={DEFAULT_ARROW_SIZE}
               />
@@ -206,7 +207,11 @@ export function GanttArrow(props: Props) {
                     DEFAULT_CORNER_SIZE * 2 +
                     LEFT_TO_RIGHT_SECOND -
                     DEFAULT_ARROW_SIZE / 2,
-                  top: TOP_TO_BOTTOM + DEFAULT_CORNER_SIZE * 2 - DEFAULT_ARROW_SIZE / 2 + 0.5,
+                  top:
+                    TOP_TO_BOTTOM +
+                    DEFAULT_CORNER_SIZE * 2 -
+                    DEFAULT_ARROW_SIZE / 2 +
+                    TOP_ARROW_SHIFT,
                 }}
                 size={DEFAULT_ARROW_SIZE}
               />

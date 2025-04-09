@@ -1,9 +1,2 @@
-export const GANTT_HEADER_HEIGHT = 30;
-export const GANTT_HEADER_WIDTH = 55;
 export const GANTT_ROW_HEIGHT = 69;
 export const GANTT_ROW_HEIGHT_MINI = 45;
-export const GANTT_ROW_PADDING = 8;
-export const GANTT_HEADER_ID = "react-table-gantt-header";
-export const GANTT_BODY_ID = "react-table-gantt-body";
-export const GANTT_COMMON_TABLE_HEADER_ID = "react-table-common-gantt-header";
-export const GANTT_COMMON_TABLE_BODY_ID = "react-table-common-gantt-body";

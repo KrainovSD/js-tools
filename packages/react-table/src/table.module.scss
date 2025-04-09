@@ -61,71 +61,13 @@
   background-color: var(--table-container-color);
   height: fit-content;
 
-  &__gantt {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
   &_full {
     height: 100%;
   }
-}
-
-.ganttContainer {
-  display: flex;
 }
 
 .tableContainer {
   height: fit-content;
   display: flex;
   overflow: hidden;
-}
-
-.splitter {
-  display: flex;
-  margin-right: -1px;
-  width: 1px;
-  overflow: visible;
-  cursor: col-resize;
-  background-color: var(--table-border);
-  position: relative;
-  top: 0;
-  z-index: 7;
-
-  &__trigger {
-    position: absolute;
-    width: 12px;
-    height: 100%;
-    margin-left: -2px;
-    top: 0;
-    left: 0;
-  }
-
-  &__ghost {
-    background: var(--table-splitter-ghost-color);
-    width: 1px;
-    height: 100%;
-    position: absolute;
-    visibility: hidden;
-  }
-
-  &__overflowContainer {
-    position: relative;
-    top: 0px;
-    left: 0px;
-    width: 0px;
-    z-index: 6;
-    display: none;
-
-    &_active {
-      display: flex;
-    }
-  }
-
-  &__overflow {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: var(--table-splitter-overflow-color);
-  }
 }

@@ -4,7 +4,7 @@ import {
   GANTT_COMMON_TABLE_BODY_ID,
   GANTT_COMMON_TABLE_HEADER_ID,
   GANTT_HEADER_ID,
-} from "../table.constants";
+} from "../gantt.constants";
 
 const MAX_SCROLL_WIDTH = 10;
 

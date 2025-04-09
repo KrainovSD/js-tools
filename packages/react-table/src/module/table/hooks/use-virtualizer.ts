@@ -1,8 +1,8 @@
 import type { Table } from "@tanstack/react-table";
 import { useVirtualizer as useVirtualizerLibrary } from "@tanstack/react-virtual";
 import React from "react";
-import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../table.constants";
-import type { TableColumn } from "../types";
+import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
+import type { TableColumn } from "../../../types";
 
 type UseVirtualizerProps<
   Row extends Record<string, unknown>,

@@ -1,5 +1,5 @@
 import React from "react";
-import type { GanttDate, GanttInfo, RowInterface } from "../types";
+import type { GanttDate, GanttInfo, RowInterface } from "../../../types";
 
 type UseGanttHeaderProps<RowData extends Record<string, unknown>> = {
   firstGanttDate?: string;

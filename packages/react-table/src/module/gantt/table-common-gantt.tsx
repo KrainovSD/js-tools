@@ -1,15 +1,14 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
-import { useTableCell } from "./hooks";
-import styles from "./table-common-gantt.module.scss";
+import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../table.constants";
+import type { RowInterface, TableInterface } from "../../types";
+import { useTableCell } from "../table/hooks";
 import {
   GANTT_COMMON_TABLE_BODY_ID,
   GANTT_COMMON_TABLE_HEADER_ID,
   GANTT_HEADER_HEIGHT,
-  GANTT_ROW_HEIGHT,
-  GANTT_ROW_HEIGHT_MINI,
-} from "./table.constants";
-import type { RowInterface, TableInterface } from "./types";
+} from "./gantt.constants";
+import styles from "./table-common-gantt.module.scss";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   gantt: boolean | undefined;

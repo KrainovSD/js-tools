@@ -1,6 +1,6 @@
 import { Pagination } from "@krainovsd/react-ui";
+import type { TableInterface } from "../../types";
 import styles from "./table-footer.module.scss";
-import type { TableInterface } from "./types";
 
 type TableFooterProps<RowData extends Record<string, unknown>> = {
   Pagination: React.FC<{ table: TableInterface<RowData> }> | undefined;

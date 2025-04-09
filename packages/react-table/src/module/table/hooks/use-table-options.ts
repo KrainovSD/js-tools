@@ -11,9 +11,9 @@ import {
 } from "@tanstack/react-table";
 import type { ColumnDef, ColumnPinningState } from "@tanstack/react-table";
 import React from "react";
+import type { TableProps } from "../../../table";
+import type { TableRenderers } from "../../../types";
 import { Expander } from "../components";
-import type { TableProps } from "../table";
-import type { TableRenderers } from "../types";
 
 type InitialState<Row extends Record<string, unknown>> = {
   grouping: GroupingState;

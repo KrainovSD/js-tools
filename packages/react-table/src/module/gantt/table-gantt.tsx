@@ -4,20 +4,25 @@ import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
 import { createPortal } from "react-dom";
+import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../table.constants";
+import type {
+  GanttInfo,
+  GanttRowInfo,
+  GanttViewType,
+  RowInterface,
+  TableInterface,
+} from "../../types";
 import { GanttArrow } from "./components";
-import { useGanttHeader } from "./hooks";
-import { getMonthDifference, getShortMonthName } from "./lib";
-import styles from "./table-gantt.module.scss";
 import {
   GANTT_BODY_ID,
   GANTT_HEADER_HEIGHT,
   GANTT_HEADER_ID,
-  GANTT_HEADER_WIDTH,
-  GANTT_ROW_HEIGHT,
-  GANTT_ROW_HEIGHT_MINI,
-  GANTT_ROW_PADDING,
-} from "./table.constants";
-import type { GanttInfo, GanttRowInfo, RowInterface, TableInterface } from "./types";
+  GANTT_LEFT_SHIFT,
+  GANTT_TOP_SHIFT,
+} from "./gantt.constants";
+import { type HeaderItem, useGanttHeader } from "./hooks";
+import { getGanttColumnWidth, getGanttInitialCoordinates, getShortMonthName } from "./lib";
+import styles from "./table-gantt.module.scss";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   width?: number;
@@ -41,6 +46,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
+  ganttView?: GanttViewType;
 };
 
 type GetCellOptions<RowData extends Record<string, unknown>> = {
@@ -55,10 +61,6 @@ type GetCellOptions<RowData extends Record<string, unknown>> = {
   mini: boolean;
 };
 
-const MIN_ITEM_WIDTH = 10;
-const COLUMN_LEFT_SHIFT_MAX = 2;
-const COLUMN_LEFT_SHIFT_MIN = 2;
-
 export function TableGantt<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
 ) {
@@ -72,6 +74,8 @@ export function TableGantt<RowData extends Record<string, unknown>>(
   });
   let columnCount = 0;
 
+  const GANTT_COLUMN_WIDTH = getGanttColumnWidth(props.ganttView);
+
   const rowsMap = React.useMemo(() => {
     const rowsMap: Record<string | number, GanttRowInfo> = {};
 
@@ -80,46 +84,17 @@ export function TableGantt<RowData extends Record<string, unknown>>(
       const ganttInfo = props.ganttInfoGetter?.(row);
       if (!ganttInfo || !headerItems) continue;
 
-      const startDate = new Date(ganttInfo.start);
-      const endDate = new Date(ganttInfo.end);
-
-      const monthWidth = getMonthDifference(startDate, endDate) * GANTT_HEADER_WIDTH;
-      const startWidth = (GANTT_HEADER_WIDTH / 30) * startDate.getDate();
-      const endWidth = (GANTT_HEADER_WIDTH / 30) * endDate.getDate();
-      let height = props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI / 2 : GANTT_ROW_HEIGHT / 2;
-      if (ganttInfo.type === "milestone") {
-        height /= 1.5;
-      }
-
-      let width = monthWidth + endWidth - startWidth;
-      if (width < MIN_ITEM_WIDTH) width = MIN_ITEM_WIDTH;
-      if (ganttInfo.type === "milestone") {
-        width = height;
-      }
-      const textWidth = ganttInfo.name.length * 6 + 20;
-
-      let startCell;
-      {
-        const startYear = startDate.getFullYear();
-        const startMonth = startDate.getMonth();
-        if (headerItems[0].year < startYear) {
-          startCell = headerItems[0].months.length;
-          const diff = startYear - headerItems[0].year - 1;
-          for (let i = 0; i < diff; i++) {
-            startCell += 12;
-          }
-          startCell += startMonth;
-        } else {
-          startCell = startMonth - headerItems[0].months[0];
-        }
-      }
-
-      const ROW_HEIGHT = props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT;
-      const top = i * ROW_HEIGHT + ROW_HEIGHT / 2;
+      const { left, width, height, textWidth, top } = getGanttInitialCoordinates({
+        ganttInfo,
+        ganttView: props.ganttView,
+        index: i,
+        ganttRowMini: props.ganttRowMini,
+        headerItems,
+      });
 
       rowsMap[ganttInfo.id] = {
         index: i,
-        left: startCell * GANTT_HEADER_WIDTH + startWidth - GANTT_ROW_PADDING,
+        left,
         height,
         width,
         textWidth,
@@ -129,7 +104,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
 
     return rowsMap;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.rows, headerItems, props.ganttInfoGetter, props.ganttRowMini]);
+  }, [props.rows, headerItems, props.ganttInfoGetter, props.ganttRowMini, props.ganttView]);
 
   const getCell = React.useCallback((opts: GetCellOptions<RowData>) => {
     const ganttInfo = opts.ganttInfoGetter?.(opts.row);
@@ -146,13 +121,13 @@ export function TableGantt<RowData extends Record<string, unknown>>(
       <React.Fragment key={ganttInfo.id}>
         <Tooltip
           styleBase={{
-            left: rowInfo.left + 8,
-            top: rowInfo.top - 30.5 / 2,
+            left: rowInfo.left,
+            top: rowInfo.top - rowInfo.height / 2 - GANTT_TOP_SHIFT,
             width: "fit-content",
             position: "absolute",
             zIndex: 4,
           }}
-          classNameBaseContainer={styles.item__container}
+          classNameBaseContainer={clsx(styles.item__container)}
           zIndex={10}
           text={
             opts.GanttTooltip ? (
@@ -239,50 +214,25 @@ export function TableGantt<RowData extends Record<string, unknown>>(
           (props.frozenHeader || props.frozenHeader == undefined) && styles.headerContainer__frozen,
         )}
       >
-        <div className={clsx(styles.header)} style={{ minHeight: 60 }} data-id="header">
-          {/** HEADER ROW */}
-          <div
-            className={styles.headerRow}
-            style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
-            data-id="header-row"
-          >
-            {headerItems.map((item) => {
-              return (
-                <div
-                  data-id="header-cell"
-                  className={styles.headerCell}
-                  key={item.year}
-                  style={{
-                    minWidth: GANTT_HEADER_WIDTH * item.months.length,
-                    maxWidth: GANTT_HEADER_WIDTH * item.months.length,
-                  }}
-                >
-                  {item.year}
-                </div>
-              );
-            })}
-          </div>
-          {/** HEADER ROW */}
-          <div
-            data-id="header-row"
-            className={styles.headerRow}
-            style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
-          >
-            {headerItems.map((item) => {
-              return item.months.map((month) => {
-                return (
-                  <div
-                    data-id="header-cell"
-                    className={styles.headerCell}
-                    key={`${item.year}${month}`}
-                    style={{ minWidth: GANTT_HEADER_WIDTH, maxWidth: GANTT_HEADER_WIDTH }}
-                  >
-                    {getShortMonthName(month, props.locale)}
-                  </div>
-                );
-              });
-            })}
-          </div>
+        <div
+          className={clsx(styles.header)}
+          style={{ minHeight: GANTT_HEADER_HEIGHT * 2 }}
+          data-id="header"
+        >
+          {props.ganttView === "months" && (
+            <GanttMonthHeader
+              headerItems={headerItems}
+              locale={props.locale}
+              width={GANTT_COLUMN_WIDTH}
+            />
+          )}
+          {props.ganttView === "years" && (
+            <GanttYearHeader
+              headerItems={headerItems}
+              locale={props.locale}
+              width={GANTT_COLUMN_WIDTH}
+            />
+          )}
         </div>
       </div>
       <div id={GANTT_BODY_ID} className={styles.bodyContainer} data-id="body-container">
@@ -299,7 +249,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                 acc += item.months.length;
 
                 return acc;
-              }, 0) * GANTT_HEADER_WIDTH,
+              }, 0) * GANTT_COLUMN_WIDTH,
           }}
         >
           {/** VIRTUAL ROWS */}
@@ -365,9 +315,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                     key={`${item.year}${month}`}
                     className={styles.fake__column}
                     style={{
-                      left:
-                        columnCount * GANTT_HEADER_WIDTH -
-                        (props.ganttRowMini ? COLUMN_LEFT_SHIFT_MIN : COLUMN_LEFT_SHIFT_MAX),
+                      left: columnCount * GANTT_COLUMN_WIDTH - GANTT_LEFT_SHIFT,
                     }}
                   ></div>
                 );
@@ -376,5 +324,108 @@ export function TableGantt<RowData extends Record<string, unknown>>(
         </div>
       </div>
     </div>
+  );
+}
+
+type GanttHeaderProps = {
+  headerItems: HeaderItem[];
+  width: number;
+  locale: string | undefined;
+};
+
+function GanttMonthHeader(props: GanttHeaderProps) {
+  return (
+    <>
+      {/** HEADER ROW */}
+      <div
+        className={styles.headerRow}
+        style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+        data-id="header-row"
+      >
+        {props.headerItems.map((item) => {
+          return (
+            <div
+              data-id="header-cell"
+              className={styles.headerCell}
+              key={item.year}
+              style={{
+                minWidth: props.width * item.months.length,
+                maxWidth: props.width * item.months.length,
+              }}
+            >
+              {item.year}
+            </div>
+          );
+        })}
+      </div>
+      {/** HEADER ROW */}
+      <div
+        data-id="header-row"
+        className={styles.headerRow}
+        style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+      >
+        {props.headerItems.map((item) => {
+          return item.months.map((month) => {
+            return (
+              <div
+                data-id="header-cell"
+                className={styles.headerCell}
+                key={`${item.year}${month}`}
+                style={{ minWidth: props.width, maxWidth: props.width }}
+              >
+                {getShortMonthName(month, props.locale)}
+              </div>
+            );
+          });
+        })}
+      </div>
+    </>
+  );
+}
+
+function GanttYearHeader(props: GanttHeaderProps) {
+  const firstYear = props.headerItems[0].year;
+  const lastYear = props.headerItems[props.headerItems.length - 1].year;
+
+  return (
+    <>
+      {/** HEADER ROW */}
+      <div
+        className={styles.headerRow}
+        style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+        data-id="header-row"
+      >
+        <div
+          data-id="header-cell"
+          className={styles.headerCell}
+          style={{
+            minWidth: props.width * props.headerItems.length,
+            maxWidth: props.width * props.headerItems.length,
+            justifyContent: "center",
+          }}
+        >
+          {firstYear !== lastYear ? `${firstYear} - ${lastYear}` : firstYear}
+        </div>
+      </div>
+      {/** HEADER ROW */}
+      <div
+        data-id="header-row"
+        className={styles.headerRow}
+        style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+      >
+        {props.headerItems.map((item) => {
+          return (
+            <div
+              data-id="header-cell"
+              className={styles.headerCell}
+              key={item.year}
+              style={{ minWidth: props.width, maxWidth: props.width }}
+            >
+              {item.year}
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 }

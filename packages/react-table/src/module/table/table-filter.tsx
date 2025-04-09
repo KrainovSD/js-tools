@@ -1,6 +1,6 @@
 import { type FilterFieldType, type FilterInputValueType, FiltersBlock } from "@krainovsd/react-ui";
+import type { TableInterface } from "../../types";
 import styles from "./table-filter.module.scss";
-import type { TableInterface } from "./types";
 
 type TableFilterProps<RowData extends Record<string, unknown>> = {
   filterOptions: FilterFieldType[];

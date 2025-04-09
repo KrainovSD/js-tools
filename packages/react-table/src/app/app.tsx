@@ -135,8 +135,9 @@ export function App() {
           }
           firstGanttDate={firstDate?.toISOString?.()}
           lastGanttDate={lastDate?.toDateString?.()}
-          ganttRowMini={false}
+          ganttRowMini={true}
           ganttGrid={true}
+          ganttView={"years"}
         />
       </div>
     </ConfigProvider>
