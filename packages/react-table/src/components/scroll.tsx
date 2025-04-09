@@ -11,7 +11,9 @@ export function Scroll(props: Props) {
     <div className={styles.base}>
       <div ref={props.tableScrollRef} className={styles.scroll} style={{ width: props.sizes[0] }}>
         <div className={styles.scroll__track}>
-          <div className={styles.scroll__thumb}></div>
+          <div className={styles.scroll__thumb}>
+            <div className={styles.scroll__body}></div>
+          </div>
         </div>
       </div>
       <div
@@ -20,7 +22,9 @@ export function Scroll(props: Props) {
         style={{ width: props.sizes[1] }}
       >
         <div className={styles.scroll__track}>
-          <div className={styles.scroll__thumb}></div>
+          <div className={styles.scroll__thumb}>
+            <div className={styles.scroll__body}></div>
+          </div>
         </div>
       </div>
     </div>

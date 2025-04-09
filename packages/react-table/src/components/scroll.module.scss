@@ -5,10 +5,9 @@
 
 .scroll {
   width: 100%;
-  height: 8px;
+  height: 15px;
   background: white;
   border-radius: 6px;
-  margin-top: 8px;
   margin-left: 3px;
 
   &__track {
@@ -16,15 +15,23 @@
     height: 100%;
     position: relative;
   }
+
+  &__body {
+    background: #e2e2e2;
+    width: 100%;
+    height: 4px;
+    border-radius: 6px;
+  }
+
   &__thumb {
     height: 4px;
-    background: #e2e2e2;
     border-radius: 6px;
     position: absolute;
     left: 0;
     width: 100px;
     cursor: grab;
     display: none;
+    padding: 7px 0;
 
     &:active {
       cursor: grabbing;
