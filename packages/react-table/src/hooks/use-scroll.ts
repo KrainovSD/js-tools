@@ -229,6 +229,7 @@ export function useScroll() {
 
     const observer = new ResizeObserver(onObserve);
     observer.observe(mainContainer);
+    observer.observe(mainBody);
 
     return () => {
       observer.disconnect();
