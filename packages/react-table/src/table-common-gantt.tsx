@@ -33,7 +33,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
 export function TableCommonGantt<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
 ) {
-  const { getCell, getHeader } = useTableCell<RowData>();
+  const { getCell, getHeader } = useTableCell<RowData>(false);
 
   return (
     <div

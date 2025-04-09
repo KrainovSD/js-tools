@@ -6,6 +6,8 @@ import {
   GANTT_HEADER_ID,
 } from "../table.constants";
 
+const MAX_SCROLL_WIDTH = 10;
+
 // eslint-disable-next-line max-params
 function updateScroll(
   container: HTMLDivElement,
@@ -46,8 +48,9 @@ export function useScroll() {
       const contentWidth = mainBody.scrollWidth;
       const visibleWidth = mainContainer.clientWidth;
 
-      if (contentWidth - visibleWidth <= 0) {
+      if (contentWidth - visibleWidth <= MAX_SCROLL_WIDTH) {
         setTableGanttScroll(false);
+        thumb.style.display = "none";
 
         return;
       }
@@ -120,8 +123,9 @@ export function useScroll() {
       const contentWidth = mainBody.scrollWidth;
       const visibleWidth = mainContainer.clientWidth;
 
-      if (contentWidth - visibleWidth <= 0) {
+      if (contentWidth - visibleWidth <= MAX_SCROLL_WIDTH) {
         setTableScroll(false);
+        thumb.style.display = "none";
 
         return;
       }

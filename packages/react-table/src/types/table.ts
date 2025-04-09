@@ -277,6 +277,7 @@ export type GanttDate = {
 export type GanttRowInfo = {
   index: number;
   left: number;
+  top: number;
   width: number;
   height: number;
   textWidth: number;

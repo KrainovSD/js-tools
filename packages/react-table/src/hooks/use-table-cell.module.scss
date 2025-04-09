@@ -36,8 +36,6 @@
 }
 
 .cell {
-  transition: var(--table-transition);
-
   &__frozen {
     &_left {
       position: sticky;

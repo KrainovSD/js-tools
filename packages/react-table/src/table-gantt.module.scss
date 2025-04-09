@@ -84,20 +84,6 @@
   display: flex;
   width: 100%;
   border-bottom: 1px solid var(--table-border);
-
-  &__virtual {
-    position: absolute;
-    z-index: 4;
-    border-bottom: none;
-  }
-}
-
-.cell {
-  transition: var(--table-transition);
-  width: 100%;
-  padding: 8px 8px;
-  align-items: center;
-  display: flex;
 }
 
 .tooltip {

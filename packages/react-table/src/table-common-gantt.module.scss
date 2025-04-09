@@ -65,4 +65,8 @@
   &__virtual {
     position: absolute;
   }
+
+  // & > :last-child {
+  //   border-right: 1px solid var(--table-border);
+  // }
 }

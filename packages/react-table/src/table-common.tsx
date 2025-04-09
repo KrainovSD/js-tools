@@ -22,7 +22,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
 export function TableCommon<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
 ) {
-  const { getCell, getHeader } = useTableCell<RowData>();
+  const { getCell, getHeader } = useTableCell<RowData>(true);
 
   return (
     <table

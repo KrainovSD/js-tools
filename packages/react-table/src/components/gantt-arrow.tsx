@@ -28,7 +28,7 @@ export function GanttArrow(props: Props) {
   const rowInfo = props.rowsMap[props.currentRowId];
   if (!rowInfo) return;
 
-  const startTop = rowInfo.index * GANTT_ROW_HEIGHT_MINI + GANTT_ROW_HEIGHT_MINI / 2 - 2;
+  const startTop = rowInfo.top - 2;
   const startLeft = rowInfo.left + rowInfo.width + GANTT_ROW_PADDING - 2;
 
   return (
