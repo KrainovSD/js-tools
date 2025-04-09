@@ -234,3 +234,77 @@ export function GanttMonthHeader(props: GanttHeaderProps) {
     </>
   );
 }
+
+export function GanttWeekHeader(props: GanttHeaderProps) {
+  return (
+    <>
+      {/** HEADER ROW YEAR */}
+      <div
+        className={styles.headerRow}
+        style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+        data-id="header-row"
+      >
+        {props.headerItems.map((item) => {
+          return (
+            <div
+              data-id="header-cell"
+              className={styles.headerCell}
+              key={item.year}
+              style={{
+                minWidth: props.width * item.months.length * 4,
+                maxWidth: props.width * item.months.length * 4,
+                justifyContent: "center",
+              }}
+            >
+              {item.year}
+            </div>
+          );
+        })}
+      </div>
+      {/** HEADER ROW MONTH */}
+      <div
+        data-id="header-row"
+        className={styles.headerRow}
+        style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+      >
+        {props.headerItems.map((item) => {
+          return item.months.map((month) => {
+            return (
+              <div
+                data-id="header-cell"
+                className={styles.headerCell}
+                key={`${item.year}${month}`}
+                style={{ minWidth: props.width * 4, maxWidth: props.width * 4 }}
+              >
+                {getShortMonthName(month, props.locale)}
+              </div>
+            );
+          });
+        })}
+      </div>
+      {/** HEADER ROW WEEK */}
+      <div
+        data-id="header-row"
+        className={styles.headerRow}
+        style={{ minHeight: GANTT_HEADER_HEIGHT, maxHeight: GANTT_HEADER_HEIGHT }}
+      >
+        {props.headerItems.map((item) => {
+          return item.months.map((month) => {
+            return Array.from({ length: 4 }, (_, index) => {
+              return (
+                <div
+                  data-id="header-cell"
+                  className={styles.headerCell}
+                  key={`${item.year}${month}${index}`}
+                  style={{ minWidth: props.width, maxWidth: props.width }}
+                >
+                  {`W${index + 1}`}
+                </div>
+              );
+            });
+          });
+        })}
+      </div>
+    </>
+  );
+}

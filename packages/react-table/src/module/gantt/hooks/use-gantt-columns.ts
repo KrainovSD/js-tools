@@ -129,7 +129,13 @@ export function useGanttColumns<RowData extends Record<string, unknown>>(
       }
 
       case "weeks": {
-        return 0;
+        return (
+          headerItems.reduce((acc, item) => {
+            acc += item.months.length;
+
+            return acc;
+          }, 0) * 4
+        );
       }
       default: {
         return 0;

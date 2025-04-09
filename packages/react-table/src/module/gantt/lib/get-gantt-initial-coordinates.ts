@@ -71,6 +71,27 @@ export function getGanttInitialCoordinates(opts: GetGanttInitialCoordinates): {
 
       break;
     }
+    case "weeks": {
+      diffWidth = getMonthDifference(startDate, endDate) * 4 * GANTT_COLUMN_WIDTH;
+      startWidth = ((GANTT_COLUMN_WIDTH * 4) / 31) * startDate.getDate();
+      endWidth = ((GANTT_COLUMN_WIDTH * 4) / 31) * endDate.getDate();
+
+      const startYear = startDate.getFullYear();
+      const startMonth = startDate.getMonth();
+      if (opts.headerItems[0].year < startYear) {
+        startCell = opts.headerItems[0].months.length;
+        const diff = startYear - opts.headerItems[0].year - 1;
+        for (let i = 0; i < diff; i++) {
+          startCell += 12;
+        }
+        startCell += startMonth;
+      } else {
+        startCell = startMonth - opts.headerItems[0].months[0];
+      }
+
+      startCell *= 4;
+      break;
+    }
     default: {
       break;
     }

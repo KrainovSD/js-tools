@@ -9,7 +9,12 @@ import type {
   RowInterface,
   TableInterface,
 } from "../../types";
-import { GanttMonthHeader, GanttQuarterHeader, GanttYearHeader } from "./components";
+import {
+  GanttMonthHeader,
+  GanttQuarterHeader,
+  GanttWeekHeader,
+  GanttYearHeader,
+} from "./components";
 import {
   GANTT_BODY_ID,
   GANTT_HEADER_HEIGHT,
@@ -132,6 +137,13 @@ export function TableGantt<RowData extends Record<string, unknown>>(
           )}
           {props.ganttView === "quarters" && (
             <GanttQuarterHeader
+              headerItems={headerItems}
+              locale={props.locale}
+              width={GANTT_COLUMN_WIDTH}
+            />
+          )}
+          {props.ganttView === "weeks" && (
+            <GanttWeekHeader
               headerItems={headerItems}
               locale={props.locale}
               width={GANTT_COLUMN_WIDTH}
