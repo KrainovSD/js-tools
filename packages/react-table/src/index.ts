@@ -31,4 +31,4 @@ declare module "@tanstack/react-table" {
 
 export * from "./table";
 export * from "./types";
-export { useVisibleCell } from "./hooks";
+export { useVisibleCell } from "./module/table/hooks";

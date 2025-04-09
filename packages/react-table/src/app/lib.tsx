@@ -62,10 +62,9 @@ export const columns: TableColumn<Row, "test">[] = [
     cellRenderProps: {
       pathToTooltip: "description",
       autoTooltip: true,
-      // eslint-disable-next-line react/prop-types
-      Link: ({ row, children }) => {
+      Link: (props) => {
         // eslint-disable-next-line react/prop-types
-        return <a href={row.country}>{children}</a>;
+        return <a href={props.row.country}>{props.children}</a>;
       },
     },
     // leftFrozen: true,

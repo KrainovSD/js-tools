@@ -48,6 +48,7 @@ export function App() {
     checkRows(rowsGantt);
 
     return { firstDate, lastDate };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [withGantt]);
 
   return (

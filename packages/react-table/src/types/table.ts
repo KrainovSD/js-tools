@@ -15,7 +15,7 @@ import type {
   SelectFilterRenderProps,
   TagCellRenderProps,
   TextCellRenderProps,
-} from "../components";
+} from "../module/table/components";
 
 export type TableColumn<
   RowData extends Record<string, unknown>,
