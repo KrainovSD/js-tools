@@ -138,7 +138,7 @@ export function App() {
           lastGanttDate={lastDate?.toDateString?.()}
           ganttRowMini={true}
           ganttGrid={true}
-          ganttView={"weeks"}
+          ganttView={"years"}
         />
       </div>
     </ConfigProvider>

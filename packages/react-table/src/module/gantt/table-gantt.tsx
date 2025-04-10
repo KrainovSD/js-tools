@@ -169,7 +169,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
               const row = props.rows[virtualRow.index];
 
               return (
-                <React.Fragment key={virtualRow.index}>
+                <React.Fragment key={`${virtualRow.index}-row`}>
                   {getCell({
                     row,
                     ganttInfoGetter: props.ganttInfoGetter,
@@ -196,7 +196,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
           {!props.rowVirtualEnabled &&
             props.rows.map((row) => {
               return (
-                <React.Fragment key={row.index}>
+                <React.Fragment key={`${row.id}-row`}>
                   {getCell({
                     row,
                     ganttInfoGetter: props.ganttInfoGetter,
@@ -221,7 +221,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
             Array.from({ length: columnsCount }, (_, index) => {
               return (
                 <div
-                  key={index}
+                  key={`${index}-column`}
                   className={styles.fake__column}
                   style={{
                     left: (index + 1) * GANTT_COLUMN_WIDTH - GANTT_LEFT_SHIFT,

@@ -40,8 +40,21 @@
 
   &__text {
     margin-left: 10px;
+    margin-right: 10px;
+
     font-size: 14px;
     font-family: Nunito;
+
+    &_white {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    &_ellipsis {
+      text-overflow: ellipsis;
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
 
     &_shift {
       transform: translateY(-50%);

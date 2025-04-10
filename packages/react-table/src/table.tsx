@@ -225,7 +225,7 @@ export function Table<
             firstGanttDate={props.firstGanttDate}
             ganttGrid={props.ganttGrid}
             ganttInfoGetter={props.ganttInfoGetter}
-            ganttView={props.ganttView}
+            ganttView={props.ganttView ?? "months"}
             lastGanttDate={props.lastGanttDate}
             locale={props.locale}
             onClickRow={props.onClickRow}

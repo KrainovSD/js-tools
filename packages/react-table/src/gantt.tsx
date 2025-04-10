@@ -32,7 +32,7 @@ export type GanttProps<RowData extends Record<string, unknown>> = {
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
   locale?: string;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
-  ganttView?: GanttViewType;
+  ganttView: GanttViewType;
 };
 
 export function Gantt<RowData extends Record<string, unknown>>(props: GanttProps<RowData>) {

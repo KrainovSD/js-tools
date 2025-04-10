@@ -26,7 +26,7 @@ export function getGanttInitialCoordinates(opts: GetGanttInitialCoordinates): {
   const GANTT_COLUMN_WIDTH = getGanttColumnWidth(opts.ganttView);
   const ROW_HEIGHT = opts.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT;
 
-  const textWidth = opts.ganttInfo.name.length * 6 + 20;
+  const textWidth = opts.ganttInfo.name.length * 6.5 + 20;
   const top = opts.index * ROW_HEIGHT + ROW_HEIGHT / 2;
   let height = ROW_HEIGHT / 2;
   if (opts.ganttInfo.type === "milestone") {

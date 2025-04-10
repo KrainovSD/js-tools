@@ -27,13 +27,13 @@ export function getCell<RowData extends Record<string, unknown>>(opts: GetCellOp
 
   const startDate = new Date(ganttInfo.start);
   const endDate = new Date(ganttInfo.end);
-  const duration = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+  const duration = Math.round(endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
   const rowInfo = opts.rowsMap[ganttInfo.id];
 
   if (!rowInfo) return null;
 
   return (
-    <React.Fragment key={ganttInfo.id}>
+    <React.Fragment key={`${ganttInfo.id}-cell`}>
       <Tooltip
         styleBase={{
           left: rowInfo.left,
@@ -76,7 +76,15 @@ export function getCell<RowData extends Record<string, unknown>>(opts: GetCellOp
           }}
         >
           {rowInfo.textWidth <= rowInfo.width && (
-            <span className={styles.item__text}>{ganttInfo.name}</span>
+            <span
+              className={clsx(
+                styles.item__text,
+                styles.item__text_white,
+                styles.item__text_ellipsis,
+              )}
+            >
+              {ganttInfo.name}
+            </span>
           )}
         </div>
         {rowInfo.textWidth > rowInfo.width && (

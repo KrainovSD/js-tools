@@ -231,7 +231,7 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
         }
 
         transformArrow = "translateX(-50%)";
-        leftArrow = "5%";
+        leftArrow = "15px";
 
         break;
       }
@@ -247,7 +247,7 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
         }
 
         transformArrow = "translateX(-50%)";
-        leftArrow = "95%";
+        leftArrow = "calc(100% - 15px)";
 
         break;
       }
@@ -279,7 +279,7 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
           leftArrow = "-11px";
         }
 
-        topArrow = "5%";
+        topArrow = "5px";
 
         break;
       }
@@ -295,7 +295,7 @@ export function Positioner(props: React.PropsWithChildren<Props>) {
         }
 
         transformArrow = "translateY(-100%)";
-        topArrow = "95%";
+        topArrow = "calc(100% - 5px)";
 
         break;
       }

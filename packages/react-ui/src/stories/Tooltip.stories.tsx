@@ -153,6 +153,29 @@ const Template: StoryFn<typeof Tooltip> = () => {
       >
         Тултип
       </Tooltip>
+      <Tooltip
+        placement="bottom-left"
+        text={
+          <div
+            className={css`
+              display: flex;
+              flex-direction: column;
+              gap: 3px;
+            `}
+          >
+            <span>Задача:</span>
+            <span>Очень короткий</span>
+            <span>Начало:</span>
+            <span>02.02.2024</span>
+            <span>Оконание:</span>
+            <span>03.04.2025</span>
+            <span>Продолжительность:</span>
+            <span>{24}</span>
+          </div>
+        }
+      >
+        Тултип
+      </Tooltip>
     </Flex>
   );
 };
