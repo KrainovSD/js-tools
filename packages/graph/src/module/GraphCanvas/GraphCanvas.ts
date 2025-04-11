@@ -1061,6 +1061,17 @@ export class GraphCanvas<
         this.updateSize();
       });
     });
+
+    function updateRect(this: GraphCanvas<NodeData, LinkData>) {
+      if (this.area) this.areaRect = this.area.getBoundingClientRect();
+    }
+
+    document.addEventListener("scroll", updateRect.bind(this), {
+      capture: true,
+      passive: true,
+      signal: abortController.signal,
+    });
+
     observer.observe(this.area);
   }
 

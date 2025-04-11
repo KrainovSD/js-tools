@@ -2,13 +2,15 @@
   position: relative;
   display: flex;
   width: 100%;
-  height: 100%;
+  height: 200vh;
+  justify-content: center;
+  align-items: start;
 }
 
 .graph {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
   z-index: 1;
   top: 0;
   left: 0;
