@@ -4,13 +4,24 @@ import { Editor, type MultiCursorOptions } from "@/module";
 import "./global.css";
 import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } from "./helpers";
 
+// let first = true;
 /** Multi Cursor Mode */
 const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");
 const presetMultiCursor: MultiCursorOptions = {
-  roomId,
-  url: "ws://192.168.135.150:3005",
+  roomId: `${roomId}/main/Readme.md`,
+  url: "ws://192.168.135.150:4006/ws/v1/editor",
   userName: randomString(5),
   userColor: randomColor(),
+  onChangeStatusProvider: (status) => {
+    // eslint-disable-next-line no-console
+    console.log(status);
+
+    // if (first) {
+    //   provider.disconnect();
+    //   first = false;
+    //   provider.connect();
+    // }
+  },
 };
 
 let editor: Editor | undefined;

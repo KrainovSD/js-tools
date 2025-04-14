@@ -1,4 +1,4 @@
-import type { MultiCursorOptions } from "../Editor.types";
+import type { MultiCursorOptions, ProviderStatusEvent } from "../Editor.types";
 
 type InitEditorProviderOptions = {
   initialText?: string;
@@ -10,7 +10,7 @@ export async function initEditorProvider({
   userName = "Anonymous",
   userColor,
   initialText,
-  onStartProvider,
+  ...opts
 }: InitEditorProviderOptions) {
   const { Doc } = await import("yjs");
   const { WebsocketProvider } = await import("y-websocket");
@@ -31,17 +31,20 @@ export async function initEditorProvider({
     colorLight: userColorLight,
   });
 
-  if (onStartProvider)
-    provider.on("status", (event: { status: string }) => {
-      onStartProvider(event?.status);
+  if (opts.onChangeStatusProvider)
+    provider.on("status", (event: ProviderStatusEvent) => {
+      opts.onChangeStatusProvider?.(event, provider, multiCursorText);
     });
 
-  if (provider)
-    provider.on("sync", (isSynced: boolean) => {
-      if (isSynced && !multiCursorText.length && initialText) {
-        multiCursorText.insert(0, initialText);
-      }
-    });
+  provider.on("sync", (isSynced: boolean) => {
+    if (opts.onSyncProvider) {
+      opts.onSyncProvider(isSynced, provider, multiCursorText);
+    }
+
+    if (opts.autoInsert && isSynced && !multiCursorText.length && initialText) {
+      multiCursorText.insert(0, initialText);
+    }
+  });
 
   return { provider, multiCursorText };
 }

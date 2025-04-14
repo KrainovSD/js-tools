@@ -1,3 +1,5 @@
+import type { WebsocketProvider } from "y-websocket";
+import type { Text } from "yjs";
 import { type ExtensionsOptions } from "@/extensions";
 
 export type EditorArguments = {
@@ -11,5 +13,15 @@ export type MultiCursorOptions = {
   userName?: string;
   userColor?: string;
   roomId: string;
-  onStartProvider?: (status?: string) => void;
+  autoInsert?: boolean;
+  onChangeStatusProvider?: (
+    event: ProviderStatusEvent,
+    provider: WebsocketProvider,
+    doc: Text,
+  ) => void;
+  onSyncProvider?: (synced: boolean, provider: WebsocketProvider, doc: Text) => void;
+};
+
+export type ProviderStatusEvent = {
+  status?: "connected" | "disconnected" | "connecting";
 };
