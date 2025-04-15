@@ -1,4 +1,9 @@
-import type { Response as NodeResponse } from "node-fetch";
+import type {
+  BodyInit as NodeBodyInit,
+  RequestInfo as NodeRequestInfo,
+  RequestInit as NodeRequestInit,
+  Response as NodeResponse,
+} from "node-fetch";
 import { IS_BROWSER } from "../../constants";
 import type {
   ActiveMiddleware,
@@ -42,7 +47,9 @@ export class ResponseError extends Error {
 }
 
 type CreateRequestClientInstance = {
-  client: typeof fetch;
+  client:
+    | ((url: URL | NodeRequestInfo, init?: NodeRequestInit) => Promise<NodeResponse>)
+    | typeof fetch;
   activeMiddlewares?: ActiveMiddleware;
   middlewareOptions?: MiddlewaresOptions;
   customMiddlewares?: Middleware[];
@@ -122,7 +129,7 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
 
     const response: Response | NodeResponse | undefined = await options.client(url, {
       method,
-      body: preparedBody as BodyInit,
+      body: preparedBody as (BodyInit & NodeBodyInit) | null | undefined,
       headers: {
         ...(body instanceof FormData || !body
           ? {}
