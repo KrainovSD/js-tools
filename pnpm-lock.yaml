@@ -379,6 +379,9 @@ importers:
       '@types/node':
         specifier: 22.10.2
         version: 22.10.2
+      '@types/node-fetch':
+        specifier: 2.6.12
+        version: 2.6.12
       eslint:
         specifier: 9.21.0
         version: 9.21.0
@@ -386,8 +389,8 @@ importers:
         specifier: 29.7.0
         version: 29.7.0(@types/node@22.10.2)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.11.5)(@types/node@22.10.2)(typescript@5.7.3))
       node-fetch:
-        specifier: 3.3.2
-        version: 3.3.2
+        specifier: 2.7.0
+        version: 2.7.0
       prettier:
         specifier: 3.5.2
         version: 3.5.2
@@ -4295,6 +4298,9 @@ packages:
 
   '@types/minimatch@5.1.2':
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
+
+  '@types/node-fetch@2.6.12':
+    resolution: {integrity: sha512-8nneRWKCg3rMtF69nLQJnOYUcbafYeFSjqkw3jCRLsqkWFlHaoQrr5mXmofFGOx3DKn7UfmBMyov8ySvLRVldA==}
 
   '@types/node@18.15.11':
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
@@ -10176,8 +10182,8 @@ snapshots:
       '@aws-crypto/sha1-browser': 3.0.0
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
-      '@aws-sdk/client-sts': 3.577.0
+      '@aws-sdk/client-sso-oidc': 3.577.0
+      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-bucket-endpoint': 3.577.0
@@ -10234,11 +10240,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sso-oidc@3.577.0(@aws-sdk/client-sts@3.577.0)':
+  '@aws-sdk/client-sso-oidc@3.577.0':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sts': 3.577.0
+      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -10277,7 +10283,6 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
-      - '@aws-sdk/client-sts'
       - aws-crt
 
   '@aws-sdk/client-sso@3.577.0':
@@ -10323,11 +10328,11 @@ snapshots:
     transitivePeerDependencies:
       - aws-crt
 
-  '@aws-sdk/client-sts@3.577.0':
+  '@aws-sdk/client-sts@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)':
     dependencies:
       '@aws-crypto/sha256-browser': 3.0.0
       '@aws-crypto/sha256-js': 3.0.0
-      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
+      '@aws-sdk/client-sso-oidc': 3.577.0
       '@aws-sdk/core': 3.576.0
       '@aws-sdk/credential-provider-node': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)
       '@aws-sdk/middleware-host-header': 3.577.0
@@ -10366,6 +10371,7 @@ snapshots:
       '@smithy/util-utf8': 3.0.0
       tslib: 2.8.1
     transitivePeerDependencies:
+      - '@aws-sdk/client-sso-oidc'
       - aws-crt
 
   '@aws-sdk/core@3.576.0':
@@ -10399,7 +10405,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-ini@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)(@aws-sdk/client-sts@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.577.0
+      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
       '@aws-sdk/credential-provider-env': 3.577.0
       '@aws-sdk/credential-provider-process': 3.577.0
       '@aws-sdk/credential-provider-sso': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
@@ -10456,7 +10462,7 @@ snapshots:
 
   '@aws-sdk/credential-provider-web-identity@3.577.0(@aws-sdk/client-sts@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sts': 3.577.0
+      '@aws-sdk/client-sts': 3.577.0(@aws-sdk/client-sso-oidc@3.577.0)
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.1.11
       '@smithy/types': 3.7.2
@@ -10572,7 +10578,7 @@ snapshots:
 
   '@aws-sdk/token-providers@3.577.0(@aws-sdk/client-sso-oidc@3.577.0)':
     dependencies:
-      '@aws-sdk/client-sso-oidc': 3.577.0(@aws-sdk/client-sts@3.577.0)
+      '@aws-sdk/client-sso-oidc': 3.577.0
       '@aws-sdk/types': 3.577.0
       '@smithy/property-provider': 3.1.11
       '@smithy/shared-ini-file-loader': 3.1.12
@@ -12041,7 +12047,7 @@ snapshots:
       eslint: 9.21.0
       eslint-config-prettier: 10.0.2(eslint@9.21.0)
       eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)
-      eslint-plugin-jest: 28.11.0(@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(jest@29.7.0(@types/node@22.13.8)(ts-node@10.9.1(@types/node@22.13.8)(typescript@5.7.3)))(typescript@5.7.3)
+      eslint-plugin-jest: 28.11.0(@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(jest@29.7.0(@types/node@22.13.8))(typescript@5.7.3)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.21.0)
       eslint-plugin-prettier: 5.2.3(@types/eslint@8.56.7)(eslint-config-prettier@10.0.2(eslint@9.21.0))(eslint@9.21.0)(prettier@3.5.2)
       eslint-plugin-react: 7.37.4(eslint@9.21.0)
@@ -14223,6 +14229,11 @@ snapshots:
 
   '@types/minimatch@5.1.2': {}
 
+  '@types/node-fetch@2.6.12':
+    dependencies:
+      '@types/node': 22.13.8
+      form-data: 4.0.2
+
   '@types/node@18.15.11': {}
 
   '@types/node@22.10.2':
@@ -15799,7 +15810,8 @@ snapshots:
 
   damerau-levenshtein@1.0.8: {}
 
-  data-uri-to-buffer@4.0.1: {}
+  data-uri-to-buffer@4.0.1:
+    optional: true
 
   data-view-buffer@1.0.2:
     dependencies:
@@ -16314,6 +16326,17 @@ snapshots:
       - supports-color
       - typescript
 
+  eslint-plugin-jest@28.11.0(@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(jest@29.7.0(@types/node@22.13.8))(typescript@5.7.3):
+    dependencies:
+      '@typescript-eslint/utils': 8.28.0(eslint@9.21.0)(typescript@5.7.3)
+      eslint: 9.21.0
+    optionalDependencies:
+      '@typescript-eslint/eslint-plugin': 8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3)
+      jest: 29.7.0(@types/node@22.13.8)(ts-node@10.9.1(@types/node@22.13.8)(typescript@5.7.3))
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   eslint-plugin-jest@28.11.0(@typescript-eslint/eslint-plugin@8.25.0(@typescript-eslint/parser@8.25.0(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(typescript@5.7.3))(eslint@9.21.0)(jest@29.7.0(@types/node@22.8.6))(typescript@5.7.3):
     dependencies:
       '@typescript-eslint/utils': 8.28.0(eslint@9.21.0)(typescript@5.7.3)
@@ -16739,6 +16762,7 @@ snapshots:
     dependencies:
       node-domexception: 1.0.0
       web-streams-polyfill: 3.3.3
+    optional: true
 
   figures@3.2.0:
     dependencies:
@@ -16886,6 +16910,7 @@ snapshots:
   formdata-polyfill@4.0.10:
     dependencies:
       fetch-blob: 3.2.0
+    optional: true
 
   formidable@2.1.2:
     dependencies:
@@ -18751,7 +18776,8 @@ snapshots:
   node-addon-api@7.1.1:
     optional: true
 
-  node-domexception@1.0.0: {}
+  node-domexception@1.0.0:
+    optional: true
 
   node-emoji@1.11.0:
     dependencies:
@@ -18766,6 +18792,7 @@ snapshots:
       data-uri-to-buffer: 4.0.1
       fetch-blob: 3.2.0
       formdata-polyfill: 4.0.10
+    optional: true
 
   node-gyp-build@4.1.1:
     optional: true
@@ -21213,7 +21240,8 @@ snapshots:
     dependencies:
       defaults: 1.0.4
 
-  web-streams-polyfill@3.3.3: {}
+  web-streams-polyfill@3.3.3:
+    optional: true
 
   webidl-conversions@3.0.1: {}
 

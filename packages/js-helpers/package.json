@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/js-helpers",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "description": "Krainov helpers",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -61,7 +61,8 @@
     "@types/lodash": "4.17.13",
     "@types/node": "22.10.2",
     "jest": "29.7.0",
-    "node-fetch": "3.3.2",
+    "node-fetch": "2.7.0",
+    "@types/node-fetch": "2.6.12",
     "ts-jest": "29.2.5"
   }
 }

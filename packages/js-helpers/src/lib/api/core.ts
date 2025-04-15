@@ -129,14 +129,14 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
 
     const response: Response | NodeResponse | undefined = await options.client(url, {
       method,
-      body: preparedBody as (BodyInit & NodeBodyInit) | null | undefined,
+      body: preparedBody as ((BodyInit | null) & NodeBodyInit) | undefined,
       headers: {
         ...(body instanceof FormData || !body
           ? {}
           : { "Content-Type": "application/json; charset=UTF-8" }),
         ...headers,
       },
-      signal: request.signal,
+      signal: request.signal as (AbortSignal & NodeRequestInit["signal"]) | null | undefined,
     });
 
     await executePostMiddlewares(response);
@@ -178,7 +178,7 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
 
       if (IS_BROWSER)
         downloadFile({
-          data,
+          data: data as Blob,
           fileName,
           mimeType,
         });
