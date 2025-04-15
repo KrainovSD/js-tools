@@ -40,4 +40,6 @@ export type DefineMiddlewareSettings = {
   onRequest?: (request: FastifyRequest, reply: FastifyReply) => void;
   onSend?: (request: FastifyRequest, reply: FastifyReply, payload: unknown) => Promise<void>;
   onResponse?: (request: FastifyRequest, reply: FastifyReply) => void;
+  accessLogFilter?: (request: FastifyRequest) => boolean;
+  errorLogFilter?: (request: FastifyRequest) => boolean;
 };

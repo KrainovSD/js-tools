@@ -11,7 +11,10 @@ export function defineMiddlewares(
 
   fastify.setErrorHandler(function onError(error, request, reply) {
     const status = error.statusCode ?? 500;
-    if (status === 500) {
+    if (
+      status === 500 &&
+      (settings.errorLogFilter == undefined || settings.errorLogFilter(request))
+    ) {
       const requestInfo = getRequestInfo(request);
       logger.error({ error, info: requestInfo, message: "error" });
     }
@@ -30,6 +33,12 @@ export function defineMiddlewares(
   });
 
   fastify.addHook("onRequest", function onRequest(request, reply, done) {
+    if (settings.accessLogFilter != undefined && !settings.accessLogFilter(request)) {
+      done();
+
+      return;
+    }
+
     const requestInfo = getRequestInfo(request);
     request.traceId = requestInfo.traceID;
     request.operationId = requestInfo.operationId;
@@ -48,6 +57,12 @@ export function defineMiddlewares(
     return payload;
   });
   fastify.addHook("onResponse", function onResponse(request, reply, done) {
+    if (settings.accessLogFilter != undefined && !settings.accessLogFilter(request)) {
+      done();
+
+      return;
+    }
+
     const requestInfo = getRequestInfo(request);
     const responseInfo = getResponseInfo(reply);
 
