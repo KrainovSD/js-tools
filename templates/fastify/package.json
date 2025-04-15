@@ -18,10 +18,10 @@
     "test-coverage": "jest --coverage"
   },
   "dependencies": {
-    "@krainovsd/fastify-logger": "0.3.0",
+    "@krainovsd/fastify-logger": "0.3.1",
     "@krainovsd/js-helpers": "0.13.0",
-    "@krainovsd/fastify-health-controller": "0.3.0",
-    "@krainovsd/fastify-trace": "0.0.2",
+    "@krainovsd/fastify-health-controller": "0.3.1",
+    "@krainovsd/fastify-trace": "0.0.4",
     "dotenv": "16.4.7",
     "fastify": "5.2.1",
     "@fastify/cors": "10.0.2",

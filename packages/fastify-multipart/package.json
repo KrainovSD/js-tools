@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/fastify-multipart",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Krainov fastify multipart",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -57,7 +57,7 @@
     "ajv": "8.17.1"
   },
   "dependencies": {
-    "@fastify/multipart": "9.0.3"
+    "@fastify/multipart": "^9.0.3"
   },
   "peerDependencies": {
     "fastify": "^5"
