@@ -24,6 +24,7 @@ export default defineConfig(
           format: "cjs",
           override: {
             file: "./lib/cjs/transport.cjs",
+            format: "cjs",
             generatedCode: "es2015",
             sourcemap: true,
           },
