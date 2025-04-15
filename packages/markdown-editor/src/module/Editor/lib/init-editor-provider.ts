@@ -16,7 +16,7 @@ export async function initEditorProvider({
   const { WebsocketProvider } = await import("y-websocket");
 
   const multiCursorDocument = new Doc();
-  const multiCursorText = multiCursorDocument.getText(roomId);
+  const multiCursorText = multiCursorDocument.getText("codemirror");
 
   if (!userColor?.startsWith?.("#")) {
     console.warn("user color must be hex!");

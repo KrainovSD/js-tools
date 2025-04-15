@@ -9,7 +9,7 @@ import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } fro
 const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");
 const presetMultiCursor: MultiCursorOptions = {
   roomId: `${roomId}/main/Readme.md`,
-  url: "ws://192.168.135.150:4006/ws/v1/editor",
+  url: "ws://192.168.135.150:4007/ws/v1/editor",
   userName: randomString(5),
   userColor: randomColor(),
   onChangeStatusProvider: (status) => {

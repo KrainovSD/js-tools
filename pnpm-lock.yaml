@@ -503,7 +503,7 @@ importers:
         version: 10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/websockets@10.3.7)(reflect-metadata@0.2.2)(rxjs@7.8.1)
       '@nestjs/schematics':
         specifier: 10.1.1
-        version: 10.1.1(chokidar@3.5.3)(typescript@5.1.6)
+        version: 10.1.1(chokidar@3.6.0)(typescript@5.1.6)
       '@nestjs/swagger':
         specifier: 7.3.1
         version: 7.3.1(@fastify/static@7.0.3)(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/websockets@10.3.7)(reflect-metadata@0.2.2)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
@@ -636,7 +636,7 @@ importers:
         version: 10.3.8(@fastify/static@7.0.3)(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/websockets@10.3.7)(reflect-metadata@0.2.2)(rxjs@7.8.1))
       '@nestjs/schematics':
         specifier: 10.1.1
-        version: 10.1.1(chokidar@3.6.0)(typescript@5.1.6)
+        version: 10.1.1(chokidar@3.5.3)(typescript@5.1.6)
       '@nestjs/swagger':
         specifier: 7.3.1
         version: 7.3.1(@fastify/static@7.0.3)(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/core@10.3.7(@nestjs/common@10.3.7(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)(rxjs@7.8.1))(@nestjs/websockets@10.3.7)(reflect-metadata@0.2.2)(rxjs@7.8.1))(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.2)
@@ -7156,6 +7156,11 @@ packages:
 
   lib0@0.2.101:
     resolution: {integrity: sha512-LljA6+Ehf0Z7YnxhgSAvspzWALjW4wlWdN/W4iGiqYc1KvXQgOVXWI0xwlwqozIL5WRdKeUW2gq0DLhFsY+Xlw==}
+    engines: {node: '>=16'}
+    hasBin: true
+
+  lib0@0.2.104:
+    resolution: {integrity: sha512-1tqKRANSPTcjs/yjPoKh52oRM2u5AYdd8jie8sDiN8/5kpWWiQSHUGgtB4VEXLw1chVL3QPSPp8q9RWqzSn2FA==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -18507,6 +18512,10 @@ snapshots:
     dependencies:
       isomorphic.js: 0.2.5
 
+  lib0@0.2.104:
+    dependencies:
+      isomorphic.js: 0.2.5
+
   libphonenumber-js@1.12.6: {}
 
   light-my-request@5.13.0:
@@ -21526,18 +21535,18 @@ snapshots:
   y-leveldb@0.1.2(yjs@13.6.24):
     dependencies:
       level: 6.0.1
-      lib0: 0.2.101
+      lib0: 0.2.104
       yjs: 13.6.24
     optional: true
 
   y-protocols@1.0.6(yjs@13.6.24):
     dependencies:
-      lib0: 0.2.101
+      lib0: 0.2.104
       yjs: 13.6.24
 
   y-websocket@2.1.0(yjs@13.6.24):
     dependencies:
-      lib0: 0.2.101
+      lib0: 0.2.104
       lodash.debounce: 4.0.8
       y-protocols: 1.0.6(yjs@13.6.24)
       yjs: 13.6.24
