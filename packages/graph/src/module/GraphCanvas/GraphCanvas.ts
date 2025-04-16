@@ -243,6 +243,10 @@ export class GraphCanvas<
     this.tick();
   }
 
+  updateRect() {
+    if (this.area) this.areaRect = this.area.getBoundingClientRect();
+  }
+
   clearCache() {
     this.nodeOptionsCache = {};
     this.linkOptionsCache = {};
@@ -1062,11 +1066,7 @@ export class GraphCanvas<
       });
     });
 
-    function updateRect(this: GraphCanvas<NodeData, LinkData>) {
-      if (this.area) this.areaRect = this.area.getBoundingClientRect();
-    }
-
-    document.addEventListener("scroll", updateRect.bind(this), {
+    document.addEventListener("scroll", this.updateRect.bind(this), {
       capture: true,
       passive: true,
       signal: abortController.signal,
