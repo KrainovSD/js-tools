@@ -18,6 +18,7 @@ export function useGanttColumns<RowData extends Record<string, unknown>>(
   props: UseGanttColumnsProps<RowData>,
 ) {
   const firstGanttDate = React.useMemo<GanttDate | null>(() => {
+    if (props.rows.length === 0) return null;
     const firstDate = props.firstGanttDate ?? props.ganttInfoGetter?.(props.rows[0])?.start;
     if (!firstDate) return null;
 
@@ -38,6 +39,7 @@ export function useGanttColumns<RowData extends Record<string, unknown>>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.firstGanttDate, props.rows, props.ganttInfoGetter]);
   const lastGanttDate = React.useMemo<GanttDate | null>(() => {
+    if (props.rows.length === 0) return null;
     const lastDate = props.lastGanttDate ?? props.ganttInfoGetter?.(props.rows[0])?.end;
     if (!lastDate) return null;
 
