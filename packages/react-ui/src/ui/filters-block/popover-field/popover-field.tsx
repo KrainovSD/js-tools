@@ -28,7 +28,7 @@ export const PopoverField: FC<IProps> = (props) => {
   }, [props.newFilter]);
 
   const displayValue = React.useMemo(() => {
-    if (fieldValue) {
+    if (fieldValue !== undefined) {
       if (props.field.labelInValue && props.field.renderDisplayValue) {
         return props.field.renderDisplayValue(fieldValue);
       }
