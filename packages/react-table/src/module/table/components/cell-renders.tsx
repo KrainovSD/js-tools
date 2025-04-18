@@ -19,6 +19,7 @@ export type TextCellRenderProps<RowData extends Record<string, unknown>> = {
   autoTooltip?: boolean;
   booleanMapping?: BooleanMapping;
   classes?: Record<CellRenderClasses, boolean>;
+  tooltipZ?: number;
 };
 
 type BooleanMapping = {
@@ -81,6 +82,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
                 classNameContent={styles.tooltip}
                 text={tooltip}
                 autoTooltip={cellRenderProps?.autoTooltip}
+                zIndex={cellRenderProps?.tooltipZ}
               >
                 {Node}
               </Tooltip>
@@ -106,6 +108,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
               classNameContent={styles.tooltip}
               text={tooltip}
               autoTooltip={cellRenderProps?.autoTooltip}
+              zIndex={cellRenderProps?.tooltipZ}
             >
               {Node}
             </Tooltip>
@@ -167,6 +170,7 @@ export type TagCellRenderProps<Row extends Record<string, unknown>> = {
   classes?: Record<CellRenderClasses, boolean>;
   tooltip?: boolean;
   autoTooltip?: boolean;
+  tooltipZ?: number;
 };
 
 export function TagCellRender<Row extends Record<string, unknown>>(props: {
@@ -243,6 +247,7 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
             classNameContent={styles.tooltip}
             text={renderContent.join(", ")}
             autoTooltip={cellRenderProps?.autoTooltip}
+            zIndex={cellRenderProps?.tooltipZ}
           >
             {Node}
           </Tooltip>
