@@ -73,9 +73,9 @@ export const Primary: Story = {
             size="middle"
             style={{ width: "fit-content", minWidth: 200, maxWidth: 300 }}
             options={[
-              { value: "Тест", label: "Тест" },
-              { value: "Старт", label: "Старт" },
-              { value: "Стоп", label: "Стоп" },
+              { value: 1, label: "Тест" },
+              { value: 2, label: "Старт" },
+              { value: 3, label: "Стоп" },
               {
                 value: "Супер длинное название которо точно не поместится",
                 label: "Супер длинное название которо точно не поместится",

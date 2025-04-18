@@ -182,12 +182,14 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
   const { isVisible } = useVisibleCell(props.context);
   if (!cellRenderProps) return;
 
+  const rowValue = getData(props.context.row.original, props.context.column.id);
   const rowContent =
     cellRenderProps?.content?.(props.context.row.original) ??
     getData(props.context.row.original, props.context.column.id);
   const renderContent = isArray(rowContent) ? rowContent : [rowContent];
+  const renderValue = isArray(rowValue) ? rowValue : [rowValue];
 
-  if (!isVisible || !isArray(renderContent)) return null;
+  if (!isVisible || !isArray(renderContent) || !isArray(renderValue)) return null;
 
   const Node = renderContent.map((content, index) => {
     if (!isId(content)) return null;
@@ -219,13 +221,14 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
             isObject(filterRenderProps) && "multiple" in filterRenderProps
               ? filterRenderProps.multiple
               : false;
+          const value = renderValue[index];
           if (multiple) {
-            const values: (string | number)[] = [];
-            values.push(content);
+            const values: unknown[] = [];
+            values.push(value);
 
             if (values.length > 0) props.context.column.setFilterValue(values);
           } else {
-            props.context.column.setFilterValue(content);
+            props.context.column.setFilterValue(value);
           }
         }}
       >

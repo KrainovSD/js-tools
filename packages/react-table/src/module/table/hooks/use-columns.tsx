@@ -1,5 +1,5 @@
 import { type DayJS, dateFormat, isArray, isObject, isString } from "@krainovsd/js-helpers";
-import type { FilterFieldType } from "@krainovsd/react-ui";
+import type { FilterFieldType, SelectItemInterface } from "@krainovsd/react-ui";
 import type {
   BuiltInSortingFn,
   CellContext,
@@ -273,8 +273,9 @@ export function useColumns<
         labelInValue: true,
         popover: true,
         renderDisplayValue: (value) => {
-          const filterKey = props.columns[i].filterType;
+          const filterRender = props.columns[i].filterRender;
 
+          /** datepicker */
           if (isDayjsDate(value)) {
             const props = column.filterRenderProps;
 
@@ -284,7 +285,7 @@ export function useColumns<
                 isObject(props) && isString(props.format) ? props.format : "DD/MM/YYYY",
               );
           }
-
+          /** datepicker range */
           if (isArray(value) && isDayjsDate(value[0])) {
             const props = column.filterRenderProps;
 
@@ -298,10 +299,27 @@ export function useColumns<
               .join(" - ");
           }
 
-          if (isArray(value) && isString(filterKey) && filterKey.includes("range")) {
+          /** select */
+          if (isString(filterRender) && filterRender.includes("select")) {
+            const options = column.filterRenderProps as SelectItemInterface[] | undefined;
+            if (isArray(options)) {
+              if (isArray(value)) {
+                return value
+                  .map((val) => options.find((opt) => opt.value === val)?.label)
+                  .join(", ");
+              }
+
+              return options.find((opt) => opt.value === value)?.label ?? "";
+            }
+          }
+
+          /** range */
+          if (isArray(value) && isString(filterRender) && filterRender.includes("range")) {
             // eslint-disable-next-line @typescript-eslint/no-base-to-string
             return value.join(" - ");
           }
+
+          /** array */
           if (isArray(value)) {
             // eslint-disable-next-line @typescript-eslint/no-base-to-string
             return value.join(", ");
