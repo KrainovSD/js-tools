@@ -160,7 +160,8 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
 }
 
 export type TagCellRenderProps<Row extends Record<string, unknown>> = {
-  color?: ((row: Row) => keyof PresetColorType) | keyof PresetColorType;
+  color?: ((row: Row) => keyof PresetColorType | undefined) | keyof PresetColorType | undefined;
+  content?: (row: Row) => string | string[] | undefined;
   bordered?: boolean;
   filterable?: boolean;
   classes?: Record<CellRenderClasses, boolean>;
@@ -177,7 +178,9 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
   const { isVisible } = useVisibleCell(props.context);
   if (!cellRenderProps) return;
 
-  const rowContent = getData(props.context.row.original, props.context.column.id);
+  const rowContent =
+    cellRenderProps?.content?.(props.context.row.original) ??
+    getData(props.context.row.original, props.context.column.id);
   const renderContent = isArray(rowContent) ? rowContent : [rowContent];
 
   if (!isVisible || !isArray(renderContent)) return null;
