@@ -301,7 +301,10 @@ export function useColumns<
 
           /** select */
           if (isString(filterRender) && filterRender.includes("select")) {
-            const options = column.filterRenderProps as SelectItemInterface[] | undefined;
+            const options =
+              isObject(column.filterRenderProps) && "options" in column.filterRenderProps
+                ? (column.filterRenderProps?.options as SelectItemInterface[] | undefined)
+                : undefined;
             if (isArray(options)) {
               if (isArray(value)) {
                 return value
