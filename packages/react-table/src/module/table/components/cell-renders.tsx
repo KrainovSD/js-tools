@@ -159,8 +159,8 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
   );
 }
 
-export type TagCellRenderProps = {
-  color?: keyof PresetColorType;
+export type TagCellRenderProps<Row extends Record<string, unknown>> = {
+  color?: ((row: Row) => keyof PresetColorType) | keyof PresetColorType;
   bordered?: boolean;
   filterable?: boolean;
   classes?: Record<CellRenderClasses, boolean>;
@@ -172,7 +172,7 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as
-    | TagCellRenderProps
+    | TagCellRenderProps<Row>
     | undefined;
   const { isVisible } = useVisibleCell(props.context);
   if (!cellRenderProps) return;
@@ -190,7 +190,11 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
         key={`${content}${index}`}
         className={styles.tag}
         bordered={cellRenderProps?.bordered}
-        color={cellRenderProps?.color}
+        color={
+          typeof cellRenderProps?.color === "function"
+            ? cellRenderProps.color(props.context.row.original)
+            : cellRenderProps?.color
+        }
         style={{
           cursor:
             !props.context.column.columnDef.enableColumnFilter || !cellRenderProps.filterable

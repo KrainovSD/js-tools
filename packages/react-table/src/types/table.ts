@@ -65,7 +65,7 @@ export type TableCellRendersProps<
       cellRenderProps: DateCellRenderProps;
     }
   | { cellRender: "text"; cellRenderProps: TextCellRenderProps<RowData> }
-  | { cellRender: "tag"; cellRenderProps: TagCellRenderProps };
+  | { cellRender: "tag"; cellRenderProps: TagCellRenderProps<RowData> };
 export type TableHeaderRendersProps<HeaderRender = undefined> = {
   headerRender?: HeaderRender | TableHeaderRenderKey;
   headerRenderProps?: unknown;
