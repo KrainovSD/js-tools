@@ -59,6 +59,7 @@ export function getCell<
           }}
           classNameBaseContainer={clsx(styles.item__container)}
           zIndex={10}
+          cursorTooltip
           text={
             opts.GanttTooltip ? (
               <opts.GanttTooltip row={opts.row} />

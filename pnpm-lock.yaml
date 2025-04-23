@@ -1160,8 +1160,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0(react@18.3.1)
       '@krainovsd/react-ui':
-        specifier: ^0.8.12
-        version: 0.8.12(node-fetch@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
+        specifier: ^0.8.13
+        version: 0.8.13(node-fetch@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)
       '@tanstack/react-table':
         specifier: 8.21.2
         version: 8.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2759,8 +2759,8 @@ packages:
     peerDependencies:
       react: ^18.0.0
 
-  '@krainovsd/react-ui@0.8.12':
-    resolution: {integrity: sha512-2iKTEHmHjw5eJFCrBctXj5oCI876AIVCd8M7oTFV8jjJvkIJxE5x49PiJjTFwjJe6Wr/JOIAEJ2lr3pj6ON3Dg==}
+  '@krainovsd/react-ui@0.8.13':
+    resolution: {integrity: sha512-YihU48Atpl+mRMTOYuCuzT6oHPdzrQcdRYAXRFUNBa92hD+zHAu3yUQrne41HVMTHRcSl0gHuIKqOIvuIcOQ5w==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -7499,6 +7499,7 @@ packages:
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+    deprecated: Use your platform's native DOMException instead
 
   node-emoji@1.11.0:
     resolution: {integrity: sha512-wo2DpQkQp7Sjm2A0cq+sN7EHKO6Sl0ctXeBdFZrL9T9+UywORbufTcTZxom8YqpLQt/FqNMUkOpkZrJVYSKD3A==}
@@ -12416,7 +12417,7 @@ snapshots:
     dependencies:
       react: 18.3.1
 
-  '@krainovsd/react-ui@0.8.12(node-fetch@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)':
+  '@krainovsd/react-ui@0.8.13(node-fetch@3.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.7.3)':
     dependencies:
       '@emotion/css': 11.13.5
       '@krainovsd/js-helpers': 0.12.0(node-fetch@3.3.2)
