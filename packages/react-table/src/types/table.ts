@@ -62,7 +62,7 @@ export type TableCellRendersProps<
     }
   | {
       cellRender: "date";
-      cellRenderProps: DateCellRenderProps;
+      cellRenderProps: DateCellRenderProps<RowData>;
     }
   | { cellRender: "text"; cellRenderProps: TextCellRenderProps<RowData> }
   | { cellRender: "tag"; cellRenderProps: TagCellRenderProps<RowData> };

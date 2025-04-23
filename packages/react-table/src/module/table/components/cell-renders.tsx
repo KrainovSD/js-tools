@@ -20,7 +20,7 @@ export type TextCellRenderProps<RowData extends Record<string, unknown>> = {
   booleanMapping?: BooleanMapping;
   classes?: Record<CellRenderClasses, boolean>;
   tooltipZ?: number;
-  className?: string;
+  className?: ((row: RowData) => string) | string;
 };
 
 type BooleanMapping = {
@@ -70,7 +70,9 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
           className={clsx(
             styles.container,
             cellRenderProps?.classes?.center && styles.container__center,
-            cellRenderProps?.className,
+            typeof cellRenderProps?.className === "function"
+              ? cellRenderProps.className(props.context.row.original)
+              : cellRenderProps?.className,
           )}
           style={{
             paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
@@ -97,7 +99,9 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
           className={clsx(
             styles.container,
             cellRenderProps?.classes?.center && styles.container__center,
-            cellRenderProps?.className,
+            typeof cellRenderProps?.className === "function"
+              ? cellRenderProps.className(props.context.row.original)
+              : cellRenderProps?.className,
           )}
           style={{
             paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
@@ -121,19 +125,19 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
   );
 }
 
-export type DateCellRenderProps = {
+export type DateCellRenderProps<RowData extends Record<string, unknown>> = {
   format: string;
   expanded?: boolean;
   shift?: number;
   classes?: Record<CellRenderClasses, boolean>;
-  className?: string;
+  className?: ((row: RowData) => string) | string;
 };
 
 export function DateCellRender<Row extends Record<string, unknown>>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as
-    | DateCellRenderProps
+    | DateCellRenderProps<Row>
     | undefined;
   const { isVisible, extraPadding } = useVisibleCell(props.context);
   if (!cellRenderProps) return;
@@ -152,7 +156,9 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
         className={clsx(
           styles.container,
           cellRenderProps?.classes?.center && styles.container__center,
-          cellRenderProps?.className,
+          typeof cellRenderProps?.className === "function"
+            ? cellRenderProps.className(props.context.row.original)
+            : cellRenderProps?.className,
         )}
         style={{
           paddingLeft: cellRenderProps.shift ? extraPadding * cellRenderProps.shift : undefined,
@@ -174,7 +180,7 @@ export type TagCellRenderProps<Row extends Record<string, unknown>> = {
   pathToTooltip?: string;
   autoTooltip?: boolean;
   tooltipZ?: number;
-  className?: string;
+  className?: ((row: Row) => string) | string;
 };
 
 export function TagCellRender<Row extends Record<string, unknown>>(props: {
@@ -251,7 +257,9 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
         className={clsx(
           styles.container,
           cellRenderProps?.classes?.center && styles.container__center,
-          cellRenderProps?.className,
+          typeof cellRenderProps?.className === "function"
+            ? cellRenderProps.className(props.context.row.original)
+            : cellRenderProps?.className,
         )}
       >
         {renderTooltip != undefined && (
