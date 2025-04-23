@@ -35,7 +35,7 @@ export type GanttProps<
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   locale?: string;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
-  rowClassName: ((row: RowInterface<RowData>) => string) | string | undefined;
+  rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
   ganttView: GanttViewType;
   GanttTask:
     | React.FC<{

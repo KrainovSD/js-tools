@@ -17,7 +17,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
-  rowClassName: ((row: RowInterface<RowData>) => string) | string | undefined;
+  rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
 };
 
 export function TableCommon<RowData extends Record<string, unknown>>(

@@ -96,7 +96,7 @@ export type TableProps<
     Pagination?: React.FC<{ table: TableInterface<RowData> }>;
     setTable?: (table: TableInterface<RowData>) => void;
     rootRef?: React.MutableRefObject<HTMLDivElement | null>;
-    rowClassName?: ((row: RowInterface<RowData>) => string) | string;
+    rowClassName?: ((row: RowInterface<RowData>) => string | undefined) | string;
   } & GanttProps<RowData, GanttData>;
 
 export function Table<
