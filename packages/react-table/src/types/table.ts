@@ -247,29 +247,40 @@ export type FilterKey =
 export type TableInterface<TData extends RowData> = Table<TData>;
 export type RowInterface<TData extends RowData> = Row<TData>;
 
-export type GanttProps<RowData extends Record<string, unknown>> = {
+export type GanttProps<
+  RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
+> = {
   withGantt?: boolean;
   firstGanttDate?: string;
   lastGanttDate?: string;
   ganttRowMini?: boolean;
-  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
+  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   instantGanttSplitter?: boolean;
   ganttGrid?: boolean;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
+  GanttTask?:
+    | React.FC<{
+        row: RowInterface<RowData>;
+        ganttInfo: GanttInfo<GanttData>;
+        rowInfo: GanttRowInfo;
+      }>
+    | undefined;
   ganttView?: GanttViewType;
 };
 
 export type GanttTypeShapes = "task" | "group" | "milestone";
 export type GanttViewType = "years" | "months" | "quarters" | "weeks";
 
-export type GanttInfo = {
+export type GanttInfo<GanttData extends Record<string, unknown>> = {
   id: number | string;
   start: string;
   end: string;
   name: string;
   type: GanttTypeShapes;
   progress?: number;
-  dependencies?: (string | number)[];
+  dependents?: (string | number)[];
+  props?: GanttData;
 };
 
 export type GanttDate = {

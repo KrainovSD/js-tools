@@ -20,6 +20,7 @@ export type TextCellRenderProps<RowData extends Record<string, unknown>> = {
   booleanMapping?: BooleanMapping;
   classes?: Record<CellRenderClasses, boolean>;
   tooltipZ?: number;
+  className?: string;
 };
 
 type BooleanMapping = {
@@ -66,10 +67,10 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
     <>
       {Link && (
         <div
-          data-tooltip={isString(tooltip) ? tooltip : undefined}
           className={clsx(
             styles.container,
             cellRenderProps?.classes?.center && styles.container__center,
+            cellRenderProps?.className,
           )}
           style={{
             paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
@@ -93,10 +94,10 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
       )}
       {!Link && (
         <div
-          data-tooltip={isString(tooltip) ? tooltip : undefined}
           className={clsx(
             styles.container,
             cellRenderProps?.classes?.center && styles.container__center,
+            cellRenderProps?.className,
           )}
           style={{
             paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
@@ -125,6 +126,7 @@ export type DateCellRenderProps = {
   expanded?: boolean;
   shift?: number;
   classes?: Record<CellRenderClasses, boolean>;
+  className?: string;
 };
 
 export function DateCellRender<Row extends Record<string, unknown>>(props: {
@@ -150,6 +152,7 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
         className={clsx(
           styles.container,
           cellRenderProps?.classes?.center && styles.container__center,
+          cellRenderProps?.className,
         )}
         style={{
           paddingLeft: cellRenderProps.shift ? extraPadding * cellRenderProps.shift : undefined,
@@ -168,9 +171,10 @@ export type TagCellRenderProps<Row extends Record<string, unknown>> = {
   bordered?: boolean;
   filterable?: boolean;
   classes?: Record<CellRenderClasses, boolean>;
-  tooltip?: boolean;
+  pathToTooltip?: string;
   autoTooltip?: boolean;
   tooltipZ?: number;
+  className?: string;
 };
 
 export function TagCellRender<Row extends Record<string, unknown>>(props: {
@@ -182,6 +186,10 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
   const { isVisible } = useVisibleCell(props.context);
   if (!cellRenderProps) return;
 
+  const tooltip = cellRenderProps?.pathToTooltip
+    ? getData(props.context.row.original, cellRenderProps.pathToTooltip)
+    : undefined;
+  const renderTooltip = tooltip != undefined ? (isArray(tooltip) ? tooltip : [tooltip]) : undefined;
   const rowValue = getData(props.context.row.original, props.context.column.id);
   const rowContent =
     cellRenderProps?.content?.(props.context.row.original) ??
@@ -243,19 +251,20 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
         className={clsx(
           styles.container,
           cellRenderProps?.classes?.center && styles.container__center,
+          cellRenderProps?.className,
         )}
       >
-        {cellRenderProps.tooltip && (
+        {renderTooltip != undefined && (
           <Tooltip
             classNameContent={styles.tooltip}
-            text={renderContent.join(", ")}
+            text={renderTooltip.join(", ")}
             autoTooltip={cellRenderProps?.autoTooltip}
             zIndex={cellRenderProps?.tooltipZ}
           >
             {Node}
           </Tooltip>
         )}
-        {!cellRenderProps.tooltip && Node}
+        {renderTooltip == undefined && Node}
       </div>
     </>
   );

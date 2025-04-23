@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
+import { wait } from "@krainovsd/js-helpers";
+import type { VisibilityState } from "@tanstack/react-table";
 import { ConfigProvider } from "antd";
 import React from "react";
 import { Table } from "../table";
@@ -12,6 +14,9 @@ const rows: Row[] = createRows();
 const rowsGantt: RowGantt[] = createRowsGantt();
 
 type CurrentRow = typeof withGantt extends true ? RowGantt : Row;
+type CurrentGantt = {
+  additionalData?: number;
+};
 
 type CellRenderKeys = "test";
 type HeaderRenderKeys = undefined;
@@ -23,6 +28,28 @@ type FilterTypeKeys = undefined;
 type SortTypeKeys = undefined;
 
 export function App() {
+  const [columnsVisibility, setColumnsVisibility] = React.useState<VisibilityState>({
+    name: false,
+    start: true,
+    end: true,
+    deviations: true,
+    risks: true,
+  });
+
+  React.useEffect(() => {
+    wait(1000)
+      .then(() => {
+        setColumnsVisibility({
+          name: true,
+          start: true,
+          end: true,
+          deviations: true,
+          risks: true,
+        });
+      })
+      .catch(() => {});
+  }, []);
+
   const { firstDate, lastDate } = React.useMemo(() => {
     if (!withGantt) return {};
 
@@ -77,6 +104,7 @@ export function App() {
       >
         <Table<
           CurrentRow,
+          CurrentGantt,
           CellRenderKeys,
           HeaderRenderKeys,
           FilterRenderKeys,
@@ -131,6 +159,12 @@ export function App() {
                   name: row.original.name,
                   type: row.original.type ?? (row.original.children ? "group" : "task"),
                   dependencies: row.original.dependencies,
+                  props: {
+                    additionalData: 1,
+                  },
+                  data: {
+                    additionalData: 1,
+                  },
                 })
               : undefined
           }
@@ -139,6 +173,8 @@ export function App() {
           ganttRowMini={true}
           ganttGrid={true}
           ganttView={"years"}
+          columnVisibility={columnsVisibility}
+          onColumnVisibilityChange={setColumnsVisibility}
         />
       </div>
     </ConfigProvider>

@@ -23,6 +23,7 @@ type InitialState<Row extends Record<string, unknown>> = {
 
 export function useTableOptions<
   Row extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
   CellRender = undefined,
   HeaderRender = undefined,
   FilterRender = undefined,
@@ -34,6 +35,7 @@ export function useTableOptions<
 >(
   props: TableProps<
     Row,
+    GanttData,
     CellRender,
     HeaderRender,
     FilterRender,

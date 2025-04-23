@@ -55,7 +55,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
     cellRenderProps: {
       bordered: true,
       color: "red",
-      tooltip: true,
+      pathToTooltip: "deviation",
       autoTooltip: true,
     },
   },

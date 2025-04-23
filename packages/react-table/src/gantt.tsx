@@ -6,9 +6,12 @@ import { GANTT_HEADER_HEIGHT } from "./module/gantt/gantt.constants";
 import { useScroll, useSplitter } from "./module/gantt/hooks";
 import { TableCommonGantt } from "./module/gantt/table-common-gantt";
 import { TableGantt } from "./module/gantt/table-gantt";
-import type { GanttInfo, GanttViewType, RowInterface, TableInterface } from "./types";
+import type { GanttInfo, GanttRowInfo, GanttViewType, RowInterface, TableInterface } from "./types";
 
-export type GanttProps<RowData extends Record<string, unknown>> = {
+export type GanttProps<
+  RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
+> = {
   fullSize: boolean | undefined;
   tableContainerRef?: React.LegacyRef<HTMLDivElement>;
   columnVirtualEnabled: boolean;
@@ -29,13 +32,23 @@ export type GanttProps<RowData extends Record<string, unknown>> = {
   firstGanttDate?: string;
   lastGanttDate?: string;
   ganttGrid?: boolean;
-  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
+  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   locale?: string;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
   ganttView: GanttViewType;
+  GanttTask:
+    | React.FC<{
+        row: RowInterface<RowData>;
+        ganttInfo: GanttInfo<GanttData>;
+        rowInfo: GanttRowInfo;
+      }>
+    | undefined;
 };
 
-export function Gantt<RowData extends Record<string, unknown>>(props: GanttProps<RowData>) {
+export function Gantt<
+  RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
+>(props: GanttProps<RowData, GanttData>) {
   const { sizes, startDrag, splitterRef, isDragging, splitterGhostRef, splitterOverflowRef } =
     useSplitter(props.instantGanttSplitter);
 
@@ -114,6 +127,7 @@ export function Gantt<RowData extends Record<string, unknown>>(props: GanttProps
             ganttGrid={props.ganttGrid}
             locale={props.locale}
             ganttView={props.ganttView ?? "months"}
+            GanttTask={props.GanttTask}
           />
         </div>
       </div>

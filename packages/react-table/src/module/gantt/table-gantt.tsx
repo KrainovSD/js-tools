@@ -25,14 +25,17 @@ import { useGanttColumns } from "./hooks";
 import { getCell, getGanttColumnWidth, getGanttInitialCoordinates } from "./lib";
 import styles from "./table-gantt.module.scss";
 
-type TableContainerProps<RowData extends Record<string, unknown>> = {
+type TableContainerProps<
+  RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
+> = {
   width?: number;
   tableRef?: React.LegacyRef<HTMLTableElement>;
   firstGanttDate?: string;
   lastGanttDate?: string;
   ganttRowMini?: boolean;
   ganttGrid?: boolean;
-  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
+  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   locale?: string;
   rows: RowInterface<RowData>[];
   columnVirtualEnabled: boolean;
@@ -47,12 +50,20 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
+  GanttTask:
+    | React.FC<{
+        row: RowInterface<RowData>;
+        ganttInfo: GanttInfo<GanttData>;
+        rowInfo: GanttRowInfo;
+      }>
+    | undefined;
   ganttView: GanttViewType;
 };
 
-export function TableGantt<RowData extends Record<string, unknown>>(
-  props: TableContainerProps<RowData>,
-) {
+export function TableGantt<
+  RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
+>(props: TableContainerProps<RowData, GanttData>) {
   const arrowContainerRef = React.useRef<HTMLDivElement | null>(null);
 
   const { headerItems, columnsCount } = useGanttColumns({
@@ -177,6 +188,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                     rowsMap,
                     mini: props.ganttRowMini ?? false,
                     arrowContainer: arrowContainerRef.current,
+                    GanttTask: props.GanttTask,
                   })}
                   <div
                     data-id="row"
@@ -204,6 +216,7 @@ export function TableGantt<RowData extends Record<string, unknown>>(
                     rowsMap,
                     mini: props.ganttRowMini ?? false,
                     arrowContainer: arrowContainerRef.current,
+                    GanttTask: props.GanttTask,
                   })}
                   <div
                     data-id="row"

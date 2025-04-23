@@ -16,6 +16,7 @@ import type {
 
 export type TableProps<
   RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
   CellRender = undefined,
   HeaderRender = undefined,
   FilterRender = undefined,
@@ -93,10 +94,12 @@ export type TableProps<
       filterOptions: FilterFieldType[];
     }>;
     Pagination?: React.FC<{ table: TableInterface<RowData> }>;
-  } & GanttProps<RowData>;
+    setTable?: (table: TableInterface<RowData>) => void;
+  } & GanttProps<RowData, GanttData>;
 
 export function Table<
   Row extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
   CellRender = undefined,
   HeaderRender = undefined,
   FilterRender = undefined,
@@ -108,6 +111,7 @@ export function Table<
 >(
   props: TableProps<
     Row,
+    GanttData,
     CellRender,
     HeaderRender,
     FilterRender,
@@ -173,6 +177,11 @@ export function Table<
     ganttMini: props.ganttRowMini,
   });
 
+  React.useEffect(() => {
+    props.setTable?.(table);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table, props.setTable]);
+
   try {
     return (
       <div className={clsx(styles.base, props.className)}>
@@ -231,6 +240,7 @@ export function Table<
             onClickRow={props.onClickRow}
             onDoubleClickRow={props.onDoubleClickRow}
             tableContainerRef={tableContainerRef}
+            GanttTask={props.GanttTask}
           />
         )}
 

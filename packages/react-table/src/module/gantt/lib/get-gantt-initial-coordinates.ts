@@ -8,15 +8,17 @@ import { getMonthDifference } from "./get-month-difference";
 
 const MIN_ITEM_WIDTH = 10;
 
-type GetGanttInitialCoordinates = {
+type GetGanttInitialCoordinates<GanttData extends Record<string, unknown>> = {
   ganttView?: GanttViewType;
-  ganttInfo: GanttInfo;
+  ganttInfo: GanttInfo<GanttData>;
   ganttRowMini?: boolean;
   index: number;
   headerItems: HeaderItem[];
 };
 
-export function getGanttInitialCoordinates(opts: GetGanttInitialCoordinates): {
+export function getGanttInitialCoordinates<GanttData extends Record<string, unknown>>(
+  opts: GetGanttInitialCoordinates<GanttData>,
+): {
   width: number;
   left: number;
   top: number;

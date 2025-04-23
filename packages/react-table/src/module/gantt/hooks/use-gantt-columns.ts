@@ -1,10 +1,13 @@
 import React from "react";
 import type { GanttDate, GanttInfo, GanttViewType, RowInterface } from "../../../types";
 
-type UseGanttColumnsProps<RowData extends Record<string, unknown>> = {
+type UseGanttColumnsProps<
+  RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
+> = {
   firstGanttDate?: string;
   lastGanttDate?: string;
-  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo;
+  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   rows: RowInterface<RowData>[];
   ganttView: GanttViewType;
 };
@@ -14,9 +17,10 @@ export type HeaderItem = {
   months: number[];
 };
 
-export function useGanttColumns<RowData extends Record<string, unknown>>(
-  props: UseGanttColumnsProps<RowData>,
-) {
+export function useGanttColumns<
+  RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
+>(props: UseGanttColumnsProps<RowData, GanttData>) {
   const firstGanttDate = React.useMemo<GanttDate | null>(() => {
     if (props.rows.length === 0) return null;
     const firstDate = props.firstGanttDate ?? props.ganttInfoGetter?.(props.rows[0])?.start;
