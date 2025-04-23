@@ -95,6 +95,7 @@ export type TableProps<
     }>;
     Pagination?: React.FC<{ table: TableInterface<RowData> }>;
     setTable?: (table: TableInterface<RowData>) => void;
+    rootRef?: React.MutableRefObject<HTMLDivElement | null>;
   } & GanttProps<RowData, GanttData>;
 
 export function Table<
@@ -184,7 +185,7 @@ export function Table<
 
   try {
     return (
-      <div className={clsx(styles.base, props.className)}>
+      <div className={clsx(styles.base, props.className)} ref={props.rootRef}>
         <TableFilter
           filterOptions={filterOptions}
           filters={filters}
