@@ -1,4 +1,4 @@
-import type { PositionPlacements } from "@krainovsd/js-helpers";
+import { type PositionPlacements, startWith } from "@krainovsd/js-helpers";
 import clsx from "clsx";
 import React, { type CSSProperties } from "react";
 import { Positioner } from "../positioner";
@@ -52,6 +52,7 @@ type Props = {
 
   openEvent?: "click" | "hover" | "custom" | "tooltip";
   autoTooltip?: boolean;
+  cursorTooltip?: boolean;
   onClose?: () => void;
 
   widthByParent?: boolean;
@@ -73,7 +74,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
     isOpen,
     setIsOpen,
     openEvent = "click",
-    placement,
+    placement = "bottom-center",
     size,
     testid,
     widthByParent,
@@ -103,6 +104,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
   } = props;
 
   const [localOpen, setLocalOpen] = React.useState(initialOpenState);
+  const [cursorPosition, setCursorPosition] = React.useState<PopperTargetNodePosition | null>(null);
   const baseRef = React.useRef<HTMLDivElement | null>(null);
   const closeTimer = React.useRef<undefined | NodeJS.Timeout>(undefined);
   const openTimer = React.useRef<undefined | NodeJS.Timeout>(undefined);
@@ -139,7 +141,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
 
     const base = baseRef.current;
 
-    function onHover() {
+    function onHover(event: MouseEvent) {
       clearTimeout(closeTimer.current);
       openTimer.current = setTimeout(() => {
         if (props.autoTooltip && props.openEvent === "tooltip") {
@@ -153,6 +155,20 @@ export function Popper(props: React.PropsWithChildren<Props>) {
             return;
         }
 
+        if (props.openEvent === "tooltip" && props.cursorTooltip && baseRef.current) {
+          const { x, y, height, width } = baseRef.current.getBoundingClientRect();
+
+          const autoOrientation: "x" | "y" =
+            startWith(placement, "bottom") || startWith(placement, "top") ? "y" : "x";
+
+          setCursorPosition({
+            width: autoOrientation === "x" ? width : 1,
+            height: autoOrientation === "y" ? height : 1,
+            x: autoOrientation === "x" ? x : event.clientX,
+            y: autoOrientation === "y" ? y : event.clientY,
+          });
+        }
+
         setLocalOpen(true);
         setIsOpen?.(true);
       }, openDelay);
@@ -162,6 +178,10 @@ export function Popper(props: React.PropsWithChildren<Props>) {
       closeTimer.current = setTimeout(() => {
         setLocalOpen(false);
         setIsOpen?.(false);
+
+        if (props.openEvent === "tooltip" && props.cursorTooltip) {
+          setCursorPosition(null);
+        }
       }, closeDelay);
     }
 
@@ -221,7 +241,7 @@ export function Popper(props: React.PropsWithChildren<Props>) {
           placement={placement}
           stepX={stepX}
           stepY={stepY}
-          targetNodePosition={targetNodePosition}
+          targetNodePosition={cursorPosition ?? targetNodePosition}
           visibleArea={visibleArea}
           wrapperInstance={wrapperInstance}
           zIndex={zIndex}

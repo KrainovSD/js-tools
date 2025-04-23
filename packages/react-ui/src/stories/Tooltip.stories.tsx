@@ -107,7 +107,7 @@ const Template: StoryFn<typeof Tooltip> = () => {
       </Flex>
 
       <Flex style={{ maxWidth: "100px", overflow: "hidden" }}>
-        <Tooltip text="Очень длинный текст который не поместился" autoTooltip>
+        <Tooltip text="Очень длинный текст который не поместился" autoTooltip cursorTooltip>
           <Text ellipsis>Очень длинный текст который не поместился</Text>
         </Tooltip>
       </Flex>

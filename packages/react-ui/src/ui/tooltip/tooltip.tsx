@@ -23,6 +23,7 @@ export type TooltipProps = {
   modalRootInner?: boolean;
   placement?: Exclude<PositionPlacements, "flex">;
   autoTooltip?: boolean;
+  cursorTooltip?: boolean;
   zIndex?: number;
 };
 
@@ -49,6 +50,7 @@ export function Tooltip(props: React.PropsWithChildren<TooltipProps>): React.JSX
       openEvent="tooltip"
       arrow
       autoTooltip={props.autoTooltip}
+      cursorTooltip={props.cursorTooltip}
       placement={props.placement}
       zIndex={props.zIndex}
     >
