@@ -24,6 +24,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
+  rowClassName: ((row: RowInterface<RowData>) => string) | string | undefined;
 };
 
 export function TableCommonGantt<RowData extends Record<string, unknown>>(
@@ -115,7 +116,13 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                 <div
                   data-id="row"
                   key={row.id}
-                  className={clsx(styles.row, styles.row__virtual)}
+                  className={clsx(
+                    styles.row,
+                    styles.row__virtual,
+                    typeof props.rowClassName === "function"
+                      ? props.rowClassName(row)
+                      : props.rowClassName,
+                  )}
                   data-index={virtualRow.index}
                   ref={(node) => props.rowVirtualizer.measureElement(node)}
                   style={{
@@ -179,7 +186,12 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                 <div
                   data-id="row"
                   key={row.id}
-                  className={styles.row}
+                  className={clsx(
+                    styles.row,
+                    typeof props.rowClassName === "function"
+                      ? props.rowClassName(row)
+                      : props.rowClassName,
+                  )}
                   data-index={row.index}
                   ref={(node) => props.rowVirtualizer.measureElement(node)}
                   onClick={(event) => {

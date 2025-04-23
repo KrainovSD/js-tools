@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 import { wait } from "@krainovsd/js-helpers";
-import type { VisibilityState } from "@tanstack/react-table";
+import type { ExpandedState, VisibilityState } from "@tanstack/react-table";
 import { ConfigProvider } from "antd";
 import React from "react";
 import { Table } from "../table";
 import type { TableColumn } from "../types";
+import styles from "./app.module.scss";
 import { type Row, columns, createRows } from "./lib";
 import { type RowGantt, columnsGantt, createRowsGantt } from "./lib-gantt";
 
@@ -28,6 +29,7 @@ type FilterTypeKeys = undefined;
 type SortTypeKeys = undefined;
 
 export function App() {
+  const [expanded, setExpanded] = React.useState<ExpandedState>(true);
   const [columnsVisibility, setColumnsVisibility] = React.useState<VisibilityState>({
     name: false,
     start: true,
@@ -175,6 +177,9 @@ export function App() {
           ganttView={"years"}
           columnVisibility={columnsVisibility}
           onColumnVisibilityChange={setColumnsVisibility}
+          expanded={expanded}
+          onExpandedChange={setExpanded}
+          rowClassName={styles.row}
         />
       </div>
     </ConfigProvider>

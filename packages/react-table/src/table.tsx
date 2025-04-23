@@ -96,6 +96,7 @@ export type TableProps<
     Pagination?: React.FC<{ table: TableInterface<RowData> }>;
     setTable?: (table: TableInterface<RowData>) => void;
     rootRef?: React.MutableRefObject<HTMLDivElement | null>;
+    rowClassName?: ((row: RowInterface<RowData>) => string) | string;
   } & GanttProps<RowData, GanttData>;
 
 export function Table<
@@ -212,6 +213,7 @@ export function Table<
               virtualPaddingRight={virtualPaddingRight}
               onClickRow={props.onClickRow}
               onDoubleClickRow={props.onDoubleClickRow}
+              rowClassName={props.rowClassName}
             />
           </div>
         )}
@@ -242,6 +244,7 @@ export function Table<
             onDoubleClickRow={props.onDoubleClickRow}
             tableContainerRef={tableContainerRef}
             GanttTask={props.GanttTask}
+            rowClassName={props.rowClassName}
           />
         )}
 

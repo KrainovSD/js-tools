@@ -35,6 +35,7 @@ export type GanttProps<
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   locale?: string;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
+  rowClassName: ((row: RowInterface<RowData>) => string) | string | undefined;
   ganttView: GanttViewType;
   GanttTask:
     | React.FC<{
@@ -88,6 +89,7 @@ export function Gantt<
             onClickRow={props.onClickRow}
             onDoubleClickRow={props.onDoubleClickRow}
             ganttRowMini={props.ganttRowMini}
+            rowClassName={props.rowClassName}
           />
           {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div className={clsx(styles.splitter)} ref={splitterRef} onMouseDown={startDrag}>

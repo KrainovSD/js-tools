@@ -53,20 +53,13 @@
   display: flex;
   width: 100%;
   transition: var(--table-transition);
+  background-color: var(--table-row-bg);
 
   &:hover {
     background-color: var(--table-row-hover-bg);
-
-    & > td {
-      background-color: var(--table-row-hover-bg);
-    }
   }
 
   &__virtual {
     position: absolute;
   }
-
-  // & > :last-child {
-  //   border-right: 1px solid var(--table-border);
-  // }
 }

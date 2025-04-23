@@ -6,7 +6,7 @@
     border-spacing: 0px;
     overflow: hidden;
     white-space: pre-wrap;
-    background: var(--table-header-cell-bg);
+    // background: var(--table-header-cell-bg);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -45,7 +45,7 @@
     border-spacing: 0px;
     border-collapse: collapse;
     padding: 12px 8px;
-    background: var(--table-cell-bg);
+    // background: var(--table-cell-bg);
     overflow: hidden;
     white-space: pre-wrap;
     display: flex;
