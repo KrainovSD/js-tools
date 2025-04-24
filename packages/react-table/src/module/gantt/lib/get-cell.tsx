@@ -26,7 +26,7 @@ type GetCellOptions<
         bodyWidth: number | null;
       }>
     | undefined;
-  rowsMap: Record<string | number, GanttRowInfo>;
+  rowsMap: Record<string | number, GanttRowInfo | undefined>;
   row: RowInterface<RowData>;
   mini: boolean;
   arrowContainer: HTMLElement | null;
@@ -46,11 +46,11 @@ export function getCell<
   const rowInfo = opts.rowsMap[ganttInfo.id];
   let textMaxWidth: number | undefined;
 
+  if (!rowInfo) return null;
+
   if (rowInfo.textWidth > rowInfo.width && opts.bodyWidth) {
     textMaxWidth = opts.bodyWidth - rowInfo.width - rowInfo.left - 25;
   }
-
-  if (!rowInfo) return null;
 
   return (
     <React.Fragment key={`${ganttInfo.id}-cell`}>

@@ -79,7 +79,7 @@ export function TableGantt<
   const GANTT_COLUMN_WIDTH = getGanttColumnWidth(props.ganttView);
 
   const rowsMap = React.useMemo(() => {
-    const rowsMap: Record<string | number, GanttRowInfo> = {};
+    const rowsMap: Record<string | number, GanttRowInfo | undefined> = {};
     if (headerItems.length === 0) return rowsMap;
 
     for (let i = 0; i < props.rows.length; i++) {

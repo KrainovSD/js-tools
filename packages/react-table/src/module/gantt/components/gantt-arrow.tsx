@@ -8,7 +8,7 @@ import styles from "./gantt-arrow.module.scss";
 type Props = {
   currentRowId: string | number;
   dependencies: (string | number)[];
-  rowsMap: Record<string | number, GanttRowInfo>;
+  rowsMap: Record<string | number, GanttRowInfo | undefined>;
   mini: boolean;
 };
 
@@ -39,6 +39,8 @@ export function GanttArrow(props: Props) {
     <div className={styles.base} style={{ left: startLeft, top: startTop }}>
       {props.dependencies.map((depend) => {
         const dependRow = props.rowsMap[depend];
+
+        if (!dependRow) return null;
 
         const dependLeft = dependRow.left;
         const fullFirstCorner =
