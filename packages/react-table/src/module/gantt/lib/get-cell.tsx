@@ -29,6 +29,7 @@ type GetCellOptions<
   row: RowInterface<RowData>;
   mini: boolean;
   arrowContainer: HTMLElement | null;
+  bodyWidth: number | null;
 };
 
 export function getCell<
@@ -42,6 +43,11 @@ export function getCell<
   const endDate = new Date(ganttInfo.end);
   const duration = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
   const rowInfo = opts.rowsMap[ganttInfo.id];
+  let textMaxWidth: number | undefined;
+
+  if (rowInfo.textWidth > rowInfo.width && opts.bodyWidth) {
+    textMaxWidth = opts.bodyWidth - rowInfo.width - rowInfo.left - 25;
+  }
 
   if (!rowInfo) return null;
 
@@ -107,8 +113,10 @@ export function getCell<
             <span
               className={clsx(
                 styles.item__text,
+                styles.item__text_ellipsis,
                 !!ganttInfo.dependents?.length && styles.item__text_shift,
               )}
+              style={{ maxWidth: textMaxWidth }}
             >
               {ganttInfo.name}
             </span>

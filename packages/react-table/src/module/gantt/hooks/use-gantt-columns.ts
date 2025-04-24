@@ -64,7 +64,7 @@ export function useGanttColumns<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.lastGanttDate, props.rows, props.ganttInfoGetter]);
   const headerItems = React.useMemo(() => {
-    if (!firstGanttDate || !lastGanttDate || firstGanttDate.year > lastGanttDate.year) return null;
+    if (!firstGanttDate || !lastGanttDate || firstGanttDate.year > lastGanttDate.year) return [];
 
     const items: HeaderItem[] = [];
 

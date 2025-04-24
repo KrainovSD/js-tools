@@ -47,7 +47,7 @@ const graph = new GraphCanvas({
     },
   },
   graphSettings: {
-    // highlightFadingMin: 0.2,
+    // highlightByNodeNodeFadingMin: 0.2,
     zoomInitial: { k: 1 },
     // stickAfterDrag: true,
     // zoomInitial: {
@@ -140,10 +140,10 @@ function onDraw(
         state.highlightedNode.id != link.source.id &&
         state.highlightedNode.id != link.target.id
       ) {
-        if (linkOptions.highlightFading)
+        if (linkOptions.highlightByNodeLinkFading)
           alpha =
-            state.graphSettings.highlightFadingMin +
-            (alpha - state.graphSettings.highlightFadingMin) * (1 - fadingProgress);
+            state.graphSettings.highlightByNodeNodeFadingMin +
+            (alpha - state.graphSettings.highlightByNodeNodeFadingMin) * (1 - fadingProgress);
       }
 
       state.context.beginPath();
@@ -195,17 +195,17 @@ function onDraw(
       if (state.highlightedNeighbors && state.highlightedNode) {
         /** Not highlighted */
         if (!state.highlightedNeighbors.has(node.id) && state.highlightedNode.id != node.id) {
-          if (nodeOptions.highlightFading) {
+          if (nodeOptions.highlightByNodeNodeFading) {
             alpha =
-              state.graphSettings.highlightFadingMin +
-              (alpha - state.graphSettings.highlightFadingMin) * (1 - fadingProgress);
+              state.graphSettings.highlightByNodeNodeFadingMin +
+              (alpha - state.graphSettings.highlightByNodeNodeFadingMin) * (1 - fadingProgress);
           }
-          if (nodeOptions.highlightTextFading) {
+          if (nodeOptions.highlightByNodeTextFading) {
             textAlpha =
-              state.graphSettings.highlightTextFadingMin +
-              (textAlpha - state.graphSettings.highlightTextFadingMin) * (1 - fadingProgress);
+              state.graphSettings.highlightByNodeTextFadingMin +
+              (textAlpha - state.graphSettings.highlightByNodeTextFadingMin) * (1 - fadingProgress);
           }
-          if (nodeOptions.highlightColor) {
+          if (nodeOptions.highlightByNodeNodeColor) {
             const colorRgb = extractRgb(colorToRgb(color));
             if (colorRgb) {
               const colorRgbFade = fadeRgb(colorRgb, 0.15);
@@ -218,20 +218,24 @@ function onDraw(
             }
           }
         } else if (
-          !state.graphSettings.highlightOnlyRoot ||
-          (state.graphSettings.highlightOnlyRoot && state.highlightedNode.id === node.id)
+          !state.graphSettings.highlightByNodeOnlyRoot ||
+          (state.graphSettings.highlightByNodeOnlyRoot && state.highlightedNode.id === node.id)
         ) {
           /** Highlighted */
-          if (nodeOptions.highlightSizing) {
-            const radiusMax = radiusInitial + state.graphSettings.highlightSizingAdditional;
+          if (nodeOptions.highlightByNodeNodeSizing) {
+            const radiusMax =
+              radiusInitial + state.graphSettings.highlightByNodeNodeSizingAdditional;
             radiusInitial += ((radiusMax - radiusInitial) / 100) * (fadingProgress * 100);
           }
-          if (nodeOptions.highlightTextSizing) {
-            const textSizeMax = textSize + state.graphSettings.highlightTextSizingAdditional;
-            const textShiftXMax = textShiftX + state.graphSettings.highlightTextShiftXAdditional;
-            const textShiftYMax = textShiftY + state.graphSettings.highlightTextShiftYAdditional;
-            const textWeightMax = textWeight + state.graphSettings.highlightTextWeightAdditional;
-            const textWidthMax = textWidth + state.graphSettings.highlightTextWidthAdditional;
+          if (nodeOptions.highlightByNodeTextSizing) {
+            const textSizeMax = textSize + state.graphSettings.highlightByNodeTextSizingAdditional;
+            const textShiftXMax =
+              textShiftX + state.graphSettings.highlightByNodeTextShiftXAdditional;
+            const textShiftYMax =
+              textShiftY + state.graphSettings.highlightByNodeTextShiftYAdditional;
+            const textWeightMax =
+              textWeight + state.graphSettings.highlightByNodeTextWeightAdditional;
+            const textWidthMax = textWidth + state.graphSettings.highlightByNodeTextWidthAdditional;
 
             textSize += ((textSizeMax - textSize) / 100) * (fadingProgress * 100);
             textShiftX += ((textShiftXMax - textShiftX) / 100) * (fadingProgress * 100);

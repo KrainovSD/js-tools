@@ -65,6 +65,7 @@ export function TableGantt<
   GanttData extends Record<string, unknown>,
 >(props: TableContainerProps<RowData, GanttData>) {
   const arrowContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const [bodyWidth, setBodyWidth] = React.useState<number | null>(null);
 
   const { headerItems, columnsCount } = useGanttColumns({
     rows: props.rows,
@@ -78,6 +79,7 @@ export function TableGantt<
 
   const rowsMap = React.useMemo(() => {
     const rowsMap: Record<string | number, GanttRowInfo> = {};
+    if (headerItems.length === 0) return rowsMap;
 
     for (let i = 0; i < props.rows.length; i++) {
       const row = props.rows[i];
@@ -106,7 +108,23 @@ export function TableGantt<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.rows, headerItems, props.ganttInfoGetter, props.ganttRowMini, props.ganttView]);
 
-  if (!headerItems || !props.ganttInfoGetter) {
+  React.useLayoutEffect(() => {
+    if (!arrowContainerRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      if (!entries[0].contentRect) return;
+
+      setBodyWidth(entries[0].contentRect.width);
+    });
+
+    observer.observe(arrowContainerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  if (!props.ganttInfoGetter) {
     throw new Error("Required ganttInfoGetter");
   }
 
@@ -189,6 +207,7 @@ export function TableGantt<
                     mini: props.ganttRowMini ?? false,
                     arrowContainer: arrowContainerRef.current,
                     GanttTask: props.GanttTask,
+                    bodyWidth,
                   })}
                   <div
                     data-id="row"
@@ -217,6 +236,7 @@ export function TableGantt<
                     mini: props.ganttRowMini ?? false,
                     arrowContainer: arrowContainerRef.current,
                     GanttTask: props.GanttTask,
+                    bodyWidth,
                   })}
                   <div
                     data-id="row"

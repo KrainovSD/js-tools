@@ -40,6 +40,7 @@ export type GraphState<
   simulationWorking: boolean;
   isDragging: boolean;
   highlightedNode: NodeInterface<NodeData> | null;
+  highlightedLink: LinkInterface<NodeData, LinkData> | null;
   highlightedNeighbors: Set<string | number> | null;
   highlightProgress: number;
   highlightWorking: boolean;

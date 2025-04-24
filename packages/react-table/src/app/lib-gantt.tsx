@@ -81,7 +81,7 @@ export type RowGantt = {
   end: string;
   risks?: number;
   deviations?: number;
-  dependencies?: string[];
+  dependents?: string[];
   children?: RowGantt[];
 };
 
@@ -150,6 +150,14 @@ export function createRowsGantt(): RowGantt[] {
           deviations: 5,
           children: [
             {
+              id: "1.1.0",
+              name: "Contract and very very long text in the end of table for test",
+              start: "2027-11-25",
+              end: "2025-12-01",
+              risks: 2,
+              children: [],
+            },
+            {
               id: "1.1.1",
               name: "Contract",
               start: "2025-05-01",
@@ -170,7 +178,7 @@ export function createRowsGantt(): RowGantt[] {
                   name: "Outline Design",
                   start: "2025-05-30",
                   end: "2025-06-15",
-                  dependencies: ["1.1.2.2", "1.1.3", "1.2"],
+                  dependents: ["1.1.2.2", "1.1.3", "1.2"],
                   risks: 2,
                 },
                 {
@@ -202,7 +210,7 @@ export function createRowsGantt(): RowGantt[] {
               name: "Tender",
               start: "2025-10-08",
               end: "2025-10-30",
-              dependencies: ["1.2.2"],
+              dependents: ["1.2.2"],
             },
             {
               id: "1.2.2",
@@ -222,7 +230,7 @@ export function createRowsGantt(): RowGantt[] {
               name: "Tender",
               start: "2025-10-08",
               end: "2025-10-30",
-              dependencies: ["1.2.5"],
+              dependents: ["1.2.5"],
             },
             {
               id: "1.2.5",
@@ -242,7 +250,7 @@ export function createRowsGantt(): RowGantt[] {
               name: "Tender",
               start: "2025-10-08",
               end: "2025-10-30",
-              dependencies: ["1.2.8"],
+              dependents: ["1.2.8"],
             },
             {
               id: "1.2.8",
@@ -262,7 +270,7 @@ export function createRowsGantt(): RowGantt[] {
               name: "Tender",
               start: "2025-10-08",
               end: "2025-10-30",
-              dependencies: ["1.2.11"],
+              dependents: ["1.2.11"],
             },
             {
               id: "1.2.11",
@@ -311,7 +319,7 @@ export function createRowsGantt(): RowGantt[] {
                   name: "Outline Design",
                   start: "2025-05-30",
                   end: "2025-06-15",
-                  dependencies: ["2.1.2.2", "2.1.3", "2.2"],
+                  dependents: ["2.1.2.2", "2.1.3", "2.2"],
                 },
                 {
                   id: "2.1.2.2",
@@ -341,7 +349,7 @@ export function createRowsGantt(): RowGantt[] {
               name: "Tender",
               start: "2025-10-08",
               end: "2025-10-30",
-              dependencies: ["2.2.2"],
+              dependents: ["2.2.2"],
             },
             {
               id: "2.2.2",
@@ -361,7 +369,7 @@ export function createRowsGantt(): RowGantt[] {
               name: "Tender",
               start: "2025-10-08",
               end: "2025-10-30",
-              dependencies: ["2.2.5"],
+              dependents: ["2.2.5"],
             },
             {
               id: "2.2.5",
@@ -381,7 +389,7 @@ export function createRowsGantt(): RowGantt[] {
               name: "Tender",
               start: "2025-10-08",
               end: "2025-10-30",
-              dependencies: ["2.2.8"],
+              dependents: ["2.2.8"],
             },
             {
               id: "2.2.8",
@@ -401,7 +409,7 @@ export function createRowsGantt(): RowGantt[] {
               name: "Tender",
               start: "2025-10-08",
               end: "2025-10-30",
-              dependencies: ["2.2.11"],
+              dependents: ["2.2.11"],
             },
             {
               id: "2.2.11",

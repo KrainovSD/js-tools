@@ -130,6 +130,7 @@ export function App() {
             >[]
           }
           rows={(withGantt ? rowsGantt : rows) as CurrentRow[]}
+          // rows={[{ end: "", id: "", name: "", start: "", children: [], dependents: [] }]}
           cellRenders={{ test: () => "" }}
           getSubRows={(row) => row.children}
           // onSortingChange={onSortingChange}
@@ -160,11 +161,8 @@ export function App() {
                   start: row.original.start,
                   name: row.original.name,
                   type: row.original.type ?? (row.original.children ? "group" : "task"),
-                  dependencies: row.original.dependencies,
+                  dependents: row.original.dependents,
                   props: {
-                    additionalData: 1,
-                  },
-                  data: {
                     additionalData: 1,
                   },
                 })

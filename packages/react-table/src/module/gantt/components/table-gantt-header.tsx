@@ -11,6 +11,8 @@ type GanttHeaderProps = {
 };
 
 export function GanttYearHeader(props: GanttHeaderProps) {
+  if (props.headerItems.length === 0) return null;
+
   const firstYear = props.headerItems[0].year;
   const lastYear = props.headerItems[props.headerItems.length - 1].year;
 

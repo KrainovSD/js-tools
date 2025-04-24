@@ -231,12 +231,12 @@
   {#if openForce}
     <Flex class={styles.settings} vertical gap={10} style="top: 45px; left: 10px;">
       <span>Параметры физики:</span>
-      <Flex vertical gap={10}>
+      <Flex vertical gap={10} class={styles.settings__container}>
         {@render inputs(getForceControls(), forceSettings, (key, value) => {
           forceSettings = { ...forceSettings, [key]: value };
         })}
-        <button class={styles.settings__button} onclick={clearForce}>Сбросить</button>
       </Flex>
+      <button class={styles.settings__button} onclick={clearForce}>Сбросить</button>
     </Flex>
   {/if}
 
@@ -254,12 +254,12 @@
       style="top: 45px; left: calc(10px + 185px + 20px);"
     >
       <span>Параметры отображения:</span>
-      <Flex vertical gap={10}>
+      <Flex vertical gap={10} class={styles.settings__container}>
         {@render inputs(getGraphControls(), graphSettings, (key, value) => {
           graphSettings = { ...graphSettings, [key]: value };
         })}
-        <button class={styles.settings__button} onclick={clearGraph}>Сбросить</button>
       </Flex>
+      <button class={styles.settings__button} onclick={clearGraph}>Сбросить</button>
     </Flex>
   {/if}
 
@@ -277,12 +277,12 @@
       style="top: 45px; left: calc(10px + 185px + 20px + 220px + 20px);"
     >
       <span>Параметры нод:</span>
-      <Flex vertical gap={10}>
+      <Flex vertical gap={10} class={styles.settings__container}>
         {@render inputs(getNodeControls(), nodeOptions, (key, value) => {
           nodeOptions = { ...nodeOptions, [key]: value };
         })}
-        <button class={styles.settings__button} onclick={clearNode}>Сбросить</button>
       </Flex>
+      <button class={styles.settings__button} onclick={clearNode}>Сбросить</button>
     </Flex>
   {/if}
 
@@ -300,12 +300,12 @@
       style="top: 45px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px);"
     >
       <span>Параметры связей:</span>
-      <Flex vertical gap={10}>
+      <Flex vertical gap={10} class={styles.settings__container}>
         {@render inputs(getLinkControls(), linkOptions, (key, value) => {
           linkOptions = { ...linkOptions, [key]: value };
         })}
-        <button class={styles.settings__button} onclick={clearLink}>Сбросить</button>
       </Flex>
+      <button class={styles.settings__button} onclick={clearLink}>Сбросить</button>
     </Flex>
   {/if}
 
@@ -315,7 +315,7 @@
   {#if openData}
     <Flex class={styles.settings} vertical gap={10} style="bottom: 45px; left: 10px;">
       <span>Настройки данных</span>
-      <Flex vertical gap={10}>
+      <Flex vertical gap={10} class={styles.settings__container}>
         {#each dataArray as data (data.id)}
           <label>
             <input

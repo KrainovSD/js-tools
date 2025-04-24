@@ -9,5 +9,7 @@ export {
   calculateLinkPositionByRadius,
   animationByProgress,
   getParticlePosition,
+  linkByPointerGetter,
+  nodeByPointerGetter,
 } from "./lib";
 export * from "./types";

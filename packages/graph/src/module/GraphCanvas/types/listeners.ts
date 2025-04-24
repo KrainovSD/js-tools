@@ -1,6 +1,6 @@
 import type { D3DragEvent } from "d3-drag";
 import type { D3ZoomEvent } from "d3-zoom";
-import type { NodeInterface } from "@/types";
+import type { LinkInterface, NodeInterface } from "@/types";
 import type { GraphState } from "./graph";
 
 export type ZoomEventInterface = D3ZoomEvent<HTMLCanvasElement, unknown>;
@@ -15,11 +15,31 @@ export type ListenersInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
-  onContextMenu?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
-  onClick?: (event: MouseEvent | TouchEvent, node?: NodeInterface<NodeData>) => void;
-  onDoubleClick?: (event: MouseEvent | TouchEvent, node?: NodeInterface<NodeData>) => void;
-  onWheelClick?: (event: MouseEvent, node?: NodeInterface<NodeData>) => void;
-  onMove?: (event: MouseEvent | TouchEvent, node?: NodeInterface<NodeData>) => void;
+  onContextMenu?: (
+    event: MouseEvent,
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+  ) => void;
+  onClick?: (
+    event: MouseEvent | TouchEvent,
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+  ) => void;
+  onDoubleClick?: (
+    event: MouseEvent | TouchEvent,
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+  ) => void;
+  onWheelClick?: (
+    event: MouseEvent,
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+  ) => void;
+  onMove?: (
+    event: MouseEvent | TouchEvent,
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+  ) => void;
   onZoom?: (event: ZoomEventInterface) => void;
   onDragSubject?: (
     event: DragEventInterface<NodeData>,

@@ -44,12 +44,6 @@
     font-size: 14px;
     font-family: Nunito;
 
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    align-self: stretch;
-
     &_white {
       color: rgba(255, 255, 255, 0.85);
     }
