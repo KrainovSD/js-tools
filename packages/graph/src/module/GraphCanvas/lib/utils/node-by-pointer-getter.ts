@@ -7,7 +7,7 @@ import { isOverlapsNode } from "./is-overlaps-node";
 import { pointerGetter } from "./pointer-getter";
 
 export type NodeByPointerGetterOptions<NodeData extends Record<string, unknown>> = {
-  mouseEvent: MouseEvent;
+  mouseEvent: MouseEvent | TouchEvent;
   areaRect: DOMRect | undefined;
   areaTransform: ZoomTransform;
   nodes: NodeInterface<NodeData>[];

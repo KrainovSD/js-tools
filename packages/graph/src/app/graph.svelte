@@ -13,7 +13,7 @@
   let nodes: Node[] = $state.raw([]);
   let links: Link[] = $state.raw([]);
 
-  function onClick(event: MouseEvent, node?: NodeInterface<NodeData> | undefined) {}
+  function onClick(event: MouseEvent | TouchEvent, node?: NodeInterface<NodeData> | undefined) {}
 
   $effect(() => {
     const neighbors: Record<string, string[]> = {};

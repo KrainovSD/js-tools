@@ -1078,58 +1078,81 @@ export class GraphCanvas<
   private initPointer() {
     if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
 
-    /** hover */
-    this.area.addEventListener(
-      "pointermove",
-      (event) => {
-        let currentNode: NodeInterface<NodeData> | undefined;
+    function onHover(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
+      let currentNode: NodeInterface<NodeData> | undefined;
 
-        if (this.graphSettings.highlightByHover && !this.isDragging) {
-          currentNode = nodeByPointerGetter({
-            graphSettings: this.graphSettings,
-            areaRect: this.areaRect,
-            areaTransform: this.areaTransform,
-            mouseEvent: event,
-            nodes: this.nodes,
-          });
-          if (currentNode && this.highlightedNode !== currentNode) {
-            this.highlightedNode = currentNode;
-            this.highlightedNeighbors = new Set(this.highlightedNode?.neighbors ?? []);
-            this.highlightWorking = true;
+      if (this.graphSettings.highlightByHover && !this.isDragging) {
+        currentNode = nodeByPointerGetter({
+          graphSettings: this.graphSettings,
+          areaRect: this.areaRect,
+          areaTransform: this.areaTransform,
+          mouseEvent: event,
+          nodes: this.nodes,
+        });
+        if (currentNode && this.highlightedNode !== currentNode) {
+          this.highlightedNode = currentNode;
+          this.highlightedNeighbors = new Set(this.highlightedNode?.neighbors ?? []);
+          this.highlightWorking = true;
 
-            if (!this.simulationWorking && !this.highlightDrawing)
-              requestAnimationFrame(() => {
-                this.draw();
-              });
-          } else if (!currentNode && this.highlightedNode) {
-            this.highlightWorking = false;
-            if (!this.simulationWorking && !this.highlightDrawing)
-              requestAnimationFrame(() => {
-                this.draw();
-              });
-          }
+          if (!this.simulationWorking && !this.highlightDrawing)
+            requestAnimationFrame(() => {
+              this.draw();
+            });
+        } else if (!currentNode && this.highlightedNode) {
+          this.highlightWorking = false;
+          if (!this.simulationWorking && !this.highlightDrawing)
+            requestAnimationFrame(() => {
+              this.draw();
+            });
         }
+      }
 
-        if (!this.listeners.onMove) return;
+      if (!this.listeners.onMove) return;
 
-        if (!currentNode)
-          currentNode = nodeByPointerGetter({
-            graphSettings: this.graphSettings,
-            areaRect: this.areaRect,
-            areaTransform: this.areaTransform,
-            mouseEvent: event,
-            nodes: this.nodes,
-          });
+      if (!currentNode)
+        currentNode = nodeByPointerGetter({
+          graphSettings: this.graphSettings,
+          areaRect: this.areaRect,
+          areaTransform: this.areaTransform,
+          mouseEvent: event,
+          nodes: this.nodes,
+        });
 
-        return void this.listeners.onMove(event, currentNode);
-      },
-      {
-        signal: this.eventAbortController.signal,
-      },
-    );
+      return void this.listeners.onMove(event, currentNode);
+    }
+    function onWheelClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
+      if (
+        this.isDragging ||
+        !this.listeners.onWheelClick ||
+        !("button" in event) ||
+        event.button !== 1
+      )
+        return;
 
-    /** dblclick */
-    this.area.addEventListener("dblclick", (event) => {
+      const currentNode = nodeByPointerGetter({
+        graphSettings: this.graphSettings,
+        areaRect: this.areaRect,
+        areaTransform: this.areaTransform,
+        mouseEvent: event,
+        nodes: this.nodes,
+      });
+
+      return void this.listeners.onWheelClick(event, currentNode);
+    }
+    function onRightClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent) {
+      if (!this.listeners.onContextMenu) return;
+
+      const currentNode = nodeByPointerGetter({
+        graphSettings: this.graphSettings,
+        areaRect: this.areaRect,
+        areaTransform: this.areaTransform,
+        mouseEvent: event,
+        nodes: this.nodes,
+      });
+
+      return void this.listeners.onContextMenu(event, currentNode);
+    }
+    function onDoubleClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
       if (!this.listeners.onDoubleClick) return;
 
       const currentNode = nodeByPointerGetter({
@@ -1141,155 +1164,131 @@ export class GraphCanvas<
       });
 
       return void this.listeners.onDoubleClick(event, currentNode);
+    }
+    function onClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
+      if (this.isDragging || !this.listeners.onClick || ("button" in event && event.button !== 0))
+        return;
+      const currentNode = nodeByPointerGetter({
+        graphSettings: this.graphSettings,
+        areaRect: this.areaRect,
+        areaTransform: this.areaTransform,
+        mouseEvent: event,
+        nodes: this.nodes,
+      });
+
+      return void this.listeners.onClick(event, currentNode);
+    }
+
+    /** hover */
+    this.area.addEventListener("mousemove", onHover.bind(this), {
+      signal: this.eventAbortController.signal,
+    });
+    this.area.addEventListener("touchmove", onHover.bind(this), {
+      signal: this.eventAbortController.signal,
+    });
+
+    /** dblclick */
+    this.area.addEventListener("dblclick", onDoubleClick.bind(this), {
+      signal: this.eventAbortController.signal,
     });
 
     /** wheel click */
-    this.area.addEventListener(
-      "mousedown",
-      (event) => {
-        if (this.isDragging || !this.listeners.onWheelClick || event.button !== 1) return;
-        const currentNode = nodeByPointerGetter({
-          graphSettings: this.graphSettings,
-          areaRect: this.areaRect,
-          areaTransform: this.areaTransform,
-          mouseEvent: event,
-          nodes: this.nodes,
-        });
-
-        return void this.listeners.onWheelClick(event, currentNode);
-      },
-      {
-        signal: this.eventAbortController.signal,
-      },
-    );
+    this.area.addEventListener("mousedown", onWheelClick.bind(this), {
+      signal: this.eventAbortController.signal,
+    });
 
     /** click */
-    this.area.addEventListener(
-      "click",
-      (event) => {
-        if (this.isDragging || !this.listeners.onClick || event.button !== 0) return;
-        const currentNode = nodeByPointerGetter({
-          graphSettings: this.graphSettings,
-          areaRect: this.areaRect,
-          areaTransform: this.areaTransform,
-          mouseEvent: event,
-          nodes: this.nodes,
-        });
-
-        return void this.listeners.onClick(event, currentNode);
-      },
-      {
-        signal: this.eventAbortController.signal,
-      },
-    );
+    this.area.addEventListener("click", onClick.bind(this), {
+      signal: this.eventAbortController.signal,
+    });
 
     /** right click */
-    this.area.addEventListener(
-      "contextmenu",
-      (event) => {
-        if (!this.listeners.onContextMenu) return;
-
-        const currentNode = nodeByPointerGetter({
-          graphSettings: this.graphSettings,
-          areaRect: this.areaRect,
-          areaTransform: this.areaTransform,
-          mouseEvent: event,
-          nodes: this.nodes,
-        });
-
-        return void this.listeners.onContextMenu(event, currentNode);
-      },
-      {
-        signal: this.eventAbortController.signal,
-      },
-    );
+    this.area.addEventListener("contextmenu", onRightClick.bind(this), {
+      signal: this.eventAbortController.signal,
+    });
   }
 
   private initDnd() {
     if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
 
-    d3Select(this.area).call(
-      d3Drag<HTMLCanvasElement, unknown>()
-        .subject((event: DragEventInterface<NodeData>) => {
-          if (this.listeners.onDragSubject) {
-            return this.listeners.onDragSubject(event, this.state);
+    const dragHandler = d3Drag<HTMLCanvasElement, unknown>()
+      .subject((event: DragEventInterface<NodeData>) => {
+        if (this.listeners.onDragSubject) {
+          return this.listeners.onDragSubject(event, this.state);
+        }
+
+        if (!this.areaRect) return;
+
+        const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
+        const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
+
+        let index = 0;
+
+        return greatest(this.nodes, (node) => {
+          if (!node.x || !node.y || (isBoolean(node.drag) && !node.drag)) return undefined;
+
+          let radius = node._radius;
+          if (!radius) {
+            const nodeOptions = nodeIterationExtractor(
+              node,
+              index,
+              this.nodes,
+              this.state,
+              this.nodeSettings.options ?? {},
+              nodeOptionsGetter,
+            );
+
+            radius = nodeRadiusGetter({
+              radiusFlexible: this.graphSettings.nodeRadiusFlexible,
+              radiusInitial: nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial,
+              radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
+              radiusFactor: this.graphSettings.nodeRadiusFactor,
+              linkCount: node.linkCount,
+            });
           }
 
+          index++;
+
+          return this.graphSettings.dragPlaceCoefficient(node, pointerX, pointerY, radius);
+        });
+      })
+      .on("start", (event: DragEventInterface<NodeData>) => {
+        this.listeners.onStartDragFinished?.(event, this.state);
+      })
+      .on("drag", (event: DragEventInterface<NodeData>) => {
+        if (!this.isDragging) {
+          this.isDragging = true;
+          if (this.simulation) this.simulation.alphaTarget(0.3).restart();
+        }
+
+        if (!this.areaRect) return;
+        const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
+        const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
+        event.subject.fx = pointerX;
+        event.subject.fy = pointerY;
+
+        this.listeners.onMoveDragFinished?.(event, this.state);
+      })
+      .on("end", (event: DragEventInterface<NodeData>) => {
+        this.isDragging = false;
+
+        if (!event.active && this.simulation) this.simulation.alphaTarget(0);
+
+        if (this.graphSettings.stickAfterDrag && this.areaRect) {
           if (!this.areaRect) return;
-
-          const mouseEvent = event.sourceEvent as MouseEvent;
-          const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
-
-          let index = 0;
-
-          return greatest(this.nodes, (node) => {
-            if (!node.x || !node.y || (isBoolean(node.drag) && !node.drag)) return undefined;
-
-            let radius = node._radius;
-            if (!radius) {
-              const nodeOptions = nodeIterationExtractor(
-                node,
-                index,
-                this.nodes,
-                this.state,
-                this.nodeSettings.options ?? {},
-                nodeOptionsGetter,
-              );
-
-              radius = nodeRadiusGetter({
-                radiusFlexible: this.graphSettings.nodeRadiusFlexible,
-                radiusInitial: nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial,
-                radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
-                radiusFactor: this.graphSettings.nodeRadiusFactor,
-                linkCount: node.linkCount,
-              });
-            }
-
-            index++;
-
-            return this.graphSettings.dragPlaceCoefficient(node, pointerX, pointerY, radius);
-          });
-        })
-        .on("start", (event: DragEventInterface<NodeData>) => {
-          this.listeners.onStartDragFinished?.(event, this.state);
-        })
-        .on("drag", (event: DragEventInterface<NodeData>) => {
-          if (!this.isDragging) {
-            this.isDragging = true;
-            if (this.simulation) this.simulation.alphaTarget(0.3).restart();
-          }
-
-          if (!this.areaRect) return;
-          const mouseEvent = event.sourceEvent as MouseEvent;
+          const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
           const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
           event.subject.fx = pointerX;
           event.subject.fy = pointerY;
+        } else {
+          event.subject.fx = null;
+          event.subject.fy = null;
+        }
 
-          this.listeners.onMoveDragFinished?.(event, this.state);
-        })
-        .on("end", (event: DragEventInterface<NodeData>) => {
-          this.isDragging = false;
+        this.listeners.onEndDragFinished?.(event, this.state);
+      });
 
-          if (!event.active && this.simulation) this.simulation.alphaTarget(0);
-
-          if (this.graphSettings.stickAfterDrag && this.areaRect) {
-            if (!this.areaRect) return;
-            const mouseEvent = event.sourceEvent as MouseEvent;
-            const [pointerX, pointerY] = pointerGetter(
-              mouseEvent,
-              this.areaRect,
-              this.areaTransform,
-            );
-            event.subject.fx = pointerX;
-            event.subject.fy = pointerY;
-          } else {
-            event.subject.fx = null;
-            event.subject.fy = null;
-          }
-
-          this.listeners.onEndDragFinished?.(event, this.state);
-        }),
-    );
+    d3Select(this.area).call(dragHandler);
   }
 
   private initZoom(currentZoom?: ZoomTransform) {
