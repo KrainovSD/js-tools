@@ -23,6 +23,7 @@ type GetCellOptions<
         row: RowInterface<RowData>;
         ganttInfo: GanttInfo<GanttData>;
         rowInfo: GanttRowInfo;
+        bodyWidth: number | null;
       }>
     | undefined;
   rowsMap: Record<string | number, GanttRowInfo>;
@@ -53,7 +54,14 @@ export function getCell<
 
   return (
     <React.Fragment key={`${ganttInfo.id}-cell`}>
-      {opts.GanttTask && <opts.GanttTask row={opts.row} ganttInfo={ganttInfo} rowInfo={rowInfo} />}
+      {opts.GanttTask && (
+        <opts.GanttTask
+          row={opts.row}
+          ganttInfo={ganttInfo}
+          rowInfo={rowInfo}
+          bodyWidth={opts.bodyWidth}
+        />
+      )}
       {!opts.GanttTask && (
         <Tooltip
           styleBase={{

@@ -42,6 +42,7 @@ export type GanttProps<
         row: RowInterface<RowData>;
         ganttInfo: GanttInfo<GanttData>;
         rowInfo: GanttRowInfo;
+        bodyWidth: number | null;
       }>
     | undefined;
 };
