@@ -30,6 +30,14 @@
     NodeOptionsInterface,
     NodeSettingsInterface,
   } from "@/module/GraphCanvas";
+  import { downloadJson, isArray, isObject, jsonParse, readFile } from "@krainovsd/js-helpers";
+  import type { LinkInterface, NodeInterface } from "@/types";
+  import { getNodeNeighbors } from "./lib";
+
+  type GraphInterface = {
+    nodes: NodeInterface<NodeData>[];
+    links: LinkInterface<NodeData, LinkData>[];
+  };
 
   let forceSettings: Partial<ForceSettingsInterface<NodeData, LinkData>> = $state.raw({
     ...FORCE_SETTINGS,
@@ -43,15 +51,14 @@
   let linkSettings: Partial<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> = $state({
     ...LINK_SETTINGS,
   });
+  let downloadInputRef: HTMLInputElement | undefined = $state();
 
   let openForce = $state(false);
   let openGraph = $state(false);
   let openNode = $state(false);
   let openLink = $state(false);
-  let openData = $state(false);
 
   function allClose() {
-    openData = false;
     openForce = false;
     openGraph = false;
     openLink = false;
@@ -92,6 +99,72 @@
   function clearLink() {
     linkOptions = { ...LINK_OPTIONS };
     linkSettings = { ...LINK_SETTINGS };
+  }
+
+  function exportGraph() {
+    function getRequiredNodeDataProjection() {
+      const { links, nodes } = $graphStore?.getData?.() ?? {};
+      const graph: GraphInterface = {
+        links:
+          links?.map?.((link) => ({
+            source: isObject(link.source)
+              ? (link.source.id as string | number)
+              : (link.source as string | number),
+            target: isObject(link.target)
+              ? (link.target.id as string | number)
+              : (link.target as string | number),
+            data: link.data,
+          })) ?? [],
+        nodes:
+          nodes?.map?.((node) => ({
+            id: node.id,
+            data: node.data,
+            name: node.name,
+            vx: node.vx,
+            vy: node.vy,
+            x: node.x,
+            y: node.y,
+          })) ?? [],
+      };
+      return { links: graph.links, nodes: graph.nodes };
+    }
+
+    const { links, nodes } = getRequiredNodeDataProjection();
+    downloadJson(
+      {
+        links,
+        nodes,
+        settings: {
+          forceSettings,
+          graphSettings,
+          nodeOptions,
+          linkOptions,
+          nodeSettings,
+          linkSettings,
+        },
+      },
+      "graph.json",
+    );
+  }
+
+  function importGraph() {
+    downloadInputRef?.click?.();
+  }
+
+  async function onImportGraph(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.[0]) return;
+
+    const file = await readFile(input.files[0]);
+    if (!file) return;
+
+    const json = jsonParse<GraphInterface>(file);
+    if (!json || !isArray(json.links) || !isArray(json.nodes)) {
+      alert("Не правильная схема данных!");
+      return;
+    }
+    getNodeNeighbors(json);
+    $graphStore?.changeData?.({ links: json.links, nodes: json.nodes });
   }
 
   /** button close handlers */
@@ -215,6 +288,8 @@
   {/each}
 {/snippet}
 
+<input type="file" class={styles.download} bind:this={downloadInputRef} onchange={onImportGraph} />
+
 <Flex
   onclick={(e) => {
     e.stopPropagation();
@@ -303,4 +378,16 @@
       <button class={styles.settings__button} onclick={clearLink}>Сбросить</button>
     </Flex>
   {/if}
+
+  <button
+    class={styles.button}
+    onclick={importGraph}
+    style="top: 10px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px + 185px + 20px);"
+    >{"Импорт графа"}</button
+  ><button
+    class={styles.button}
+    onclick={exportGraph}
+    style="top: 10px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px + 185px + 20px + 110px + 20px);"
+    >{"Экспорт графа"}</button
+  >
 </Flex>
