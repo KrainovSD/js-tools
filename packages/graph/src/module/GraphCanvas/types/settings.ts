@@ -2,36 +2,8 @@ import type { LinkInterface, NodeInterface } from "@/types";
 import type { GraphState } from "./graph";
 
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
-  highlightByNodeOnlyRoot?: boolean;
-  highlightByNodeNodeFadingMin?: number;
-  highlightByNodeLinkFadingMin?: number;
-  highlightByNodeArrowFadingMin?: number;
-  highlightByNodeNodeColorFadingMin?: number;
-  highlightByNodeTextFadingMin?: number;
-  highlightByNodeNodeSizingAdditional?: number;
-  highlightByNodeTextSizingAdditional?: number;
-  highlightByNodeTextShiftXAdditional?: number;
-  highlightByNodeTextShiftYAdditional?: number;
-  highlightByNodeTextWeightAdditional?: number;
-  highlightByNodeTextWidthAdditional?: number;
-  highlightByLinkOnlyRoot?: boolean;
-  highlightByLinkNodeFadingMin?: number;
-  highlightByLinkLinkFadingMin?: number;
-  highlightByLinkArrowFadingMin?: number;
-  highlightByLinkNodeColorFadingMin?: number;
-  highlightByLinkTextFadingMin?: number;
-  highlightByLinkNodeSizingAdditional?: number;
-  highlightByLinkTextSizingAdditional?: number;
-  highlightByLinkTextShiftXAdditional?: number;
-  highlightByLinkTextShiftYAdditional?: number;
-  highlightByLinkTextWeightAdditional?: number;
-  highlightByLinkTextWidthAdditional?: number;
-  highlightByHoverNode?: boolean;
-  highlightByHoverLink?: boolean;
-  hoverLinkThreshold?: number;
   highlightDownFrames?: number;
   highlightUpFrames?: number;
-  stickAfterDrag?: boolean;
   zoomExtent?: [number, number];
   translateExtent?: [[number?, number?], [number?, number?]];
   translateExtentCoefficient?: number | [number, number];
@@ -47,10 +19,6 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
     pyEvent: number,
     radius: number,
   ) => number | undefined;
-  nodeRadiusInitial?: number;
-  nodeRadiusCoefficient?: number;
-  nodeRadiusFactor?: number;
-  nodeRadiusFlexible?: boolean;
   showDrawTime?: boolean;
   showDrawTimeEveryTick?: boolean;
 };
@@ -87,7 +55,42 @@ export type NodeSettingsInterface<
   LinkData extends Record<string, unknown>,
 > = {
   cache?: boolean;
+  stickAfterDrag?: boolean;
   idGetter?: NodeIterationPropsInterface<NodeData, LinkData, string | number>;
+  highlightByNodeOnlyRoot?: boolean;
+  highlightByNodeNodeFadingMin?: number;
+  highlightByNodeNodeColorFadingMin?: number;
+  highlightByNodeNodeSizingAdditional?: number;
+  highlightByNodeTextFadingMin?: number;
+  highlightByNodeTextSizingAdditional?: number;
+  highlightByNodeTextShiftXAdditional?: number;
+  highlightByNodeTextShiftYAdditional?: number;
+  highlightByNodeTextWeightAdditional?: number;
+  highlightByNodeTextWidthAdditional?: number;
+  highlightByLinkNodeFadingMin?: number;
+  highlightByLinkNodeColorFadingMin?: number;
+  highlightByLinkTextFadingMin?: number;
+  highlightByLinkNodeSizingAdditional?: number;
+  highlightByLinkTextSizingAdditional?: number;
+  highlightByLinkTextShiftXAdditional?: number;
+  highlightByLinkTextShiftYAdditional?: number;
+  highlightByLinkTextWeightAdditional?: number;
+  highlightByLinkTextWidthAdditional?: number;
+  highlightByHoverNode?: boolean;
+  highlightByNodeNodeFading?: boolean;
+  highlightByNodeNodeSizing?: boolean;
+  highlightByNodeTextFading?: boolean;
+  highlightByNodeTextSizing?: boolean;
+  highlightByNodeNodeColor?: boolean;
+  highlightByLinkNodeFading?: boolean;
+  highlightByLinkNodeSizing?: boolean;
+  highlightByLinkTextFading?: boolean;
+  highlightByLinkTextSizing?: boolean;
+  highlightByLinkNodeColor?: boolean;
+  nodeRadiusInitial?: number;
+  nodeRadiusCoefficient?: number;
+  nodeRadiusFactor?: number;
+  nodeRadiusFlexible?: boolean;
   options?:
     | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface<NodeData, LinkData>>
     | NodeOptionsInterface<NodeData, LinkData>;
@@ -125,16 +128,7 @@ export type NodeOptionsInterface<
         state: GraphState<NodeData, LinkData>,
       ) => void)
     | null;
-  highlightByNodeNodeFading?: boolean;
-  highlightByNodeNodeSizing?: boolean;
-  highlightByNodeTextFading?: boolean;
-  highlightByNodeTextSizing?: boolean;
-  highlightByNodeNodeColor?: boolean;
-  highlightByLinkNodeFading?: boolean;
-  highlightByLinkNodeSizing?: boolean;
-  highlightByLinkTextFading?: boolean;
-  highlightByLinkTextSizing?: boolean;
-  highlightByLinkNodeColor?: boolean;
+
   borderColor?: string;
   borderWidth?: number;
   radius?: number;
@@ -171,7 +165,20 @@ export type LinkSettingsInterface<
   LinkData extends Record<string, unknown>,
 > = {
   particles?: boolean;
+  pretty?: boolean;
+  arrow?: boolean;
+  arrowByHighlight?: boolean;
   cache?: boolean;
+  highlightByNodeLinkFadingMin?: number;
+  highlightByNodeArrowFadingMin?: number;
+  highlightByLinkArrowFadingMin?: number;
+  highlightByLinkLinkFadingMin?: number;
+  highlightByHoverLink?: boolean;
+  highlightByNodeLinkFading?: boolean;
+  highlightByNodeArrowFading?: boolean;
+  highlightByLinkLinkFading?: boolean;
+  highlightByLinkArrowFading?: boolean;
+  hoverLinkThreshold?: number;
   options?:
     | LinkIterationPropsInterface<NodeData, LinkData, LinkOptionsInterface<NodeData, LinkData>>
     | LinkOptionsInterface<NodeData, LinkData>;
@@ -198,16 +205,9 @@ export type LinkOptionsInterface<
   alpha?: number;
   color?: string;
   width?: number;
-  highlightByNodeLinkFading?: boolean;
-  highlightByNodeArrowFading?: boolean;
-  highlightByLinkLinkFading?: boolean;
-  highlightByLinkArrowFading?: boolean;
-  pretty?: boolean;
-  arrow?: boolean;
   arrowAlpha?: number;
   arrowColor?: string;
   arrowSize?: number;
-  arrowReverseAppear?: boolean;
   particleAlpha?: number;
   particleColor?: string;
   particleRadius?: number;

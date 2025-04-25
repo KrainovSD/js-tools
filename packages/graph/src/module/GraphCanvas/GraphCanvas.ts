@@ -388,6 +388,8 @@ export class GraphCanvas<
 
           if (this.graphSettings.showDrawTime) {
             getDrawTime();
+            // eslint-disable-next-line no-console
+            console.log(`nodes: ${this.nodes.length} | links: ${this.links.length}`);
             resetDrawTime();
           }
         });
@@ -481,10 +483,10 @@ export class GraphCanvas<
               nodeOptionsGetter,
             );
             const radius = nodeRadiusGetter({
-              radiusFlexible: this.graphSettings.nodeRadiusFlexible,
-              radiusInitial: nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial,
-              radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
-              radiusFactor: this.graphSettings.nodeRadiusFactor,
+              radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
+              radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
+              radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
+              radiusFactor: this.nodeSettings.nodeRadiusFactor,
               linkCount: node.linkCount,
             });
 
@@ -651,7 +653,7 @@ export class GraphCanvas<
         }
 
         let alpha = linkOptions.alpha;
-        let arrowAlpha = linkOptions.arrowReverseAppear ? 0 : linkOptions.arrowAlpha;
+        let arrowAlpha = this.linkSettings.arrowByHighlight ? 0 : linkOptions.arrowAlpha;
 
         /** NODE HIGHLIGHT */
         if (this.highlightedNeighbors && this.highlightedNode) {
@@ -660,27 +662,27 @@ export class GraphCanvas<
             this.highlightedNode.id != link.source.id &&
             this.highlightedNode.id != link.target.id
           ) {
-            if (linkOptions.highlightByNodeLinkFading) {
+            if (this.linkSettings.highlightByNodeLinkFading) {
               const min =
-                this.graphSettings.highlightByNodeLinkFadingMin < alpha
-                  ? this.graphSettings.highlightByNodeLinkFadingMin
+                this.linkSettings.highlightByNodeLinkFadingMin < alpha
+                  ? this.linkSettings.highlightByNodeLinkFadingMin
                   : alpha;
               alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
             }
             if (
-              linkOptions.arrow &&
-              linkOptions.highlightByNodeArrowFading &&
-              !linkOptions.arrowReverseAppear
+              this.linkSettings.arrow &&
+              this.linkSettings.highlightByNodeArrowFading &&
+              !this.linkSettings.arrowByHighlight
             ) {
               const min =
-                this.graphSettings.highlightByNodeArrowFadingMin < arrowAlpha
-                  ? this.graphSettings.highlightByNodeArrowFadingMin
+                this.linkSettings.highlightByNodeArrowFadingMin < arrowAlpha
+                  ? this.linkSettings.highlightByNodeArrowFadingMin
                   : arrowAlpha;
               arrowAlpha = animationByProgress(min, arrowAlpha - min, 1 - this.highlightProgress);
             }
           } else {
             // eslint-disable-next-line no-lonely-if
-            if (linkOptions.arrow && linkOptions.arrowReverseAppear) {
+            if (this.linkSettings.arrow && this.linkSettings.arrowByHighlight) {
               /** Highlighted */
               arrowAlpha = animationByProgress(0, linkOptions.arrowAlpha, this.highlightProgress);
             }
@@ -690,27 +692,27 @@ export class GraphCanvas<
         if (this.highlightedNeighbors && this.highlightedLink) {
           /** Not highlighted */
           if (this.highlightedLink !== link) {
-            if (linkOptions.highlightByLinkLinkFading) {
+            if (this.linkSettings.highlightByLinkLinkFading) {
               const min =
-                this.graphSettings.highlightByLinkLinkFadingMin < alpha
-                  ? this.graphSettings.highlightByLinkLinkFadingMin
+                this.linkSettings.highlightByLinkLinkFadingMin < alpha
+                  ? this.linkSettings.highlightByLinkLinkFadingMin
                   : alpha;
               alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
             }
             if (
-              linkOptions.arrow &&
-              linkOptions.highlightByLinkArrowFading &&
-              !linkOptions.arrowReverseAppear
+              this.linkSettings.arrow &&
+              this.linkSettings.highlightByLinkArrowFading &&
+              !this.linkSettings.arrowByHighlight
             ) {
               const min =
-                this.graphSettings.highlightByLinkArrowFadingMin < arrowAlpha
-                  ? this.graphSettings.highlightByLinkArrowFadingMin
+                this.linkSettings.highlightByLinkArrowFadingMin < arrowAlpha
+                  ? this.linkSettings.highlightByLinkArrowFadingMin
                   : arrowAlpha;
               arrowAlpha = animationByProgress(min, arrowAlpha - min, 1 - this.highlightProgress);
             }
           } else {
             // eslint-disable-next-line no-lonely-if
-            if (linkOptions.arrow && linkOptions.arrowReverseAppear) {
+            if (this.linkSettings.arrow && this.linkSettings.arrowByHighlight) {
               /** Highlighted */
               arrowAlpha = animationByProgress(0, linkOptions.arrowAlpha, this.highlightProgress);
             }
@@ -728,8 +730,8 @@ export class GraphCanvas<
         let yStart = link.source.y;
         let xEnd = link.target.x;
         let yEnd = link.target.y;
-        if (linkOptions.pretty) {
-          const isHasArrow = linkOptions.arrow && arrowAlpha > 0;
+        if (this.linkSettings.pretty) {
+          const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
 
           const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(
             link,
@@ -793,7 +795,7 @@ export class GraphCanvas<
         }
 
         /** Arrow */
-        if (linkOptions.arrow && arrowAlpha > 0) {
+        if (this.linkSettings.arrow && arrowAlpha > 0) {
           const {
             x1: xStart,
             x2: xEnd,
@@ -873,7 +875,7 @@ export class GraphCanvas<
 
         let alpha = nodeOptions.alpha;
         let color = nodeOptions.color;
-        let radiusInitial = nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial;
+        let radiusInitial = nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial;
         let textAlpha = nodeOptions.textAlpha;
         let textSize = nodeOptions.textSize;
         let textShiftX = nodeOptions.textShiftX;
@@ -884,26 +886,26 @@ export class GraphCanvas<
         if (this.highlightedNeighbors && this.highlightedNode) {
           /** Not highlighted */
           if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
-            if (nodeOptions.highlightByNodeNodeFading) {
+            if (this.nodeSettings.highlightByNodeNodeFading) {
               const min =
-                this.graphSettings.highlightByNodeNodeFadingMin < alpha
-                  ? this.graphSettings.highlightByNodeNodeFadingMin
+                this.nodeSettings.highlightByNodeNodeFadingMin < alpha
+                  ? this.nodeSettings.highlightByNodeNodeFadingMin
                   : alpha;
               alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
             }
-            if (nodeOptions.highlightByNodeTextFading) {
+            if (this.nodeSettings.highlightByNodeTextFading) {
               const min =
-                this.graphSettings.highlightByNodeTextFadingMin < textAlpha
-                  ? this.graphSettings.highlightByNodeTextFadingMin
+                this.nodeSettings.highlightByNodeTextFadingMin < textAlpha
+                  ? this.nodeSettings.highlightByNodeTextFadingMin
                   : textAlpha;
               textAlpha = animationByProgress(min, textAlpha - min, 1 - this.highlightProgress);
             }
-            if (nodeOptions.highlightByNodeNodeColor) {
+            if (this.nodeSettings.highlightByNodeNodeColor) {
               const colorRgb = extractRgb(colorToRgb(color));
               if (colorRgb) {
                 const colorRgbFade = fadeRgb(
                   colorRgb,
-                  this.graphSettings.highlightByNodeNodeColorFadingMin,
+                  this.nodeSettings.highlightByNodeNodeColorFadingMin,
                 );
                 const colorFadeAnimation = rgbAnimationByProgress(
                   colorRgb,
@@ -914,42 +916,42 @@ export class GraphCanvas<
               }
             }
           } else if (
-            !this.graphSettings.highlightByNodeOnlyRoot ||
-            (this.graphSettings.highlightByNodeOnlyRoot && this.highlightedNode.id === node.id)
+            !this.nodeSettings.highlightByNodeOnlyRoot ||
+            (this.nodeSettings.highlightByNodeOnlyRoot && this.highlightedNode.id === node.id)
           ) {
             /** Highlighted */
 
-            if (nodeOptions.highlightByNodeNodeSizing) {
+            if (this.nodeSettings.highlightByNodeNodeSizing) {
               radiusInitial = animationByProgress(
                 radiusInitial,
-                this.graphSettings.highlightByNodeNodeSizingAdditional,
+                this.nodeSettings.highlightByNodeNodeSizingAdditional,
                 this.highlightProgress,
               );
             }
-            if (nodeOptions.highlightByNodeTextSizing) {
+            if (this.nodeSettings.highlightByNodeTextSizing) {
               textSize = animationByProgress(
                 textSize,
-                this.graphSettings.highlightByNodeTextSizingAdditional,
+                this.nodeSettings.highlightByNodeTextSizingAdditional,
                 this.highlightProgress,
               );
               textShiftX = animationByProgress(
                 textShiftX,
-                this.graphSettings.highlightByNodeTextShiftXAdditional,
+                this.nodeSettings.highlightByNodeTextShiftXAdditional,
                 this.highlightProgress,
               );
               textShiftY = animationByProgress(
                 textShiftY,
-                this.graphSettings.highlightByNodeTextShiftYAdditional,
+                this.nodeSettings.highlightByNodeTextShiftYAdditional,
                 this.highlightProgress,
               );
               textWeight = animationByProgress(
                 textWeight,
-                this.graphSettings.highlightByNodeTextWeightAdditional,
+                this.nodeSettings.highlightByNodeTextWeightAdditional,
                 this.highlightProgress,
               );
               textWidth = animationByProgress(
                 textWidth,
-                this.graphSettings.highlightByNodeTextWidthAdditional,
+                this.nodeSettings.highlightByNodeTextWidthAdditional,
                 this.highlightProgress,
               );
             }
@@ -963,26 +965,26 @@ export class GraphCanvas<
             this.highlightedLink.source !== node &&
             this.highlightedLink.target !== node
           ) {
-            if (nodeOptions.highlightByLinkNodeFading) {
+            if (this.nodeSettings.highlightByLinkNodeFading) {
               const min =
-                this.graphSettings.highlightByLinkNodeFadingMin < alpha
-                  ? this.graphSettings.highlightByLinkNodeFadingMin
+                this.nodeSettings.highlightByLinkNodeFadingMin < alpha
+                  ? this.nodeSettings.highlightByLinkNodeFadingMin
                   : alpha;
               alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
             }
-            if (nodeOptions.highlightByLinkTextFading) {
+            if (this.nodeSettings.highlightByLinkTextFading) {
               const min =
-                this.graphSettings.highlightByLinkTextFadingMin < textAlpha
-                  ? this.graphSettings.highlightByLinkTextFadingMin
+                this.nodeSettings.highlightByLinkTextFadingMin < textAlpha
+                  ? this.nodeSettings.highlightByLinkTextFadingMin
                   : textAlpha;
               textAlpha = animationByProgress(min, textAlpha - min, 1 - this.highlightProgress);
             }
-            if (nodeOptions.highlightByLinkNodeColor) {
+            if (this.nodeSettings.highlightByLinkNodeColor) {
               const colorRgb = extractRgb(colorToRgb(color));
               if (colorRgb) {
                 const colorRgbFade = fadeRgb(
                   colorRgb,
-                  this.graphSettings.highlightByLinkNodeColorFadingMin,
+                  this.nodeSettings.highlightByLinkNodeColorFadingMin,
                 );
                 const colorFadeAnimation = rgbAnimationByProgress(
                   colorRgb,
@@ -995,37 +997,37 @@ export class GraphCanvas<
           } else {
             /** Highlighted */
 
-            if (nodeOptions.highlightByLinkNodeSizing) {
+            if (this.nodeSettings.highlightByLinkNodeSizing) {
               radiusInitial = animationByProgress(
                 radiusInitial,
-                this.graphSettings.highlightByLinkNodeSizingAdditional,
+                this.nodeSettings.highlightByLinkNodeSizingAdditional,
                 this.highlightProgress,
               );
             }
-            if (nodeOptions.highlightByLinkTextSizing) {
+            if (this.nodeSettings.highlightByLinkTextSizing) {
               textSize = animationByProgress(
                 textSize,
-                this.graphSettings.highlightByLinkTextSizingAdditional,
+                this.nodeSettings.highlightByLinkTextSizingAdditional,
                 this.highlightProgress,
               );
               textShiftX = animationByProgress(
                 textShiftX,
-                this.graphSettings.highlightByLinkTextShiftXAdditional,
+                this.nodeSettings.highlightByLinkTextShiftXAdditional,
                 this.highlightProgress,
               );
               textShiftY = animationByProgress(
                 textShiftY,
-                this.graphSettings.highlightByLinkTextShiftYAdditional,
+                this.nodeSettings.highlightByLinkTextShiftYAdditional,
                 this.highlightProgress,
               );
               textWeight = animationByProgress(
                 textWeight,
-                this.graphSettings.highlightByLinkTextWeightAdditional,
+                this.nodeSettings.highlightByLinkTextWeightAdditional,
                 this.highlightProgress,
               );
               textWidth = animationByProgress(
                 textWidth,
-                this.graphSettings.highlightByLinkTextWidthAdditional,
+                this.nodeSettings.highlightByLinkTextWidthAdditional,
                 this.highlightProgress,
               );
             }
@@ -1033,10 +1035,10 @@ export class GraphCanvas<
         }
 
         const radius = nodeRadiusGetter({
-          radiusFlexible: this.graphSettings.nodeRadiusFlexible,
+          radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
           radiusInitial,
-          radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
-          radiusFactor: this.graphSettings.nodeRadiusFactor,
+          radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
+          radiusFactor: this.nodeSettings.nodeRadiusFactor,
           linkCount: node.linkCount,
         });
 
@@ -1211,12 +1213,12 @@ export class GraphCanvas<
 
       let currentNode: NodeInterface<NodeData> | undefined;
       let currentLink: LinkInterface<NodeData, LinkData> | undefined;
-      const checkHighlightNode = this.graphSettings.highlightByHoverNode && !this.isDragging;
-      const checkHighlightLink = this.graphSettings.highlightByHoverLink && !this.isDragging;
+      const checkHighlightNode = this.nodeSettings.highlightByHoverNode && !this.isDragging;
+      const checkHighlightLink = this.linkSettings.highlightByHoverLink && !this.isDragging;
 
       if (checkHighlightNode) {
         currentNode = nodeByPointerGetter({
-          graphSettings: this.graphSettings,
+          nodeSettings: this.nodeSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,
@@ -1227,7 +1229,7 @@ export class GraphCanvas<
         this.area.style.cursor = "pointer";
       } else if (checkHighlightLink) {
         currentLink = linkByPointerGetter({
-          graphSettings: this.graphSettings,
+          linkSettings: this.linkSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,
@@ -1279,7 +1281,7 @@ export class GraphCanvas<
 
       if (!currentNode && !checkHighlightNode)
         currentNode = nodeByPointerGetter({
-          graphSettings: this.graphSettings,
+          nodeSettings: this.nodeSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,
@@ -1287,7 +1289,7 @@ export class GraphCanvas<
         });
       if (!currentNode && (!checkHighlightNode || (!checkHighlightLink && !currentLink))) {
         currentLink = linkByPointerGetter({
-          graphSettings: this.graphSettings,
+          linkSettings: this.linkSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,
@@ -1307,7 +1309,7 @@ export class GraphCanvas<
         return;
 
       const currentNode = nodeByPointerGetter({
-        graphSettings: this.graphSettings,
+        nodeSettings: this.nodeSettings,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -1316,7 +1318,7 @@ export class GraphCanvas<
 
       if (!currentNode) {
         const currentLink = linkByPointerGetter({
-          graphSettings: this.graphSettings,
+          linkSettings: this.linkSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,
@@ -1332,7 +1334,7 @@ export class GraphCanvas<
       if (!this.listeners.onContextMenu) return;
 
       const currentNode = nodeByPointerGetter({
-        graphSettings: this.graphSettings,
+        nodeSettings: this.nodeSettings,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -1341,7 +1343,7 @@ export class GraphCanvas<
 
       if (!currentNode) {
         const currentLink = linkByPointerGetter({
-          graphSettings: this.graphSettings,
+          linkSettings: this.linkSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,
@@ -1357,7 +1359,7 @@ export class GraphCanvas<
       if (!this.listeners.onDoubleClick) return;
 
       const currentNode = nodeByPointerGetter({
-        graphSettings: this.graphSettings,
+        nodeSettings: this.nodeSettings,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -1365,7 +1367,7 @@ export class GraphCanvas<
       });
       if (!currentNode) {
         const currentLink = linkByPointerGetter({
-          graphSettings: this.graphSettings,
+          linkSettings: this.linkSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,
@@ -1381,7 +1383,7 @@ export class GraphCanvas<
       if (this.isDragging || !this.listeners.onClick || ("button" in event && event.button !== 0))
         return;
       const currentNode = nodeByPointerGetter({
-        graphSettings: this.graphSettings,
+        nodeSettings: this.nodeSettings,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -1389,7 +1391,7 @@ export class GraphCanvas<
       });
       if (!currentNode) {
         const currentLink = linkByPointerGetter({
-          graphSettings: this.graphSettings,
+          linkSettings: this.linkSettings,
           areaRect: this.areaRect,
           areaTransform: this.areaTransform,
           mouseEvent: event,
@@ -1462,10 +1464,10 @@ export class GraphCanvas<
             );
 
             radius = nodeRadiusGetter({
-              radiusFlexible: this.graphSettings.nodeRadiusFlexible,
-              radiusInitial: nodeOptions.radius ?? this.graphSettings.nodeRadiusInitial,
-              radiusCoefficient: this.graphSettings.nodeRadiusCoefficient,
-              radiusFactor: this.graphSettings.nodeRadiusFactor,
+              radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
+              radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
+              radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
+              radiusFactor: this.nodeSettings.nodeRadiusFactor,
               linkCount: node.linkCount,
             });
           }
@@ -1497,7 +1499,7 @@ export class GraphCanvas<
 
         if (!event.active && this.simulation) this.simulation.alphaTarget(0);
 
-        if (this.graphSettings.stickAfterDrag && this.areaRect) {
+        if (this.nodeSettings.stickAfterDrag && this.areaRect) {
           if (!this.areaRect) return;
           const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
           const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);

@@ -7,6 +7,8 @@ export {
   fadeRgb,
   getForceControls,
   getGraphControls,
-  getLinkControls,
-  getNodeControls,
+  getLinkOptionsControls,
+  getNodeOptionsControls,
+  getLinkSettingsControls,
+  getNodeSettingControls,
 } from "./lib";

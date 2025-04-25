@@ -7,39 +7,42 @@
     FORCE_SETTINGS,
     GRAPH_SETTINGS,
     LINK_OPTIONS,
+    LINK_SETTINGS,
     NODE_OPTIONS,
+    NODE_SETTINGS,
   } from "@/module/GraphCanvas/constants";
   import type { GraphSettingsInputInterface } from "@/types/controls";
-  import { graphStore, linksStore, nodesStore } from "./store";
+  import { graphStore } from "./store";
   // import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "../../mock";
-  import { getForceControls, getGraphControls, getLinkControls, getNodeControls } from "@/lib";
-  import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
+  import {
+    getForceControls,
+    getGraphControls,
+    getLinkOptionsControls,
+    getLinkSettingsControls,
+    getNodeOptionsControls,
+    getNodeSettingControls,
+  } from "@/lib";
   import type {
     ForceSettingsInterface,
-    GraphCanvasInterface,
     GraphSettingsInterface,
     LinkOptionsInterface,
+    LinkSettingsInterface,
     NodeOptionsInterface,
+    NodeSettingsInterface,
   } from "@/module/GraphCanvas";
 
-  let dataArray: {
-    id: number;
-    label: string;
-    data: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links">;
-  }[] = [
-    { data: d3Mock, id: 1, label: "D3 example" },
-    { data: stressMock, id: 2, label: "Стресс" },
-    { data: realMock, id: 3, label: "Реальный" },
-    { data: customMock, id: 4, label: "Кастомный" },
-    { data: createNewDynamicMock({ links: [], nodes: [] }), id: 5, label: "Динамически" },
-  ];
-  let selectedDataId: number = $state(1);
   let forceSettings: Partial<ForceSettingsInterface<NodeData, LinkData>> = $state.raw({
     ...FORCE_SETTINGS,
   });
   let graphSettings: Partial<GraphSettingsInterface<NodeData>> = $state({ ...GRAPH_SETTINGS });
   let nodeOptions: Partial<NodeOptionsInterface<NodeData, LinkData>> = $state({ ...NODE_OPTIONS });
   let linkOptions: Partial<LinkOptionsInterface<NodeData, LinkData>> = $state({ ...LINK_OPTIONS });
+  let nodeSettings: Partial<
+    Omit<NodeSettingsInterface<NodeData, LinkData>, "options" | "idGetter">
+  > = $state({ ...NODE_SETTINGS });
+  let linkSettings: Partial<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> = $state({
+    ...LINK_SETTINGS,
+  });
 
   let openForce = $state(false);
   let openGraph = $state(false);
@@ -75,11 +78,6 @@
     allClose();
     openLink = !open;
   }
-  function toggleOpenData() {
-    let open = openData;
-    allClose();
-    openData = !open;
-  }
 
   function clearForce() {
     forceSettings = { ...FORCE_SETTINGS };
@@ -89,11 +87,14 @@
   }
   function clearNode() {
     nodeOptions = { ...NODE_OPTIONS };
+    nodeSettings = { ...NODE_SETTINGS };
   }
   function clearLink() {
     linkOptions = { ...LINK_OPTIONS };
+    linkSettings = { ...LINK_SETTINGS };
   }
 
+  /** button close handlers */
   $effect(() => {
     let close = untrack(() => allClose);
 
@@ -104,16 +105,7 @@
     };
   });
 
-  $effect(() => {
-    selectedDataId;
-
-    const selectedData = dataArray.find((data) => data.id === selectedDataId);
-    if (selectedData) {
-      untrack(() => nodesStore.set(selectedData.data.nodes));
-      untrack(() => linksStore.set(selectedData.data.links));
-    }
-  });
-
+  /** force settings */
   $effect(() => {
     forceSettings;
 
@@ -125,6 +117,7 @@
       });
     }
   });
+  /** graph settings */
   $effect(() => {
     graphSettings;
 
@@ -136,6 +129,7 @@
       });
     }
   });
+  /** node settings */
   $effect(() => {
     const store = untrack(() => $graphStore);
     const options = JSON.parse(JSON.stringify(nodeOptions));
@@ -143,7 +137,7 @@
     if (store) {
       store.changeSettings({
         nodeSettings: {
-          cache: true,
+          ...nodeSettings,
           options: (node) => {
             return options;
           },
@@ -151,6 +145,7 @@
       });
     }
   });
+  /** link settings */
   $effect(() => {
     const store = untrack(() => $graphStore);
     const options = JSON.parse(JSON.stringify(linkOptions));
@@ -158,7 +153,7 @@
     if (store) {
       store.changeSettings({
         linkSettings: {
-          cache: true,
+          ...linkSettings,
           options: (link) => {
             return options;
           },
@@ -189,7 +184,7 @@
           value={settings[input.id] ?? input.initialValue}
           data-tooltip={settings[input.id]?.toString?.() ?? input.initialValue.toString()}
         />
-        <span>{input.label ?? input.id}</span>
+        <span>{`${input.label ?? input.id} (${settings[input.id] ?? input.initialValue})`}</span>
       {/if}
       {#if input.type === "checkbox"}
         <label>
@@ -229,7 +224,7 @@
     >{openForce ? "Закрыть настройки физики" : "Открыть настройки физики"}</button
   >
   {#if openForce}
-    <Flex class={styles.settings} vertical gap={10} style="top: 45px; left: 10px;">
+    <Flex class={styles.settings} vertical style="top: 45px; left: 10px;">
       <span>Параметры физики:</span>
       <Flex vertical gap={10} class={styles.settings__container}>
         {@render inputs(getForceControls(), forceSettings, (key, value) => {
@@ -247,12 +242,7 @@
     >{openGraph ? "Закрыть настройки отображения" : "Открыть настройки отображения"}</button
   >
   {#if openGraph}
-    <Flex
-      class={styles.settings}
-      vertical
-      gap={10}
-      style="top: 45px; left: calc(10px + 185px + 20px);"
-    >
+    <Flex class={styles.settings} vertical style="top: 45px; left: calc(10px + 185px + 20px);">
       <span>Параметры отображения:</span>
       <Flex vertical gap={10} class={styles.settings__container}>
         {@render inputs(getGraphControls(), graphSettings, (key, value) => {
@@ -273,13 +263,15 @@
     <Flex
       class={styles.settings}
       vertical
-      gap={10}
       style="top: 45px; left: calc(10px + 185px + 20px + 220px + 20px);"
     >
       <span>Параметры нод:</span>
       <Flex vertical gap={10} class={styles.settings__container}>
-        {@render inputs(getNodeControls(), nodeOptions, (key, value) => {
+        {@render inputs(getNodeOptionsControls(), nodeOptions, (key, value) => {
           nodeOptions = { ...nodeOptions, [key]: value };
+        })}
+        {@render inputs(getNodeSettingControls(), nodeSettings, (key, value) => {
+          nodeSettings = { ...nodeSettings, [key]: value };
         })}
       </Flex>
       <button class={styles.settings__button} onclick={clearNode}>Сбросить</button>
@@ -301,36 +293,14 @@
     >
       <span>Параметры связей:</span>
       <Flex vertical gap={10} class={styles.settings__container}>
-        {@render inputs(getLinkControls(), linkOptions, (key, value) => {
+        {@render inputs(getLinkOptionsControls(), linkOptions, (key, value) => {
           linkOptions = { ...linkOptions, [key]: value };
+        })}
+        {@render inputs(getLinkSettingsControls(), linkSettings, (key, value) => {
+          linkSettings = { ...linkSettings, [key]: value };
         })}
       </Flex>
       <button class={styles.settings__button} onclick={clearLink}>Сбросить</button>
-    </Flex>
-  {/if}
-
-  <button class={styles.button} onclick={toggleOpenData} style="bottom: 10px; left: 10px"
-    >{openData ? "Закрыть настройки данных" : "Открыть настройки данных"}</button
-  >
-  {#if openData}
-    <Flex class={styles.settings} vertical gap={10} style="bottom: 45px; left: 10px;">
-      <span>Настройки данных</span>
-      <Flex vertical gap={10} class={styles.settings__container}>
-        {#each dataArray as data (data.id)}
-          <label>
-            <input
-              class={styles.input}
-              type={"radio"}
-              name="data"
-              checked={selectedDataId === data.id}
-              onchange={() => {
-                selectedDataId = data.id;
-              }}
-            />
-            {data.label}</label
-          >
-        {/each}
-      </Flex>
     </Flex>
   {/if}
 </Flex>

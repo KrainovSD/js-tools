@@ -6,7 +6,7 @@ function randomNumber(min: number, max: number) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
-const NODES_COUNT = 20000;
+const NODES_COUNT = 7500;
 const GROUPS_COUNT = 10;
 const EXISTING_LINKS = new Map<number, number[]>();
 
