@@ -29,8 +29,8 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   highlightByHoverNode?: boolean;
   highlightByHoverLink?: boolean;
   hoverLinkThreshold?: number;
-  highlightDownStep?: number;
-  highlightUpStep?: number;
+  highlightDownFrames?: number;
+  highlightUpFrames?: number;
   stickAfterDrag?: boolean;
   zoomExtent?: [number, number];
   translateExtent?: [[number?, number?], [number?, number?]];

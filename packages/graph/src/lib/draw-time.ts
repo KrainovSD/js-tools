@@ -25,3 +25,8 @@ export function getDrawTime() {
   // eslint-disable-next-line no-console
   console.log("average draw: ", average);
 }
+
+export function resetDrawTime() {
+  countTime = 0;
+  countOperation = 0;
+}

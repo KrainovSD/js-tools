@@ -66,8 +66,8 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   highlightByHoverLink: true,
   hoverLinkThreshold: 2,
 
-  highlightDownStep: 0.2,
-  highlightUpStep: 0.2,
+  highlightUpFrames: 5,
+  highlightDownFrames: 5,
   dragPlaceCoefficient: dragPlaceCoefficientGetter,
   nodeRadiusInitial: 4,
   nodeRadiusCoefficient: 5,

@@ -19,6 +19,7 @@ import {
   extractRgb,
   fadeRgb,
   getDrawTime,
+  resetDrawTime,
   rgbAnimationByProgress,
   setDrawTime,
 } from "@/lib";
@@ -385,7 +386,10 @@ export class GraphCanvas<
         .on("end", () => {
           this.listeners.onSimulationEnd?.(this.state);
 
-          if (this.graphSettings.showDrawTime) getDrawTime();
+          if (this.graphSettings.showDrawTime) {
+            getDrawTime();
+            resetDrawTime();
+          }
         });
       this.initSimulationForces();
     }
@@ -525,14 +529,16 @@ export class GraphCanvas<
       this.highlightDrawing = true;
 
       if (!this.highlightWorking && this.highlightProgress > 0) {
-        this.highlightProgress -= this.graphSettings.highlightDownStep;
+        const highlightDownStep = 1 / this.graphSettings.highlightDownFrames;
+        this.highlightProgress -= highlightDownStep;
 
         if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
 
         if (!this.linkSettings.particles) return;
       }
       if (this.highlightWorking && this.highlightProgress < 1) {
-        this.highlightProgress += this.graphSettings.highlightUpStep;
+        const highlightUpStep = 1 / this.graphSettings.highlightUpFrames;
+        this.highlightProgress += highlightUpStep;
 
         if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
 
