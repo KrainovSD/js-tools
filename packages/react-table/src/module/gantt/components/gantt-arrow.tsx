@@ -37,7 +37,7 @@ export function GanttArrow(props: Props) {
 
   return (
     <div className={styles.base} style={{ left: startLeft, top: startTop }}>
-      {props.dependencies.map((depend) => {
+      {props.dependencies.map((depend, index) => {
         const dependRow = props.rowsMap[depend];
 
         if (!dependRow) return null;
@@ -68,7 +68,7 @@ export function GanttArrow(props: Props) {
         if (indexDiff <= 0) return null;
 
         return (
-          <React.Fragment key={`${props.currentRowId}${depend}`}>
+          <React.Fragment key={`${props.currentRowId}${depend}${index}`}>
             <div
               className={clsx(styles.link, styles.one__leftToRight)}
               style={{ width: LEFT_TO_RIGHT_FIRST, height: DEFAULT_LINK_SIZE, left: 0, top: 0 }}
