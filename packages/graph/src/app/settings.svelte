@@ -124,6 +124,7 @@
             vy: node.vy,
             x: node.x,
             y: node.y,
+            group: node.group,
           })) ?? [],
       };
       return { links: graph.links, nodes: graph.nodes };

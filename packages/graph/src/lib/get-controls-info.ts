@@ -24,6 +24,48 @@ export function getForceControls<
     keyof ForceSettingsInterface<NodeData, LinkData>
   >[] = [
     {
+      id: "forces",
+      initialValue: FORCE_SETTINGS.forces,
+      label: "Физика",
+      type: "checkbox",
+    },
+    {
+      id: "collideForce",
+      type: "checkbox",
+      label: "Сила отталкивания",
+      initialValue: FORCE_SETTINGS.collideForce,
+    },
+    {
+      id: "centerForce",
+      type: "checkbox",
+      label: "Сила центрирования",
+      initialValue: FORCE_SETTINGS.centerForce,
+    },
+    {
+      id: "chargeForce",
+      type: "checkbox",
+      label: "Сила дистанции",
+      initialValue: FORCE_SETTINGS.chargeForce,
+    },
+    {
+      id: "linkForce",
+      type: "checkbox",
+      label: "Сила связей",
+      initialValue: FORCE_SETTINGS.linkForce,
+    },
+    {
+      id: "xForce",
+      type: "checkbox",
+      label: "Сила X",
+      initialValue: FORCE_SETTINGS.xForce,
+    },
+    {
+      id: "yForce",
+      type: "checkbox",
+      label: "Сила Y",
+      initialValue: FORCE_SETTINGS.yForce,
+    },
+    {
       id: "centerStrength",
       initialValue: FORCE_SETTINGS.centerStrength,
       label: "Граница центра",
@@ -63,7 +105,7 @@ export function getForceControls<
       id: "chargeStrength",
       initialValue:
         typeof FORCE_SETTINGS.chargeStrength === "number" ? FORCE_SETTINGS.chargeStrength : 0,
-      label: "Гравитация",
+      label: "Дистанция",
       max: 0,
       min: -300,
       step: 0.1,
@@ -71,21 +113,21 @@ export function getForceControls<
     },
     {
       type: "range",
-      id: "xForce",
+      id: "xPosition",
       min: 0,
-      max: 1,
-      step: 0.01,
-      label: "Граница X",
-      initialValue: typeof FORCE_SETTINGS.xForce === "number" ? FORCE_SETTINGS.xForce : 0,
+      max: 2000,
+      step: 1,
+      label: "Координата притяжения X",
+      initialValue: typeof FORCE_SETTINGS.xPosition === "number" ? FORCE_SETTINGS.xPosition : 0,
     },
     {
       type: "range",
-      id: "yForce",
+      id: "yPosition",
       min: 0,
-      max: 1,
-      step: 0.01,
-      label: "Граница Y",
-      initialValue: typeof FORCE_SETTINGS.yForce === "number" ? FORCE_SETTINGS.yForce : 0,
+      max: 2000,
+      step: 1,
+      label: "Координата притяжения Y",
+      initialValue: typeof FORCE_SETTINGS.yPosition === "number" ? FORCE_SETTINGS.yPosition : 0,
     },
     {
       type: "range",
@@ -124,12 +166,6 @@ export function getForceControls<
       label: "Расстояние связей",
       initialValue:
         typeof FORCE_SETTINGS.linkDistance === "number" ? FORCE_SETTINGS.linkDistance : 30,
-    },
-    {
-      id: "collideOn",
-      type: "checkbox",
-      initialValue: FORCE_SETTINGS.collideOn,
-      label: "Отталкивание",
     },
   ];
 

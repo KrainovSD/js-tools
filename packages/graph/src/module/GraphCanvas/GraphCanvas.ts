@@ -334,9 +334,21 @@ export class GraphCanvas<
           "link",
           forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
             .id(this.nodeSettings.idGetter)
-            .distance(this.forceSettings.linkDistance)
-            .strength(this.forceSettings.linkStrength)
-            .iterations(this.forceSettings.linkIterations),
+            .distance(
+              this.forceSettings.forces && this.forceSettings.linkForce
+                ? this.forceSettings.linkDistance
+                : 0,
+            )
+            .strength(
+              this.forceSettings.forces && this.forceSettings.linkForce
+                ? this.forceSettings.linkStrength
+                : 0,
+            )
+            .iterations(
+              this.forceSettings.forces && this.forceSettings.linkForce
+                ? this.forceSettings.linkIterations
+                : 0,
+            ),
         )
         .alpha(alpha ?? 0.5)
         .restart();

@@ -27,7 +27,14 @@ export type ForceSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
-  collideOn?: boolean;
+  forces?: boolean;
+  xForce?: boolean;
+  yForce?: boolean;
+  chargeForce?: boolean;
+  centerForce?: boolean;
+  collideForce?: boolean;
+  linkForce?: boolean;
+
   collideOffMax?: {
     nodes: number;
     links: number;
@@ -44,9 +51,9 @@ export type ForceSettingsInterface<
   chargeDistanceMin?: number;
   centerPosition?: { x?: number; y?: number };
   centerStrength?: number;
-  xForce?: NodeIterationPropsInterface<NodeData, LinkData> | number;
+  xPosition?: NodeIterationPropsInterface<NodeData, LinkData> | number;
   xStrength?: NodeIterationPropsInterface<NodeData, LinkData> | number;
-  yForce?: NodeIterationPropsInterface<NodeData, LinkData> | number;
+  yPosition?: NodeIterationPropsInterface<NodeData, LinkData> | number;
   yStrength?: NodeIterationPropsInterface<NodeData, LinkData> | number;
 };
 

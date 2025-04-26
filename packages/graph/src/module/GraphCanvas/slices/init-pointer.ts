@@ -8,7 +8,7 @@ export function initPointer<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(this: GraphCanvas<NodeData, LinkData>) {
-  if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
+  if (!this.area || !this.nodes) throw new Error("bad init data");
 
   function onHover(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
     if (!this.area) return;

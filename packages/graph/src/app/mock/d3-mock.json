@@ -1,2223 +1,4414 @@
 {
-  "nodes": [
-    {
-      "id": "Structural basis of PROTAC cooperative recognition for selective protein degradation.",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "The influence of rough lipopolysaccharide structure on molecular interactions with mammalian antimicrobial peptides",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "New Synthetic Routes to Triazolo-benzodiazepine Analogues: Expanding the Scope of the Bump-and-Hole Approach for Selective Bromo and Extra-Terminal (BET) Bromodomain Inhibition.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Cyclic and Macrocyclic Peptides as Chemical Tools To Recognise Protein Surfaces and Probe Protein-Protein Interactions.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "8-Substituted Pyrido[3,4-d]pyrimidin-4(3H)-one Derivatives As Potent, Cell Permeable, KDM4 (JMJD2) and KDM5 (JARID1) Histone Lysine Demethylase Inhibitors.",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Discovery of Type II Inhibitors of TGFβ-Activated Kinase 1 (TAK1) and Mitogen-Activated Protein Kinase Kinase Kinase Kinase 2 (MAP4K2)",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "SIK2 regulates CRTCs, HDAC4 and glucose uptake in adipocytes",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Metabotropic Glutamate Receptor 5 Negative Allosteric Modulators: Discovery of 2-Chloro-4-[1-(4-fluorophenyl)-2,5-dimethyl-1H-imidazol-4-ylethynyl]pyridine (Basimglurant, RO4917523), a Promising Novel Medicine for Psychiatric Diseases",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Nrf2 regulates ROS production by mitochondria and NADPH oxidase.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "The clinically approved drugs dasatinib and bosutinib induce anti-inflammatory macrophages by inhibiting the salt-inducible kinases",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "New Monocyclic, Bicyclic, and Tricyclic Ethynylcyanodienones as Activators of the Keap1/Nrf2/ARE Pathway and Inhibitors of Inducible Nitric Oxide Synthase",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Palmitoylation of the Na/Ca exchanger cytoplasmic loop controls its inactivation and internalization during stress signaling",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Molecular Cloning and Functional Characterization of Components of the Capsule Biosynthesis Complex of Neisseria meningitidis Serogroup A TOWARD IN VITRO VACCINE PRODUCTION",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
-      "group": "Cited Works",
-      "radius": 7,
-      "citing_patents_count": 7
-    },
-    {
-      "id": "An unexpected twist to the activation of IKKβ: TAK1 primes IKKβ for activation by autophosphorylation",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Crystallographic analysis of Neisseria meningitidis PorB extracellular loops potentially implicated in TLR2 recognition",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "The LKB1-salt-inducible kinase pathway functions as a key gluconeogenic suppressor in the liver",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Characterization of VPS34-IN1, a selective inhibitor of Vps34, reveals that the phosphatidylinositol 3-phosphate-binding SGK3 protein kinase is a downstream target of class III phosphoinositide 3-kinase",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "3-(2-oxoethylidene)indolin-2-one derivatives activate Nrf2 and inhibit NF-κB: potential candidates for chemoprevention.",
-      "group": "Cited Works",
-      "radius": 6,
-      "citing_patents_count": 6
-    },
-    {
-      "id": "Carnosic acid stimulates glucose uptake in skeletal muscle cells via a PME-1/PP2A/PKB signalling axis",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Kv1.3 inhibitors have differential effects on glucose uptake and AMPK activity in skeletal muscle cell lines and mouse ex vivo skeletal muscle",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Restoration of CFTR function in patients with cystic fibrosis carrying the F508del-CFTR mutation",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Parkin is activated by PINK1-dependent phosphorylation of ubiquitin at Ser65",
-      "group": "Cited Works",
-      "radius": 4,
-      "citing_patents_count": 4
-    },
-    {
-      "id": "Substrate recognition by the cell surface palmitoyl transferase DHHC5.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Dysregulation of ubiquitin homeostasis and β-catenin signaling promote spinal muscular atrophy",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Structure-Guided Design and Optimization of Small Molecules Targeting the Protein–Protein Interaction between the von Hippel–Lindau (VHL) E3 Ubiquitin Ligase and the Hypoxia Inducible Factor (HIF) Alpha Subunit with in Vitro Nanomolar Affinities",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "The Nrf2 regulatory network provides an interface between redox and intermediary metabolism",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Characterization of WZ4003 and HTH-01-015 as selective inhibitors of the LKB1-tumour-suppressor-activated NUAK kinases",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Synthesis of vitamin D3 analogues with A-ring modifications to directly measure vitamin D levels in biological samples",
-      "group": "Cited Works",
-      "radius": 6,
-      "citing_patents_count": 6
-    },
-    {
-      "id": "Structure-activity relationship studies of pyrrolone antimalarial agents",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "The Concise Guide to Pharmacology 2013/14.: The Concise Guide to Pharmacology 2013/14: G Protein-Coupled Receptors",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Elevated SGK1 predicts resistance of breast cancer cells to Akt inhibitors",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Metabolism of inflammation limited by AMPK and pseudo-starvation",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Nrf2 impacts cellular bioenergetics by controlling substrate availability for mitochondrial respiration",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "The anti-inflammatory compound BAY 11-7082 is a potent inhibitor of Protein Tyrosine Phosphatases",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "BslA is a self-assembling bacterial hydrophobin that coats the Bacillus subtilis biofilm",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Investigation of acyclic uridine amide and 5′-amido nucleoside analogues as potential inhibitors of the Plasmodium falciparum dUTPase",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Discovery and structure-activity relationships of pyrrolone antimalarials",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "De Novo Design of Protein Kinase Inhibitors by in Silico Identification of Hinge Region-Binding Fragments",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Comprehensive characterization and optimization of anti-LRRK2 (leucine-rich repeat kinase 2) monoclonal antibodies",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "From On-Target to Off-Target Activity: Identification and Optimisation of Trypanosoma brucei GSK3 Inhibitors and Their Characterisation as Anti-Trypanosoma brucei Drug Discovery Lead Molecules",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "HIF-independent role of prolyl hydroxylases in the cellular response to amino acids",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
-      "group": "Cited Works",
-      "radius": 11,
-      "citing_patents_count": 11
-    },
-    {
-      "id": "A novel shogaol analog suppresses cancer cell invasion and inflammation, and displays cytoprotective effects through modulation of NF-κB and Nrf2-Keap1 signaling pathways",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "X-ray Crystal Structure of ERK5 (MAPK7) in Complex with a Specific Inhibitor",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "The endosome-lysosome pathway and information generation in the immune system.",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "GSK2578215A; a potent and highly selective 2-arylmethyloxy-5-substitutent-N-arylbenzamide LRRK2 kinase inhibitor.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Structure of the TatC core of the twin-arginine protein transport system",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "The Ancient Drug Salicylate Directly Activates AMP-Activated Protein Kinase",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Application of a novel highly sensitive activity-based probe for detection of cathepsin G",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Analysis of the role of Nrf2 in the expression of liver proteins in mice using two-dimensional gel-based proteomics",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "PINK1 is activated by mitochondrial membrane potential depolarization and stimulates Parkin E3 ligase activity by phosphorylating Serine 65",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Synthesis, Chemical Reactivity as Michael Acceptors, and Biological Potency of Monocyclic Cyanoenones, Novel and Highly Potent Anti-inflammatory and Cytoprotective Agents(1)",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Design, Synthesis and Biological Evaluation of Trypanosoma brucei Trypanothione Synthetase Inhibitors",
-      "group": "Cited Works",
-      "radius": 5,
-      "citing_patents_count": 5
-    },
-    {
-      "id": "Mitogen-activated protein kinase-activated protein kinase 2 (MAPKAP-K2) as an antiinflammatory target: discovery and in vivo activity of selective pyrazolo[1,5-a]pyrimidine inhibitors using a focused library and structure-based optimization approach.",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Chemical Proteomic Analysis Reveals the Drugability of the Kinome of Trypanosoma brucei",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Avirulence Protein 3a (AVR3a) from the Potato Pathogen Phytophthora infestans Forms Homodimers through Its Predicted Translocation Region and Does Not Specifically Bind Phospholipids",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "NEDD8 overexpression results in neddylation of ubiquitin substrates by the ubiquitin pathway.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Kinome-wide Selectivity Profiling of ATP-competitive Mammalian Target of Rapamycin (mTOR) Inhibitors and Characterization of Their Binding Kinetics",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "The ubiquitin E1 enzyme Ube1 mediates NEDD8 activation under diverse stress conditions",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Acinetobacter baumannii FolD ligand complexes – potent inhibitors of folate metabolism and a re‐evaluation of the structure of LY374571",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Aurora kinase inhibitors: Progress towards the clinic",
-      "group": "Cited Works",
-      "radius": 12,
-      "citing_patents_count": 12
-    },
-    {
-      "id": "The AMPK-related kinase SIK2 is regulated by cAMP via phosphorylation at Ser(358) in adipocytes",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Synergy of Peptide and Sugar in O-GlcNAcase Substrate Recognition",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Discovery of potent and selective covalent inhibitors of JNK",
-      "group": "Cited Works",
-      "radius": 6,
-      "citing_patents_count": 6
-    },
-    {
-      "id": "Phosphorylation of FOXO3a on Ser-7 by p38 Promotes Its Nuclear Localization in Response to Doxorubicin",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "AMPK: a nutrient and energy sensor that maintains energy homeostasis",
-      "group": "Cited Works",
-      "radius": 6,
-      "citing_patents_count": 6
-    },
-    {
-      "id": "Synthesis and structure-activity relationships of a novel series of pyrimidines as potent inhibitors of TBK1/IKKε kinases.",
-      "group": "Cited Works",
-      "radius": 4,
-      "citing_patents_count": 4
-    },
-    {
-      "id": "Peptide inhibitors of the Keap1-Nrf2 protein-protein interaction",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Small molecules that bind the Mdm2 RING stabilize and activate p53",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
-      "group": "Cited Works",
-      "radius": 29,
-      "citing_patents_count": 29
-    },
-    {
-      "id": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
-      "group": "Cited Works",
-      "radius": 11,
-      "citing_patents_count": 11
-    },
-    {
-      "id": "Changes in the ratio of free NEDD8 to ubiquitin triggers NEDDylation by ubiquitin enzymes",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Fragment-based discovery of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors.",
-      "group": "Cited Works",
-      "radius": 4,
-      "citing_patents_count": 4
-    },
-    {
-      "id": "A multifunctional protease inhibitor to regulate endolysosomal function.",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Design, Synthesis, and Structure−Activity Relationship Exploration of 1-Substituted 4-Aroyl-3-hydroxy-5-phenyl-1H-pyrrol-2(5H)-one Analogues as Inhibitors of the Annexin A2−S100A10 Protein Interaction",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "4-benzimidazolyl-3-phenylbutanoic acids as novel PIF-pocket-targeting allosteric inhibitors of protein kinase PKCζ.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Optimisation of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors",
-      "group": "Cited Works",
-      "radius": 4,
-      "citing_patents_count": 4
-    },
-    {
-      "id": "Design, Synthesis and Biological Evaluation of Novel Inhibitors of Trypanosoma brucei Pteridine Reductase 1",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "The inhibitory effect of phospholemman on the sodium pump requires its palmitoylation.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "SCF/β-TrCP promotes glycogen synthase kinase 3-dependent degradation of the Nrf2 transcription factor in a keap1-independent manner",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Immunosuppressive but Non-LasR-Inducing Analogues of the Pseudomonas aeruginosa Quorum-Sensing Molecule N-(3-Oxododecanoyl)-L-homoserine Lactone",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Absolute SILAC-Compatible Expression Strain Allows Sumo-2 Copy Number Determination in Clinical Samples",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Collateral sensitivity of multidrug-resistant cells to the orphan drug tiopronin.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
-      "group": "Cited Works",
-      "radius": 11,
-      "citing_patents_count": 11
-    },
-    {
-      "id": "ATP site-directed inhibitors of protein kinase CK2: an update.",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Identification of Inhibitors of the Leishmania cdc2-Related Protein Kinase CRK3",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Polyubiquitin binding to optineurin is required for optimal activation of TANK-binding kinase 1 and production of interferon β.",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "Substrate and Product Analogues as Human O-Glcnac Transferase Inhibitors.",
-      "group": "Cited Works",
-      "radius": 4,
-      "citing_patents_count": 4
-    },
-    {
-      "id": "The cytoprotective role of the Keap1–Nrf2 pathway",
-      "group": "Cited Works",
-      "radius": 7,
-      "citing_patents_count": 7
-    },
-    {
-      "id": "Design, synthesis and biological evaluation of 6-pyridylmethylaminopurines as CDK inhibitors",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Analgesic omega-Conotoxins CVIE and CVIF Selectively and Voltage-Dependently Block Recombinant and Native N-Type Calcium Channels (vol 77, pg 139, 2010)",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "NF-κB controls energy homeostasis and metabolic adaptation by upregulating mitochondrial respiration",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "Development of 18F-fluorinatable dendrons and their application to cancer cell targeting",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    {
-      "id": "The specificities of small molecule inhibitors of the TGFß and BMP pathways",
-      "group": "Cited Works",
-      "radius": 3,
-      "citing_patents_count": 3
-    },
-    {
-      "id": "Catalysis by the nucleolytic ribozymes",
-      "group": "Cited Works",
-      "radius": 5,
-      "citing_patents_count": 5
-    },
-    {
-      "id": "Characterization of GSK2334470, a novel and highly specific inhibitor of PDK1",
-      "group": "Cited Works",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    {
-      "id": "N1-Benzyl substituted cambinol analogues as isozyme selective inhibitors of the sirtuin family of protein deacetylases",
-      "group": "Cited Works",
-      "radius": 4,
-      "citing_patents_count": 4
-    },
-    {
-      "id": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
-      "group": "Cited Works",
-      "radius": 7,
-      "citing_patents_count": 7
-    },
-    {
-      "id": "Optimisation of the Anti-Trypanosoma brucei Activity of the Opioid Agonist U50488",
-      "group": "Cited Works",
-      "radius": 1,
-      "citing_patents_count": 1
-    },
-    { "id": "109-294-662-661-65X", "group": "Citing Patents" },
-    {
-      "id": "new",
-      "group": "new",
-      "radius": 2,
-      "citing_patents_count": 2
-    },
-    { "id": "074-937-457-594-345", "group": "Citing Patents" },
-    { "id": "081-355-367-506-27X", "group": "Citing Patents" },
-    { "id": "048-634-530-447-798", "group": "Citing Patents" },
-    { "id": "137-231-469-269-151", "group": "Citing Patents" },
-    { "id": "031-072-815-607-16X", "group": "Citing Patents" },
-    { "id": "105-312-070-982-098", "group": "Citing Patents" },
-    { "id": "018-515-082-074-296", "group": "Citing Patents" },
-    { "id": "027-228-373-793-594", "group": "Citing Patents" },
-    { "id": "016-712-604-622-721", "group": "Citing Patents" },
-    { "id": "086-316-087-480-933", "group": "Citing Patents" },
-    { "id": "118-309-833-112-117", "group": "Citing Patents" },
-    { "id": "134-672-819-080-83X", "group": "Citing Patents" },
-    { "id": "036-789-224-520-054", "group": "Citing Patents" },
-    { "id": "106-594-488-484-12X", "group": "Citing Patents" },
-    { "id": "125-726-727-125-409", "group": "Citing Patents" },
-    { "id": "161-487-188-181-03X", "group": "Citing Patents" },
-    { "id": "076-538-237-089-675", "group": "Citing Patents" },
-    { "id": "051-324-518-696-462", "group": "Citing Patents" },
-    { "id": "198-017-973-913-570", "group": "Citing Patents" },
-    { "id": "156-653-831-632-101", "group": "Citing Patents" },
-    { "id": "178-739-712-688-618", "group": "Citing Patents" },
-    { "id": "131-486-498-702-07X", "group": "Citing Patents" },
-    { "id": "010-031-167-075-106", "group": "Citing Patents" },
-    { "id": "119-453-428-180-987", "group": "Citing Patents" },
-    { "id": "153-595-914-216-97X", "group": "Citing Patents" },
-    { "id": "148-353-591-913-750", "group": "Citing Patents" },
-    { "id": "019-827-938-996-490", "group": "Citing Patents" },
-    { "id": "184-646-935-269-773", "group": "Citing Patents" },
-    { "id": "186-230-275-872-748", "group": "Citing Patents" },
-    { "id": "165-291-395-706-725", "group": "Citing Patents" },
-    { "id": "047-113-007-956-15X", "group": "Citing Patents" },
-    { "id": "089-019-916-582-397", "group": "Citing Patents" },
-    { "id": "136-000-598-663-919", "group": "Citing Patents" },
-    { "id": "051-072-189-723-758", "group": "Citing Patents" },
-    { "id": "040-766-915-457-886", "group": "Citing Patents" },
-    { "id": "141-482-415-400-338", "group": "Citing Patents" },
-    { "id": "149-129-599-518-595", "group": "Citing Patents" },
-    { "id": "156-286-485-464-499", "group": "Citing Patents" },
-    { "id": "001-353-214-346-040", "group": "Citing Patents" },
-    { "id": "118-479-143-842-720", "group": "Citing Patents" },
-    { "id": "007-641-959-106-118", "group": "Citing Patents" },
-    { "id": "189-040-066-278-226", "group": "Citing Patents" },
-    { "id": "026-244-336-682-442", "group": "Citing Patents" },
-    { "id": "168-286-254-597-740", "group": "Citing Patents" },
-    { "id": "109-916-358-959-05X", "group": "Citing Patents" },
-    { "id": "002-458-268-309-533", "group": "Citing Patents" },
-    { "id": "038-310-729-099-192", "group": "Citing Patents" },
-    { "id": "179-033-965-606-598", "group": "Citing Patents" },
-    { "id": "113-229-447-433-64X", "group": "Citing Patents" },
-    { "id": "077-771-399-719-227", "group": "Citing Patents" },
-    { "id": "183-966-651-664-305", "group": "Citing Patents" },
-    { "id": "013-467-292-050-692", "group": "Citing Patents" },
-    { "id": "079-314-054-163-947", "group": "Citing Patents" },
-    { "id": "110-082-309-221-187", "group": "Citing Patents" },
-    { "id": "128-382-566-327-896", "group": "Citing Patents" },
-    { "id": "143-543-676-408-839", "group": "Citing Patents" },
-    { "id": "005-743-260-244-802", "group": "Citing Patents" },
-    { "id": "026-638-223-054-804", "group": "Citing Patents" },
-    { "id": "048-208-660-423-215", "group": "Citing Patents" },
-    { "id": "159-658-602-048-982", "group": "Citing Patents" },
-    { "id": "077-811-145-153-079", "group": "Citing Patents" },
-    { "id": "170-781-236-728-970", "group": "Citing Patents" },
-    { "id": "144-284-594-583-951", "group": "Citing Patents" },
-    { "id": "139-409-891-293-77X", "group": "Citing Patents" },
-    { "id": "081-017-751-048-013", "group": "Citing Patents" },
-    { "id": "114-963-910-586-828", "group": "Citing Patents" },
-    { "id": "162-513-842-046-362", "group": "Citing Patents" },
-    { "id": "188-803-921-043-695", "group": "Citing Patents" },
-    { "id": "191-147-881-232-285", "group": "Citing Patents" },
-    { "id": "081-817-015-173-962", "group": "Citing Patents" },
-    { "id": "106-530-060-683-82X", "group": "Citing Patents" },
-    { "id": "133-935-409-400-672", "group": "Citing Patents" },
-    { "id": "046-588-899-387-353", "group": "Citing Patents" },
-    { "id": "049-222-171-973-678", "group": "Citing Patents" },
-    { "id": "074-598-665-914-143", "group": "Citing Patents" },
-    { "id": "190-195-697-065-907", "group": "Citing Patents" },
-    { "id": "031-461-589-086-771", "group": "Citing Patents" },
-    { "id": "167-851-091-520-257", "group": "Citing Patents" },
-    { "id": "151-760-923-304-502", "group": "Citing Patents" },
-    { "id": "097-019-537-894-104", "group": "Citing Patents" },
-    { "id": "170-696-774-214-700", "group": "Citing Patents" },
-    { "id": "084-807-525-209-072", "group": "Citing Patents" },
-    { "id": "044-648-704-787-12X", "group": "Citing Patents" },
-    { "id": "150-822-190-827-131", "group": "Citing Patents" },
-    { "id": "051-919-508-851-10X", "group": "Citing Patents" },
-    { "id": "036-251-116-198-69X", "group": "Citing Patents" },
-    { "id": "149-946-446-737-586", "group": "Citing Patents" },
-    { "id": "075-397-286-033-085", "group": "Citing Patents" },
-    { "id": "028-992-308-265-357", "group": "Citing Patents" },
-    { "id": "044-207-676-689-405", "group": "Citing Patents" },
-    { "id": "030-350-713-791-200", "group": "Citing Patents" },
-    { "id": "093-997-239-092-949", "group": "Citing Patents" },
-    { "id": "046-345-437-716-689", "group": "Citing Patents" },
-    { "id": "146-411-731-640-871", "group": "Citing Patents" },
-    { "id": "000-266-572-036-366", "group": "Citing Patents" },
-    { "id": "186-389-876-954-313", "group": "Citing Patents" },
-    { "id": "168-483-508-794-377", "group": "Citing Patents" },
-    { "id": "029-748-240-628-036", "group": "Citing Patents" },
-    { "id": "184-507-509-452-559", "group": "Citing Patents" },
-    { "id": "069-961-069-943-549", "group": "Citing Patents" },
-    { "id": "017-777-392-752-199", "group": "Citing Patents" },
-    { "id": "000-150-893-948-804", "group": "Citing Patents" },
-    { "id": "027-437-502-794-894", "group": "Citing Patents" },
-    { "id": "074-789-039-135-70X", "group": "Citing Patents" },
-    { "id": "063-617-165-524-327", "group": "Citing Patents" },
-    { "id": "019-872-586-012-269", "group": "Citing Patents" },
-    { "id": "103-648-347-913-447", "group": "Citing Patents" },
-    { "id": "007-245-406-573-328", "group": "Citing Patents" },
-    { "id": "008-337-248-044-723", "group": "Citing Patents" },
-    { "id": "197-071-041-313-103", "group": "Citing Patents" },
-    { "id": "098-538-513-984-747", "group": "Citing Patents" },
-    { "id": "019-125-805-246-964", "group": "Citing Patents" },
-    { "id": "172-064-016-145-117", "group": "Citing Patents" },
-    { "id": "007-417-942-335-284", "group": "Citing Patents" },
-    { "id": "005-947-025-410-764", "group": "Citing Patents" },
-    { "id": "116-404-026-640-450", "group": "Citing Patents" },
-    { "id": "090-437-295-781-023", "group": "Citing Patents" },
-    { "id": "197-158-559-918-854", "group": "Citing Patents" },
-    { "id": "076-225-263-850-117", "group": "Citing Patents" },
-    { "id": "049-199-509-181-561", "group": "Citing Patents" },
-    { "id": "179-045-041-176-506", "group": "Citing Patents" },
-    { "id": "004-301-778-674-378", "group": "Citing Patents" },
-    { "id": "111-313-231-732-367", "group": "Citing Patents" },
-    { "id": "092-197-031-561-353", "group": "Citing Patents" },
-    { "id": "192-019-786-423-841", "group": "Citing Patents" },
-    { "id": "076-608-180-638-59X", "group": "Citing Patents" },
-    { "id": "175-263-797-963-040", "group": "Citing Patents" },
-    { "id": "141-694-167-791-759", "group": "Citing Patents" },
-    { "id": "081-203-444-563-604", "group": "Citing Patents" },
-    { "id": "125-348-249-762-351", "group": "Citing Patents" },
-    { "id": "125-850-986-196-787", "group": "Citing Patents" },
-    { "id": "119-397-162-706-860", "group": "Citing Patents" },
-    { "id": "133-023-408-974-285", "group": "Citing Patents" },
-    { "id": "039-847-299-166-952", "group": "Citing Patents" },
-    { "id": "076-641-402-312-988", "group": "Citing Patents" },
-    { "id": "102-485-198-725-150", "group": "Citing Patents" },
-    { "id": "168-829-456-947-639", "group": "Citing Patents" },
-    { "id": "098-813-369-162-741", "group": "Citing Patents" },
-    { "id": "023-180-369-416-862", "group": "Citing Patents" },
-    { "id": "189-473-046-734-005", "group": "Citing Patents" },
-    { "id": "019-633-684-883-828", "group": "Citing Patents" },
-    { "id": "174-501-376-407-235", "group": "Citing Patents" },
-    { "id": "129-062-448-949-030", "group": "Citing Patents" },
-    { "id": "162-916-741-322-002", "group": "Citing Patents" },
-    { "id": "080-026-305-809-343", "group": "Citing Patents" },
-    { "id": "016-698-167-713-829", "group": "Citing Patents" },
-    { "id": "091-325-080-234-401", "group": "Citing Patents" },
-    { "id": "032-206-614-235-635", "group": "Citing Patents" },
-    { "id": "143-271-017-351-983", "group": "Citing Patents" },
-    { "id": "169-312-245-869-778", "group": "Citing Patents" },
-    { "id": "089-818-979-077-305", "group": "Citing Patents" },
-    { "id": "187-517-157-601-239", "group": "Citing Patents" },
-    { "id": "111-583-988-147-450", "group": "Citing Patents" },
-    { "id": "058-026-435-099-506", "group": "Citing Patents" },
-    { "id": "153-651-762-444-327", "group": "Citing Patents" },
-    { "id": "159-766-711-047-610", "group": "Citing Patents" },
-    { "id": "058-933-099-316-100", "group": "Citing Patents" },
-    { "id": "023-452-662-674-373", "group": "Citing Patents" },
-    { "id": "047-432-030-246-04X", "group": "Citing Patents" },
-    { "id": "139-008-712-602-518", "group": "Citing Patents" },
-    { "id": "137-720-748-139-162", "group": "Citing Patents" },
-    { "id": "192-136-893-476-749", "group": "Citing Patents" },
-    { "id": "172-890-893-515-719", "group": "Citing Patents" },
-    { "id": "104-472-615-006-481", "group": "Citing Patents" },
-    { "id": "097-374-332-908-898", "group": "Citing Patents" },
-    { "id": "034-416-075-094-770", "group": "Citing Patents" },
-    { "id": "127-642-274-375-054", "group": "Citing Patents" },
-    { "id": "036-708-909-192-156", "group": "Citing Patents" },
-    { "id": "193-863-590-855-263", "group": "Citing Patents" },
-    { "id": "150-028-859-997-047", "group": "Citing Patents" },
-    { "id": "132-394-716-226-832", "group": "Citing Patents" },
-    { "id": "131-238-819-455-784", "group": "Citing Patents" },
-    { "id": "155-402-461-387-483", "group": "Citing Patents" },
-    { "id": "040-389-070-176-191", "group": "Citing Patents" },
-    { "id": "076-478-479-475-120", "group": "Citing Patents" },
-    { "id": "034-190-802-321-708", "group": "Citing Patents" },
-    { "id": "130-316-719-983-242", "group": "Citing Patents" },
-    { "id": "036-668-261-470-040", "group": "Citing Patents" },
-    { "id": "183-767-289-461-131", "group": "Citing Patents" },
-    { "id": "107-556-164-321-147", "group": "Citing Patents" },
-    { "id": "066-190-726-252-149", "group": "Citing Patents" },
-    { "id": "140-900-012-438-14X", "group": "Citing Patents" },
-    { "id": "058-438-690-312-096", "group": "Citing Patents" },
-    { "id": "004-889-112-130-518", "group": "Citing Patents" },
-    { "id": "193-040-307-473-220", "group": "Citing Patents" },
-    { "id": "188-718-220-131-362", "group": "Citing Patents" },
-    { "id": "087-577-350-425-176", "group": "Citing Patents" },
-    { "id": "191-670-060-004-126", "group": "Citing Patents" },
-    { "id": "041-699-843-843-567", "group": "Citing Patents" },
-    { "id": "180-366-233-781-99X", "group": "Citing Patents" },
-    { "id": "122-739-962-072-793", "group": "Citing Patents" },
-    { "id": "109-274-898-147-341", "group": "Citing Patents" },
-    { "id": "124-179-501-005-870", "group": "Citing Patents" },
-    { "id": "008-694-981-426-172", "group": "Citing Patents" },
-    { "id": "109-611-546-954-080", "group": "Citing Patents" },
-    { "id": "004-378-254-734-355", "group": "Citing Patents" },
-    { "id": "133-997-520-845-569", "group": "Citing Patents" },
-    { "id": "115-381-943-359-61X", "group": "Citing Patents" },
-    { "id": "022-078-711-389-998", "group": "Citing Patents" },
-    { "id": "132-854-391-972-865", "group": "Citing Patents" },
-    { "id": "171-143-110-884-468", "group": "Citing Patents" },
-    { "id": "003-946-199-636-328", "group": "Citing Patents" },
-    { "id": "009-649-401-227-606", "group": "Citing Patents" },
-    { "id": "170-042-571-881-121", "group": "Citing Patents" },
-    { "id": "033-301-273-471-462", "group": "Citing Patents" },
-    { "id": "040-826-560-477-838", "group": "Citing Patents" },
-    { "id": "135-293-472-746-415", "group": "Citing Patents" },
-    { "id": "153-999-081-812-523", "group": "Citing Patents" },
-    { "id": "000-498-778-953-787", "group": "Citing Patents" },
-    { "id": "085-065-777-135-758", "group": "Citing Patents" },
-    { "id": "152-366-692-522-975", "group": "Citing Patents" },
-    { "id": "167-869-142-610-582", "group": "Citing Patents" },
-    { "id": "191-676-336-200-724", "group": "Citing Patents" },
-    { "id": "056-387-403-639-935", "group": "Citing Patents" },
-    { "id": "066-841-401-628-941", "group": "Citing Patents" },
-    { "id": "069-503-782-573-055", "group": "Citing Patents" },
-    { "id": "028-137-796-142-577", "group": "Citing Patents" },
-    { "id": "197-678-301-596-236", "group": "Citing Patents" },
-    { "id": "147-466-934-435-143", "group": "Citing Patents" },
-    { "id": "114-647-123-099-321", "group": "Citing Patents" },
-    { "id": "058-829-130-504-901", "group": "Citing Patents" },
-    { "id": "169-953-034-717-264", "group": "Citing Patents" },
-    { "id": "028-012-588-449-727", "group": "Citing Patents" },
-    { "id": "038-839-140-589-623", "group": "Citing Patents" },
-    { "id": "194-924-906-201-593", "group": "Citing Patents" },
-    { "id": "195-611-964-620-410", "group": "Citing Patents" },
-    { "id": "025-014-524-538-421", "group": "Citing Patents" },
-    { "id": "120-667-268-642-909", "group": "Citing Patents" },
-    { "id": "163-117-320-460-138", "group": "Citing Patents" },
-    { "id": "191-290-593-697-506", "group": "Citing Patents" },
-    { "id": "118-339-847-530-982", "group": "Citing Patents" },
-    { "id": "073-318-370-112-877", "group": "Citing Patents" },
-    { "id": "113-828-920-381-078", "group": "Citing Patents" },
-    { "id": "048-983-957-537-421", "group": "Citing Patents" },
-    { "id": "073-531-962-083-670", "group": "Citing Patents" }
-  ],
   "links": [
     {
       "source": "Structural basis of PROTAC cooperative recognition for selective protein degradation.",
       "target": "109-294-662-661-65X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural basis of PROTAC cooperative recognition for selective protein degradation.",
       "target": "074-937-457-594-345",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The influence of rough lipopolysaccharide structure on molecular interactions with mammalian antimicrobial peptides",
       "target": "081-355-367-506-27X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "New Synthetic Routes to Triazolo-benzodiazepine Analogues: Expanding the Scope of the Bump-and-Hole Approach for Selective Bromo and Extra-Terminal (BET) Bromodomain Inhibition.",
       "target": "048-634-530-447-798",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Cyclic and Macrocyclic Peptides as Chemical Tools To Recognise Protein Surfaces and Probe Protein-Protein Interactions.",
       "target": "137-231-469-269-151",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "8-Substituted Pyrido[3,4-d]pyrimidin-4(3H)-one Derivatives As Potent, Cell Permeable, KDM4 (JMJD2) and KDM5 (JARID1) Histone Lysine Demethylase Inhibitors.",
       "target": "031-072-815-607-16X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "8-Substituted Pyrido[3,4-d]pyrimidin-4(3H)-one Derivatives As Potent, Cell Permeable, KDM4 (JMJD2) and KDM5 (JARID1) Histone Lysine Demethylase Inhibitors.",
       "target": "105-312-070-982-098",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "8-Substituted Pyrido[3,4-d]pyrimidin-4(3H)-one Derivatives As Potent, Cell Permeable, KDM4 (JMJD2) and KDM5 (JARID1) Histone Lysine Demethylase Inhibitors.",
       "target": "018-515-082-074-296",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Discovery of Type II Inhibitors of TGFβ-Activated Kinase 1 (TAK1) and Mitogen-Activated Protein Kinase Kinase Kinase Kinase 2 (MAP4K2)",
       "target": "027-228-373-793-594",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "SIK2 regulates CRTCs, HDAC4 and glucose uptake in adipocytes",
       "target": "016-712-604-622-721",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Metabotropic Glutamate Receptor 5 Negative Allosteric Modulators: Discovery of 2-Chloro-4-[1-(4-fluorophenyl)-2,5-dimethyl-1H-imidazol-4-ylethynyl]pyridine (Basimglurant, RO4917523), a Promising Novel Medicine for Psychiatric Diseases",
       "target": "086-316-087-480-933",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Nrf2 regulates ROS production by mitochondria and NADPH oxidase.",
       "target": "118-309-833-112-117",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The clinically approved drugs dasatinib and bosutinib induce anti-inflammatory macrophages by inhibiting the salt-inducible kinases",
       "target": "134-672-819-080-83X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "New Monocyclic, Bicyclic, and Tricyclic Ethynylcyanodienones as Activators of the Keap1/Nrf2/ARE Pathway and Inhibitors of Inducible Nitric Oxide Synthase",
       "target": "036-789-224-520-054",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Palmitoylation of the Na/Ca exchanger cytoplasmic loop controls its inactivation and internalization during stress signaling",
       "target": "106-594-488-484-12X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Molecular Cloning and Functional Characterization of Components of the Capsule Biosynthesis Complex of Neisseria meningitidis Serogroup A TOWARD IN VITRO VACCINE PRODUCTION",
       "target": "125-726-727-125-409",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
       "target": "161-487-188-181-03X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
       "target": "076-538-237-089-675",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
       "target": "051-324-518-696-462",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
       "target": "198-017-973-913-570",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
       "target": "156-653-831-632-101",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
       "target": "178-739-712-688-618",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
       "target": "048-634-530-447-798",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "An unexpected twist to the activation of IKKβ: TAK1 primes IKKβ for activation by autophosphorylation",
       "target": "131-486-498-702-07X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "An unexpected twist to the activation of IKKβ: TAK1 primes IKKβ for activation by autophosphorylation",
       "target": "010-031-167-075-106",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Crystallographic analysis of Neisseria meningitidis PorB extracellular loops potentially implicated in TLR2 recognition",
       "target": "119-453-428-180-987",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The LKB1-salt-inducible kinase pathway functions as a key gluconeogenic suppressor in the liver",
       "target": "016-712-604-622-721",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of VPS34-IN1, a selective inhibitor of Vps34, reveals that the phosphatidylinositol 3-phosphate-binding SGK3 protein kinase is a downstream target of class III phosphoinositide 3-kinase",
       "target": "153-595-914-216-97X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of VPS34-IN1, a selective inhibitor of Vps34, reveals that the phosphatidylinositol 3-phosphate-binding SGK3 protein kinase is a downstream target of class III phosphoinositide 3-kinase",
       "target": "148-353-591-913-750",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of VPS34-IN1, a selective inhibitor of Vps34, reveals that the phosphatidylinositol 3-phosphate-binding SGK3 protein kinase is a downstream target of class III phosphoinositide 3-kinase",
       "target": "019-827-938-996-490",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "3-(2-oxoethylidene)indolin-2-one derivatives activate Nrf2 and inhibit NF-κB: potential candidates for chemoprevention.",
       "target": "184-646-935-269-773",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "3-(2-oxoethylidene)indolin-2-one derivatives activate Nrf2 and inhibit NF-κB: potential candidates for chemoprevention.",
       "target": "186-230-275-872-748",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "3-(2-oxoethylidene)indolin-2-one derivatives activate Nrf2 and inhibit NF-κB: potential candidates for chemoprevention.",
       "target": "165-291-395-706-725",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "3-(2-oxoethylidene)indolin-2-one derivatives activate Nrf2 and inhibit NF-κB: potential candidates for chemoprevention.",
       "target": "047-113-007-956-15X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "3-(2-oxoethylidene)indolin-2-one derivatives activate Nrf2 and inhibit NF-κB: potential candidates for chemoprevention.",
       "target": "089-019-916-582-397",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "3-(2-oxoethylidene)indolin-2-one derivatives activate Nrf2 and inhibit NF-κB: potential candidates for chemoprevention.",
       "target": "136-000-598-663-919",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Carnosic acid stimulates glucose uptake in skeletal muscle cells via a PME-1/PP2A/PKB signalling axis",
       "target": "051-072-189-723-758",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Kv1.3 inhibitors have differential effects on glucose uptake and AMPK activity in skeletal muscle cell lines and mouse ex vivo skeletal muscle",
       "target": "040-766-915-457-886",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Kv1.3 inhibitors have differential effects on glucose uptake and AMPK activity in skeletal muscle cell lines and mouse ex vivo skeletal muscle",
       "target": "141-482-415-400-338",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Restoration of CFTR function in patients with cystic fibrosis carrying the F508del-CFTR mutation",
       "target": "149-129-599-518-595",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Restoration of CFTR function in patients with cystic fibrosis carrying the F508del-CFTR mutation",
       "target": "156-286-485-464-499",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Parkin is activated by PINK1-dependent phosphorylation of ubiquitin at Ser65",
       "target": "001-353-214-346-040",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Parkin is activated by PINK1-dependent phosphorylation of ubiquitin at Ser65",
       "target": "118-479-143-842-720",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Parkin is activated by PINK1-dependent phosphorylation of ubiquitin at Ser65",
       "target": "007-641-959-106-118",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Parkin is activated by PINK1-dependent phosphorylation of ubiquitin at Ser65",
       "target": "189-040-066-278-226",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Substrate recognition by the cell surface palmitoyl transferase DHHC5.",
       "target": "106-594-488-484-12X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Dysregulation of ubiquitin homeostasis and β-catenin signaling promote spinal muscular atrophy",
       "target": "026-244-336-682-442",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structure-Guided Design and Optimization of Small Molecules Targeting the Protein–Protein Interaction between the von Hippel–Lindau (VHL) E3 Ubiquitin Ligase and the Hypoxia Inducible Factor (HIF) Alpha Subunit with in Vitro Nanomolar Affinities",
       "target": "074-937-457-594-345",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structure-Guided Design and Optimization of Small Molecules Targeting the Protein–Protein Interaction between the von Hippel–Lindau (VHL) E3 Ubiquitin Ligase and the Hypoxia Inducible Factor (HIF) Alpha Subunit with in Vitro Nanomolar Affinities",
       "target": "168-286-254-597-740",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The Nrf2 regulatory network provides an interface between redox and intermediary metabolism",
       "target": "109-916-358-959-05X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of WZ4003 and HTH-01-015 as selective inhibitors of the LKB1-tumour-suppressor-activated NUAK kinases",
       "target": "002-458-268-309-533",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis of vitamin D3 analogues with A-ring modifications to directly measure vitamin D levels in biological samples",
       "target": "038-310-729-099-192",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis of vitamin D3 analogues with A-ring modifications to directly measure vitamin D levels in biological samples",
       "target": "179-033-965-606-598",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis of vitamin D3 analogues with A-ring modifications to directly measure vitamin D levels in biological samples",
       "target": "113-229-447-433-64X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis of vitamin D3 analogues with A-ring modifications to directly measure vitamin D levels in biological samples",
       "target": "077-771-399-719-227",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis of vitamin D3 analogues with A-ring modifications to directly measure vitamin D levels in biological samples",
       "target": "183-966-651-664-305",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis of vitamin D3 analogues with A-ring modifications to directly measure vitamin D levels in biological samples",
       "target": "013-467-292-050-692",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structure-activity relationship studies of pyrrolone antimalarial agents",
       "target": "079-314-054-163-947",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structure-activity relationship studies of pyrrolone antimalarial agents",
       "target": "110-082-309-221-187",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The Concise Guide to Pharmacology 2013/14.: The Concise Guide to Pharmacology 2013/14: G Protein-Coupled Receptors",
       "target": "128-382-566-327-896",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The Concise Guide to Pharmacology 2013/14.: The Concise Guide to Pharmacology 2013/14: G Protein-Coupled Receptors",
       "target": "143-543-676-408-839",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Elevated SGK1 predicts resistance of breast cancer cells to Akt inhibitors",
       "target": "005-743-260-244-802",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Metabolism of inflammation limited by AMPK and pseudo-starvation",
       "target": "026-638-223-054-804",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Nrf2 impacts cellular bioenergetics by controlling substrate availability for mitochondrial respiration",
       "target": "048-208-660-423-215",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The anti-inflammatory compound BAY 11-7082 is a potent inhibitor of Protein Tyrosine Phosphatases",
       "target": "159-658-602-048-982",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "BslA is a self-assembling bacterial hydrophobin that coats the Bacillus subtilis biofilm",
       "target": "077-811-145-153-079",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "BslA is a self-assembling bacterial hydrophobin that coats the Bacillus subtilis biofilm",
       "target": "170-781-236-728-970",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "BslA is a self-assembling bacterial hydrophobin that coats the Bacillus subtilis biofilm",
       "target": "144-284-594-583-951",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Investigation of acyclic uridine amide and 5′-amido nucleoside analogues as potential inhibitors of the Plasmodium falciparum dUTPase",
       "target": "139-409-891-293-77X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Discovery and structure-activity relationships of pyrrolone antimalarials",
       "target": "110-082-309-221-187",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "De Novo Design of Protein Kinase Inhibitors by in Silico Identification of Hinge Region-Binding Fragments",
       "target": "081-017-751-048-013",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "De Novo Design of Protein Kinase Inhibitors by in Silico Identification of Hinge Region-Binding Fragments",
       "target": "114-963-910-586-828",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "De Novo Design of Protein Kinase Inhibitors by in Silico Identification of Hinge Region-Binding Fragments",
       "target": "162-513-842-046-362",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Comprehensive characterization and optimization of anti-LRRK2 (leucine-rich repeat kinase 2) monoclonal antibodies",
       "target": "188-803-921-043-695",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "From On-Target to Off-Target Activity: Identification and Optimisation of Trypanosoma brucei GSK3 Inhibitors and Their Characterisation as Anti-Trypanosoma brucei Drug Discovery Lead Molecules",
       "target": "191-147-881-232-285",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "From On-Target to Off-Target Activity: Identification and Optimisation of Trypanosoma brucei GSK3 Inhibitors and Their Characterisation as Anti-Trypanosoma brucei Drug Discovery Lead Molecules",
       "target": "081-817-015-173-962",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "HIF-independent role of prolyl hydroxylases in the cellular response to amino acids",
       "target": "106-530-060-683-82X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "HIF-independent role of prolyl hydroxylases in the cellular response to amino acids",
       "target": "133-935-409-400-672",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "046-588-899-387-353",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "051-324-518-696-462",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "161-487-188-181-03X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "156-653-831-632-101",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "198-017-973-913-570",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "076-538-237-089-675",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "198-017-973-913-570",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "076-538-237-089-675",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "051-324-518-696-462",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "161-487-188-181-03X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
       "target": "156-653-831-632-101",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A novel shogaol analog suppresses cancer cell invasion and inflammation, and displays cytoprotective effects through modulation of NF-κB and Nrf2-Keap1 signaling pathways",
       "target": "049-222-171-973-678",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A novel shogaol analog suppresses cancer cell invasion and inflammation, and displays cytoprotective effects through modulation of NF-κB and Nrf2-Keap1 signaling pathways",
       "target": "074-598-665-914-143",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "X-ray Crystal Structure of ERK5 (MAPK7) in Complex with a Specific Inhibitor",
       "target": "161-487-188-181-03X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "X-ray Crystal Structure of ERK5 (MAPK7) in Complex with a Specific Inhibitor",
       "target": "156-653-831-632-101",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "X-ray Crystal Structure of ERK5 (MAPK7) in Complex with a Specific Inhibitor",
       "target": "051-324-518-696-462",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The endosome-lysosome pathway and information generation in the immune system.",
       "target": "190-195-697-065-907",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The endosome-lysosome pathway and information generation in the immune system.",
       "target": "031-461-589-086-771",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "GSK2578215A; a potent and highly selective 2-arylmethyloxy-5-substitutent-N-arylbenzamide LRRK2 kinase inhibitor.",
       "target": "167-851-091-520-257",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Structure of the TatC core of the twin-arginine protein transport system",
       "target": "151-760-923-304-502",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The Ancient Drug Salicylate Directly Activates AMP-Activated Protein Kinase",
       "target": "097-019-537-894-104",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The Ancient Drug Salicylate Directly Activates AMP-Activated Protein Kinase",
       "target": "170-696-774-214-700",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Application of a novel highly sensitive activity-based probe for detection of cathepsin G",
       "target": "084-807-525-209-072",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Analysis of the role of Nrf2 in the expression of liver proteins in mice using two-dimensional gel-based proteomics",
       "target": "044-648-704-787-12X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "PINK1 is activated by mitochondrial membrane potential depolarization and stimulates Parkin E3 ligase activity by phosphorylating Serine 65",
       "target": "001-353-214-346-040",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "PINK1 is activated by mitochondrial membrane potential depolarization and stimulates Parkin E3 ligase activity by phosphorylating Serine 65",
       "target": "150-822-190-827-131",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "PINK1 is activated by mitochondrial membrane potential depolarization and stimulates Parkin E3 ligase activity by phosphorylating Serine 65",
       "target": "051-919-508-851-10X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis, Chemical Reactivity as Michael Acceptors, and Biological Potency of Monocyclic Cyanoenones, Novel and Highly Potent Anti-inflammatory and Cytoprotective Agents(1)",
       "target": "036-789-224-520-054",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis, Chemical Reactivity as Michael Acceptors, and Biological Potency of Monocyclic Cyanoenones, Novel and Highly Potent Anti-inflammatory and Cytoprotective Agents(1)",
       "target": "036-251-116-198-69X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, Synthesis and Biological Evaluation of Trypanosoma brucei Trypanothione Synthetase Inhibitors",
       "target": "149-946-446-737-586",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, Synthesis and Biological Evaluation of Trypanosoma brucei Trypanothione Synthetase Inhibitors",
       "target": "075-397-286-033-085",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, Synthesis and Biological Evaluation of Trypanosoma brucei Trypanothione Synthetase Inhibitors",
       "target": "028-992-308-265-357",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, Synthesis and Biological Evaluation of Trypanosoma brucei Trypanothione Synthetase Inhibitors",
       "target": "044-207-676-689-405",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, Synthesis and Biological Evaluation of Trypanosoma brucei Trypanothione Synthetase Inhibitors",
       "target": "030-350-713-791-200",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Mitogen-activated protein kinase-activated protein kinase 2 (MAPKAP-K2) as an antiinflammatory target: discovery and in vivo activity of selective pyrazolo[1,5-a]pyrimidine inhibitors using a focused library and structure-based optimization approach.",
       "target": "093-997-239-092-949",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Mitogen-activated protein kinase-activated protein kinase 2 (MAPKAP-K2) as an antiinflammatory target: discovery and in vivo activity of selective pyrazolo[1,5-a]pyrimidine inhibitors using a focused library and structure-based optimization approach.",
       "target": "046-345-437-716-689",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Mitogen-activated protein kinase-activated protein kinase 2 (MAPKAP-K2) as an antiinflammatory target: discovery and in vivo activity of selective pyrazolo[1,5-a]pyrimidine inhibitors using a focused library and structure-based optimization approach.",
       "target": "146-411-731-640-871",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Chemical Proteomic Analysis Reveals the Drugability of the Kinome of Trypanosoma brucei",
       "target": "000-266-572-036-366",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Avirulence Protein 3a (AVR3a) from the Potato Pathogen Phytophthora infestans Forms Homodimers through Its Predicted Translocation Region and Does Not Specifically Bind Phospholipids",
       "target": "186-389-876-954-313",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "NEDD8 overexpression results in neddylation of ubiquitin substrates by the ubiquitin pathway.",
       "target": "168-483-508-794-377",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Kinome-wide Selectivity Profiling of ATP-competitive Mammalian Target of Rapamycin (mTOR) Inhibitors and Characterization of Their Binding Kinetics",
       "target": "029-748-240-628-036",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The ubiquitin E1 enzyme Ube1 mediates NEDD8 activation under diverse stress conditions",
       "target": "184-507-509-452-559",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Acinetobacter baumannii FolD ligand complexes – potent inhibitors of folate metabolism and a re‐evaluation of the structure of LY374571",
       "target": "069-961-069-943-549",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "017-777-392-752-199",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "000-150-893-948-804",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "027-437-502-794-894",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "074-789-039-135-70X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "063-617-165-524-327",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "019-872-586-012-269",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "103-648-347-913-447",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "007-245-406-573-328",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "027-437-502-794-894",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "008-337-248-044-723",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "197-071-041-313-103",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Aurora kinase inhibitors: Progress towards the clinic",
       "target": "098-538-513-984-747",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The AMPK-related kinase SIK2 is regulated by cAMP via phosphorylation at Ser(358) in adipocytes",
       "target": "019-125-805-246-964",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The AMPK-related kinase SIK2 is regulated by cAMP via phosphorylation at Ser(358) in adipocytes",
       "target": "172-064-016-145-117",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The AMPK-related kinase SIK2 is regulated by cAMP via phosphorylation at Ser(358) in adipocytes",
       "target": "007-417-942-335-284",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synergy of Peptide and Sugar in O-GlcNAcase Substrate Recognition",
       "target": "005-947-025-410-764",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synergy of Peptide and Sugar in O-GlcNAcase Substrate Recognition",
       "target": "116-404-026-640-450",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Discovery of potent and selective covalent inhibitors of JNK",
       "target": "090-437-295-781-023",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Discovery of potent and selective covalent inhibitors of JNK",
       "target": "197-158-559-918-854",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Discovery of potent and selective covalent inhibitors of JNK",
       "target": "076-225-263-850-117",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Discovery of potent and selective covalent inhibitors of JNK",
       "target": "049-199-509-181-561",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Discovery of potent and selective covalent inhibitors of JNK",
       "target": "179-045-041-176-506",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Discovery of potent and selective covalent inhibitors of JNK",
       "target": "004-301-778-674-378",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Phosphorylation of FOXO3a on Ser-7 by p38 Promotes Its Nuclear Localization in Response to Doxorubicin",
       "target": "111-313-231-732-367",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMPK: a nutrient and energy sensor that maintains energy homeostasis",
       "target": "092-197-031-561-353",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMPK: a nutrient and energy sensor that maintains energy homeostasis",
       "target": "192-019-786-423-841",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMPK: a nutrient and energy sensor that maintains energy homeostasis",
       "target": "192-019-786-423-841",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMPK: a nutrient and energy sensor that maintains energy homeostasis",
       "target": "076-608-180-638-59X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMPK: a nutrient and energy sensor that maintains energy homeostasis",
       "target": "175-263-797-963-040",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMPK: a nutrient and energy sensor that maintains energy homeostasis",
       "target": "092-197-031-561-353",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis and structure-activity relationships of a novel series of pyrimidines as potent inhibitors of TBK1/IKKε kinases.",
       "target": "141-694-167-791-759",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis and structure-activity relationships of a novel series of pyrimidines as potent inhibitors of TBK1/IKKε kinases.",
       "target": "081-203-444-563-604",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis and structure-activity relationships of a novel series of pyrimidines as potent inhibitors of TBK1/IKKε kinases.",
       "target": "125-348-249-762-351",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Synthesis and structure-activity relationships of a novel series of pyrimidines as potent inhibitors of TBK1/IKKε kinases.",
       "target": "125-850-986-196-787",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Peptide inhibitors of the Keap1-Nrf2 protein-protein interaction",
       "target": "119-397-162-706-860",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Small molecules that bind the Mdm2 RING stabilize and activate p53",
       "target": "133-023-408-974-285",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Small molecules that bind the Mdm2 RING stabilize and activate p53",
       "target": "039-847-299-166-952",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "076-641-402-312-988",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "102-485-198-725-150",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "168-829-456-947-639",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "098-813-369-162-741",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "023-180-369-416-862",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "189-473-046-734-005",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "019-633-684-883-828",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "174-501-376-407-235",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "129-062-448-949-030",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "162-916-741-322-002",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "080-026-305-809-343",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "016-698-167-713-829",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "091-325-080-234-401",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "032-206-614-235-635",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "143-271-017-351-983",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "169-312-245-869-778",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "089-818-979-077-305",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "187-517-157-601-239",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "111-583-988-147-450",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "058-026-435-099-506",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "153-651-762-444-327",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "159-766-711-047-610",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "058-933-099-316-100",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "023-452-662-674-373",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "047-432-030-246-04X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "139-008-712-602-518",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "137-720-748-139-162",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "192-136-893-476-749",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
       "target": "172-890-893-515-719",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "104-472-615-006-481",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "097-374-332-908-898",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "034-416-075-094-770",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "127-642-274-375-054",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "036-708-909-192-156",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "193-863-590-855-263",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "150-028-859-997-047",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "034-416-075-094-770",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "097-374-332-908-898",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "104-472-615-006-481",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
       "target": "132-394-716-226-832",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Changes in the ratio of free NEDD8 to ubiquitin triggers NEDDylation by ubiquitin enzymes",
       "target": "168-483-508-794-377",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Fragment-based discovery of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors.",
       "target": "131-238-819-455-784",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Fragment-based discovery of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors.",
       "target": "155-402-461-387-483",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Fragment-based discovery of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors.",
       "target": "040-389-070-176-191",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Fragment-based discovery of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors.",
       "target": "076-478-479-475-120",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A multifunctional protease inhibitor to regulate endolysosomal function.",
       "target": "031-461-589-086-771",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "A multifunctional protease inhibitor to regulate endolysosomal function.",
       "target": "190-195-697-065-907",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, Synthesis, and Structure−Activity Relationship Exploration of 1-Substituted 4-Aroyl-3-hydroxy-5-phenyl-1H-pyrrol-2(5H)-one Analogues as Inhibitors of the Annexin A2−S100A10 Protein Interaction",
       "target": "034-190-802-321-708",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "4-benzimidazolyl-3-phenylbutanoic acids as novel PIF-pocket-targeting allosteric inhibitors of protein kinase PKCζ.",
       "target": "130-316-719-983-242",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Optimisation of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors",
       "target": "076-478-479-475-120",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Optimisation of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors",
       "target": "040-389-070-176-191",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Optimisation of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors",
       "target": "036-668-261-470-040",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Optimisation of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors",
       "target": "183-767-289-461-131",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, Synthesis and Biological Evaluation of Novel Inhibitors of Trypanosoma brucei Pteridine Reductase 1",
       "target": "107-556-164-321-147",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The inhibitory effect of phospholemman on the sodium pump requires its palmitoylation.",
       "target": "106-594-488-484-12X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "SCF/β-TrCP promotes glycogen synthase kinase 3-dependent degradation of the Nrf2 transcription factor in a keap1-independent manner",
       "target": "066-190-726-252-149",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Immunosuppressive but Non-LasR-Inducing Analogues of the Pseudomonas aeruginosa Quorum-Sensing Molecule N-(3-Oxododecanoyl)-L-homoserine Lactone",
       "target": "140-900-012-438-14X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Absolute SILAC-Compatible Expression Strain Allows Sumo-2 Copy Number Determination in Clinical Samples",
       "target": "058-438-690-312-096",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Absolute SILAC-Compatible Expression Strain Allows Sumo-2 Copy Number Determination in Clinical Samples",
       "target": "004-889-112-130-518",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Collateral sensitivity of multidrug-resistant cells to the orphan drug tiopronin.",
       "target": "193-040-307-473-220",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "188-718-220-131-362",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "087-577-350-425-176",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "191-670-060-004-126",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "188-803-921-043-695",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "041-699-843-843-567",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "180-366-233-781-99X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "156-653-831-632-101",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "051-324-518-696-462",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "161-487-188-181-03X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "167-851-091-520-257",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
       "target": "122-739-962-072-793",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "ATP site-directed inhibitors of protein kinase CK2: an update.",
       "target": "109-274-898-147-341",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Identification of Inhibitors of the Leishmania cdc2-Related Protein Kinase CRK3",
       "target": "124-179-501-005-870",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Identification of Inhibitors of the Leishmania cdc2-Related Protein Kinase CRK3",
       "target": "008-694-981-426-172",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Identification of Inhibitors of the Leishmania cdc2-Related Protein Kinase CRK3",
       "target": "109-611-546-954-080",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Polyubiquitin binding to optineurin is required for optimal activation of TANK-binding kinase 1 and production of interferon β.",
       "target": "004-378-254-734-355",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Polyubiquitin binding to optineurin is required for optimal activation of TANK-binding kinase 1 and production of interferon β.",
       "target": "133-997-520-845-569",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Substrate and Product Analogues as Human O-Glcnac Transferase Inhibitors.",
       "target": "115-381-943-359-61X",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Substrate and Product Analogues as Human O-Glcnac Transferase Inhibitors.",
       "target": "022-078-711-389-998",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Substrate and Product Analogues as Human O-Glcnac Transferase Inhibitors.",
       "target": "132-854-391-972-865",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Substrate and Product Analogues as Human O-Glcnac Transferase Inhibitors.",
       "target": "171-143-110-884-468",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The cytoprotective role of the Keap1–Nrf2 pathway",
       "target": "003-946-199-636-328",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The cytoprotective role of the Keap1–Nrf2 pathway",
       "target": "009-649-401-227-606",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The cytoprotective role of the Keap1–Nrf2 pathway",
       "target": "170-042-571-881-121",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The cytoprotective role of the Keap1–Nrf2 pathway",
       "target": "033-301-273-471-462",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The cytoprotective role of the Keap1–Nrf2 pathway",
       "target": "040-826-560-477-838",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The cytoprotective role of the Keap1–Nrf2 pathway",
       "target": "048-208-660-423-215",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The cytoprotective role of the Keap1–Nrf2 pathway",
       "target": "135-293-472-746-415",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, synthesis and biological evaluation of 6-pyridylmethylaminopurines as CDK inhibitors",
       "target": "153-999-081-812-523",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, synthesis and biological evaluation of 6-pyridylmethylaminopurines as CDK inhibitors",
       "target": "000-498-778-953-787",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Design, synthesis and biological evaluation of 6-pyridylmethylaminopurines as CDK inhibitors",
       "target": "085-065-777-135-758",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Analgesic omega-Conotoxins CVIE and CVIF Selectively and Voltage-Dependently Block Recombinant and Native N-Type Calcium Channels (vol 77, pg 139, 2010)",
       "target": "152-366-692-522-975",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Analgesic omega-Conotoxins CVIE and CVIF Selectively and Voltage-Dependently Block Recombinant and Native N-Type Calcium Channels (vol 77, pg 139, 2010)",
       "target": "167-869-142-610-582",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "NF-κB controls energy homeostasis and metabolic adaptation by upregulating mitochondrial respiration",
       "target": "191-676-336-200-724",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Development of 18F-fluorinatable dendrons and their application to cancer cell targeting",
       "target": "056-387-403-639-935",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The specificities of small molecule inhibitors of the TGFß and BMP pathways",
       "target": "066-841-401-628-941",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The specificities of small molecule inhibitors of the TGFß and BMP pathways",
       "target": "069-503-782-573-055",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "The specificities of small molecule inhibitors of the TGFß and BMP pathways",
       "target": "028-137-796-142-577",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Catalysis by the nucleolytic ribozymes",
       "target": "197-678-301-596-236",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Catalysis by the nucleolytic ribozymes",
       "target": "147-466-934-435-143",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Catalysis by the nucleolytic ribozymes",
       "target": "114-647-123-099-321",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Catalysis by the nucleolytic ribozymes",
       "target": "058-829-130-504-901",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Catalysis by the nucleolytic ribozymes",
       "target": "169-953-034-717-264",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of GSK2334470, a novel and highly specific inhibitor of PDK1",
       "target": "028-012-588-449-727",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Characterization of GSK2334470, a novel and highly specific inhibitor of PDK1",
       "target": "038-839-140-589-623",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "N1-Benzyl substituted cambinol analogues as isozyme selective inhibitors of the sirtuin family of protein deacetylases",
       "target": "194-924-906-201-593",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "N1-Benzyl substituted cambinol analogues as isozyme selective inhibitors of the sirtuin family of protein deacetylases",
       "target": "195-611-964-620-410",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "N1-Benzyl substituted cambinol analogues as isozyme selective inhibitors of the sirtuin family of protein deacetylases",
       "target": "025-014-524-538-421",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "N1-Benzyl substituted cambinol analogues as isozyme selective inhibitors of the sirtuin family of protein deacetylases",
       "target": "025-014-524-538-421",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
       "target": "120-667-268-642-909",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
       "target": "163-117-320-460-138",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
       "target": "191-290-593-697-506",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
       "target": "118-339-847-530-982",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
       "target": "073-318-370-112-877",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
       "target": "113-828-920-381-078",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
       "target": "048-983-957-537-421",
-      "value": 2
+      "data": { "value": 2 }
     },
     {
       "source": "Optimisation of the Anti-Trypanosoma brucei Activity of the Opioid Agonist U50488",
       "target": "073-531-962-083-670",
-      "value": 2
+      "data": { "value": 2 }
+    }
+  ],
+  "nodes": [
+    {
+      "id": "Structural basis of PROTAC cooperative recognition for selective protein degradation.",
+      "name": "Cited Works 0",
+      "vx": -0.00235684327441673,
+      "vy": 0.00287487435681176,
+      "x": 95.74679207638344,
+      "y": 75.7969845628624,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The influence of rough lipopolysaccharide structure on molecular interactions with mammalian antimicrobial peptides",
+      "name": "Cited Works 1",
+      "vx": -0.00268149114436815,
+      "vy": 0.0033980158329902344,
+      "x": -138.4912347215628,
+      "y": 255.2216259615266,
+      "group": "Cited Works"
+    },
+    {
+      "id": "New Synthetic Routes to Triazolo-benzodiazepine Analogues: Expanding the Scope of the Bump-and-Hole Approach for Selective Bromo and Extra-Terminal (BET) Bromodomain Inhibition.",
+      "name": "Cited Works 2",
+      "vx": 0.0030389709146358204,
+      "vy": -0.000788644546664938,
+      "x": 76.54164904981748,
+      "y": -118.60172239529997,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Cyclic and Macrocyclic Peptides as Chemical Tools To Recognise Protein Surfaces and Probe Protein-Protein Interactions.",
+      "name": "Cited Works 3",
+      "vx": 0.0061683831718748455,
+      "vy": 0.0037030279040441683,
+      "x": 240.50201490600628,
+      "y": 168.12177845408326,
+      "group": "Cited Works"
+    },
+    {
+      "id": "8-Substituted Pyrido[3,4-d]pyrimidin-4(3H)-one Derivatives As Potent, Cell Permeable, KDM4 (JMJD2) and KDM5 (JARID1) Histone Lysine Demethylase Inhibitors.",
+      "name": "Cited Works 4",
+      "vx": -0.00007874400585314619,
+      "vy": -0.0017721156398102242,
+      "x": -27.035988261095323,
+      "y": 20.692365521667323,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Discovery of Type II Inhibitors of TGFβ-Activated Kinase 1 (TAK1) and Mitogen-Activated Protein Kinase Kinase Kinase Kinase 2 (MAP4K2)",
+      "name": "Cited Works 5",
+      "vx": -0.0025275273496566902,
+      "vy": -0.005918928534109596,
+      "x": -129.9817859640407,
+      "y": -250.35987500136483,
+      "group": "Cited Works"
+    },
+    {
+      "id": "SIK2 regulates CRTCs, HDAC4 and glucose uptake in adipocytes",
+      "name": "Cited Works 6",
+      "vx": 0.003939610822697387,
+      "vy": 0.0018765410581702887,
+      "x": 267.09738580259057,
+      "y": 53.97305122303953,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Metabotropic Glutamate Receptor 5 Negative Allosteric Modulators: Discovery of 2-Chloro-4-[1-(4-fluorophenyl)-2,5-dimethyl-1H-imidazol-4-ylethynyl]pyridine (Basimglurant, RO4917523), a Promising Novel Medicine for Psychiatric Diseases",
+      "name": "Cited Works 7",
+      "vx": -0.0063092452151344135,
+      "vy": 0.004567830703919484,
+      "x": -266.6573616421786,
+      "y": 109.42623402538632,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Nrf2 regulates ROS production by mitochondria and NADPH oxidase.",
+      "name": "Cited Works 8",
+      "vx": 0.002377101058899644,
+      "vy": -0.003546191254382844,
+      "x": 178.0880028718905,
+      "y": -225.99951685558176,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The clinically approved drugs dasatinib and bosutinib induce anti-inflammatory macrophages by inhibiting the salt-inducible kinases",
+      "name": "Cited Works 9",
+      "vx": -0.0004734627814004966,
+      "vy": 0.008450720541152033,
+      "x": 80.29955109451399,
+      "y": 283.9709746514093,
+      "group": "Cited Works"
+    },
+    {
+      "id": "New Monocyclic, Bicyclic, and Tricyclic Ethynylcyanodienones as Activators of the Keap1/Nrf2/ARE Pathway and Inhibitors of Inducible Nitric Oxide Synthase",
+      "name": "Cited Works 10",
+      "vx": -0.004915878813450622,
+      "vy": -0.0036559083409274397,
+      "x": -215.67393948307836,
+      "y": -207.86896250245485,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Palmitoylation of the Na/Ca exchanger cytoplasmic loop controls its inactivation and internalization during stress signaling",
+      "name": "Cited Works 11",
+      "vx": 0.005828779031344748,
+      "vy": -0.003759883105422825,
+      "x": 291.2025716585552,
+      "y": -62.58793290563956,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Molecular Cloning and Functional Characterization of Components of the Capsule Biosynthesis Complex of Neisseria meningitidis Serogroup A TOWARD IN VITRO VACCINE PRODUCTION",
+      "name": "Cited Works 12",
+      "vx": -0.00459563156956892,
+      "vy": 0.007320457750127511,
+      "x": -190.55668193237105,
+      "y": 248.5847540785418,
+      "group": "Cited Works"
+    },
+    {
+      "id": "A bump-and-hole approach to engineer controlled selectivity of BET bromodomain chemical probes",
+      "name": "Cited Works 13",
+      "vx": 0.0003821091781013293,
+      "vy": -0.0018391850770603866,
+      "x": 102.48894324307558,
+      "y": -47.375937880391504,
+      "group": "Cited Works"
+    },
+    {
+      "id": "An unexpected twist to the activation of IKKβ: TAK1 primes IKKβ for activation by autophosphorylation",
+      "name": "Cited Works 14",
+      "vx": 0.0027835614765051937,
+      "vy": 0.0014020020571553495,
+      "x": 9.707871430044856,
+      "y": 203.2395847561275,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Crystallographic analysis of Neisseria meningitidis PorB extracellular loops potentially implicated in TLR2 recognition",
+      "name": "Cited Works 15",
+      "vx": 0.003863432475733207,
+      "vy": -0.00451474816942983,
+      "x": 52.4397553955027,
+      "y": -327.03814660202374,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The LKB1-salt-inducible kinase pathway functions as a key gluconeogenic suppressor in the liver",
+      "name": "Cited Works 16",
+      "vx": 0.004203717225674485,
+      "vy": 0.0011400324879591815,
+      "x": 279.6326435084786,
+      "y": 72.5404957867087,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Characterization of VPS34-IN1, a selective inhibitor of Vps34, reveals that the phosphatidylinositol 3-phosphate-binding SGK3 protein kinase is a downstream target of class III phosphoinositide 3-kinase",
+      "name": "Cited Works 17",
+      "vx": -0.004235825277059045,
+      "vy": -0.000874571684788033,
+      "x": -53.5320166435275,
+      "y": -21.169412089325085,
+      "group": "Cited Works"
+    },
+    {
+      "id": "3-(2-oxoethylidene)indolin-2-one derivatives activate Nrf2 and inhibit NF-κB: potential candidates for chemoprevention.",
+      "name": "Cited Works 18",
+      "vx": 0.006306469039737236,
+      "vy": -0.00006962511686940333,
+      "x": 177.37111676349528,
+      "y": -26.395631372149335,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Carnosic acid stimulates glucose uptake in skeletal muscle cells via a PME-1/PP2A/PKB signalling axis",
+      "name": "Cited Works 19",
+      "vx": -0.0064087231514216745,
+      "vy": -0.001209398961108423,
+      "x": -331.4816314820235,
+      "y": 32.32997858335519,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Kv1.3 inhibitors have differential effects on glucose uptake and AMPK activity in skeletal muscle cell lines and mouse ex vivo skeletal muscle",
+      "name": "Cited Works 20",
+      "vx": -0.0009118499249364173,
+      "vy": -0.004698695001596742,
+      "x": 3.2423653465016624,
+      "y": -33.97713758910532,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Restoration of CFTR function in patients with cystic fibrosis carrying the F508del-CFTR mutation",
+      "name": "Cited Works 21",
+      "vx": 0.005858352333165301,
+      "vy": -0.0026118026965261097,
+      "x": 242.1560078541054,
+      "y": -89.52488113856812,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Parkin is activated by PINK1-dependent phosphorylation of ubiquitin at Ser65",
+      "name": "Cited Works 22",
+      "vx": -0.0025705477896626793,
+      "vy": -0.001252209580164662,
+      "x": -233.5584491034501,
+      "y": 30.063583573866755,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Substrate recognition by the cell surface palmitoyl transferase DHHC5.",
+      "name": "Cited Works 23",
+      "vx": 0.004012733967488514,
+      "vy": -0.002861797141666548,
+      "x": 273.6149562727664,
+      "y": -121.367089465787,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Dysregulation of ubiquitin homeostasis and β-catenin signaling promote spinal muscular atrophy",
+      "name": "Cited Works 24",
+      "vx": 0.003436646668493933,
+      "vy": 0.0012444590823586432,
+      "x": 286.4919056465429,
+      "y": 117.94580509920179,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Structure-Guided Design and Optimization of Small Molecules Targeting the Protein–Protein Interaction between the von Hippel–Lindau (VHL) E3 Ubiquitin Ligase and the Hypoxia Inducible Factor (HIF) Alpha Subunit with in Vitro Nanomolar Affinities",
+      "name": "Cited Works 25",
+      "vx": 0.0007797875624647221,
+      "vy": 0.004917507317731341,
+      "x": 5.007948279013715,
+      "y": 39.47314602086968,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The Nrf2 regulatory network provides an interface between redox and intermediary metabolism",
+      "name": "Cited Works 26",
+      "vx": 0.0016579287273993635,
+      "vy": -0.0034710746649313875,
+      "x": 127.00028058413518,
+      "y": -280.7778903840853,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Characterization of WZ4003 and HTH-01-015 as selective inhibitors of the LKB1-tumour-suppressor-activated NUAK kinases",
+      "name": "Cited Works 27",
+      "vx": 0.0013163512645671897,
+      "vy": 0.005638661897854255,
+      "x": 93.60335803776519,
+      "y": 323.01931574119976,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Synthesis of vitamin D3 analogues with A-ring modifications to directly measure vitamin D levels in biological samples",
+      "name": "Cited Works 28",
+      "vx": -0.0036886291965193808,
+      "vy": -0.003873050301886297,
+      "x": -141.37932479683064,
+      "y": -142.0779963305528,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Structure-activity relationship studies of pyrrolone antimalarial agents",
+      "name": "Cited Works 29",
+      "vx": 0.005564508704090109,
+      "vy": 0.0032184423130482685,
+      "x": 251.07343027176643,
+      "y": 153.90875794707242,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The Concise Guide to Pharmacology 2013/14.: The Concise Guide to Pharmacology 2013/14: G Protein-Coupled Receptors",
+      "name": "Cited Works 30",
+      "vx": -0.000931948874760898,
+      "vy": 0.0046524995190187855,
+      "x": -112.5875975198612,
+      "y": -87.16970815722176,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Elevated SGK1 predicts resistance of breast cancer cells to Akt inhibitors",
+      "name": "Cited Works 31",
+      "vx": -0.0040220696596921825,
+      "vy": 0.005552379814846321,
+      "x": -115.76376673620719,
+      "y": 179.97197893240653,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Metabolism of inflammation limited by AMPK and pseudo-starvation",
+      "name": "Cited Works 32",
+      "vx": -0.00044026612180133066,
+      "vy": -0.002755558838040971,
+      "x": -7.147245647284906,
+      "y": -215.22249194676255,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Nrf2 impacts cellular bioenergetics by controlling substrate availability for mitochondrial respiration",
+      "name": "Cited Works 33",
+      "vx": 0.00469088363206757,
+      "vy": 0.000381332185244337,
+      "x": 238.9732027987057,
+      "y": 42.25973429740385,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The anti-inflammatory compound BAY 11-7082 is a potent inhibitor of Protein Tyrosine Phosphatases",
+      "name": "Cited Works 34",
+      "vx": -0.0006096027113892855,
+      "vy": 0.00041183517322830745,
+      "x": -125.95558431214296,
+      "y": -40.23952653348197,
+      "group": "Cited Works"
+    },
+    {
+      "id": "BslA is a self-assembling bacterial hydrophobin that coats the Bacillus subtilis biofilm",
+      "name": "Cited Works 35",
+      "vx": -0.005253869217764306,
+      "vy": 0.001302504535458827,
+      "x": -111.51057247534632,
+      "y": 53.11068676787075,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Investigation of acyclic uridine amide and 5′-amido nucleoside analogues as potential inhibitors of the Plasmodium falciparum dUTPase",
+      "name": "Cited Works 36",
+      "vx": 0.0037854495068322786,
+      "vy": -0.004419166935031091,
+      "x": 291.78096106947146,
+      "y": -139.71395250645702,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Discovery and structure-activity relationships of pyrrolone antimalarials",
+      "name": "Cited Works 37",
+      "vx": 0.00646476683978697,
+      "vy": -0.0006110081891483229,
+      "x": 219.05525308715198,
+      "y": 222.41915200873805,
+      "group": "Cited Works"
+    },
+    {
+      "id": "De Novo Design of Protein Kinase Inhibitors by in Silico Identification of Hinge Region-Binding Fragments",
+      "name": "Cited Works 38",
+      "vx": -0.002230731296837668,
+      "vy": 0.00048239226407386385,
+      "x": -210.50744232024667,
+      "y": -0.6616761665073598,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Comprehensive characterization and optimization of anti-LRRK2 (leucine-rich repeat kinase 2) monoclonal antibodies",
+      "name": "Cited Works 39",
+      "vx": 0.00470464589298617,
+      "vy": -0.002664032561776645,
+      "x": 27.13396701835994,
+      "y": -67.1770200999238,
+      "group": "Cited Works"
+    },
+    {
+      "id": "From On-Target to Off-Target Activity: Identification and Optimisation of Trypanosoma brucei GSK3 Inhibitors and Their Characterisation as Anti-Trypanosoma brucei Drug Discovery Lead Molecules",
+      "name": "Cited Works 40",
+      "vx": 0.0012014217243800083,
+      "vy": 0.005214242479129366,
+      "x": 94.53438265796748,
+      "y": 237.55796033781365,
+      "group": "Cited Works"
+    },
+    {
+      "id": "HIF-independent role of prolyl hydroxylases in the cellular response to amino acids",
+      "name": "Cited Works 41",
+      "vx": 0.003654048674705356,
+      "vy": 0.00014139324067865042,
+      "x": 83.52436841416011,
+      "y": -180.26884202763227,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Structural determinants for ERK5 (MAPK7) and leucine rich repeat kinase 2 activities of benzo[e]pyrimido-[5,4-b]diazepine-6(11H)-ones",
+      "name": "Cited Works 42",
+      "vx": 0.0003751183108946546,
+      "vy": -0.0010843148743063858,
+      "x": 137.69833666044926,
+      "y": -10.477221418449988,
+      "group": "Cited Works"
+    },
+    {
+      "id": "A novel shogaol analog suppresses cancer cell invasion and inflammation, and displays cytoprotective effects through modulation of NF-κB and Nrf2-Keap1 signaling pathways",
+      "name": "Cited Works 43",
+      "vx": 0.0010615773660174967,
+      "vy": 0.0027913335732567056,
+      "x": -3.904222822269309,
+      "y": 115.47225188007697,
+      "group": "Cited Works"
+    },
+    {
+      "id": "X-ray Crystal Structure of ERK5 (MAPK7) in Complex with a Specific Inhibitor",
+      "name": "Cited Works 44",
+      "vx": 0.0007409240011249205,
+      "vy": -0.004741274289913091,
+      "x": 134.00437272551346,
+      "y": 10.085165820433028,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The endosome-lysosome pathway and information generation in the immune system.",
+      "name": "Cited Works 45",
+      "vx": 0.0038032530624730635,
+      "vy": 0.0032647121704212747,
+      "x": 87.38522506014517,
+      "y": 104.06771804559231,
+      "group": "Cited Works"
+    },
+    {
+      "id": "GSK2578215A; a potent and highly selective 2-arylmethyloxy-5-substitutent-N-arylbenzamide LRRK2 kinase inhibitor.",
+      "name": "Cited Works 46",
+      "vx": 0.021327383401578703,
+      "vy": -0.005227523197558343,
+      "x": -3.10242857038589,
+      "y": 66.42777405358409,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Structure of the TatC core of the twin-arginine protein transport system",
+      "name": "Cited Works 47",
+      "vx": 0.0003415918967264574,
+      "vy": -0.0050040657464278755,
+      "x": 182.39415729645205,
+      "y": -273.9212121899564,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The Ancient Drug Salicylate Directly Activates AMP-Activated Protein Kinase",
+      "name": "Cited Works 48",
+      "vx": -0.004155511180893426,
+      "vy": 0.003972715794585314,
+      "x": -145.691854687225,
+      "y": 286.843524730318,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Application of a novel highly sensitive activity-based probe for detection of cathepsin G",
+      "name": "Cited Works 49",
+      "vx": 0.0030180115917727837,
+      "vy": -0.000002466689435682618,
+      "x": 167.99695543913907,
+      "y": -266.0699314542058,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Analysis of the role of Nrf2 in the expression of liver proteins in mice using two-dimensional gel-based proteomics",
+      "name": "Cited Works 50",
+      "vx": -0.0010359496990807581,
+      "vy": 0.0033633908942419274,
+      "x": 57.649973022093135,
+      "y": 336.09911971706686,
+      "group": "Cited Works"
+    },
+    {
+      "id": "PINK1 is activated by mitochondrial membrane potential depolarization and stimulates Parkin E3 ligase activity by phosphorylating Serine 65",
+      "name": "Cited Works 51",
+      "vx": -0.009598777040362995,
+      "vy": -0.0017604178276821008,
+      "x": -253.58579645541235,
+      "y": -39.87223917099942,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Synthesis, Chemical Reactivity as Michael Acceptors, and Biological Potency of Monocyclic Cyanoenones, Novel and Highly Potent Anti-inflammatory and Cytoprotective Agents(1)",
+      "name": "Cited Works 52",
+      "vx": -0.0026744428329101106,
+      "vy": -0.0046965123933738525,
+      "x": -237.3118606242954,
+      "y": -139.55253029653898,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Design, Synthesis and Biological Evaluation of Trypanosoma brucei Trypanothione Synthetase Inhibitors",
+      "name": "Cited Works 53",
+      "vx": 0.002077730806097701,
+      "vy": 0.0025678235319186215,
+      "x": 77.32507435870339,
+      "y": 188.67853156883777,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Mitogen-activated protein kinase-activated protein kinase 2 (MAPKAP-K2) as an antiinflammatory target: discovery and in vivo activity of selective pyrazolo[1,5-a]pyrimidine inhibitors using a focused library and structure-based optimization approach.",
+      "name": "Cited Works 54",
+      "vx": -0.003633630465811797,
+      "vy": -0.004140254149612281,
+      "x": -206.5531837719592,
+      "y": -174.73187206828996,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Chemical Proteomic Analysis Reveals the Drugability of the Kinome of Trypanosoma brucei",
+      "name": "Cited Works 55",
+      "vx": 0.0016743060252216932,
+      "vy": -0.0034695084722320834,
+      "x": 287.18816211556594,
+      "y": -170.55789363243034,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Avirulence Protein 3a (AVR3a) from the Potato Pathogen Phytophthora infestans Forms Homodimers through Its Predicted Translocation Region and Does Not Specifically Bind Phospholipids",
+      "name": "Cited Works 56",
+      "vx": -0.0006360949268119533,
+      "vy": 0.003902142162393974,
+      "x": -117.95125101058758,
+      "y": 328.3948058701617,
+      "group": "Cited Works"
+    },
+    {
+      "id": "NEDD8 overexpression results in neddylation of ubiquitin substrates by the ubiquitin pathway.",
+      "name": "Cited Works 57",
+      "vx": -0.0027455153757787233,
+      "vy": -0.001836895885314566,
+      "x": -219.5142159192643,
+      "y": -256.5239988190469,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Kinome-wide Selectivity Profiling of ATP-competitive Mammalian Target of Rapamycin (mTOR) Inhibitors and Characterization of Their Binding Kinetics",
+      "name": "Cited Works 58",
+      "vx": 0.0033015423824918075,
+      "vy": 0.001991444274299255,
+      "x": 300.9343373753553,
+      "y": 156.14108315395174,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The ubiquitin E1 enzyme Ube1 mediates NEDD8 activation under diverse stress conditions",
+      "name": "Cited Works 59",
+      "vx": -0.0037216348935405967,
+      "vy": 0.0019205808023175374,
+      "x": -330.92894720950574,
+      "y": 109.178915406045,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Acinetobacter baumannii FolD ligand complexes – potent inhibitors of folate metabolism and a re‐evaluation of the structure of LY374571",
+      "name": "Cited Works 60",
+      "vx": 0.0061487259047312524,
+      "vy": -0.001961967799977401,
+      "x": 215.1669736201546,
+      "y": -247.49534843175667,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Aurora kinase inhibitors: Progress towards the clinic",
+      "name": "Cited Works 61",
+      "vx": -0.0025172195611949996,
+      "vy": 0.0038849113865518526,
+      "x": -44.93574015487705,
+      "y": 218.1049107872501,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The AMPK-related kinase SIK2 is regulated by cAMP via phosphorylation at Ser(358) in adipocytes",
+      "name": "Cited Works 62",
+      "vx": -0.004645830331610888,
+      "vy": -0.0009638719315874421,
+      "x": -113.1195172591688,
+      "y": -137.35329708009928,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Synergy of Peptide and Sugar in O-GlcNAcase Substrate Recognition",
+      "name": "Cited Works 63",
+      "vx": 0.007200448798017827,
+      "vy": -0.004994334827221355,
+      "x": 187.39351623541774,
+      "y": -64.64265280492808,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Discovery of potent and selective covalent inhibitors of JNK",
+      "name": "Cited Works 64",
+      "vx": -0.006417383808098716,
+      "vy": 0.0047031216816037415,
+      "x": -208.8371276417049,
+      "y": 135.163652333067,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Phosphorylation of FOXO3a on Ser-7 by p38 Promotes Its Nuclear Localization in Response to Doxorubicin",
+      "name": "Cited Works 65",
+      "vx": -0.0007611042370829977,
+      "vy": -0.003550017562974421,
+      "x": -157.7968738352465,
+      "y": -282.12961008848976,
+      "group": "Cited Works"
+    },
+    {
+      "id": "AMPK: a nutrient and energy sensor that maintains energy homeostasis",
+      "name": "Cited Works 66",
+      "vx": 0.003144875363381825,
+      "vy": 0.005446079814207474,
+      "x": 138.25003040327917,
+      "y": 252.9373294642422,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Synthesis and structure-activity relationships of a novel series of pyrimidines as potent inhibitors of TBK1/IKKε kinases.",
+      "name": "Cited Works 67",
+      "vx": -0.00841163086028564,
+      "vy": -0.0008397978990193314,
+      "x": -282.0033866025724,
+      "y": -130.38015463402414,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Peptide inhibitors of the Keap1-Nrf2 protein-protein interaction",
+      "name": "Cited Works 68",
+      "vx": 0.00439872568499592,
+      "vy": -0.0015562083484604282,
+      "x": 336.6831058624315,
+      "y": -67.61265249830589,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Small molecules that bind the Mdm2 RING stabilize and activate p53",
+      "name": "Cited Works 69",
+      "vx": -0.006215981641747007,
+      "vy": 0.0020641259498425076,
+      "x": -298.4603115829151,
+      "y": 97.97858736881795,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Reduction in BACE1 decreases body weight, protects against diet-induced obesity and enhances insulin sensitivity in mice",
+      "name": "Cited Works 70",
+      "vx": -0.0007653059607637096,
+      "vy": -0.0032131028419381926,
+      "x": -24.631773053749736,
+      "y": -228.54523427484347,
+      "group": "Cited Works"
+    },
+    {
+      "id": "AMP-Activated Protein Kinase: A Target for Drugs both Ancient and Modern",
+      "name": "Cited Works 71",
+      "vx": 0.0021385282983972663,
+      "vy": -0.00003756438490687227,
+      "x": 195.56740513514288,
+      "y": 141.07408054126404,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Changes in the ratio of free NEDD8 to ubiquitin triggers NEDDylation by ubiquitin enzymes",
+      "name": "Cited Works 72",
+      "vx": -0.002925492734686968,
+      "vy": -0.0024543328529410655,
+      "x": -265.0349297770327,
+      "y": -215.33484922487636,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Fragment-based discovery of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors.",
+      "name": "Cited Works 73",
+      "vx": -0.0005321191120548915,
+      "vy": -0.00047023881047573236,
+      "x": -10.148531670931597,
+      "y": 3.337340284011977,
+      "group": "Cited Works"
+    },
+    {
+      "id": "A multifunctional protease inhibitor to regulate endolysosomal function.",
+      "name": "Cited Works 74",
+      "vx": 0.004037453046462192,
+      "vy": 0.0041309099770537785,
+      "x": 84.03684960499297,
+      "y": 125.43139947514827,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Design, Synthesis, and Structure−Activity Relationship Exploration of 1-Substituted 4-Aroyl-3-hydroxy-5-phenyl-1H-pyrrol-2(5H)-one Analogues as Inhibitors of the Annexin A2−S100A10 Protein Interaction",
+      "name": "Cited Works 75",
+      "vx": 0.00011235213857945787,
+      "vy": -0.0032727700986810155,
+      "x": -17.255409317710797,
+      "y": -351.7429947928045,
+      "group": "Cited Works"
+    },
+    {
+      "id": "4-benzimidazolyl-3-phenylbutanoic acids as novel PIF-pocket-targeting allosteric inhibitors of protein kinase PKCζ.",
+      "name": "Cited Works 76",
+      "vx": 0.0020100919518306025,
+      "vy": 0.0024515304415196094,
+      "x": 249.13243027892622,
+      "y": 243.3251729067021,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Optimisation of 6-substituted isoquinolin-1-amine based ROCK-I inhibitors",
+      "name": "Cited Works 77",
+      "vx": -0.0006375022249678305,
+      "vy": -0.001295108800999591,
+      "x": -55.510907987643584,
+      "y": 61.29445243941402,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Design, Synthesis and Biological Evaluation of Novel Inhibitors of Trypanosoma brucei Pteridine Reductase 1",
+      "name": "Cited Works 78",
+      "vx": -0.004234057191225268,
+      "vy": 0.007929744737893065,
+      "x": -190.55590559497364,
+      "y": 178.4248034646454,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The inhibitory effect of phospholemman on the sodium pump requires its palmitoylation.",
+      "name": "Cited Works 79",
+      "vx": 0.005971654544350779,
+      "vy": -0.004999649331241292,
+      "x": 308.3928008970317,
+      "y": -64.7284200015131,
+      "group": "Cited Works"
+    },
+    {
+      "id": "SCF/β-TrCP promotes glycogen synthase kinase 3-dependent degradation of the Nrf2 transcription factor in a keap1-independent manner",
+      "name": "Cited Works 80",
+      "vx": -0.0003192167259937111,
+      "vy": -0.0031564456016431645,
+      "x": -195.31168876206274,
+      "y": -291.44509489053297,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Immunosuppressive but Non-LasR-Inducing Analogues of the Pseudomonas aeruginosa Quorum-Sensing Molecule N-(3-Oxododecanoyl)-L-homoserine Lactone",
+      "name": "Cited Works 81",
+      "vx": 0.00276991827136823,
+      "vy": 0.0005564549268916107,
+      "x": 341.15182622353257,
+      "y": 54.194863846231215,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Absolute SILAC-Compatible Expression Strain Allows Sumo-2 Copy Number Determination in Clinical Samples",
+      "name": "Cited Works 82",
+      "vx": -0.0019269514902178165,
+      "vy": 0.0001643573960222293,
+      "x": -182.59393085042552,
+      "y": 90.80758147597388,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Collateral sensitivity of multidrug-resistant cells to the orphan drug tiopronin.",
+      "name": "Cited Works 83",
+      "vx": -0.007478306626150387,
+      "vy": 0.017026448128080386,
+      "x": -56.74630823185479,
+      "y": 257.37352814133186,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Characterization of a selective inhibitor of the Parkinson's disease kinase LRRK2",
+      "name": "Cited Works 84",
+      "vx": 0.002620900274055802,
+      "vy": -0.0014118664146514535,
+      "x": 77.37141834521896,
+      "y": 8.109919408610956,
+      "group": "Cited Works"
+    },
+    {
+      "id": "ATP site-directed inhibitors of protein kinase CK2: an update.",
+      "name": "Cited Works 85",
+      "vx": 0.005948628121901451,
+      "vy": -0.003935146384524579,
+      "x": 170.1678487308204,
+      "y": -192.68122856419922,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Identification of Inhibitors of the Leishmania cdc2-Related Protein Kinase CRK3",
+      "name": "Cited Works 86",
+      "vx": 0.003211970316052433,
+      "vy": -0.006042615361975223,
+      "x": 181.74333909201684,
+      "y": -130.74521540189735,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Polyubiquitin binding to optineurin is required for optimal activation of TANK-binding kinase 1 and production of interferon β.",
+      "name": "Cited Works 87",
+      "vx": -0.002043076156218809,
+      "vy": 0.0015741619702208287,
+      "x": -41.35622832611359,
+      "y": 132.6929039334243,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Substrate and Product Analogues as Human O-Glcnac Transferase Inhibitors.",
+      "name": "Cited Works 88",
+      "vx": -0.00451879853278325,
+      "vy": -0.002945154554177093,
+      "x": -218.7183762972235,
+      "y": -81.51863328945683,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The cytoprotective role of the Keap1–Nrf2 pathway",
+      "name": "Cited Works 89",
+      "vx": 0.006288839835180434,
+      "vy": 0.0005343544415543568,
+      "x": 253.63270694374276,
+      "y": -21.102555591657687,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Design, synthesis and biological evaluation of 6-pyridylmethylaminopurines as CDK inhibitors",
+      "name": "Cited Works 90",
+      "vx": -0.002834896071870069,
+      "vy": 0.002299253205644521,
+      "x": -133.1410220666161,
+      "y": 157.15648110889774,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Analgesic omega-Conotoxins CVIE and CVIF Selectively and Voltage-Dependently Block Recombinant and Native N-Type Calcium Channels (vol 77, pg 139, 2010)",
+      "name": "Cited Works 91",
+      "vx": 0.00010236547319706817,
+      "vy": -0.0011800794568224912,
+      "x": -73.63897072352067,
+      "y": -137.98567484226004,
+      "group": "Cited Works"
+    },
+    {
+      "id": "NF-κB controls energy homeostasis and metabolic adaptation by upregulating mitochondrial respiration",
+      "name": "Cited Works 92",
+      "vx": 0.0034455850908477977,
+      "vy": 0.000015961103968979837,
+      "x": 330.083162899352,
+      "y": 23.95246775767154,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Development of 18F-fluorinatable dendrons and their application to cancer cell targeting",
+      "name": "Cited Works 93",
+      "vx": -0.0015199628281640874,
+      "vy": 0.002125383465075299,
+      "x": -270.2303762278244,
+      "y": 209.53750756136475,
+      "group": "Cited Works"
+    },
+    {
+      "id": "The specificities of small molecule inhibitors of the TGFß and BMP pathways",
+      "name": "Cited Works 94",
+      "vx": 0.0035496779381013715,
+      "vy": -0.0012733211497753891,
+      "x": 178.77512838862432,
+      "y": -175.87047845293435,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Catalysis by the nucleolytic ribozymes",
+      "name": "Cited Works 95",
+      "vx": 0.0016234053216956073,
+      "vy": 0.012478754183479369,
+      "x": -24.10680436268091,
+      "y": 265.4608985817285,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Characterization of GSK2334470, a novel and highly specific inhibitor of PDK1",
+      "name": "Cited Works 96",
+      "vx": 0.005382988740428481,
+      "vy": -0.0038971804123683245,
+      "x": 91.12733010298234,
+      "y": -256.3538070134377,
+      "group": "Cited Works"
+    },
+    {
+      "id": "N1-Benzyl substituted cambinol analogues as isozyme selective inhibitors of the sirtuin family of protein deacetylases",
+      "name": "Cited Works 97",
+      "vx": 0.004795254556618794,
+      "vy": 0.003486936336501155,
+      "x": 154.43500700982554,
+      "y": 228.2463312327595,
+      "group": "Cited Works"
+    },
+    {
+      "id": "AMP-activated protein kinase—an energy sensor that regulates all aspects of cell function",
+      "name": "Cited Works 98",
+      "vx": -0.003262849131579093,
+      "vy": -0.001254337369345233,
+      "x": -241.00660416503882,
+      "y": 13.218717482867339,
+      "group": "Cited Works"
+    },
+    {
+      "id": "Optimisation of the Anti-Trypanosoma brucei Activity of the Opioid Agonist U50488",
+      "name": "Cited Works 99",
+      "vx": -0.0015551357534660667,
+      "vy": 0.0024238321674837295,
+      "x": -170.57416731920256,
+      "y": 117.11115659991927,
+      "group": "Cited Works"
+    },
+    {
+      "id": "109-294-662-661-65X",
+      "name": "Citing Patents 100",
+      "vx": -0.0007155991352571433,
+      "vy": -0.0018676338328438014,
+      "x": 132.32209874871648,
+      "y": 90.21080778555283,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "new",
+      "name": "new 101",
+      "vx": -0.004415519454507829,
+      "vy": -0.0014493223705162935,
+      "x": -308.6436703638238,
+      "y": -171.61133627072942,
+      "group": "new"
+    },
+    {
+      "id": "074-937-457-594-345",
+      "name": "Citing Patents 102",
+      "vx": -0.0006382604061895572,
+      "vy": 0.005964047053377328,
+      "x": 51.135630116354875,
+      "y": 60.71738823114224,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "081-355-367-506-27X",
+      "name": "Citing Patents 103",
+      "vx": -0.0018833535394241455,
+      "vy": 0.0013018890444115555,
+      "x": -167.6461627034293,
+      "y": 244.3760622620522,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "048-634-530-447-798",
+      "name": "Citing Patents 104",
+      "vx": 0.0028265348761378306,
+      "vy": -0.0011777148760421287,
+      "x": 94.93175900105462,
+      "y": -87.55876699720984,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "137-231-469-269-151",
+      "name": "Citing Patents 105",
+      "vx": 0.006799208975390447,
+      "vy": 0.0029886040745100823,
+      "x": 262.2132488653185,
+      "y": 190.79367308018035,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "031-072-815-607-16X",
+      "name": "Citing Patents 106",
+      "vx": 0.0013453777816633634,
+      "vy": -0.0017890619466883347,
+      "x": -65.82735530210356,
+      "y": 36.196809334142486,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "105-312-070-982-098",
+      "name": "Citing Patents 107",
+      "vx": 0.005428508678911179,
+      "vy": -0.0011934894169527276,
+      "x": -18.94434946963944,
+      "y": -20.09602707466147,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "018-515-082-074-296",
+      "name": "Citing Patents 108",
+      "vx": -0.0023695068566179558,
+      "vy": 0.002789710819074218,
+      "x": -18.49434771968149,
+      "y": 54.36964052338875,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "027-228-373-793-594",
+      "name": "Citing Patents 109",
+      "vx": -0.0031691431612596924,
+      "vy": -0.0027357152545831468,
+      "x": -159.0511213500475,
+      "y": -250.26893489930887,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "016-712-604-622-721",
+      "name": "Citing Patents 110",
+      "vx": 0.003575441813239205,
+      "vy": 0.0008204815668125409,
+      "x": 297.1703964466216,
+      "y": 45.714002062755135,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "086-316-087-480-933",
+      "name": "Citing Patents 111",
+      "vx": -0.005489447921308508,
+      "vy": 0.004668174998035432,
+      "x": -268.19906031279356,
+      "y": 142.38428525242605,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "118-309-833-112-117",
+      "name": "Citing Patents 112",
+      "vx": 0.0014216647540822047,
+      "vy": -0.001739151666508893,
+      "x": 149.31359226580858,
+      "y": -240.45929938545987,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "134-672-819-080-83X",
+      "name": "Citing Patents 113",
+      "vx": 0.0006828858908352469,
+      "vy": 0.006098022247336583,
+      "x": 109.08636441432147,
+      "y": 296.6977622279915,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "036-789-224-520-054",
+      "name": "Citing Patents 114",
+      "vx": -0.0020431019990949997,
+      "vy": -0.0023083965081818927,
+      "x": -228.34692001951453,
+      "y": -177.84513493313892,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "106-594-488-484-12X",
+      "name": "Citing Patents 115",
+      "vx": 0.00436397345257297,
+      "vy": -0.003363471444938279,
+      "x": 292.05294051159467,
+      "y": -94.31749353313707,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "125-726-727-125-409",
+      "name": "Citing Patents 116",
+      "vx": -0.003631115505852217,
+      "vy": 0.005636979984297471,
+      "x": -169.47629108420992,
+      "y": 280.90824875625106,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "161-487-188-181-03X",
+      "name": "Citing Patents 117",
+      "vx": 0.0031255694138699786,
+      "vy": -0.0026498278605769214,
+      "x": 112.84751311064704,
+      "y": -20.096790373696074,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "076-538-237-089-675",
+      "name": "Citing Patents 118",
+      "vx": -0.0010238042807458447,
+      "vy": -0.00035848545720150937,
+      "x": 143.44827751899075,
+      "y": -45.11150072300097,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "051-324-518-696-462",
+      "name": "Citing Patents 119",
+      "vx": -0.0001051216847513259,
+      "vy": -0.0034918077290016464,
+      "x": 96.88481369654644,
+      "y": -12.016029637805492,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "198-017-973-913-570",
+      "name": "Citing Patents 120",
+      "vx": -0.0019061995130115101,
+      "vy": 0.0029377242967416014,
+      "x": 126.39514376011384,
+      "y": -43.328249212692704,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "156-653-831-632-101",
+      "name": "Citing Patents 121",
+      "vx": 0.000257012078023655,
+      "vy": -0.0010350676002393669,
+      "x": 111.10385674945022,
+      "y": -1.1039049072841154,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "178-739-712-688-618",
+      "name": "Citing Patents 122",
+      "vx": 0.0019099115580853041,
+      "vy": -0.002367432159031582,
+      "x": 80.449615618046,
+      "y": -75.5704723666208,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "131-486-498-702-07X",
+      "name": "Citing Patents 123",
+      "vx": 0.002444208673578549,
+      "vy": 0.002021360501945654,
+      "x": 36.756669356056314,
+      "y": 192.2880167349108,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "010-031-167-075-106",
+      "name": "Citing Patents 124",
+      "vx": -0.00024945551687161115,
+      "vy": -0.0016202645585012118,
+      "x": -22.67626075113975,
+      "y": 219.41809817816804,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "119-453-428-180-987",
+      "name": "Citing Patents 125",
+      "vx": 0.004100421952441325,
+      "vy": -0.003223932172655178,
+      "x": 21.19311327545372,
+      "y": -333.8200568513486,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "153-595-914-216-97X",
+      "name": "Citing Patents 126",
+      "vx": 0.0033719987037515563,
+      "vy": -0.0003680080318738824,
+      "x": -43.71328817566597,
+      "y": 30.20376342555094,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "148-353-591-913-750",
+      "name": "Citing Patents 127",
+      "vx": -0.0037656226344283074,
+      "vy": -0.0023233345373612456,
+      "x": -83.23404233868946,
+      "y": -31.53579064072835,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "019-827-938-996-490",
+      "name": "Citing Patents 128",
+      "vx": -0.010863935085953014,
+      "vy": -0.003878581271797688,
+      "x": -25.802371405757302,
+      "y": -51.338315896694354,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "184-646-935-269-773",
+      "name": "Citing Patents 129",
+      "vx": 0.005477155092548342,
+      "vy": -0.0011075325674782606,
+      "x": 172.7157342227789,
+      "y": 10.48453951985173,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "186-230-275-872-748",
+      "name": "Citing Patents 130",
+      "vx": 0.00910540012584726,
+      "vy": 0.001368252203018427,
+      "x": 151.92038105574358,
+      "y": -61.08381071680879,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "165-291-395-706-725",
+      "name": "Citing Patents 131",
+      "vx": 0.006661407517432278,
+      "vy": 0.0024039318276134767,
+      "x": 204.06420410132588,
+      "y": -11.449537391272262,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "047-113-007-956-15X",
+      "name": "Citing Patents 132",
+      "vx": 0.01269096792830532,
+      "vy": 0.0014423202716036447,
+      "x": 141.8080272041045,
+      "y": -28.40516010176203,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "089-019-916-582-397",
+      "name": "Citing Patents 133",
+      "vx": 0.009225512910531688,
+      "vy": 0.0011193697323898038,
+      "x": 168.05618207172677,
+      "y": -63.976971905410934,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "136-000-598-663-919",
+      "name": "Citing Patents 134",
+      "vx": 0.006215329572339752,
+      "vy": 0.0003337950823128708,
+      "x": 188.9187864988003,
+      "y": 7.085673267724612,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "051-072-189-723-758",
+      "name": "Citing Patents 135",
+      "vx": -0.005953949587299696,
+      "vy": -0.001018161855974361,
+      "x": -333.3148456660258,
+      "y": 0.3194144674208826,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "040-766-915-457-886",
+      "name": "Citing Patents 136",
+      "vx": -0.0006345982812304441,
+      "vy": -0.0006744195364535061,
+      "x": 30.765326586676487,
+      "y": -51.21717766486286,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "141-482-415-400-338",
+      "name": "Citing Patents 137",
+      "vx": -0.0005203684733326253,
+      "vy": -0.004187416644953482,
+      "x": -29.00210728642693,
+      "y": -7.211823197039435,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "149-129-599-518-595",
+      "name": "Citing Patents 138",
+      "vx": 0.007372462305133118,
+      "vy": -0.002394213136152288,
+      "x": 233.58082713039758,
+      "y": -123.48709856164777,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "156-286-485-464-499",
+      "name": "Citing Patents 139",
+      "vx": 0.006493066830227157,
+      "vy": -0.0034129940655044273,
+      "x": 255.9494145215035,
+      "y": -48.704337684523345,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "001-353-214-346-040",
+      "name": "Citing Patents 140",
+      "vx": -0.004303369613359975,
+      "vy": -0.0003533264114698189,
+      "x": -261.1298894688675,
+      "y": -3.0756114394837004,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "118-479-143-842-720",
+      "name": "Citing Patents 141",
+      "vx": -0.0027554238197662214,
+      "vy": 0.002628258907059675,
+      "x": -199.5356523313208,
+      "y": 14.04624568346346,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "007-641-959-106-118",
+      "name": "Citing Patents 142",
+      "vx": -0.004930964967500187,
+      "vy": -0.0009315079033373665,
+      "x": -228.51316628085394,
+      "y": 66.44807507677389,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "189-040-066-278-226",
+      "name": "Citing Patents 143",
+      "vx": -0.004253216042512138,
+      "vy": -0.0016718166673805048,
+      "x": -244.56037361199975,
+      "y": -3.991820202042397,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "026-244-336-682-442",
+      "name": "Citing Patents 144",
+      "vx": 0.0035666691385755262,
+      "vy": 0.001526716860225494,
+      "x": 302.01014829969836,
+      "y": 91.76912468455203,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "168-286-254-597-740",
+      "name": "Citing Patents 145",
+      "vx": -0.000018551289311862643,
+      "vy": 0.0008749574832067081,
+      "x": -57.295417705746814,
+      "y": 21.178423886402676,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "109-916-358-959-05X",
+      "name": "Citing Patents 146",
+      "vx": 0.0023939954374421735,
+      "vy": -0.004071608731034919,
+      "x": 110.7248896840943,
+      "y": -307.2257326697829,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "002-458-268-309-533",
+      "name": "Citing Patents 147",
+      "vx": 0.0013370667911349486,
+      "vy": 0.005302619717572231,
+      "x": 126.24862807696077,
+      "y": 319.7829494611081,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "038-310-729-099-192",
+      "name": "Citing Patents 148",
+      "vx": -0.0037483882388417893,
+      "vy": -0.0031997887808636913,
+      "x": -165.52279366171294,
+      "y": -164.12376764541963,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "179-033-965-606-598",
+      "name": "Citing Patents 149",
+      "vx": -0.0010873343880615461,
+      "vy": 0.002177237151911696,
+      "x": -100.57849062449333,
+      "y": -148.4935728625105,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "113-229-447-433-64X",
+      "name": "Citing Patents 150",
+      "vx": -0.004246781215033929,
+      "vy": -0.0040974264020636865,
+      "x": -135.3897493278598,
+      "y": -104.63363717255945,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "077-771-399-719-227",
+      "name": "Citing Patents 151",
+      "vx": -0.004904161370974107,
+      "vy": -0.0034295166975929913,
+      "x": -144.36571050015834,
+      "y": -176.92315503387726,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "183-966-651-664-305",
+      "name": "Citing Patents 152",
+      "vx": -0.006997697873430457,
+      "vy": -0.0005136710248271213,
+      "x": -111.32361909694882,
+      "y": -120.65782464616035,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "013-467-292-050-692",
+      "name": "Citing Patents 153",
+      "vx": -0.003132847654392039,
+      "vy": -0.0024433722091620276,
+      "x": -170.90190896257306,
+      "y": -126.9605982296421,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "079-314-054-163-947",
+      "name": "Citing Patents 154",
+      "vx": 0.00563084987792578,
+      "vy": 0.005136267776050848,
+      "x": 249.2029941233152,
+      "y": 116.93032029622347,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "110-082-309-221-187",
+      "name": "Citing Patents 155",
+      "vx": 0.005904535043340455,
+      "vy": 0.0009573466014539892,
+      "x": 236.23095002304564,
+      "y": 191.44756178995513,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "128-382-566-327-896",
+      "name": "Citing Patents 156",
+      "vx": 0.0008410732075712716,
+      "vy": 0.004523541513804274,
+      "x": -148.62603549171763,
+      "y": -89.58571463541877,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "143-543-676-408-839",
+      "name": "Citing Patents 157",
+      "vx": -0.001087130255492208,
+      "vy": 0.0013667749867259927,
+      "x": -79.25827232701627,
+      "y": -82.40104459152327,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "005-743-260-244-802",
+      "name": "Citing Patents 158",
+      "vx": -0.0032565780351983867,
+      "vy": 0.00587161183722294,
+      "x": -135.10671516362262,
+      "y": 204.97638991663007,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "026-638-223-054-804",
+      "name": "Citing Patents 159",
+      "vx": -0.0007255348151461643,
+      "vy": -0.0035995915539536838,
+      "x": -17.833981424091746,
+      "y": -249.45355731376938,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "048-208-660-423-215",
+      "name": "Citing Patents 160",
+      "vx": 0.005277320659184746,
+      "vy": 0.0008298635919145261,
+      "x": 257.7271876958671,
+      "y": 12.997935744002225,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "159-658-602-048-982",
+      "name": "Citing Patents 161",
+      "vx": -0.0006429663579702697,
+      "vy": 0.00009432312325239826,
+      "x": -155.6483476278532,
+      "y": -40.54693628661523,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "077-811-145-153-079",
+      "name": "Citing Patents 162",
+      "vx": -0.00474042921319967,
+      "vy": 0.0026645367822226798,
+      "x": -104.63024899145755,
+      "y": 19.903520591296783,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "170-781-236-728-970",
+      "name": "Citing Patents 163",
+      "vx": -0.006823619966613408,
+      "vy": -0.00033850693968765584,
+      "x": -102.73393082302158,
+      "y": 86.84996100865747,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "144-284-594-583-951",
+      "name": "Citing Patents 164",
+      "vx": -0.005254357442448918,
+      "vy": 0.0013835237551379032,
+      "x": -125.4020046617417,
+      "y": 24.04298558046955,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "139-409-891-293-77X",
+      "name": "Citing Patents 165",
+      "vx": 0.0042864503183450905,
+      "vy": -0.0049238213082817344,
+      "x": 311.2356860557931,
+      "y": -115.38726099007067,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "081-017-751-048-013",
+      "name": "Citing Patents 166",
+      "vx": -0.003084469590726904,
+      "vy": 0.00033094451896771094,
+      "x": -250.42161106162956,
+      "y": 28.025464523363098,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "114-963-910-586-828",
+      "name": "Citing Patents 167",
+      "vx": -0.0013455324419369644,
+      "vy": 0.0026544673549537268,
+      "x": -188.65232781283922,
+      "y": -27.72918115272478,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "162-513-842-046-362",
+      "name": "Citing Patents 168",
+      "vx": -0.001562372570675055,
+      "vy": -0.0022867936691095625,
+      "x": -177.45924905802477,
+      "y": 16.262274620293244,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "188-803-921-043-695",
+      "name": "Citing Patents 169",
+      "vx": 0.0032032502971803024,
+      "vy": -0.002574497932949939,
+      "x": 45.989581407684256,
+      "y": -24.23223722738318,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "191-147-881-232-285",
+      "name": "Citing Patents 170",
+      "vx": -0.00014358749787989503,
+      "vy": 0.005213099882753427,
+      "x": 111.07259429981588,
+      "y": 204.93122502796163,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "081-817-015-173-962",
+      "name": "Citing Patents 171",
+      "vx": 0.0014928480351899134,
+      "vy": 0.0035760948543620804,
+      "x": 70.13838388702344,
+      "y": 261.850035166745,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "106-530-060-683-82X",
+      "name": "Citing Patents 172",
+      "vx": 0.007500146507299235,
+      "vy": -0.0013977913598922232,
+      "x": 72.76212996166556,
+      "y": -207.66607870706963,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "133-935-409-400-672",
+      "name": "Citing Patents 173",
+      "vx": 0.003487568892842429,
+      "vy": 0.00057154973144198,
+      "x": 104.22640924442841,
+      "y": -160.67786751409912,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "046-588-899-387-353",
+      "name": "Citing Patents 174",
+      "vx": 0.00843455640143161,
+      "vy": 0.003445808410299485,
+      "x": 122.12453519146746,
+      "y": 21.945090513540432,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "049-222-171-973-678",
+      "name": "Citing Patents 175",
+      "vx": 0.0022339128819450207,
+      "vy": 0.005476184265729791,
+      "x": 18.70285350250255,
+      "y": 94.91341831294014,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "074-598-665-914-143",
+      "name": "Citing Patents 176",
+      "vx": 0.0024909935132984102,
+      "vy": 0.001875015320985839,
+      "x": 2.775289732441561,
+      "y": 147.80988989244747,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "190-195-697-065-907",
+      "name": "Citing Patents 177",
+      "vx": 0.003687491608895482,
+      "vy": 0.005001084327917909,
+      "x": 56.02527002726876,
+      "y": 110.0612437426143,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "031-461-589-086-771",
+      "name": "Citing Patents 178",
+      "vx": 0.003772622038266932,
+      "vy": 0.003562880170944512,
+      "x": 115.91060681516862,
+      "y": 116.9591506261435,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "167-851-091-520-257",
+      "name": "Citing Patents 179",
+      "vx": 0.008425935031027084,
+      "vy": -0.0022071578280750018,
+      "x": 40.694462181435576,
+      "y": 36.56296711863019,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "151-760-923-304-502",
+      "name": "Citing Patents 180",
+      "vx": 0.0018302128526293377,
+      "vy": -0.003157863264674567,
+      "x": 157.5360881495589,
+      "y": -295.5684296256873,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "097-019-537-894-104",
+      "name": "Citing Patents 181",
+      "vx": -0.00470120807422784,
+      "vy": 0.0030445386846720663,
+      "x": -115.19688220899512,
+      "y": 299.3989549532781,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "170-696-774-214-700",
+      "name": "Citing Patents 182",
+      "vx": -0.002142325599291118,
+      "vy": 0.0036589387429745244,
+      "x": -179.21159367758514,
+      "y": 267.74771906644514,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "084-807-525-209-072",
+      "name": "Citing Patents 183",
+      "vx": 0.0006008878284648583,
+      "vy": 0.000185783458976172,
+      "x": 203.62145560168537,
+      "y": -262.4881537824373,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "044-648-704-787-12X",
+      "name": "Citing Patents 184",
+      "vx": -0.000887691651460699,
+      "vy": 0.003361757650733178,
+      "x": 26.93720321513645,
+      "y": 339.10234043218406,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "150-822-190-827-131",
+      "name": "Citing Patents 185",
+      "vx": -0.00245322727609692,
+      "vy": -0.00023129646728538617,
+      "x": -242.8909066922475,
+      "y": -74.32374626813254,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "051-919-508-851-10X",
+      "name": "Citing Patents 186",
+      "vx": -0.00945553842318419,
+      "vy": -0.004455331865091194,
+      "x": -217.63733191143552,
+      "y": -32.76925891686433,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "036-251-116-198-69X",
+      "name": "Citing Patents 187",
+      "vx": -0.0022918772696871943,
+      "vy": -0.00462730208921625,
+      "x": -263.0021280964872,
+      "y": -114.03775689429665,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "149-946-446-737-586",
+      "name": "Citing Patents 188",
+      "vx": 0.0017795213435025743,
+      "vy": 0.003080570227073956,
+      "x": 86.58849151868301,
+      "y": 158.3659146794885,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "075-397-286-033-085",
+      "name": "Citing Patents 189",
+      "vx": 0.002031223876043011,
+      "vy": 0.002359023568247263,
+      "x": 75.67631400263899,
+      "y": 220.99423475028783,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "028-992-308-265-357",
+      "name": "Citing Patents 190",
+      "vx": 0.0031267569657228112,
+      "vy": 0.0010824259082050105,
+      "x": 52.733331636936775,
+      "y": 168.46635132189215,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "044-207-676-689-405",
+      "name": "Citing Patents 191",
+      "vx": 0.0021043187774021275,
+      "vy": 0.0033848761819260252,
+      "x": 105.72627455156852,
+      "y": 171.43406800772394,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "030-350-713-791-200",
+      "name": "Citing Patents 192",
+      "vx": 0.002095877729073539,
+      "vy": 0.00230046136637072,
+      "x": 57.13196219998481,
+      "y": 215.22095491084966,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "093-997-239-092-949",
+      "name": "Citing Patents 193",
+      "vx": -0.0030379408820747763,
+      "vy": -0.0035754225159406847,
+      "x": -188.81416169543925,
+      "y": -202.65984371245526,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "046-345-437-716-689",
+      "name": "Citing Patents 194",
+      "vx": -0.005546736266996845,
+      "vy": -0.0024526597722889774,
+      "x": -191.14334843424555,
+      "y": -148.3758307051124,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "146-411-731-640-871",
+      "name": "Citing Patents 195",
+      "vx": -0.00333847920931216,
+      "vy": -0.0033846745820694008,
+      "x": -242.12679039121957,
+      "y": -168.62559769245868,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "000-266-572-036-366",
+      "name": "Citing Patents 196",
+      "vx": 0.0014910077259833038,
+      "vy": -0.0027989363587225175,
+      "x": 267.71429522862525,
+      "y": -193.89680055854842,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "186-389-876-954-313",
+      "name": "Citing Patents 197",
+      "vx": -0.0008010368658508203,
+      "vy": 0.003388887010484216,
+      "x": -86.87781629725048,
+      "y": 337.0852704545923,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "168-483-508-794-377",
+      "name": "Citing Patents 198",
+      "vx": -0.0029485867384357193,
+      "vy": -0.0025746868669078763,
+      "x": -243.80094527405663,
+      "y": -237.8716699002633,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "029-748-240-628-036",
+      "name": "Citing Patents 199",
+      "vx": 0.003306614754014421,
+      "vy": 0.0020273690932607795,
+      "x": 315.32107512409186,
+      "y": 128.68656555124207,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "184-507-509-452-559",
+      "name": "Citing Patents 200",
+      "vx": -0.003622990150929985,
+      "vy": 0.0019075378763331553,
+      "x": -319.612235900907,
+      "y": 139.98228220627038,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "069-961-069-943-549",
+      "name": "Citing Patents 201",
+      "vx": 0.006413267151872154,
+      "vy": -0.0008796529604514267,
+      "x": 202.12554502802422,
+      "y": -280.6903076688719,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "017-777-392-752-199",
+      "name": "Citing Patents 202",
+      "vx": -0.008260269597288154,
+      "vy": -0.0005476766415809828,
+      "x": -16.39153256020189,
+      "y": 249.195060958916,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "000-150-893-948-804",
+      "name": "Citing Patents 203",
+      "vx": -0.0006634392751330732,
+      "vy": 0.002877506178373577,
+      "x": -81.77785989017548,
+      "y": 215.03176610043025,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "027-437-502-794-894",
+      "name": "Citing Patents 204",
+      "vx": -0.0031524226119892555,
+      "vy": 0.003459240839112299,
+      "x": -21.89508529129954,
+      "y": 194.26816669470713,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "074-789-039-135-70X",
+      "name": "Citing Patents 205",
+      "vx": -0.0013711135492980669,
+      "vy": -0.003957235774260224,
+      "x": -71.85693676227436,
+      "y": 250.86046534350638,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "063-617-165-524-327",
+      "name": "Citing Patents 206",
+      "vx": 0.00009642903179639056,
+      "vy": 0.002796454886170288,
+      "x": -63.32590304003673,
+      "y": 187.7887383867385,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "019-872-586-012-269",
+      "name": "Citing Patents 207",
+      "vx": -0.0009055162188586172,
+      "vy": 0.00036437164805281074,
+      "x": -13.426668070104869,
+      "y": 233.08304048931612,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "103-648-347-913-447",
+      "name": "Citing Patents 208",
+      "vx": -0.0008429419087573754,
+      "vy": 0.002979586968600198,
+      "x": -79.48311014126134,
+      "y": 231.2672742068581,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "007-245-406-573-328",
+      "name": "Citing Patents 209",
+      "vx": -0.0021397691065835256,
+      "vy": 0.003931079302983506,
+      "x": -38.83516037233569,
+      "y": 183.0771367540399,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "008-337-248-044-723",
+      "name": "Citing Patents 210",
+      "vx": 0.0012903746650780523,
+      "vy": -0.008350907955217176,
+      "x": -41.132415942075255,
+      "y": 262.32043347716046,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "197-071-041-313-103",
+      "name": "Citing Patents 211",
+      "vx": -0.002852632112792786,
+      "vy": 0.0014282879690288206,
+      "x": -73.079734005629,
+      "y": 201.13152291412902,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "098-538-513-984-747",
+      "name": "Citing Patents 212",
+      "vx": 0.0004756290088378638,
+      "vy": 0.0005668929187839633,
+      "x": -6.342730802184757,
+      "y": 218.25703178733897,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "019-125-805-246-964",
+      "name": "Citing Patents 213",
+      "vx": -0.005520907334702252,
+      "vy": -0.004041965055865413,
+      "x": -139.6520006664442,
+      "y": -120.45766088313226,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "172-064-016-145-117",
+      "name": "Citing Patents 214",
+      "vx": -0.004365467894141186,
+      "vy": -0.0028855260226221162,
+      "x": -115.29705496436524,
+      "y": -176.00556069377936,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "007-417-942-335-284",
+      "name": "Citing Patents 215",
+      "vx": -0.0021564592278926096,
+      "vy": -0.003573060281491486,
+      "x": -86.28688547167918,
+      "y": -111.56698458274266,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "005-947-025-410-764",
+      "name": "Citing Patents 216",
+      "vx": 0.0104100374713851,
+      "vy": -0.006285244241483851,
+      "x": 164.8238552074682,
+      "y": -38.580547324950984,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "116-404-026-640-450",
+      "name": "Citing Patents 217",
+      "vx": 0.004033702689101719,
+      "vy": -0.0044222018417055895,
+      "x": 197.45907743459378,
+      "y": -94.85551798503114,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "090-437-295-781-023",
+      "name": "Citing Patents 218",
+      "vx": -0.005184552690807829,
+      "vy": 0.004106163414101433,
+      "x": -219.4484452028801,
+      "y": 167.59775561042892,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "197-158-559-918-854",
+      "name": "Citing Patents 219",
+      "vx": -0.005825719798905899,
+      "vy": 0.005786546849038363,
+      "x": -232.05688492503745,
+      "y": 110.62379583523033,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "076-225-263-850-117",
+      "name": "Citing Patents 220",
+      "vx": -0.006502731426763035,
+      "vy": 0.002938503961774188,
+      "x": -173.00477567098136,
+      "y": 133.87499671696222,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "049-199-509-181-561",
+      "name": "Citing Patents 221",
+      "vx": -0.0058466950705242165,
+      "vy": 0.004067906782868609,
+      "x": -235.18603834431656,
+      "y": 155.22992133712398,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "179-045-041-176-506",
+      "name": "Citing Patents 222",
+      "vx": -0.001102423932366688,
+      "vy": 0.0020592383206892635,
+      "x": -203.18790733650746,
+      "y": 100.44784046222883,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "004-301-778-674-378",
+      "name": "Citing Patents 223",
+      "vx": -0.0056375526541149745,
+      "vy": 0.0036123763460669516,
+      "x": -178.7829548622381,
+      "y": 153.69321911618906,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "111-313-231-732-367",
+      "name": "Citing Patents 224",
+      "vx": -0.0011350565332107886,
+      "vy": -0.003584763961559337,
+      "x": -183.55439366398636,
+      "y": -261.83647008461014,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "092-197-031-561-353",
+      "name": "Citing Patents 225",
+      "vx": 0.0033443258315850708,
+      "vy": 0.0057919003798137915,
+      "x": 168.27411299657552,
+      "y": 240.14472174328273,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "192-019-786-423-841",
+      "name": "Citing Patents 226",
+      "vx": 0.0035382755074736074,
+      "vy": 0.005745923495927539,
+      "x": 113.51191887558085,
+      "y": 271.08068111351344,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "076-608-180-638-59X",
+      "name": "Citing Patents 227",
+      "vx": 0.004737932324889029,
+      "vy": 0.005430475641801615,
+      "x": 136.46552714529258,
+      "y": 217.5850938092498,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "175-263-797-963-040",
+      "name": "Citing Patents 228",
+      "vx": 0.00284731438015717,
+      "vy": 0.007127356555024661,
+      "x": 171.81624826054338,
+      "y": 261.89816881315187,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "141-694-167-791-759",
+      "name": "Citing Patents 229",
+      "vx": -0.00792411257209687,
+      "vy": -0.0010955269895064918,
+      "x": -308.57556434852995,
+      "y": -112.6339262370653,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "081-203-444-563-604",
+      "name": "Citing Patents 230",
+      "vx": -0.010067964847231506,
+      "vy": -0.0011704719003132352,
+      "x": -255.01091338481282,
+      "y": -148.8991216718325,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "125-348-249-762-351",
+      "name": "Citing Patents 231",
+      "vx": -0.006832167687752954,
+      "vy": -0.0011735686453580169,
+      "x": -293.5040352000977,
+      "y": -98.72871760287767,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "125-850-986-196-787",
+      "name": "Citing Patents 232",
+      "vx": -0.00588308909503997,
+      "vy": -0.0017120916126090568,
+      "x": -282.78140046413563,
+      "y": -161.94918236387758,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "119-397-162-706-860",
+      "name": "Citing Patents 233",
+      "vx": 0.002937025737967708,
+      "vy": -0.000834005794430044,
+      "x": 345.4123986437368,
+      "y": -37.57822353299958,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "133-023-408-974-285",
+      "name": "Citing Patents 234",
+      "vx": -0.0058333741616592785,
+      "vy": 0.0013964059218251376,
+      "x": -292.4899597686098,
+      "y": 130.42209139280064,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "039-847-299-166-952",
+      "name": "Citing Patents 235",
+      "vx": -0.007663918824056664,
+      "vy": 0.0025520125553884607,
+      "x": -305.0247054406967,
+      "y": 66.94108689027905,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "076-641-402-312-988",
+      "name": "Citing Patents 236",
+      "vx": -0.0014593690281604794,
+      "vy": -0.001111156174528756,
+      "x": 1.605672248713407,
+      "y": -201.34856163161967,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "102-485-198-725-150",
+      "name": "Citing Patents 237",
+      "vx": -0.003620624954565737,
+      "vy": -0.001966920658739333,
+      "x": -72.59210423978999,
+      "y": -234.83681678787613,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "168-829-456-947-639",
+      "name": "Citing Patents 238",
+      "vx": -0.0019324831158219558,
+      "vy": -0.004541797349065094,
+      "x": 4.464737393238589,
+      "y": -246.71732270327527,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "098-813-369-162-741",
+      "name": "Citing Patents 239",
+      "vx": -0.003625613617633635,
+      "vy": -0.005484556216724865,
+      "x": -28.92696717075659,
+      "y": -197.29373229569492,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "023-180-369-416-862",
+      "name": "Citing Patents 240",
+      "vx": -0.0015388487303528962,
+      "vy": -0.0028197749792828347,
+      "x": -46.228506517342666,
+      "y": -270.73029163986143,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "189-473-046-734-005",
+      "name": "Citing Patents 241",
+      "vx": 0.00039325860805420427,
+      "vy": -0.00202842434031599,
+      "x": 9.220546663498501,
+      "y": -215.73976438858026,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "019-633-684-883-828",
+      "name": "Citing Patents 242",
+      "vx": -0.0021160363807581754,
+      "vy": -0.0045982349443518524,
+      "x": -56.80515302463417,
+      "y": -229.52486105463177,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "174-501-376-407-235",
+      "name": "Citing Patents 243",
+      "vx": -0.00013928804018112373,
+      "vy": -0.007346097886288568,
+      "x": -2.5571573854065917,
+      "y": -275.96603609217124,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "129-062-448-949-030",
+      "name": "Citing Patents 244",
+      "vx": -0.003825564325120749,
+      "vy": -0.0019113722711860696,
+      "x": -12.906350421870998,
+      "y": -193.92943200259748,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "162-916-741-322-002",
+      "name": "Citing Patents 245",
+      "vx": -0.00004877125795204437,
+      "vy": -0.005269111366732956,
+      "x": -61.05374181978005,
+      "y": -261.8978630011062,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "080-026-305-809-343",
+      "name": "Citing Patents 246",
+      "vx": 0.0008871218311932457,
+      "vy": -0.0036750504113477332,
+      "x": 11.181634513574288,
+      "y": -231.90609137630506,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "016-698-167-713-829",
+      "name": "Citing Patents 247",
+      "vx": -0.0016184642728745843,
+      "vy": -0.004297947103039933,
+      "x": -48.411193291885226,
+      "y": -194.1192520212148,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "091-325-080-234-401",
+      "name": "Citing Patents 248",
+      "vx": -0.0031869198280737045,
+      "vy": -0.005599019338334386,
+      "x": -31.860177854668425,
+      "y": -278.6063583979051,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "032-206-614-235-635",
+      "name": "Citing Patents 249",
+      "vx": 0.00061960485569871,
+      "vy": -0.004993901878261477,
+      "x": 17.52558502114613,
+      "y": -197.6325974789926,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "143-271-017-351-983",
+      "name": "Citing Patents 250",
+      "vx": -0.0006197797524279805,
+      "vy": -0.002087815918236913,
+      "x": -69.19741496974115,
+      "y": -218.81583232793847,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "169-312-245-869-778",
+      "name": "Citing Patents 251",
+      "vx": -0.0019296523954861569,
+      "vy": -0.005074433141066778,
+      "x": 11.124893466885633,
+      "y": -261.67327020820005,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "089-818-979-077-305",
+      "name": "Citing Patents 252",
+      "vx": -0.0022513813951050825,
+      "vy": 0.0002856440717210006,
+      "x": -20.514008303500276,
+      "y": -179.47166975794408,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "187-517-157-601-239",
+      "name": "Citing Patents 253",
+      "vx": -0.0008510855427818423,
+      "vy": -0.00263825443229965,
+      "x": -46.50724636365265,
+      "y": -254.35359456131567,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "111-583-988-147-450",
+      "name": "Citing Patents 254",
+      "vx": 0.002168695706674392,
+      "vy": -0.0022986469076984968,
+      "x": 27.51220304148238,
+      "y": -231.8250518415037,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "058-026-435-099-506",
+      "name": "Citing Patents 255",
+      "vx": -0.0011976446855115211,
+      "vy": -0.0046264728367031655,
+      "x": -46.69277002166727,
+      "y": -210.41291678869646,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "153-651-762-444-327",
+      "name": "Citing Patents 256",
+      "vx": -0.0011643344171042274,
+      "vy": -0.008593977788439653,
+      "x": -17.864358423662445,
+      "y": -270.12989675047226,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "159-766-711-047-610",
+      "name": "Citing Patents 257",
+      "vx": -0.004194382545876001,
+      "vy": -0.0005656530878900408,
+      "x": 0.861442302885802,
+      "y": -185.01113415066902,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "058-933-099-316-100",
+      "name": "Citing Patents 258",
+      "vx": -0.0038800295981806588,
+      "vy": -0.004611863862160782,
+      "x": -60.25792356331032,
+      "y": -245.53964885503822,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "023-452-662-674-373",
+      "name": "Citing Patents 259",
+      "vx": -0.0013393459790116092,
+      "vy": -0.0021570911374177585,
+      "x": 20.83733454860099,
+      "y": -246.9662381230592,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "047-432-030-246-04X",
+      "name": "Citing Patents 260",
+      "vx": -0.0017216831870848427,
+      "vy": -0.0036599411316209102,
+      "x": -36.55565176790207,
+      "y": -182.81191619546684,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "139-008-712-602-518",
+      "name": "Citing Patents 261",
+      "vx": -0.0001113700757354708,
+      "vy": -0.004607758257396403,
+      "x": -32.19413523333505,
+      "y": -262.23547191605934,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "137-720-748-139-162",
+      "name": "Citing Patents 262",
+      "vx": 0.0025467167315236117,
+      "vy": -0.004185169637152592,
+      "x": 25.162063749865425,
+      "y": -212.21137538598953,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "192-136-893-476-749",
+      "name": "Citing Patents 263",
+      "vx": -0.000672404304077184,
+      "vy": -0.0015495867117525004,
+      "x": -61.83255339280639,
+      "y": -204.18542991761854,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "172-890-893-515-719",
+      "name": "Citing Patents 264",
+      "vx": -0.0022354517429101274,
+      "vy": -0.006401089098578253,
+      "x": -5.169025542014631,
+      "y": -259.8384671767207,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "104-472-615-006-481",
+      "name": "Citing Patents 265",
+      "vx": 0.0016064974364302634,
+      "vy": 0.00007856124848997985,
+      "x": 197.85021511038562,
+      "y": 172.8518302610202,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "097-374-332-908-898",
+      "name": "Citing Patents 266",
+      "vx": 0.002050415117466001,
+      "vy": -0.00009487721289734898,
+      "x": 175.30061564603457,
+      "y": 117.68910876987631,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "034-416-075-094-770",
+      "name": "Citing Patents 267",
+      "vx": 0.0020575509195339273,
+      "vy": -0.0008597036420920761,
+      "x": 226.54532837769838,
+      "y": 138.9397172427595,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "127-642-274-375-054",
+      "name": "Citing Patents 268",
+      "vx": 0.002267223585331985,
+      "vy": -0.00007197149688829863,
+      "x": 176.62849180373578,
+      "y": 167.8318423917723,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "036-708-909-192-156",
+      "name": "Citing Patents 269",
+      "vx": 0.0019369597359752367,
+      "vy": -0.00025985323438146134,
+      "x": 197.74466445749522,
+      "y": 107.65838459382488,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "193-863-590-855-263",
+      "name": "Citing Patents 270",
+      "vx": 0.001959201880184185,
+      "vy": -0.0011206212954030413,
+      "x": 214.80503116998185,
+      "y": 168.3547919493643,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "150-028-859-997-047",
+      "name": "Citing Patents 271",
+      "vx": 0.002169617822664725,
+      "vy": -0.0010176389430555002,
+      "x": 164.25073892515485,
+      "y": 149.46891096383294,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "132-394-716-226-832",
+      "name": "Citing Patents 272",
+      "vx": 0.0022167179018092384,
+      "vy": -0.000582653335372725,
+      "x": 216.9968115286109,
+      "y": 115.60032186216729,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "131-238-819-455-784",
+      "name": "Citing Patents 273",
+      "vx": -0.0013526066047218333,
+      "vy": -0.0018513137956224215,
+      "x": 19.471295942032977,
+      "y": 16.623970121363122,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "155-402-461-387-483",
+      "name": "Citing Patents 274",
+      "vx": 0.0008846772340704447,
+      "vy": 0.0012895552460184692,
+      "x": -27.400374201424636,
+      "y": -34.13885737126243,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "040-389-070-176-191",
+      "name": "Citing Patents 275",
+      "vx": -0.001706636820204466,
+      "vy": 0.0007703395205914727,
+      "x": -26.814159357792814,
+      "y": 39.186083673442745,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "076-478-479-475-120",
+      "name": "Citing Patents 276",
+      "vx": -0.00022012209828013742,
+      "vy": -0.001753383837066594,
+      "x": -42.52522894442154,
+      "y": 13.6954741692772,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "034-190-802-321-708",
+      "name": "Citing Patents 277",
+      "vx": -0.0005609794795826604,
+      "vy": -0.0032526316800912413,
+      "x": 15.408717242529965,
+      "y": -355.9921261443757,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "130-316-719-983-242",
+      "name": "Citing Patents 278",
+      "vx": 0.002175415628199963,
+      "vy": 0.0020689585659427493,
+      "x": 225.6936863094084,
+      "y": 265.45623959049226,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "036-668-261-470-040",
+      "name": "Citing Patents 279",
+      "vx": 0.002076012480088083,
+      "vy": 0.0017947659813512698,
+      "x": -88.20667335976592,
+      "y": 72.72181216573385,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "183-767-289-461-131",
+      "name": "Citing Patents 280",
+      "vx": -0.009672021463807828,
+      "vy": 0.0017059286035661057,
+      "x": -27.757039034367363,
+      "y": 86.13687567722177,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "107-556-164-321-147",
+      "name": "Citing Patents 281",
+      "vx": -0.005703684296630284,
+      "vy": 0.007569166674629546,
+      "x": -196.36730338615172,
+      "y": 206.85094006036067,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "066-190-726-252-149",
+      "name": "Citing Patents 282",
+      "vx": -0.0006012433863429419,
+      "vy": -0.003640007714973293,
+      "x": -167.18120133394038,
+      "y": -307.7039827816539,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "140-900-012-438-14X",
+      "name": "Citing Patents 283",
+      "vx": 0.0026513567453368544,
+      "vy": 0.0006638512183280233,
+      "x": 335.1785566623876,
+      "y": 84.72030831030823,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "058-438-690-312-096",
+      "name": "Citing Patents 284",
+      "vx": -0.0021195828626970614,
+      "vy": 0.0019897760679747057,
+      "x": -212.8347500350866,
+      "y": 113.680416673219,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "004-889-112-130-518",
+      "name": "Citing Patents 285",
+      "vx": -0.0013439138404658445,
+      "vy": 0.001579781959289286,
+      "x": -159.5802324563599,
+      "y": 68.2187365193955,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "193-040-307-473-220",
+      "name": "Citing Patents 286",
+      "vx": -0.00223874251367182,
+      "vy": 0.008784004410600812,
+      "x": -50.96311012186746,
+      "y": 297.089430918147,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "188-718-220-131-362",
+      "name": "Citing Patents 287",
+      "vx": 0.0027312376544661727,
+      "vy": -0.00010699990442305392,
+      "x": 61.28076741780839,
+      "y": -17.82916264916977,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "087-577-350-425-176",
+      "name": "Citing Patents 288",
+      "vx": 0.00169090206703131,
+      "vy": -0.0015187934717880624,
+      "x": 102.37469569531163,
+      "y": 35.00350720892921,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "191-670-060-004-126",
+      "name": "Citing Patents 289",
+      "vx": 0.001299115451775829,
+      "vy": -0.0027350955534083134,
+      "x": 71.81472474828944,
+      "y": 43.46257462222006,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "041-699-843-843-567",
+      "name": "Citing Patents 290",
+      "vx": 0.001794172273082213,
+      "vy": -0.001601050154187106,
+      "x": 74.56349879718344,
+      "y": -27.440073052967396,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "180-366-233-781-99X",
+      "name": "Citing Patents 291",
+      "vx": 0.0013642548513294096,
+      "vy": -0.0017815546404877447,
+      "x": 88.21135875907368,
+      "y": 43.259091928613145,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "122-739-962-072-793",
+      "name": "Citing Patents 292",
+      "vx": 0.0026885506853731936,
+      "vy": -0.0003132361737624108,
+      "x": 45.558122010088994,
+      "y": 6.004042470591222,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "109-274-898-147-341",
+      "name": "Citing Patents 293",
+      "vx": 0.00483840410651824,
+      "vy": -0.004018816486430015,
+      "x": 202.77399159131213,
+      "y": -198.7075130190827,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "124-179-501-005-870",
+      "name": "Citing Patents 294",
+      "vx": 0.0001148513053010497,
+      "vy": -0.007289431669303018,
+      "x": 168.9504907937599,
+      "y": -103.66536027819443,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "008-694-981-426-172",
+      "name": "Citing Patents 295",
+      "vx": 0.00042464979563820634,
+      "vy": -0.0024560563935450068,
+      "x": 154.96624640111622,
+      "y": -145.2289234644062,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "109-611-546-954-080",
+      "name": "Citing Patents 296",
+      "vx": 0.003134912451789455,
+      "vy": -0.0073068520844160895,
+      "x": 210.90801233691775,
+      "y": -120.1915005541099,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "004-378-254-734-355",
+      "name": "Citing Patents 297",
+      "vx": -0.0011855251346214182,
+      "vy": 0.0008335056122471511,
+      "x": -73.18004038679992,
+      "y": 135.25184879125308,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "133-997-520-845-569",
+      "name": "Citing Patents 298",
+      "vx": -0.00440151623519745,
+      "vy": 0.003326342570954835,
+      "x": -8.065977737518526,
+      "y": 132.9082535129636,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "115-381-943-359-61X",
+      "name": "Citing Patents 299",
+      "vx": -0.0011052330974483913,
+      "vy": -0.0034042755980875582,
+      "x": -210.49625946466563,
+      "y": -53.11270914302677,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "022-078-711-389-998",
+      "name": "Citing Patents 300",
+      "vx": -0.004238192318518662,
+      "vy": -0.0026806962805222966,
+      "x": -241.56240885559484,
+      "y": -101.11592478385795,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "132-854-391-972-865",
+      "name": "Citing Patents 301",
+      "vx": -0.004643643804900194,
+      "vy": -0.002080409229814113,
+      "x": -186.49021064550277,
+      "y": -77.20539285244035,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "171-143-110-884-468",
+      "name": "Citing Patents 302",
+      "vx": -0.0053841150669111,
+      "vy": -0.0029967608954288966,
+      "x": -256.3391472357549,
+      "y": -65.00038412660429,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "003-946-199-636-328",
+      "name": "Citing Patents 303",
+      "vx": 0.0011217572924671205,
+      "vy": -0.0016060107047129082,
+      "x": 247.0677621936701,
+      "y": -62.418552463604684,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "009-649-401-227-606",
+      "name": "Citing Patents 304",
+      "vx": 0.006403418397195589,
+      "vy": 0.0002398452799806008,
+      "x": 280.9379848826511,
+      "y": -4.713348269097161,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "170-042-571-881-121",
+      "name": "Citing Patents 305",
+      "vx": 0.005655374314420645,
+      "vy": 0.0019425920336030317,
+      "x": 223.69730313249872,
+      "y": -32.52338528689268,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "033-301-273-471-462",
+      "name": "Citing Patents 306",
+      "vx": 0.008095983158528827,
+      "vy": 0.004647389344528074,
+      "x": 272.131151711353,
+      "y": -51.2869357517768,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "040-826-560-477-838",
+      "name": "Citing Patents 307",
+      "vx": 0.005326866910644614,
+      "vy": 0.000054320491708017464,
+      "x": 238.02925845835944,
+      "y": 8.111667342476654,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "135-293-472-746-415",
+      "name": "Citing Patents 308",
+      "vx": 0.005797737298894077,
+      "vy": 0.0019108473561324345,
+      "x": 233.3576086834147,
+      "y": -49.28606096060123,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "153-999-081-812-523",
+      "name": "Citing Patents 309",
+      "vx": -0.0033151208072838196,
+      "vy": 0.0008166497034272719,
+      "x": -101.57376699939026,
+      "y": 157.32181871506708,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "000-498-778-953-787",
+      "name": "Citing Patents 310",
+      "vx": -0.0007038380306793468,
+      "vy": 0.003376442051606876,
+      "x": -156.22828962981518,
+      "y": 181.30540856416158,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "085-065-777-135-758",
+      "name": "Citing Patents 311",
+      "vx": -0.0019876086173645983,
+      "vy": 0.003140916348034563,
+      "x": -125.76257633001333,
+      "y": 125.55029492760532,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "152-366-692-522-975",
+      "name": "Citing Patents 312",
+      "vx": -0.00017360543528970715,
+      "vy": -0.001155853848603861,
+      "x": -44.09341831383387,
+      "y": -117.58322009470399,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "167-869-142-610-582",
+      "name": "Citing Patents 313",
+      "vx": 0.0034268896784919243,
+      "vy": -0.004102594423094321,
+      "x": -112.30295007252982,
+      "y": -159.89101895790128,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "191-676-336-200-724",
+      "name": "Citing Patents 314",
+      "vx": 0.0033807104057974957,
+      "vy": 0.00011183252635671618,
+      "x": 333.1243011755892,
+      "y": -5.915947183335798,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "056-387-403-639-935",
+      "name": "Citing Patents 315",
+      "vx": -0.0012124167161902957,
+      "vy": 0.0017747421910817613,
+      "x": -249.61425650679308,
+      "y": 233.0774311803052,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "066-841-401-628-941",
+      "name": "Citing Patents 316",
+      "vx": 0.0014074190402574036,
+      "vy": -0.0005514652042053308,
+      "x": 155.57901996703663,
+      "y": -202.27001157297826,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "069-503-782-573-055",
+      "name": "Citing Patents 317",
+      "vx": 0.0035522240033760153,
+      "vy": -0.004248553749378849,
+      "x": 211.6408611919313,
+      "y": -171.83460395665324,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "028-137-796-142-577",
+      "name": "Citing Patents 318",
+      "vx": 0.0030466308580527554,
+      "vy": -0.0017864234610909283,
+      "x": 144.9361231537078,
+      "y": -175.1135863009755,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "197-678-301-596-236",
+      "name": "Citing Patents 319",
+      "vx": 0.0011828346134740973,
+      "vy": 0.011738440733467376,
+      "x": 9.048852655258047,
+      "y": 250.1248894744857,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "147-466-934-435-143",
+      "name": "Citing Patents 320",
+      "vx": 0.0030833839796214945,
+      "vy": 0.010573027202336261,
+      "x": -21.348935621826225,
+      "y": 298.0414802827716,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "114-647-123-099-321",
+      "name": "Citing Patents 321",
+      "vx": 0.010041767644874416,
+      "vy": 0.010850861389113066,
+      "x": -58.796365904120215,
+      "y": 240.94531491724644,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "058-829-130-504-901",
+      "name": "Citing Patents 322",
+      "vx": 0.002804236471033479,
+      "vy": 0.010208071213451375,
+      "x": 6.291061665419758,
+      "y": 278.47310995295726,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "169-953-034-717-264",
+      "name": "Citing Patents 323",
+      "vx": 0.0022959529545037876,
+      "vy": 0.00638765339872588,
+      "x": -58.13128918715351,
+      "y": 282.3466428647705,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "028-012-588-449-727",
+      "name": "Citing Patents 324",
+      "vx": 0.007145696779196461,
+      "vy": -0.003913893633166178,
+      "x": 74.92749182268007,
+      "y": -285.17658321648025,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "038-839-140-589-623",
+      "name": "Citing Patents 325",
+      "vx": 0.004790152830666554,
+      "vy": -0.004888070989885754,
+      "x": 102.28887381257466,
+      "y": -225.3891345397324,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "194-924-906-201-593",
+      "name": "Citing Patents 326",
+      "vx": 0.0044706513473355075,
+      "vy": 0.004335575180711402,
+      "x": 121.46057214751652,
+      "y": 227.45113541910192,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "195-611-964-620-410",
+      "name": "Citing Patents 327",
+      "vx": 0.003673817547768146,
+      "vy": 0.003074866386675257,
+      "x": 177.3982456373173,
+      "y": 206.7531378017084,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "025-014-524-538-421",
+      "name": "Citing Patents 328",
+      "vx": 0.0034439599179113107,
+      "vy": 0.003209775564402703,
+      "x": 154.64993731629352,
+      "y": 261.52544730145326,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "120-667-268-642-909",
+      "name": "Citing Patents 329",
+      "vx": -0.004497778957411796,
+      "vy": 0.0010004449981133804,
+      "x": -277.8430671293041,
+      "y": -4.500971584808701,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "163-117-320-460-138",
+      "name": "Citing Patents 330",
+      "vx": -0.0060406462511121625,
+      "vy": 0.0009344368540687817,
+      "x": -216.72625140362427,
+      "y": 41.92992508322489,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "191-290-593-697-506",
+      "name": "Citing Patents 331",
+      "vx": -0.004710824149556461,
+      "vy": -0.0017242484049085395,
+      "x": -269.48323231591917,
+      "y": 39.84575164845635,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "118-339-847-530-982",
+      "name": "Citing Patents 332",
+      "vx": -0.006379036306757709,
+      "vy": -0.0018060237813651789,
+      "x": -239.57241716650609,
+      "y": -20.17480640343927,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "073-318-370-112-877",
+      "name": "Citing Patents 333",
+      "vx": -0.007686846710002385,
+      "vy": -0.00044500614418452,
+      "x": -242.43610882062728,
+      "y": 50.17387204913791,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "113-828-920-381-078",
+      "name": "Citing Patents 334",
+      "vx": -0.0034701395668798284,
+      "vy": 0.0005589783147287198,
+      "x": -280.13006623477503,
+      "y": 16.716860275506352,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "048-983-957-537-421",
+      "name": "Citing Patents 335",
+      "vx": -0.0045440846625529495,
+      "vy": 0.0016772103454792808,
+      "x": -208.73456265878454,
+      "y": 27.612573739052518,
+      "group": "Citing Patents"
+    },
+    {
+      "id": "073-531-962-083-670",
+      "name": "Citing Patents 336",
+      "vx": -0.0019909557326382083,
+      "vy": 0.0015488488743255473,
+      "x": -193.36003062566147,
+      "y": 145.77519272869236,
+      "group": "Citing Patents"
     }
   ]
 }

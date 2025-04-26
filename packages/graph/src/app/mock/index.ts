@@ -7,7 +7,7 @@ import * as realMockIncorrect from "./real.json";
 import * as stressMockIncorrect from "./stress-mock.json";
 
 export const d3Mock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
-  links: d3MockIncorrect.links.map((link) => ({ ...link, data: { value: link.value } })),
+  links: d3MockIncorrect.links.map((link) => ({ ...link })),
   nodes: d3MockIncorrect.nodes.map<NodeInterface<NodeData>>((node, index) => ({
     ...node,
     name: `${node.group} ${index}`,

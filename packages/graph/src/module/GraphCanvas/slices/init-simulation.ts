@@ -60,38 +60,68 @@ export function initSimulationForces<
 
   if (!linkForce) return;
 
-  linkForce
-    .distance(this.forceSettings.linkDistance)
-    .strength(this.forceSettings.linkStrength)
-    .iterations(this.forceSettings.linkIterations);
+  if ((!this.forceSettings.forces || !this.forceSettings.xForce) && this.simulation.force("x")) {
+    this.simulation.force("x", null);
+  }
+  if ((!this.forceSettings.forces || !this.forceSettings.yForce) && this.simulation.force("y")) {
+    this.simulation.force("y", null);
+  }
+  if (
+    (!this.forceSettings.forces || !this.forceSettings.chargeForce) &&
+    this.simulation.force("charge")
+  ) {
+    this.simulation.force("charge", null);
+  }
+  if (
+    (!this.forceSettings.forces || !this.forceSettings.centerForce) &&
+    this.simulation.force("center")
+  ) {
+    this.simulation.force("center", null);
+  }
+  if (!this.forceSettings.forces || !this.forceSettings.linkForce) {
+    linkForce.distance(0).strength(0).iterations(0);
+  }
 
-  this.simulation
-    .force(
+  if (this.forceSettings.forces && this.forceSettings.linkForce) {
+    linkForce
+      .distance(this.forceSettings.linkDistance)
+      .strength(this.forceSettings.linkStrength)
+      .iterations(this.forceSettings.linkIterations);
+  }
+  if (this.forceSettings.forces && this.forceSettings.xForce) {
+    this.simulation.force(
       "x",
-      forceX<NodeInterface<NodeData>>(this.forceSettings.xForce).strength(
+      forceX<NodeInterface<NodeData>>(this.forceSettings.xPosition).strength(
         this.forceSettings.xStrength,
       ),
-    )
-    .force(
+    );
+  }
+  if (this.forceSettings.forces && this.forceSettings.yForce) {
+    this.simulation.force(
       "y",
-      forceY<NodeInterface<NodeData>>(this.forceSettings.yForce).strength(
+      forceY<NodeInterface<NodeData>>(this.forceSettings.yPosition).strength(
         this.forceSettings.yStrength,
       ),
-    )
-    .force(
+    );
+  }
+  if (this.forceSettings.forces && this.forceSettings.chargeForce) {
+    this.simulation.force(
       "charge",
       forceManyBody<NodeInterface<NodeData>>()
         .strength(this.forceSettings.chargeStrength)
         .distanceMax(this.forceSettings.chargeDistanceMax)
         .distanceMin(this.forceSettings.chargeDistanceMin),
-    )
-    .force(
+    );
+  }
+  if (this.forceSettings.forces && this.forceSettings.centerForce) {
+    this.simulation.force(
       "center",
       forceCenter<NodeInterface<NodeData>>(
         this.forceSettings.centerPosition.x ?? 0,
         this.forceSettings.centerPosition.y ?? 0,
       ).strength(this.forceSettings.centerStrength),
     );
+  }
 
   initCollideForce.call<
     GraphCanvas<NodeData, LinkData>,
@@ -106,53 +136,58 @@ export function initCollideForce<
 >(this: GraphCanvas<NodeData, LinkData>, forceUpdate: boolean) {
   if (!this.simulation) return;
 
-  if (!this.forceSettings.collideOn) {
-    if (this.simulation.force("collide")) this.simulation.force("collide", null);
-
-    return;
+  if (
+    (!this.forceSettings.collideForce || !this.forceSettings.forces) &&
+    this.simulation.force("collide")
+  ) {
+    this.simulation.force("collide", null);
   }
 
-  const isHasMax =
-    this.forceSettings.collideOffMax.links != 0 && this.forceSettings.collideOffMax.nodes != 0;
-  const isMaxCollideNodes = isHasMax && this.forceSettings.collideOffMax.nodes < this.nodes.length;
-  const isMaxCollideLinks = isHasMax && this.forceSettings.collideOffMax.links < this.links.length;
-  if (isMaxCollideNodes && isMaxCollideLinks) {
-    this.simulation.force("collide", null);
-  } else if (!this.simulation.force("collide") || forceUpdate) {
-    this.simulation.force(
-      "collide",
-      forceCollide<NodeInterface<NodeData>>()
-        .radius((node, index) => {
-          if (this.forceSettings.collideRadius) {
-            return nodeIterationExtractor(
+  if (this.forceSettings.forces && this.forceSettings.collideForce) {
+    const isHasMax =
+      this.forceSettings.collideOffMax.links != 0 && this.forceSettings.collideOffMax.nodes != 0;
+    const isMaxCollideNodes =
+      isHasMax && this.forceSettings.collideOffMax.nodes < this.nodes.length;
+    const isMaxCollideLinks =
+      isHasMax && this.forceSettings.collideOffMax.links < this.links.length;
+    if (isMaxCollideNodes && isMaxCollideLinks) {
+      this.simulation.force("collide", null);
+    } else if (!this.simulation.force("collide") || forceUpdate) {
+      this.simulation.force(
+        "collide",
+        forceCollide<NodeInterface<NodeData>>()
+          .radius((node, index) => {
+            if (this.forceSettings.collideRadius) {
+              return nodeIterationExtractor(
+                node,
+                index,
+                this.nodes,
+                this.state,
+                this.forceSettings.collideRadius,
+                undefined,
+              );
+            }
+            const nodeOptions = nodeIterationExtractor(
               node,
               index,
               this.nodes,
               this.state,
-              this.forceSettings.collideRadius,
-              undefined,
+              this.nodeSettings.options ?? {},
+              nodeOptionsGetter,
             );
-          }
-          const nodeOptions = nodeIterationExtractor(
-            node,
-            index,
-            this.nodes,
-            this.state,
-            this.nodeSettings.options ?? {},
-            nodeOptionsGetter,
-          );
-          const radius = nodeRadiusGetter({
-            radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-            radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
-            radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
-            radiusFactor: this.nodeSettings.nodeRadiusFactor,
-            linkCount: node.linkCount,
-          });
+            const radius = nodeRadiusGetter({
+              radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
+              radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
+              radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
+              radiusFactor: this.nodeSettings.nodeRadiusFactor,
+              linkCount: node.linkCount,
+            });
 
-          return radius + this.forceSettings.collideAdditionalRadius;
-        })
-        .strength(this.forceSettings.collideStrength)
-        .iterations(this.forceSettings.collideIterations),
-    );
+            return radius + this.forceSettings.collideAdditionalRadius;
+          })
+          .strength(this.forceSettings.collideStrength)
+          .iterations(this.forceSettings.collideIterations),
+      );
+    }
   }
 }

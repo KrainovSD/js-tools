@@ -10,7 +10,7 @@ export function initDnd<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(this: GraphCanvas<NodeData, LinkData>) {
-  if (!this.area || !this.nodes || !this.simulation) throw new Error("bad init data");
+  if (!this.area || !this.nodes) throw new Error("bad init data");
 
   const dragHandler = d3Drag<HTMLCanvasElement, unknown>()
     .subject((event: DragEventInterface<NodeData>) => {
