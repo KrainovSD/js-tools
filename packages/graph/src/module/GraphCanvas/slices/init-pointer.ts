@@ -62,6 +62,7 @@ export function initPointer<
       checkType<NodeInterface<NodeData>>(currentLink.target, isObject(currentLink.target)) &&
       this.highlightedLink !== currentLink
     ) {
+      this.highlightProgress = 0;
       this.highlightedLink = currentLink;
       this.highlightedNode = null;
       this.highlightedNeighbors = new Set([currentLink.source.id, currentLink.target.id]);
