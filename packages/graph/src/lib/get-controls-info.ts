@@ -592,6 +592,12 @@ export function getLinkSettingsControls<
       initialValue: LINK_SETTINGS.particles,
     },
     {
+      id: "particleFlexSpeed",
+      type: "checkbox",
+      label: "Гибкий расчет скорости частицы",
+      initialValue: LINK_SETTINGS.particleFlexSpeed,
+    },
+    {
       id: "pretty",
       type: "checkbox",
       label: "Обсчет красивого соединения",
@@ -638,6 +644,15 @@ export function getLinkSettingsControls<
       type: "checkbox",
       label: "Затухание стрелки при анимации связи",
       initialValue: LINK_SETTINGS.highlightByLinkArrowFading,
+    },
+    {
+      id: "particleFlexSpeedCoefficient",
+      initialValue: LINK_SETTINGS.particleFlexSpeedCoefficient,
+      max: 10,
+      min: 0.1,
+      step: 0.1,
+      type: "range",
+      label: "Коэффициент скорости частицы относительно расстояния",
     },
     {
       id: "hoverLinkThreshold",

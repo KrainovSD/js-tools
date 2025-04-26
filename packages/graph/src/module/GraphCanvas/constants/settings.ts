@@ -116,6 +116,7 @@ export const NODE_OPTIONS: Omit<
 export const LINK_SETTINGS: Omit<Required<LinkSettingsInterface<NodeData, LinkData>>, "options"> = {
   cache: false,
   particles: true,
+  particleFlexSpeed: true,
   pretty: true,
   arrow: true,
   highlightByHoverLink: true,
@@ -124,6 +125,7 @@ export const LINK_SETTINGS: Omit<Required<LinkSettingsInterface<NodeData, LinkDa
   highlightByNodeArrowFading: true,
   highlightByLinkLinkFading: false,
   highlightByLinkArrowFading: false,
+  particleFlexSpeedCoefficient: 2,
   hoverLinkThreshold: 2,
   highlightByNodeLinkFadingMin: 0.21,
   highlightByNodeArrowFadingMin: 0.21,

@@ -65,7 +65,9 @@ export type RGB = {
 
 export type GraphParticle = {
   step: number;
-  wait: number;
+  index: number;
+  prev: GraphParticle | undefined;
+  next: GraphParticle | undefined;
   x?: number;
   y?: number;
   sourceId: string | number;

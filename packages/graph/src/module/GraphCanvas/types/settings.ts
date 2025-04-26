@@ -168,6 +168,8 @@ export type LinkSettingsInterface<
   arrow?: boolean;
   arrowByHighlight?: boolean;
   cache?: boolean;
+  particleFlexSpeed?: boolean;
+  particleFlexSpeedCoefficient?: number;
   highlightByNodeLinkFadingMin?: number;
   highlightByNodeArrowFadingMin?: number;
   highlightByLinkArrowFadingMin?: number;

@@ -130,8 +130,8 @@ export function getDrawLink<
     let yStart = link.source.y;
     let xEnd = link.target.x;
     let yEnd = link.target.y;
-    // let linkDistance = 0;
-    if (this.linkSettings.pretty) {
+    let linkDistance = 0;
+    if (this.linkSettings.pretty || this.linkSettings.particleFlexSpeed) {
       const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
       const position = calculateLinkPositionByRadius(link, isHasArrow ? linkOptions.arrowSize : 0);
 
@@ -140,10 +140,9 @@ export function getDrawLink<
         xEnd = position.x2;
         yStart = position.y1;
         yEnd = position.y2;
-        // linkDistance = position.distance;
+        linkDistance = position.distance;
       }
     }
-
     this.context.moveTo(xStart, yStart);
     this.context.lineTo(xEnd, yEnd);
     this.context.stroke();
@@ -156,50 +155,66 @@ export function getDrawLink<
           this.highlightedNode.id === link.target.id)) ||
         (this.highlightedLink && this.highlightedLink === link))
     ) {
-      // const particleSteps = this.linkSettings.pretty
-      //   ? linkDistance > 0
-      //     ? linkDistance * 2
-      //     : 5
-      //   : 60;
-      const particleSteps = linkOptions.particleSteps;
+      const particleSteps = this.linkSettings.particleFlexSpeed
+        ? linkDistance <= 0
+          ? 0
+          : linkDistance * this.linkSettings.particleFlexSpeedCoefficient
+        : linkOptions.particleSteps;
       const particleCount = linkOptions.particleCount;
 
       if (!this.particles[id]) {
         const sourceId = link.source.id;
         const targetId = link.target.id;
-        this.particles[id] = Array.from<unknown, GraphParticle>(
-          { length: particleCount },
-          (_, index) => {
-            return {
-              step: 0,
-              wait: index * (particleSteps / particleCount),
-              sourceId,
-              targetId,
-            };
-          },
-        );
-      }
-      this.particles[id].forEach((particle) => {
-        if (!this.context) return;
 
-        getParticlePosition({
-          particle,
-          totalSteps: particleSteps,
-          xEnd,
-          xStart,
-          yEnd,
-          yStart,
-        });
-        if (particle.x != undefined && particle.y != undefined) {
-          this.context.beginPath();
-          this.context.strokeStyle = linkOptions.particleBorderColor;
-          this.context.lineWidth = linkOptions.particleBorderWidth;
-          this.context.arc(particle.x, particle.y, linkOptions.particleRadius, 0, Math.PI * 2);
-          this.context.fillStyle = linkOptions.particleColor;
-          this.context.fill();
-          this.context.stroke();
+        const particles: GraphParticle[] = [];
+        let prevParticle: GraphParticle | undefined;
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle: GraphParticle = {
+            step: 0,
+            sourceId,
+            targetId,
+            prev: prevParticle,
+            next: undefined,
+            index: i,
+          };
+          if (prevParticle) prevParticle.next = particle;
+          particles.push(particle);
+          prevParticle = particle;
         }
-      });
+        if (particles.length >= 2) {
+          particles[0].prev = particles[particles.length - 1];
+          particles[particles.length - 1].next = particles[0];
+        }
+        this.particles[id] = particles;
+      }
+
+      if (particleSteps !== 0) {
+        this.particles[id].forEach((particle) => {
+          if (!this.context) return;
+
+          const distance = particleSteps / particleCount;
+          getParticlePosition({
+            distance,
+            particle,
+            totalSteps: particleSteps,
+            totalCount: particleCount,
+            xEnd,
+            xStart,
+            yEnd,
+            yStart,
+          });
+          if (particle.x != undefined && particle.y != undefined) {
+            this.context.beginPath();
+            this.context.strokeStyle = linkOptions.particleBorderColor;
+            this.context.lineWidth = linkOptions.particleBorderWidth;
+            this.context.arc(particle.x, particle.y, linkOptions.particleRadius, 0, Math.PI * 2);
+            this.context.fillStyle = linkOptions.particleColor;
+            this.context.fill();
+            this.context.stroke();
+          }
+        });
+      }
     }
 
     /** Arrow */

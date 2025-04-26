@@ -7,24 +7,33 @@ type GetParticlePositionOptions = {
   xEnd: number;
   yEnd: number;
   totalSteps: number;
+  totalCount: number;
+  distance: number;
 };
 
 export function getParticlePosition(opts: GetParticlePositionOptions) {
-  if (opts.particle.wait > 0) {
-    opts.particle.wait--;
+  const prevStepDifference = opts.particle.step - (opts.particle.prev?.step ?? 0);
+  const nextStepDifference = (opts.particle.next?.step ?? 0) - opts.particle.step;
+
+  const needWait =
+    opts.particle.next &&
+    opts.particle.next.step > opts.particle.step &&
+    nextStepDifference <= opts.distance;
+  const needSpeed =
+    opts.particle.prev &&
+    opts.particle.prev.step !== 0 &&
+    opts.particle.prev.step < opts.particle.step &&
+    prevStepDifference < opts.distance;
+
+  if (opts.particle.step === 0 && needWait) {
+    opts.particle.x = undefined;
+    opts.particle.y = undefined;
 
     return;
   }
 
   const remainingSteps = opts.totalSteps - opts.particle.step;
   const progress = opts.particle.step / opts.totalSteps;
-
-  if (
-    opts.particle.targetId === "027-437-502-794-894" ||
-    opts.particle.targetId === "007-245-406-573-328"
-  ) {
-    console.log(opts.totalSteps, opts.particle.step, remainingSteps, progress);
-  }
 
   if (remainingSteps <= 0) {
     opts.particle.x = opts.xEnd;
@@ -42,5 +51,10 @@ export function getParticlePosition(opts: GetParticlePositionOptions) {
 
   opts.particle.x = newX;
   opts.particle.y = newY;
-  opts.particle.step++;
+
+  if (needSpeed) {
+    opts.particle.step += prevStepDifference <= 3 ? prevStepDifference : 3;
+  } else {
+    opts.particle.step++;
+  }
 }
