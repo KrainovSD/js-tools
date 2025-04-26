@@ -68,6 +68,6 @@ export type GraphParticle = {
   wait: number;
   x?: number;
   y?: number;
-  sourceId: number;
-  targetId: number;
+  sourceId: string | number;
+  targetId: string | number;
 };

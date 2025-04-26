@@ -12,13 +12,17 @@ export function calculateLinkPositionByRadius<
   const dx = (target.x ?? 0) - (source.x ?? 0);
   const dy = (target.y ?? 0) - (source.y ?? 0);
   const dr = Math.sqrt(dx * dx + dy * dy);
+
   const sourceRadius = source._radius ?? 0;
   const targetRadius = (target._radius ?? 0) + (arrowSize > 0 ? arrowSize * 0.85 : 0);
+
+  const distance = Math.round(dr - (sourceRadius + targetRadius));
 
   return {
     x1: (source.x ?? 0) + (dx * sourceRadius) / dr,
     y1: (source.y ?? 0) + (dy * sourceRadius) / dr,
     x2: (target.x ?? 0) - (dx * targetRadius) / dr,
     y2: (target.y ?? 0) - (dy * targetRadius) / dr,
+    distance,
   };
 }

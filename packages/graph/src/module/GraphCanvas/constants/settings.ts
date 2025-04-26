@@ -50,7 +50,6 @@ export const NODE_SETTINGS: Omit<
   "options" | "idGetter"
 > = {
   cache: false,
-  stickAfterDrag: false,
   highlightByNodeOnlyRoot: true,
   highlightByHoverNode: true,
   nodeRadiusFlexible: true,

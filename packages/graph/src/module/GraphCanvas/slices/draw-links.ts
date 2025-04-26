@@ -130,23 +130,18 @@ export function getDrawLink<
     let yStart = link.source.y;
     let xEnd = link.target.x;
     let yEnd = link.target.y;
+    // let linkDistance = 0;
     if (this.linkSettings.pretty) {
       const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
+      const position = calculateLinkPositionByRadius(link, isHasArrow ? linkOptions.arrowSize : 0);
 
-      const { x1, x2, y1, y2 } = calculateLinkPositionByRadius(
-        link,
-        isHasArrow ? linkOptions.arrowSize : 0,
-      ) ?? {
-        x1: 0,
-        x2: 0,
-        y1: 0,
-        y2: 0,
-      };
-
-      xStart = x1;
-      xEnd = x2;
-      yStart = y1;
-      yEnd = y2;
+      if (position) {
+        xStart = position.x1;
+        xEnd = position.x2;
+        yStart = position.y1;
+        yEnd = position.y2;
+        // linkDistance = position.distance;
+      }
     }
 
     this.context.moveTo(xStart, yStart);
@@ -161,24 +156,35 @@ export function getDrawLink<
           this.highlightedNode.id === link.target.id)) ||
         (this.highlightedLink && this.highlightedLink === link))
     ) {
+      // const particleSteps = this.linkSettings.pretty
+      //   ? linkDistance > 0
+      //     ? linkDistance * 2
+      //     : 5
+      //   : 60;
+      const particleSteps = linkOptions.particleSteps;
+      const particleCount = linkOptions.particleCount;
+
       if (!this.particles[id]) {
         const sourceId = link.source.id;
         const targetId = link.target.id;
-        this.particles[id] = Array.from({ length: linkOptions.particleCount }, (_, index) => {
-          return {
-            step: 0,
-            wait: index * (linkOptions.particleSteps / linkOptions.particleCount),
-            sourceId,
-            targetId,
-          };
-        }) as GraphParticle[];
+        this.particles[id] = Array.from<unknown, GraphParticle>(
+          { length: particleCount },
+          (_, index) => {
+            return {
+              step: 0,
+              wait: index * (particleSteps / particleCount),
+              sourceId,
+              targetId,
+            };
+          },
+        );
       }
       this.particles[id].forEach((particle) => {
         if (!this.context) return;
 
         getParticlePosition({
           particle,
-          totalSteps: linkOptions.particleSteps,
+          totalSteps: particleSteps,
           xEnd,
           xStart,
           yEnd,

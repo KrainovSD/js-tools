@@ -14,7 +14,9 @@ export function initDraw<
       const highlightDownStep = 1 / this.graphSettings.highlightDownFrames;
       this.highlightProgress -= highlightDownStep;
 
-      if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
+      if (!this.simulationWorking) {
+        return void requestAnimationFrame(() => this.draw());
+      }
 
       if (!this.linkSettings.particles) return;
     }
@@ -22,7 +24,9 @@ export function initDraw<
       const highlightUpStep = 1 / this.graphSettings.highlightUpFrames;
       this.highlightProgress += highlightUpStep;
 
-      if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
+      if (!this.simulationWorking) {
+        return void requestAnimationFrame(() => this.draw());
+      }
 
       if (!this.linkSettings.particles) return;
     }
@@ -38,7 +42,9 @@ export function initDraw<
         this.highlightedLink = null;
         this.particles = {};
 
-        if (!this.simulationWorking) return void requestAnimationFrame(() => this.draw());
+        if (!this.simulationWorking) {
+          return void requestAnimationFrame(() => this.draw());
+        }
       }
     }
 

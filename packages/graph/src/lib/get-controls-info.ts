@@ -176,12 +176,7 @@ export function getNodeSettingControls<
       initialValue: NODE_SETTINGS.cache,
       label: "Кеширование вычисляемых настроек",
     },
-    {
-      id: "stickAfterDrag",
-      type: "checkbox",
-      initialValue: NODE_SETTINGS.stickAfterDrag,
-      label: "Фиксировании ноды после перетаскивания",
-    },
+
     {
       id: "highlightByNodeOnlyRoot",
       type: "checkbox",

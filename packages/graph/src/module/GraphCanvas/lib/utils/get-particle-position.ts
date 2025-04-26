@@ -19,7 +19,14 @@ export function getParticlePosition(opts: GetParticlePositionOptions) {
   const remainingSteps = opts.totalSteps - opts.particle.step;
   const progress = opts.particle.step / opts.totalSteps;
 
-  if (remainingSteps === 0) {
+  if (
+    opts.particle.targetId === "027-437-502-794-894" ||
+    opts.particle.targetId === "007-245-406-573-328"
+  ) {
+    console.log(opts.totalSteps, opts.particle.step, remainingSteps, progress);
+  }
+
+  if (remainingSteps <= 0) {
     opts.particle.x = opts.xEnd;
     opts.particle.y = opts.yEnd;
     opts.particle.step = 0;

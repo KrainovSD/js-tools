@@ -55,7 +55,6 @@ export type NodeSettingsInterface<
   LinkData extends Record<string, unknown>,
 > = {
   cache?: boolean;
-  stickAfterDrag?: boolean;
   idGetter?: NodeIterationPropsInterface<NodeData, LinkData, string | number>;
   highlightByNodeOnlyRoot?: boolean;
   highlightByNodeNodeFadingMin?: number;

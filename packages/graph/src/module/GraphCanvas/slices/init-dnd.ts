@@ -75,10 +75,9 @@ export function initDnd<
 
       if (!event.active && this.simulation) this.simulation.alphaTarget(0);
 
-      if (this.nodeSettings.stickAfterDrag && this.areaRect) {
-        if (!this.areaRect) return;
-        const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
-        const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
+      const sourceEvent = event.sourceEvent as MouseEvent | TouchEvent;
+      if (sourceEvent.altKey && this.areaRect) {
+        const [pointerX, pointerY] = pointerGetter(sourceEvent, this.areaRect, this.areaTransform);
         event.subject.fx = pointerX;
         event.subject.fy = pointerY;
       } else {
