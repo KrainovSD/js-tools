@@ -208,6 +208,10 @@ export type LinkOptionsInterface<
   arrowAlpha?: number;
   arrowColor?: string;
   arrowSize?: number;
+  arrowBorderColor?: string;
+  arrowBorderWidth?: number;
+  particleBorderColor?: string;
+  particleBorderWidth?: number;
   particleAlpha?: number;
   particleColor?: string;
   particleRadius?: number;

@@ -740,6 +740,24 @@ export function getLinkOptionsControls<
       initialValue: LINK_OPTIONS.arrowSize,
     },
     {
+      id: "arrowBorderWidth",
+      type: "range",
+      max: 10,
+      min: 0.1,
+      step: 0.1,
+      label: "Размер границы стрелки",
+      initialValue: LINK_OPTIONS.arrowBorderWidth,
+    },
+    {
+      id: "particleBorderWidth",
+      type: "range",
+      max: 10,
+      min: 0.1,
+      step: 0.1,
+      label: "Размер границы частиц",
+      initialValue: LINK_OPTIONS.particleBorderWidth,
+    },
+    {
       id: "particleAlpha",
       type: "range",
       max: 1,
@@ -788,10 +806,22 @@ export function getLinkOptionsControls<
       label: "Цвет стрелки",
     },
     {
+      id: "arrowBorderColor",
+      type: "color",
+      initialValue: LINK_OPTIONS.arrowBorderColor,
+      label: "Цвет границы стрелки",
+    },
+    {
       id: "particleColor",
       type: "color",
-      initialValue: "#000000FF",
+      initialValue: LINK_OPTIONS.particleColor,
       label: "Цвет частиц",
+    },
+    {
+      id: "particleBorderColor",
+      type: "color",
+      initialValue: LINK_OPTIONS.particleBorderColor,
+      label: "Цвет границы частиц",
     },
   ];
 

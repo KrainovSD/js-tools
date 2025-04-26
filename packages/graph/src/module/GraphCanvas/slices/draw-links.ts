@@ -186,6 +186,8 @@ export function getDrawLink<
         });
         if (particle.x != undefined && particle.y != undefined) {
           this.context.beginPath();
+          this.context.strokeStyle = linkOptions.particleBorderColor;
+          this.context.lineWidth = linkOptions.particleBorderWidth;
           this.context.arc(particle.x, particle.y, linkOptions.particleRadius, 0, Math.PI * 2);
           this.context.fillStyle = linkOptions.particleColor;
           this.context.fill();
@@ -208,9 +210,12 @@ export function getDrawLink<
         y2: 0,
       };
 
-      const angle = Math.atan2(yEnd - yStart, xEnd - xStart);
       this.context.beginPath();
       this.context.globalAlpha = arrowAlpha;
+      this.context.strokeStyle = linkOptions.arrowBorderColor;
+      this.context.lineWidth = linkOptions.arrowBorderWidth;
+      this.context.fillStyle = linkOptions.arrowColor;
+      const angle = Math.atan2(yEnd - yStart, xEnd - xStart);
       this.context.moveTo(xEnd, yEnd);
       this.context.lineTo(
         xEnd - linkOptions.arrowSize * Math.cos(angle - Math.PI / 6),
@@ -221,7 +226,6 @@ export function getDrawLink<
         yEnd - linkOptions.arrowSize * Math.sin(angle + Math.PI / 6),
       );
       this.context.closePath();
-      this.context.fillStyle = linkOptions.arrowColor;
       this.context.fill();
       this.context.stroke();
     }
