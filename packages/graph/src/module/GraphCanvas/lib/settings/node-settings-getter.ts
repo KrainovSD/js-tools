@@ -99,6 +99,33 @@ export function nodeRadiusGetter({
   );
 }
 
+export type NodeSizeGetterOptions = {
+  linkCount: number | undefined;
+  sizeFlexible: boolean;
+  sizeCoefficient: number;
+  sizeFactor: number;
+  widthInitial: number;
+  heightInitial: number;
+};
+
+export function nodeSizeGetter({
+  heightInitial,
+  linkCount,
+  sizeCoefficient,
+  sizeFactor,
+  sizeFlexible,
+  widthInitial,
+}: NodeSizeGetterOptions) {
+  let widthCoefficient = 1;
+  let heightCoefficient = 1;
+  if (sizeFlexible && linkCount != undefined) {
+    widthCoefficient += (linkCount / sizeCoefficient) * sizeFactor;
+    heightCoefficient += (linkCount / sizeCoefficient) * sizeFactor;
+  }
+
+  return { width: widthInitial * widthCoefficient, height: heightInitial * heightCoefficient };
+}
+
 export function nodeIdGetter<NodeData extends Record<string, unknown>>(
   node: NodeInterface<NodeData>,
 ) {

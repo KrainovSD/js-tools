@@ -180,7 +180,7 @@ export function initCollideForce<
                 }
                 const radius = nodeRadiusGetter({
                   radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-                  radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
+                  radiusInitial: nodeOptions.radius,
                   radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
                   radiusFactor: this.nodeSettings.nodeRadiusFactor,
                   linkCount: node.linkCount,
@@ -210,7 +210,7 @@ export function initCollideForce<
                 }
                 const radius = nodeRadiusGetter({
                   radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-                  radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
+                  radiusInitial: nodeOptions.radius,
                   radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
                   radiusFactor: this.nodeSettings.nodeRadiusFactor,
                   linkCount: node.linkCount,

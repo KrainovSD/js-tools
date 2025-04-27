@@ -232,6 +232,12 @@ export function getNodeSettingControls<
       label: "Гибкий радиус ноды",
     },
     {
+      id: "nodeSizeFlexible",
+      type: "checkbox",
+      initialValue: NODE_SETTINGS.nodeSizeFlexible,
+      label: "Гибкий размер ноды",
+    },
+    {
       id: "highlightByNodeNodeFading",
       type: "checkbox",
       initialValue: NODE_SETTINGS.highlightByNodeNodeFading,
@@ -293,15 +299,6 @@ export function getNodeSettingControls<
       label: "Изменение размера текста при анимации связи",
     },
     {
-      id: "nodeRadiusInitial",
-      initialValue: NODE_SETTINGS.nodeRadiusInitial,
-      max: 50,
-      min: 0.1,
-      step: 0.1,
-      type: "range",
-      label: "Изначальный радиус ноды",
-    },
-    {
       id: "nodeRadiusCoefficient",
       initialValue: NODE_SETTINGS.nodeRadiusCoefficient,
       max: 100,
@@ -318,6 +315,24 @@ export function getNodeSettingControls<
       step: 0.1,
       type: "range",
       label: "Коэффициент увеличения радиуса",
+    },
+    {
+      id: "nodeSizeCoefficient",
+      initialValue: NODE_SETTINGS.nodeSizeCoefficient,
+      max: 50,
+      min: 0.1,
+      step: 0.1,
+      type: "range",
+      label: "Количество связей для увеличения размера",
+    },
+    {
+      id: "nodeSizeFactor",
+      initialValue: NODE_SETTINGS.nodeSizeFactor,
+      max: 20,
+      min: 0.01,
+      step: 0.01,
+      type: "range",
+      label: "Коэффициент увеличения размера",
     },
     {
       id: "highlightByNodeNodeSizingAdditional",

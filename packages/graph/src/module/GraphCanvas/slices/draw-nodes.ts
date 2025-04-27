@@ -8,6 +8,7 @@ import {
   nodeIterationExtractor,
   nodeOptionsGetter,
   nodeRadiusGetter,
+  nodeSizeGetter,
 } from "../lib";
 import type { GraphState, NodeOptionsInterface } from "../types";
 import { drawText } from "./draw-text";
@@ -54,9 +55,9 @@ export function getDrawNode<
 
     let alpha = nodeOptions.alpha;
     let color = nodeOptions.color;
-    let radiusInitial = nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial;
-    let width = nodeOptions.width;
-    let height = nodeOptions.height;
+    let radiusInitial = nodeOptions.radius;
+    let widthInitial = nodeOptions.width;
+    let heightInitial = nodeOptions.height;
     let textAlpha = nodeOptions.textAlpha;
     let textSize = nodeOptions.textSize;
     let textShiftX = nodeOptions.textShiftX;
@@ -120,8 +121,8 @@ export function getDrawNode<
             this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
             this.highlightProgress,
           );
-          width *= widthCoefficient;
-          height *= heightCoefficient;
+          widthInitial *= widthCoefficient;
+          heightInitial *= heightCoefficient;
         }
         if (this.nodeSettings.highlightByNodeTextSizing) {
           textSize = animationByProgress(
@@ -210,8 +211,8 @@ export function getDrawNode<
             this.nodeSettings.highlightByLinkNodeSizingAdditionalCoefficient,
             this.highlightProgress,
           );
-          width *= widthCoefficient;
-          height *= heightCoefficient;
+          widthInitial *= widthCoefficient;
+          heightInitial *= heightCoefficient;
         }
         if (this.nodeSettings.highlightByLinkTextSizing) {
           textSize = animationByProgress(
@@ -244,7 +245,7 @@ export function getDrawNode<
     }
 
     const radius =
-      nodeOptions.shape === "circle" || !nodeOptions.shape
+      nodeOptions.shape === "circle"
         ? nodeRadiusGetter({
             radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
             radiusInitial,
@@ -253,6 +254,18 @@ export function getDrawNode<
             linkCount: node.linkCount,
           })
         : radiusInitial;
+
+    const { height, width } =
+      nodeOptions.shape === "square"
+        ? nodeSizeGetter({
+            heightInitial,
+            widthInitial,
+            linkCount: node.linkCount,
+            sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
+            sizeFactor: this.nodeSettings.nodeSizeFactor,
+            sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+          })
+        : { width: widthInitial, height: heightInitial };
 
     node._radius = radius;
     node._width = width;

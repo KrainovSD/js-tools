@@ -94,10 +94,12 @@ export type NodeSettingsInterface<
   highlightByLinkTextFading?: boolean;
   highlightByLinkTextSizing?: boolean;
   highlightByLinkNodeColor?: boolean;
-  nodeRadiusInitial?: number;
   nodeRadiusCoefficient?: number;
   nodeRadiusFactor?: number;
   nodeRadiusFlexible?: boolean;
+  nodeSizeFlexible?: boolean;
+  nodeSizeCoefficient?: number;
+  nodeSizeFactor?: number;
   options?:
     | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface<NodeData, LinkData>>
     | NodeOptionsInterface<NodeData, LinkData>;
