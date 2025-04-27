@@ -238,6 +238,12 @@ export function getNodeSettingControls<
       label: "Гибкий размер ноды",
     },
     {
+      id: "textNodeDebug",
+      type: "checkbox",
+      initialValue: NODE_SETTINGS.textNodeDebug,
+      label: "Отладка текстовой ноды",
+    },
+    {
       id: "highlightByNodeNodeFading",
       type: "checkbox",
       initialValue: NODE_SETTINGS.highlightByNodeNodeFading,
@@ -605,6 +611,24 @@ export function getNodeOptionsControls<
       type: "color",
       initialValue: "#000000FF",
       label: "Цвет",
+    },
+    {
+      id: "textNodeXPadding",
+      type: "range",
+      max: 30,
+      min: 0,
+      step: 0.1,
+      label: "Отступы по оси X у текстовой ноды внутри контейнера",
+      initialValue: NODE_OPTIONS.textNodeXPadding,
+    },
+    {
+      id: "textNodeYPadding",
+      type: "range",
+      max: 30,
+      min: 0,
+      step: 0.1,
+      label: "Отступы по оси Y у текстовой ноды внутри контейнера",
+      initialValue: NODE_OPTIONS.textNodeYPadding,
     },
     {
       id: "textSize",

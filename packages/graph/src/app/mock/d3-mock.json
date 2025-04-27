@@ -2296,6 +2296,15 @@
       "group": "new"
     },
     {
+      "id": "Node with text in 3 line minimum",
+      "name": "Node with text in 3 line minimum",
+      "vx": -0.004415519454507829,
+      "vy": -0.0014493223705162935,
+      "x": -308.6436703638238,
+      "y": -171.61133627072942,
+      "group": "Node with text in 3 line minimum"
+    },
+    {
       "id": "074-937-457-594-345",
       "name": "Citing Patents 102",
       "vx": -0.0006382604061895572,

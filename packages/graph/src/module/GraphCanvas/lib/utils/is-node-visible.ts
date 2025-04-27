@@ -32,7 +32,8 @@ export function isNodeVisible<NodeData extends Record<string, unknown>>(
         opts.node.y - radius - ADDITIONAL_VIEWPORT < bottom
       );
     }
-    case "square": {
+    case "square":
+    case "text": {
       const width = opts.node._width ?? COMMON_SETTINGS.nodeSize;
       const height = opts.node._height ?? COMMON_SETTINGS.nodeSize;
 

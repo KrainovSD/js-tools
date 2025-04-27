@@ -11,7 +11,13 @@ import {
 import { getDrawTime, resetDrawTime } from "@/lib";
 import type { LinkInterface, NodeInterface } from "@/types";
 import type { GraphCanvas } from "../GraphCanvas";
-import { nodeIterationExtractor, nodeOptionsGetter, nodeRadiusGetter } from "../lib";
+import {
+  nodeIterationExtractor,
+  nodeOptionsGetter,
+  nodeRadiusGetter,
+  nodeSizeGetter,
+} from "../lib";
+import { getTextLines } from "./draw-text";
 
 export function initSimulation<
   NodeData extends Record<string, unknown>,
@@ -189,11 +195,54 @@ export function initCollideForce<
                 return radius + this.forceSettings.collideAdditionalRadius;
               }
               case "square": {
+                const { height, width } = nodeSizeGetter({
+                  heightInitial: nodeOptions.width,
+                  widthInitial: nodeOptions.height,
+                  linkCount: node.linkCount,
+                  sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
+                  sizeFactor: this.nodeSettings.nodeSizeFactor,
+                  sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+                });
+
                 return (
-                  Math.sqrt(
-                    nodeOptions.width * nodeOptions.width + nodeOptions.height * nodeOptions.height,
-                  ) /
-                    2 +
+                  Math.sqrt(width ** 2 + height ** 2) / 2 +
+                  this.forceSettings.collideAdditionalRadius
+                );
+              }
+              case "text": {
+                let { height, width } = nodeSizeGetter({
+                  heightInitial: nodeOptions.width,
+                  widthInitial: nodeOptions.height,
+                  linkCount: node.linkCount,
+                  sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
+                  sizeFactor: this.nodeSettings.nodeSizeFactor,
+                  sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+                });
+
+                if (this.context && nodeOptions.text) {
+                  const lines =
+                    this.cachedNodeText[node.id] ??
+                    getTextLines({
+                      context: this.context,
+                      text: nodeOptions.text,
+                      textAlign: nodeOptions.textAlign,
+                      textColor: nodeOptions.textColor,
+                      textFont: nodeOptions.textFont,
+                      textSize: nodeOptions.textSize,
+                      maxWidth: width,
+                      textStyle: nodeOptions.textStyle,
+                      textWeight: nodeOptions.textWeight,
+                    });
+
+                  height =
+                    lines.length * nodeOptions.textSize +
+                    (lines.length - 1) * nodeOptions.textGap +
+                    nodeOptions.textNodeYPadding;
+                  width += nodeOptions.textNodeXPadding;
+                }
+
+                return (
+                  Math.sqrt(width ** 2 + height ** 2) / 2 +
                   this.forceSettings.collideAdditionalRadius
                 );
               }

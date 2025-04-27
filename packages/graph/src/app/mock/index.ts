@@ -13,6 +13,40 @@ export const d3Mock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "l
     name: `${node.group} ${index}`,
   })),
 };
+
+// export const d3Mock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
+//   links: [],
+//   nodes: [
+//     {
+//       id: "Node with text in 3 line minimum",
+//       name: "Node with text in 3 line minimum",
+//       vx: -0.004415519454507829,
+//       vy: -0.0014493223705162935,
+//       x: -308.6436703638238,
+//       y: -171.61133627072942,
+//       group: "Node with text in 3 line minimum",
+//     },
+//     {
+//       id: "new",
+//       name: "new 101",
+//       vx: -0.004415519454507829,
+//       vy: -0.0014493223705162935,
+//       x: -308.6436703638238,
+//       y: -171.61133627072942,
+//       group: "new",
+//     },
+//     {
+//       id: "109-294-662-661-65X",
+//       name: "Citing Patents 100",
+//       vx: -0.0007155991352571433,
+//       vy: -0.0018676338328438014,
+//       x: 132.32209874871648,
+//       y: 90.21080778555283,
+//       group: "Citing Patents",
+//     },
+//   ],
+// };
+
 export const stressMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
   links: stressMockIncorrect.links.map((link, index) => ({
     index,

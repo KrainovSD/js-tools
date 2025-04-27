@@ -55,6 +55,50 @@ export function drawText({
     return;
   }
 
+  const lines = getTextLines({
+    context,
+    maxWidth,
+    text,
+    textAlign,
+    textColor,
+    textFont,
+    textSize,
+    textStyle,
+    textWeight,
+  });
+
+  cachedNodeText[id] = lines;
+  lines.forEach((line, index) => {
+    context.fillText(line, x, y + index * textSize + index * textGap);
+  });
+}
+
+export type GetTextLines = {
+  text: string;
+  textSize: number;
+  textStyle: TextStyleEnum;
+  textWeight: number;
+  textFont: string;
+  textColor: string;
+  textAlign: CanvasTextAlign;
+  context: CanvasRenderingContext2D;
+  maxWidth: number;
+};
+export function getTextLines({
+  context,
+  textAlign,
+  textColor,
+  textFont,
+  textStyle,
+  textWeight,
+  textSize,
+  text,
+  maxWidth,
+}: GetTextLines) {
+  context.font = `${textStyle} normal ${textWeight} ${textSize}px ${textFont}`;
+  context.fillStyle = textColor;
+  context.textAlign = textAlign;
+
   const spaceWidth = context.measureText(" ").width;
   const lines: string[] = [];
   let lineWidth = 0;
@@ -62,7 +106,7 @@ export function drawText({
 
   for (const word of text.split(" ")) {
     const size = context.measureText(word).width;
-    lineWidth += size;
+    lineWidth += size + spaceWidth;
 
     if (line === "") {
       line = word;
@@ -81,8 +125,5 @@ export function drawText({
 
   if (line !== "") lines.push(line);
 
-  cachedNodeText[id] = lines;
-  lines.forEach((line, index) => {
-    context.fillText(line, x, y + index * textSize + index * textGap);
-  });
+  return lines;
 }

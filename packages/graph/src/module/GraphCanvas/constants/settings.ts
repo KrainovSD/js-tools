@@ -55,11 +55,12 @@ export const NODE_SETTINGS: Omit<
   Required<NodeSettingsInterface<NodeData, LinkData>>,
   "options" | "idGetter"
 > = {
-  cache: false,
+  cache: true,
   highlightByNodeOnlyRoot: true,
   highlightByHoverNode: true,
   nodeRadiusFlexible: true,
   nodeSizeFlexible: true,
+  textNodeDebug: true,
   highlightByNodeNodeFading: true,
   highlightByNodeNodeColor: false,
   highlightByNodeNodeSizing: true,
@@ -75,7 +76,7 @@ export const NODE_SETTINGS: Omit<
   nodeSizeCoefficient: 5,
   nodeSizeFactor: 0.1,
   highlightByNodeNodeSizingAdditional: 0.5,
-  highlightByLinkNodeSizingAdditionalCoefficient: 0.1,
+  highlightByLinkNodeSizingAdditionalCoefficient: 0.35,
   highlightByNodeNodeColorFadingMin: 0.15,
   highlightByNodeTextShiftXAdditional: 0,
   highlightByNodeTextShiftYAdditional: 2,
@@ -85,7 +86,7 @@ export const NODE_SETTINGS: Omit<
   highlightByNodeNodeFadingMin: 0.21,
   highlightByNodeTextFadingMin: 0.21,
   highlightByLinkNodeSizingAdditional: 0.5,
-  highlightByNodeNodeSizingAdditionalCoefficient: 0.1,
+  highlightByNodeNodeSizingAdditionalCoefficient: 0.35,
   highlightByLinkNodeColorFadingMin: 0.15,
   highlightByLinkTextShiftXAdditional: 0,
   highlightByLinkTextShiftYAdditional: 2,
@@ -108,12 +109,14 @@ export const NODE_OPTIONS: Omit<
   | "textDraw"
   | "textExtraDraw"
 > = {
-  shape: "square",
+  shape: "text",
   height: 10,
   width: 15,
   borderRadius: 0,
   radius: 4,
   alpha: 1,
+  textNodeXPadding: 5,
+  textNodeYPadding: 3,
   borderWidth: 0.1,
   borderColor: "#000000FF",
   textAlpha: 1,
@@ -124,11 +127,11 @@ export const NODE_OPTIONS: Omit<
   textColor: "#333",
   textStyle: "normal",
   textWeight: 500,
-  textGap: 1,
+  textGap: 0,
 };
 
 export const LINK_SETTINGS: Omit<Required<LinkSettingsInterface<NodeData, LinkData>>, "options"> = {
-  cache: false,
+  cache: true,
   particles: true,
   particleFlexSpeed: true,
   pretty: true,

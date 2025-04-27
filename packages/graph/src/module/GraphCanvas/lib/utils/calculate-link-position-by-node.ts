@@ -70,7 +70,8 @@ function getLinkPoint<NodeData extends Record<string, unknown>>(opts: GetLinkPoi
       });
       break;
     }
-    case "square": {
+    case "square":
+    case "text": {
       nodePoint = getRectangleIntersection({
         arrowSize: opts.arrowSize,
         x: opts.node.x,
@@ -79,7 +80,7 @@ function getLinkPoint<NodeData extends Record<string, unknown>>(opts: GetLinkPoi
         width: opts.node._width ?? COMMON_SETTINGS.nodeSize,
         oppositeX: opts.oppositeNode.x,
         oppositeY: opts.oppositeNode.y,
-        borderRadius: opts.node._borderRadius ?? 0,
+        borderRadius: opts.node._shape === "text" ? 0 : (opts.node._borderRadius ?? 0),
       });
       break;
     }

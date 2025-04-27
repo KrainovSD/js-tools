@@ -11,7 +11,7 @@ import {
   nodeSizeGetter,
 } from "../lib";
 import type { GraphState, NodeOptionsInterface } from "../types";
-import { drawText } from "./draw-text";
+import { drawText, getTextLines } from "./draw-text";
 
 export function getDrawNode<
   NodeData extends Record<string, unknown>,
@@ -110,7 +110,10 @@ export function getDrawNode<
             this.highlightProgress,
           );
         }
-        if (this.nodeSettings.highlightByLinkNodeSizing && nodeOptions.shape === "square") {
+        if (
+          this.nodeSettings.highlightByLinkNodeSizing &&
+          (nodeOptions.shape === "square" || nodeOptions.shape === "text")
+        ) {
           const widthCoefficient = animationByProgress(
             1,
             this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
@@ -200,7 +203,12 @@ export function getDrawNode<
             this.highlightProgress,
           );
         }
-        if (this.nodeSettings.highlightByLinkNodeSizing && nodeOptions.shape === "square") {
+        if (
+          this.nodeSettings.highlightByLinkNodeSizing &&
+          (nodeOptions.shape === "square" ||
+            nodeOptions.shape === "text" ||
+            nodeOptions.shape === "icon")
+        ) {
           const widthCoefficient = animationByProgress(
             1,
             this.nodeSettings.highlightByLinkNodeSizingAdditionalCoefficient,
@@ -244,6 +252,7 @@ export function getDrawNode<
       }
     }
 
+    /** Flex radius */
     const radius =
       nodeOptions.shape === "circle"
         ? nodeRadiusGetter({
@@ -254,19 +263,48 @@ export function getDrawNode<
             linkCount: node.linkCount,
           })
         : radiusInitial;
+    /** Flex size */
+    let height: number = heightInitial;
+    let width: number = widthInitial;
+    if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
+      const size = nodeSizeGetter({
+        heightInitial,
+        widthInitial,
+        linkCount: node.linkCount,
+        sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
+        sizeFactor: this.nodeSettings.nodeSizeFactor,
+        sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+      });
+      width = size.width;
+      height = size.height;
+    }
+    if (nodeOptions.shape === "text" && nodeOptions.text) {
+      const lines =
+        this.cachedNodeText[node.id] ??
+        getTextLines({
+          context: this.context,
+          text: nodeOptions.text,
+          textAlign: nodeOptions.textAlign,
+          textColor: nodeOptions.textColor,
+          textFont: nodeOptions.textFont,
+          textSize,
+          maxWidth: width,
+          textStyle: nodeOptions.textStyle,
+          textWeight,
+        });
 
-    const { height, width } =
-      nodeOptions.shape === "square"
-        ? nodeSizeGetter({
-            heightInitial,
-            widthInitial,
-            linkCount: node.linkCount,
-            sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
-            sizeFactor: this.nodeSettings.nodeSizeFactor,
-            sizeFlexible: this.nodeSettings.nodeSizeFlexible,
-          })
-        : { width: widthInitial, height: heightInitial };
+      if (!this.cachedNodeText[node.id]) {
+        this.cachedNodeText[node.id] = lines;
+      }
 
+      height =
+        lines.length * textSize +
+        (lines.length - 1) * nodeOptions.textGap +
+        nodeOptions.textNodeYPadding;
+      width += nodeOptions.textNodeXPadding;
+    }
+
+    /** Node parameters */
     node._radius = radius;
     node._width = width;
     node._height = height;
@@ -274,9 +312,9 @@ export function getDrawNode<
       isNumber(nodeOptions.borderRadius) && nodeOptions.borderRadius > 0
         ? Math.min(nodeOptions.borderRadius, nodeOptions.width / 2, nodeOptions.height / 2)
         : 0;
-
     node._shape = nodeOptions.shape ?? "circle";
 
+    /** Node Visibility */
     if (
       !isNodeVisible({
         height: this.height,
@@ -291,6 +329,7 @@ export function getDrawNode<
     }
     node._visible = true;
 
+    /** Node draw */
     nodeRenders.push(() => {
       if (!this.context || !node.x || !node.y) return;
 
@@ -313,6 +352,31 @@ export function getDrawNode<
             height,
             node._borderRadius,
           );
+          break;
+        }
+        case "text": {
+          if (this.nodeSettings.textNodeDebug) {
+            this.context.strokeRect(node.x - width / 2, node.y - height / 2, width, height);
+          }
+
+          const lines = this.cachedNodeText[node.id];
+          if (nodeOptions.text && lines)
+            drawText({
+              id: node.id,
+              cachedNodeText: this.cachedNodeText,
+              context: this.context,
+              text: nodeOptions.text,
+              textAlign: nodeOptions.textAlign,
+              textColor: nodeOptions.textColor,
+              textFont: nodeOptions.textFont,
+              textSize,
+              x: node.x,
+              y: node.y + textSize / 4 - (lines.length - 1) * (textSize / 2),
+              maxWidth: widthInitial,
+              textStyle: nodeOptions.textStyle,
+              textWeight,
+              textGap: nodeOptions.textGap,
+            });
           break;
         }
         default: {
@@ -346,8 +410,8 @@ export function getDrawNode<
       });
     }
 
-    /** text */
-    if (nodeOptions.textVisible && nodeOptions.text) {
+    /** Text draw */
+    if (nodeOptions.textVisible && nodeOptions.text && nodeOptions.shape !== "text") {
       textRenders.push(() => {
         if (nodeOptions.textDraw) {
           nodeOptions.textDraw(

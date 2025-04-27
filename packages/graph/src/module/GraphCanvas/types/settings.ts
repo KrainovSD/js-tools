@@ -100,6 +100,7 @@ export type NodeSettingsInterface<
   nodeSizeFlexible?: boolean;
   nodeSizeCoefficient?: number;
   nodeSizeFactor?: number;
+  textNodeDebug?: boolean;
   options?:
     | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface<NodeData, LinkData>>
     | NodeOptionsInterface<NodeData, LinkData>;
@@ -146,6 +147,8 @@ export type NodeOptionsInterface<
   radius?: number;
   alpha?: number;
   color?: string;
+  textNodeYPadding?: number;
+  textNodeXPadding?: number;
   textVisible?: boolean;
   text?: string | null;
   textAlpha?: number;

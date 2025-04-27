@@ -19,4 +19,4 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
 
 export type NodeShape = "circle" | "square" | "text" | "icon";
 
-export type CachedNodeTextInterface = Record<string | number, string[]>;
+export type CachedNodeTextInterface = Record<string | number, string[] | undefined>;

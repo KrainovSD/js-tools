@@ -16,14 +16,15 @@ export function isOverlapsNode<NodeData extends Record<string, unknown>>(
 
       return isOverX && isOverY;
     }
-    case "square": {
+    case "square":
+    case "text": {
       const width = node._width ?? 5;
       const height = node._height ?? 5;
       const borderRadius = node._borderRadius ?? 0;
       const overlaps =
         Math.abs(pointerX - node.x) <= width / 2 && Math.abs(pointerY - node.y) <= height / 2;
 
-      if (borderRadius != undefined && borderRadius > 0 && overlaps) {
+      if (node._shape !== "text" && borderRadius != undefined && borderRadius > 0 && overlaps) {
         return isCursorOverRoundedRect(
           pointerX,
           pointerY,
