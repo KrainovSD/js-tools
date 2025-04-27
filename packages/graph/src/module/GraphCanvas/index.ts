@@ -6,7 +6,7 @@ export {
   drawText,
   linkIterationExtractor,
   linkOptionsGetter,
-  calculateLinkPositionByRadius,
+  calculateLinkPositionByNode,
   animationByProgress,
   getParticlePosition,
   linkByPointerGetter,

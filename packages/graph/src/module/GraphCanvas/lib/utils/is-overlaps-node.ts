@@ -2,14 +2,32 @@ import type { NodeInterface } from "@/types";
 
 export function isOverlapsNode<NodeData extends Record<string, unknown>>(
   node: NodeInterface<NodeData>,
-  radius: number,
   pointerX: number,
   pointerY: number,
+  radius: number | undefined,
 ) {
   if (node.x == undefined || node.y == undefined) return false;
 
-  const isOverX = node.x - radius <= pointerX && pointerX <= node.x + radius;
-  const isOverY = node.y - radius <= pointerY && pointerY <= node.y + radius;
+  switch (node._shape) {
+    case "circle": {
+      const nodeRadius = node._radius ?? radius ?? 5;
+      const isOverX = node.x - nodeRadius <= pointerX && pointerX <= node.x + nodeRadius;
+      const isOverY = node.y - nodeRadius <= pointerY && pointerY <= node.y + nodeRadius;
 
-  return isOverX && isOverY;
+      return isOverX && isOverY;
+    }
+    case "square": {
+      const width = node._width ?? 5;
+      const height = node._height ?? 5;
+
+      return Math.abs(pointerX - node.x) <= width / 2 && Math.abs(pointerY - node.y) <= height / 2;
+    }
+    default: {
+      const nodeRadius = node._radius ?? radius ?? 5;
+      const isOverX = node.x - nodeRadius <= pointerX && pointerX <= node.x + nodeRadius;
+      const isOverY = node.y - nodeRadius <= pointerY && pointerY <= node.y + nodeRadius;
+
+      return isOverX && isOverY;
+    }
+  }
 }

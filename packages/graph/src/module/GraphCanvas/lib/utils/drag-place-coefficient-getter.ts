@@ -5,9 +5,8 @@ export function dragPlaceCoefficientGetter<NodeData extends Record<string, unkno
   node: NodeInterface<NodeData>,
   pointerX: number,
   pointerY: number,
-  radius: number,
 ): number | undefined {
   if (!node.x || !node.y) return undefined;
 
-  if (isOverlapsNode(node, radius, pointerX, pointerY)) return node.index;
+  if (isOverlapsNode(node, pointerX, pointerY, undefined)) return node.index;
 }

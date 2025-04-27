@@ -157,16 +157,6 @@ export function initCollideForce<
         "collide",
         forceCollide<NodeInterface<NodeData>>()
           .radius((node, index) => {
-            if (this.forceSettings.collideRadius) {
-              return nodeIterationExtractor(
-                node,
-                index,
-                this.nodes,
-                this.state,
-                this.forceSettings.collideRadius,
-                undefined,
-              );
-            }
             const nodeOptions = nodeIterationExtractor(
               node,
               index,
@@ -175,15 +165,60 @@ export function initCollideForce<
               this.nodeSettings.options ?? {},
               nodeOptionsGetter,
             );
-            const radius = nodeRadiusGetter({
-              radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-              radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
-              radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
-              radiusFactor: this.nodeSettings.nodeRadiusFactor,
-              linkCount: node.linkCount,
-            });
 
-            return radius + this.forceSettings.collideAdditionalRadius;
+            switch (nodeOptions.shape) {
+              case "circle": {
+                if (this.forceSettings.collideRadius) {
+                  return nodeIterationExtractor(
+                    node,
+                    index,
+                    this.nodes,
+                    this.state,
+                    this.forceSettings.collideRadius,
+                    undefined,
+                  );
+                }
+                const radius = nodeRadiusGetter({
+                  radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
+                  radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
+                  radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
+                  radiusFactor: this.nodeSettings.nodeRadiusFactor,
+                  linkCount: node.linkCount,
+                });
+
+                return radius + this.forceSettings.collideAdditionalRadius;
+              }
+              case "square": {
+                return (
+                  Math.sqrt(
+                    nodeOptions.width * nodeOptions.width + nodeOptions.height * nodeOptions.height,
+                  ) /
+                    2 +
+                  this.forceSettings.collideAdditionalRadius
+                );
+              }
+              default: {
+                if (this.forceSettings.collideRadius) {
+                  return nodeIterationExtractor(
+                    node,
+                    index,
+                    this.nodes,
+                    this.state,
+                    this.forceSettings.collideRadius,
+                    undefined,
+                  );
+                }
+                const radius = nodeRadiusGetter({
+                  radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
+                  radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
+                  radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
+                  radiusFactor: this.nodeSettings.nodeRadiusFactor,
+                  linkCount: node.linkCount,
+                });
+
+                return radius + this.forceSettings.collideAdditionalRadius;
+              }
+            }
           })
           .strength(this.forceSettings.collideStrength)
           .iterations(this.forceSettings.collideIterations),

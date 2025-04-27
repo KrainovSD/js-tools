@@ -3,7 +3,7 @@ import { greatest } from "d3-array";
 import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import type { GraphCanvas } from "../GraphCanvas";
-import { nodeIterationExtractor, nodeOptionsGetter, nodeRadiusGetter, pointerGetter } from "../lib";
+import { pointerGetter } from "../lib";
 import type { DragEventInterface } from "../types";
 
 export function initDnd<
@@ -23,34 +23,10 @@ export function initDnd<
       const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
       const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
 
-      let index = 0;
-
       return greatest(this.nodes, (node) => {
         if (!node.x || !node.y || (isBoolean(node.drag) && !node.drag)) return undefined;
 
-        let radius = node._radius;
-        if (!radius) {
-          const nodeOptions = nodeIterationExtractor(
-            node,
-            index,
-            this.nodes,
-            this.state,
-            this.nodeSettings.options ?? {},
-            nodeOptionsGetter,
-          );
-
-          radius = nodeRadiusGetter({
-            radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-            radiusInitial: nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial,
-            radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
-            radiusFactor: this.nodeSettings.nodeRadiusFactor,
-            linkCount: node.linkCount,
-          });
-        }
-
-        index++;
-
-        return this.graphSettings.dragPlaceCoefficient(node, pointerX, pointerY, radius);
+        return this.graphSettings.dragPlaceCoefficient(node, pointerX, pointerY);
       });
     })
     .on("start", (event: DragEventInterface<NodeData>) => {

@@ -7,10 +7,16 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   group?: number | string;
   neighbors?: (string | number)[];
   _radius?: number;
+  _width?: number;
+  _height?: number;
+  _borderRadius?: number;
   _visible?: boolean;
+  _shape?: NodeShape;
   name?: string;
-  data?: NodeData;
   drag?: boolean;
+  data?: NodeData;
 }
+
+export type NodeShape = "circle" | "square" | "text" | "icon";
 
 export type CachedNodeTextInterface = Record<string | number, string[]>;

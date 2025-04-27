@@ -2,7 +2,7 @@ import type { LinkInterface } from "@/types";
 import type { GraphCanvas } from "../GraphCanvas";
 import {
   animationByProgress,
-  calculateLinkPositionByRadius,
+  calculateLinkPositionByNode,
   getParticlePosition,
   linkIterationExtractor,
   linkOptionsGetter,
@@ -133,7 +133,7 @@ export function getDrawLink<
     let linkDistance = 0;
     if (this.linkSettings.pretty || this.linkSettings.particleFlexSpeed) {
       const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
-      const position = calculateLinkPositionByRadius(link, isHasArrow ? linkOptions.arrowSize : 0);
+      const position = calculateLinkPositionByNode(link, isHasArrow ? linkOptions.arrowSize : 0);
 
       if (position) {
         xStart = position.x1;
@@ -224,7 +224,7 @@ export function getDrawLink<
         x2: xEnd,
         y1: yStart,
         y2: yEnd,
-      } = calculateLinkPositionByRadius(link) ?? {
+      } = calculateLinkPositionByNode(link) ?? {
         x1: 0,
         x2: 0,
         y1: 0,

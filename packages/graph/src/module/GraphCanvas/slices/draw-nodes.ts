@@ -212,23 +212,28 @@ export function getDrawNode<
       }
     }
 
-    const radius = nodeRadiusGetter({
-      radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-      radiusInitial,
-      radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
-      radiusFactor: this.nodeSettings.nodeRadiusFactor,
-      linkCount: node.linkCount,
-    });
+    const radius =
+      nodeOptions.shape === "circle" || !nodeOptions.shape
+        ? nodeRadiusGetter({
+            radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
+            radiusInitial,
+            radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
+            radiusFactor: this.nodeSettings.nodeRadiusFactor,
+            linkCount: node.linkCount,
+          })
+        : radiusInitial;
 
     node._radius = radius;
+    node._width = nodeOptions.width;
+    node._height = nodeOptions.height;
+    node._shape = nodeOptions.shape ?? "circle";
+
     if (
       !isNodeVisible({
         height: this.height,
         width: this.width,
-        x: node.x,
-        y: node.y,
-        radius,
         transform: this.areaTransform,
+        node,
       })
     ) {
       node._visible = false;
@@ -241,14 +246,31 @@ export function getDrawNode<
       if (!this.context || !node.x || !node.y) return;
 
       this.context.beginPath();
-
       this.context.globalAlpha = alpha;
-
-      /** circle */
       this.context.lineWidth = nodeOptions.borderWidth;
       this.context.strokeStyle = nodeOptions.borderColor;
       this.context.fillStyle = color;
-      this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+
+      switch (nodeOptions.shape) {
+        case "circle": {
+          this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+          break;
+        }
+        case "square": {
+          this.context.roundRect(
+            node.x - nodeOptions.width / 2,
+            node.y - nodeOptions.height / 2,
+            nodeOptions.width,
+            nodeOptions.height,
+            nodeOptions.borderRadius,
+          );
+          break;
+        }
+        default: {
+          this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+          break;
+        }
+      }
 
       this.context.fill();
       this.context.stroke();

@@ -20,7 +20,6 @@ export function initPointer<
 
     if (checkHighlightNode) {
       currentNode = nodeByPointerGetter({
-        nodeSettings: this.nodeSettings,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -84,7 +83,6 @@ export function initPointer<
 
     if (!currentNode && !checkHighlightNode)
       currentNode = nodeByPointerGetter({
-        nodeSettings: this.nodeSettings,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -112,7 +110,6 @@ export function initPointer<
       return;
 
     const currentNode = nodeByPointerGetter({
-      nodeSettings: this.nodeSettings,
       areaRect: this.areaRect,
       areaTransform: this.areaTransform,
       mouseEvent: event,
@@ -137,7 +134,6 @@ export function initPointer<
     if (!this.listeners.onContextMenu) return;
 
     const currentNode = nodeByPointerGetter({
-      nodeSettings: this.nodeSettings,
       areaRect: this.areaRect,
       areaTransform: this.areaTransform,
       mouseEvent: event,
@@ -162,7 +158,6 @@ export function initPointer<
     if (!this.listeners.onDoubleClick) return;
 
     const currentNode = nodeByPointerGetter({
-      nodeSettings: this.nodeSettings,
       areaRect: this.areaRect,
       areaTransform: this.areaTransform,
       mouseEvent: event,
@@ -186,7 +181,6 @@ export function initPointer<
     if (this.isDragging || !this.listeners.onClick || ("button" in event && event.button !== 0))
       return;
     const currentNode = nodeByPointerGetter({
-      nodeSettings: this.nodeSettings,
       areaRect: this.areaRect,
       areaTransform: this.areaTransform,
       mouseEvent: event,

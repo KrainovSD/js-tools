@@ -1,4 +1,4 @@
-import type { LinkInterface, NodeInterface } from "@/types";
+import type { LinkInterface, NodeInterface, NodeShape } from "@/types";
 import type { GraphState } from "./graph";
 
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
@@ -17,7 +17,6 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
     node: NodeInterface<NodeData>,
     pxEvent: number,
     pyEvent: number,
-    radius: number,
   ) => number | undefined;
   showDrawTime?: boolean;
   showDrawTimeEveryTick?: boolean;
@@ -134,7 +133,10 @@ export type NodeOptionsInterface<
         state: GraphState<NodeData, LinkData>,
       ) => void)
     | null;
-
+  shape?: NodeShape;
+  width?: number;
+  height?: number;
+  borderRadius?: number | [number, number, number, number];
   borderColor?: string;
   borderWidth?: number;
   radius?: number;

@@ -104,6 +104,10 @@ export const NODE_OPTIONS: Omit<
   | "textDraw"
   | "textExtraDraw"
 > = {
+  shape: "square",
+  height: 10,
+  width: 15,
+  borderRadius: 0,
   radius: 4,
   alpha: 1,
   borderWidth: 0.1,
@@ -131,7 +135,7 @@ export const LINK_SETTINGS: Omit<Required<LinkSettingsInterface<NodeData, LinkDa
   highlightByNodeArrowFading: true,
   highlightByLinkLinkFading: false,
   highlightByLinkArrowFading: false,
-  particleFlexSpeedCoefficient: 2,
+  particleFlexSpeedCoefficient: 4,
   hoverLinkThreshold: 2,
   highlightByNodeLinkFadingMin: 0.21,
   highlightByNodeArrowFadingMin: 0.21,
@@ -171,4 +175,6 @@ export const COMMON_SETTINGS = {
   nodeTextShiftYMin: 2.5,
   nodeTextShiftYMax: 4,
   nodeTextChangeStepCount: 200,
+  nodeRadius: 5,
+  nodeSize: 5,
 };
