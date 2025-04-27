@@ -244,6 +244,19 @@
 )}
   {#each inputs as input (input.id)}
     <Flex gap={5} align={"center"}>
+      {#if input.type === "select"}
+        <select
+          id="colors"
+          name="colors"
+          value={input.initialValue}
+          onchange={(event) => onChange(input.id, event.currentTarget.value)}
+        >
+          {#each input.options as option (option.value)}
+            <option value={option.value}>{option.label}</option>
+          {/each}
+        </select>
+        <span>{input.label ?? input.id}</span>
+      {/if}
       {#if input.type === "range"}
         <input
           class={[styles.input, styles.tooltip]}

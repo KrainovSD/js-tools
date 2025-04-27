@@ -3,7 +3,6 @@ export {
   nodeRadiusGetter,
   nodeOptionsGetter,
   nodeIterationExtractor,
-  drawText,
   linkIterationExtractor,
   linkOptionsGetter,
   calculateLinkPositionByNode,
@@ -12,4 +11,5 @@ export {
   linkByPointerGetter,
   nodeByPointerGetter,
 } from "./lib";
+export { drawText, getDrawLink, getDrawNode } from "./slices";
 export * from "./types";

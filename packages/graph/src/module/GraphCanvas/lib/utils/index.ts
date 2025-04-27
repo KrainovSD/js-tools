@@ -4,7 +4,6 @@ export * from "./is-overlaps-node";
 export * from "./link-iteration-extractor";
 export * from "./node-by-pointer-getter";
 export * from "./node-iteration-extractor";
-export * from "./draw-text";
 export * from "./calculate-link-position-by-node";
 export * from "./animation-by-progress";
 export * from "./is-node-visible";

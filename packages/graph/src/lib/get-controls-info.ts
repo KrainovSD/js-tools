@@ -329,6 +329,15 @@ export function getNodeSettingControls<
       label: "Дополнительный размер при анимации ноды",
     },
     {
+      id: "highlightByNodeNodeSizingAdditionalCoefficient",
+      initialValue: NODE_SETTINGS.highlightByNodeNodeSizingAdditionalCoefficient,
+      max: 10,
+      min: 0.01,
+      step: 0.01,
+      type: "range",
+      label: "Дополнительный размер квадрата при анимации ноды",
+    },
+    {
       id: "highlightByNodeNodeColorFadingMin",
       initialValue: NODE_SETTINGS.highlightByNodeNodeColorFadingMin,
       max: 1,
@@ -408,6 +417,15 @@ export function getNodeSettingControls<
       step: 0.01,
       type: "range",
       label: "Дополнительный размер при анимации связи",
+    },
+    {
+      id: "highlightByLinkNodeSizingAdditionalCoefficient",
+      initialValue: NODE_SETTINGS.highlightByLinkNodeSizingAdditionalCoefficient,
+      max: 10,
+      min: 0.01,
+      step: 0.01,
+      type: "range",
+      label: "Дополнительный размер квадрата при анимации связи",
     },
     {
       id: "highlightByLinkNodeColorFadingMin",
@@ -496,6 +514,18 @@ export function getNodeOptionsControls<
     keyof NodeOptionsInterface<NodeData, LinkData>
   >[] = [
     {
+      id: "shape",
+      type: "select",
+      initialValue: NODE_OPTIONS.shape,
+      label: "Форма",
+      options: [
+        { label: "Картинки", value: "icon" },
+        { label: "Круг", value: "circle" },
+        { label: "Прямоугольник", value: "square" },
+        { label: "Текст", value: "text" },
+      ],
+    },
+    {
       id: "radius",
       type: "range",
       max: 50,
@@ -503,6 +533,33 @@ export function getNodeOptionsControls<
       step: 1,
       label: "Радиус",
       initialValue: NODE_OPTIONS.radius,
+    },
+    {
+      id: "width",
+      type: "range",
+      max: 50,
+      min: 1,
+      step: 1,
+      label: "Ширина",
+      initialValue: NODE_OPTIONS.width,
+    },
+    {
+      id: "height",
+      type: "range",
+      max: 50,
+      min: 1,
+      step: 1,
+      label: "Высота",
+      initialValue: NODE_OPTIONS.height,
+    },
+    {
+      id: "borderRadius",
+      type: "range",
+      max: 50,
+      min: 0,
+      step: 1,
+      label: "Радиус границы",
+      initialValue: NODE_OPTIONS.borderRadius,
     },
     {
       id: "alpha",

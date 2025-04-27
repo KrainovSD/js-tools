@@ -66,6 +66,7 @@ export type NodeSettingsInterface<
   highlightByNodeNodeFadingMin?: number;
   highlightByNodeNodeColorFadingMin?: number;
   highlightByNodeNodeSizingAdditional?: number;
+  highlightByNodeNodeSizingAdditionalCoefficient?: number;
   highlightByNodeTextFadingMin?: number;
   highlightByNodeTextSizingAdditional?: number;
   highlightByNodeTextShiftXAdditional?: number;
@@ -76,6 +77,7 @@ export type NodeSettingsInterface<
   highlightByLinkNodeColorFadingMin?: number;
   highlightByLinkTextFadingMin?: number;
   highlightByLinkNodeSizingAdditional?: number;
+  highlightByLinkNodeSizingAdditionalCoefficient?: number;
   highlightByLinkTextSizingAdditional?: number;
   highlightByLinkTextShiftXAdditional?: number;
   highlightByLinkTextShiftYAdditional?: number;
@@ -136,7 +138,7 @@ export type NodeOptionsInterface<
   shape?: NodeShape;
   width?: number;
   height?: number;
-  borderRadius?: number | [number, number, number, number];
+  borderRadius?: number;
   borderColor?: string;
   borderWidth?: number;
   radius?: number;

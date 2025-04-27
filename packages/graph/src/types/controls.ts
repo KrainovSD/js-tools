@@ -22,7 +22,16 @@ type GraphSettingsInputColorBox<I extends string> = {
   label: string;
 };
 
+type GraphSettingsInputSelect<I extends string> = {
+  type: "select";
+  id: I;
+  initialValue: string;
+  label: string;
+  options: { label: string; value: string }[];
+};
+
 export type GraphSettingsInputInterface<I extends string> =
   | GraphSettingsInputRange<I>
   | GraphSettingsInputCheckBox<I>
-  | GraphSettingsInputColorBox<I>;
+  | GraphSettingsInputColorBox<I>
+  | GraphSettingsInputSelect<I>;

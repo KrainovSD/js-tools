@@ -1,15 +1,16 @@
+import { isNumber } from "@krainovsd/js-helpers";
 import { colorToRgb, extractRgb, fadeRgb, rgbAnimationByProgress } from "@/lib";
 import type { NodeInterface } from "@/types";
 import type { GraphCanvas } from "../GraphCanvas";
 import {
   animationByProgress,
-  drawText,
   isNodeVisible,
   nodeIterationExtractor,
   nodeOptionsGetter,
   nodeRadiusGetter,
 } from "../lib";
 import type { GraphState, NodeOptionsInterface } from "../types";
+import { drawText } from "./draw-text";
 
 export function getDrawNode<
   NodeData extends Record<string, unknown>,
@@ -54,6 +55,8 @@ export function getDrawNode<
     let alpha = nodeOptions.alpha;
     let color = nodeOptions.color;
     let radiusInitial = nodeOptions.radius ?? this.nodeSettings.nodeRadiusInitial;
+    let width = nodeOptions.width;
+    let height = nodeOptions.height;
     let textAlpha = nodeOptions.textAlpha;
     let textSize = nodeOptions.textSize;
     let textShiftX = nodeOptions.textShiftX;
@@ -99,12 +102,26 @@ export function getDrawNode<
       ) {
         /** Highlighted */
 
-        if (this.nodeSettings.highlightByNodeNodeSizing) {
+        if (this.nodeSettings.highlightByNodeNodeSizing && nodeOptions.shape === "circle") {
           radiusInitial = animationByProgress(
             radiusInitial,
             this.nodeSettings.highlightByNodeNodeSizingAdditional,
             this.highlightProgress,
           );
+        }
+        if (this.nodeSettings.highlightByLinkNodeSizing && nodeOptions.shape === "square") {
+          const widthCoefficient = animationByProgress(
+            1,
+            this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
+            this.highlightProgress,
+          );
+          const heightCoefficient = animationByProgress(
+            1,
+            this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
+            this.highlightProgress,
+          );
+          width *= widthCoefficient;
+          height *= heightCoefficient;
         }
         if (this.nodeSettings.highlightByNodeTextSizing) {
           textSize = animationByProgress(
@@ -175,12 +192,26 @@ export function getDrawNode<
       } else {
         /** Highlighted */
 
-        if (this.nodeSettings.highlightByLinkNodeSizing) {
+        if (this.nodeSettings.highlightByLinkNodeSizing && nodeOptions.shape === "circle") {
           radiusInitial = animationByProgress(
             radiusInitial,
             this.nodeSettings.highlightByLinkNodeSizingAdditional,
             this.highlightProgress,
           );
+        }
+        if (this.nodeSettings.highlightByLinkNodeSizing && nodeOptions.shape === "square") {
+          const widthCoefficient = animationByProgress(
+            1,
+            this.nodeSettings.highlightByLinkNodeSizingAdditionalCoefficient,
+            this.highlightProgress,
+          );
+          const heightCoefficient = animationByProgress(
+            1,
+            this.nodeSettings.highlightByLinkNodeSizingAdditionalCoefficient,
+            this.highlightProgress,
+          );
+          width *= widthCoefficient;
+          height *= heightCoefficient;
         }
         if (this.nodeSettings.highlightByLinkTextSizing) {
           textSize = animationByProgress(
@@ -224,8 +255,13 @@ export function getDrawNode<
         : radiusInitial;
 
     node._radius = radius;
-    node._width = nodeOptions.width;
-    node._height = nodeOptions.height;
+    node._width = width;
+    node._height = height;
+    node._borderRadius =
+      isNumber(nodeOptions.borderRadius) && nodeOptions.borderRadius > 0
+        ? Math.min(nodeOptions.borderRadius, nodeOptions.width / 2, nodeOptions.height / 2)
+        : 0;
+
     node._shape = nodeOptions.shape ?? "circle";
 
     if (
@@ -258,11 +294,11 @@ export function getDrawNode<
         }
         case "square": {
           this.context.roundRect(
-            node.x - nodeOptions.width / 2,
-            node.y - nodeOptions.height / 2,
-            nodeOptions.width,
-            nodeOptions.height,
-            nodeOptions.borderRadius,
+            node.x - width / 2,
+            node.y - height / 2,
+            width,
+            height,
+            node._borderRadius,
           );
           break;
         }
@@ -325,6 +361,14 @@ export function getDrawNode<
         this.context.beginPath();
         this.context.globalAlpha = textAlpha;
 
+        let y = node.y + textShiftY;
+        if (nodeOptions.shape === "circle") {
+          y += radius;
+        }
+        if (nodeOptions.shape === "square") {
+          y += height / 2;
+        }
+
         drawText({
           id: node.id,
           cachedNodeText: this.cachedNodeText,
@@ -335,7 +379,7 @@ export function getDrawNode<
           textFont: nodeOptions.textFont,
           textSize,
           x: node.x + textShiftX,
-          y: node.y + radius + textShiftY,
+          y,
           maxWidth: textWidth,
           textStyle: nodeOptions.textStyle,
           textWeight,

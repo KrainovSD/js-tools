@@ -229,6 +229,11 @@ export class GraphCanvas<
       this.nodeSettings = nodeSettingsGetter(options.nodeSettings, this.nodeSettings);
       this.cachedNodeText = {};
       this.nodeOptionsCache = {};
+      initCollideForce.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof initCollideForce>,
+        ReturnType<typeof initCollideForce>
+      >(this, true);
     }
 
     if (options.forceSettings) {
