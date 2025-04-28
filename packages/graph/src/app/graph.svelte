@@ -84,6 +84,7 @@
             console.log("simulation end");
           },
         },
+
         nodeSettings: {
           options: getNodeSettings(NODE_OPTIONS),
         },

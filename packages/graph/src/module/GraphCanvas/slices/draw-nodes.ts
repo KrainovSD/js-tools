@@ -282,7 +282,6 @@ export function getDrawNode<
         sizeFactor: this.nodeSettings.nodeSizeFactor,
         sizeFlexible: this.nodeSettings.nodeSizeFlexible,
       });
-      width = size.width;
       textSize *= size.additionalSizeCoefficient;
     }
     /** Size by text in textNode */
@@ -314,15 +313,25 @@ export function getDrawNode<
         this.cachedNodeTextMaxWidths[node.id] = maxWidths;
       }
 
-      const textSizeCoefficient = textSize / nodeOptions.textSize;
+      const textSizeCoefficient = 1 + textSize / maxWidths[1];
       const maxSizeDiff = maxWidths[0] * textSizeCoefficient;
+
+      // if (textSize > 4)
+      //   console.log({
+      //     textSize,
+      //     initialTextSize: nodeOptions.textSize,
+      //     textSizeCoefficient,
+      //     width,
+      //     maxSizeDiff,
+      //     maxWidthOld: maxWidths[0],
+      //   });
 
       height =
         lines.length * textSize +
         (lines.length - 1) * nodeOptions.textGap +
         nodeOptions.textNodeYPadding;
 
-      width = maxSizeDiff + nodeOptions.textNodeXPadding;
+      width = maxWidths[0] + nodeOptions.textNodeXPadding;
     }
 
     /** Node parameters */
