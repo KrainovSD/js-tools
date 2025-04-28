@@ -32,7 +32,7 @@
   } from "@/module/GraphCanvas";
   import { downloadJson, isArray, isObject, jsonParse, readFile } from "@krainovsd/js-helpers";
   import type { LinkInterface, NodeInterface } from "@/types";
-  import { getNodeNeighbors } from "./lib";
+  import { getLinkSettings, getNodeNeighbors, getNodeSettings } from "./lib";
 
   type GraphInterface = {
     nodes: NodeInterface<NodeData>[];
@@ -212,9 +212,7 @@
       store.changeSettings({
         nodeSettings: {
           ...nodeSettings,
-          options: (node) => {
-            return options;
-          },
+          options: getNodeSettings(options),
         },
       });
     }
@@ -228,9 +226,7 @@
       store.changeSettings({
         linkSettings: {
           ...linkSettings,
-          options: (link) => {
-            return options;
-          },
+          options: getLinkSettings(options),
         },
       });
     }

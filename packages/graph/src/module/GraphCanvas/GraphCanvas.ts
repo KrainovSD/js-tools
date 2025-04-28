@@ -1,7 +1,7 @@
 import { forceLink } from "d3-force";
 import { type ZoomTransform, zoomIdentity } from "d3-zoom";
 import type { LinkInterface } from "@/types/links";
-import type { CachedNodeTextInterface, NodeInterface } from "@/types/nodes";
+import type { CachedNodeTextInterface, CachedNodeTextMaxWidth, NodeInterface } from "@/types/nodes";
 import {
   forceSettingsGetter,
   graphSettingsGetter,
@@ -85,6 +85,8 @@ export class GraphCanvas<
   protected eventAbortController: AbortController;
 
   protected cachedNodeText: CachedNodeTextInterface = {};
+
+  protected cachedNodeTextMaxWidths: CachedNodeTextMaxWidth = {};
 
   protected linkOptionsCache: Record<string, Required<LinkOptionsInterface<NodeData, LinkData>>> =
     {};
@@ -228,6 +230,7 @@ export class GraphCanvas<
     if (options.nodeSettings) {
       this.nodeSettings = nodeSettingsGetter(options.nodeSettings, this.nodeSettings);
       this.cachedNodeText = {};
+      this.cachedNodeTextMaxWidths = {};
       this.nodeOptionsCache = {};
       initCollideForce.call<
         GraphCanvas<NodeData, LinkData>,
@@ -251,6 +254,7 @@ export class GraphCanvas<
     this.nodeOptionsCache = {};
     this.linkOptionsCache = {};
     this.cachedNodeText = {};
+    this.cachedNodeTextMaxWidths = {};
   }
 
   tick() {
@@ -283,7 +287,7 @@ export class GraphCanvas<
 
     this.clearHTMLElements();
     this.clearState();
-    this.clearDataDependencies();
+    this.clearCache();
   }
 
   protected clearHTMLElements() {
@@ -317,14 +321,8 @@ export class GraphCanvas<
     this.highlightDrawing = false;
   }
 
-  protected clearDataDependencies() {
-    this.cachedNodeText = {};
-    this.nodeOptionsCache = {};
-    this.linkOptionsCache = {};
-  }
-
   protected updateData(alpha?: number) {
-    this.clearDataDependencies();
+    this.clearCache();
 
     if (this.simulation) {
       initCollideForce.call<

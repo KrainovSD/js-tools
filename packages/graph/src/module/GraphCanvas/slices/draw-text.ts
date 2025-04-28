@@ -55,7 +55,7 @@ export function drawText({
     return;
   }
 
-  const lines = getTextLines({
+  const { lines } = getTextLines({
     context,
     maxWidth,
     text,
@@ -103,6 +103,7 @@ export function getTextLines({
   const lines: string[] = [];
   let lineWidth = 0;
   let line = "";
+  let currentMaxSize = 0;
 
   for (const word of text.split(" ")) {
     const size = context.measureText(word).width;
@@ -114,7 +115,10 @@ export function getTextLines({
       continue;
     }
     if (lineWidth > maxWidth) {
-      lineWidth = 0;
+      const initialSize = lineWidth - size - spaceWidth;
+      if (initialSize > currentMaxSize) currentMaxSize = initialSize;
+
+      lineWidth = size;
       lines.push(line);
       line = word;
     } else {
@@ -124,6 +128,7 @@ export function getTextLines({
   }
 
   if (line !== "") lines.push(line);
+  if (lineWidth > currentMaxSize) currentMaxSize = lineWidth;
 
-  return lines;
+  return { lines, currentMaxSize };
 }

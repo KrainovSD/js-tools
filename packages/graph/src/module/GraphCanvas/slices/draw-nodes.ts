@@ -64,6 +64,7 @@ export function getDrawNode<
     let textShiftY = nodeOptions.textShiftY;
     let textWeight = nodeOptions.textWeight;
     let textWidth = nodeOptions.textWidth;
+    let sizeCoefficient = 1;
     /** Node Highlight */
     if (this.highlightedNeighbors && this.highlightedNode) {
       /** Not highlighted */
@@ -111,21 +112,17 @@ export function getDrawNode<
           );
         }
         if (
-          this.nodeSettings.highlightByLinkNodeSizing &&
+          this.nodeSettings.highlightByNodeNodeSizing &&
           (nodeOptions.shape === "square" || nodeOptions.shape === "text")
         ) {
-          const widthCoefficient = animationByProgress(
-            1,
+          sizeCoefficient = animationByProgress(
+            sizeCoefficient,
             this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
             this.highlightProgress,
           );
-          const heightCoefficient = animationByProgress(
-            1,
-            this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
-            this.highlightProgress,
-          );
-          widthInitial *= widthCoefficient;
-          heightInitial *= heightCoefficient;
+
+          widthInitial *= sizeCoefficient;
+          heightInitial *= sizeCoefficient;
         }
         if (this.nodeSettings.highlightByNodeTextSizing) {
           textSize = animationByProgress(
@@ -209,18 +206,14 @@ export function getDrawNode<
             nodeOptions.shape === "text" ||
             nodeOptions.shape === "icon")
         ) {
-          const widthCoefficient = animationByProgress(
-            1,
-            this.nodeSettings.highlightByLinkNodeSizingAdditionalCoefficient,
+          sizeCoefficient = animationByProgress(
+            sizeCoefficient,
+            this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
             this.highlightProgress,
           );
-          const heightCoefficient = animationByProgress(
-            1,
-            this.nodeSettings.highlightByLinkNodeSizingAdditionalCoefficient,
-            this.highlightProgress,
-          );
-          widthInitial *= widthCoefficient;
-          heightInitial *= heightCoefficient;
+
+          widthInitial *= sizeCoefficient;
+          heightInitial *= sizeCoefficient;
         }
         if (this.nodeSettings.highlightByLinkTextSizing) {
           textSize = animationByProgress(
@@ -266,7 +259,7 @@ export function getDrawNode<
     /** Flex size */
     let height: number = heightInitial;
     let width: number = widthInitial;
-    if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
+    if (nodeOptions.shape === "square") {
       const size = nodeSizeGetter({
         heightInitial,
         widthInitial,
@@ -278,30 +271,58 @@ export function getDrawNode<
       width = size.width;
       height = size.height;
     }
+    if (nodeOptions.shape === "text") {
+      width = nodeOptions.width;
+
+      const size = nodeSizeGetter({
+        heightInitial,
+        widthInitial: width,
+        linkCount: node.linkCount,
+        sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
+        sizeFactor: this.nodeSettings.nodeSizeFactor,
+        sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+      });
+      width = size.width;
+      textSize *= size.additionalSizeCoefficient;
+    }
+    /** Size by text in textNode */
     if (nodeOptions.shape === "text" && nodeOptions.text) {
-      const lines =
-        this.cachedNodeText[node.id] ??
-        getTextLines({
+      textWidth = width;
+      let lines: string[];
+      let maxWidths: [number, number];
+
+      const cachedLines = this.cachedNodeText[node.id];
+      const cachedMaxWidths = this.cachedNodeTextMaxWidths[node.id];
+      if (cachedLines && cachedMaxWidths != undefined) {
+        lines = cachedLines;
+        maxWidths = cachedMaxWidths;
+      } else {
+        const textInfo = getTextLines({
           context: this.context,
           text: nodeOptions.text,
           textAlign: nodeOptions.textAlign,
           textColor: nodeOptions.textColor,
           textFont: nodeOptions.textFont,
           textSize,
-          maxWidth: width,
+          maxWidth: textWidth,
           textStyle: nodeOptions.textStyle,
           textWeight,
         });
-
-      if (!this.cachedNodeText[node.id]) {
+        maxWidths = [textInfo.currentMaxSize, textWidth];
+        lines = textInfo.lines;
         this.cachedNodeText[node.id] = lines;
+        this.cachedNodeTextMaxWidths[node.id] = maxWidths;
       }
+
+      const textSizeCoefficient = textSize / nodeOptions.textSize;
+      const maxSizeDiff = maxWidths[0] * textSizeCoefficient;
 
       height =
         lines.length * textSize +
         (lines.length - 1) * nodeOptions.textGap +
         nodeOptions.textNodeYPadding;
-      width += nodeOptions.textNodeXPadding;
+
+      width = maxSizeDiff + nodeOptions.textNodeXPadding;
     }
 
     /** Node parameters */
@@ -372,7 +393,7 @@ export function getDrawNode<
               textSize,
               x: node.x,
               y: node.y + textSize / 4 - (lines.length - 1) * (textSize / 2),
-              maxWidth: widthInitial,
+              maxWidth: textWidth,
               textStyle: nodeOptions.textStyle,
               textWeight,
               textGap: nodeOptions.textGap,

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 let countOfTime = 0;
 let countOfOperation = 0;
 
@@ -12,7 +13,6 @@ export function perfTestWrapper(name: string, cb: () => void) {
     countOfOperation++;
 
     const average = countOfTime / countOfOperation;
-    // eslint-disable-next-line no-console
     console.log(name, ": average: ", average, "perf: ", result);
   };
 }
@@ -47,7 +47,6 @@ export function perfDiffWrapper(cb: () => void, cb2: () => void) {
 
     const average2 = countOfTime2 / countOfOperation2;
 
-    // eslint-disable-next-line no-console
     console.log("diff; ", "average: ", average2 - average1, "pref: ", result1, " ", result2);
   };
 }

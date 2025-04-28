@@ -1,5 +1,7 @@
 {
   "links": [
+    { "source": "custom-1", "target": "custom-2" },
+    { "source": "custom-1", "target": "custom-3" },
     {
       "source": "Structural basis of PROTAC cooperative recognition for selective protein degradation.",
       "target": "109-294-662-661-65X",
@@ -2296,13 +2298,31 @@
       "group": "new"
     },
     {
-      "id": "Node with text in 3 line minimum",
-      "name": "Node with text in 3 line minimum",
+      "id": "custom-1",
+      "name": "custom-1",
       "vx": -0.004415519454507829,
       "vy": -0.0014493223705162935,
       "x": -308.6436703638238,
       "y": -171.61133627072942,
-      "group": "Node with text in 3 line minimum"
+      "group": "Проверка"
+    },
+    {
+      "id": "custom-2",
+      "name": "custom-2",
+      "vx": -0.004415519454507829,
+      "vy": -0.0014493223705162935,
+      "x": -308.6436703638238,
+      "y": -171.61133627072942,
+      "group": "Загрузка потребности проверки длинных слов для отладки"
+    },
+    {
+      "id": "custom-3",
+      "name": "custom-3",
+      "vx": -0.004415519454507829,
+      "vy": -0.0014493223705162935,
+      "x": -308.6436703638238,
+      "y": -171.61133627072942,
+      "group": "ДлинноеСловоКотороеНужноУместить"
     },
     {
       "id": "074-937-457-594-345",

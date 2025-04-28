@@ -7,6 +7,8 @@
   import { graphStore, linksStore, nodesStore } from "./store";
   import type { NodeInterface } from "@/types";
   import { GraphCanvas } from "@/module/GraphCanvas";
+  import { getLinkSettings, getNodeSettings } from "./lib";
+  import { LINK_OPTIONS, NODE_OPTIONS } from "@/module/GraphCanvas/constants";
 
   let root = $state<HTMLDivElement | undefined>();
 
@@ -81,6 +83,12 @@
           onSimulationEnd: () => {
             console.log("simulation end");
           },
+        },
+        nodeSettings: {
+          options: getNodeSettings(NODE_OPTIONS),
+        },
+        linkSettings: {
+          options: getLinkSettings(LINK_OPTIONS),
         },
       }) as GraphCanvas<NodeData, LinkData>;
       graphStore.set(graphInstance);

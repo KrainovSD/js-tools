@@ -116,14 +116,16 @@ export function nodeSizeGetter({
   sizeFlexible,
   widthInitial,
 }: NodeSizeGetterOptions) {
-  let widthCoefficient = 1;
-  let heightCoefficient = 1;
+  let additionalSizeCoefficient = 1;
   if (sizeFlexible && linkCount != undefined) {
-    widthCoefficient += (linkCount / sizeCoefficient) * sizeFactor;
-    heightCoefficient += (linkCount / sizeCoefficient) * sizeFactor;
+    additionalSizeCoefficient += (linkCount / sizeCoefficient) * sizeFactor;
   }
 
-  return { width: widthInitial * widthCoefficient, height: heightInitial * heightCoefficient };
+  return {
+    width: widthInitial * additionalSizeCoefficient,
+    height: heightInitial * additionalSizeCoefficient,
+    additionalSizeCoefficient,
+  };
 }
 
 export function nodeIdGetter<NodeData extends Record<string, unknown>>(
