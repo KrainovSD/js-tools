@@ -232,7 +232,7 @@ export function initCollideForce<
                       maxWidth: width,
                       textStyle: nodeOptions.textStyle,
                       textWeight: nodeOptions.textWeight,
-                    });
+                    }).lines;
 
                   height =
                     lines.length * nodeOptions.textSize +

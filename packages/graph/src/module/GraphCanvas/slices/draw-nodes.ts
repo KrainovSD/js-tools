@@ -1,6 +1,6 @@
 import { isNumber } from "@krainovsd/js-helpers";
 import { colorToRgb, extractRgb, fadeRgb, rgbAnimationByProgress } from "@/lib";
-import type { NodeInterface } from "@/types";
+import type { CachedTextNodeParametersInterface, NodeInterface } from "@/types";
 import type { GraphCanvas } from "../GraphCanvas";
 import {
   animationByProgress,
@@ -282,19 +282,21 @@ export function getDrawNode<
         sizeFactor: this.nodeSettings.nodeSizeFactor,
         sizeFlexible: this.nodeSettings.nodeSizeFlexible,
       });
+
       textSize *= size.additionalSizeCoefficient;
     }
     /** Size by text in textNode */
     if (nodeOptions.shape === "text" && nodeOptions.text) {
       textWidth = width;
       let lines: string[];
-      let maxWidths: [number, number];
+
+      let textNodeParameters: CachedTextNodeParametersInterface;
 
       const cachedLines = this.cachedNodeText[node.id];
-      const cachedMaxWidths = this.cachedNodeTextMaxWidths[node.id];
-      if (cachedLines && cachedMaxWidths != undefined) {
+      const cachedTextNodeParameters = this.cachedTextNodeParameters[node.id];
+      if (cachedLines != undefined && cachedTextNodeParameters != undefined) {
         lines = cachedLines;
-        maxWidths = cachedMaxWidths;
+        textNodeParameters = cachedTextNodeParameters;
       } else {
         const textInfo = getTextLines({
           context: this.context,
@@ -307,31 +309,21 @@ export function getDrawNode<
           textStyle: nodeOptions.textStyle,
           textWeight,
         });
-        maxWidths = [textInfo.currentMaxSize, textWidth];
+        textNodeParameters = [textInfo.currentMaxSize, textSize];
         lines = textInfo.lines;
         this.cachedNodeText[node.id] = lines;
-        this.cachedNodeTextMaxWidths[node.id] = maxWidths;
+        this.cachedTextNodeParameters[node.id] = textNodeParameters;
       }
 
-      const textSizeCoefficient = 1 + textSize / maxWidths[1];
-      const maxSizeDiff = maxWidths[0] * textSizeCoefficient;
-
-      // if (textSize > 4)
-      //   console.log({
-      //     textSize,
-      //     initialTextSize: nodeOptions.textSize,
-      //     textSizeCoefficient,
-      //     width,
-      //     maxSizeDiff,
-      //     maxWidthOld: maxWidths[0],
-      //   });
+      const textSizeCoefficient = textSize / textNodeParameters[1];
+      const maxSize = textNodeParameters[0] * textSizeCoefficient;
 
       height =
         lines.length * textSize +
         (lines.length - 1) * nodeOptions.textGap +
         nodeOptions.textNodeYPadding;
 
-      width = maxWidths[0] + nodeOptions.textNodeXPadding;
+      width = maxSize + nodeOptions.textNodeXPadding;
     }
 
     /** Node parameters */

@@ -1,7 +1,11 @@
 import { forceLink } from "d3-force";
 import { type ZoomTransform, zoomIdentity } from "d3-zoom";
 import type { LinkInterface } from "@/types/links";
-import type { CachedNodeTextInterface, CachedNodeTextMaxWidth, NodeInterface } from "@/types/nodes";
+import type {
+  CachedNodeTextInterface,
+  CachedTextNodeParametersMap,
+  NodeInterface,
+} from "@/types/nodes";
 import {
   forceSettingsGetter,
   graphSettingsGetter,
@@ -86,7 +90,7 @@ export class GraphCanvas<
 
   protected cachedNodeText: CachedNodeTextInterface = {};
 
-  protected cachedNodeTextMaxWidths: CachedNodeTextMaxWidth = {};
+  protected cachedTextNodeParameters: CachedTextNodeParametersMap = {};
 
   protected linkOptionsCache: Record<string, Required<LinkOptionsInterface<NodeData, LinkData>>> =
     {};
@@ -230,7 +234,7 @@ export class GraphCanvas<
     if (options.nodeSettings) {
       this.nodeSettings = nodeSettingsGetter(options.nodeSettings, this.nodeSettings);
       this.cachedNodeText = {};
-      this.cachedNodeTextMaxWidths = {};
+      this.cachedTextNodeParameters = {};
       this.nodeOptionsCache = {};
       initCollideForce.call<
         GraphCanvas<NodeData, LinkData>,
@@ -254,7 +258,7 @@ export class GraphCanvas<
     this.nodeOptionsCache = {};
     this.linkOptionsCache = {};
     this.cachedNodeText = {};
-    this.cachedNodeTextMaxWidths = {};
+    this.cachedTextNodeParameters = {};
   }
 
   tick() {
