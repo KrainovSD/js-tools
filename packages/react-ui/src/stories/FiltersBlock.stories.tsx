@@ -5,6 +5,7 @@ import type { Meta, StoryFn, StoryObj } from "@storybook/react";
 import React from "react";
 import {
   Button,
+  CheckBox,
   DatePicker,
   DateRangePicker,
   type FilterFieldType,
@@ -155,6 +156,28 @@ export const Primary: Story = {
         inputField: (
           <InputNumber placeholder={"Введите значение"} variant="outlined" size="middle" />
         ),
+      },
+      {
+        label: "Булевое",
+        name: "criticalPath",
+        labelInValue: true,
+        popover: true,
+        valuePropName: "checked",
+        renderDisplayValue: (value: unknown) => {
+          switch (Boolean(value)) {
+            case true: {
+              return "Да";
+            }
+            case false: {
+              return "Нет";
+            }
+            default: {
+              return "";
+            }
+          }
+        },
+
+        inputField: <CheckBox>Булевое</CheckBox>,
       },
     ] as unknown as FilterFieldType[],
     // fixedFields: [

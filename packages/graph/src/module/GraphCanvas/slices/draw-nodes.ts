@@ -43,11 +43,15 @@ export function getDrawNode<
 
     if (nodeOptions.nodeDraw && nodeOptions.textDraw) {
       nodeRenders.push(() => {
-        nodeOptions?.nodeDraw?.(node, nodeOptions, state);
+        if (nodeOptions.nodeDraw) {
+          nodeOptions.nodeDraw.bind(this)(node, nodeOptions);
+        }
       });
 
       textRenders.push(() => {
-        nodeOptions?.textDraw?.(node, nodeOptions, state);
+        if (nodeOptions.textDraw) {
+          nodeOptions.textDraw.bind(this)(node, nodeOptions);
+        }
       });
 
       return;
@@ -413,9 +417,26 @@ export function getDrawNode<
 
     if (nodeOptions.nodeExtraDraw) {
       nodeRenders.push(() => {
-        nodeOptions?.nodeExtraDraw?.(
-          node,
-          {
+        nodeOptions?.nodeExtraDraw?.bind?.(this)?.(node, {
+          ...nodeOptions,
+          radius,
+          alpha,
+          color,
+          textAlpha,
+          textSize,
+          textShiftX,
+          textShiftY,
+          textWeight,
+          textWidth,
+        });
+      });
+    }
+
+    /** Text draw */
+    if (nodeOptions.textVisible && nodeOptions.text && nodeOptions.shape !== "text") {
+      textRenders.push(() => {
+        if (nodeOptions.textDraw) {
+          nodeOptions.textDraw.bind(this)(node, {
             ...nodeOptions,
             radius,
             alpha,
@@ -426,32 +447,7 @@ export function getDrawNode<
             textShiftY,
             textWeight,
             textWidth,
-          },
-          state,
-        );
-      });
-    }
-
-    /** Text draw */
-    if (nodeOptions.textVisible && nodeOptions.text && nodeOptions.shape !== "text") {
-      textRenders.push(() => {
-        if (nodeOptions.textDraw) {
-          nodeOptions.textDraw(
-            node,
-            {
-              ...nodeOptions,
-              radius,
-              alpha,
-              color,
-              textAlpha,
-              textSize,
-              textShiftX,
-              textShiftY,
-              textWeight,
-              textWidth,
-            },
-            state,
-          );
+          });
 
           return;
         }
@@ -486,22 +482,18 @@ export function getDrawNode<
         });
 
         if (nodeOptions.textExtraDraw) {
-          nodeOptions.textExtraDraw(
-            node,
-            {
-              ...nodeOptions,
-              radius,
-              alpha,
-              color,
-              textAlpha,
-              textSize,
-              textShiftX,
-              textShiftY,
-              textWeight,
-              textWidth,
-            },
-            state,
-          );
+          nodeOptions.textExtraDraw.bind(this)(node, {
+            ...nodeOptions,
+            radius,
+            alpha,
+            color,
+            textAlpha,
+            textSize,
+            textShiftX,
+            textShiftY,
+            textWeight,
+            textWidth,
+          });
         }
       });
     }

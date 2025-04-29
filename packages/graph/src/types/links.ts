@@ -6,4 +6,5 @@ export interface LinkInterface<
   LinkData extends Record<string, unknown>,
 > extends SimulationLinkDatum<NodeInterface<NodeData>> {
   data?: LinkData;
+  highlight?: boolean;
 }

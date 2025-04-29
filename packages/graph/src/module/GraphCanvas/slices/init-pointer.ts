@@ -17,6 +17,8 @@ export function initPointer<
     let currentLink: LinkInterface<NodeData, LinkData> | undefined;
     const checkHighlightNode = this.nodeSettings.highlightByHoverNode && !this.isDragging;
     const checkHighlightLink = this.linkSettings.highlightByHoverLink && !this.isDragging;
+    let highlightNode = true;
+    let highlightLink = true;
 
     if (checkHighlightNode) {
       currentNode = nodeByPointerGetter({
@@ -25,8 +27,9 @@ export function initPointer<
         mouseEvent: event,
         nodes: this.nodes,
       });
+      if (currentNode?.highlight != undefined) highlightNode = currentNode.highlight;
     }
-    if (currentNode) {
+    if (currentNode && highlightNode) {
       this.area.style.cursor = "pointer";
     } else if (checkHighlightLink) {
       currentLink = linkByPointerGetter({
@@ -36,8 +39,9 @@ export function initPointer<
         mouseEvent: event,
         links: this.links,
       });
+      if (currentLink?.highlight != undefined) highlightLink = currentLink?.highlight;
 
-      if (currentLink) {
+      if (currentLink && highlightLink) {
         this.area.style.cursor = "pointer";
       } else {
         this.area.style.cursor = "default";
@@ -45,7 +49,7 @@ export function initPointer<
     } else {
       this.area.style.cursor = "default";
     }
-    if (currentNode && this.highlightedNode !== currentNode) {
+    if (currentNode && highlightNode && this.highlightedNode !== currentNode) {
       this.highlightedNode = currentNode;
       this.highlightedLink = null;
       this.highlightedNeighbors = new Set(this.highlightedNode?.neighbors ?? []);
@@ -57,6 +61,7 @@ export function initPointer<
         });
     } else if (
       currentLink &&
+      highlightLink &&
       checkType<NodeInterface<NodeData>>(currentLink.source, isObject(currentLink.source)) &&
       checkType<NodeInterface<NodeData>>(currentLink.target, isObject(currentLink.target)) &&
       this.highlightedLink !== currentLink

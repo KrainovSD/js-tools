@@ -254,11 +254,25 @@ export class GraphCanvas<
     if (this.area) this.areaRect = this.area.getBoundingClientRect();
   }
 
-  clearCache() {
-    this.nodeOptionsCache = {};
-    this.linkOptionsCache = {};
-    this.cachedNodeText = {};
-    this.cachedTextNodeParameters = {};
+  clearCache(
+    keys?: (
+      | "nodeOptionsCache"
+      | "linkOptionsCache"
+      | "cachedNodeText"
+      | "cachedTextNodeParameters"
+    )[],
+  ) {
+    if (!keys) {
+      this.nodeOptionsCache = {};
+      this.linkOptionsCache = {};
+      this.cachedNodeText = {};
+      this.cachedTextNodeParameters = {};
+    } else {
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        this[key] = {};
+      }
+    }
   }
 
   tick() {

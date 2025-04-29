@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import React from "react";
+import React, { type CSSProperties } from "react";
 import { Flex } from "../flex";
 import { FixedFields } from "./fixed-fields";
 import { PopoverFields } from "./popover-fields";
@@ -28,6 +28,8 @@ interface FiltersBlockProps<T extends Record<string, FilterInputValueType>> {
   initialValues?: Partial<T>;
   filter?: Partial<T>;
   onChangeSearch?: (value: string) => void;
+  className?: string;
+  style?: CSSProperties;
 }
 
 export function FiltersBlock<T extends Record<string, FilterInputValueType>>(
@@ -67,7 +69,8 @@ export function FiltersBlock<T extends Record<string, FilterInputValueType>>(
       name="filters_form"
       onValuesChange={onChangeFormValues}
       initialValues={props.initialValues}
-      style={{ width: "100%" }}
+      style={{ width: "100%", ...props.style }}
+      className={props.className}
     >
       <Flex justify="space-between" gap={12} align="flex-start">
         <Flex gap={8} wrap>

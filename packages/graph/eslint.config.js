@@ -16,6 +16,7 @@ export default [
         { exceptions: ["x", "y", "z", "i", "j", "_", "t", "r", "g", "b", "k"] },
       ],
       "no-underscore-dangle": "off",
+      "@typescript-eslint/prefer-for-of": "off",
     },
   },
 ];

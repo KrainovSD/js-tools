@@ -1,4 +1,5 @@
 import type { LinkInterface, NodeInterface, NodeShape } from "@/types";
+import type { GraphCanvas } from "../GraphCanvas";
 import type { GraphState } from "./graph";
 
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
@@ -112,30 +113,30 @@ export type NodeOptionsInterface<
 > = {
   nodeDraw?:
     | ((
+        this: GraphCanvas<NodeData, LinkData>,
         node: NodeInterface<NodeData>,
         options: Required<NodeOptionsInterface<NodeData, LinkData>>,
-        state: GraphState<NodeData, LinkData>,
       ) => void)
     | null;
   textDraw?:
     | ((
+        this: GraphCanvas<NodeData, LinkData>,
         node: NodeInterface<NodeData>,
         options: Required<NodeOptionsInterface<NodeData, LinkData>>,
-        state: GraphState<NodeData, LinkData>,
       ) => void)
     | null;
   nodeExtraDraw?:
     | ((
+        this: GraphCanvas<NodeData, LinkData>,
         node: NodeInterface<NodeData>,
         options: Required<NodeOptionsInterface<NodeData, LinkData>>,
-        state: GraphState<NodeData, LinkData>,
       ) => void)
     | null;
   textExtraDraw?:
     | ((
+        this: GraphCanvas<NodeData, LinkData>,
         node: NodeInterface<NodeData>,
         options: Required<NodeOptionsInterface<NodeData, LinkData>>,
-        state: GraphState<NodeData, LinkData>,
       ) => void)
     | null;
   shape?: NodeShape;

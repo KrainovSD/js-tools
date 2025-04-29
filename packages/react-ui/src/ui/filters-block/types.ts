@@ -5,6 +5,7 @@ import type { SelectItemInterface } from "../select";
 export type InputValueType =
   | string
   | number
+  | boolean
   | undefined
   | null
   | SelectItemInterface[]
@@ -22,4 +23,5 @@ export type FilterFieldType = {
   icon?: JSX.Element;
   inputField?: JSX.Element;
   popover?: boolean;
+  valuePropName?: string;
 };

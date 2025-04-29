@@ -14,6 +14,7 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   _shape?: NodeShape;
   name?: string;
   drag?: boolean;
+  highlight?: boolean;
   data?: NodeData;
 }
 

@@ -51,6 +51,7 @@ export const PopoverField: FC<IProps> = (props) => {
           rules={props.field.rules}
           noStyle
           style={{ minWidth: 200 }}
+          valuePropName={props.field.valuePropName}
         >
           {props.field.inputField}
         </Form.Item>
@@ -61,7 +62,11 @@ export const PopoverField: FC<IProps> = (props) => {
     >
       <div className={styles.popover(token)}>
         {/* Используется для инициализации формы */}
-        <Form.Item name={props.field.name} style={{ display: "none" }}>
+        <Form.Item
+          name={props.field.name}
+          valuePropName={props.field.valuePropName}
+          style={{ display: "none" }}
+        >
           {props.field.inputField ?? <Input placeholder={props.field.label} />}
         </Form.Item>
         <Flex align="center" wrap={false} style={{ color: "currentColor" }} gap={8}>
