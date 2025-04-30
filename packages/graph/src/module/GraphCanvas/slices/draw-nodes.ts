@@ -368,7 +368,9 @@ export function getDrawNode<
           if (!node.image) {
             this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
             this.context.fill();
-            this.context.stroke();
+            if (nodeOptions.borderWidth > 0) {
+              this.context.stroke();
+            }
           } else {
             this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
             this.context.closePath();
@@ -384,7 +386,9 @@ export function getDrawNode<
             );
 
             this.context.restore();
-            this.context.stroke();
+            if (nodeOptions.borderWidth > 0) {
+              this.context.stroke();
+            }
           }
           break;
         }
@@ -398,7 +402,9 @@ export function getDrawNode<
               node._borderRadius,
             );
             this.context.fill();
-            this.context.stroke();
+            if (nodeOptions.borderWidth > 0) {
+              this.context.stroke();
+            }
           } else {
             this.context.roundRect(
               node.x - width / 2,
@@ -419,7 +425,9 @@ export function getDrawNode<
             );
             this.context.restore();
 
-            this.context.stroke();
+            if (nodeOptions.borderWidth > 0) {
+              this.context.stroke();
+            }
           }
           break;
         }
@@ -447,13 +455,17 @@ export function getDrawNode<
               textGap: nodeOptions.textGap,
             });
           this.context.fill();
-          this.context.stroke();
+          if (nodeOptions.borderWidth > 0) {
+            this.context.stroke();
+          }
           break;
         }
         default: {
           this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
           this.context.fill();
-          this.context.stroke();
+          if (nodeOptions.borderWidth > 0) {
+            this.context.stroke();
+          }
           break;
         }
       }

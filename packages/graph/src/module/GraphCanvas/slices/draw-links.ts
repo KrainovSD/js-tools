@@ -211,7 +211,9 @@ export function getDrawLink<
             this.context.arc(particle.x, particle.y, linkOptions.particleRadius, 0, Math.PI * 2);
             this.context.fillStyle = linkOptions.particleColor;
             this.context.fill();
-            this.context.stroke();
+            if (linkOptions.particleBorderWidth > 0) {
+              this.context.stroke();
+            }
           }
         });
       }
@@ -248,7 +250,9 @@ export function getDrawLink<
       );
       this.context.closePath();
       this.context.fill();
-      this.context.stroke();
+      if (linkOptions.arrowBorderWidth > 0) {
+        this.context.stroke();
+      }
     }
 
     if (linkOptions.drawExtraLink) {
