@@ -109,7 +109,7 @@ export const NODE_OPTIONS: Omit<
   | "textDraw"
   | "textExtraDraw"
 > = {
-  shape: "text",
+  shape: "square",
   height: 10,
   width: 15,
   borderRadius: 0,

@@ -23,5 +23,11 @@ export function getNodeNeighbors(
       node.neighbors = [...new Set(neighbors[node.id])];
       node.linkCount = neighbors[node.id].length;
     }
+
+    if (node.data?.image) {
+      const image = new Image();
+      image.src = node.data.image;
+      node.image = image;
+    }
   });
 }

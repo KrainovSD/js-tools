@@ -206,9 +206,7 @@ export function getDrawNode<
         }
         if (
           this.nodeSettings.highlightByLinkNodeSizing &&
-          (nodeOptions.shape === "square" ||
-            nodeOptions.shape === "text" ||
-            nodeOptions.shape === "icon")
+          (nodeOptions.shape === "square" || nodeOptions.shape === "text")
         ) {
           sizeCoefficient = animationByProgress(
             sizeCoefficient,
@@ -367,17 +365,62 @@ export function getDrawNode<
 
       switch (nodeOptions.shape) {
         case "circle": {
-          this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+          if (!node.image) {
+            this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+            this.context.fill();
+            this.context.stroke();
+          } else {
+            this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+            this.context.closePath();
+            this.context.save();
+            this.context.clip();
+
+            this.context.drawImage(
+              node.image,
+              node.x - radius,
+              node.y - radius,
+              radius * 2,
+              radius * 2,
+            );
+
+            this.context.restore();
+            this.context.stroke();
+          }
           break;
         }
         case "square": {
-          this.context.roundRect(
-            node.x - width / 2,
-            node.y - height / 2,
-            width,
-            height,
-            node._borderRadius,
-          );
+          if (!node.image) {
+            this.context.roundRect(
+              node.x - width / 2,
+              node.y - height / 2,
+              width,
+              height,
+              node._borderRadius,
+            );
+            this.context.fill();
+            this.context.stroke();
+          } else {
+            this.context.roundRect(
+              node.x - width / 2,
+              node.y - height / 2,
+              width,
+              height,
+              node._borderRadius,
+            );
+            this.context.closePath();
+            this.context.save();
+            this.context.clip();
+            this.context.drawImage(
+              node.image,
+              node.x - width / 2,
+              node.y - height / 2,
+              width,
+              height,
+            );
+            this.context.restore();
+
+            this.context.stroke();
+          }
           break;
         }
         case "text": {
@@ -403,16 +446,17 @@ export function getDrawNode<
               textWeight,
               textGap: nodeOptions.textGap,
             });
+          this.context.fill();
+          this.context.stroke();
           break;
         }
         default: {
           this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
+          this.context.fill();
+          this.context.stroke();
           break;
         }
       }
-
-      this.context.fill();
-      this.context.stroke();
     });
 
     if (nodeOptions.nodeExtraDraw) {

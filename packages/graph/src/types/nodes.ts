@@ -15,10 +15,11 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   name?: string;
   drag?: boolean;
   highlight?: boolean;
+  image?: HTMLImageElement;
   data?: NodeData;
 }
 
-export type NodeShape = "circle" | "square" | "text" | "icon";
+export type NodeShape = "circle" | "square" | "text";
 
 export type CachedNodeTextInterface = Record<string | number, string[] | undefined>;
 export type CachedTextNodeParametersMap = Record<string | number, [number, number] | undefined>;

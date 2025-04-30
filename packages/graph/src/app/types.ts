@@ -1,6 +1,8 @@
 import type { LinkInterface, NodeInterface } from "@/types";
 
-export type NodeData = {};
+export type NodeData = {
+  image?: string;
+};
 export type LinkData = {};
 
 export type Link = LinkInterface<NodeData, LinkData>;
