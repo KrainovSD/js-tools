@@ -60,7 +60,7 @@ export const NODE_SETTINGS: Omit<
   highlightByHoverNode: true,
   nodeRadiusFlexible: true,
   nodeSizeFlexible: true,
-  textNodeDebug: true,
+  textNodeDebug: false,
   highlightByNodeNodeFading: true,
   highlightByNodeNodeColor: false,
   highlightByNodeNodeSizing: true,

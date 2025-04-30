@@ -220,25 +220,23 @@ export function initCollideForce<
                 });
 
                 if (this.context && nodeOptions.text) {
-                  const lines =
-                    this.cachedNodeText[node.id] ??
-                    getTextLines({
-                      context: this.context,
-                      text: nodeOptions.text,
-                      textAlign: nodeOptions.textAlign,
-                      textColor: nodeOptions.textColor,
-                      textFont: nodeOptions.textFont,
-                      textSize: nodeOptions.textSize,
-                      maxWidth: width,
-                      textStyle: nodeOptions.textStyle,
-                      textWeight: nodeOptions.textWeight,
-                    }).lines;
+                  const textInfo = getTextLines({
+                    context: this.context,
+                    text: nodeOptions.text,
+                    textAlign: nodeOptions.textAlign,
+                    textColor: nodeOptions.textColor,
+                    textFont: nodeOptions.textFont,
+                    textSize: nodeOptions.textSize,
+                    maxWidth: width,
+                    textStyle: nodeOptions.textStyle,
+                    textWeight: nodeOptions.textWeight,
+                  });
 
                   height =
-                    lines.length * nodeOptions.textSize +
-                    (lines.length - 1) * nodeOptions.textGap +
+                    textInfo.lines.length * nodeOptions.textSize +
+                    (textInfo.lines.length - 1) * nodeOptions.textGap +
                     nodeOptions.textNodeYPadding;
-                  width += nodeOptions.textNodeXPadding;
+                  width = textInfo.currentMaxSize + nodeOptions.textNodeXPadding;
                 }
 
                 return (
