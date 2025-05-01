@@ -1,4 +1,4 @@
-import type { NodeInterface } from "@/types";
+import type { NodeInterface } from "../../types";
 import { isOverlapsNode } from "./is-overlaps-node";
 
 export function dragPlaceCoefficientGetter<NodeData extends Record<string, unknown>>(

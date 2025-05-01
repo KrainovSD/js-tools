@@ -1,7 +1,7 @@
-import type { GraphParticle } from "../../types";
+import type { LinkParticle } from "../../types";
 
 type GetParticlePositionOptions = {
-  particle: GraphParticle;
+  particle: LinkParticle;
   xStart: number;
   yStart: number;
   xEnd: number;

@@ -1,7 +1,8 @@
 import type { D3DragEvent } from "d3-drag";
 import type { D3ZoomEvent } from "d3-zoom";
-import type { LinkInterface, NodeInterface } from "@/types";
 import type { GraphState } from "./graph";
+import type { LinkInterface } from "./links";
+import type { NodeInterface } from "./nodes";
 
 export type ZoomEventInterface = D3ZoomEvent<HTMLCanvasElement, unknown>;
 

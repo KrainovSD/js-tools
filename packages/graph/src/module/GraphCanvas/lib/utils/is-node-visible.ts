@@ -1,6 +1,6 @@
 import type { ZoomTransform } from "d3-zoom";
-import type { NodeInterface } from "@/types";
 import { COMMON_SETTINGS } from "../../constants";
+import type { NodeInterface } from "../../types";
 
 type IsNodeVisibleOptions<NodeData extends Record<string, unknown>> = {
   width: number;

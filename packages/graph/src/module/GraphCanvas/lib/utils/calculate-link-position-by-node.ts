@@ -1,6 +1,6 @@
 /* eslint-disable id-length */
-import type { LinkInterface, NodeInterface } from "@/types";
 import { COMMON_SETTINGS } from "../../constants";
+import type { LinkInterface, NodeInterface } from "../../types";
 
 type Point = {
   x: number;

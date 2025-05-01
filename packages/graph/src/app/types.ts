@@ -1,4 +1,4 @@
-import type { LinkInterface, NodeInterface } from "@/types";
+import type { LinkInterface, NodeInterface } from "@/module/GraphCanvas";
 
 export type NodeData = {
   image?: string;

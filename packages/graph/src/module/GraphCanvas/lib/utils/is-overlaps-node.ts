@@ -1,4 +1,4 @@
-import type { NodeInterface } from "@/types";
+import type { NodeInterface } from "../../types";
 
 export function isOverlapsNode<NodeData extends Record<string, unknown>>(
   node: NodeInterface<NodeData>,

@@ -1,4 +1,4 @@
-import type { RGB } from "@/module/GraphCanvas";
+import type { RGB } from "@/types";
 
 export function fadeRgb(color: RGB, fade: number): RGB {
   const gray = (color.r + color.g + color.b) / 3;

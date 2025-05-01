@@ -29,5 +29,7 @@ export function getNodeNeighbors(
       image.src = node.data.image;
       node.image = image;
     }
+
+    node.label = "+5";
   });
 }

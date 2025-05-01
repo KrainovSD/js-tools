@@ -1,4 +1,4 @@
-import type { RGB } from "@/module/GraphCanvas";
+import type { RGB } from "@/types";
 
 export function rgbAnimationByProgress(start: RGB, end: RGB, progress: number): RGB {
   return {

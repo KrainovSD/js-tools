@@ -6,6 +6,7 @@
   import {
     FORCE_SETTINGS,
     GRAPH_SETTINGS,
+    HIGHLIGHT_SETTINGS,
     LINK_OPTIONS,
     LINK_SETTINGS,
     NODE_OPTIONS,
@@ -15,23 +16,40 @@
   import { graphStore } from "./store";
   // import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "../../mock";
   import {
-    getForceControls,
-    getGraphControls,
-    getLinkOptionsControls,
-    getLinkSettingsControls,
-    getNodeOptionsControls,
-    getNodeSettingControls,
-  } from "@/lib";
+    FORCE_CONTROLS,
+    GRAPH_CONTROLS,
+    HIGHLIGHT_BY_LINK_FOR_ARROW_CONTROLS,
+    HIGHLIGHT_BY_LINK_FOR_LABEL_CONTROLS,
+    HIGHLIGHT_BY_LINK_FOR_LINK_CONTROLS,
+    HIGHLIGHT_BY_LINK_FOR_NODE_CONTROLS,
+    HIGHLIGHT_BY_LINK_FOR_TEXT_CONTROLS,
+    HIGHLIGHT_BY_NODE_FOR_ARROW_CONTROLS,
+    HIGHLIGHT_BY_NODE_FOR_LABEL_CONTROLS,
+    HIGHLIGHT_BY_NODE_FOR_LINK_CONTROLS,
+    HIGHLIGHT_BY_NODE_FOR_NODE_CONTROLS,
+    HIGHLIGHT_BY_NODE_FOR_TEXT_CONTROLS,
+    HIGHLIGHT_COMMON_CONTROLS,
+    LINK_OPTIONS_ARROW_CONTROLS,
+    LINK_OPTIONS_LINK_CONTROLS,
+    LINK_OPTIONS_PARTICLE_CONTROLS,
+    LINK_SETTINGS_CONTROLS,
+    NODE_OPTIONS_LABEL_CONTROLS,
+    NODE_OPTIONS_NODE_CONTROLS,
+    NODE_OPTIONS_TEXT_CONTROLS,
+    NODE_SETTINGS_CONTROLS,
+  } from "@/constants";
   import type {
     ForceSettingsInterface,
     GraphSettingsInterface,
+    HighlightSettingsInterface,
+    LinkInterface,
     LinkOptionsInterface,
     LinkSettingsInterface,
+    NodeInterface,
     NodeOptionsInterface,
     NodeSettingsInterface,
   } from "@/module/GraphCanvas";
   import { downloadJson, isArray, isObject, jsonParse, readFile } from "@krainovsd/js-helpers";
-  import type { LinkInterface, NodeInterface } from "@/types";
   import { getLinkSettings, getNodeNeighbors, getNodeSettings } from "./lib";
 
   type GraphInterface = {
@@ -51,18 +69,21 @@
   let linkSettings: Partial<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> = $state({
     ...LINK_SETTINGS,
   });
+  let highlightSettings: Partial<HighlightSettingsInterface> = $state({ ...HIGHLIGHT_SETTINGS });
   let downloadInputRef: HTMLInputElement | undefined = $state();
 
   let openForce = $state(false);
   let openGraph = $state(false);
   let openNode = $state(false);
   let openLink = $state(false);
+  let openHighlight = $state(false);
 
   function allClose() {
     openForce = false;
     openGraph = false;
     openLink = false;
     openNode = false;
+    openHighlight = false;
   }
 
   function toggleOpenForce() {
@@ -85,6 +106,11 @@
     allClose();
     openLink = !open;
   }
+  function toggleOpenHighlight() {
+    let open = openHighlight;
+    allClose();
+    openHighlight = !open;
+  }
 
   function clearForce() {
     forceSettings = { ...FORCE_SETTINGS };
@@ -99,6 +125,9 @@
   function clearLink() {
     linkOptions = { ...LINK_OPTIONS };
     linkSettings = { ...LINK_SETTINGS };
+  }
+  function clearHighlight() {
+    highlightSettings = { ...HIGHLIGHT_SETTINGS };
   }
 
   function exportGraph() {
@@ -231,6 +260,16 @@
       });
     }
   });
+  /** highlight settings */
+  $effect(() => {
+    const store = untrack(() => $graphStore);
+
+    if (store) {
+      store.changeSettings({
+        highlightSettings,
+      });
+    }
+  });
 </script>
 
 {#snippet inputs(
@@ -304,15 +343,16 @@
   onclick={(e) => {
     e.stopPropagation();
   }}
+  gap={20}
 >
   <button class={styles.button} onclick={toggleOpenForce} style="top: 10px; left: 10px"
     >{openForce ? "Закрыть настройки физики" : "Открыть настройки физики"}</button
   >
   {#if openForce}
-    <Flex class={styles.settings} vertical style="top: 45px; left: 10px;">
-      <span>Параметры физики:</span>
+    <Flex class={styles.settings} gap={20} vertical style="top: 45px; left: 10px;">
+      <h1>Параметры физики:</h1>
       <Flex vertical gap={10} class={styles.settings__container}>
-        {@render inputs(getForceControls(), forceSettings, (key, value) => {
+        {@render inputs(FORCE_CONTROLS, forceSettings, (key, value) => {
           forceSettings = { ...forceSettings, [key]: value };
         })}
       </Flex>
@@ -327,10 +367,15 @@
     >{openGraph ? "Закрыть настройки отображения" : "Открыть настройки отображения"}</button
   >
   {#if openGraph}
-    <Flex class={styles.settings} vertical style="top: 45px; left: calc(10px + 185px + 20px);">
-      <span>Параметры отображения:</span>
+    <Flex
+      class={styles.settings}
+      gap={20}
+      vertical
+      style="top: 45px; left: calc(10px + 185px + 20px);"
+    >
+      <h1>Параметры отображения:</h1>
       <Flex vertical gap={10} class={styles.settings__container}>
-        {@render inputs(getGraphControls(), graphSettings, (key, value) => {
+        {@render inputs(GRAPH_CONTROLS, graphSettings, (key, value) => {
           graphSettings = { ...graphSettings, [key]: value };
         })}
       </Flex>
@@ -348,15 +393,31 @@
     <Flex
       class={styles.settings}
       vertical
+      gap={20}
       style="top: 45px; left: calc(10px + 185px + 20px + 220px + 20px);"
     >
-      <span>Параметры нод:</span>
+      <h1>Общие параметры вершин:</h1>
       <Flex vertical gap={10} class={styles.settings__container}>
-        {@render inputs(getNodeOptionsControls(), nodeOptions, (key, value) => {
+        {@render inputs(NODE_SETTINGS_CONTROLS, nodeSettings, (key, value) => {
+          nodeSettings = { ...nodeSettings, [key]: value };
+        })}
+      </Flex>
+      <h1>Параметры вершины:</h1>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(NODE_OPTIONS_NODE_CONTROLS, nodeOptions, (key, value) => {
           nodeOptions = { ...nodeOptions, [key]: value };
         })}
-        {@render inputs(getNodeSettingControls(), nodeSettings, (key, value) => {
-          nodeSettings = { ...nodeSettings, [key]: value };
+      </Flex>
+      <h1>Параметры текста:</h1>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(NODE_OPTIONS_TEXT_CONTROLS, nodeOptions, (key, value) => {
+          nodeOptions = { ...nodeOptions, [key]: value };
+        })}
+      </Flex>
+      <h1>Параметры подписи:</h1>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(NODE_OPTIONS_LABEL_CONTROLS, nodeOptions, (key, value) => {
+          nodeOptions = { ...nodeOptions, [key]: value };
         })}
       </Flex>
       <button class={styles.settings__button} onclick={clearNode}>Сбросить</button>
@@ -373,16 +434,31 @@
     <Flex
       class={styles.settings}
       vertical
-      gap={10}
+      gap={20}
       style="top: 45px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px);"
     >
-      <span>Параметры связей:</span>
+      <h1>Общие параметры связей:</h1>
       <Flex vertical gap={10} class={styles.settings__container}>
-        {@render inputs(getLinkOptionsControls(), linkOptions, (key, value) => {
+        {@render inputs(LINK_SETTINGS_CONTROLS, linkSettings, (key, value) => {
+          linkSettings = { ...linkSettings, [key]: value };
+        })}
+      </Flex>
+      <h1>Параметры связи:</h1>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(LINK_OPTIONS_LINK_CONTROLS, linkOptions, (key, value) => {
           linkOptions = { ...linkOptions, [key]: value };
         })}
-        {@render inputs(getLinkSettingsControls(), linkSettings, (key, value) => {
-          linkSettings = { ...linkSettings, [key]: value };
+      </Flex>
+      <h1>Параметры стрелки:</h1>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(LINK_OPTIONS_ARROW_CONTROLS, linkOptions, (key, value) => {
+          linkOptions = { ...linkOptions, [key]: value };
+        })}
+      </Flex>
+      <h1>Параметры частицы:</h1>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(LINK_OPTIONS_PARTICLE_CONTROLS, linkOptions, (key, value) => {
+          linkOptions = { ...linkOptions, [key]: value };
         })}
       </Flex>
       <button class={styles.settings__button} onclick={clearLink}>Сбросить</button>
@@ -391,13 +467,99 @@
 
   <button
     class={styles.button}
+    onclick={toggleOpenHighlight}
+    style="top: 10px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px + 185px + 20px)"
+    >{openHighlight ? "Закрыть настройки анимации" : "Открыть настройки анимации"}</button
+  >
+  {#if openHighlight}
+    <Flex
+      class={styles.settings}
+      vertical
+      gap={20}
+      style="top: 45px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px + 185px + 20px);"
+    >
+      <h1>Общие параметры:</h1>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_COMMON_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h1>Анимация вершины:</h1>
+      <h2>Вершина</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_NODE_FOR_NODE_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h2>Текст</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_NODE_FOR_TEXT_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h2>Подпись</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_NODE_FOR_LABEL_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h2>Связь</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_NODE_FOR_LINK_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h2>Стрелка</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_NODE_FOR_ARROW_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h1>Анимация связи:</h1>
+      <h2>Вершина</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_LINK_FOR_NODE_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h2>Текст</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_LINK_FOR_TEXT_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h2>Подпись</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_LINK_FOR_LABEL_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h2>Связь</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_LINK_FOR_LINK_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+      <h2>Стрелка</h2>
+      <Flex vertical gap={10} class={styles.settings__container}>
+        {@render inputs(HIGHLIGHT_BY_LINK_FOR_ARROW_CONTROLS, highlightSettings, (key, value) => {
+          highlightSettings = { ...highlightSettings, [key]: value };
+        })}
+      </Flex>
+
+      <button class={styles.settings__button} onclick={clearHighlight}>Сбросить</button>
+    </Flex>
+  {/if}
+
+  <button
+    class={styles.button}
     onclick={importGraph}
-    style="top: 10px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px + 185px + 20px);"
+    style="top: 10px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px + 185px + 20px + 200px + 20px);"
     >{"Импорт графа"}</button
   ><button
     class={styles.button}
     onclick={exportGraph}
-    style="top: 10px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px + 185px + 20px + 110px + 20px);"
+    style="top: 10px; left: calc(10px + 185px + 20px + 220px + 20px + 161px + 20px + 185px + 20px +  200px + 20px + 110px + 20px);"
     >{"Экспорт графа"}</button
   >
 </Flex>

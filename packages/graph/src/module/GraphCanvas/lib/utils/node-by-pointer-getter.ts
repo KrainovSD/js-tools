@@ -1,6 +1,6 @@
 import { greatest } from "d3-array";
 import type { ZoomTransform } from "d3-zoom";
-import type { NodeInterface } from "@/types";
+import type { NodeInterface } from "../../types";
 import { isOverlapsNode } from "./is-overlaps-node";
 import { pointerGetter } from "./pointer-getter";
 

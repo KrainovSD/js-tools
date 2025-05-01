@@ -1,6 +1,5 @@
 import { checkType } from "@/lib";
-import type { LinkInterface } from "@/types";
-import type { GraphState, LinkIterationPropsInterface } from "../../types";
+import type { GraphState, LinkInterface, LinkIterationPropsInterface } from "../../types";
 
 export function linkIterationExtractor<
   NodeData extends Record<string, unknown>,

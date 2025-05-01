@@ -1,5 +1,4 @@
-import type { CachedNodeTextInterface } from "@/types";
-import type { TextStyleEnum } from "../types";
+import type { CachedNodeTextInterface, TextStyleEnum } from "../types";
 
 export type DrawTextOptions = {
   id: string | number;

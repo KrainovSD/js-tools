@@ -1,0 +1,17 @@
+export const COMMON_SETTINGS = {
+  linkColorZoomFar: "#999",
+  linkColorZoomNear: "#000000FF",
+  linkWidthZoomFar: 1,
+  linkWidthZoomNear: 0.1,
+  linkWidthZoomBorder: 1,
+  linkColorZoomBorder: 1,
+  nodeTextScaleMin: 1.5,
+  nodeTextScaleMax: 20,
+  nodeTextSizeMin: 1.5,
+  nodeTextSizeMax: 3.5,
+  nodeTextShiftYMin: 2.5,
+  nodeTextShiftYMax: 4,
+  nodeTextChangeStepCount: 200,
+  nodeRadius: 5,
+  nodeSize: 5,
+};

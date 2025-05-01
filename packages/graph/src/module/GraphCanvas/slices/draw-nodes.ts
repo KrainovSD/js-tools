@@ -1,6 +1,5 @@
 import { isNumber } from "@krainovsd/js-helpers";
 import { colorToRgb, extractRgb, fadeRgb, rgbAnimationByProgress } from "@/lib";
-import type { CachedTextNodeParametersInterface, NodeInterface } from "@/types";
 import type { GraphCanvas } from "../GraphCanvas";
 import {
   animationByProgress,
@@ -10,7 +9,12 @@ import {
   nodeRadiusGetter,
   nodeSizeGetter,
 } from "../lib";
-import type { GraphState, NodeOptionsInterface } from "../types";
+import type {
+  CachedTextNodeParametersInterface,
+  GraphState,
+  NodeInterface,
+  NodeOptionsInterface,
+} from "../types";
 import { drawText, getTextLines } from "./draw-text";
 
 export function getDrawNode<
@@ -25,7 +29,7 @@ export function getDrawNode<
     if (!this.context || !node.x || !node.y) return;
 
     let nodeOptions: Required<NodeOptionsInterface<NodeData, LinkData>>;
-    if (this.nodeSettings.cache && this.nodeOptionsCache[node.id]) {
+    if (this.nodeSettings.cacheOptions && this.nodeOptionsCache[node.id]) {
       nodeOptions = this.nodeOptionsCache[node.id];
     } else {
       nodeOptions = nodeIterationExtractor(
@@ -36,7 +40,7 @@ export function getDrawNode<
         this.nodeSettings.options ?? {},
         nodeOptionsGetter,
       );
-      if (this.nodeSettings.cache) {
+      if (this.nodeSettings.cacheOptions) {
         this.nodeOptionsCache[node.id] = nodeOptions;
       }
     }
@@ -67,32 +71,49 @@ export function getDrawNode<
     let textShiftX = nodeOptions.textShiftX;
     let textShiftY = nodeOptions.textShiftY;
     let textWeight = nodeOptions.textWeight;
-    let textWidth = nodeOptions.textWidth;
+    let labelSize = nodeOptions.labelSize;
+    let labelWeight = nodeOptions.labelWeight;
+    let labelAlpha = nodeOptions.labelAlpha;
     let sizeCoefficient = 1;
     /** Node Highlight */
     if (this.highlightedNeighbors && this.highlightedNode) {
       /** Not highlighted */
       if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
-        if (this.nodeSettings.highlightByNodeNodeFading) {
-          const min =
-            this.nodeSettings.highlightByNodeNodeFadingMin < alpha
-              ? this.nodeSettings.highlightByNodeNodeFadingMin
-              : alpha;
-          alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
+        /** Alpha */
+        const alphaMin =
+          this.highlightSettings.highlightByNodeForNodeFadingMin < alpha
+            ? this.highlightSettings.highlightByNodeForNodeFadingMin
+            : alpha;
+        alpha = animationByProgress(alphaMin, alpha - alphaMin, 1 - this.highlightProgress);
+        /** Text Alpha */
+        const textAlphaMin =
+          this.highlightSettings.highlightByNodeForTextFadingMin < textAlpha
+            ? this.highlightSettings.highlightByNodeForTextFadingMin
+            : textAlpha;
+        textAlpha = animationByProgress(
+          textAlphaMin,
+          textAlpha - textAlphaMin,
+          1 - this.highlightProgress,
+        );
+        if (nodeOptions.label) {
+          /** Label Alpha */
+          const labelAlphaMin =
+            this.highlightSettings.highlightByNodeForLabelFadingMin < labelAlpha
+              ? this.highlightSettings.highlightByNodeForLabelFadingMin
+              : labelAlpha;
+          labelAlpha = animationByProgress(
+            labelAlphaMin,
+            labelAlpha - labelAlphaMin,
+            1 - this.highlightProgress,
+          );
         }
-        if (this.nodeSettings.highlightByNodeTextFading) {
-          const min =
-            this.nodeSettings.highlightByNodeTextFadingMin < textAlpha
-              ? this.nodeSettings.highlightByNodeTextFadingMin
-              : textAlpha;
-          textAlpha = animationByProgress(min, textAlpha - min, 1 - this.highlightProgress);
-        }
-        if (this.nodeSettings.highlightByNodeNodeColor) {
+        if (this.highlightSettings.highlightByNodeForNodeColorFading) {
+          /** Color Fading */
           const colorRgb = extractRgb(colorToRgb(color));
           if (colorRgb) {
             const colorRgbFade = fadeRgb(
               colorRgb,
-              this.nodeSettings.highlightByNodeNodeColorFadingMin,
+              this.highlightSettings.highlightByNodeForNodeColorFadingMin,
             );
             const colorFadeAnimation = rgbAnimationByProgress(
               colorRgb,
@@ -103,55 +124,81 @@ export function getDrawNode<
           }
         }
       } else if (
-        !this.nodeSettings.highlightByNodeOnlyRoot ||
-        (this.nodeSettings.highlightByNodeOnlyRoot && this.highlightedNode.id === node.id)
+        !this.highlightSettings.highlightByNodeOnlyRoot ||
+        (this.highlightSettings.highlightByNodeOnlyRoot && this.highlightedNode.id === node.id)
       ) {
         /** Highlighted */
 
-        if (this.nodeSettings.highlightByNodeNodeSizing && nodeOptions.shape === "circle") {
+        if (this.highlightSettings.highlightByNodeForNodeColor) {
+          /** Color */
+          const colorRgb = extractRgb(colorToRgb(color));
+          const colorRgbHighlight = extractRgb(
+            colorToRgb(this.highlightSettings.highlightByNodeForNodeColor),
+          );
+          if (colorRgb && colorRgbHighlight) {
+            const colorFadeAnimation = rgbAnimationByProgress(
+              colorRgb,
+              colorRgbHighlight,
+              this.highlightProgress,
+            );
+            color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
+          }
+        }
+        if (nodeOptions.shape === "circle") {
+          /** Radius */
           radiusInitial = animationByProgress(
             radiusInitial,
-            this.nodeSettings.highlightByNodeNodeSizingAdditional,
+            this.highlightSettings.highlightByNodeForNodeSizingAdditional,
             this.highlightProgress,
           );
         }
-        if (
-          this.nodeSettings.highlightByNodeNodeSizing &&
-          (nodeOptions.shape === "square" || nodeOptions.shape === "text")
-        ) {
+        if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
+          /** Size */
           sizeCoefficient = animationByProgress(
             sizeCoefficient,
-            this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
+            this.highlightSettings.highlightByNodeForNodeSizingAdditionalCoefficient,
             this.highlightProgress,
           );
 
           widthInitial *= sizeCoefficient;
           heightInitial *= sizeCoefficient;
         }
-        if (this.nodeSettings.highlightByNodeTextSizing) {
-          textSize = animationByProgress(
-            textSize,
-            this.nodeSettings.highlightByNodeTextSizingAdditional,
+        /** Text Size */
+        textSize = animationByProgress(
+          textSize,
+          this.highlightSettings.highlightByNodeForTextSizingAdditional,
+          this.highlightProgress,
+        );
+        /** Text Shift X */
+        textShiftX = animationByProgress(
+          textShiftX,
+          this.highlightSettings.highlightByNodeForTextShiftXAdditional,
+          this.highlightProgress,
+        );
+        /** Text Shift Y */
+        textShiftY = animationByProgress(
+          textShiftY,
+          this.highlightSettings.highlightByNodeForTextShiftYAdditional,
+          this.highlightProgress,
+        );
+        /** Text Weight */
+        textWeight = animationByProgress(
+          textWeight,
+          this.highlightSettings.highlightByNodeForTextWeightAdditional,
+          this.highlightProgress,
+        );
+
+        if (nodeOptions.label) {
+          /** Label Size */
+          labelSize = animationByProgress(
+            labelSize,
+            this.highlightSettings.highlightByNodeForLabelSizingAdditional,
             this.highlightProgress,
           );
-          textShiftX = animationByProgress(
-            textShiftX,
-            this.nodeSettings.highlightByNodeTextShiftXAdditional,
-            this.highlightProgress,
-          );
-          textShiftY = animationByProgress(
-            textShiftY,
-            this.nodeSettings.highlightByNodeTextShiftYAdditional,
-            this.highlightProgress,
-          );
-          textWeight = animationByProgress(
-            textWeight,
-            this.nodeSettings.highlightByNodeTextWeightAdditional,
-            this.highlightProgress,
-          );
-          textWidth = animationByProgress(
-            textWidth,
-            this.nodeSettings.highlightByNodeTextWidthAdditional,
+          /** Label Weight */
+          labelWeight = animationByProgress(
+            labelWeight,
+            this.highlightSettings.highlightByNodeForLabelWeightAdditional,
             this.highlightProgress,
           );
         }
@@ -165,26 +212,41 @@ export function getDrawNode<
         this.highlightedLink.source !== node &&
         this.highlightedLink.target !== node
       ) {
-        if (this.nodeSettings.highlightByLinkNodeFading) {
-          const min =
-            this.nodeSettings.highlightByLinkNodeFadingMin < alpha
-              ? this.nodeSettings.highlightByLinkNodeFadingMin
-              : alpha;
-          alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
+        /** Alpha */
+        const alphaMin =
+          this.highlightSettings.highlightByLinkForNodeFadingMin < alpha
+            ? this.highlightSettings.highlightByLinkForNodeFadingMin
+            : alpha;
+        alpha = animationByProgress(alphaMin, alpha - alphaMin, 1 - this.highlightProgress);
+        /** Text Alpha */
+        const textAlphaMin =
+          this.highlightSettings.highlightByLinkForTextFadingMin < textAlpha
+            ? this.highlightSettings.highlightByLinkForTextFadingMin
+            : textAlpha;
+        textAlpha = animationByProgress(
+          textAlphaMin,
+          textAlpha - textAlphaMin,
+          1 - this.highlightProgress,
+        );
+        if (nodeOptions.label) {
+          /** Label Alpha */
+          const labelAlphaMin =
+            this.highlightSettings.highlightByLinkForLabelFadingMin < labelAlpha
+              ? this.highlightSettings.highlightByLinkForLabelFadingMin
+              : labelAlpha;
+          labelAlpha = animationByProgress(
+            labelAlphaMin,
+            labelAlpha - labelAlphaMin,
+            1 - this.highlightProgress,
+          );
         }
-        if (this.nodeSettings.highlightByLinkTextFading) {
-          const min =
-            this.nodeSettings.highlightByLinkTextFadingMin < textAlpha
-              ? this.nodeSettings.highlightByLinkTextFadingMin
-              : textAlpha;
-          textAlpha = animationByProgress(min, textAlpha - min, 1 - this.highlightProgress);
-        }
-        if (this.nodeSettings.highlightByLinkNodeColor) {
+        if (this.highlightSettings.highlightByLinkForNodeColor) {
+          /** Color Fading */
           const colorRgb = extractRgb(colorToRgb(color));
           if (colorRgb) {
             const colorRgbFade = fadeRgb(
               colorRgb,
-              this.nodeSettings.highlightByLinkNodeColorFadingMin,
+              this.highlightSettings.highlightByLinkForNodeColorFadingMin,
             );
             const colorFadeAnimation = rgbAnimationByProgress(
               colorRgb,
@@ -197,50 +259,78 @@ export function getDrawNode<
       } else {
         /** Highlighted */
 
-        if (this.nodeSettings.highlightByLinkNodeSizing && nodeOptions.shape === "circle") {
+        if (this.highlightSettings.highlightByNodeForNodeColor) {
+          /** Color */
+          const colorRgb = extractRgb(colorToRgb(color));
+          const colorRgbHighlight = extractRgb(
+            colorToRgb(this.highlightSettings.highlightByNodeForNodeColor),
+          );
+          if (colorRgb && colorRgbHighlight) {
+            const colorFadeAnimation = rgbAnimationByProgress(
+              colorRgb,
+              colorRgbHighlight,
+              this.highlightProgress,
+            );
+            color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
+          }
+        }
+
+        if (nodeOptions.shape === "circle") {
+          /** Radius */
           radiusInitial = animationByProgress(
             radiusInitial,
-            this.nodeSettings.highlightByLinkNodeSizingAdditional,
+            this.highlightSettings.highlightByLinkForNodeSizingAdditional,
             this.highlightProgress,
           );
         }
-        if (
-          this.nodeSettings.highlightByLinkNodeSizing &&
-          (nodeOptions.shape === "square" || nodeOptions.shape === "text")
-        ) {
+        if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
+          /** Size */
           sizeCoefficient = animationByProgress(
             sizeCoefficient,
-            this.nodeSettings.highlightByNodeNodeSizingAdditionalCoefficient,
+            this.highlightSettings.highlightByNodeForNodeSizingAdditionalCoefficient,
             this.highlightProgress,
           );
 
           widthInitial *= sizeCoefficient;
           heightInitial *= sizeCoefficient;
         }
-        if (this.nodeSettings.highlightByLinkTextSizing) {
-          textSize = animationByProgress(
-            textSize,
-            this.nodeSettings.highlightByLinkTextSizingAdditional,
+
+        /** Text Size */
+        textSize = animationByProgress(
+          textSize,
+          this.highlightSettings.highlightByLinkForTextSizingAdditional,
+          this.highlightProgress,
+        );
+        /** Text Shift X */
+        textShiftX = animationByProgress(
+          textShiftX,
+          this.highlightSettings.highlightByLinkForTextShiftXAdditional,
+          this.highlightProgress,
+        );
+        /** Text Shift Y */
+        textShiftY = animationByProgress(
+          textShiftY,
+          this.highlightSettings.highlightByLinkForTextShiftYAdditional,
+          this.highlightProgress,
+        );
+        /** Text Weight */
+        textWeight = animationByProgress(
+          textWeight,
+          this.highlightSettings.highlightByLinkForTextWeightAdditional,
+          this.highlightProgress,
+        );
+
+        if (nodeOptions.label) {
+          /** Label Size */
+          labelSize = animationByProgress(
+            labelSize,
+            this.highlightSettings.highlightByLinkForLabelSizingAdditional,
             this.highlightProgress,
           );
-          textShiftX = animationByProgress(
-            textShiftX,
-            this.nodeSettings.highlightByLinkTextShiftXAdditional,
-            this.highlightProgress,
-          );
-          textShiftY = animationByProgress(
-            textShiftY,
-            this.nodeSettings.highlightByLinkTextShiftYAdditional,
-            this.highlightProgress,
-          );
-          textWeight = animationByProgress(
-            textWeight,
-            this.nodeSettings.highlightByLinkTextWeightAdditional,
-            this.highlightProgress,
-          );
-          textWidth = animationByProgress(
-            textWidth,
-            this.nodeSettings.highlightByLinkTextWidthAdditional,
+          /** Label Weight */
+          labelWeight = animationByProgress(
+            labelWeight,
+            this.highlightSettings.highlightByLinkForLabelWeightAdditional,
             this.highlightProgress,
           );
         }
@@ -285,16 +375,15 @@ export function getDrawNode<
         sizeFlexible: this.nodeSettings.nodeSizeFlexible,
       });
 
-      textSize *= size.additionalSizeCoefficient;
+      labelSize *= size.additionalSizeCoefficient;
     }
     /** Size by text in textNode */
-    if (nodeOptions.shape === "text" && nodeOptions.text) {
-      textWidth = width;
+    if (nodeOptions.shape === "text" && nodeOptions.label) {
       let lines: string[];
 
       let textNodeParameters: CachedTextNodeParametersInterface;
 
-      const cachedLines = this.cachedNodeText[node.id];
+      const cachedLines = this.cachedNodeLabel[node.id];
       const cachedTextNodeParameters = this.cachedTextNodeParameters[node.id];
       if (cachedLines != undefined && cachedTextNodeParameters != undefined) {
         lines = cachedLines;
@@ -302,30 +391,30 @@ export function getDrawNode<
       } else {
         const textInfo = getTextLines({
           context: this.context,
-          text: nodeOptions.text,
-          textAlign: nodeOptions.textAlign,
-          textColor: nodeOptions.textColor,
-          textFont: nodeOptions.textFont,
-          textSize,
-          maxWidth: textWidth,
-          textStyle: nodeOptions.textStyle,
+          text: nodeOptions.label,
+          textAlign: nodeOptions.labelAlign,
+          textColor: nodeOptions.labelColor,
+          textFont: nodeOptions.labelFont,
+          textSize: labelSize,
+          maxWidth: nodeOptions.labelWidth,
+          textStyle: nodeOptions.labelStyle,
           textWeight,
         });
-        textNodeParameters = [textInfo.currentMaxSize, textSize];
+        textNodeParameters = [textInfo.currentMaxSize, labelSize];
         lines = textInfo.lines;
-        this.cachedNodeText[node.id] = lines;
+        this.cachedNodeLabel[node.id] = lines;
         this.cachedTextNodeParameters[node.id] = textNodeParameters;
       }
 
-      const textSizeCoefficient = textSize / textNodeParameters[1];
+      const textSizeCoefficient = labelSize / textNodeParameters[1];
       const maxSize = textNodeParameters[0] * textSizeCoefficient;
 
       height =
-        lines.length * textSize +
-        (lines.length - 1) * nodeOptions.textGap +
-        nodeOptions.textNodeYPadding;
+        lines.length * labelSize +
+        (lines.length - 1) * nodeOptions.labelGap +
+        nodeOptions.labelYPadding;
 
-      width = maxSize + nodeOptions.textNodeXPadding;
+      width = maxSize + nodeOptions.labelXPadding;
     }
 
     /** Node parameters */
@@ -390,6 +479,27 @@ export function getDrawNode<
               this.context.stroke();
             }
           }
+
+          if (node.label) {
+            this.context.globalAlpha = labelAlpha;
+            drawText({
+              context: this.context,
+              cachedNodeText: this.cachedNodeLabel,
+              id: node.id,
+              text: node.label,
+              textAlign: nodeOptions.labelAlign,
+              textColor: nodeOptions.labelColor,
+              textFont: nodeOptions.labelFont,
+              textGap: nodeOptions.labelGap,
+              textSize: labelSize,
+              textStyle: nodeOptions.labelStyle,
+              textWeight: labelWeight,
+              maxWidth: nodeOptions.labelWidth,
+              x: node.x,
+              y: node.y + labelSize / 3,
+            });
+          }
+
           break;
         }
         case "square": {
@@ -429,6 +539,25 @@ export function getDrawNode<
               this.context.stroke();
             }
           }
+          if (node.label) {
+            this.context.globalAlpha = labelAlpha;
+            drawText({
+              context: this.context,
+              cachedNodeText: this.cachedNodeLabel,
+              id: node.id,
+              text: node.label,
+              textAlign: nodeOptions.labelAlign,
+              textColor: nodeOptions.labelColor,
+              textFont: nodeOptions.labelFont,
+              textGap: nodeOptions.labelGap,
+              textSize: labelSize,
+              textStyle: nodeOptions.labelStyle,
+              textWeight: labelWeight,
+              maxWidth: nodeOptions.labelWidth,
+              x: node.x,
+              y: node.y + labelSize / 3,
+            });
+          }
           break;
         }
         case "text": {
@@ -436,23 +565,23 @@ export function getDrawNode<
             this.context.strokeRect(node.x - width / 2, node.y - height / 2, width, height);
           }
 
-          const lines = this.cachedNodeText[node.id];
-          if (nodeOptions.text && lines)
+          const lines = this.cachedNodeLabel[node.id];
+          if (nodeOptions.label && lines)
             drawText({
               id: node.id,
-              cachedNodeText: this.cachedNodeText,
+              cachedNodeText: this.cachedNodeLabel,
               context: this.context,
-              text: nodeOptions.text,
-              textAlign: nodeOptions.textAlign,
-              textColor: nodeOptions.textColor,
-              textFont: nodeOptions.textFont,
-              textSize,
+              text: nodeOptions.label,
+              textAlign: nodeOptions.labelAlign,
+              textColor: nodeOptions.labelColor,
+              textFont: nodeOptions.labelFont,
+              textSize: labelSize,
               x: node.x,
               y: node.y + textSize / 4 - (lines.length - 1) * (textSize / 2),
-              maxWidth: textWidth,
-              textStyle: nodeOptions.textStyle,
+              maxWidth: nodeOptions.labelWidth,
+              textStyle: nodeOptions.labelStyle,
               textWeight,
-              textGap: nodeOptions.textGap,
+              textGap: nodeOptions.labelGap,
             });
           this.context.fill();
           if (nodeOptions.borderWidth > 0) {
@@ -483,13 +612,12 @@ export function getDrawNode<
           textShiftX,
           textShiftY,
           textWeight,
-          textWidth,
         });
       });
     }
 
     /** Text draw */
-    if (nodeOptions.textVisible && nodeOptions.text && nodeOptions.shape !== "text") {
+    if (nodeOptions.textVisible && nodeOptions.text) {
       textRenders.push(() => {
         if (nodeOptions.textDraw) {
           nodeOptions.textDraw.bind(this)(node, {
@@ -502,7 +630,6 @@ export function getDrawNode<
             textShiftX,
             textShiftY,
             textWeight,
-            textWidth,
           });
 
           return;
@@ -516,7 +643,7 @@ export function getDrawNode<
         if (nodeOptions.shape === "circle") {
           y += radius;
         }
-        if (nodeOptions.shape === "square") {
+        if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
           y += height / 2;
         }
 
@@ -531,7 +658,7 @@ export function getDrawNode<
           textSize,
           x: node.x + textShiftX,
           y,
-          maxWidth: textWidth,
+          maxWidth: nodeOptions.textWidth,
           textStyle: nodeOptions.textStyle,
           textWeight,
           textGap: nodeOptions.textGap,
@@ -548,7 +675,6 @@ export function getDrawNode<
             textShiftX,
             textShiftY,
             textWeight,
-            textWidth,
           });
         }
       });

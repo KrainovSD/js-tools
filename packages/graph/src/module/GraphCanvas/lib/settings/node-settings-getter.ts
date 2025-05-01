@@ -1,8 +1,12 @@
 import type { ZoomTransform } from "d3-zoom";
 import { colorGetter } from "@/lib";
-import type { NodeInterface } from "@/types";
 import { COMMON_SETTINGS, NODE_OPTIONS, NODE_SETTINGS } from "../../constants";
-import type { GraphState, NodeOptionsInterface, NodeSettingsInterface } from "../../types";
+import type {
+  GraphState,
+  NodeInterface,
+  NodeOptionsInterface,
+  NodeSettingsInterface,
+} from "../../types";
 
 export function nodeSettingsGetter<
   NodeData extends Record<string, unknown>,

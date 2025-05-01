@@ -1,6 +1,10 @@
-import type { LinkInterface } from "@/types";
 import { COMMON_SETTINGS, LINK_OPTIONS, LINK_SETTINGS } from "../../constants";
-import type { GraphState, LinkOptionsInterface, LinkSettingsInterface } from "../../types";
+import type {
+  GraphState,
+  LinkInterface,
+  LinkOptionsInterface,
+  LinkSettingsInterface,
+} from "../../types";
 
 export function linkSettingsGetter<
   NodeData extends Record<string, unknown>,

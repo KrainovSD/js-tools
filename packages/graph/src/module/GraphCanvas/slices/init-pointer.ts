@@ -1,8 +1,8 @@
 import { isObject } from "lodash";
 import { checkType } from "@/lib";
-import type { LinkInterface, NodeInterface } from "@/types";
 import type { GraphCanvas } from "../GraphCanvas";
 import { linkByPointerGetter, nodeByPointerGetter } from "../lib";
+import type { LinkInterface, NodeInterface } from "../types";
 
 export function initPointer<
   NodeData extends Record<string, unknown>,
@@ -15,8 +15,8 @@ export function initPointer<
 
     let currentNode: NodeInterface<NodeData> | undefined;
     let currentLink: LinkInterface<NodeData, LinkData> | undefined;
-    const checkHighlightNode = this.nodeSettings.highlightByHoverNode && !this.isDragging;
-    const checkHighlightLink = this.linkSettings.highlightByHoverLink && !this.isDragging;
+    const checkHighlightNode = this.highlightSettings.highlightByHoverNode && !this.isDragging;
+    const checkHighlightLink = this.highlightSettings.highlightByHoverLink && !this.isDragging;
     let highlightNode = true;
     let highlightLink = true;
 
@@ -33,7 +33,7 @@ export function initPointer<
       this.area.style.cursor = "pointer";
     } else if (checkHighlightLink) {
       currentLink = linkByPointerGetter({
-        linkSettings: this.linkSettings,
+        linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -95,7 +95,7 @@ export function initPointer<
       });
     if (!currentNode && (!checkHighlightNode || (!checkHighlightLink && !currentLink))) {
       currentLink = linkByPointerGetter({
-        linkSettings: this.linkSettings,
+        linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -123,7 +123,7 @@ export function initPointer<
 
     if (!currentNode) {
       const currentLink = linkByPointerGetter({
-        linkSettings: this.linkSettings,
+        linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -147,7 +147,7 @@ export function initPointer<
 
     if (!currentNode) {
       const currentLink = linkByPointerGetter({
-        linkSettings: this.linkSettings,
+        linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -170,7 +170,7 @@ export function initPointer<
     });
     if (!currentNode) {
       const currentLink = linkByPointerGetter({
-        linkSettings: this.linkSettings,
+        linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,
@@ -193,7 +193,7 @@ export function initPointer<
     });
     if (!currentNode) {
       const currentLink = linkByPointerGetter({
-        linkSettings: this.linkSettings,
+        linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
         areaRect: this.areaRect,
         areaTransform: this.areaTransform,
         mouseEvent: event,

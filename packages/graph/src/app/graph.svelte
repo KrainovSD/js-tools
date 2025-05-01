@@ -5,8 +5,7 @@
   import { isId } from "@krainovsd/js-helpers";
   import type { Link, LinkData, Node, NodeData } from "./types";
   import { graphStore, linksStore, nodesStore } from "./store";
-  import type { NodeInterface } from "@/types";
-  import { GraphCanvas } from "@/module/GraphCanvas";
+  import { GraphCanvas, type NodeInterface } from "@/module/GraphCanvas";
   import { getLinkSettings, getNodeSettings } from "./lib";
   import { LINK_OPTIONS, NODE_OPTIONS } from "@/module/GraphCanvas/constants";
 
@@ -77,14 +76,13 @@
         root,
         listeners: {
           onClick: untrack(() => onClick),
-          onDoubleClick: (event, node) => {
-            console.log({ ...graphInstance?.getData?.(), node });
+          onDoubleClick: (event, node, link) => {
+            console.log({ ...graphInstance?.getData?.(), node, link });
           },
           onSimulationEnd: () => {
             console.log("simulation end");
           },
         },
-
         nodeSettings: {
           options: getNodeSettings(NODE_OPTIONS),
         },

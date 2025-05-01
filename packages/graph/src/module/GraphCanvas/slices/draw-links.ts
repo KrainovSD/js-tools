@@ -1,4 +1,3 @@
-import type { LinkInterface } from "@/types";
 import type { GraphCanvas } from "../GraphCanvas";
 import {
   animationByProgress,
@@ -7,7 +6,7 @@ import {
   linkIterationExtractor,
   linkOptionsGetter,
 } from "../lib";
-import type { GraphParticle, GraphState, LinkOptionsInterface } from "../types";
+import type { GraphState, LinkInterface, LinkOptionsInterface, LinkParticle } from "../types";
 
 export function getDrawLink<
   NodeData extends Record<string, unknown>,
@@ -33,7 +32,7 @@ export function getDrawLink<
 
     const id = `${link.target.id}${link.source.id}`;
     let linkOptions: Required<LinkOptionsInterface<NodeData, LinkData>>;
-    if (this.linkSettings.cache && this.linkOptionsCache[id]) {
+    if (this.linkSettings.cacheOptions && this.linkOptionsCache[id]) {
       linkOptions = this.linkOptionsCache[id];
     } else {
       linkOptions = linkIterationExtractor(
@@ -44,7 +43,7 @@ export function getDrawLink<
         this.linkSettings.options ?? {},
         linkOptionsGetter,
       );
-      if (this.linkSettings.cache) {
+      if (this.linkSettings.cacheOptions) {
         this.linkOptionsCache[id] = linkOptions;
       }
     }
@@ -57,28 +56,28 @@ export function getDrawLink<
 
     let alpha = linkOptions.alpha;
     let arrowAlpha = this.linkSettings.arrowByHighlight ? 0 : linkOptions.arrowAlpha;
+    // let color = linkOptions.color;
+    // let arrowColor = linkOptions.arrowColor;
 
     /** NODE HIGHLIGHT */
     if (this.highlightedNeighbors && this.highlightedNode) {
       /** Not highlighted */
       if (this.highlightedNode.id != link.source.id && this.highlightedNode.id != link.target.id) {
-        if (this.linkSettings.highlightByNodeLinkFading) {
-          const min =
-            this.linkSettings.highlightByNodeLinkFadingMin < alpha
-              ? this.linkSettings.highlightByNodeLinkFadingMin
-              : alpha;
-          alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
-        }
-        if (
-          this.linkSettings.arrow &&
-          this.linkSettings.highlightByNodeArrowFading &&
-          !this.linkSettings.arrowByHighlight
-        ) {
-          const min =
-            this.linkSettings.highlightByNodeArrowFadingMin < arrowAlpha
-              ? this.linkSettings.highlightByNodeArrowFadingMin
+        const alphaMin =
+          this.highlightSettings.highlightByNodeForLinkFadingMin < alpha
+            ? this.highlightSettings.highlightByNodeForLinkFadingMin
+            : alpha;
+        alpha = animationByProgress(alphaMin, alpha - alphaMin, 1 - this.highlightProgress);
+        if (this.linkSettings.arrow && !this.linkSettings.arrowByHighlight) {
+          const arrowAlphaMin =
+            this.highlightSettings.highlightByNodeForArrowFadingMin < arrowAlpha
+              ? this.highlightSettings.highlightByNodeForArrowFadingMin
               : arrowAlpha;
-          arrowAlpha = animationByProgress(min, arrowAlpha - min, 1 - this.highlightProgress);
+          arrowAlpha = animationByProgress(
+            arrowAlphaMin,
+            arrowAlpha - arrowAlphaMin,
+            1 - this.highlightProgress,
+          );
         }
       } else {
         // eslint-disable-next-line no-lonely-if
@@ -92,23 +91,21 @@ export function getDrawLink<
     if (this.highlightedNeighbors && this.highlightedLink) {
       /** Not highlighted */
       if (this.highlightedLink !== link) {
-        if (this.linkSettings.highlightByLinkLinkFading) {
-          const min =
-            this.linkSettings.highlightByLinkLinkFadingMin < alpha
-              ? this.linkSettings.highlightByLinkLinkFadingMin
-              : alpha;
-          alpha = animationByProgress(min, alpha - min, 1 - this.highlightProgress);
-        }
-        if (
-          this.linkSettings.arrow &&
-          this.linkSettings.highlightByLinkArrowFading &&
-          !this.linkSettings.arrowByHighlight
-        ) {
-          const min =
-            this.linkSettings.highlightByLinkArrowFadingMin < arrowAlpha
-              ? this.linkSettings.highlightByLinkArrowFadingMin
+        const alphaMin =
+          this.highlightSettings.highlightByLinkForLinkFadingMin < alpha
+            ? this.highlightSettings.highlightByLinkForLinkFadingMin
+            : alpha;
+        alpha = animationByProgress(alphaMin, alpha - alphaMin, 1 - this.highlightProgress);
+        if (this.linkSettings.arrow && !this.linkSettings.arrowByHighlight) {
+          const arrowAlphaMin =
+            this.highlightSettings.highlightByLinkForArrowFadingMin < arrowAlpha
+              ? this.highlightSettings.highlightByLinkForArrowFadingMin
               : arrowAlpha;
-          arrowAlpha = animationByProgress(min, arrowAlpha - min, 1 - this.highlightProgress);
+          arrowAlpha = animationByProgress(
+            arrowAlphaMin,
+            arrowAlpha - arrowAlphaMin,
+            1 - this.highlightProgress,
+          );
         }
       } else {
         // eslint-disable-next-line no-lonely-if
@@ -131,7 +128,7 @@ export function getDrawLink<
     let xEnd = link.target.x;
     let yEnd = link.target.y;
     let linkDistance = 0;
-    if (this.linkSettings.pretty || this.linkSettings.particleFlexSpeed) {
+    if (this.linkSettings.prettyDraw || this.linkSettings.particleFlexSpeed) {
       const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
       const position = calculateLinkPositionByNode(link, isHasArrow ? linkOptions.arrowSize : 0);
 
@@ -166,11 +163,11 @@ export function getDrawLink<
         const sourceId = link.source.id;
         const targetId = link.target.id;
 
-        const particles: GraphParticle[] = [];
-        let prevParticle: GraphParticle | undefined;
+        const particles: LinkParticle[] = [];
+        let prevParticle: LinkParticle | undefined;
 
         for (let i = 0; i < particleCount; i++) {
-          const particle: GraphParticle = {
+          const particle: LinkParticle = {
             step: 0,
             sourceId,
             targetId,

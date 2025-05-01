@@ -1,6 +1,5 @@
 import { checkType } from "@/lib";
-import type { NodeInterface } from "@/types";
-import type { GraphState, NodeIterationPropsInterface } from "../../types";
+import type { GraphState, NodeInterface, NodeIterationPropsInterface } from "../../types";
 
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,

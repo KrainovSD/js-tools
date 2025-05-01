@@ -9,7 +9,6 @@ import {
   forceY,
 } from "d3-force";
 import { getDrawTime, resetDrawTime } from "@/lib";
-import type { LinkInterface, NodeInterface } from "@/types";
 import type { GraphCanvas } from "../GraphCanvas";
 import {
   nodeIterationExtractor,
@@ -17,6 +16,7 @@ import {
   nodeRadiusGetter,
   nodeSizeGetter,
 } from "../lib";
+import type { LinkInterface, NodeInterface } from "../types";
 import { getTextLines } from "./draw-text";
 
 export function initSimulation<
@@ -235,8 +235,8 @@ export function initCollideForce<
                   height =
                     textInfo.lines.length * nodeOptions.textSize +
                     (textInfo.lines.length - 1) * nodeOptions.textGap +
-                    nodeOptions.textNodeYPadding;
-                  width = textInfo.currentMaxSize + nodeOptions.textNodeXPadding;
+                    nodeOptions.labelYPadding;
+                  width = textInfo.currentMaxSize + nodeOptions.labelXPadding;
                 }
 
                 return (

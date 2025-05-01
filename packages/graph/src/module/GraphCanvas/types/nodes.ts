@@ -13,6 +13,7 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   _visible?: boolean;
   _shape?: NodeShape;
   name?: string;
+  label?: string;
   drag?: boolean;
   highlight?: boolean;
   image?: HTMLImageElement;
@@ -20,7 +21,7 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
 }
 
 export type NodeShape = "circle" | "square" | "text";
-
+export type TextStyleEnum = "normal" | "italic" | "oblique";
 export type CachedNodeTextInterface = Record<string | number, string[] | undefined>;
 export type CachedTextNodeParametersMap = Record<string | number, [number, number] | undefined>;
 

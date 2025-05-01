@@ -1,3 +1,7 @@
-export * from "./links";
-export * from "./nodes";
 export * from "./controls";
+
+export type RGB = {
+  r: number;
+  g: number;
+  b: number;
+};

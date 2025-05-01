@@ -2,8 +2,7 @@
 import { isObject } from "@krainovsd/js-helpers";
 import { greatest } from "d3-array";
 import type { ZoomTransform } from "d3-zoom";
-import type { LinkInterface } from "@/types";
-import type { LinkSettingsInterface } from "../../types";
+import type { LinkInterface } from "../../types";
 import { pointerGetter } from "./pointer-getter";
 
 export type LinkByPointerGetterOptions<
@@ -14,8 +13,7 @@ export type LinkByPointerGetterOptions<
   areaRect: DOMRect | undefined;
   areaTransform: ZoomTransform;
   links: LinkInterface<NodeData, LinkData>[];
-  linkSettings: Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
-    Pick<LinkSettingsInterface<NodeData, LinkData>, "options">;
+  linkHoverExtraZone: number;
 };
 
 export function linkByPointerGetter<
@@ -26,14 +24,14 @@ export function linkByPointerGetter<
   areaTransform,
   mouseEvent,
   links,
-  linkSettings,
+  linkHoverExtraZone,
 }: LinkByPointerGetterOptions<NodeData, LinkData>): LinkInterface<NodeData, LinkData> | undefined {
   if (!areaRect) return undefined;
 
   const [pointerX, pointerY] = pointerGetter(mouseEvent, areaRect, areaTransform);
 
   return greatest(links, (link) => {
-    if (isNearLink(pointerX, pointerY, link, linkSettings.hoverLinkThreshold)) return link.index;
+    if (isNearLink(pointerX, pointerY, link, linkHoverExtraZone)) return link.index;
   });
 }
 

@@ -1,14 +1,9 @@
 import { forceLink } from "d3-force";
 import { type ZoomTransform, zoomIdentity } from "d3-zoom";
-import type { LinkInterface } from "@/types/links";
-import type {
-  CachedNodeTextInterface,
-  CachedTextNodeParametersMap,
-  NodeInterface,
-} from "@/types/nodes";
 import {
   forceSettingsGetter,
   graphSettingsGetter,
+  highlightSettingsGetter,
   linkSettingsGetter,
   listenersGetter,
   nodeSettingsGetter,
@@ -25,15 +20,20 @@ import {
   initZoom,
 } from "./slices";
 import type {
+  CachedNodeTextInterface,
+  CachedTextNodeParametersMap,
   ForceSettingsInterface,
   GraphCanvasInterface,
   GraphCanvasSimulation,
-  GraphParticle,
   GraphSettingsInterface,
   GraphState,
+  HighlightSettingsInterface,
+  LinkInterface,
   LinkOptionsInterface,
+  LinkParticle,
   LinkSettingsInterface,
   ListenersInterface,
+  NodeInterface,
   NodeOptionsInterface,
   NodeSettingsInterface,
 } from "./types";
@@ -48,7 +48,7 @@ export class GraphCanvas<
 
   protected links: LinkInterface<NodeData, LinkData>[];
 
-  protected particles: Record<string, GraphParticle[]> = {};
+  protected particles: Record<string, LinkParticle[]> = {};
 
   protected width: number;
 
@@ -65,6 +65,8 @@ export class GraphCanvas<
   protected graphSettings: Required<GraphSettingsInterface<NodeData>>;
 
   protected forceSettings: Required<ForceSettingsInterface<NodeData, LinkData>>;
+
+  protected highlightSettings: Required<HighlightSettingsInterface>;
 
   protected nodeSettings: Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
     Pick<NodeSettingsInterface<NodeData, LinkData>, "options">;
@@ -89,6 +91,8 @@ export class GraphCanvas<
   protected eventAbortController: AbortController;
 
   protected cachedNodeText: CachedNodeTextInterface = {};
+
+  protected cachedNodeLabel: CachedNodeTextInterface = {};
 
   protected cachedTextNodeParameters: CachedTextNodeParametersMap = {};
 
@@ -156,6 +160,7 @@ export class GraphCanvas<
     listeners,
     nodeSettings,
     graphSettings,
+    highlightSettings,
   }: GraphCanvasInterface<NodeData, LinkData>) {
     // root.style.position = "relative";
     root.style.overflow = "hidden";
@@ -167,6 +172,7 @@ export class GraphCanvas<
     this.nodeSettings = nodeSettingsGetter(nodeSettings);
     this.listeners = listenersGetter(listeners);
     this.graphSettings = graphSettingsGetter(graphSettings);
+    this.highlightSettings = highlightSettingsGetter(highlightSettings);
 
     this.eventAbortController = new AbortController();
 
@@ -234,6 +240,7 @@ export class GraphCanvas<
     if (options.nodeSettings) {
       this.nodeSettings = nodeSettingsGetter(options.nodeSettings, this.nodeSettings);
       this.cachedNodeText = {};
+      this.cachedNodeLabel = {};
       this.cachedTextNodeParameters = {};
       this.nodeOptionsCache = {};
       initCollideForce.call<
@@ -259,6 +266,7 @@ export class GraphCanvas<
       | "nodeOptionsCache"
       | "linkOptionsCache"
       | "cachedNodeText"
+      | "cachedNodeLabel"
       | "cachedTextNodeParameters"
     )[],
   ) {
@@ -266,6 +274,7 @@ export class GraphCanvas<
       this.nodeOptionsCache = {};
       this.linkOptionsCache = {};
       this.cachedNodeText = {};
+      this.cachedNodeLabel = {};
       this.cachedTextNodeParameters = {};
     } else {
       for (let i = 0; i < keys.length; i++) {

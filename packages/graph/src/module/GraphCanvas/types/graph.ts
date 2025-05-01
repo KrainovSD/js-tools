@@ -1,13 +1,13 @@
 import type { Simulation } from "d3-force";
 import type { ZoomTransform } from "d3-zoom";
-import type { CachedNodeTextInterface, LinkInterface, NodeInterface } from "@/types";
+import type { ForceSettingsInterface } from "./force-settings";
+import type { GraphSettingsInterface } from "./graph-settings";
+import type { HighlightSettingsInterface } from "./highlight-settings";
+import type { LinkSettingsInterface } from "./link-settings";
+import type { LinkInterface } from "./links";
 import type { ListenersInterface } from "./listeners";
-import type {
-  ForceSettingsInterface,
-  GraphSettingsInterface,
-  LinkSettingsInterface,
-  NodeSettingsInterface,
-} from "./settings";
+import type { NodeSettingsInterface } from "./node-settings";
+import type { CachedNodeTextInterface, NodeInterface } from "./nodes";
 
 export type GraphCanvasInterface<
   NodeData extends Record<string, unknown>,
@@ -21,6 +21,7 @@ export type GraphCanvasInterface<
   nodeSettings?: NodeSettingsInterface<NodeData, LinkData>;
   linkSettings?: LinkSettingsInterface<NodeData, LinkData>;
   listeners?: ListenersInterface<NodeData, LinkData>;
+  highlightSettings?: HighlightSettingsInterface;
 };
 
 export type GraphCanvasSimulation<
@@ -55,21 +56,4 @@ export type GraphState<
     Pick<NodeSettingsInterface<NodeData, LinkData>, "options">;
   linkSettings: Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
     Pick<LinkSettingsInterface<NodeData, LinkData>, "options">;
-};
-
-export type RGB = {
-  r: number;
-  g: number;
-  b: number;
-};
-
-export type GraphParticle = {
-  step: number;
-  index: number;
-  prev: GraphParticle | undefined;
-  next: GraphParticle | undefined;
-  x?: number;
-  y?: number;
-  sourceId: string | number;
-  targetId: string | number;
 };

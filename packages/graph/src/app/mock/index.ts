@@ -1,5 +1,4 @@
-import type { GraphCanvasInterface } from "@/module/GraphCanvas";
-import type { NodeInterface } from "@/types";
+import type { GraphCanvasInterface, NodeInterface } from "@/module/GraphCanvas";
 import { getNodeNeighbors } from "../lib";
 import type { LinkData, NodeData } from "../types";
 import * as d3MockIncorrect from "./d3-mock.json";
