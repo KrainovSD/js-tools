@@ -50,7 +50,7 @@ export const columns: TableColumn<Row, "test">[] = [
   },
   {
     key: "description",
-    name: "Description",
+    name: "Очень длинное название колонки для тестов переноса строк",
     width: 234,
     filterable: true,
     filterRender: "string",
@@ -59,6 +59,7 @@ export const columns: TableColumn<Row, "test">[] = [
     draggable: true,
     sortable: true,
     cellClass: ["common", "empty", "lineClamp"],
+    headerClass: ["common", "lineClamp"],
     cellRender: "text",
     cellRenderProps: {
       pathToTooltip: "description",

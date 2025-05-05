@@ -4,7 +4,19 @@ import React from "react";
 import { getPrevFrozenWidthCell, getPrevFrozenWidthHeader } from "../lib";
 import styles from "./use-table-cell.module.scss";
 
+const RESIZE_HANDLE_WIDTH = 10;
+const THRESHOLD = 2;
+
 function handleDragStart(event: React.DragEvent<HTMLElement>) {
+  const { left, width } = event.currentTarget.getBoundingClientRect();
+  const isOverResize = event.clientX >= left + width - RESIZE_HANDLE_WIDTH - THRESHOLD;
+
+  if (isOverResize) {
+    event.preventDefault();
+
+    return;
+  }
+
   if (event.dataTransfer) {
     const index = event.currentTarget.getAttribute("data-column-index");
     if (!index) return;
@@ -65,9 +77,7 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
       );
       const frozenPosition = header.column.getIsPinned();
       const prevFrozen = getPrevFrozenWidthHeader({ frozenPosition, headers, index });
-      const canSort = header.column.getCanSort();
       const HeaderRender = header.column.columnDef.headerRender;
-      const SortRender = header.column.columnDef.sortRender;
       const draggable = header.column.columnDef.enableDraggable;
 
       if (table) {
@@ -113,13 +123,16 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
             }
           >
             <HeaderRender context={headerContext} />
-            {canSort && <SortRender context={headerContext} />}
+
             {header.column.getCanResize() && (
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
               <div
                 onMouseDown={header.getResizeHandler()}
                 onTouchStart={header.getResizeHandler()}
                 className={styles.headerResize}
+                style={{
+                  width: RESIZE_HANDLE_WIDTH,
+                }}
               />
             )}
           </th>
@@ -151,13 +164,15 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
           }}
         >
           <HeaderRender context={headerContext} />
-          {canSort && <SortRender context={headerContext} />}
           {header.column.getCanResize() && (
             // eslint-disable-next-line jsx-a11y/no-static-element-interactions
             <div
               onMouseDown={header.getResizeHandler()}
               onTouchStart={header.getResizeHandler()}
               className={styles.headerResize}
+              style={{
+                width: RESIZE_HANDLE_WIDTH,
+              }}
             />
           )}
         </div>
