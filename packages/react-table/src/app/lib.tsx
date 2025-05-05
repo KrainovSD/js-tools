@@ -10,6 +10,7 @@ export const columns: TableColumn<Row, "test">[] = [
     width: 120,
     resizable: true,
     sortType: "string-with-number",
+    draggable: false,
     // leftFrozen: true,
   },
   {
@@ -74,6 +75,7 @@ export const columns: TableColumn<Row, "test">[] = [
     name: "Colors",
     width: 200,
     resizable: true,
+    draggable: false,
     sortType: "array",
     filterable: true,
     filterType: "includes-array-all",
@@ -94,6 +96,7 @@ export const columns: TableColumn<Row, "test">[] = [
     width: 200,
     resizable: true,
     filterable: true,
+    draggable: false,
     filterType: "includes-string-one-of-array",
     filterRender: "select",
     filterRenderProps: {
@@ -112,6 +115,7 @@ export const columns: TableColumn<Row, "test">[] = [
     name: "Age",
     width: 200,
     resizable: true,
+    draggable: false,
     sortType: "number",
     filterable: true,
     filterRender: "number-range",
@@ -122,12 +126,14 @@ export const columns: TableColumn<Row, "test">[] = [
     name: "Checked",
     width: 200,
     resizable: true,
+    draggable: false,
     sortType: "boolean",
   },
   {
     key: "country",
     name: "Country",
     width: 200,
+    draggable: false,
     resizable: true,
     // grouping: true,
   },
@@ -135,6 +141,7 @@ export const columns: TableColumn<Row, "test">[] = [
     key: "sport",
     name: "Sport",
     width: 200,
+    draggable: false,
     resizable: true,
   },
   {
@@ -143,6 +150,7 @@ export const columns: TableColumn<Row, "test">[] = [
     width: 500,
     sortType: "date",
     resizable: false,
+    draggable: false,
     cellRender: "date",
     cellRenderProps: {
       format: "DD/MM/YYYY",
@@ -217,8 +225,7 @@ export function createRows(): Row[] {
       colors: Array.from({ length: 1 + faker.number.int(3) }, () => faker.color.human()),
       age: faker.number.int({ min: 18, max: 80 }),
       checked: faker.datatype.boolean(),
-      description:
-        "Бурение эксплуатационное на месторождении. Эксплуатационные газовые скважины Чаяндинского НГКМ",
+      description: "Описание",
       children:
         i % 10 === 0
           ? Array.from({ length: 5 }, (_, childId) => {

@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 import { wait } from "@krainovsd/js-helpers";
-import type { ExpandedState, VisibilityState } from "@tanstack/react-table";
+import type { ColumnOrderState, ExpandedState, VisibilityState } from "@tanstack/react-table";
 import { ConfigProvider } from "antd";
 import React from "react";
 import { Table } from "../table";
@@ -10,7 +10,7 @@ import styles from "./app.module.scss";
 import { type Row, columns, createRows } from "./lib";
 import { type RowGantt, columnsGantt, createRowsGantt } from "./lib-gantt";
 
-const withGantt: true | false = true;
+const withGantt: true | false = false;
 const rows: Row[] = createRows();
 const rowsGantt: RowGantt[] = createRowsGantt();
 
@@ -29,14 +29,15 @@ type FilterTypeKeys = undefined;
 type SortTypeKeys = undefined;
 
 export function App() {
-  const [expanded, setExpanded] = React.useState<ExpandedState>(true);
+  const [expanded, setExpanded] = React.useState<ExpandedState>({});
   const [columnsVisibility, setColumnsVisibility] = React.useState<VisibilityState>({
     name: false,
     start: true,
     end: true,
-    deviations: true,
-    risks: true,
   });
+  const [tableColumns, setTableColumns] = React.useState<ColumnOrderState>(
+    columns.map((col) => col.key),
+  );
 
   React.useEffect(() => {
     wait(1000)
@@ -45,8 +46,6 @@ export function App() {
           name: true,
           start: true,
           end: true,
-          deviations: true,
-          risks: true,
         });
       })
       .catch(() => {});
@@ -153,21 +152,23 @@ export function App() {
           fullSize={false}
           withGantt={withGantt}
           instantGanttSplitter={false}
-          ganttInfoGetter={
-            withGantt
-              ? (row) => ({
-                  end: row.original.end,
-                  id: row.original.id,
-                  start: row.original.start,
-                  name: row.original.name,
-                  type: row.original.type ?? (row.original.children ? "group" : "task"),
-                  dependents: row.original.dependents,
-                  props: {
-                    additionalData: 1,
-                  },
-                })
-              : undefined
-          }
+          columnOrder={!withGantt ? tableColumns : undefined}
+          onColumnOrderChange={!withGantt ? setTableColumns : undefined}
+          // ganttInfoGetter={
+          //   withGantt
+          //     ? (row) => ({
+          //         end: row.original.end,
+          //         id: row.original.id,
+          //         start: row.original.start,
+          //         name: row.original.name,
+          //         type: row.original.type ?? (row.original.children ? "group" : "task"),
+          //         dependents: row.original.dependents,
+          //         props: {
+          //           additionalData: 1,
+          //         },
+          //       })
+          //     : undefined
+          // }
           firstGanttDate={firstDate?.toISOString?.()}
           lastGanttDate={lastDate?.toDateString?.()}
           ganttRowMini={true}

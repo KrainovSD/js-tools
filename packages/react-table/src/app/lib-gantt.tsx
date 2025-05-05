@@ -45,32 +45,6 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
       format: "DD/MM/YYYY",
     },
   },
-  {
-    key: "deviations",
-    name: "Отклонения",
-    width: 100,
-    cellClass: ["common", "empty", "nowrap"],
-    resizable: true,
-    cellRender: "tag",
-    cellRenderProps: {
-      bordered: true,
-      color: "red",
-      pathToTooltip: "deviation",
-      autoTooltip: true,
-    },
-  },
-  {
-    key: "risks",
-    name: "Риски",
-    width: 100,
-    cellClass: ["common", "empty", "nowrap"],
-    resizable: false,
-    cellRender: "tag",
-    cellRenderProps: {
-      bordered: true,
-      color: "purple",
-    },
-  },
 ];
 
 export type RowGantt = {
@@ -79,8 +53,6 @@ export type RowGantt = {
   start: string;
   type?: GanttTypeShapes;
   end: string;
-  risks?: number;
-  deviations?: number;
   dependents?: string[];
   children?: RowGantt[];
 };
@@ -146,15 +118,12 @@ export function createRowsGantt(): RowGantt[] {
           name: "Johnson's house",
           start: "2025-05-01",
           end: "2025-10-08",
-          risks: 4,
-          deviations: 5,
           children: [
             {
               id: "1.1.0",
               name: "Contract and very very long text in the end of table for test",
               start: "2027-11-25",
               end: "2025-12-01",
-              risks: 2,
               children: [],
             },
             {
@@ -162,7 +131,6 @@ export function createRowsGantt(): RowGantt[] {
               name: "Contract",
               start: "2025-05-01",
               end: "2025-06-02",
-              risks: 2,
               children: [],
             },
             {
@@ -170,8 +138,6 @@ export function createRowsGantt(): RowGantt[] {
               name: "Design",
               start: "2025-05-30",
               end: "2025-07-01",
-              risks: 2,
-              deviations: 3,
               children: [
                 {
                   id: "1.1.2.1",
@@ -179,13 +145,11 @@ export function createRowsGantt(): RowGantt[] {
                   start: "2025-05-30",
                   end: "2025-06-15",
                   dependents: ["1.1.2.2", "1.1.3", "1.2"],
-                  risks: 2,
                 },
                 {
                   id: "1.1.2.2",
                   name: "Outline Design",
                   start: "2025-06-15",
-                  deviations: 2,
                   end: "2025-07-01",
                 },
               ],

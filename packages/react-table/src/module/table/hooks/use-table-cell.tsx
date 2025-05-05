@@ -1,8 +1,59 @@
-import type { Cell, Header } from "@tanstack/react-table";
+import type { Cell, ColumnOrderState, Header, Updater } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
 import { getPrevFrozenWidthCell, getPrevFrozenWidthHeader } from "../lib";
 import styles from "./use-table-cell.module.scss";
+
+function handleDragStart(event: React.DragEvent<HTMLElement>) {
+  if (event.dataTransfer) {
+    const index = event.currentTarget.getAttribute("data-column-index");
+    if (!index) return;
+
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text", index);
+    event.currentTarget.style.opacity = "var(--table-header-drag-opacity)";
+  }
+}
+
+function handleDragEnd(event: React.DragEvent<HTMLElement>) {
+  event.preventDefault();
+  event.currentTarget.style.opacity = "1";
+}
+
+function handleDragEnter(event: React.DragEvent<HTMLElement>) {
+  event.currentTarget.style.background = "var(--table-header-drag-bg)";
+}
+
+function handleDragLeave(event: React.DragEvent<HTMLElement>) {
+  if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node))
+    event.currentTarget.style.background = "";
+}
+
+function handleDropGetter(
+  columnOrderState: ColumnOrderState,
+  setColumnOrderState: (updater: Updater<ColumnOrderState>) => void,
+) {
+  return function handleDrop(event: React.DragEvent<HTMLElement>) {
+    event.preventDefault();
+    event.currentTarget.style.background = "";
+    const draggableIndex = event.dataTransfer?.getData?.("text");
+    const droppableIndex = event.currentTarget.getAttribute("data-column-index");
+
+    if (
+      draggableIndex == undefined ||
+      droppableIndex == undefined ||
+      draggableIndex === droppableIndex
+    )
+      return;
+
+    const order = [...columnOrderState];
+    [order[+draggableIndex], order[+droppableIndex]] = [
+      order[+droppableIndex],
+      order[+draggableIndex],
+    ];
+    setColumnOrderState(order);
+  };
+}
 
 export function useTableCell<RowData extends Record<string, unknown>>(table: boolean) {
   const getHeader = React.useCallback(
@@ -17,11 +68,13 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
       const canSort = header.column.getCanSort();
       const HeaderRender = header.column.columnDef.headerRender;
       const SortRender = header.column.columnDef.sortRender;
+      const draggable = header.column.columnDef.enableDraggable;
 
       if (table) {
         return (
           <th
             data-id="header-cell"
+            data-column-index={index}
             key={header.id}
             colSpan={header.colSpan}
             className={clsx(
@@ -42,7 +95,22 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
               minWidth: header.getSize(),
               left: frozenPosition === "left" ? prevFrozen : 0,
               right: frozenPosition === "right" ? prevFrozen : 0,
+              cursor: draggable ? "move" : "inherit",
             }}
+            draggable={draggable}
+            onDragOver={draggable ? (event) => event.preventDefault() : undefined}
+            onDragStart={draggable ? handleDragStart : undefined}
+            onDragEnd={draggable ? handleDragEnd : undefined}
+            onDragEnter={draggable ? handleDragEnter : undefined}
+            onDragLeave={draggable ? handleDragLeave : undefined}
+            onDrop={
+              draggable
+                ? handleDropGetter(
+                    headerContext.table.getState().columnOrder,
+                    headerContext.table.setColumnOrder,
+                  )
+                : undefined
+            }
           >
             <HeaderRender context={headerContext} />
             {canSort && <SortRender context={headerContext} />}

@@ -13,6 +13,8 @@
   --table-header-cell-bg: #fafafa;
   --table-body-bg: #ffffff;
   --table-header-bg: #fafafa;
+  --table-header-drag-bg: #d7d6d6;
+  --table-header-drag-opacity: 0.5;
   --table-row-bg: "#ffffff";
   --table-border: #f0f0f0;
   --table-footer-bg: #fafafa;
@@ -23,7 +25,9 @@
   --table-row-hover-bg: #f5f5f5;
   --table-transition: all 0.1s ease;
   --table-splitter-ghost-color: #1e90ff;
-  --table-splitter-overflow-color: #26262610; // @media (prefers-color-scheme: dark) {
+  --table-splitter-overflow-color: #26262610;
+
+  // @media (prefers-color-scheme: dark) {
   //   --table-box-shadow-left: -2px 0px 5px -2px rgba(136, 136, 136, 0.3);
   //   --table-box-shadow-right: 2px 0 5px -2px rgba(136, 136, 136, 0.3);
   //   --table-box-shadow-bottom: 0px 3px 5px -2px rgba(136, 136, 136, 0.3);
