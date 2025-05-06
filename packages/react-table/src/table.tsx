@@ -250,7 +250,6 @@ export function Table<
 
         <TableFooter
           filteredRowsCount={filteredRowsCount}
-          pageSizes={props.pageSizes}
           Pagination={props.Pagination}
           table={table}
           withPagination={props.withPagination && !props.withGantt}

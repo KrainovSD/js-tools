@@ -26,7 +26,7 @@
   background-color: var(--table-header-bg);
   overflow: initial;
   display: flex;
-  width: 100%;
+  width: fit-content;
 }
 
 .body {
@@ -40,7 +40,7 @@
 
 .row {
   display: flex;
-  width: 100%;
+  width: fit-content;
   transition: var(--table-transition);
   background-color: var(--table-row-bg);
 

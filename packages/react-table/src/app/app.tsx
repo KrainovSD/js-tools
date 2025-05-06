@@ -144,7 +144,7 @@ export function App() {
           onDoubleClickRow={(row) => {
             console.log(row, "dbClick");
           }}
-          pageSizes={[25, 50, 100, 150, 250]}
+          pageSizes={[25, 50, 100, 150, 250, 500]}
           withFilters={true}
           virtualRows={true}
           virtualRowSize={60}

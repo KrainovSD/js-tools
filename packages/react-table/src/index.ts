@@ -26,6 +26,7 @@ declare module "@tanstack/react-table" {
 
   interface TableMeta<TData extends RowData> {
     renderers: TableRenderers<TData>;
+    pageSizes?: number[];
   }
 }
 

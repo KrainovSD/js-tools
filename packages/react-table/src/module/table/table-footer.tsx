@@ -8,13 +8,13 @@ type TableFooterProps<RowData extends Record<string, unknown>> = {
   withTotal: boolean | undefined;
   table: TableInterface<RowData>;
   filteredRowsCount: number;
-  pageSizes: number[] | undefined;
 };
 
 export function TableFooter<RowData extends Record<string, unknown>>(
   props: TableFooterProps<RowData>,
 ) {
   const tableState = props.table.getState();
+  const pageSizes = props.table.options.meta?.pageSizes;
 
   return (
     <>
@@ -37,7 +37,7 @@ export function TableFooter<RowData extends Record<string, unknown>>(
                       props.table.setPageSize(pageSize);
                     }}
                     defaultPageSize={tableState.pagination.pageSize}
-                    pageSizeOptions={props.pageSizes ?? [10, 25, 50, 100, 150, 200]}
+                    pageSizeOptions={pageSizes ?? [10, 25, 50, 100, 150, 200]}
                   />
                 )}
                 {props.Pagination && <props.Pagination table={props.table} />}
