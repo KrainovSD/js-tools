@@ -1,5 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import { useVirtualizer as useVirtualizerLibrary } from "@tanstack/react-virtual";
+import React from "react";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
 import type { TableColumn } from "../../../types";
 
@@ -60,6 +61,24 @@ export function useVirtualizer<
 ) {
   const columnVirtualEnabled = Boolean(props.virtualColumn);
   const visibleColumns = props.table.getCenterVisibleLeafColumns();
+  const leftColumns = props.table.getLeftVisibleLeafColumns();
+  const rightColumns = props.table.getRightVisibleLeafColumns();
+
+  const leftOffset = React.useMemo(() => {
+    return leftColumns.reduce((acc, column) => {
+      acc += column.getSize();
+
+      return acc;
+    }, 0);
+  }, [leftColumns]);
+  const rightOffset = React.useMemo(() => {
+    return rightColumns.reduce((acc, column) => {
+      acc += column.getSize();
+
+      return acc;
+    }, 0);
+  }, [rightColumns]);
+
   const columnVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLTableCellElement>({
     count: visibleColumns.length,
     estimateSize: (index) => visibleColumns[index].getSize(),
@@ -67,8 +86,11 @@ export function useVirtualizer<
     horizontal: true,
     overscan: 2,
     enabled: columnVirtualEnabled,
+    paddingStart: leftOffset,
+    paddingEnd: rightOffset,
   });
   const columnsVirtual = columnVirtualizer.getVirtualItems();
+
   //different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
   let virtualPaddingLeft: number | undefined;
   let virtualPaddingRight: number | undefined;

@@ -7,6 +7,7 @@ type Props<RowData extends Record<string, unknown>> = {
   cell: Cell<RowData, unknown>;
   index: number;
   cells: Cell<RowData, unknown>[];
+  left?: number;
   table?: boolean;
 };
 
@@ -51,8 +52,9 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
           width: props.cell.column.getSize(),
           maxWidth: props.cell.column.getSize(),
           minWidth: props.cell.column.getSize(),
-          left: frozenPosition === "left" ? prevFrozen : 0,
+          left: frozenPosition === "left" ? prevFrozen : (props.left ?? 0),
           right: frozenPosition === "right" ? prevFrozen : 0,
+          position: props.left ? "absolute" : undefined,
         }}
       >
         {isGroupCell && Expander && <Expander context={cellContext} />}

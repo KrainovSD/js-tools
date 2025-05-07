@@ -1,7 +1,7 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
-import type { RowInterface } from "../../types";
+import type { RowInterface, TableInterface } from "../../types";
 import { TableCell } from "./table-cell";
 import styles from "./table-row-virtual.module.scss";
 
@@ -16,6 +16,7 @@ type Props<RowData extends Record<string, unknown>> = {
   columnVirtualEnabled: boolean;
   virtualPaddingLeft: number | undefined;
   virtualPaddingRight: number | undefined;
+  table: TableInterface<RowData>;
 };
 
 export const TableRowVirtual = React.memo(function TableRowVirtual<
@@ -38,6 +39,7 @@ export const TableRowVirtual = React.memo(function TableRowVirtual<
       ref={(node) => props.rowVirtualizer.measureElement(node)}
       style={{
         transform: `translateY(${props.virtualRow.start}px)`, //this should always be a `style` as it changes on scrolls
+        width: props.table.getTotalSize(),
       }}
       onClick={(event) => {
         props.onClickRow?.(row, event);
@@ -48,9 +50,6 @@ export const TableRowVirtual = React.memo(function TableRowVirtual<
     >
       {props.columnVirtualEnabled && (
         <>
-          {props.virtualPaddingLeft ? (
-            <td data-id="cell" style={{ display: "flex", width: props.virtualPaddingLeft }} />
-          ) : null}
           {row.getLeftVisibleCells().map((cell, index, cells) => {
             /** CELL */
 
@@ -69,6 +68,7 @@ export const TableRowVirtual = React.memo(function TableRowVirtual<
                 cell={cell}
                 index={virtualColumn.index}
                 cells={centerVisibleCells}
+                left={virtualColumn.start}
                 table
               />
             );
@@ -80,9 +80,6 @@ export const TableRowVirtual = React.memo(function TableRowVirtual<
               <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} table />
             );
           })}
-          {props.virtualPaddingRight ? (
-            <td data-id="cell" style={{ display: "flex", width: props.virtualPaddingRight }} />
-          ) : null}
         </>
       )}
       {!props.columnVirtualEnabled &&

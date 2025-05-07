@@ -1,6 +1,7 @@
 import type { HeaderGroup } from "@tanstack/react-table";
-import type { VirtualItem } from "@tanstack/react-virtual";
+import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import React from "react";
+import type { TableInterface } from "../../types";
 import { TableHeaderCell } from "./table-header-cell";
 import styles from "./table-header-row.module.scss";
 
@@ -13,21 +14,22 @@ type Props<RowData extends Record<string, unknown>> = {
   leftHeaders: HeaderGroup<RowData>["headers"];
   rightHeaders: HeaderGroup<RowData>["headers"];
   centerHeaders: HeaderGroup<RowData>["headers"];
+  columnVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
+  table: TableInterface<RowData>;
 };
 
 export const TableHeaderRow = React.memo(function TableHeaderRow<
   RowData extends Record<string, unknown>,
 >(props: Props<RowData>) {
   return (
-    <tr key={`${props.headerGroup.id}-row`} className={styles.headerRow} data-id="header-row">
+    <tr
+      key={`${props.headerGroup.id}-row`}
+      className={styles.headerRow}
+      data-id="header-row"
+      style={{ width: props.table.getTotalSize() }}
+    >
       {props.columnVirtualEnabled && (
         <>
-          {props.virtualPaddingLeft ? (
-            <th
-              style={{ display: "flex", width: props.virtualPaddingLeft }}
-              data-id="header-cell"
-            />
-          ) : null}
           {props.leftHeaders.map((header, index, headers) => {
             return (
               <TableHeaderCell
@@ -49,6 +51,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 header={header}
                 headers={props.centerHeaders}
                 index={virtualColumn.index}
+                left={virtualColumn.start}
                 table
               />
             );
@@ -64,12 +67,6 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
               />
             );
           })}
-          {props.virtualPaddingRight ? (
-            <th
-              style={{ display: "flex", width: props.virtualPaddingRight }}
-              data-id="header-cell"
-            />
-          ) : null}
         </>
       )}
       {!props.columnVirtualEnabled &&

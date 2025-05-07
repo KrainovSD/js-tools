@@ -7,6 +7,7 @@ type Props<RowData extends Record<string, unknown>> = {
   header: Header<RowData, unknown>;
   index: number;
   headers: Header<RowData, unknown>[];
+  left?: number;
   table?: boolean;
 };
 
@@ -113,9 +114,10 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
           width: props.header.getSize(),
           maxWidth: props.header.getSize(),
           minWidth: props.header.getSize(),
-          left: frozenPosition === "left" ? prevFrozen : 0,
+          left: frozenPosition === "left" ? prevFrozen : (props.left ?? 0),
           right: frozenPosition === "right" ? prevFrozen : 0,
           cursor: draggable ? "move" : "inherit",
+          position: props.left ? "absolute" : undefined,
         }}
         draggable={draggable}
         onDragOver={draggable ? (event) => event.preventDefault() : undefined}
