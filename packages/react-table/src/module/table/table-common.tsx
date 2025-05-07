@@ -1,8 +1,10 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import type { RowInterface, TableInterface } from "../../types";
-import { useTableCell } from "./hooks";
 import styles from "./table-common.module.scss";
+import { TableHeaderRow } from "./table-header-row";
+import { TableRow } from "./table-row";
+import { TableRowVirtual } from "./table-row-virtual";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   columnVirtualEnabled: boolean;
@@ -23,7 +25,9 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
 export function TableCommon<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
 ) {
-  const { getCell, getHeader } = useTableCell<RowData>(true);
+  const leftHeadersGroup = props.table.getLeftHeaderGroups();
+  const centerHeadersGroup = props.table.getCenterHeaderGroups();
+  const rightHeadersGroup = props.table.getRightHeaderGroups();
 
   return (
     <table
@@ -40,34 +44,24 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         )}
         data-id="header"
       >
-        {props.table.getHeaderGroups().map((headerGroup) => {
+        {props.table.getHeaderGroups().map((headerGroup, index) => {
+          const leftHeaders = leftHeadersGroup[index].headers;
+          const centerHeaders = centerHeadersGroup[index].headers;
+          const rightHeaders = rightHeadersGroup[index].headers;
+
           /** ROW HEADER */
           return (
-            <tr key={headerGroup.id} className={styles.headerRow} data-id="header-row">
-              {props.columnVirtualEnabled && (
-                <>
-                  {props.virtualPaddingLeft ? (
-                    <th
-                      style={{ display: "flex", width: props.virtualPaddingLeft }}
-                      data-id="header-cell"
-                    />
-                  ) : null}
-                  {props.columnsVirtual.map((virtualColumn) => {
-                    /** CELL HEADER  */
-                    const header = headerGroup.headers[virtualColumn.index];
-
-                    return getHeader(header, virtualColumn.index, headerGroup.headers);
-                  })}
-                  {props.virtualPaddingRight ? (
-                    <th
-                      style={{ display: "flex", width: props.virtualPaddingRight }}
-                      data-id="header-cell"
-                    />
-                  ) : null}
-                </>
-              )}
-              {!props.columnVirtualEnabled && headerGroup.headers.map(getHeader)}
-            </tr>
+            <TableHeaderRow<RowData>
+              key={`${headerGroup.id}-header-row`}
+              columnVirtualEnabled={props.columnVirtualEnabled}
+              columnsVirtual={props.columnsVirtual}
+              headerGroup={headerGroup}
+              virtualPaddingLeft={props.virtualPaddingLeft}
+              virtualPaddingRight={props.virtualPaddingRight}
+              centerHeaders={centerHeaders}
+              leftHeaders={leftHeaders}
+              rightHeaders={rightHeaders}
+            />
           );
         })}
       </thead>
@@ -80,117 +74,36 @@ export function TableCommon<RowData extends Record<string, unknown>>(
       >
         {props.rowVirtualEnabled &&
           props.rowsVirtual.map((virtualRow) => {
-            const row = props.rows[virtualRow.index];
-            const visibleCells = row.getVisibleCells();
-
-            /** ROW */
             return (
-              <tr
-                data-id="row"
-                key={row.id}
-                className={clsx(
-                  styles.row,
-                  styles.row__virtual,
-                  typeof props.rowClassName === "function"
-                    ? props.rowClassName(row)
-                    : props.rowClassName,
-                )}
-                data-index={virtualRow.index}
-                ref={(node) => props.rowVirtualizer.measureElement(node)}
-                style={{
-                  transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scrolls
-                }}
-                onClick={(event) => {
-                  props.onClickRow?.(row, event);
-                }}
-                onDoubleClick={(event) => {
-                  props.onDoubleClickRow?.(row, event);
-                }}
-              >
-                {props.columnVirtualEnabled && (
-                  <>
-                    {props.virtualPaddingLeft ? (
-                      <td
-                        data-id="cell"
-                        style={{ display: "flex", width: props.virtualPaddingLeft }}
-                      />
-                    ) : null}
-                    {props.columnsVirtual.map((virtualColumn) => {
-                      /** CELL */
-                      const cell = visibleCells[virtualColumn.index];
-
-                      return getCell(cell, virtualColumn.index, visibleCells);
-                    })}
-                    {props.virtualPaddingRight ? (
-                      <td
-                        data-id="cell"
-                        style={{ display: "flex", width: props.virtualPaddingRight }}
-                      />
-                    ) : null}
-                  </>
-                )}
-                {!props.columnVirtualEnabled &&
-                  visibleCells.map((cell, index, cells) => {
-                    /** CELL */
-
-                    return getCell(cell, index, cells);
-                  })}
-              </tr>
+              <TableRowVirtual<RowData>
+                virtualRow={virtualRow}
+                columnVirtualEnabled={props.columnVirtualEnabled}
+                columnsVirtual={props.columnsVirtual}
+                rowClassName={props.rowClassName}
+                rows={props.rows}
+                virtualPaddingLeft={props.virtualPaddingLeft}
+                virtualPaddingRight={props.virtualPaddingRight}
+                key={`${virtualRow.index}-row`}
+                onClickRow={props.onClickRow}
+                onDoubleClickRow={props.onDoubleClickRow}
+                rowVirtualizer={props.rowVirtualizer}
+              />
             );
           })}
         {!props.rowVirtualEnabled &&
           props.rows.map((row) => {
-            const visibleCells = row.getVisibleCells();
-
-            /** ROW */
             return (
-              <tr
-                data-id="row"
-                key={row.id}
-                className={clsx(
-                  styles.row,
-                  typeof props.rowClassName === "function"
-                    ? props.rowClassName(row)
-                    : props.rowClassName,
-                )}
-                data-index={row.index}
-                ref={(node) => props.rowVirtualizer.measureElement(node)}
-                onClick={(event) => {
-                  props.onClickRow?.(row, event);
-                }}
-                onDoubleClick={(event) => {
-                  props.onDoubleClickRow?.(row, event);
-                }}
-              >
-                {props.columnVirtualEnabled && (
-                  <>
-                    {props.virtualPaddingLeft ? (
-                      <td
-                        data-id="cell"
-                        style={{ display: "flex", width: props.virtualPaddingLeft }}
-                      />
-                    ) : null}
-                    {props.columnsVirtual.map((virtualColumn) => {
-                      /** CELL */
-                      const cell = visibleCells[virtualColumn.index];
-
-                      return getCell(cell, virtualColumn.index, visibleCells);
-                    })}
-                    {props.virtualPaddingRight ? (
-                      <td
-                        data-id="cell"
-                        style={{ display: "flex", width: props.virtualPaddingRight }}
-                      />
-                    ) : null}
-                  </>
-                )}
-                {!props.columnVirtualEnabled &&
-                  visibleCells.map((cell, index, cells) => {
-                    /** CELL */
-
-                    return getCell(cell, index, cells);
-                  })}
-              </tr>
+              <TableRow
+                columnVirtualEnabled={props.columnVirtualEnabled}
+                columnsVirtual={props.columnsVirtual}
+                row={row}
+                rowClassName={props.rowClassName}
+                virtualPaddingLeft={props.virtualPaddingLeft}
+                virtualPaddingRight={props.virtualPaddingRight}
+                key={`${row.id}-row`}
+                onClickRow={props.onClickRow}
+                onDoubleClickRow={props.onDoubleClickRow}
+              />
             );
           })}
       </tbody>

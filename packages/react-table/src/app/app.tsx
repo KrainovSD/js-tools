@@ -147,8 +147,8 @@ export function App() {
           pageSizes={[25, 50, 100, 150, 250, 500]}
           withFilters={true}
           virtualRows={true}
-          virtualRowSize={60}
-          virtualColumn={false}
+          virtualRowSize={69}
+          virtualColumn={true}
           fullSize={false}
           withGantt={withGantt}
           instantGanttSplitter={false}

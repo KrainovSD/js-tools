@@ -1,0 +1,13 @@
+.row {
+  display: flex;
+  width: fit-content;
+  background-color: var(--table-row-bg);
+
+  &:hover {
+    background-color: var(--table-row-hover-bg);
+  }
+
+  &__virtual {
+    position: absolute;
+  }
+}

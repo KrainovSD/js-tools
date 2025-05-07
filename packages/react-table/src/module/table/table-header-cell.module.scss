@@ -34,28 +34,3 @@
   user-select: none;
   touch-action: none;
 }
-
-.cell {
-  &__frozen {
-    &_left {
-      position: sticky;
-      left: 0;
-      z-index: 1;
-
-      &_last {
-        box-shadow: var(--table-box-shadow-right);
-      }
-    }
-
-    &_right {
-      position: sticky;
-      right: 0;
-      z-index: 1;
-
-      &_first {
-        box-shadow: var(--table-box-shadow-left);
-        border-left: 1px solid var(--table-border);
-      }
-    }
-  }
-}

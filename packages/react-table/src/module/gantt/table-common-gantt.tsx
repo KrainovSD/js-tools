@@ -2,7 +2,8 @@ import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../table.constants";
 import type { RowInterface, TableInterface } from "../../types";
-import { useTableCell } from "../table/hooks";
+import { TableCell } from "../table/table-cell";
+import { TableHeaderCell } from "../table/table-header-cell";
 import { GANTT_COMMON_TABLE_BODY_ID, GANTT_COMMON_TABLE_HEADER_ID } from "./gantt.constants";
 import styles from "./table-common-gantt.module.scss";
 
@@ -30,8 +31,6 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
 export function TableCommonGantt<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
 ) {
-  const { getCell, getHeader } = useTableCell<RowData>(false);
-
   return (
     <div
       ref={props.tableRef}
@@ -74,7 +73,14 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                       /** CELL HEADER  */
                       const header = headerGroup.headers[virtualColumn.index];
 
-                      return getHeader(header, virtualColumn.index, headerGroup.headers);
+                      return (
+                        <TableHeaderCell
+                          key={`${header.id}-cell`}
+                          header={header}
+                          headers={headerGroup.headers}
+                          index={virtualColumn.index}
+                        />
+                      );
                     })}
                     {props.virtualPaddingRight ? (
                       <div
@@ -84,7 +90,17 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                     ) : null}
                   </>
                 )}
-                {!props.columnVirtualEnabled && headerGroup.headers.map(getHeader)}
+                {!props.columnVirtualEnabled &&
+                  headerGroup.headers.map((header, index) => {
+                    return (
+                      <TableHeaderCell
+                        key={`${header.id}-cell`}
+                        header={header}
+                        headers={headerGroup.headers}
+                        index={index}
+                      />
+                    );
+                  })}
               </div>
             );
           })}
@@ -157,7 +173,14 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                         /** CELL */
                         const cell = visibleCells[virtualColumn.index];
 
-                        return getCell(cell, virtualColumn.index, visibleCells);
+                        return (
+                          <TableCell
+                            key={`${cell.id}-cell`}
+                            cell={cell}
+                            index={virtualColumn.index}
+                            cells={visibleCells}
+                          />
+                        );
                       })}
                       {props.virtualPaddingRight ? (
                         <div
@@ -171,7 +194,14 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                     visibleCells.map((cell, index, cells) => {
                       /** CELL */
 
-                      return getCell(cell, index, cells);
+                      return (
+                        <TableCell
+                          key={`${cell.id}-cell`}
+                          cell={cell}
+                          index={index}
+                          cells={cells}
+                        />
+                      );
                     })}
                 </div>
               );
@@ -225,7 +255,14 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                         /** CELL */
                         const cell = visibleCells[virtualColumn.index];
 
-                        return getCell(cell, virtualColumn.index, visibleCells);
+                        return (
+                          <TableCell
+                            key={`${cell.id}-cell`}
+                            cell={cell}
+                            index={virtualColumn.index}
+                            cells={visibleCells}
+                          />
+                        );
                       })}
                       {props.virtualPaddingRight ? (
                         <div
@@ -239,7 +276,14 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                     visibleCells.map((cell, index, cells) => {
                       /** CELL */
 
-                      return getCell(cell, index, cells);
+                      return (
+                        <TableCell
+                          key={`${cell.id}-cell`}
+                          cell={cell}
+                          index={index}
+                          cells={cells}
+                        />
+                      );
                     })}
                 </div>
               );

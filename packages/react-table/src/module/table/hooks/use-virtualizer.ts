@@ -1,6 +1,5 @@
 import type { Table } from "@tanstack/react-table";
 import { useVirtualizer as useVirtualizerLibrary } from "@tanstack/react-virtual";
-import React from "react";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
 import type { TableColumn } from "../../../types";
 
@@ -59,13 +58,8 @@ export function useVirtualizer<
     SortType
   >,
 ) {
-  const columnVirtualEnabled = React.useMemo(() => {
-    return props.initialColumns.every(
-      (column) =>
-        !column.leftFrozen && !column.rightFrozen && !column.grouping && props.virtualColumn,
-    );
-  }, [props.initialColumns, props.virtualColumn]);
-  const visibleColumns = props.table.getVisibleLeafColumns();
+  const columnVirtualEnabled = Boolean(props.virtualColumn);
+  const visibleColumns = props.table.getCenterVisibleLeafColumns();
   const columnVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLTableCellElement>({
     count: visibleColumns.length,
     estimateSize: (index) => visibleColumns[index].getSize(),
@@ -85,6 +79,7 @@ export function useVirtualizer<
   }
 
   const { rows } = props.table.getRowModel();
+
   const rowVirtualEnabled = Boolean(props.virtualRows);
   const rowVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLElement>({
     count: rows.length,
@@ -108,7 +103,6 @@ export function useVirtualizer<
   return {
     rowVirtual,
     rows,
-    visibleColumns,
     columnsVirtual,
     virtualPaddingLeft,
     virtualPaddingRight,

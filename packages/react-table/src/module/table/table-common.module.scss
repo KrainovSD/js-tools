@@ -18,15 +18,8 @@
   &__frozen {
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 2;
   }
-}
-
-.headerRow {
-  background-color: var(--table-header-bg);
-  overflow: initial;
-  display: flex;
-  width: fit-content;
 }
 
 .body {
@@ -36,19 +29,4 @@
 
   display: flex;
   flex-direction: column;
-}
-
-.row {
-  display: flex;
-  width: fit-content;
-  transition: var(--table-transition);
-  background-color: var(--table-row-bg);
-
-  &:hover {
-    background-color: var(--table-row-hover-bg);
-  }
-
-  &__virtual {
-    position: absolute;
-  }
 }
