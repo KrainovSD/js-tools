@@ -77,7 +77,7 @@ export function useColumns<
     HeaderClass,
     FilterType,
     SortType
-  > & { withGantt: boolean | undefined },
+  > & { withGantt: boolean | undefined; withFilters: boolean },
 ) {
   const {
     cellRender = "text",
@@ -261,77 +261,80 @@ export function useColumns<
     });
 
     const filterOptions: FilterFieldType[] = [];
-    for (let i = 0; i < columns.length; i++) {
-      const column = columns[i];
+    if (props.withFilters) {
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i];
 
-      if (!column.enableColumnFilter || !column.id) continue;
+        if (!column.enableColumnFilter || !column.id || typeof column.filterRender !== "function")
+          continue;
 
-      filterOptions.push({
-        label: column.name,
-        name: column.id,
-        icon: column.icon as React.JSX.Element,
-        labelInValue: true,
-        popover: true,
-        renderDisplayValue: (value) => {
-          const filterRender = props.columns[i].filterRender;
+        filterOptions.push({
+          label: column.name,
+          name: column.id,
+          icon: column.icon as React.JSX.Element,
+          labelInValue: true,
+          popover: true,
+          renderDisplayValue: (value) => {
+            const filterRender = props.columns[i].filterRender;
 
-          /** datepicker */
-          if (isDayjsDate(value)) {
-            const props = column.filterRenderProps;
+            /** datepicker */
+            if (isDayjsDate(value)) {
+              const props = column.filterRenderProps;
 
-            if (isObject(props) && isString(props.format))
-              return dateFormat(
-                value.toDate(),
-                isObject(props) && isString(props.format) ? props.format : "DD/MM/YYYY",
-              );
-          }
-          /** datepicker range */
-          if (isArray(value) && isDayjsDate(value[0])) {
-            const props = column.filterRenderProps;
-
-            return value
-              .map((val) =>
-                dateFormat(
-                  (val as DayJS).toDate(),
+              if (isObject(props) && isString(props.format))
+                return dateFormat(
+                  value.toDate(),
                   isObject(props) && isString(props.format) ? props.format : "DD/MM/YYYY",
-                ),
-              )
-              .join(" - ");
-          }
-
-          /** select */
-          if (isString(filterRender) && filterRender.includes("select")) {
-            const options =
-              isObject(column.filterRenderProps) && "options" in column.filterRenderProps
-                ? (column.filterRenderProps?.options as SelectItemInterface[] | undefined)
-                : undefined;
-            if (isArray(options)) {
-              if (isArray(value)) {
-                return value
-                  .map((val) => options.find((opt) => opt.value === val)?.label)
-                  .join(", ");
-              }
-
-              return options.find((opt) => opt.value === value)?.label ?? "";
+                );
             }
-          }
+            /** datepicker range */
+            if (isArray(value) && isDayjsDate(value[0])) {
+              const props = column.filterRenderProps;
 
-          /** range */
-          if (isArray(value) && isString(filterRender) && filterRender.includes("range")) {
-            // eslint-disable-next-line @typescript-eslint/no-base-to-string
-            return value.join(" - ");
-          }
+              return value
+                .map((val) =>
+                  dateFormat(
+                    (val as DayJS).toDate(),
+                    isObject(props) && isString(props.format) ? props.format : "DD/MM/YYYY",
+                  ),
+                )
+                .join(" - ");
+            }
 
-          /** array */
-          if (isArray(value)) {
-            // eslint-disable-next-line @typescript-eslint/no-base-to-string
-            return value.join(", ");
-          }
+            /** select */
+            if (isString(filterRender) && filterRender.includes("select")) {
+              const options =
+                isObject(column.filterRenderProps) && "options" in column.filterRenderProps
+                  ? (column.filterRenderProps?.options as SelectItemInterface[] | undefined)
+                  : undefined;
+              if (isArray(options)) {
+                if (isArray(value)) {
+                  return value
+                    .map((val) => options.find((opt) => opt.value === val)?.label)
+                    .join(", ");
+                }
 
-          return String(value);
-        },
-        inputField: column.filterRender(column) as React.JSX.Element,
-      });
+                return options.find((opt) => opt.value === value)?.label ?? "";
+              }
+            }
+
+            /** range */
+            if (isArray(value) && isString(filterRender) && filterRender.includes("range")) {
+              // eslint-disable-next-line @typescript-eslint/no-base-to-string
+              return value.join(" - ");
+            }
+
+            /** array */
+            if (isArray(value)) {
+              // eslint-disable-next-line @typescript-eslint/no-base-to-string
+              return value.join(", ");
+            }
+
+            return String(value);
+          },
+          inputField: column.filterRender(column) as React.JSX.Element,
+        });
+      }
     }
 
     if (grouping.length > 0) {

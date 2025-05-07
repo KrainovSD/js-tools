@@ -143,6 +143,7 @@ export function Table<
     filterTypes: props.filterTypes,
     sortTypes: props.sortTypes,
     withGantt: props.withGantt,
+    withFilters: props.withFilters ?? false,
   });
 
   const table = useTableOptions({
