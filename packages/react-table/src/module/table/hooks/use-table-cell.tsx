@@ -80,6 +80,8 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
       const HeaderRender = header.column.columnDef.headerRender;
       const draggable = header.column.columnDef.enableDraggable;
 
+      if (!HeaderRender) return null;
+
       if (table) {
         return (
           <th
@@ -194,6 +196,8 @@ export function useTableCell<RowData extends Record<string, unknown>>(table: boo
       const renderers = cellContext.table.options.meta?.renderers;
       const CellRender = cell.column.columnDef.cellRender;
       const Expander = renderers?.expander;
+
+      if (!CellRender) return null;
 
       if (table) {
         return (
