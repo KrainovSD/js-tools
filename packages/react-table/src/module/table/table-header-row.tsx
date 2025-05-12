@@ -1,7 +1,8 @@
 import type { HeaderGroup } from "@tanstack/react-table";
 import type { VirtualItem } from "@tanstack/react-virtual";
+import clsx from "clsx";
 import React from "react";
-import type { TableInterface } from "../../types";
+import type { HeaderInterface } from "../../types";
 import { TableHeaderCell } from "./table-header-cell";
 import styles from "./table-header-row.module.scss";
 
@@ -12,7 +13,11 @@ type Props<RowData extends Record<string, unknown>> = {
   leftHeaders: HeaderGroup<RowData>["headers"];
   rightHeaders: HeaderGroup<RowData>["headers"];
   centerHeaders: HeaderGroup<RowData>["headers"];
-  table: TableInterface<RowData>;
+  totalWidth: number;
+  headerRowClassName:
+    | ((header: HeaderInterface<RowData>) => string | undefined)
+    | string
+    | undefined;
 };
 
 export const TableHeaderRow = React.memo(function TableHeaderRow<
@@ -21,9 +26,14 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
   return (
     <tr
       key={`${props.headerGroup.id}-row`}
-      className={styles.headerRow}
+      className={clsx(
+        styles.headerRow,
+        typeof props.headerRowClassName === "function"
+          ? props.headerRowClassName(props.headerGroup)
+          : props.headerRowClassName,
+      )}
       data-id="header-row"
-      style={{ width: props.table.getTotalSize() }}
+      style={{ width: props.totalWidth }}
     >
       {props.columnVirtualEnabled && (
         <>
@@ -34,7 +44,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 header={header}
                 headers={headers}
                 index={index}
-                table
+                semanticTag
               />
             );
           })}
@@ -48,8 +58,8 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 header={header}
                 headers={props.centerHeaders}
                 index={virtualColumn.index}
-                left={virtualColumn.start}
-                table
+                virtualLeft={virtualColumn.start}
+                semanticTag
               />
             );
           })}
@@ -61,7 +71,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 header={header}
                 headers={headers}
                 index={index}
-                table
+                semanticTag
               />
             );
           })}
@@ -75,7 +85,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
               header={header}
               headers={headers}
               index={index}
-              table
+              semanticTag
             />
           );
         })}

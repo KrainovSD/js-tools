@@ -1,14 +1,13 @@
 import type { VirtualItem } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
-import type { RowInterface, TableInterface } from "../../types";
+import type { RowInterface } from "../../types";
 import { TableRow } from "./table-row";
 import styles from "./table-row-wrapper.module.scss";
 
 type Props<RowData extends Record<string, unknown>> = {
   row: RowInterface<RowData>;
-  table: TableInterface<RowData>;
-
+  totalWidth: number;
   columnsVirtual: VirtualItem[];
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
@@ -31,7 +30,7 @@ export const TableRowWrapper = React.memo(function TableRowWrapper<
           : props.rowClassName,
       )}
       style={{
-        width: props.table.getTotalSize(),
+        width: props.totalWidth,
       }}
       data-index={props.row.index}
       onClick={(event) => {

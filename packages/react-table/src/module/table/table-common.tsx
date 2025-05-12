@@ -1,6 +1,6 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
-import type { RowInterface, TableInterface } from "../../types";
+import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
 import styles from "./table-common.module.scss";
 import { TableHeaderRow } from "./table-header-row";
 import { TableRowVirtualWrapper } from "./table-row-virtual-wrapper";
@@ -15,9 +15,17 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   rowsVirtual: VirtualItem[];
   rows: RowInterface<RowData>[];
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
-  onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
-  onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
+  onClickRow:
+    | ((row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void)
+    | undefined;
+  onDoubleClickRow:
+    | ((row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void)
+    | undefined;
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
+  headerRowClassName:
+    | ((header: HeaderInterface<RowData>) => string | undefined)
+    | string
+    | undefined;
 };
 
 export function TableCommon<RowData extends Record<string, unknown>>(
@@ -57,7 +65,8 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               centerHeaders={centerHeaders}
               leftHeaders={leftHeaders}
               rightHeaders={rightHeaders}
-              table={props.table}
+              totalWidth={props.table.getTotalSize()}
+              headerRowClassName={props.headerRowClassName}
             />
           );
         })}
@@ -82,7 +91,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
                 rowVirtualizer={props.rowVirtualizer}
-                table={props.table}
+                totalWidth={props.table.getTotalSize()}
               />
             );
           })}
@@ -97,7 +106,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 key={`${row.id}-row`}
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
-                table={props.table}
+                totalWidth={props.table.getTotalSize()}
               />
             );
           })}

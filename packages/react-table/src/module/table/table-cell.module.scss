@@ -1,12 +1,16 @@
 .cell {
   background: inherit;
-  height: 100%;
+
+  &__virtual {
+    height: 100%;
+  }
 
   &__frozen {
     &_left {
       position: sticky;
       left: 0;
       z-index: 1;
+      height: auto;
 
       &_last {
         box-shadow: var(--table-box-shadow-right);
@@ -17,6 +21,7 @@
       position: sticky;
       right: 0;
       z-index: 1;
+      height: auto;
 
       &_first {
         box-shadow: var(--table-box-shadow-left);

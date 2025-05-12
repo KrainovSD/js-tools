@@ -3,6 +3,7 @@ import type {
   ColumnDef,
   FilterFn,
   HeaderContext,
+  HeaderGroup,
   Row,
   RowData,
   SortingFn,
@@ -246,6 +247,7 @@ export type FilterKey =
 
 export type TableInterface<TData extends RowData> = Table<TData>;
 export type RowInterface<TData extends RowData> = Row<TData>;
+export type HeaderInterface<TData extends RowData> = HeaderGroup<TData>;
 
 export type GanttProps<
   RowData extends Record<string, unknown>,

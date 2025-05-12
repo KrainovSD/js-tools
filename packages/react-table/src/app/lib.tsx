@@ -91,6 +91,7 @@ export const columns: TableColumn<Row, "test">[] = [
         { label: "teal", value: "teal" },
       ],
     },
+    cellClass: ["common", "empty", "lineClamp"],
   },
   {
     key: "year",

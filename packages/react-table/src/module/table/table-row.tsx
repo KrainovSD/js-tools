@@ -20,7 +20,13 @@ export function TableRow<RowData extends Record<string, unknown>>(props: Props<R
             /** CELL */
 
             return (
-              <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} table />
+              <TableCell
+                key={`${cell.id}-cell`}
+                cell={cell}
+                index={index}
+                cells={cells}
+                semanticTag
+              />
             );
           })}
           {props.columnsVirtual.map((virtualColumn) => {
@@ -34,8 +40,8 @@ export function TableRow<RowData extends Record<string, unknown>>(props: Props<R
                 cell={cell}
                 index={virtualColumn.index}
                 cells={centerVisibleCells}
-                left={virtualColumn.start}
-                table
+                virtualLeft={virtualColumn.start}
+                semanticTag
               />
             );
           })}
@@ -44,7 +50,13 @@ export function TableRow<RowData extends Record<string, unknown>>(props: Props<R
             /** CELL */
 
             return (
-              <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} table />
+              <TableCell
+                key={`${cell.id}-cell`}
+                cell={cell}
+                index={index}
+                cells={cells}
+                semanticTag
+              />
             );
           })}
         </>
@@ -54,7 +66,13 @@ export function TableRow<RowData extends Record<string, unknown>>(props: Props<R
           /** CELL */
 
           return (
-            <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} table />
+            <TableCell
+              key={`${cell.id}-cell`}
+              cell={cell}
+              index={index}
+              cells={cells}
+              semanticTag
+            />
           );
         })}
     </>

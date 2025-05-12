@@ -179,6 +179,7 @@ export function App() {
           expanded={expanded}
           onExpandedChange={setExpanded}
           rowClassName={styles.row}
+          headerRowClassName={styles.headerRow}
         />
       </div>
     </ConfigProvider>

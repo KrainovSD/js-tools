@@ -29,11 +29,13 @@ type UseVirtualizerProps<
   >[];
   table: Table<Row>;
   tableContainerRef: React.RefObject<HTMLDivElement | null>;
-  virtualColumn?: boolean;
-  virtualRows?: boolean;
-  virtualRowSize?: number;
-  gantt?: boolean;
-  ganttMini?: boolean;
+  virtualColumn: boolean | undefined;
+  virtualColumnOverScan: number | undefined;
+  virtualRows: boolean | undefined;
+  virtualRowSize: number | undefined;
+  virtualRowOverScan: number | undefined;
+  gantt: boolean | undefined;
+  ganttMini: boolean | undefined;
 };
 
 export function useVirtualizer<
@@ -63,42 +65,45 @@ export function useVirtualizer<
   const visibleColumns = props.table.getCenterVisibleLeafColumns();
   const leftColumns = props.table.getLeftVisibleLeafColumns();
   const rightColumns = props.table.getRightVisibleLeafColumns();
+  const totalWidth = props.table.getTotalSize();
 
   const leftOffset = React.useMemo(() => {
+    if (!columnVirtualEnabled) return 0;
+
     return leftColumns.reduce((acc, column) => {
       acc += column.getSize();
 
       return acc;
     }, 0);
-  }, [leftColumns]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leftColumns, totalWidth, columnVirtualEnabled]);
   const rightOffset = React.useMemo(() => {
+    if (!columnVirtualEnabled) return 0;
+
     return rightColumns.reduce((acc, column) => {
       acc += column.getSize();
 
       return acc;
     }, 0);
-  }, [rightColumns]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rightColumns, totalWidth, columnVirtualEnabled]);
 
   const columnVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLTableCellElement>({
     count: visibleColumns.length,
     estimateSize: (index) => visibleColumns[index].getSize(),
     getScrollElement: () => props.tableContainerRef.current,
     horizontal: true,
-    overscan: 2,
+    overscan: props.virtualColumnOverScan ?? 2,
     enabled: columnVirtualEnabled,
     paddingStart: leftOffset,
     paddingEnd: rightOffset,
   });
   const columnsVirtual = columnVirtualizer.getVirtualItems();
 
-  //different virtualization strategy for columns - instead of absolute and translateY, we add empty columns to the left and right
-  let virtualPaddingLeft: number | undefined;
-  let virtualPaddingRight: number | undefined;
-  if (columnVirtualizer && columnsVirtual?.length) {
-    virtualPaddingLeft = columnsVirtual[0]?.start ?? 0;
-    virtualPaddingRight =
-      columnVirtualizer.getTotalSize() - (columnsVirtual[columnsVirtual.length - 1]?.end ?? 0);
-  }
+  React.useEffect(() => {
+    columnVirtualizer.measure();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [totalWidth]);
 
   const { rows } = props.table.getRowModel();
 
@@ -117,7 +122,7 @@ export function useVirtualizer<
       typeof window !== "undefined" && navigator.userAgent.includes("Firefox")
         ? (element) => element?.getBoundingClientRect().height
         : undefined,
-    overscan: 4,
+    overscan: props.virtualRowOverScan ?? 4,
     enabled: rowVirtualEnabled,
   });
   const rowVirtual = rowVirtualizer.getVirtualItems();
@@ -126,8 +131,6 @@ export function useVirtualizer<
     rowVirtual,
     rows,
     columnsVirtual,
-    virtualPaddingLeft,
-    virtualPaddingRight,
     columnVirtualEnabled,
     rowVirtualEnabled,
     columnVirtualizer,

@@ -7,8 +7,8 @@ type Props<RowData extends Record<string, unknown>> = {
   cell: Cell<RowData, unknown>;
   index: number;
   cells: Cell<RowData, unknown>[];
-  left?: number;
-  table?: boolean;
+  virtualLeft?: number;
+  semanticTag?: boolean;
 };
 
 export function TableCell<RowData extends Record<string, unknown>>(props: Props<RowData>) {
@@ -31,13 +31,14 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
 
   if (!CellRender) return null;
 
-  if (props.table) {
+  if (props.semanticTag) {
     return (
       <td
         data-id="cell"
         key={props.cell.id}
         className={clsx(
           styles.cell,
+          props.virtualLeft != undefined && styles.cell__virtual,
           frozenPosition === "left" && styles.cell__frozen_left,
           frozenPosition === "right" && styles.cell__frozen_right,
           frozenPosition === "left" &&
@@ -52,9 +53,9 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
           width: props.cell.column.getSize(),
           maxWidth: props.cell.column.getSize(),
           minWidth: props.cell.column.getSize(),
-          left: frozenPosition === "left" ? prevFrozen : (props.left ?? 0),
+          left: frozenPosition === "left" ? prevFrozen : (props.virtualLeft ?? 0),
           right: frozenPosition === "right" ? prevFrozen : 0,
-          position: props.left ? "absolute" : undefined,
+          position: props.virtualLeft ? "absolute" : undefined,
         }}
       >
         {isGroupCell && Expander && <Expander context={cellContext} />}
@@ -69,6 +70,7 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
       key={props.cell.id}
       className={clsx(
         styles.cell,
+        props.virtualLeft != undefined && styles.cell__virtual,
         frozenPosition === "left" && styles.cell__frozen_left,
         frozenPosition === "right" && styles.cell__frozen_right,
         frozenPosition === "left" &&
@@ -83,8 +85,9 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
         width: props.cell.column.getSize(),
         maxWidth: props.cell.column.getSize(),
         minWidth: props.cell.column.getSize(),
-        left: frozenPosition === "left" ? prevFrozen : 0,
+        left: frozenPosition === "left" ? prevFrozen : (props.virtualLeft ?? 0),
         right: frozenPosition === "right" ? prevFrozen : 0,
+        position: props.virtualLeft ? "absolute" : undefined,
       }}
     >
       {isGroupCell && Expander && <Expander context={cellContext} />}

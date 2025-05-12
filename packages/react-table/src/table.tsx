@@ -8,6 +8,7 @@ import { useColumns, useTableOptions, useVirtualizer } from "./module/table/hook
 import styles from "./table.module.scss";
 import type {
   GanttProps,
+  HeaderInterface,
   RowInterface,
   TableColumnsSettings,
   TableInterface,
@@ -83,8 +84,10 @@ export type TableProps<
     pageSizes?: number[];
     fullSize?: boolean;
     virtualColumn?: boolean;
+    virtualColumnOverScan?: number;
     virtualRows?: boolean;
     virtualRowSize?: number;
+    virtualRowOverScan?: number;
     locale?: string;
     onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
     onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
@@ -96,6 +99,7 @@ export type TableProps<
     Pagination?: React.FC<{ table: TableInterface<RowData> }>;
     setTable?: (table: TableInterface<RowData>) => void;
     rootRef?: React.MutableRefObject<HTMLDivElement | null>;
+    headerRowClassName?: ((header: HeaderInterface<RowData>) => string | undefined) | string;
     rowClassName?: ((row: RowInterface<RowData>) => string | undefined) | string;
   } & GanttProps<RowData, GanttData>;
 
@@ -163,8 +167,6 @@ export function Table<
     columnsVirtual,
     rowVirtual,
     rows,
-    virtualPaddingLeft,
-    virtualPaddingRight,
     columnVirtualEnabled,
     rowVirtualizer,
     rowVirtualEnabled,
@@ -178,6 +180,8 @@ export function Table<
     virtualRowSize: props.virtualRowSize,
     gantt: props.withGantt,
     ganttMini: props.ganttRowMini,
+    virtualColumnOverScan: props.virtualColumnOverScan,
+    virtualRowOverScan: props.virtualRowOverScan,
   });
 
   React.useEffect(() => {
@@ -210,11 +214,10 @@ export function Table<
               rowVirtualizer={rowVirtualizer}
               rows={rows}
               table={table}
-              virtualPaddingLeft={virtualPaddingLeft}
-              virtualPaddingRight={virtualPaddingRight}
               onClickRow={props.onClickRow}
               onDoubleClickRow={props.onDoubleClickRow}
               rowClassName={props.rowClassName}
+              headerRowClassName={props.headerRowClassName}
             />
           </div>
         )}
@@ -231,8 +234,6 @@ export function Table<
             rows={rows}
             rowsVirtual={rowVirtual}
             table={table}
-            virtualPaddingLeft={virtualPaddingLeft}
-            virtualPaddingRight={virtualPaddingRight}
             withGantt={props.withGantt}
             GanttTooltip={props.GanttTooltip}
             firstGanttDate={props.firstGanttDate}

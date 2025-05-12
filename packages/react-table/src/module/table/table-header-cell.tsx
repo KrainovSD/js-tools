@@ -7,8 +7,8 @@ type Props<RowData extends Record<string, unknown>> = {
   header: Header<RowData, unknown>;
   index: number;
   headers: Header<RowData, unknown>[];
-  left?: number;
-  table?: boolean;
+  virtualLeft?: number;
+  semanticTag?: boolean;
 };
 
 const RESIZE_HANDLE_WIDTH = 10;
@@ -91,7 +91,7 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
 
   if (!HeaderRender) return null;
 
-  if (props.table) {
+  if (props.semanticTag) {
     return (
       <th
         data-id="header-cell"
@@ -100,6 +100,7 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
         colSpan={props.header.colSpan}
         className={clsx(
           styles.headerCell,
+          props.virtualLeft != undefined && styles.headerCell__virtual,
           frozenPosition === "left" && styles.headerCell__frozen_left,
           frozenPosition === "right" && styles.headerCell__frozen_right,
           frozenPosition === "left" &&
@@ -114,10 +115,10 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
           width: props.header.getSize(),
           maxWidth: props.header.getSize(),
           minWidth: props.header.getSize(),
-          left: frozenPosition === "left" ? prevFrozen : (props.left ?? 0),
+          left: frozenPosition === "left" ? prevFrozen : (props.virtualLeft ?? 0),
           right: frozenPosition === "right" ? prevFrozen : 0,
           cursor: draggable ? "move" : "inherit",
-          position: props.left ? "absolute" : undefined,
+          position: props.virtualLeft ? "absolute" : undefined,
         }}
         draggable={draggable}
         onDragOver={draggable ? (event) => event.preventDefault() : undefined}
@@ -154,9 +155,11 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
   return (
     <div
       data-id="header-cell"
+      data-column-index={props.index}
       key={props.header.id}
       className={clsx(
         styles.headerCell,
+        props.virtualLeft != undefined && styles.headerCell__virtual,
         frozenPosition === "left" && styles.headerCell__frozen_left,
         frozenPosition === "right" && styles.headerCell__frozen_right,
         frozenPosition === "left" &&
@@ -168,12 +171,28 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
         headerClasses,
       )}
       style={{
-        width: props.header.column.getSize(),
-        maxWidth: props.header.column.getSize(),
-        minWidth: props.header.column.getSize(),
-        left: frozenPosition === "left" ? prevFrozen : 0,
+        width: props.header.getSize(),
+        maxWidth: props.header.getSize(),
+        minWidth: props.header.getSize(),
+        left: frozenPosition === "left" ? prevFrozen : (props.virtualLeft ?? 0),
         right: frozenPosition === "right" ? prevFrozen : 0,
+        cursor: draggable ? "move" : "inherit",
+        position: props.virtualLeft ? "absolute" : undefined,
       }}
+      draggable={draggable}
+      onDragOver={draggable ? (event) => event.preventDefault() : undefined}
+      onDragStart={draggable ? handleDragStart : undefined}
+      onDragEnd={draggable ? handleDragEnd : undefined}
+      onDragEnter={draggable ? handleDragEnter : undefined}
+      onDragLeave={draggable ? handleDragLeave : undefined}
+      onDrop={
+        draggable
+          ? handleDropGetter(
+              headerContext.table.getState().columnOrder,
+              headerContext.table.setColumnOrder,
+            )
+          : undefined
+      }
     >
       <HeaderRender context={headerContext} />
       {props.header.column.getCanResize() && (

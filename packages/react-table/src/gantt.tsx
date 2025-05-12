@@ -18,8 +18,6 @@ export type GanttProps<
   rowVirtualEnabled: boolean;
   table: TableInterface<RowData>;
   frozenHeader: boolean;
-  virtualPaddingLeft: number | undefined;
-  virtualPaddingRight: number | undefined;
   columnsVirtual: VirtualItem[];
   rowsVirtual: VirtualItem[];
   rows: RowInterface<RowData>[];
@@ -85,8 +83,8 @@ export function Gantt<
             rowVirtualizer={props.rowVirtualizer}
             rows={props.rows}
             table={props.table}
-            virtualPaddingLeft={props.virtualPaddingLeft}
-            virtualPaddingRight={props.virtualPaddingRight}
+            virtualPaddingLeft={0}
+            virtualPaddingRight={0}
             onClickRow={props.onClickRow}
             onDoubleClickRow={props.onDoubleClickRow}
             ganttRowMini={props.ganttRowMini}
@@ -118,8 +116,8 @@ export function Gantt<
             rowVirtualizer={props.rowVirtualizer}
             rows={props.rows}
             table={props.table}
-            virtualPaddingLeft={props.virtualPaddingLeft}
-            virtualPaddingRight={props.virtualPaddingRight}
+            virtualPaddingLeft={0}
+            virtualPaddingRight={0}
             onClickRow={props.onClickRow}
             onDoubleClickRow={props.onDoubleClickRow}
             firstGanttDate={props.firstGanttDate}

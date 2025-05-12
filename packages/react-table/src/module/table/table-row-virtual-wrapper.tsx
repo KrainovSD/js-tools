@@ -1,7 +1,7 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
-import type { RowInterface, TableInterface } from "../../types";
+import type { RowInterface } from "../../types";
 import { TableRow } from "./table-row";
 import styles from "./table-row-wrapper.module.scss";
 
@@ -14,7 +14,7 @@ type Props<RowData extends Record<string, unknown>> = {
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   columnVirtualEnabled: boolean;
-  table: TableInterface<RowData>;
+  totalWidth: number;
 };
 
 export const TableRowVirtualWrapper = React.memo(function TableRowVirtual<
@@ -36,7 +36,7 @@ export const TableRowVirtualWrapper = React.memo(function TableRowVirtual<
       ref={(node) => props.rowVirtualizer.measureElement(node)}
       style={{
         transform: `translateY(${props.virtualRow.start}px)`,
-        width: props.table.getTotalSize(),
+        width: props.totalWidth,
       }}
       onClick={(event) => {
         props.onClickRow?.(row, event);
