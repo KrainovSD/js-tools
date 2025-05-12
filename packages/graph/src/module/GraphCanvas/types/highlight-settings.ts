@@ -24,6 +24,8 @@ export type HighlightByNodeForNodeSettingsInterface = {
   highlightByNodeForNodeColor?: string | null;
   highlightByNodeForNodeSizingAdditional?: number;
   highlightByNodeForNodeSizingAdditionalCoefficient?: number;
+  highlightByNodeForNodeBorderSizingAdditional?: number;
+  highlightByNodeForNodeBorderColor?: string | null;
 };
 export type HighlightByNodeForLabelSettingsInterface = {
   highlightByNodeForLabelSizingAdditional?: number;
@@ -44,6 +46,8 @@ export type HighlightByLinkForNodeSettingsInterface = {
   highlightByLinkForNodeColor?: string | null;
   highlightByLinkForNodeSizingAdditional?: number;
   highlightByLinkForNodeSizingAdditionalCoefficient?: number;
+  highlightByLinkForNodeBorderSizingAdditional?: number;
+  highlightByLinkForNodeBorderColor?: string | null;
 };
 export type HighlightByLinkForLabelSettingsInterface = {
   highlightByLinkForLabelSizingAdditional?: number;
@@ -67,6 +71,8 @@ export type HighlightByNodeForArrowSettingsInterface = {
   highlightByNodeForArrowFadingMin?: number;
   highlightByNodeForArrowSizeAdditional?: number;
   highlightByNodeForArrowColor?: string | null;
+  highlightByNodeForArrowBorderSizingAdditional?: number;
+  highlightByNodeForArrowBorderColor?: string | null;
 };
 
 export type HighlightByLinkForLinkSettingsInterface = {
@@ -78,4 +84,6 @@ export type HighlightByLinkForArrowSettingsInterface = {
   highlightByLinkForArrowFadingMin?: number;
   highlightByLinkForArrowSizeAdditional?: number;
   highlightByLinkForArrowColor?: string | null;
+  highlightByLinkForArrowBorderSizingAdditional?: number;
+  highlightByLinkForArrowBorderColor?: string | null;
 };

@@ -97,6 +97,21 @@ export const HIGHLIGHT_BY_NODE_FOR_NODE_CONTROLS: GraphSettingsInputInterface<
     type: "range",
     label: "Коэффициент изменения размера (только не для круга)",
   },
+  {
+    id: "highlightByNodeForNodeBorderColor",
+    type: "color",
+    initialValue: HIGHLIGHT_SETTINGS.highlightByNodeForNodeBorderColor ?? "#000000",
+    label: "Цвет границы",
+  },
+  {
+    id: "highlightByNodeForNodeBorderSizingAdditional",
+    initialValue: HIGHLIGHT_SETTINGS.highlightByNodeForNodeBorderSizingAdditional,
+    max: 10,
+    min: 0.01,
+    step: 0.01,
+    type: "range",
+    label: "Изменение размера границы",
+  },
 ];
 
 export const HIGHLIGHT_BY_NODE_FOR_TEXT_CONTROLS: GraphSettingsInputInterface<
@@ -188,7 +203,7 @@ export const HIGHLIGHT_BY_NODE_FOR_LINK_CONTROLS: GraphSettingsInputInterface<
     id: "highlightByNodeForLinkColor",
     type: "color",
     initialValue: HIGHLIGHT_SETTINGS.highlightByNodeForLinkColor ?? "#000000",
-    label: "Цвет вершины",
+    label: "Цвет",
   },
   {
     id: "highlightByNodeForLinkFadingMin",
@@ -217,7 +232,7 @@ export const HIGHLIGHT_BY_NODE_FOR_ARROW_CONTROLS: GraphSettingsInputInterface<
     id: "highlightByNodeForArrowColor",
     type: "color",
     initialValue: HIGHLIGHT_SETTINGS.highlightByNodeForArrowColor ?? "#000000",
-    label: "Цвет вершины",
+    label: "Цвет",
   },
   {
     id: "highlightByNodeForArrowFadingMin",
@@ -236,6 +251,21 @@ export const HIGHLIGHT_BY_NODE_FOR_ARROW_CONTROLS: GraphSettingsInputInterface<
     step: 0.1,
     type: "range",
     label: "Изменение размера",
+  },
+  {
+    id: "highlightByNodeForArrowBorderColor",
+    type: "color",
+    initialValue: HIGHLIGHT_SETTINGS.highlightByNodeForArrowBorderColor ?? "#000000",
+    label: "Цвет границы",
+  },
+  {
+    id: "highlightByNodeForArrowBorderSizingAdditional",
+    initialValue: HIGHLIGHT_SETTINGS.highlightByNodeForArrowBorderSizingAdditional,
+    max: 10,
+    min: 0.01,
+    step: 0.01,
+    type: "range",
+    label: "Изменение размера границы",
   },
 ];
 
@@ -289,6 +319,21 @@ export const HIGHLIGHT_BY_LINK_FOR_NODE_CONTROLS: GraphSettingsInputInterface<
     step: 0.01,
     type: "range",
     label: "Коэффициент изменения размера (только не для круга)",
+  },
+  {
+    id: "highlightByLinkForNodeBorderColor",
+    type: "color",
+    initialValue: HIGHLIGHT_SETTINGS.highlightByLinkForNodeBorderColor ?? "#000000",
+    label: "Цвет границы",
+  },
+  {
+    id: "highlightByLinkForNodeBorderSizingAdditional",
+    initialValue: HIGHLIGHT_SETTINGS.highlightByLinkForNodeBorderSizingAdditional,
+    max: 10,
+    min: 0.01,
+    step: 0.01,
+    type: "range",
+    label: "Изменение размера границы",
   },
 ];
 
@@ -381,7 +426,7 @@ export const HIGHLIGHT_BY_LINK_FOR_LINK_CONTROLS: GraphSettingsInputInterface<
     id: "highlightByLinkForLinkColor",
     type: "color",
     initialValue: HIGHLIGHT_SETTINGS.highlightByLinkForLinkColor ?? "#000000",
-    label: "Цвет вершины",
+    label: "Цвет",
   },
   {
     id: "highlightByLinkForLinkFadingMin",
@@ -410,7 +455,7 @@ export const HIGHLIGHT_BY_LINK_FOR_ARROW_CONTROLS: GraphSettingsInputInterface<
     id: "highlightByLinkForArrowColor",
     type: "color",
     initialValue: HIGHLIGHT_SETTINGS.highlightByLinkForArrowColor ?? "#000000",
-    label: "Цвет вершины",
+    label: "Цвет",
   },
   {
     id: "highlightByLinkForArrowFadingMin",
@@ -429,5 +474,20 @@ export const HIGHLIGHT_BY_LINK_FOR_ARROW_CONTROLS: GraphSettingsInputInterface<
     step: 0.1,
     type: "range",
     label: "Изменение размера",
+  },
+  {
+    id: "highlightByLinkForArrowBorderColor",
+    type: "color",
+    initialValue: HIGHLIGHT_SETTINGS.highlightByLinkForArrowBorderColor ?? "#000000",
+    label: "Цвет границы",
+  },
+  {
+    id: "highlightByLinkForArrowBorderSizingAdditional",
+    initialValue: HIGHLIGHT_SETTINGS.highlightByLinkForArrowBorderSizingAdditional,
+    max: 10,
+    min: 0.01,
+    step: 0.01,
+    type: "range",
+    label: "Изменение размера границы",
   },
 ];

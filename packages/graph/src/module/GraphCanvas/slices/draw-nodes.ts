@@ -1,9 +1,9 @@
 import { isNumber } from "@krainovsd/js-helpers";
-import { colorToRgb, extractRgb, fadeRgb, rgbAnimationByProgress } from "@/lib";
 import type { GraphCanvas } from "../GraphCanvas";
 import {
-  animationByProgress,
   isNodeVisible,
+  nodeFade,
+  nodeHighlight,
   nodeIterationExtractor,
   nodeOptionsGetter,
   nodeRadiusGetter,
@@ -63,6 +63,8 @@ export function getDrawNode<
 
     let alpha = nodeOptions.alpha;
     let color = nodeOptions.color;
+    let borderColor = nodeOptions.borderColor;
+    let borderWidth = nodeOptions.borderWidth;
     let radiusInitial = nodeOptions.radius;
     let widthInitial = nodeOptions.width;
     let heightInitial = nodeOptions.height;
@@ -74,266 +76,127 @@ export function getDrawNode<
     let labelSize = nodeOptions.labelSize;
     let labelWeight = nodeOptions.labelWeight;
     let labelAlpha = nodeOptions.labelAlpha;
-    let sizeCoefficient = 1;
-    /** Node Highlight */
+    /** Highlight */
     if (this.highlightedNeighbors && this.highlightedNode) {
-      /** Not highlighted */
+      /** By Node Not Highlight */
       if (!this.highlightedNeighbors.has(node.id) && this.highlightedNode.id != node.id) {
-        /** Alpha */
-        const alphaMin =
-          this.highlightSettings.highlightByNodeForNodeFadingMin < alpha
-            ? this.highlightSettings.highlightByNodeForNodeFadingMin
-            : alpha;
-        alpha = animationByProgress(alphaMin, alpha - alphaMin, 1 - this.highlightProgress);
-        /** Text Alpha */
-        const textAlphaMin =
-          this.highlightSettings.highlightByNodeForTextFadingMin < textAlpha
-            ? this.highlightSettings.highlightByNodeForTextFadingMin
-            : textAlpha;
-        textAlpha = animationByProgress(
-          textAlphaMin,
-          textAlpha - textAlphaMin,
-          1 - this.highlightProgress,
-        );
-        if (nodeOptions.label) {
-          /** Label Alpha */
-          const labelAlphaMin =
-            this.highlightSettings.highlightByNodeForLabelFadingMin < labelAlpha
-              ? this.highlightSettings.highlightByNodeForLabelFadingMin
-              : labelAlpha;
-          labelAlpha = animationByProgress(
-            labelAlphaMin,
-            labelAlpha - labelAlphaMin,
-            1 - this.highlightProgress,
-          );
-        }
-        if (this.highlightSettings.highlightByNodeForNodeColorFading) {
-          /** Color Fading */
-          const colorRgb = extractRgb(colorToRgb(color));
-          if (colorRgb) {
-            const colorRgbFade = fadeRgb(
-              colorRgb,
-              this.highlightSettings.highlightByNodeForNodeColorFadingMin,
-            );
-            const colorFadeAnimation = rgbAnimationByProgress(
-              colorRgb,
-              colorRgbFade,
-              this.highlightProgress,
-            );
-            color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
-          }
-        }
+        const fadingOptions = nodeFade({
+          highlightProgress: this.highlightProgress,
+          nodeOptions,
+          highlightForLabelFadingMin: this.highlightSettings.highlightByNodeForLabelFadingMin,
+          highlightForNodeColorFading: this.highlightSettings.highlightByNodeForNodeColorFading,
+          highlightForNodeColorFadingMin:
+            this.highlightSettings.highlightByNodeForNodeColorFadingMin,
+          highlightForNodeFadingMin: this.highlightSettings.highlightByNodeForNodeFadingMin,
+          highlightForTextFadingMin: this.highlightSettings.highlightByNodeForTextFadingMin,
+        });
+        alpha = fadingOptions.alpha;
+        color = fadingOptions.color;
+        textAlpha = fadingOptions.textAlpha;
+        labelAlpha = fadingOptions.labelAlpha;
       } else if (
         !this.highlightSettings.highlightByNodeOnlyRoot ||
         (this.highlightSettings.highlightByNodeOnlyRoot && this.highlightedNode.id === node.id)
       ) {
-        /** Highlighted */
-
-        if (this.highlightSettings.highlightByNodeForNodeColor) {
-          /** Color */
-          const colorRgb = extractRgb(colorToRgb(color));
-          const colorRgbHighlight = extractRgb(
-            colorToRgb(this.highlightSettings.highlightByNodeForNodeColor),
-          );
-          if (colorRgb && colorRgbHighlight) {
-            const colorFadeAnimation = rgbAnimationByProgress(
-              colorRgb,
-              colorRgbHighlight,
-              this.highlightProgress,
-            );
-            color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
-          }
-        }
-        if (nodeOptions.shape === "circle") {
-          /** Radius */
-          radiusInitial = animationByProgress(
-            radiusInitial,
-            this.highlightSettings.highlightByNodeForNodeSizingAdditional,
-            this.highlightProgress,
-          );
-        }
-        if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
-          /** Size */
-          sizeCoefficient = animationByProgress(
-            sizeCoefficient,
-            this.highlightSettings.highlightByNodeForNodeSizingAdditionalCoefficient,
-            this.highlightProgress,
-          );
-
-          widthInitial *= sizeCoefficient;
-          heightInitial *= sizeCoefficient;
-        }
-        /** Text Size */
-        textSize = animationByProgress(
-          textSize,
-          this.highlightSettings.highlightByNodeForTextSizingAdditional,
-          this.highlightProgress,
-        );
-        /** Text Shift X */
-        textShiftX = animationByProgress(
-          textShiftX,
-          this.highlightSettings.highlightByNodeForTextShiftXAdditional,
-          this.highlightProgress,
-        );
-        /** Text Shift Y */
-        textShiftY = animationByProgress(
-          textShiftY,
-          this.highlightSettings.highlightByNodeForTextShiftYAdditional,
-          this.highlightProgress,
-        );
-        /** Text Weight */
-        textWeight = animationByProgress(
-          textWeight,
-          this.highlightSettings.highlightByNodeForTextWeightAdditional,
-          this.highlightProgress,
-        );
-
-        if (nodeOptions.label) {
-          /** Label Size */
-          labelSize = animationByProgress(
-            labelSize,
+        /** By Node Highlight */
+        const highlightOptions = nodeHighlight({
+          highlightProgress: this.highlightProgress,
+          nodeOptions,
+          highlightForLabelSizingAdditional:
             this.highlightSettings.highlightByNodeForLabelSizingAdditional,
-            this.highlightProgress,
-          );
-          /** Label Weight */
-          labelWeight = animationByProgress(
-            labelWeight,
+          highlightForLabelWeightAdditional:
             this.highlightSettings.highlightByNodeForLabelWeightAdditional,
-            this.highlightProgress,
-          );
-        }
+          highlightForNodeBorderColor: this.highlightSettings.highlightByNodeForNodeBorderColor,
+          highlightForNodeBorderSizingAdditional:
+            this.highlightSettings.highlightByNodeForNodeBorderSizingAdditional,
+          highlightForNodeColor: this.highlightSettings.highlightByNodeForNodeColor,
+          highlightForNodeSizingAdditional:
+            this.highlightSettings.highlightByNodeForNodeSizingAdditional,
+          highlightForNodeSizingAdditionalCoefficient:
+            this.highlightSettings.highlightByNodeForNodeSizingAdditionalCoefficient,
+          highlightForTextShiftXAdditional:
+            this.highlightSettings.highlightByNodeForTextShiftXAdditional,
+          highlightForTextShiftYAdditional:
+            this.highlightSettings.highlightByNodeForTextShiftYAdditional,
+          highlightForTextSizingAdditional:
+            this.highlightSettings.highlightByNodeForTextSizingAdditional,
+          highlightForTextWeightAdditional:
+            this.highlightSettings.highlightByNodeForTextWeightAdditional,
+        });
+        color = highlightOptions.color;
+        borderColor = highlightOptions.borderColor;
+        borderWidth = highlightOptions.borderWidth;
+        radiusInitial = highlightOptions.radiusInitial;
+        widthInitial = highlightOptions.widthInitial;
+        heightInitial = highlightOptions.heightInitial;
+        textSize = highlightOptions.textSize;
+        textShiftX = highlightOptions.textShiftX;
+        textShiftY = highlightOptions.textShiftY;
+        textWeight = highlightOptions.textWeight;
+        labelSize = highlightOptions.labelSize;
+        labelWeight = highlightOptions.labelWeight;
       }
     }
-    /** LinkHighlight */
     if (this.highlightedNeighbors && this.highlightedLink) {
-      /** Not highlighted */
+      /** By Link Not Highlight */
       if (
         !this.highlightedNeighbors.has(node.id) &&
         this.highlightedLink.source !== node &&
         this.highlightedLink.target !== node
       ) {
-        /** Alpha */
-        const alphaMin =
-          this.highlightSettings.highlightByLinkForNodeFadingMin < alpha
-            ? this.highlightSettings.highlightByLinkForNodeFadingMin
-            : alpha;
-        alpha = animationByProgress(alphaMin, alpha - alphaMin, 1 - this.highlightProgress);
-        /** Text Alpha */
-        const textAlphaMin =
-          this.highlightSettings.highlightByLinkForTextFadingMin < textAlpha
-            ? this.highlightSettings.highlightByLinkForTextFadingMin
-            : textAlpha;
-        textAlpha = animationByProgress(
-          textAlphaMin,
-          textAlpha - textAlphaMin,
-          1 - this.highlightProgress,
-        );
-        if (nodeOptions.label) {
-          /** Label Alpha */
-          const labelAlphaMin =
-            this.highlightSettings.highlightByLinkForLabelFadingMin < labelAlpha
-              ? this.highlightSettings.highlightByLinkForLabelFadingMin
-              : labelAlpha;
-          labelAlpha = animationByProgress(
-            labelAlphaMin,
-            labelAlpha - labelAlphaMin,
-            1 - this.highlightProgress,
-          );
-        }
-        if (this.highlightSettings.highlightByLinkForNodeColor) {
-          /** Color Fading */
-          const colorRgb = extractRgb(colorToRgb(color));
-          if (colorRgb) {
-            const colorRgbFade = fadeRgb(
-              colorRgb,
-              this.highlightSettings.highlightByLinkForNodeColorFadingMin,
-            );
-            const colorFadeAnimation = rgbAnimationByProgress(
-              colorRgb,
-              colorRgbFade,
-              this.highlightProgress,
-            );
-            color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
-          }
-        }
+        const fadingOptions = nodeFade({
+          highlightProgress: this.highlightProgress,
+          nodeOptions,
+          highlightForLabelFadingMin: this.highlightSettings.highlightByLinkForLabelFadingMin,
+          highlightForNodeColorFading: this.highlightSettings.highlightByLinkForNodeColorFading,
+          highlightForNodeColorFadingMin:
+            this.highlightSettings.highlightByLinkForNodeColorFadingMin,
+          highlightForNodeFadingMin: this.highlightSettings.highlightByLinkForNodeFadingMin,
+          highlightForTextFadingMin: this.highlightSettings.highlightByLinkForTextFadingMin,
+        });
+        alpha = fadingOptions.alpha;
+        color = fadingOptions.color;
+        textAlpha = fadingOptions.textAlpha;
+        labelAlpha = fadingOptions.labelAlpha;
       } else {
-        /** Highlighted */
+        /** By Link Highlight */
 
-        if (this.highlightSettings.highlightByNodeForNodeColor) {
-          /** Color */
-          const colorRgb = extractRgb(colorToRgb(color));
-          const colorRgbHighlight = extractRgb(
-            colorToRgb(this.highlightSettings.highlightByNodeForNodeColor),
-          );
-          if (colorRgb && colorRgbHighlight) {
-            const colorFadeAnimation = rgbAnimationByProgress(
-              colorRgb,
-              colorRgbHighlight,
-              this.highlightProgress,
-            );
-            color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
-          }
-        }
-
-        if (nodeOptions.shape === "circle") {
-          /** Radius */
-          radiusInitial = animationByProgress(
-            radiusInitial,
-            this.highlightSettings.highlightByLinkForNodeSizingAdditional,
-            this.highlightProgress,
-          );
-        }
-        if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
-          /** Size */
-          sizeCoefficient = animationByProgress(
-            sizeCoefficient,
-            this.highlightSettings.highlightByNodeForNodeSizingAdditionalCoefficient,
-            this.highlightProgress,
-          );
-
-          widthInitial *= sizeCoefficient;
-          heightInitial *= sizeCoefficient;
-        }
-
-        /** Text Size */
-        textSize = animationByProgress(
-          textSize,
-          this.highlightSettings.highlightByLinkForTextSizingAdditional,
-          this.highlightProgress,
-        );
-        /** Text Shift X */
-        textShiftX = animationByProgress(
-          textShiftX,
-          this.highlightSettings.highlightByLinkForTextShiftXAdditional,
-          this.highlightProgress,
-        );
-        /** Text Shift Y */
-        textShiftY = animationByProgress(
-          textShiftY,
-          this.highlightSettings.highlightByLinkForTextShiftYAdditional,
-          this.highlightProgress,
-        );
-        /** Text Weight */
-        textWeight = animationByProgress(
-          textWeight,
-          this.highlightSettings.highlightByLinkForTextWeightAdditional,
-          this.highlightProgress,
-        );
-
-        if (nodeOptions.label) {
-          /** Label Size */
-          labelSize = animationByProgress(
-            labelSize,
+        const highlightOptions = nodeHighlight({
+          highlightProgress: this.highlightProgress,
+          nodeOptions,
+          highlightForLabelSizingAdditional:
             this.highlightSettings.highlightByLinkForLabelSizingAdditional,
-            this.highlightProgress,
-          );
-          /** Label Weight */
-          labelWeight = animationByProgress(
-            labelWeight,
+          highlightForLabelWeightAdditional:
             this.highlightSettings.highlightByLinkForLabelWeightAdditional,
-            this.highlightProgress,
-          );
-        }
+          highlightForNodeBorderColor: this.highlightSettings.highlightByLinkForNodeBorderColor,
+          highlightForNodeBorderSizingAdditional:
+            this.highlightSettings.highlightByLinkForNodeBorderSizingAdditional,
+          highlightForNodeColor: this.highlightSettings.highlightByLinkForNodeColor,
+          highlightForNodeSizingAdditional:
+            this.highlightSettings.highlightByLinkForNodeSizingAdditional,
+          highlightForNodeSizingAdditionalCoefficient:
+            this.highlightSettings.highlightByLinkForNodeSizingAdditionalCoefficient,
+          highlightForTextShiftXAdditional:
+            this.highlightSettings.highlightByLinkForTextShiftXAdditional,
+          highlightForTextShiftYAdditional:
+            this.highlightSettings.highlightByLinkForTextShiftYAdditional,
+          highlightForTextSizingAdditional:
+            this.highlightSettings.highlightByLinkForTextSizingAdditional,
+          highlightForTextWeightAdditional:
+            this.highlightSettings.highlightByLinkForTextWeightAdditional,
+        });
+        color = highlightOptions.color;
+        borderColor = highlightOptions.borderColor;
+        borderWidth = highlightOptions.borderWidth;
+        radiusInitial = highlightOptions.radiusInitial;
+        widthInitial = highlightOptions.widthInitial;
+        heightInitial = highlightOptions.heightInitial;
+        textSize = highlightOptions.textSize;
+        textShiftX = highlightOptions.textShiftX;
+        textShiftY = highlightOptions.textShiftY;
+        textWeight = highlightOptions.textWeight;
+        labelSize = highlightOptions.labelSize;
+        labelWeight = highlightOptions.labelWeight;
       }
     }
 
@@ -448,8 +311,8 @@ export function getDrawNode<
 
       this.context.beginPath();
       this.context.globalAlpha = alpha;
-      this.context.lineWidth = nodeOptions.borderWidth;
-      this.context.strokeStyle = nodeOptions.borderColor;
+      this.context.lineWidth = borderWidth;
+      this.context.strokeStyle = borderColor;
       this.context.fillStyle = color;
 
       switch (nodeOptions.shape) {
@@ -457,7 +320,7 @@ export function getDrawNode<
           if (!node.image) {
             this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
             this.context.fill();
-            if (nodeOptions.borderWidth > 0) {
+            if (borderWidth > 0) {
               this.context.stroke();
             }
           } else {
@@ -475,7 +338,7 @@ export function getDrawNode<
             );
 
             this.context.restore();
-            if (nodeOptions.borderWidth > 0) {
+            if (borderWidth > 0) {
               this.context.stroke();
             }
           }
@@ -512,7 +375,7 @@ export function getDrawNode<
               node._borderRadius,
             );
             this.context.fill();
-            if (nodeOptions.borderWidth > 0) {
+            if (borderWidth > 0) {
               this.context.stroke();
             }
           } else {
@@ -535,7 +398,7 @@ export function getDrawNode<
             );
             this.context.restore();
 
-            if (nodeOptions.borderWidth > 0) {
+            if (borderWidth > 0) {
               this.context.stroke();
             }
           }
@@ -584,7 +447,7 @@ export function getDrawNode<
               textGap: nodeOptions.labelGap,
             });
           this.context.fill();
-          if (nodeOptions.borderWidth > 0) {
+          if (borderWidth > 0) {
             this.context.stroke();
           }
           break;
@@ -592,7 +455,7 @@ export function getDrawNode<
         default: {
           this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
           this.context.fill();
-          if (nodeOptions.borderWidth > 0) {
+          if (borderWidth > 0) {
             this.context.stroke();
           }
           break;

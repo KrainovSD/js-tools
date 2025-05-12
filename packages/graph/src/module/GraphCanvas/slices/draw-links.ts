@@ -1,8 +1,9 @@
 import type { GraphCanvas } from "../GraphCanvas";
 import {
-  animationByProgress,
   calculateLinkPositionByNode,
   getParticlePosition,
+  linkFade,
+  linkHighlight,
   linkIterationExtractor,
   linkOptionsGetter,
 } from "../lib";
@@ -55,64 +56,90 @@ export function getDrawLink<
     }
 
     let alpha = linkOptions.alpha;
+    let color = linkOptions.color;
+    let width = linkOptions.width;
     let arrowAlpha = this.linkSettings.arrowByHighlight ? 0 : linkOptions.arrowAlpha;
-    // let color = linkOptions.color;
-    // let arrowColor = linkOptions.arrowColor;
+    let arrowColor = linkOptions.arrowColor;
+    let arrowSize = linkOptions.arrowSize;
+    let arrowBorderWidth = linkOptions.arrowBorderWidth;
+    let arrowBorderColor = linkOptions.arrowBorderColor;
 
-    /** NODE HIGHLIGHT */
+    /** Highlight */
     if (this.highlightedNeighbors && this.highlightedNode) {
-      /** Not highlighted */
+      /** By Node Not Highlight */
       if (this.highlightedNode.id != link.source.id && this.highlightedNode.id != link.target.id) {
-        const alphaMin =
-          this.highlightSettings.highlightByNodeForLinkFadingMin < alpha
-            ? this.highlightSettings.highlightByNodeForLinkFadingMin
-            : alpha;
-        alpha = animationByProgress(alphaMin, alpha - alphaMin, 1 - this.highlightProgress);
-        if (this.linkSettings.arrow && !this.linkSettings.arrowByHighlight) {
-          const arrowAlphaMin =
-            this.highlightSettings.highlightByNodeForArrowFadingMin < arrowAlpha
-              ? this.highlightSettings.highlightByNodeForArrowFadingMin
-              : arrowAlpha;
-          arrowAlpha = animationByProgress(
-            arrowAlphaMin,
-            arrowAlpha - arrowAlphaMin,
-            1 - this.highlightProgress,
-          );
-        }
+        const fadeOptions = linkFade({
+          arrow: this.linkSettings.arrow,
+          arrowByHighlight: this.linkSettings.arrowByHighlight,
+          linkOptions,
+          highlightProgress: this.highlightProgress,
+          highlightForArrowFadingMin: this.highlightSettings.highlightByNodeForArrowFadingMin,
+          highlightForLinkFadingMin: this.highlightSettings.highlightByNodeForLinkFadingMin,
+        });
+        alpha = fadeOptions.alpha;
+        arrowAlpha = fadeOptions.arrowAlpha;
       } else {
-        // eslint-disable-next-line no-lonely-if
-        if (this.linkSettings.arrow && this.linkSettings.arrowByHighlight) {
-          /** Highlighted */
-          arrowAlpha = animationByProgress(0, linkOptions.arrowAlpha, this.highlightProgress);
-        }
+        const highlightOptions = linkHighlight({
+          arrow: this.linkSettings.arrow,
+          arrowByHighlight: this.linkSettings.arrowByHighlight,
+          linkOptions,
+          highlightProgress: this.highlightProgress,
+          highlightForArrowBorderColor: this.highlightSettings.highlightByNodeForArrowBorderColor,
+          highlightForArrowBorderSizingAdditional:
+            this.highlightSettings.highlightByNodeForArrowBorderSizingAdditional,
+          highlightForArrowColor: this.highlightSettings.highlightByNodeForArrowColor,
+          highlightForArrowSizeAdditional:
+            this.highlightSettings.highlightByNodeForArrowSizeAdditional,
+          highlightForLinkColor: this.highlightSettings.highlightByNodeForLinkColor,
+          highlightForLinkSizeAdditional:
+            this.highlightSettings.highlightByNodeForLinkSizeAdditional,
+        });
+        arrowAlpha = highlightOptions.arrowAlpha;
+        color = highlightOptions.color;
+        width = highlightOptions.width;
+        arrowColor = highlightOptions.arrowColor;
+        arrowSize = highlightOptions.arrowSize;
+        arrowBorderWidth = highlightOptions.arrowBorderWidth;
+        arrowBorderColor = highlightOptions.arrowBorderColor;
       }
     }
-    /** LINK HIGHLIGHT */
     if (this.highlightedNeighbors && this.highlightedLink) {
-      /** Not highlighted */
+      /** By Link Not Highlight */
       if (this.highlightedLink !== link) {
-        const alphaMin =
-          this.highlightSettings.highlightByLinkForLinkFadingMin < alpha
-            ? this.highlightSettings.highlightByLinkForLinkFadingMin
-            : alpha;
-        alpha = animationByProgress(alphaMin, alpha - alphaMin, 1 - this.highlightProgress);
-        if (this.linkSettings.arrow && !this.linkSettings.arrowByHighlight) {
-          const arrowAlphaMin =
-            this.highlightSettings.highlightByLinkForArrowFadingMin < arrowAlpha
-              ? this.highlightSettings.highlightByLinkForArrowFadingMin
-              : arrowAlpha;
-          arrowAlpha = animationByProgress(
-            arrowAlphaMin,
-            arrowAlpha - arrowAlphaMin,
-            1 - this.highlightProgress,
-          );
-        }
+        const fadeOptions = linkFade({
+          arrow: this.linkSettings.arrow,
+          arrowByHighlight: this.linkSettings.arrowByHighlight,
+          linkOptions,
+          highlightProgress: this.highlightProgress,
+          highlightForArrowFadingMin: this.highlightSettings.highlightByLinkForArrowFadingMin,
+          highlightForLinkFadingMin: this.highlightSettings.highlightByLinkForLinkFadingMin,
+        });
+        alpha = fadeOptions.alpha;
+        arrowAlpha = fadeOptions.arrowAlpha;
       } else {
-        // eslint-disable-next-line no-lonely-if
-        if (this.linkSettings.arrow && this.linkSettings.arrowByHighlight) {
-          /** Highlighted */
-          arrowAlpha = animationByProgress(0, linkOptions.arrowAlpha, this.highlightProgress);
-        }
+        /** By Link Highlight */
+        const highlightOptions = linkHighlight({
+          arrow: this.linkSettings.arrow,
+          arrowByHighlight: this.linkSettings.arrowByHighlight,
+          linkOptions,
+          highlightProgress: this.highlightProgress,
+          highlightForArrowBorderColor: this.highlightSettings.highlightByLinkForArrowBorderColor,
+          highlightForArrowBorderSizingAdditional:
+            this.highlightSettings.highlightByLinkForArrowBorderSizingAdditional,
+          highlightForArrowColor: this.highlightSettings.highlightByLinkForArrowColor,
+          highlightForArrowSizeAdditional:
+            this.highlightSettings.highlightByLinkForArrowSizeAdditional,
+          highlightForLinkColor: this.highlightSettings.highlightByLinkForLinkColor,
+          highlightForLinkSizeAdditional:
+            this.highlightSettings.highlightByLinkForLinkSizeAdditional,
+        });
+        arrowAlpha = highlightOptions.arrowAlpha;
+        color = highlightOptions.color;
+        width = highlightOptions.width;
+        arrowColor = highlightOptions.arrowColor;
+        arrowSize = highlightOptions.arrowSize;
+        arrowBorderWidth = highlightOptions.arrowBorderWidth;
+        arrowBorderColor = highlightOptions.arrowBorderColor;
       }
     }
 
@@ -120,8 +147,8 @@ export function getDrawLink<
     this.context.beginPath();
 
     this.context.globalAlpha = alpha;
-    this.context.strokeStyle = linkOptions.color;
-    this.context.lineWidth = linkOptions.width;
+    this.context.strokeStyle = color;
+    this.context.lineWidth = width;
 
     let xStart = link.source.x;
     let yStart = link.source.y;
@@ -130,7 +157,7 @@ export function getDrawLink<
     let linkDistance = 0;
     if (this.linkSettings.prettyDraw || this.linkSettings.particleFlexSpeed) {
       const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
-      const position = calculateLinkPositionByNode(link, isHasArrow ? linkOptions.arrowSize : 0);
+      const position = calculateLinkPositionByNode(link, isHasArrow ? arrowSize : 0);
 
       if (position) {
         xStart = position.x1;
@@ -232,22 +259,22 @@ export function getDrawLink<
 
       this.context.beginPath();
       this.context.globalAlpha = arrowAlpha;
-      this.context.strokeStyle = linkOptions.arrowBorderColor;
-      this.context.lineWidth = linkOptions.arrowBorderWidth;
-      this.context.fillStyle = linkOptions.arrowColor;
+      this.context.strokeStyle = arrowBorderColor;
+      this.context.lineWidth = arrowBorderWidth;
+      this.context.fillStyle = arrowColor;
       const angle = Math.atan2(yEnd - yStart, xEnd - xStart);
       this.context.moveTo(xEnd, yEnd);
       this.context.lineTo(
-        xEnd - linkOptions.arrowSize * Math.cos(angle - Math.PI / 6),
-        yEnd - linkOptions.arrowSize * Math.sin(angle - Math.PI / 6),
+        xEnd - arrowSize * Math.cos(angle - Math.PI / 6),
+        yEnd - arrowSize * Math.sin(angle - Math.PI / 6),
       );
       this.context.lineTo(
-        xEnd - linkOptions.arrowSize * Math.cos(angle + Math.PI / 6),
-        yEnd - linkOptions.arrowSize * Math.sin(angle + Math.PI / 6),
+        xEnd - arrowSize * Math.cos(angle + Math.PI / 6),
+        yEnd - arrowSize * Math.sin(angle + Math.PI / 6),
       );
       this.context.closePath();
       this.context.fill();
-      if (linkOptions.arrowBorderWidth > 0) {
+      if (arrowBorderWidth > 0) {
         this.context.stroke();
       }
     }

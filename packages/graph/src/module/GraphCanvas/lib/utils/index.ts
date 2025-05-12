@@ -9,3 +9,5 @@ export * from "./animation-by-progress";
 export * from "./is-node-visible";
 export * from "./get-particle-position";
 export * from "./link-by-pointer-getter";
+export * from "./node-highlight";
+export * from "./link-highlight";

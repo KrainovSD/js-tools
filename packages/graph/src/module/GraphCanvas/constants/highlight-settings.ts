@@ -12,6 +12,8 @@ export const HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
   highlightByNodeForNodeSizingAdditionalCoefficient: 0.35,
   highlightByNodeForNodeColorFadingMin: 0.15,
   highlightByNodeForNodeFadingMin: 0.21,
+  highlightByNodeForNodeBorderColor: null,
+  highlightByNodeForNodeBorderSizingAdditional: 0,
 
   highlightByLinkForNodeColorFading: false,
   highlightByLinkForNodeColor: null,
@@ -19,6 +21,8 @@ export const HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
   highlightByLinkForNodeSizingAdditionalCoefficient: 0.35,
   highlightByLinkForNodeColorFadingMin: 0.15,
   highlightByLinkForNodeFadingMin: 0.21,
+  highlightByLinkForNodeBorderColor: null,
+  highlightByLinkForNodeBorderSizingAdditional: 0,
   /** Text */
   highlightByNodeForTextShiftXAdditional: 0,
   highlightByNodeForTextShiftYAdditional: 2,
@@ -51,8 +55,12 @@ export const HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
   highlightByNodeForArrowFadingMin: 0.21,
   highlightByNodeForArrowSizeAdditional: 0,
   highlightByNodeForArrowColor: null,
+  highlightByNodeForArrowBorderColor: null,
+  highlightByNodeForArrowBorderSizingAdditional: 0,
 
   highlightByLinkForArrowFadingMin: 0.21,
   highlightByLinkForArrowSizeAdditional: 0,
   highlightByLinkForArrowColor: null,
+  highlightByLinkForArrowBorderColor: null,
+  highlightByLinkForArrowBorderSizingAdditional: 0,
 };

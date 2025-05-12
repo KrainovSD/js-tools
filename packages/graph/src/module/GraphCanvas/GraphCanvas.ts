@@ -233,6 +233,17 @@ export class GraphCanvas<
     if (options.forceSettings) {
       this.forceSettings = forceSettingsGetter(options.forceSettings, this.forceSettings);
     }
+    if (options.highlightSettings) {
+      this.highlightSettings = highlightSettingsGetter(
+        options.highlightSettings,
+        this.highlightSettings,
+      );
+      this.linkOptionsCache = {};
+      this.cachedNodeText = {};
+      this.cachedNodeLabel = {};
+      this.cachedTextNodeParameters = {};
+      this.nodeOptionsCache = {};
+    }
     if (options.linkSettings) {
       this.linkSettings = linkSettingsGetter(options.linkSettings, this.linkSettings);
       this.linkOptionsCache = {};
