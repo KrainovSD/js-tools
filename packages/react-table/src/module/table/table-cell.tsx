@@ -35,6 +35,7 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
     return (
       <td
         data-id="cell"
+        data-column-id={props.cell.id}
         key={props.cell.id}
         className={clsx(
           styles.cell,
@@ -67,6 +68,7 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
   return (
     <div
       data-id="cell"
+      data-column-id={props.cell.id}
       key={props.cell.id}
       className={clsx(
         styles.cell,

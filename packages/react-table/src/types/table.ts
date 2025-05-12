@@ -11,9 +11,12 @@ import type {
 } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import type {
+  CommonHeaderRenderProps,
   DateCellRenderProps,
   DateFilterRenderProps,
+  SelectCellRenderProps,
   SelectFilterRenderProps,
+  SelectHeaderRenderProps,
   TagCellRenderProps,
   TextCellRenderProps,
 } from "../module/table/components";
@@ -47,7 +50,7 @@ export type TableColumn<
   filterType?: FilterType | FilterKey;
   props?: unknown;
 } & TableCellRendersProps<RowData, CellRender> &
-  TableHeaderRendersProps<HeaderRender> &
+  TableHeaderRendersProps<RowData, HeaderRender> &
   TableFilterRendersProps<FilterRender> &
   TableSortRendersProps<SortRender> &
   TableCellClassesProps<CellClass> &
@@ -58,19 +61,27 @@ export type TableCellRendersProps<
   CellRender = undefined,
 > =
   | {
-      cellRender?: CellRender | Exclude<TableCellRenderKey, "date" | "text" | "tag">;
+      cellRender?: CellRender | Exclude<TableCellRenderKey, "date" | "text" | "tag" | "select">;
       cellRenderProps?: unknown;
     }
   | {
       cellRender: "date";
       cellRenderProps: DateCellRenderProps<RowData>;
     }
-  | { cellRender: "text"; cellRenderProps: TextCellRenderProps<RowData> }
-  | { cellRender: "tag"; cellRenderProps: TagCellRenderProps<RowData> };
-export type TableHeaderRendersProps<HeaderRender = undefined> = {
-  headerRender?: HeaderRender | TableHeaderRenderKey;
-  headerRenderProps?: unknown;
-};
+  | { cellRender: "text"; cellRenderProps?: TextCellRenderProps<RowData> }
+  | { cellRender: "tag"; cellRenderProps?: TagCellRenderProps<RowData> }
+  | { cellRender: "select"; cellRenderProps?: SelectCellRenderProps<RowData> };
+export type TableHeaderRendersProps<
+  RowData extends Record<string, unknown>,
+  HeaderRender = undefined,
+> =
+  | {
+      headerRender?: HeaderRender | Exclude<TableHeaderRenderKey, "select" | "common">;
+      headerRenderProps?: unknown;
+    }
+  | { headerRender: "select"; headerRenderProps?: SelectHeaderRenderProps<RowData> }
+  | { headerRender: "common"; headerRenderProps?: CommonHeaderRenderProps<RowData> };
+
 export type TableFilterRendersProps<FilterRender = undefined> =
   | {
       filterRender?: FilterRender | Exclude<TableFilterRenderKey, "select" | "date" | "date-range">;
@@ -191,8 +202,8 @@ export type TableColumnsSettings<
   >;
 };
 
-export type TableCellRenderKey = "date" | "text" | "empty" | "tag";
-export type TableHeaderRenderKey = "common";
+export type TableCellRenderKey = "date" | "text" | "empty" | "tag" | "select";
+export type TableHeaderRenderKey = "common" | "select" | "empty";
 export type TableFilterRenderKey =
   | "number"
   | "number-range"

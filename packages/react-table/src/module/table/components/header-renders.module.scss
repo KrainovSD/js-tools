@@ -1,18 +1,25 @@
-.common {
-  &__container {
-    height: fit-content;
-    display: flex;
-    align-items: center;
-    max-width: 100%;
-    overflow: hidden;
-    justify-content: space-between;
-    width: 100%;
-  }
+.container {
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+  overflow: hidden;
+  justify-content: space-between;
+  width: 100%;
 
-  &__base {
-    display: block;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  &__hCenter {
+    height: 100%;
+    align-items: center;
   }
+  &__wCenter {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.base {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

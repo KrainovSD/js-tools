@@ -36,7 +36,9 @@ import {
   DoubleArrowSortRender,
   NumberFilterRender,
   NumberRangeFilterRender,
+  SelectCellRender,
   SelectFilterRender,
+  SelectHeaderRender,
   SingleArrowSortRender,
   StringFilterRender,
   TagCellRender,
@@ -97,6 +99,7 @@ export function useColumns<
 
   const cellRenders = React.useMemo<TableCellRenders<Row>>(
     () => ({
+      select: SelectCellRender,
       date: DateCellRender,
       text: TextCellRender,
       tag: TagCellRender,
@@ -105,7 +108,7 @@ export function useColumns<
     [],
   );
   const headerRenders = React.useMemo<TableHeaderRenders<Row>>(
-    () => ({ common: CommonHeaderRender }),
+    () => ({ common: CommonHeaderRender, select: SelectHeaderRender, empty: () => "" }),
     [],
   );
   const filterRenders = React.useMemo<TableFilterRenders<Row>>(

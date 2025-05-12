@@ -16,6 +16,15 @@ a.container {
     height: 100%;
     align-items: center;
   }
+
+  &__hCenter {
+    height: 100%;
+    align-items: center;
+  }
+  &__wCenter {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .tooltip {
@@ -41,4 +50,23 @@ a.container {
   white-space: nowrap;
   text-overflow: ellipsis;
   cursor: pointer;
+}
+
+.select {
+  &__container {
+    &:hover {
+      & > .select__number {
+        display: none;
+      }
+      & > .select__check {
+        display: block;
+      }
+    }
+  }
+  &__number {
+    display: block;
+  }
+  &__check {
+    display: none;
+  }
 }

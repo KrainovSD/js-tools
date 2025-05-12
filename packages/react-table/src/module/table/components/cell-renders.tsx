@@ -1,5 +1,5 @@
 import { dateFormat, isArray, isBoolean, isId, isObject, isString } from "@krainovsd/js-helpers";
-import { Tag, Tooltip } from "@krainovsd/react-ui";
+import { CheckBox, Tag, Tooltip } from "@krainovsd/react-ui";
 import type { CellContext } from "@tanstack/react-table";
 import type { PresetColorType } from "antd/es/theme/internal";
 import clsx from "clsx";
@@ -9,18 +9,21 @@ import { useVisibleCell } from "../hooks/use-visible-cell";
 import { getData } from "../lib";
 import styles from "./cell-renders.module.scss";
 
-export type CellRenderClasses = "center";
+export type CellRenderClasses = "hCenter" | "wCenter";
 
 export type TextCellRenderProps<RowData extends Record<string, unknown>> = {
   expanded?: boolean;
   shift?: number;
   pathToTooltip?: string;
-  Link?: (props: { children?: React.ReactNode; row: RowData }) => ReactNode;
+  Link?: (props: {
+    children?: React.ReactNode;
+    context: CellContext<RowData, unknown>;
+  }) => ReactNode;
   autoTooltip?: boolean;
   booleanMapping?: BooleanMapping;
-  classes?: Record<CellRenderClasses, boolean>;
+  classes?: CellRenderClasses[];
+  className?: ((context: CellContext<RowData, unknown>) => string) | string;
   tooltipZ?: number;
-  className?: ((row: RowData) => string) | string;
 };
 
 type BooleanMapping = {
@@ -69,9 +72,9 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
         <div
           className={clsx(
             styles.container,
-            cellRenderProps?.classes?.center && styles.container__center,
+            cellRenderProps?.classes?.map?.((style) => styles[`container__${style}`]),
             typeof cellRenderProps?.className === "function"
-              ? cellRenderProps.className(props.context.row.original)
+              ? cellRenderProps.className(props.context)
               : cellRenderProps?.className,
           )}
           style={{
@@ -79,7 +82,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
           }}
         >
           {isExpandable && Expander && <Expander context={props.context} />}
-          <Link row={props.context.row.original}>
+          <Link context={props.context}>
             {isString(tooltip) && (
               <Tooltip
                 classNameContent={styles.tooltip}
@@ -98,9 +101,9 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
         <div
           className={clsx(
             styles.container,
-            cellRenderProps?.classes?.center && styles.container__center,
+            cellRenderProps?.classes?.map?.((style) => styles[`container__${style}`]),
             typeof cellRenderProps?.className === "function"
-              ? cellRenderProps.className(props.context.row.original)
+              ? cellRenderProps.className(props.context)
               : cellRenderProps?.className,
           )}
           style={{
@@ -129,8 +132,8 @@ export type DateCellRenderProps<RowData extends Record<string, unknown>> = {
   format: string;
   expanded?: boolean;
   shift?: number;
-  classes?: Record<CellRenderClasses, boolean>;
-  className?: ((row: RowData) => string) | string;
+  classes?: CellRenderClasses[];
+  className?: ((context: CellContext<RowData, unknown>) => string) | string;
 };
 
 export function DateCellRender<Row extends Record<string, unknown>>(props: {
@@ -155,9 +158,9 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
       <div
         className={clsx(
           styles.container,
-          cellRenderProps?.classes?.center && styles.container__center,
+          cellRenderProps?.classes?.map?.((style) => styles[`container__${style}`]),
           typeof cellRenderProps?.className === "function"
-            ? cellRenderProps.className(props.context.row.original)
+            ? cellRenderProps.className(props.context)
             : cellRenderProps?.className,
         )}
         style={{
@@ -172,15 +175,18 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
 }
 
 export type TagCellRenderProps<Row extends Record<string, unknown>> = {
-  color?: ((row: Row) => keyof PresetColorType | undefined) | keyof PresetColorType | undefined;
-  content?: (row: Row) => string | string[] | undefined;
+  color?:
+    | ((context: CellContext<Row, unknown>) => keyof PresetColorType | undefined)
+    | keyof PresetColorType
+    | undefined;
+  content?: (context: CellContext<Row, unknown>) => string | string[] | undefined;
   bordered?: boolean;
   filterable?: boolean;
-  classes?: Record<CellRenderClasses, boolean>;
+  classes?: CellRenderClasses[];
   pathToTooltip?: string;
   autoTooltip?: boolean;
   tooltipZ?: number;
-  className?: ((row: Row) => string) | string;
+  className?: ((context: CellContext<Row, unknown>) => string) | string;
 };
 
 export function TagCellRender<Row extends Record<string, unknown>>(props: {
@@ -198,7 +204,7 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
   const renderTooltip = tooltip != undefined ? (isArray(tooltip) ? tooltip : [tooltip]) : undefined;
   const rowValue = getData(props.context.row.original, props.context.column.id);
   const rowContent =
-    cellRenderProps?.content?.(props.context.row.original) ??
+    cellRenderProps?.content?.(props.context) ??
     getData(props.context.row.original, props.context.column.id);
   const renderContent = isArray(rowContent) ? rowContent : [rowContent];
   const renderValue = isArray(rowValue) ? rowValue : [rowValue];
@@ -215,7 +221,7 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
         bordered={cellRenderProps?.bordered}
         color={
           typeof cellRenderProps?.color === "function"
-            ? cellRenderProps.color(props.context.row.original)
+            ? cellRenderProps.color(props.context)
             : cellRenderProps?.color
         }
         style={{
@@ -256,9 +262,9 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
       <div
         className={clsx(
           styles.container,
-          cellRenderProps?.classes?.center && styles.container__center,
+          cellRenderProps?.classes?.map?.((style) => styles[`container__${style}`]),
           typeof cellRenderProps?.className === "function"
-            ? cellRenderProps.className(props.context.row.original)
+            ? cellRenderProps.className(props.context)
             : cellRenderProps?.className,
         )}
       >
@@ -273,6 +279,66 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
           </Tooltip>
         )}
         {renderTooltip == undefined && Node}
+      </div>
+    </>
+  );
+}
+
+type CheckProps = (props: {
+  checked: boolean;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+}) => ReactNode;
+export type SelectCellRenderProps<RowData extends Record<string, unknown>> = {
+  Check?: CheckProps;
+  shift?: number;
+  classes?: CellRenderClasses[];
+  hover?: boolean;
+  className?: ((context: CellContext<RowData, unknown>) => string) | string;
+};
+
+export function SelectCellRender<Row extends Record<string, unknown>>(props: {
+  context: CellContext<Row, unknown>;
+}): ReactNode {
+  const cellRenderProps = props.context.column.columnDef.cellRenderProps as
+    | SelectCellRenderProps<Row>
+    | undefined;
+  const { isVisible, extraPadding } = useVisibleCell(props.context);
+  const Check = cellRenderProps?.Check ?? CheckBox;
+
+  const checked = props.context.row.getIsSelected();
+  const hover = !checked && cellRenderProps?.hover;
+
+  if (!isVisible) return;
+
+  return (
+    <>
+      {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}
+      <div
+        className={clsx(
+          styles.container,
+          hover && styles.select__container,
+          cellRenderProps?.classes?.map?.((style) => styles[`container__${style}`]),
+          typeof cellRenderProps?.className === "function"
+            ? cellRenderProps.className(props.context)
+            : cellRenderProps?.className,
+        )}
+        style={{
+          paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
+        }}
+        onClick={(event) => event.stopPropagation()}
+        onDoubleClick={(event) => event.stopPropagation()}
+      >
+        {hover && (
+          <span className={clsx(hover && styles.select__number)}>{props.context.row.id}</span>
+        )}
+        <span className={clsx(hover && styles.select__check)}>
+          <Check
+            checked={checked}
+            onChange={(event) => {
+              props.context.row.toggleSelected(event.target.checked);
+            }}
+          />
+        </span>
       </div>
     </>
   );

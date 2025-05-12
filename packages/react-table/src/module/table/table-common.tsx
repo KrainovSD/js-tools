@@ -66,6 +66,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               rightHeaders={rightHeaders}
               totalWidth={props.table.getTotalSize()}
               headerRowClassName={props.headerRowClassName}
+              page={props.table.getState().pagination.pageIndex}
             />
           );
         })}

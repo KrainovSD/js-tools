@@ -3,7 +3,25 @@ import type { TableColumn } from "../types";
 
 export const columns: TableColumn<Row, "test">[] = [
   //   SelectColumn,
-
+  {
+    key: "_select",
+    name: "",
+    width: 50,
+    resizable: false,
+    draggable: false,
+    leftFrozen: true,
+    sortable: false,
+    filterable: false,
+    cellRender: "select",
+    cellRenderProps: {
+      classes: ["hCenter", "wCenter"],
+      hover: true,
+    },
+    headerRender: "select",
+    headerRenderProps: {
+      classes: ["hCenter", "wCenter"],
+    },
+  },
   {
     key: "id",
     name: "ID",
@@ -12,6 +30,9 @@ export const columns: TableColumn<Row, "test">[] = [
     sortType: "string-with-number",
     draggable: false,
     leftFrozen: true,
+    cellRenderProps: {
+      classes: ["hCenter"],
+    },
   },
   {
     key: "firstName",
@@ -29,6 +50,7 @@ export const columns: TableColumn<Row, "test">[] = [
       expanded: true,
       // pathToLink: "country",
       pathToTooltip: "lastName",
+      classes: ["hCenter"],
     },
   },
   {
@@ -40,9 +62,7 @@ export const columns: TableColumn<Row, "test">[] = [
     filterType: "includes-string",
     cellRender: "text",
     cellRenderProps: {
-      classes: {
-        center: true,
-      },
+      classes: ["hCenter"],
     },
     resizable: true,
     draggable: true,
@@ -67,7 +87,7 @@ export const columns: TableColumn<Row, "test">[] = [
       autoTooltip: true,
       Link: (props) => {
         // eslint-disable-next-line react/prop-types
-        return <a href={props.row.country}>{props.children}</a>;
+        return <a href={props.context.row.original.country}>{props.children}</a>;
       },
     },
     // leftFrozen: true,

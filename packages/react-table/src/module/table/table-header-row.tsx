@@ -18,6 +18,7 @@ type Props<RowData extends Record<string, unknown>> = {
     | ((header: HeaderInterface<RowData>) => string | undefined)
     | string
     | undefined;
+  page: number;
 };
 
 export const TableHeaderRow = React.memo(function TableHeaderRow<
