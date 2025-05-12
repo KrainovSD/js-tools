@@ -3,7 +3,6 @@ import clsx from "clsx";
 import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
 import styles from "./table-common.module.scss";
 import { TableHeaderRow } from "./table-header-row";
-import { TableRowVirtualWrapper } from "./table-row-virtual-wrapper";
 import { TableRowWrapper } from "./table-row-wrapper";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
@@ -81,7 +80,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         {props.rowVirtualEnabled &&
           props.rowsVirtual.map((virtualRow) => {
             return (
-              <TableRowVirtualWrapper<RowData>
+              <TableRowWrapper<RowData>
                 virtualRow={virtualRow}
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={props.columnsVirtual}
@@ -92,6 +91,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 onDoubleClickRow={props.onDoubleClickRow}
                 rowVirtualizer={props.rowVirtualizer}
                 totalWidth={props.table.getTotalSize()}
+                row={null}
               />
             );
           })}
@@ -107,6 +107,9 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
                 totalWidth={props.table.getTotalSize()}
+                rowVirtualizer={props.rowVirtualizer}
+                rows={props.rows}
+                virtualRow={null}
               />
             );
           })}

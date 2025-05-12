@@ -1,4 +1,4 @@
-import type { VirtualItem } from "@tanstack/react-virtual";
+import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
 import type { RowInterface } from "../../types";
@@ -6,9 +6,12 @@ import { TableRow } from "./table-row";
 import styles from "./table-row-wrapper.module.scss";
 
 type Props<RowData extends Record<string, unknown>> = {
-  row: RowInterface<RowData>;
+  rows: RowInterface<RowData>[];
+  row: RowInterface<RowData> | null;
   totalWidth: number;
   columnsVirtual: VirtualItem[];
+  virtualRow: VirtualItem | null;
+  rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
@@ -18,32 +21,37 @@ type Props<RowData extends Record<string, unknown>> = {
 export const TableRowWrapper = React.memo(function TableRowWrapper<
   RowData extends Record<string, unknown>,
 >(props: Props<RowData>) {
+  const row = props.virtualRow ? props.rows[props.virtualRow.index] : props.row;
+
+  if (!row) return;
+
   /** ROW */
   return (
     <tr
       data-id="row"
-      key={props.row.id}
+      key={row.id}
       className={clsx(
         styles.row,
-        typeof props.rowClassName === "function"
-          ? props.rowClassName(props.row)
-          : props.rowClassName,
+        props.virtualRow && styles.row__virtual,
+        typeof props.rowClassName === "function" ? props.rowClassName(row) : props.rowClassName,
       )}
+      data-index={props.virtualRow ? props.virtualRow.index : row.index}
+      ref={props.virtualRow ? (node) => props.rowVirtualizer.measureElement(node) : undefined}
       style={{
+        transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
         width: props.totalWidth,
       }}
-      data-index={props.row.index}
       onClick={(event) => {
-        props.onClickRow?.(props.row, event);
+        props.onClickRow?.(row, event);
       }}
       onDoubleClick={(event) => {
-        props.onDoubleClickRow?.(props.row, event);
+        props.onDoubleClickRow?.(row, event);
       }}
     >
       <TableRow
         columnVirtualEnabled={props.columnVirtualEnabled}
         columnsVirtual={props.columnsVirtual}
-        row={props.row}
+        row={row}
       />
     </tr>
   );

@@ -10,7 +10,7 @@ import styles from "./app.module.scss";
 import { type Row, columns, createRows } from "./lib";
 import { type RowGantt, columnsGantt, createRowsGantt } from "./lib-gantt";
 
-const withGantt: true | false = true;
+const withGantt: true | false = false;
 const rows: Row[] = createRows();
 const rowsGantt: RowGantt[] = createRowsGantt();
 
