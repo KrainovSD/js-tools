@@ -10,7 +10,7 @@ import styles from "./app.module.scss";
 import { type Row, columns, createRows } from "./lib";
 import { type RowGantt, columnsGantt, createRowsGantt } from "./lib-gantt";
 
-const withGantt: true | false = false;
+const withGantt: true | false = true;
 const rows: Row[] = createRows();
 const rowsGantt: RowGantt[] = createRowsGantt();
 
@@ -29,7 +29,7 @@ type FilterTypeKeys = undefined;
 type SortTypeKeys = undefined;
 
 export function App() {
-  const [expanded, setExpanded] = React.useState<ExpandedState>({});
+  const [expanded, setExpanded] = React.useState<ExpandedState>(true);
   const [columnsVisibility, setColumnsVisibility] = React.useState<VisibilityState>({
     name: false,
     start: true,
@@ -154,21 +154,21 @@ export function App() {
           instantGanttSplitter={false}
           columnOrder={!withGantt ? tableColumns : undefined}
           onColumnOrderChange={!withGantt ? setTableColumns : undefined}
-          // ganttInfoGetter={
-          //   withGantt
-          //     ? (row) => ({
-          //         end: row.original.end,
-          //         id: row.original.id,
-          //         start: row.original.start,
-          //         name: row.original.name,
-          //         type: row.original.type ?? (row.original.children ? "group" : "task"),
-          //         dependents: row.original.dependents,
-          //         props: {
-          //           additionalData: 1,
-          //         },
-          //       })
-          //     : undefined
-          // }
+          ganttInfoGetter={
+            withGantt
+              ? (row) => ({
+                  end: row.original.end,
+                  id: row.original.id,
+                  start: row.original.start,
+                  name: row.original.name,
+                  type: row.original.type ?? (row.original.children ? "group" : "task"),
+                  dependents: row.original.dependents,
+                  props: {
+                    additionalData: 1,
+                  },
+                })
+              : undefined
+          }
           firstGanttDate={firstDate?.toISOString?.()}
           lastGanttDate={lastDate?.toDateString?.()}
           ganttRowMini={true}

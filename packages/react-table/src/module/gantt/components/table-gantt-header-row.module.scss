@@ -1,0 +1,17 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.headerContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &__frozen {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+}

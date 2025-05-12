@@ -3,10 +3,10 @@ import { Tooltip } from "@krainovsd/react-ui";
 import clsx from "clsx";
 import React from "react";
 import { createPortal } from "react-dom";
+import { GanttArrow } from ".";
 import type { GanttInfo, GanttRowInfo, RowInterface } from "../../../types";
-import { GanttArrow } from "../components";
 import { GANTT_TOP_SHIFT } from "../gantt.constants";
-import styles from "./get-cell.module.scss";
+import styles from "./table-gantt-cell.module.scss";
 
 type GetCellOptions<
   RowData extends Record<string, unknown>,
@@ -33,7 +33,7 @@ type GetCellOptions<
   bodyWidth: number | null;
 };
 
-export function getCell<
+export function TableGanttCell<
   RowData extends Record<string, unknown>,
   GanttData extends Record<string, unknown>,
 >(opts: GetCellOptions<RowData, GanttData>) {

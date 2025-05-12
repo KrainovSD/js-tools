@@ -1,7 +1,5 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
-import clsx from "clsx";
 import React from "react";
-import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../table.constants";
 import type {
   GanttInfo,
   GanttRowInfo,
@@ -9,20 +7,11 @@ import type {
   RowInterface,
   TableInterface,
 } from "../../types";
-import {
-  GanttMonthHeader,
-  GanttQuarterHeader,
-  GanttWeekHeader,
-  GanttYearHeader,
-} from "./components";
-import {
-  GANTT_BODY_ID,
-  GANTT_HEADER_HEIGHT,
-  GANTT_HEADER_ID,
-  GANTT_LEFT_SHIFT,
-} from "./gantt.constants";
+import { TableGanttRow } from "./components";
+import { TableGanttHeaderRow } from "./components/table-gantt-header-row";
+import { GANTT_BODY_ID, GANTT_LEFT_SHIFT } from "./gantt.constants";
 import { useGanttColumns } from "./hooks";
-import { getCell, getGanttColumnWidth, getGanttInitialCoordinates } from "./lib";
+import { getGanttColumnWidth, getGanttInitialCoordinates } from "./lib";
 import styles from "./table-gantt.module.scss";
 
 type TableContainerProps<
@@ -138,49 +127,13 @@ export function TableGantt<
         width: props.width,
       }}
     >
-      <div
-        data-id="header-container"
-        id={GANTT_HEADER_ID}
-        className={clsx(
-          styles.headerContainer,
-          (props.frozenHeader || props.frozenHeader == undefined) && styles.headerContainer__frozen,
-        )}
-      >
-        <div
-          className={clsx(styles.header)}
-          style={{ minHeight: GANTT_HEADER_HEIGHT * 2 }}
-          data-id="header"
-        >
-          {props.ganttView === "months" && (
-            <GanttMonthHeader
-              headerItems={headerItems}
-              locale={props.locale}
-              width={GANTT_COLUMN_WIDTH}
-            />
-          )}
-          {props.ganttView === "years" && (
-            <GanttYearHeader
-              headerItems={headerItems}
-              locale={props.locale}
-              width={GANTT_COLUMN_WIDTH}
-            />
-          )}
-          {props.ganttView === "quarters" && (
-            <GanttQuarterHeader
-              headerItems={headerItems}
-              locale={props.locale}
-              width={GANTT_COLUMN_WIDTH}
-            />
-          )}
-          {props.ganttView === "weeks" && (
-            <GanttWeekHeader
-              headerItems={headerItems}
-              locale={props.locale}
-              width={GANTT_COLUMN_WIDTH}
-            />
-          )}
-        </div>
-      </div>
+      <TableGanttHeaderRow
+        columnWidth={GANTT_COLUMN_WIDTH}
+        ganttView={props.ganttView}
+        headerItems={headerItems}
+        locale={props.locale}
+        frozenHeader={props.frozenHeader}
+      />
       <div id={GANTT_BODY_ID} className={styles.bodyContainer} data-id="body-container">
         <div
           data-id="body"
@@ -199,28 +152,18 @@ export function TableGantt<
               const row = props.rows[virtualRow.index];
 
               return (
-                <React.Fragment key={`${virtualRow.index}-row`}>
-                  {getCell({
-                    row,
-                    ganttInfoGetter: props.ganttInfoGetter,
-                    GanttTooltip: props.GanttTooltip,
-                    rowsMap,
-                    mini: props.ganttRowMini ?? false,
-                    arrowContainer: arrowContainerRef.current,
-                    GanttTask: props.GanttTask,
-                    bodyWidth,
-                  })}
-                  <div
-                    data-id="row"
-                    key={virtualRow.index}
-                    className={styles.fake__row}
-                    style={{
-                      transform: `translateY(${virtualRow.start}px)`,
-                      minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                      maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                    }}
-                  ></div>
-                </React.Fragment>
+                <TableGanttRow
+                  GanttTask={props.GanttTask}
+                  GanttTooltip={props.GanttTooltip}
+                  arrowContainer={arrowContainerRef.current}
+                  bodyWidth={bodyWidth}
+                  ganttInfoGetter={props.ganttInfoGetter}
+                  row={row}
+                  rowsMap={rowsMap}
+                  key={`${row.id}-row`}
+                  ganttRowMini={props.ganttRowMini}
+                  virtualStart={virtualRow.start}
+                />
               );
             })}
 
@@ -228,26 +171,18 @@ export function TableGantt<
           {!props.rowVirtualEnabled &&
             props.rows.map((row) => {
               return (
-                <React.Fragment key={`${row.id}-row`}>
-                  {getCell({
-                    row,
-                    ganttInfoGetter: props.ganttInfoGetter,
-                    GanttTooltip: props.GanttTooltip,
-                    rowsMap,
-                    mini: props.ganttRowMini ?? false,
-                    arrowContainer: arrowContainerRef.current,
-                    GanttTask: props.GanttTask,
-                    bodyWidth,
-                  })}
-                  <div
-                    data-id="row"
-                    className={styles.row}
-                    style={{
-                      minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                      maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-                    }}
-                  ></div>
-                </React.Fragment>
+                <TableGanttRow
+                  GanttTask={props.GanttTask}
+                  GanttTooltip={props.GanttTooltip}
+                  arrowContainer={arrowContainerRef.current}
+                  bodyWidth={bodyWidth}
+                  ganttInfoGetter={props.ganttInfoGetter}
+                  row={row}
+                  rowsMap={rowsMap}
+                  key={`${row.id}-row`}
+                  ganttRowMini={props.ganttRowMini}
+                  virtualStart={undefined}
+                />
               );
             })}
           {/** FAKE VERTICAL ROWS */}

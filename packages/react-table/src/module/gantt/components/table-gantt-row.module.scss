@@ -1,0 +1,14 @@
+.row {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid var(--table-border);
+}
+
+.fake {
+  &__row {
+    width: 100%;
+    border-bottom: 1px solid var(--table-border);
+    position: absolute;
+    z-index: 1;
+  }
+}

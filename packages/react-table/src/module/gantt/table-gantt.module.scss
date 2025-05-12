@@ -8,24 +8,6 @@
   flex-direction: column;
 }
 
-.headerContainer {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  &__frozen {
-    position: sticky;
-    top: 0;
-    z-index: 5;
-  }
-}
-
-.header {
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
-}
-
 .bodyContainer {
   position: relative;
   display: flex;
@@ -41,19 +23,7 @@
   flex-direction: column;
 }
 
-.row {
-  display: flex;
-  width: 100%;
-  border-bottom: 1px solid var(--table-border);
-}
-
 .fake {
-  &__row {
-    width: 100%;
-    border-bottom: 1px solid var(--table-border);
-    position: absolute;
-    z-index: 1;
-  }
   &__column {
     width: 0;
     height: 100%;
