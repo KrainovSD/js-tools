@@ -97,6 +97,7 @@ export type TableProps<
       filterOptions: FilterFieldType[];
     }>;
     Pagination?: React.FC<{ table: TableInterface<RowData> }>;
+    Empty?: React.FC;
     setTable?: (table: TableInterface<RowData>) => void;
     rootRef?: React.MutableRefObject<HTMLDivElement | null>;
     headerRowClassName?: ((header: HeaderInterface<RowData>) => string | undefined) | string;
@@ -218,6 +219,7 @@ export function Table<
               onDoubleClickRow={props.onDoubleClickRow}
               rowClassName={props.rowClassName}
               headerRowClassName={props.headerRowClassName}
+              Empty={props.Empty}
             />
           </div>
         )}

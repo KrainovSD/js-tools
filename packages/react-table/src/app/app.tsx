@@ -34,7 +34,7 @@ type FilterTypeKeys = undefined;
 type SortTypeKeys = undefined;
 
 export function App() {
-  const [expanded, setExpanded] = React.useState<ExpandedState>(true);
+  const [expanded, setExpanded] = React.useState<ExpandedState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [columnsVisibility, setColumnsVisibility] = React.useState<VisibilityState>({
     name: false,
@@ -136,6 +136,7 @@ export function App() {
             >[]
           }
           rows={(withGantt ? rowsGantt : rows) as CurrentRow[]}
+          Empty={() => <span>Empty</span>}
           // rows={[{ end: "", id: "", name: "", start: "", children: [], dependents: [] }]}
           cellRenders={{ test: () => "" }}
           getSubRows={(row) => row.children}

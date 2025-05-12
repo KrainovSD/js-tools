@@ -305,6 +305,13 @@ export function SelectCellRender<Row extends Record<string, unknown>>(props: {
   const { isVisible, extraPadding } = useVisibleCell(props.context);
   const Check = cellRenderProps?.Check ?? CheckBox;
 
+  const number = cellRenderProps?.hover
+    ? props.context.row.id
+        .split(".")
+        .map((id) => +id + 1)
+        .join(".")
+    : 0;
+
   const checked = props.context.row.getIsSelected();
   const hover = !checked && cellRenderProps?.hover;
 
@@ -328,9 +335,7 @@ export function SelectCellRender<Row extends Record<string, unknown>>(props: {
         onClick={(event) => event.stopPropagation()}
         onDoubleClick={(event) => event.stopPropagation()}
       >
-        {hover && (
-          <span className={clsx(hover && styles.select__number)}>{props.context.row.id}</span>
-        )}
+        {hover && <span className={clsx(hover && styles.select__number)}>{number}</span>}
         <span className={clsx(hover && styles.select__check)}>
           <Check
             checked={checked}

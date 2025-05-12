@@ -25,6 +25,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
     | ((header: HeaderInterface<RowData>) => string | undefined)
     | string
     | undefined;
+  Empty: React.FC | undefined;
 };
 
 export function TableCommon<RowData extends Record<string, unknown>>(
@@ -74,7 +75,10 @@ export function TableCommon<RowData extends Record<string, unknown>>(
       <tbody
         className={styles.body}
         style={{
-          height: props.rowVirtualEnabled ? `${props.rowVirtualizer.getTotalSize()}px` : undefined,
+          height:
+            props.rowVirtualEnabled && props.rowsVirtual.length > 0
+              ? `${props.rowVirtualizer.getTotalSize()}px`
+              : undefined,
         }}
         data-id="body"
       >
@@ -96,6 +100,9 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               />
             );
           })}
+        {props.rowVirtualEnabled && props.rowsVirtual.length === 0 && props.Empty && (
+          <props.Empty />
+        )}
         {!props.rowVirtualEnabled &&
           props.rows.map((row) => {
             return (
@@ -114,6 +121,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               />
             );
           })}
+        {!props.rowVirtualEnabled && props.rows.length === 0 && props.Empty && <props.Empty />}
       </tbody>
     </table>
   );
