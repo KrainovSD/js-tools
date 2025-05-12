@@ -8,8 +8,6 @@ import styles from "./table-header-row.module.scss";
 type Props<RowData extends Record<string, unknown>> = {
   headerGroup: HeaderGroup<RowData>;
   columnVirtualEnabled: boolean;
-  virtualPaddingLeft: number | undefined;
-  virtualPaddingRight: number | undefined;
   columnsVirtual: VirtualItem[];
   leftHeaders: HeaderGroup<RowData>["headers"];
   rightHeaders: HeaderGroup<RowData>["headers"];
@@ -55,6 +53,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
               />
             );
           })}
+          {props.rightHeaders.length > 0 && <div className={styles.ghost}></div>}
           {props.rightHeaders.map((header, index, headers) => {
             return (
               <TableHeaderCell

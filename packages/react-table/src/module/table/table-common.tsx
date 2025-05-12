@@ -3,16 +3,14 @@ import clsx from "clsx";
 import type { RowInterface, TableInterface } from "../../types";
 import styles from "./table-common.module.scss";
 import { TableHeaderRow } from "./table-header-row";
-import { TableRow } from "./table-row";
-import { TableRowVirtual } from "./table-row-virtual";
+import { TableRowVirtualWrapper } from "./table-row-virtual-wrapper";
+import { TableRowWrapper } from "./table-row-wrapper";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   columnVirtualEnabled: boolean;
   rowVirtualEnabled: boolean;
   table: TableInterface<RowData>;
   frozenHeader: boolean;
-  virtualPaddingLeft: number | undefined;
-  virtualPaddingRight: number | undefined;
   columnsVirtual: VirtualItem[];
   rowsVirtual: VirtualItem[];
   rows: RowInterface<RowData>[];
@@ -56,8 +54,6 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               columnVirtualEnabled={props.columnVirtualEnabled}
               columnsVirtual={props.columnsVirtual}
               headerGroup={headerGroup}
-              virtualPaddingLeft={props.virtualPaddingLeft}
-              virtualPaddingRight={props.virtualPaddingRight}
               centerHeaders={centerHeaders}
               leftHeaders={leftHeaders}
               rightHeaders={rightHeaders}
@@ -76,14 +72,12 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         {props.rowVirtualEnabled &&
           props.rowsVirtual.map((virtualRow) => {
             return (
-              <TableRowVirtual<RowData>
+              <TableRowVirtualWrapper<RowData>
                 virtualRow={virtualRow}
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={props.columnsVirtual}
                 rowClassName={props.rowClassName}
                 rows={props.rows}
-                virtualPaddingLeft={props.virtualPaddingLeft}
-                virtualPaddingRight={props.virtualPaddingRight}
                 key={`${virtualRow.index}-row`}
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
@@ -95,16 +89,15 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         {!props.rowVirtualEnabled &&
           props.rows.map((row) => {
             return (
-              <TableRow
+              <TableRowWrapper
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={props.columnsVirtual}
                 row={row}
                 rowClassName={props.rowClassName}
-                virtualPaddingLeft={props.virtualPaddingLeft}
-                virtualPaddingRight={props.virtualPaddingRight}
                 key={`${row.id}-row`}
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
+                table={props.table}
               />
             );
           })}
