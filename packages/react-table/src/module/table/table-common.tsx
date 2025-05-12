@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
 import styles from "./table-common.module.scss";
 import { TableHeaderRow } from "./table-header-row";
-import { TableRowWrapper } from "./table-row-wrapper";
+import { TableRow } from "./table-row";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
   columnVirtualEnabled: boolean;
@@ -80,7 +80,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         {props.rowVirtualEnabled &&
           props.rowsVirtual.map((virtualRow) => {
             return (
-              <TableRowWrapper<RowData>
+              <TableRow<RowData>
                 virtualRow={virtualRow}
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={props.columnsVirtual}
@@ -98,7 +98,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         {!props.rowVirtualEnabled &&
           props.rows.map((row) => {
             return (
-              <TableRowWrapper
+              <TableRow
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={props.columnsVirtual}
                 row={row}

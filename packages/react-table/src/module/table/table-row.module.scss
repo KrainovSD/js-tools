@@ -1,3 +1,18 @@
+.row {
+  display: flex;
+  width: fit-content;
+  background-color: var(--table-row-bg);
+  position: relative;
+
+  &:hover {
+    background-color: var(--table-row-hover-bg);
+  }
+
+  &__virtual {
+    position: absolute;
+  }
+}
+
 .ghost {
   display: flex;
   width: 100%;
