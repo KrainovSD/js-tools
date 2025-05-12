@@ -98,7 +98,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         {!props.rowVirtualEnabled &&
           props.rows.map((row) => {
             return (
-              <TableRow
+              <TableRow<RowData>
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={props.columnsVirtual}
                 row={row}

@@ -1,14 +1,11 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
-import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../table.constants";
-import type { RowInterface, TableInterface } from "../../types";
-import { TableCell } from "../table/table-cell";
-import { TableHeaderCell } from "../table/table-header-cell";
+import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
+import { TableCommonGanttHeaderRow, TableCommonGanttRow } from "./components";
 import { GANTT_COMMON_TABLE_BODY_ID, GANTT_COMMON_TABLE_HEADER_ID } from "./gantt.constants";
 import styles from "./table-common-gantt.module.scss";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
-  gantt: boolean | undefined;
   width?: number;
   rowHeaderHeight: number;
   tableRef?: React.LegacyRef<HTMLTableElement>;
@@ -26,11 +23,19 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
+  headerRowClassName:
+    | ((header: HeaderInterface<RowData>) => string | undefined)
+    | string
+    | undefined;
 };
 
 export function TableCommonGantt<RowData extends Record<string, unknown>>(
   props: TableContainerProps<RowData>,
 ) {
+  const leftHeadersGroup = props.table.getLeftHeaderGroups();
+  const centerHeadersGroup = props.table.getCenterHeaderGroups();
+  const rightHeadersGroup = props.table.getRightHeaderGroups();
+
   return (
     <div
       ref={props.tableRef}
@@ -49,59 +54,25 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
         data-id="header-container"
       >
         <div className={clsx(styles.header)} data-id="header">
-          {props.table.getHeaderGroups().map((headerGroup) => {
+          {props.table.getHeaderGroups().map((headerGroup, index) => {
             /** ROW HEADER */
-            return (
-              <div
-                key={headerGroup.id}
-                className={styles.headerRow}
-                style={{
-                  minHeight: props.rowHeaderHeight,
-                  maxHeight: props.rowHeaderHeight,
-                }}
-                data-id="header-row"
-              >
-                {props.columnVirtualEnabled && (
-                  <>
-                    {props.virtualPaddingLeft ? (
-                      <div
-                        style={{ display: "flex", width: props.virtualPaddingLeft }}
-                        data-id="header-cell"
-                      />
-                    ) : null}
-                    {props.columnsVirtual.map((virtualColumn) => {
-                      /** CELL HEADER  */
-                      const header = headerGroup.headers[virtualColumn.index];
+            const leftHeaders = leftHeadersGroup[index].headers;
+            const centerHeaders = centerHeadersGroup[index].headers;
+            const rightHeaders = rightHeadersGroup[index].headers;
 
-                      return (
-                        <TableHeaderCell
-                          key={`${header.id}-cell`}
-                          header={header}
-                          headers={headerGroup.headers}
-                          index={virtualColumn.index}
-                        />
-                      );
-                    })}
-                    {props.virtualPaddingRight ? (
-                      <div
-                        style={{ display: "flex", width: props.virtualPaddingRight }}
-                        data-id="header-cell"
-                      />
-                    ) : null}
-                  </>
-                )}
-                {!props.columnVirtualEnabled &&
-                  headerGroup.headers.map((header, index) => {
-                    return (
-                      <TableHeaderCell
-                        key={`${header.id}-cell`}
-                        header={header}
-                        headers={headerGroup.headers}
-                        index={index}
-                      />
-                    );
-                  })}
-              </div>
+            return (
+              <TableCommonGanttHeaderRow<RowData>
+                key={`${headerGroup.id}-header-row`}
+                columnVirtualEnabled={props.columnVirtualEnabled}
+                columnsVirtual={props.columnsVirtual}
+                headerGroup={headerGroup}
+                centerHeaders={centerHeaders}
+                leftHeaders={leftHeaders}
+                rightHeaders={rightHeaders}
+                totalWidth={props.table.getTotalSize()}
+                headerRowClassName={props.headerRowClassName}
+                rowHeaderHeight={props.rowHeaderHeight}
+              />
             );
           })}
         </div>
@@ -123,169 +94,40 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
         >
           {props.rowVirtualEnabled &&
             props.rowsVirtual.map((virtualRow) => {
-              const row = props.rows[virtualRow.index];
-              const visibleCells = row.getVisibleCells();
-
-              /** ROW */
               return (
-                // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-                <div
-                  data-id="row"
-                  key={row.id}
-                  className={clsx(
-                    styles.row,
-                    styles.row__virtual,
-                    typeof props.rowClassName === "function"
-                      ? props.rowClassName(row)
-                      : props.rowClassName,
-                  )}
-                  data-index={virtualRow.index}
-                  ref={(node) => props.rowVirtualizer.measureElement(node)}
-                  style={{
-                    transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scrolls
-                    minHeight: props.gantt
-                      ? props.ganttRowMini
-                        ? GANTT_ROW_HEIGHT_MINI
-                        : GANTT_ROW_HEIGHT
-                      : undefined,
-                    maxHeight: props.gantt
-                      ? props.ganttRowMini
-                        ? GANTT_ROW_HEIGHT_MINI
-                        : GANTT_ROW_HEIGHT
-                      : undefined,
-                  }}
-                  onClick={(event) => {
-                    props.onClickRow?.(row, event);
-                  }}
-                  onDoubleClick={(event) => {
-                    props.onDoubleClickRow?.(row, event);
-                  }}
-                >
-                  {props.columnVirtualEnabled && (
-                    <>
-                      {props.virtualPaddingLeft ? (
-                        <div
-                          data-id="cell"
-                          style={{ display: "flex", width: props.virtualPaddingLeft }}
-                        />
-                      ) : null}
-                      {props.columnsVirtual.map((virtualColumn) => {
-                        /** CELL */
-                        const cell = visibleCells[virtualColumn.index];
-
-                        return (
-                          <TableCell
-                            key={`${cell.id}-cell`}
-                            cell={cell}
-                            index={virtualColumn.index}
-                            cells={visibleCells}
-                          />
-                        );
-                      })}
-                      {props.virtualPaddingRight ? (
-                        <div
-                          data-id="cell"
-                          style={{ display: "flex", width: props.virtualPaddingRight }}
-                        />
-                      ) : null}
-                    </>
-                  )}
-                  {!props.columnVirtualEnabled &&
-                    visibleCells.map((cell, index, cells) => {
-                      /** CELL */
-
-                      return (
-                        <TableCell
-                          key={`${cell.id}-cell`}
-                          cell={cell}
-                          index={index}
-                          cells={cells}
-                        />
-                      );
-                    })}
-                </div>
+                <TableCommonGanttRow<RowData>
+                  virtualRow={virtualRow}
+                  columnVirtualEnabled={props.columnVirtualEnabled}
+                  columnsVirtual={props.columnsVirtual}
+                  rowClassName={props.rowClassName}
+                  rows={props.rows}
+                  key={`${virtualRow.index}-row`}
+                  onClickRow={props.onClickRow}
+                  onDoubleClickRow={props.onDoubleClickRow}
+                  rowVirtualizer={props.rowVirtualizer}
+                  totalWidth={props.table.getTotalSize()}
+                  row={null}
+                  ganttRowMini={props.ganttRowMini}
+                />
               );
             })}
           {!props.rowVirtualEnabled &&
             props.rows.map((row) => {
-              const visibleCells = row.getVisibleCells();
-
-              /** ROW */
               return (
-                // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-                <div
-                  data-id="row"
-                  key={row.id}
-                  className={clsx(
-                    styles.row,
-                    typeof props.rowClassName === "function"
-                      ? props.rowClassName(row)
-                      : props.rowClassName,
-                  )}
-                  data-index={row.index}
-                  ref={(node) => props.rowVirtualizer.measureElement(node)}
-                  onClick={(event) => {
-                    props.onClickRow?.(row, event);
-                  }}
-                  onDoubleClick={(event) => {
-                    props.onDoubleClickRow?.(row, event);
-                  }}
-                  style={{
-                    minHeight: props.gantt
-                      ? props.ganttRowMini
-                        ? GANTT_ROW_HEIGHT_MINI
-                        : GANTT_ROW_HEIGHT
-                      : undefined,
-                    maxHeight: props.gantt
-                      ? props.ganttRowMini
-                        ? GANTT_ROW_HEIGHT_MINI
-                        : GANTT_ROW_HEIGHT
-                      : undefined,
-                  }}
-                >
-                  {props.columnVirtualEnabled && (
-                    <>
-                      {props.virtualPaddingLeft ? (
-                        <div
-                          data-id="cell"
-                          style={{ display: "flex", width: props.virtualPaddingLeft }}
-                        />
-                      ) : null}
-                      {props.columnsVirtual.map((virtualColumn) => {
-                        /** CELL */
-                        const cell = visibleCells[virtualColumn.index];
-
-                        return (
-                          <TableCell
-                            key={`${cell.id}-cell`}
-                            cell={cell}
-                            index={virtualColumn.index}
-                            cells={visibleCells}
-                          />
-                        );
-                      })}
-                      {props.virtualPaddingRight ? (
-                        <div
-                          data-id="cell"
-                          style={{ display: "flex", width: props.virtualPaddingRight }}
-                        />
-                      ) : null}
-                    </>
-                  )}
-                  {!props.columnVirtualEnabled &&
-                    visibleCells.map((cell, index, cells) => {
-                      /** CELL */
-
-                      return (
-                        <TableCell
-                          key={`${cell.id}-cell`}
-                          cell={cell}
-                          index={index}
-                          cells={cells}
-                        />
-                      );
-                    })}
-                </div>
+                <TableCommonGanttRow<RowData>
+                  columnVirtualEnabled={props.columnVirtualEnabled}
+                  columnsVirtual={props.columnsVirtual}
+                  row={row}
+                  rowClassName={props.rowClassName}
+                  key={`${row.id}-row`}
+                  onClickRow={props.onClickRow}
+                  onDoubleClickRow={props.onDoubleClickRow}
+                  totalWidth={props.table.getTotalSize()}
+                  rowVirtualizer={props.rowVirtualizer}
+                  rows={props.rows}
+                  virtualRow={null}
+                  ganttRowMini={props.ganttRowMini}
+                />
               );
             })}
         </div>

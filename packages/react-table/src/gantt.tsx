@@ -6,7 +6,14 @@ import { GANTT_HEADER_HEIGHT } from "./module/gantt/gantt.constants";
 import { useScroll, useSplitter } from "./module/gantt/hooks";
 import { TableCommonGantt } from "./module/gantt/table-common-gantt";
 import { TableGantt } from "./module/gantt/table-gantt";
-import type { GanttInfo, GanttRowInfo, GanttViewType, RowInterface, TableInterface } from "./types";
+import type {
+  GanttInfo,
+  GanttRowInfo,
+  GanttViewType,
+  HeaderInterface,
+  RowInterface,
+  TableInterface,
+} from "./types";
 
 export type GanttProps<
   RowData extends Record<string, unknown>,
@@ -34,6 +41,10 @@ export type GanttProps<
   locale?: string;
   GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
+  headerRowClassName:
+    | ((header: HeaderInterface<RowData>) => string | undefined)
+    | string
+    | undefined;
   ganttView: GanttViewType;
   GanttTask:
     | React.FC<{
@@ -73,7 +84,6 @@ export function Gantt<
                 : GANTT_HEADER_HEIGHT * 3
             }
             tableRef={tableRef}
-            gantt={props.withGantt}
             width={sizes[0]}
             columnVirtualEnabled={props.columnVirtualEnabled}
             rowVirtualEnabled={props.rowVirtualEnabled}
@@ -89,6 +99,7 @@ export function Gantt<
             onDoubleClickRow={props.onDoubleClickRow}
             ganttRowMini={props.ganttRowMini}
             rowClassName={props.rowClassName}
+            headerRowClassName={props.headerRowClassName}
           />
           {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
           <div className={clsx(styles.splitter)} ref={splitterRef} onMouseDown={startDrag}>

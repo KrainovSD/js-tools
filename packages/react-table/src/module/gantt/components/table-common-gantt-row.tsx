@@ -1,9 +1,10 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
-import type { RowInterface } from "../../types";
-import { TableCell } from "./table-cell";
-import styles from "./table-row.module.scss";
+import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
+import type { RowInterface } from "../../../types";
+import { TableCell } from "../../table/table-cell";
+import styles from "./table-common-gantt-row.module.scss";
 
 type Props<RowData extends Record<string, unknown>> = {
   rows: RowInterface<RowData>[];
@@ -20,19 +21,20 @@ type Props<RowData extends Record<string, unknown>> = {
     | ((row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void)
     | undefined;
   columnVirtualEnabled: boolean;
+  ganttRowMini: boolean | undefined;
 };
 
-export const TableRow = React.memo(function TableRow<RowData extends Record<string, unknown>>(
-  props: Props<RowData>,
-) {
+export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
+  RowData extends Record<string, unknown>,
+>(props: Props<RowData>) {
   const row = props.virtualRow ? props.rows[props.virtualRow.index] : props.row;
 
   if (!row) return;
   const centerVisibleCells = row.getCenterVisibleCells();
 
-  /** ROW */
   return (
-    <tr
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div
       data-id="row"
       key={row.id}
       className={clsx(
@@ -42,15 +44,16 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       )}
       data-index={props.virtualRow ? props.virtualRow.index : row.index}
       ref={props.virtualRow ? (node) => props.rowVirtualizer.measureElement(node) : undefined}
-      style={{
-        transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
-        width: props.totalWidth,
-      }}
       onClick={(event) => {
         props.onClickRow?.(row, event);
       }}
       onDoubleClick={(event) => {
         props.onDoubleClickRow?.(row, event);
+      }}
+      style={{
+        transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
+        minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+        maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
       }}
     >
       <>
@@ -116,6 +119,6 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
             );
           })}
       </>
-    </tr>
+    </div>
   );
 }) as <RowData extends Record<string, unknown>>(props: Props<RowData>) => React.JSX.Element;

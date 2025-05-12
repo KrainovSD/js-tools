@@ -61,7 +61,7 @@ export function useVirtualizer<
     SortType
   >,
 ) {
-  const columnVirtualEnabled = Boolean(props.virtualColumn);
+  const columnVirtualEnabled = Boolean(props.virtualColumn && !props.gantt);
   const visibleColumns = props.table.getCenterVisibleLeafColumns();
   const leftColumns = props.table.getLeftVisibleLeafColumns();
   const rightColumns = props.table.getRightVisibleLeafColumns();

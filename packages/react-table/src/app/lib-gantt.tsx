@@ -47,7 +47,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start1",
-    name: "Начало",
+    name: "Начало1",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -59,7 +59,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end1",
-    name: "Окончание",
+    name: "Окончание1",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -71,7 +71,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start2",
-    name: "Начало",
+    name: "Начало2",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -83,7 +83,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end2",
-    name: "Окончание",
+    name: "Окончание2",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -95,7 +95,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start3",
-    name: "Начало",
+    name: "Начало3",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -107,7 +107,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end3",
-    name: "Окончание",
+    name: "Окончание3",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -119,7 +119,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start4",
-    name: "Начало",
+    name: "Начало4",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -131,7 +131,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end4",
-    name: "Окончание",
+    name: "Окончание4",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -143,7 +143,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start5",
-    name: "Начало",
+    name: "Начало5",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -155,7 +155,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end5",
-    name: "Окончание",
+    name: "Окончание5",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -167,7 +167,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start6",
-    name: "Начало",
+    name: "Начало6",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -179,7 +179,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end6",
-    name: "Окончание",
+    name: "Окончание6",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -191,7 +191,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start7",
-    name: "Начало",
+    name: "Начало7",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -203,7 +203,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end7",
-    name: "Окончание",
+    name: "Окончание7",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -215,7 +215,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start8",
-    name: "Начало",
+    name: "Начало8",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -227,7 +227,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end8",
-    name: "Окончание",
+    name: "Окончание8",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -239,7 +239,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start9",
-    name: "Начало",
+    name: "Начало9",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -251,7 +251,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end9",
-    name: "Окончание",
+    name: "Окончание9",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -263,7 +263,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "start10",
-    name: "Начало",
+    name: "Начало10",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],
@@ -275,7 +275,7 @@ export const columnsGantt: TableColumn<RowGantt, "test">[] = [
   },
   {
     key: "end10",
-    name: "Окончание",
+    name: "Окончание110",
     width: 150,
     minWidth: 150,
     cellClass: ["common", "empty", "nowrap"],

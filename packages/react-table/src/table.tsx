@@ -247,6 +247,7 @@ export function Table<
             tableContainerRef={tableContainerRef}
             GanttTask={props.GanttTask}
             rowClassName={props.rowClassName}
+            headerRowClassName={props.headerRowClassName}
           />
         )}
 
