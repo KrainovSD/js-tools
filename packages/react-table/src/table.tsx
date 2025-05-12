@@ -168,7 +168,6 @@ export function Table<
     columnVirtualEnabled,
     rowVirtualizer,
     rowVirtualEnabled,
-    columnVirtualizer,
   } = useVirtualizer({
     initialColumns: props.columns,
     rows: props.rows,
@@ -216,7 +215,6 @@ export function Table<
               onClickRow={props.onClickRow}
               onDoubleClickRow={props.onDoubleClickRow}
               rowClassName={props.rowClassName}
-              columnVirtualizer={columnVirtualizer}
             />
           </div>
         )}

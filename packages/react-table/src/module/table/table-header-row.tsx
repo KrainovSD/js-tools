@@ -1,5 +1,5 @@
 import type { HeaderGroup } from "@tanstack/react-table";
-import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
+import type { VirtualItem } from "@tanstack/react-virtual";
 import React from "react";
 import type { TableInterface } from "../../types";
 import { TableHeaderCell } from "./table-header-cell";
@@ -14,7 +14,6 @@ type Props<RowData extends Record<string, unknown>> = {
   leftHeaders: HeaderGroup<RowData>["headers"];
   rightHeaders: HeaderGroup<RowData>["headers"];
   centerHeaders: HeaderGroup<RowData>["headers"];
-  columnVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
   table: TableInterface<RowData>;
 };
 

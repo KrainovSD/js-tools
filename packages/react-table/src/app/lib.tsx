@@ -24,6 +24,7 @@ export const columns: TableColumn<Row, "test">[] = [
     filterable: true,
     filterType: "includes-string",
     headerClass: ["common"],
+    leftFrozen: true,
     cellRenderProps: {
       expanded: true,
       // pathToLink: "country",
@@ -234,6 +235,7 @@ export const columns: TableColumn<Row, "test">[] = [
     resizable: true,
     draggable: false,
     sortType: "boolean",
+    rightFrozen: true,
   },
 ];
 

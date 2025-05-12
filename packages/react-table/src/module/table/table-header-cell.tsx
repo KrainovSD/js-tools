@@ -87,7 +87,7 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
     index: props.index,
   });
   const HeaderRender = props.header.column.columnDef.headerRender;
-  const draggable = props.header.column.columnDef.enableDraggable;
+  const draggable = frozenPosition ? false : props.header.column.columnDef.enableDraggable;
 
   if (!HeaderRender) return null;
 
