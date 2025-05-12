@@ -25,11 +25,11 @@ function handleDragStart(event: React.DragEvent<HTMLElement>) {
   }
 
   if (event.dataTransfer) {
-    const index = event.currentTarget.getAttribute("data-column-index");
-    if (!index) return;
+    const id = event.currentTarget.getAttribute("data-column-id");
+    if (!id) return;
 
     event.dataTransfer.effectAllowed = "move";
-    event.dataTransfer.setData("text", index);
+    event.dataTransfer.setData("text", id);
     event.currentTarget.style.opacity = "var(--table-header-drag-opacity)";
   }
 }
@@ -55,15 +55,26 @@ function handleDropGetter(
   return function handleDrop(event: React.DragEvent<HTMLElement>) {
     event.preventDefault();
     event.currentTarget.style.background = "";
-    const draggableIndex = event.dataTransfer?.getData?.("text");
-    const droppableIndex = event.currentTarget.getAttribute("data-column-index");
+    const draggableId = event.dataTransfer?.getData?.("text");
+    const droppableId = event.currentTarget.getAttribute("data-column-id");
 
-    if (
-      draggableIndex == undefined ||
-      droppableIndex == undefined ||
-      draggableIndex === droppableIndex
-    )
-      return;
+    if (draggableId == undefined || droppableId == undefined || draggableId === droppableId) return;
+
+    let draggableIndex: number = -1;
+    let droppableIndex: number = -1;
+    for (let i = 0; i <= columnOrderState.length; i++) {
+      const id = columnOrderState[i];
+      if (draggableId === id) {
+        draggableIndex = i;
+      }
+      if (droppableId === id) {
+        droppableIndex = i;
+      }
+
+      if (~draggableIndex && ~droppableIndex) break;
+    }
+
+    if (!~draggableIndex || !~droppableIndex) return;
 
     const order = [...columnOrderState];
     [order[+draggableIndex], order[+droppableIndex]] = [
@@ -95,7 +106,7 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
     return (
       <th
         data-id="header-cell"
-        data-column-index={props.index}
+        data-column-id={headerContext.column.id}
         key={props.header.id}
         colSpan={props.header.colSpan}
         className={clsx(
@@ -155,7 +166,7 @@ export function TableHeaderCell<RowData extends Record<string, unknown>>(props: 
   return (
     <div
       data-id="header-cell"
-      data-column-index={props.index}
+      data-column-id={headerContext.column.id}
       key={props.header.id}
       className={clsx(
         styles.headerCell,

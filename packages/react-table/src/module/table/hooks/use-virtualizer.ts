@@ -66,6 +66,7 @@ export function useVirtualizer<
   const leftColumns = props.table.getLeftVisibleLeafColumns();
   const rightColumns = props.table.getRightVisibleLeafColumns();
   const totalWidth = props.table.getTotalSize();
+  const orderState = props.table.getState().columnOrder;
 
   const leftOffset = React.useMemo(() => {
     if (!columnVirtualEnabled) return 0;
@@ -100,10 +101,10 @@ export function useVirtualizer<
   });
   const columnsVirtual = columnVirtualizer.getVirtualItems();
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     columnVirtualizer.measure();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalWidth]);
+  }, [totalWidth, orderState]);
 
   const { rows } = props.table.getRowModel();
 
