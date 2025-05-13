@@ -347,7 +347,7 @@ export class GraphCanvas<
         .force(
           "link",
           forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-            .id(this.nodeSettings.idGetter)
+            .id(this.nodeSettings.idGetter.bind(this))
             .distance(
               this.forceSettings.forces && this.forceSettings.linkForce
                 ? this.forceSettings.linkDistance

@@ -23,3 +23,18 @@ export type LinkIterationPropsInterface<
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
 ) => Return;
+
+export type NodeIterationPropsNoThisInterface<
+  NodeData extends Record<string, unknown>,
+  Return = number,
+> = (node: NodeInterface<NodeData>, i: number, nodes: NodeInterface<NodeData>[]) => Return;
+
+export type LinkIterationPropsNoThisInterface<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+  Return = number,
+> = (
+  link: LinkInterface<NodeData, LinkData>,
+  i: number,
+  links: LinkInterface<NodeData, LinkData>[],
+) => Return;

@@ -29,7 +29,7 @@ export function initSimulation<
       .force(
         "link",
         forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links).id(
-          this.nodeSettings.idGetter,
+          this.nodeSettings.idGetter.bind(this),
         ),
       )
       .on("tick", () => {
