@@ -282,6 +282,7 @@ export function getDrawNode<
 
     /** Node parameters */
     node._radius = radius;
+    node._borderWidth = borderWidth;
     node._width = width;
     node._height = height;
     node._borderRadius =

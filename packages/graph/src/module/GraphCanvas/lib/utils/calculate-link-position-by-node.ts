@@ -63,7 +63,9 @@ function getLinkPoint<NodeData extends Record<string, unknown>>(opts: GetLinkPoi
       nodePoint = getCircleIntersection({
         x: opts.node.x,
         y: opts.node.y,
-        radius: opts.node._radius ?? COMMON_SETTINGS.nodeRadius,
+        radius:
+          (opts.node._radius ?? COMMON_SETTINGS.nodeRadius) +
+          (opts.node._borderWidth ? opts.node._borderWidth / 2 : 0),
         oppositeX: opts.oppositeNode.x,
         oppositeY: opts.oppositeNode.y,
         arrowSize: opts.arrowSize,
@@ -76,8 +78,8 @@ function getLinkPoint<NodeData extends Record<string, unknown>>(opts: GetLinkPoi
         arrowSize: opts.arrowSize,
         x: opts.node.x,
         y: opts.node.y,
-        height: opts.node._height ?? COMMON_SETTINGS.nodeSize,
-        width: opts.node._width ?? COMMON_SETTINGS.nodeSize,
+        height: (opts.node._height ?? COMMON_SETTINGS.nodeSize) + (opts.node._borderWidth ?? 0),
+        width: (opts.node._width ?? COMMON_SETTINGS.nodeSize) + (opts.node._borderWidth ?? 0),
         oppositeX: opts.oppositeNode.x,
         oppositeY: opts.oppositeNode.y,
         borderRadius: opts.node._shape === "text" ? 0 : (opts.node._borderRadius ?? 0),

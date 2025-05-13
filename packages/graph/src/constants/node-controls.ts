@@ -111,7 +111,7 @@ export const NODE_OPTIONS_NODE_CONTROLS: GraphSettingsInputInterface<
     type: "range",
     max: 50,
     min: 1,
-    step: 1,
+    step: 0.1,
     label: "Радиус (только для круга)",
     initialValue: NODE_OPTIONS.radius,
   },
