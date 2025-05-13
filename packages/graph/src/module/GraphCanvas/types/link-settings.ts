@@ -1,4 +1,4 @@
-import type { GraphState } from "./graph";
+import type { GraphCanvas } from "../GraphCanvas";
 import type { LinkInterface } from "./links";
 import type { LinkIterationPropsInterface } from "./utils";
 
@@ -13,6 +13,12 @@ export type LinkSettingsInterface<
   particles?: boolean;
   particleFlexSpeed?: boolean;
   particleFlexSpeedCoefficient?: number;
+  linkScaleSwitch?: number;
+  linkWidthBeforeScaleSwitch?: number;
+  linkWidthAfterScaleSwitch?: number;
+  linkColorBeforeScaleSwitch?: string;
+  linkColorAfterScaleSwitch?: string;
+
   options?:
     | LinkIterationPropsInterface<NodeData, LinkData, LinkOptionsInterface<NodeData, LinkData>>
     | LinkOptionsInterface<NodeData, LinkData>;
@@ -24,16 +30,16 @@ export type LinkOptionsInterface<
 > = {
   drawLink?:
     | ((
+        this: GraphCanvas<NodeData, LinkData>,
         link: LinkInterface<NodeData, LinkData>,
         options: Required<LinkOptionsInterface<NodeData, LinkData>>,
-        state: GraphState<NodeData, LinkData>,
       ) => void)
     | null;
   drawExtraLink?:
     | ((
+        this: GraphCanvas<NodeData, LinkData>,
         link: LinkInterface<NodeData, LinkData>,
         options: Required<LinkOptionsInterface<NodeData, LinkData>>,
-        state: GraphState<NodeData, LinkData>,
       ) => void)
     | null;
 } & LinkOptionsLinkInterface &

@@ -1,12 +1,8 @@
 import type { ZoomTransform } from "d3-zoom";
 import { colorGetter } from "@/lib";
-import { COMMON_SETTINGS, NODE_OPTIONS, NODE_SETTINGS } from "../../constants";
-import type {
-  GraphState,
-  NodeInterface,
-  NodeOptionsInterface,
-  NodeSettingsInterface,
-} from "../../types";
+import type { GraphCanvas } from "../../GraphCanvas";
+import { NODE_OPTIONS, NODE_SETTINGS } from "../../constants";
+import type { NodeInterface, NodeOptionsInterface, NodeSettingsInterface } from "../../types";
 
 export function nodeSettingsGetter<
   NodeData extends Record<string, unknown>,
@@ -30,12 +26,10 @@ export function nodeOptionsGetter<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(
+  this: GraphCanvas<NodeData, LinkData>,
   node: NodeInterface<NodeData>,
-  _: number,
-  __: NodeInterface<NodeData>[],
-  state?: GraphState<NodeData, LinkData>,
 ): Required<NodeOptionsInterface<NodeData, LinkData>> {
-  const { textShiftY, textSize } = nodeTextSizeGetter(state?.areaTransform);
+  const { textShiftY, textSize } = nodeTextSizeGetter(this.areaTransform, this.nodeSettings);
 
   return {
     ...NODE_OPTIONS,
@@ -44,39 +38,40 @@ export function nodeOptionsGetter<
     textDraw: null,
     textExtraDraw: null,
     color: color(String(node.group ?? "_DEFAULT")),
-    textVisible: Boolean(
-      state?.areaTransform && state.areaTransform.k > COMMON_SETTINGS.nodeTextScaleMin,
-    ),
+    textVisible: Boolean(this.areaTransform.k > this.nodeSettings.textScaleMin),
     text: node.name ?? node.id.toString(),
     textShiftY,
     textSize,
   };
 }
 
-export function nodeTextSizeGetter(transform: ZoomTransform | undefined) {
-  let textSize: number = COMMON_SETTINGS.nodeTextSizeMax;
-  let textShiftY: number = COMMON_SETTINGS.nodeTextShiftYMax;
+export function nodeTextSizeGetter<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+>(
+  transform: ZoomTransform | undefined,
+  nodeSettings: Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
+    Pick<NodeSettingsInterface<NodeData, LinkData>, "options">,
+) {
+  let textSize: number = nodeSettings.textSizeMin;
+  let textShiftY: number = nodeSettings.textShiftYMin;
 
   if (transform) {
-    const scaleStepCoefficient =
-      (COMMON_SETTINGS.nodeTextScaleMax - COMMON_SETTINGS.nodeTextScaleMin) /
-      COMMON_SETTINGS.nodeTextChangeStepCount;
-    const textStepCoefficient =
-      (COMMON_SETTINGS.nodeTextSizeMax - COMMON_SETTINGS.nodeTextSizeMin) /
-      COMMON_SETTINGS.nodeTextChangeStepCount;
-    const shiftStepCoefficient =
-      (COMMON_SETTINGS.nodeTextShiftYMax - COMMON_SETTINGS.nodeTextShiftYMin) /
-      COMMON_SETTINGS.nodeTextChangeStepCount;
+    if (transform.k >= nodeSettings.textScaleMax) {
+      textSize = nodeSettings.textSizeMax;
+      textShiftY = nodeSettings.textShiftYMax;
+    } else if (transform.k > nodeSettings.textScaleMin) {
+      textSize =
+        nodeSettings.textSizeMin +
+        ((transform.k - nodeSettings.textScaleMin) *
+          (nodeSettings.textSizeMax - nodeSettings.textSizeMin)) /
+          (nodeSettings.textScaleMax - nodeSettings.textScaleMin);
 
-    if (transform.k >= COMMON_SETTINGS.nodeTextScaleMax) {
-      textSize = COMMON_SETTINGS.nodeTextSizeMin;
-      textShiftY = COMMON_SETTINGS.nodeTextShiftYMin;
-    } else if (transform.k > COMMON_SETTINGS.nodeTextScaleMin) {
-      const transformSteps =
-        (transform.k - COMMON_SETTINGS.nodeTextScaleMin) / scaleStepCoefficient;
-
-      textSize -= transformSteps * textStepCoefficient;
-      textShiftY -= transformSteps * shiftStepCoefficient;
+      textShiftY =
+        nodeSettings.textShiftYMin +
+        ((transform.k - nodeSettings.textScaleMin) *
+          (nodeSettings.textShiftYMax - nodeSettings.textShiftYMin)) /
+          (nodeSettings.textScaleMax - nodeSettings.textScaleMin);
     }
   }
 

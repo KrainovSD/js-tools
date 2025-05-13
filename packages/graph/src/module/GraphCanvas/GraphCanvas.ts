@@ -26,7 +26,6 @@ import type {
   GraphCanvasInterface,
   GraphCanvasSimulation,
   GraphSettingsInterface,
-  GraphState,
   HighlightSettingsInterface,
   LinkInterface,
   LinkOptionsInterface,
@@ -123,32 +122,6 @@ export class GraphCanvas<
     const force = (simulationAlpha - simulationAlphaMin) / simulationAlphaDecay;
 
     return force > 0;
-  }
-
-  protected get state(): GraphState<NodeData, LinkData> {
-    return {
-      areaTransform: this.areaTransform,
-      cachedNodeText: this.cachedNodeText,
-      context: this.context,
-      eventAbortController: this.eventAbortController,
-      highlightProgress: this.highlightProgress,
-      highlightDrawing: this.highlightDrawing,
-      highlightedNeighbors: this.highlightedNeighbors,
-      highlightedNode: this.highlightedNode,
-      highlightedLink: this.highlightedLink,
-      highlightWorking: this.highlightWorking,
-      isDragging: this.isDragging,
-      simulation: this.simulation,
-      simulationWorking: this.simulationWorking,
-      height: this.height,
-      links: this.links,
-      nodes: this.nodes,
-      width: this.width,
-      forceSettings: this.forceSettings,
-      graphSettings: this.graphSettings,
-      linkSettings: this.linkSettings,
-      nodeSettings: this.nodeSettings,
-    };
   }
 
   constructor({

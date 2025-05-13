@@ -1,4 +1,4 @@
-import type { GraphState } from "./graph";
+import type { GraphCanvas } from "../GraphCanvas";
 import type { LinkInterface } from "./links";
 import type { NodeInterface } from "./nodes";
 
@@ -7,10 +7,10 @@ export type NodeIterationPropsInterface<
   LinkData extends Record<string, unknown>,
   Return = number,
 > = (
+  this: GraphCanvas<NodeData, LinkData>,
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  state?: GraphState<NodeData, LinkData>,
 ) => Return;
 
 export type LinkIterationPropsInterface<
@@ -18,8 +18,8 @@ export type LinkIterationPropsInterface<
   LinkData extends Record<string, unknown>,
   Return = number,
 > = (
+  this: GraphCanvas<NodeData, LinkData>,
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  state?: GraphState<NodeData, LinkData>,
 ) => Return;

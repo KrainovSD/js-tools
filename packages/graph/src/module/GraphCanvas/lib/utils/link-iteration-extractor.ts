@@ -1,5 +1,6 @@
 import { checkType } from "@/lib";
-import type { GraphState, LinkInterface, LinkIterationPropsInterface } from "../../types";
+import type { GraphCanvas } from "../../GraphCanvas";
+import type { LinkInterface, LinkIterationPropsInterface } from "../../types";
 
 export function linkIterationExtractor<
   NodeData extends Record<string, unknown>,
@@ -9,7 +10,7 @@ export function linkIterationExtractor<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  state: GraphState<NodeData, LinkData>,
+  state: GraphCanvas<NodeData, LinkData>,
   option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter: undefined,
 ): Result;
@@ -22,7 +23,7 @@ export function linkIterationExtractor<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  state: GraphState<NodeData, LinkData>,
+  state: GraphCanvas<NodeData, LinkData>,
   option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter:
     | LinkIterationPropsInterface<NodeData, LinkData, Required<Result>>
@@ -37,7 +38,7 @@ export function linkIterationExtractor<
   link: LinkInterface<NodeData, LinkData>,
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
-  state: GraphState<NodeData, LinkData>,
+  state: GraphCanvas<NodeData, LinkData>,
   option: LinkIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter:
     | LinkIterationPropsInterface<NodeData, LinkData, Required<Result>>
@@ -47,7 +48,7 @@ export function linkIterationExtractor<
   let customOptions: Result | undefined;
   let constantOptions: Result | undefined;
 
-  if (typeof option === "function") customOptions = option(link, i, links, state);
+  if (typeof option === "function") customOptions = option.call(state, link, i, links);
   else customOptions = option;
 
   if (customOptions && typeof customOptions === "object" && !Array.isArray(customOptions)) {
@@ -58,7 +59,7 @@ export function linkIterationExtractor<
 
   if (optionConstantGetter) {
     if (typeof optionConstantGetter === "function")
-      constantOptions = optionConstantGetter(link, i, links, state);
+      constantOptions = optionConstantGetter.call(state, link, i, links);
     else constantOptions = optionConstantGetter;
 
     if (

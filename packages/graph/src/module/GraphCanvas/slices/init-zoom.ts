@@ -13,7 +13,7 @@ export function initZoom<
   const zoomInstance = zoom<HTMLCanvasElement, unknown>()
     .scaleExtent(this.graphSettings.zoomExtent)
     .on("zoom", (event: ZoomEventInterface) => {
-      this.listeners.onZoom?.(event);
+      this.listeners.onZoom?.call?.(this, event);
       this.areaTransform = event.transform;
       this.linkOptionsCache = {};
       this.nodeOptionsCache = {};

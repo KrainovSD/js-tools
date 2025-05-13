@@ -53,20 +53,9 @@ export function initDraw<
 
   function draw(this: GraphCanvas<NodeData, LinkData>) {
     if (!this.context) return;
-    const state = this.state;
 
     if (this.listeners.onDraw) {
-      this.listeners.onDraw(
-        state,
-        (status) => {
-          this.highlightDrawing = status;
-        },
-        () => {
-          if (this.highlightedNeighbors) this.highlightedNeighbors = null;
-          if (this.highlightedNode) this.highlightedNode = null;
-          if (this.highlightedLink) this.highlightedLink = null;
-        },
-      );
+      this.listeners.onDraw.call(this);
 
       return;
     }
@@ -78,10 +67,10 @@ export function initDraw<
 
     const textRenders: (() => void)[] = [];
     const nodeRenders: (() => void)[] = [];
-    this.nodes.forEach(getDrawNode(nodeRenders, textRenders, state).bind(this));
+    this.nodes.forEach(getDrawNode<NodeData, LinkData>(nodeRenders, textRenders).bind(this));
 
     /** links */
-    this.links.forEach(getDrawLink(state).bind(this));
+    this.links.forEach(getDrawLink<NodeData, LinkData>().bind(this));
 
     /** nodes */
 
@@ -90,7 +79,7 @@ export function initDraw<
 
     this.context.restore();
 
-    this.listeners.onDrawFinished?.(state);
+    this.listeners.onDrawFinished?.call?.(this);
 
     calculateHighlight.bind(this)();
   }

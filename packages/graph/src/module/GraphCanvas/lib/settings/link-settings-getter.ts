@@ -1,10 +1,6 @@
-import { COMMON_SETTINGS, LINK_OPTIONS, LINK_SETTINGS } from "../../constants";
-import type {
-  GraphState,
-  LinkInterface,
-  LinkOptionsInterface,
-  LinkSettingsInterface,
-} from "../../types";
+import type { GraphCanvas } from "../../GraphCanvas";
+import { LINK_OPTIONS, LINK_SETTINGS } from "../../constants";
+import type { LinkOptionsInterface, LinkSettingsInterface } from "../../types";
 
 export function linkSettingsGetter<
   NodeData extends Record<string, unknown>,
@@ -21,27 +17,22 @@ export function linkSettingsGetter<
 export function linkOptionsGetter<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
->(
-  _: LinkInterface<NodeData, LinkData>,
-  __: number,
-  ___: LinkInterface<NodeData, LinkData>[],
-  state?: GraphState<NodeData, LinkData>,
-): Required<LinkOptionsInterface<NodeData, LinkData>> {
+>(this: GraphCanvas<NodeData, LinkData>): Required<LinkOptionsInterface<NodeData, LinkData>> {
   return {
     ...LINK_OPTIONS,
     drawExtraLink: null,
     drawLink: null,
     color:
-      state?.areaTransform && state?.areaTransform.k > COMMON_SETTINGS.linkColorZoomBorder
-        ? COMMON_SETTINGS.linkColorZoomNear
-        : COMMON_SETTINGS.linkColorZoomFar,
+      this.areaTransform && this.areaTransform.k > this.linkSettings.linkScaleSwitch
+        ? this.linkSettings.linkColorAfterScaleSwitch
+        : this.linkSettings.linkColorBeforeScaleSwitch,
     arrowColor:
-      state?.areaTransform && state?.areaTransform.k > COMMON_SETTINGS.linkColorZoomBorder
-        ? COMMON_SETTINGS.linkColorZoomNear
-        : COMMON_SETTINGS.linkColorZoomFar,
+      this.areaTransform && this.areaTransform.k > this.linkSettings.linkScaleSwitch
+        ? this.linkSettings.linkColorAfterScaleSwitch
+        : this.linkSettings.linkColorBeforeScaleSwitch,
     width:
-      state?.areaTransform && state?.areaTransform.k > COMMON_SETTINGS.linkWidthZoomBorder
-        ? COMMON_SETTINGS.linkWidthZoomNear
-        : COMMON_SETTINGS.linkWidthZoomFar,
+      this.areaTransform && this.areaTransform.k > this.linkSettings.linkScaleSwitch
+        ? this.linkSettings.linkWidthAfterScaleSwitch
+        : this.linkSettings.linkWidthBeforeScaleSwitch,
   };
 }

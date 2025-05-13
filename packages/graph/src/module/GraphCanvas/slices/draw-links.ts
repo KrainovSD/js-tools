@@ -7,12 +7,12 @@ import {
   linkIterationExtractor,
   linkOptionsGetter,
 } from "../lib";
-import type { GraphState, LinkInterface, LinkOptionsInterface, LinkParticle } from "../types";
+import type { LinkInterface, LinkOptionsInterface, LinkParticle } from "../types";
 
 export function getDrawLink<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
->(state: GraphState<NodeData, LinkData>) {
+>() {
   return function drawLink(
     this: GraphCanvas<NodeData, LinkData>,
     link: LinkInterface<NodeData, LinkData>,
@@ -40,7 +40,7 @@ export function getDrawLink<
         link,
         index,
         this.links,
-        state,
+        this,
         this.linkSettings.options ?? {},
         linkOptionsGetter,
       );
@@ -50,7 +50,7 @@ export function getDrawLink<
     }
 
     if (linkOptions.drawLink) {
-      linkOptions.drawLink(link, linkOptions, state);
+      linkOptions.drawLink.call(this, link, linkOptions);
 
       return;
     }
@@ -280,7 +280,7 @@ export function getDrawLink<
     }
 
     if (linkOptions.drawExtraLink) {
-      linkOptions.drawExtraLink(link, { ...linkOptions, alpha }, state);
+      linkOptions.drawExtraLink.call(this, link, { ...linkOptions, alpha });
     }
   };
 }

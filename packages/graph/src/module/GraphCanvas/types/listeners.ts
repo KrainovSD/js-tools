@@ -1,6 +1,6 @@
 import type { D3DragEvent } from "d3-drag";
 import type { D3ZoomEvent } from "d3-zoom";
-import type { GraphState } from "./graph";
+import type { GraphCanvas } from "../GraphCanvas";
 import type { LinkInterface } from "./links";
 import type { NodeInterface } from "./nodes";
 
@@ -17,52 +17,53 @@ export type ListenersInterface<
   LinkData extends Record<string, unknown>,
 > = {
   onContextMenu?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: MouseEvent,
     node: NodeInterface<NodeData> | undefined,
     link: LinkInterface<NodeData, LinkData> | undefined,
   ) => void;
   onClick?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: MouseEvent | TouchEvent,
     node: NodeInterface<NodeData> | undefined,
     link: LinkInterface<NodeData, LinkData> | undefined,
   ) => void;
   onDoubleClick?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: MouseEvent | TouchEvent,
     node: NodeInterface<NodeData> | undefined,
     link: LinkInterface<NodeData, LinkData> | undefined,
   ) => void;
   onWheelClick?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: MouseEvent,
     node: NodeInterface<NodeData> | undefined,
     link: LinkInterface<NodeData, LinkData> | undefined,
   ) => void;
   onMove?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: MouseEvent | TouchEvent,
     node: NodeInterface<NodeData> | undefined,
     link: LinkInterface<NodeData, LinkData> | undefined,
   ) => void;
-  onZoom?: (event: ZoomEventInterface) => void;
+  onZoom?: (this: GraphCanvas<NodeData, LinkData>, event: ZoomEventInterface) => void;
   onDragSubject?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: DragEventInterface<NodeData>,
-    state: GraphState<NodeData, LinkData>,
   ) => NodeInterface<NodeData> | undefined;
-  onDraw?: (
-    state: GraphState<NodeData, LinkData>,
-    toggleHighlightStatus: (status: boolean) => void,
-    clearHighlightState: () => void,
-  ) => void;
+  onDraw?: (this: GraphCanvas<NodeData, LinkData>) => void;
   onStartDragFinished?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: DragEventInterface<NodeData>,
-    state: GraphState<NodeData, LinkData>,
   ) => void;
   onMoveDragFinished?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: DragEventInterface<NodeData>,
-    state: GraphState<NodeData, LinkData>,
   ) => void;
   onEndDragFinished?: (
+    this: GraphCanvas<NodeData, LinkData>,
     event: DragEventInterface<NodeData>,
-    state: GraphState<NodeData, LinkData>,
   ) => void;
-  onDrawFinished?: (state: GraphState<NodeData, LinkData>) => void;
-  onSimulationEnd?: (state: GraphState<NodeData, LinkData>) => void;
+  onDrawFinished?: (this: GraphCanvas<NodeData, LinkData>) => void;
+  onSimulationEnd?: (this: GraphCanvas<NodeData, LinkData>) => void;
 };

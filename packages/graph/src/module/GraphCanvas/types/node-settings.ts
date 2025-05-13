@@ -14,6 +14,12 @@ export type NodeSettingsInterface<
   nodeSizeCoefficient?: number;
   nodeSizeFactor?: number;
   textNodeDebug?: boolean;
+  textScaleMin?: number;
+  textScaleMax?: number;
+  textSizeMin?: number;
+  textSizeMax?: number;
+  textShiftYMin?: number;
+  textShiftYMax?: number;
   idGetter?: NodeIterationPropsInterface<NodeData, LinkData, string | number>;
   options?:
     | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface<NodeData, LinkData>>

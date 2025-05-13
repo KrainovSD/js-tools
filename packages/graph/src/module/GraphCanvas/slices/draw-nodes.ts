@@ -11,7 +11,6 @@ import {
 } from "../lib";
 import type {
   CachedTextNodeParametersInterface,
-  GraphState,
   NodeInterface,
   NodeOptionsInterface,
 } from "../types";
@@ -20,7 +19,7 @@ import { drawText, getTextLines } from "./draw-text";
 export function getDrawNode<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
->(nodeRenders: (() => void)[], textRenders: (() => void)[], state: GraphState<NodeData, LinkData>) {
+>(nodeRenders: (() => void)[], textRenders: (() => void)[]) {
   return function drawNode(
     this: GraphCanvas<NodeData, LinkData>,
     node: NodeInterface<NodeData>,
@@ -36,7 +35,7 @@ export function getDrawNode<
         node,
         index,
         this.nodes,
-        state,
+        this,
         this.nodeSettings.options ?? {},
         nodeOptionsGetter,
       );

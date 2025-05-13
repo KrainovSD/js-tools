@@ -36,7 +36,7 @@ export function initSimulation<
         this.draw();
       })
       .on("end", () => {
-        this.listeners.onSimulationEnd?.(this.state);
+        this.listeners.onSimulationEnd?.call?.(this);
 
         if (this.graphSettings.showDrawTime) {
           getDrawTime();
@@ -167,7 +167,7 @@ export function initCollideForce<
               node,
               index,
               this.nodes,
-              this.state,
+              this,
               this.nodeSettings.options ?? {},
               nodeOptionsGetter,
             );
@@ -179,7 +179,7 @@ export function initCollideForce<
                     node,
                     index,
                     this.nodes,
-                    this.state,
+                    this,
                     this.forceSettings.collideRadius,
                     undefined,
                   );
@@ -250,7 +250,7 @@ export function initCollideForce<
                     node,
                     index,
                     this.nodes,
-                    this.state,
+                    this,
                     this.forceSettings.collideRadius,
                     undefined,
                   );

@@ -6,6 +6,11 @@ export const LINK_SETTINGS: Omit<
 > = {
   cacheOptions: true,
   prettyDraw: true,
+  linkScaleSwitch: 1,
+  linkColorAfterScaleSwitch: "#000000FF",
+  linkColorBeforeScaleSwitch: "#999",
+  linkWidthAfterScaleSwitch: 0.1,
+  linkWidthBeforeScaleSwitch: 1,
   arrow: true,
   arrowByHighlight: true,
   particles: true,

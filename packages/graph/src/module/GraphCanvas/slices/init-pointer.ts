@@ -103,7 +103,7 @@ export function initPointer<
       });
     }
 
-    if (!currentNode) return void this.listeners.onMove(event, currentNode, currentLink);
+    if (!currentNode) return void this.listeners.onMove.call(this, event, currentNode, currentLink);
   }
   function onWheelClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
     if (
@@ -130,10 +130,10 @@ export function initPointer<
         links: this.links,
       });
 
-      return void this.listeners.onWheelClick(event, undefined, currentLink);
+      return void this.listeners.onWheelClick.call(this, event, undefined, currentLink);
     }
 
-    return void this.listeners.onWheelClick(event, currentNode, undefined);
+    return void this.listeners.onWheelClick.call(this, event, currentNode, undefined);
   }
   function onRightClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent) {
     if (!this.listeners.onContextMenu) return;
@@ -154,10 +154,10 @@ export function initPointer<
         links: this.links,
       });
 
-      return void this.listeners.onContextMenu(event, undefined, currentLink);
+      return void this.listeners.onContextMenu.call(this, event, undefined, currentLink);
     }
 
-    return void this.listeners.onContextMenu(event, currentNode, undefined);
+    return void this.listeners.onContextMenu.call(this, event, currentNode, undefined);
   }
   function onDoubleClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
     if (!this.listeners.onDoubleClick) return;
@@ -177,10 +177,10 @@ export function initPointer<
         links: this.links,
       });
 
-      return void this.listeners.onDoubleClick(event, undefined, currentLink);
+      return void this.listeners.onDoubleClick.call(this, event, undefined, currentLink);
     }
 
-    return void this.listeners.onDoubleClick(event, currentNode, undefined);
+    return void this.listeners.onDoubleClick.call(this, event, currentNode, undefined);
   }
   function onClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
     if (this.isDragging || !this.listeners.onClick || ("button" in event && event.button !== 0))
@@ -200,10 +200,10 @@ export function initPointer<
         links: this.links,
       });
 
-      return void this.listeners.onClick(event, undefined, currentLink);
+      return void this.listeners.onClick.call(this, event, undefined, currentLink);
     }
 
-    return void this.listeners.onClick(event, currentNode, undefined);
+    return void this.listeners.onClick.call(this, event, currentNode, undefined);
   }
 
   /** hover */

@@ -15,7 +15,7 @@ export function initDnd<
   const dragHandler = d3Drag<HTMLCanvasElement, unknown>()
     .subject((event: DragEventInterface<NodeData>) => {
       if (this.listeners.onDragSubject) {
-        return this.listeners.onDragSubject(event, this.state);
+        return this.listeners.onDragSubject.call(this, event);
       }
 
       if (!this.areaRect) return;
@@ -30,7 +30,7 @@ export function initDnd<
       });
     })
     .on("start", (event: DragEventInterface<NodeData>) => {
-      this.listeners.onStartDragFinished?.(event, this.state);
+      this.listeners.onStartDragFinished?.call?.(this, event);
     })
     .on("drag", (event: DragEventInterface<NodeData>) => {
       if (!this.isDragging) {
@@ -44,7 +44,7 @@ export function initDnd<
       event.subject.fx = pointerX;
       event.subject.fy = pointerY;
 
-      this.listeners.onMoveDragFinished?.(event, this.state);
+      this.listeners.onMoveDragFinished?.call?.(this, event);
     })
     .on("end", (event: DragEventInterface<NodeData>) => {
       this.isDragging = false;
@@ -61,7 +61,7 @@ export function initDnd<
         event.subject.fy = null;
       }
 
-      this.listeners.onEndDragFinished?.(event, this.state);
+      this.listeners.onEndDragFinished?.call?.(this, event);
     });
 
   d3Select(this.area).call(dragHandler);

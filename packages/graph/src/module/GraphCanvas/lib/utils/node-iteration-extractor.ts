@@ -1,5 +1,6 @@
 import { checkType } from "@/lib";
-import type { GraphState, NodeInterface, NodeIterationPropsInterface } from "../../types";
+import type { GraphCanvas } from "../../GraphCanvas";
+import type { NodeInterface, NodeIterationPropsInterface } from "../../types";
 
 export function nodeIterationExtractor<
   NodeData extends Record<string, unknown>,
@@ -9,7 +10,7 @@ export function nodeIterationExtractor<
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  state: GraphState<NodeData, LinkData>,
+  state: GraphCanvas<NodeData, LinkData>,
   option: NodeIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter: undefined,
 ): Result;
@@ -21,7 +22,7 @@ export function nodeIterationExtractor<
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  state: GraphState<NodeData, LinkData>,
+  state: GraphCanvas<NodeData, LinkData>,
   option: NodeIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter: NodeIterationPropsInterface<NodeData, LinkData, Result> | Result,
 ): Required<Result>;
@@ -33,7 +34,7 @@ export function nodeIterationExtractor<
   node: NodeInterface<NodeData>,
   i: number,
   nodes: NodeInterface<NodeData>[],
-  state: GraphState<NodeData, LinkData>,
+  state: GraphCanvas<NodeData, LinkData>,
   option: NodeIterationPropsInterface<NodeData, LinkData, Result> | Result,
   optionConstantGetter:
     | NodeIterationPropsInterface<NodeData, LinkData, Result>
@@ -43,7 +44,7 @@ export function nodeIterationExtractor<
   let customOptions: Result | undefined;
   let constantOptions: Result | undefined;
 
-  if (typeof option === "function") customOptions = option(node, i, nodes, state);
+  if (typeof option === "function") customOptions = option.call(state, node, i, nodes);
   else customOptions = option;
 
   if (customOptions && typeof customOptions === "object" && !Array.isArray(customOptions)) {
@@ -54,7 +55,7 @@ export function nodeIterationExtractor<
 
   if (optionConstantGetter) {
     if (typeof optionConstantGetter === "function")
-      constantOptions = optionConstantGetter(node, i, nodes, state);
+      constantOptions = optionConstantGetter.call(state, node, i, nodes);
     else constantOptions = optionConstantGetter;
 
     if (

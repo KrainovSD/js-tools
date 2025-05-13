@@ -11,6 +11,12 @@ export const NODE_SETTINGS: Omit<
   nodeSizeFlexible: true,
   nodeSizeCoefficient: 5,
   nodeSizeFactor: 0.1,
+  textScaleMin: 1.5,
+  textScaleMax: 18,
+  textSizeMin: 3.5,
+  textSizeMax: 1.5,
+  textShiftYMin: 4,
+  textShiftYMax: 2.5,
   textNodeDebug: false,
 };
 
