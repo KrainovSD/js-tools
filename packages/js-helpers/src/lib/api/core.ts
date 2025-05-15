@@ -103,9 +103,12 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
       await wait(request.delay);
     }
     if (request.mock) {
+      const mock: unknown =
+        typeof request.mock === "function" ? (request.mock as () => Incoming)() : request.mock;
+
       const transformedResult = request.transformIncomingData
-        ? request.transformIncomingData(request.mock)
-        : (request.mock as T);
+        ? request.transformIncomingData(mock as Incoming)
+        : (mock as T);
 
       return responseWithStatus
         ? { data: transformedResult, status: 200, headers: {} }

@@ -15,7 +15,7 @@ export type RequestInterface<T, Incoming, Body, Outcoming> = {
   delay?: number;
   transformOutcomingData?: (data: Body) => Outcoming;
   transformIncomingData?: (data: Incoming) => T;
-  mock?: Incoming;
+  mock?: (() => Incoming) | Incoming;
   downloadFile?: boolean;
   token?: string;
   withoutResponse?: boolean;
