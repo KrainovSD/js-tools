@@ -115,7 +115,7 @@ export function initSimulationForces<
       "charge",
       forceManyBody<NodeInterface<NodeData>>()
         .strength(this.forceSettings.chargeStrength)
-        .distanceMax(this.forceSettings.chargeDistanceMax)
+        .distanceMax(Infinity)
         .distanceMin(this.forceSettings.chargeDistanceMin),
     );
   }

@@ -24,7 +24,6 @@ export type ForceSettingsInterface<
   linkStrength?: LinkIterationPropsNoThisInterface<NodeData, LinkData> | number;
   linkIterations?: number;
   chargeStrength?: NodeIterationPropsNoThisInterface<NodeData> | number;
-  chargeDistanceMax?: number;
   chargeDistanceMin?: number;
   centerPosition?: { x?: number; y?: number };
   centerStrength?: number;

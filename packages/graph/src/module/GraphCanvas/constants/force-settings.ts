@@ -17,7 +17,6 @@ export const FORCE_SETTINGS: Required<
   collideIterations: 2,
   collideOffMax: { links: 0, nodes: 0 },
   chargeStrength: -40,
-  chargeDistanceMax: Infinity,
   chargeDistanceMin: 1,
   xPosition: 0,
   xStrength: 0.1,
