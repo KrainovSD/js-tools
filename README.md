@@ -13,6 +13,8 @@ List of packages for JS development.
 - [react-ui [0.4.0]](https://www.npmjs.com/package/@krainovsd/react-ui)
 - [react-table [0.0.1]](https://www.npmjs.com/package/@krainovsd/react-table)
   
+### Vue
+- [vue-ui [0.0.1]](https://www.npmjs.com/package/@krainovsd/vue-ui)
 
 ### Fastify
 - [fastify-trace [0.0.2]](https://www.npmjs.com/package/@krainovsd/fastify-trace)

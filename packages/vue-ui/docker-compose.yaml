@@ -1,0 +1,11 @@
+version: '2.1'
+
+services:
+  vue-ui-kit:
+    container_name: krainov-vue-ui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: 'unless-stopped'
+    ports:
+      - 4021:80

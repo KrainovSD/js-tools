@@ -1,0 +1,8 @@
+@import url("/fonts/Nunito/fonts.css");
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  font-family: Nunito;
+}

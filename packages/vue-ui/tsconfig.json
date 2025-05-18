@@ -1,0 +1,20 @@
+{
+  "extends": "@krainovsd/presets/typescript/common",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": [
+    "src/**/*",
+    "eslint.config.js",
+    "rollup.config.ts",
+    ".storybook/**/*",
+    "src/vite-env.d.ts",
+    ".prettierrc.mjs"
+  ],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}
