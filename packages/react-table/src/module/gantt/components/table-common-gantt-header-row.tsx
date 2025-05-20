@@ -18,6 +18,7 @@ type Props<RowData extends Record<string, unknown>> = {
     | ((header: HeaderInterface<RowData>) => string | undefined)
     | string
     | undefined;
+  selectedPage: boolean;
 };
 
 export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHeaderRow<

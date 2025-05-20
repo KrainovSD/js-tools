@@ -19,6 +19,7 @@ type Props<RowData extends Record<string, unknown>> = {
     | string
     | undefined;
   page: number;
+  selectedPage: boolean;
 };
 
 export const TableHeaderRow = React.memo(function TableHeaderRow<

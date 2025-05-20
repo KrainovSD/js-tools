@@ -60,6 +60,8 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
             const centerHeaders = centerHeadersGroup[index].headers;
             const rightHeaders = rightHeadersGroup[index].headers;
 
+            const selected = props.table.getIsAllPageRowsSelected();
+
             return (
               <TableCommonGanttHeaderRow<RowData>
                 key={`${headerGroup.id}-header-row`}
@@ -72,6 +74,7 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                 totalWidth={props.table.getTotalSize()}
                 headerRowClassName={props.headerRowClassName}
                 rowHeaderHeight={props.rowHeaderHeight}
+                selectedPage={selected}
               />
             );
           })}

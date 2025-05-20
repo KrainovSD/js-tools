@@ -55,6 +55,8 @@ export function TableCommon<RowData extends Record<string, unknown>>(
           const centerHeaders = centerHeadersGroup[index].headers;
           const rightHeaders = rightHeadersGroup[index].headers;
 
+          const selected = props.table.getIsAllPageRowsSelected();
+
           /** ROW HEADER */
           return (
             <TableHeaderRow<RowData>
@@ -68,6 +70,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               totalWidth={props.table.getTotalSize()}
               headerRowClassName={props.headerRowClassName}
               page={props.table.getState().pagination.pageIndex}
+              selectedPage={selected}
             />
           );
         })}
