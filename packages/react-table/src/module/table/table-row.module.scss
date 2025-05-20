@@ -11,6 +11,14 @@
   &__virtual {
     position: absolute;
   }
+
+  &__selected {
+    background-color: var(--table-selected-row-bg);
+
+    &:hover {
+      background-color: var(--table-selected-row-hover-bg);
+    }
+  }
 }
 
 .ghost {

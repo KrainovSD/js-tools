@@ -22,6 +22,7 @@ type Props<RowData extends Record<string, unknown>> = {
     | undefined;
   columnVirtualEnabled: boolean;
   ganttRowMini: boolean | undefined;
+  selected: boolean;
 };
 
 export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
@@ -39,6 +40,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
       key={row.id}
       className={clsx(
         styles.row,
+        props.selected && styles.row__selected,
         props.virtualRow && styles.row__virtual,
         typeof props.rowClassName === "function" ? props.rowClassName(row) : props.rowClassName,
       )}

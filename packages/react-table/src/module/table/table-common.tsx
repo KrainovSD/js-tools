@@ -84,6 +84,8 @@ export function TableCommon<RowData extends Record<string, unknown>>(
       >
         {props.rowVirtualEnabled &&
           props.rowsVirtual.map((virtualRow) => {
+            const selected = props.rows[virtualRow.index]?.getIsSelected?.();
+
             return (
               <TableRow<RowData>
                 virtualRow={virtualRow}
@@ -97,6 +99,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 rowVirtualizer={props.rowVirtualizer}
                 totalWidth={props.table.getTotalSize()}
                 row={null}
+                selected={selected}
               />
             );
           })}
@@ -105,6 +108,8 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         )}
         {!props.rowVirtualEnabled &&
           props.rows.map((row) => {
+            const selected = row.getIsSelected();
+
             return (
               <TableRow<RowData>
                 columnVirtualEnabled={props.columnVirtualEnabled}
@@ -118,6 +123,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 rowVirtualizer={props.rowVirtualizer}
                 rows={props.rows}
                 virtualRow={null}
+                selected={selected}
               />
             );
           })}

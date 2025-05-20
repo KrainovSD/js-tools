@@ -10,7 +10,7 @@ import type {
 import { ConfigProvider } from "antd";
 import React from "react";
 import { Table } from "../table";
-import type { TableColumn } from "../types";
+import type { RowInterface, TableColumn } from "../types";
 import styles from "./app.module.scss";
 import { type Row, columns, createRows } from "./lib";
 import { type RowGantt, columnsGantt, createRowsGantt } from "./lib-gantt";
@@ -146,12 +146,8 @@ export function App() {
           withPagination
           withTotal
           initialPageSize={150}
-          onClickRow={(row) => {
-            console.log(row, "click");
-          }}
-          onDoubleClickRow={(row) => {
-            console.log(row, "dbClick");
-          }}
+          onClickRow={onClick}
+          onDoubleClickRow={onDoubleClick}
           pageSizes={[25, 50, 100, 150, 250, 500]}
           withFilters={true}
           virtualRows={true}
@@ -194,4 +190,11 @@ export function App() {
       </div>
     </ConfigProvider>
   );
+}
+
+function onClick(row: RowInterface<Row>) {
+  console.log(row, "click");
+}
+function onDoubleClick(row: RowInterface<Row>) {
+  console.log(row, "dbClick");
 }

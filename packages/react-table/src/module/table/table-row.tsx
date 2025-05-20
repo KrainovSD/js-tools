@@ -7,6 +7,7 @@ import styles from "./table-row.module.scss";
 
 type Props<RowData extends Record<string, unknown>> = {
   rows: RowInterface<RowData>[];
+  selected: boolean;
   row: RowInterface<RowData> | null;
   totalWidth: number;
   columnsVirtual: VirtualItem[];
@@ -37,6 +38,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       key={row.id}
       className={clsx(
         styles.row,
+        props.selected && styles.row__selected,
         props.virtualRow && styles.row__virtual,
         typeof props.rowClassName === "function" ? props.rowClassName(row) : props.rowClassName,
       )}
