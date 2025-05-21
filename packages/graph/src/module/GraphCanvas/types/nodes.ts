@@ -17,6 +17,7 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   label?: string;
   drag?: boolean;
   highlight?: boolean;
+  visible?: boolean;
   image?: HTMLImageElement;
   data?: NodeData;
 }

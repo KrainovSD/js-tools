@@ -7,6 +7,7 @@ export interface LinkInterface<
 > extends SimulationLinkDatum<NodeInterface<NodeData>> {
   data?: LinkData;
   highlight?: boolean;
+  visible?: boolean;
 }
 
 export type LinkParticle = {

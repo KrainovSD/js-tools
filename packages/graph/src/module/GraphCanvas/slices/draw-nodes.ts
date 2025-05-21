@@ -26,6 +26,7 @@ export function getDrawNode<
     index: number,
   ) {
     if (!this.context || !node.x || !node.y) return;
+    if (node.visible != undefined && !node.visible) return;
 
     let nodeOptions: Required<NodeOptionsInterface<NodeData, LinkData>>;
     if (this.nodeSettings.cacheOptions && this.nodeOptionsCache[node.id]) {

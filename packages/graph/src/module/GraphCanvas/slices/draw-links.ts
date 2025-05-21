@@ -29,6 +29,13 @@ export function getDrawLink<
     )
       return;
 
+    if (
+      (link.visible != undefined && !link.visible) ||
+      (link.source.visible != undefined && !link.source.visible) ||
+      (link.target.visible != undefined && !link.target.visible)
+    )
+      return;
+
     if (!link.source._visible && !link.target._visible) return;
 
     const id = `${link.target.id}${link.source.id}`;
