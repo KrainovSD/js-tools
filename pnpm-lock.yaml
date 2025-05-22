@@ -1369,6 +1369,9 @@ importers:
       '@types/node':
         specifier: 22.10.2
         version: 22.10.2
+      '@types/rollup-plugin-peer-deps-external':
+        specifier: 2.2.5
+        version: 2.2.5
       '@vitejs/plugin-vue':
         specifier: 5.2.4
         version: 5.2.4(vite@6.2.1(@types/node@22.10.2)(sass-embedded@1.81.0)(sass@1.83.0)(terser@5.39.0)(yaml@2.7.0))(vue@3.5.14(typescript@5.7.3))
@@ -1387,6 +1390,12 @@ importers:
       rollup:
         specifier: 4.34.9
         version: 4.34.9
+      rollup-plugin-peer-deps-external:
+        specifier: 2.2.4
+        version: 2.2.4(rollup@4.34.9)
+      rollup-plugin-vue:
+        specifier: 6.0.0
+        version: 6.0.0(@vue/compiler-sfc@3.5.14)
       sass-embedded:
         specifier: 1.81.0
         version: 1.81.0
@@ -9128,6 +9137,11 @@ packages:
         optional: true
       rollup:
         optional: true
+
+  rollup-plugin-vue@6.0.0:
+    resolution: {integrity: sha512-oVvUd84d5u73M2HYM3XsMDLtZRIA/tw2U0dmHlXU2UWP5JARYHzh/U9vcxaN/x/9MrepY7VH3pHFeOhrWpxs/Q==}
+    peerDependencies:
+      '@vue/compiler-sfc': '*'
 
   rollup-plugin-webpack-stats@2.0.2:
     resolution: {integrity: sha512-M4JR77xMe5mjOjyjmzo/sVq+vtuObkPpMPOcj/l/R4Gkag/kPkJ9LbHw6oknNjLyLms1QCq/e/IMiH3bwUmokg==}
@@ -21263,6 +21277,15 @@ snapshots:
       yargs: 17.7.2
     optionalDependencies:
       rollup: 4.34.9
+
+  rollup-plugin-vue@6.0.0(@vue/compiler-sfc@3.5.14):
+    dependencies:
+      '@vue/compiler-sfc': 3.5.14
+      debug: 4.4.0(supports-color@5.5.0)
+      hash-sum: 2.0.0
+      rollup-pluginutils: 2.8.2
+    transitivePeerDependencies:
+      - supports-color
 
   rollup-plugin-webpack-stats@2.0.2(rollup@4.34.9):
     dependencies:

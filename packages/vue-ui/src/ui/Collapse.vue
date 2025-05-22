@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed, onMounted, ref, useTemplateRef } from "vue";
-  import ArrowSmall from "../icons/ArrowSmall.vue";
+  import ArrowSmallIcon from "../icons/ArrowSmallIcon.vue";
   import Flex from "./Flex.vue";
 
   type Props = {
@@ -102,7 +102,7 @@
       flex-align="center"
       @click.stop="onClick"
     >
-      <ArrowSmall v-if="!$props.noArrow" :size="12" class="arrow" :class="{ open: open }" />
+      <ArrowSmallIcon v-if="!$props.noArrow" :size="12" class="arrow" :class="{ open: open }" />
       <div v-if="$props.header" class="header-text" :class="componentStyles">
         {{ $props.header }}
       </div>

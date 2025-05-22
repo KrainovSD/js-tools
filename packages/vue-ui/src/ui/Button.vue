@@ -1,6 +1,8 @@
 <script setup lang="ts">
+  import { jsonParse } from "@krainovsd/js-helpers";
+  import cloneDeep from "lodash/cloneDeep";
   import { computed, useSlots, useTemplateRef } from "vue";
-  import Loading from "../icons/Loading.vue";
+  import LoadingIcon from "../icons/LoadingIcon.vue";
 
   type Props = {
     type?: "primary" | "dashed" | "link" | "text" | "default";
@@ -15,6 +17,8 @@
   const props = defineProps<Props>();
   const slots = useSlots();
   const element = useTemplateRef("button");
+
+  const test = cloneDeep(jsonParse('"test"'));
 
   const componentStyles = computed(() => ({
     [`type-${props.type ?? "default"}`]: true,
@@ -37,10 +41,11 @@
 <template>
   <button ref="button" :disabled="$props.disabled" class="button" :class="componentStyles">
     <slot v-if="iconPosition === 'left' && !$props.loading" name="icon"></slot>
-    <Loading v-if="iconPosition === 'left' && $props.loading" />
+    <LoadingIcon v-if="iconPosition === 'left' && $props.loading" />
     <slot></slot>
     <slot v-if="iconPosition === 'right' && !$props.loading" name="icon"></slot>
-    <Loading v-if="iconPosition === 'right' && $props.loading" />
+    <LoadingIcon v-if="iconPosition === 'right' && $props.loading" />
+    {{ test }}
   </button>
 </template>
 

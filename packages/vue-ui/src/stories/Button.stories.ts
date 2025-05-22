@@ -1,6 +1,6 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h } from "vue";
-import SettingsFilled from "../icons/SettingsFilled.vue";
+import SettingsFilled from "../icons/SettingsFilledIcon.vue";
 import Button from "../ui/Button.vue";
 import Flex from "../ui/Flex.vue";
 
@@ -62,7 +62,7 @@ export const AllInOne: Story = {
     },
     template: /* html */ `
       <Flex w-full h-full overflow="hidden" :gap="10">
-    <Flex class="one" :gap="10" vertical>
+    <Flex :gap="10" vertical>
       <Flex :gap="10">
         <Button size="small">Small</Button>
         <Button size="default">Default</Button>
@@ -131,7 +131,7 @@ export const AllInOne: Story = {
         </Flex>
       </Flex>
     </Flex>
-    <Flex class="two" :gap="10" vertical>
+    <Flex :gap="10" vertical>
       <Flex :gap="10">
         <Button disabled size="small">Small</Button>
         <Button disabled size="default">Default</Button>
@@ -200,218 +200,7 @@ export const AllInOne: Story = {
         </Flex>
       </Flex>
     </Flex>
-    <Flex class="three" :gap="10" vertical>
-      <Flex :gap="10">
-        <Button loading shape="circle"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading shape="round"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default"
-          ><template #icon><SettingsFilled :size="14" /></template> Default</Button
-        >
-        <Button loading shape="round">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" type="primary"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" type="primary">Default</Button>
-        <Button loading size="default" type="primary" icon-position="right"
-          ><template #icon><SettingsFilled :size="14" /></template> Default</Button
-        >
-        <Button loading shape="round" type="primary">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" type="text"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" type="text">Default</Button>
-        <Button loading shape="round" type="text">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" type="link"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" type="link">Default</Button>
-        <Button loading shape="round" type="link">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" type="dashed"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" type="dashed">Default</Button>
-        <Button loading shape="round" type="dashed">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" danger>Default</Button>
-        <Button loading shape="round" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" type="primary" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" type="primary" danger>Default</Button>
-        <Button loading shape="round" type="primary" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" type="text" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" type="text" danger>Default</Button>
-        <Button loading shape="round" type="text" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" type="link" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" type="link" danger>Default</Button>
-        <Button loading shape="round" type="link" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button loading shape="circle" type="dashed" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button loading size="default" type="dashed" danger>Default</Button>
-        <Button loading shape="round" type="dashed" danger>Large</Button>
-      </Flex>
-      <Flex vertical :gap="10" style="background-color: rgb(190, 200, 200); padding: 20px">
-        <Flex :gap="10">
-          <Button loading shape="circle" ghost
-            ><template #icon><SettingsFilled :size="14" /></template
-          ></Button>
-          <Button loading size="default" ghost>Default</Button>
-          <Button loading shape="round" ghost>Large</Button>
-        </Flex>
-        <Flex :gap="10">
-          <Button loading shape="circle" type="primary" ghost
-            ><template #icon><SettingsFilled :size="14" /></template
-          ></Button>
-          <Button loading size="default" type="primary" ghost>Default</Button>
-          <Button loading shape="round" type="primary" ghost>Large</Button>
-        </Flex>
-        <Flex :gap="10">
-          <Button loading shape="circle" type="dashed" ghost
-            ><template #icon><SettingsFilled :size="14" /></template
-          ></Button>
-          <Button loading size="default" type="dashed" ghost>Default</Button>
-          <Button loading shape="round" type="dashed" ghost>Large</Button>
-        </Flex>
-      </Flex>
-    </Flex>
-
-    <Flex class="four" :gap="10" vertical>
-      <Flex :gap="10">
-        <Button shape="circle"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button shape="round"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default"
-          ><template #icon><SettingsFilled :size="14" /></template> Default</Button
-        >
-        <Button shape="round">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" type="primary"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" type="primary">Default</Button>
-        <Button size="default" type="primary" icon-position="right"
-          ><template #icon><SettingsFilled :size="14" /></template> Default</Button
-        >
-        <Button shape="round" type="primary">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" type="text"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" type="text">Default</Button>
-        <Button shape="round" type="text">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" type="link"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" type="link">Default</Button>
-        <Button shape="round" type="link">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" type="dashed"
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" type="dashed">Default</Button>
-        <Button shape="round" type="dashed">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" danger>Default</Button>
-        <Button shape="round" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" type="primary" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" type="primary" danger>Default</Button>
-        <Button shape="round" type="primary" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" type="text" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" type="text" danger>Default</Button>
-        <Button shape="round" type="text" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" type="link" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" type="link" danger>Default</Button>
-        <Button shape="round" type="link" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button shape="circle" type="dashed" danger
-          ><template #icon><SettingsFilled :size="14" /></template
-        ></Button>
-        <Button size="default" type="dashed" danger>Default</Button>
-        <Button shape="round" type="dashed" danger>Large</Button>
-      </Flex>
-      <Flex vertical :gap="10" style="background-color: rgb(190, 200, 200); padding: 20px">
-        <Flex :gap="10">
-          <Button shape="circle" ghost
-            ><template #icon><SettingsFilled :size="14" /></template
-          ></Button>
-          <Button size="default" ghost>Default</Button>
-          <Button shape="round" ghost>Large</Button>
-        </Flex>
-        <Flex :gap="10">
-          <Button shape="circle" type="primary" ghost
-            ><template #icon><SettingsFilled :size="14" /></template
-          ></Button>
-          <Button size="default" type="primary" ghost>Default</Button>
-          <Button shape="round" type="primary" ghost>Large</Button>
-        </Flex>
-        <Flex :gap="10">
-          <Button shape="circle" type="dashed" ghost
-            ><template #icon><SettingsFilled :size="14" /></template
-          ></Button>
-          <Button size="default" type="dashed" ghost>Default</Button>
-          <Button shape="round" type="dashed" ghost>Large</Button>
-        </Flex>
-      </Flex>
+   
     </Flex>
     `,
   }),

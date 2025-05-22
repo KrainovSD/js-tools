@@ -25,7 +25,7 @@
         .filter((el) => el)
         .join(" ");
 
-      document.documentElement.style = `font-size: ${state[1]}px; ${variables} `;
+      document.documentElement.style.cssText = `font-size: ${state[1]}px; ${variables} `;
     },
     { immediate: true },
   );

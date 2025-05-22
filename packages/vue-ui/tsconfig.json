@@ -1,10 +1,12 @@
 {
   "extends": "@krainovsd/presets/typescript/common",
   "compilerOptions": {
-    "types": ["node"]
+    "types": ["node", "vite/client"]
   },
   "include": [
-    "src/**/*",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.vue",
     "eslint.config.js",
     "rollup.config.ts",
     ".storybook/**/*",
