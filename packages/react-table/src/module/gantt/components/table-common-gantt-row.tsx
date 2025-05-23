@@ -64,15 +64,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
             {row.getLeftVisibleCells().map((cell, index, cells) => {
               /** CELL */
 
-              return (
-                <TableCell
-                  key={`${cell.id}-cell`}
-                  cell={cell}
-                  index={index}
-                  cells={cells}
-                  semanticTag
-                />
-              );
+              return <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} />;
             })}
             {props.columnsVirtual.map((virtualColumn) => {
               /** CELL */
@@ -86,7 +78,6 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
                   index={virtualColumn.index}
                   cells={centerVisibleCells}
                   virtualLeft={virtualColumn.start}
-                  semanticTag
                 />
               );
             })}
@@ -94,15 +85,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
             {row.getRightVisibleCells().map((cell, index, cells) => {
               /** CELL */
 
-              return (
-                <TableCell
-                  key={`${cell.id}-cell`}
-                  cell={cell}
-                  index={index}
-                  cells={cells}
-                  semanticTag
-                />
-              );
+              return <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} />;
             })}
           </>
         )}
@@ -110,15 +93,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
           row.getVisibleCells().map((cell, index, cells) => {
             /** CELL */
 
-            return (
-              <TableCell
-                key={`${cell.id}-cell`}
-                cell={cell}
-                index={index}
-                cells={cells}
-                semanticTag
-              />
-            );
+            return <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} />;
           })}
       </>
     </div>

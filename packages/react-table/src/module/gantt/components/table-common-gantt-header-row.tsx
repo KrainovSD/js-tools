@@ -49,7 +49,6 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
                 header={header}
                 headers={headers}
                 index={index}
-                semanticTag
               />
             );
           })}
@@ -64,7 +63,6 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
                 headers={props.centerHeaders}
                 index={virtualColumn.index}
                 virtualLeft={virtualColumn.start}
-                semanticTag
               />
             );
           })}
@@ -76,7 +74,6 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
                 header={header}
                 headers={headers}
                 index={index}
-                semanticTag
               />
             );
           })}
@@ -90,7 +87,6 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
               header={header}
               headers={headers}
               index={index}
-              semanticTag
             />
           );
         })}
