@@ -1,25 +1,24 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h } from "vue";
-import SettingsFilled from "../icons/SettingsFilledIcon.vue";
-import Button from "../ui/Button.vue";
-import Flex from "../ui/Flex.vue";
+import { VSettingsFilledIcon } from "../icons";
+import { VButton } from "../ui";
 
 const meta = {
   title: "Example/Button",
-  component: Button,
+  component: VButton,
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof VButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const Template: StoryFn<typeof Button> = (args) => ({
-  components: { Button },
+const Template: StoryFn<typeof VButton> = (args) => ({
+  components: { VButton },
   setup() {
     return { args };
   },
-  render: () => h(Button, { ...args }, { default: () => "Кнопка" }),
+  render: () => h(VButton, { ...args }, { default: () => "Кнопка" }),
 });
 
 export const Primary = Template.bind({});
@@ -27,31 +26,9 @@ Primary.args = {
   type: "primary",
 };
 
-export const Custom: Story = {
-  render: (args) => ({
-    components: { Button },
-    setup() {
-      function onClick() {
-        // eslint-disable-next-line no-console
-        console.log("click");
-      }
-
-      return { args, onClick };
-    },
-    template: /* html */ `
-      <div>
-        <Button v-bind="args" @click="onClick">
-          Кнопка
-        </Button>
-      </div>
-    `,
-  }),
-  args: {},
-};
-
 export const AllInOne: Story = {
   render: (args) => ({
-    components: { Button, Flex, SettingsFilled },
+    components: { VButton },
     setup() {
       function onClick() {
         // eslint-disable-next-line no-console
@@ -60,149 +37,131 @@ export const AllInOne: Story = {
 
       return { args, onClick };
     },
-    template: /* html */ `
-      <Flex w-full h-full overflow="hidden" :gap="10">
-    <Flex :gap="10" vertical>
-      <Flex :gap="10">
-        <Button size="small">Small</Button>
-        <Button size="default">Default</Button>
-        <Button size="large">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" type="primary">Small</Button>
-        <Button size="default" type="primary">Default</Button>
-        <Button size="large" type="primary">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" type="text">Small</Button>
-        <Button size="default" type="text">Default</Button>
-        <Button size="large" type="text">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" type="link">Small</Button>
-        <Button size="default" type="link">Default</Button>
-        <Button size="large" type="link">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" type="dashed">Small</Button>
-        <Button size="default" type="dashed">Default</Button>
-        <Button size="large" type="dashed">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" danger>Small</Button>
-        <Button size="default" danger>Default</Button>
-        <Button size="large" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" type="primary" danger>Small</Button>
-        <Button size="default" type="primary" danger>Default</Button>
-        <Button size="large" type="primary" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" type="text" danger>Small</Button>
-        <Button size="default" type="text" danger>Default</Button>
-        <Button size="large" type="text" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" type="link" danger>Small</Button>
-        <Button size="default" type="link" danger>Default</Button>
-        <Button size="large" type="link" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button size="small" type="dashed" danger>Small</Button>
-        <Button size="default" type="dashed" danger>Default</Button>
-        <Button size="large" type="dashed" danger>Large</Button>
-      </Flex>
-      <Flex vertical :gap="10" style="background-color: rgb(190, 200, 200); padding: 20px">
-        <Flex :gap="10">
-          <Button size="small" ghost>Small</Button>
-          <Button size="default" ghost>Default</Button>
-          <Button size="large" ghost>Large</Button>
-        </Flex>
-        <Flex :gap="10">
-          <Button size="small" type="primary" ghost>Small</Button>
-          <Button size="default" type="primary" ghost>Default</Button>
-          <Button size="large" type="primary" ghost>Large</Button>
-        </Flex>
-        <Flex :gap="10">
-          <Button size="small" type="dashed" ghost>Small</Button>
-          <Button size="default" type="dashed" ghost>Default</Button>
-          <Button size="large" type="dashed" ghost>Large</Button>
-        </Flex>
-      </Flex>
-    </Flex>
-    <Flex :gap="10" vertical>
-      <Flex :gap="10">
-        <Button disabled size="small">Small</Button>
-        <Button disabled size="default">Default</Button>
-        <Button disabled size="large">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" type="primary">Small</Button>
-        <Button disabled size="default" type="primary">Default</Button>
-        <Button disabled size="large" type="primary">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" type="text">Small</Button>
-        <Button disabled size="default" type="text">Default</Button>
-        <Button disabled size="large" type="text">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" type="link">Small</Button>
-        <Button disabled size="default" type="link">Default</Button>
-        <Button disabled size="large" type="link">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" type="dashed">Small</Button>
-        <Button disabled size="default" type="dashed">Default</Button>
-        <Button disabled size="large" type="dashed">Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" danger>Small</Button>
-        <Button disabled size="default" danger>Default</Button>
-        <Button disabled size="large" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" type="primary" danger>Small</Button>
-        <Button disabled size="default" type="primary" danger>Default</Button>
-        <Button disabled size="large" type="primary" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" type="text" danger>Small</Button>
-        <Button disabled size="default" type="text" danger>Default</Button>
-        <Button disabled size="large" type="text" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" type="link" danger>Small</Button>
-        <Button disabled size="default" type="link" danger>Default</Button>
-        <Button disabled size="large" type="link" danger>Large</Button>
-      </Flex>
-      <Flex :gap="10">
-        <Button disabled size="small" type="dashed" danger>Small</Button>
-        <Button disabled size="default" type="dashed" danger>Default</Button>
-        <Button disabled size="large" type="dashed" danger>Large</Button>
-      </Flex>
-      <Flex vertical :gap="10" style="background-color: rgb(190, 200, 200); padding: 20px">
-        <Flex :gap="10">
-          <Button disabled size="small" ghost>Small</Button>
-          <Button disabled size="default" ghost>Default</Button>
-          <Button disabled size="large" ghost>Large</Button>
-        </Flex>
-        <Flex :gap="10">
-          <Button disabled size="small" type="primary" ghost>Small</Button>
-          <Button disabled size="default" type="primary" ghost>Default</Button>
-          <Button disabled size="large" type="primary" ghost>Large</Button>
-        </Flex>
-        <Flex :gap="10">
-          <Button disabled size="small" type="dashed" ghost>Small</Button>
-          <Button disabled size="default" type="dashed" ghost>Default</Button>
-          <Button disabled size="large" type="dashed" ghost>Large</Button>
-        </Flex>
-      </Flex>
-    </Flex>
-   
-    </Flex>
-    `,
+    render: () =>
+      h("div", { style: { display: "flex", gap: "20px" } }, [
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "10px", padding: "10px" } },
+          [
+            h("span", { style: { marginBottom: "10px" } }, "Type"),
+            h(VButton, { type: "default" }, { default: () => "Default" }),
+            h(VButton, { type: "dashed" }, { default: () => "Dashed" }),
+            h(VButton, { type: "primary" }, { default: () => "Primary" }),
+            h(VButton, { type: "text" }, { default: () => "Text" }),
+            h(VButton, { type: "link" }, { default: () => "Link" }),
+          ],
+        ),
+        h(
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              background: "#272727FF",
+              padding: "10px",
+            },
+          },
+          [
+            h("span", { style: { marginBottom: "10px", color: "#ffffff" } }, "Ghost"),
+            h(VButton, { type: "default", ghost: true }, { default: () => "Default" }),
+            h(VButton, { type: "dashed", ghost: true }, { default: () => "Dashed" }),
+            h(VButton, { type: "primary", ghost: true }, { default: () => "Primary" }),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "10px", padding: "10px" } },
+          [
+            h("span", { style: { marginBottom: "10px" } }, "Loading"),
+            h(
+              VButton,
+              { type: "default", loading: true, iconPosition: "right" },
+              { default: () => "Default" },
+            ),
+            h(VButton, { type: "dashed", loading: true }, { default: () => "Dashed" }),
+            h(VButton, { type: "primary", loading: true }, { default: () => "Primary" }),
+            h(VButton, { type: "text", loading: true }, { default: () => "Text" }),
+            h(VButton, { type: "link", loading: true }, { default: () => "Link" }),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "10px", padding: "10px" } },
+          [
+            h("span", { style: { marginBottom: "10px" } }, "Small"),
+            h(VButton, { type: "default", size: "small" }, { default: () => "Default" }),
+            h(VButton, { type: "dashed", size: "small" }, { default: () => "Dashed" }),
+            h(VButton, { type: "primary", size: "small" }, { default: () => "Primary" }),
+            h(VButton, { type: "text", size: "small" }, { default: () => "Text" }),
+            h(VButton, { type: "link", size: "small" }, { default: () => "Link" }),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "10px", padding: "10px" } },
+          [
+            h("span", { style: { marginBottom: "10px" } }, "Large"),
+            h(VButton, { type: "default", size: "large" }, { default: () => "Default" }),
+            h(VButton, { type: "dashed", size: "large" }, { default: () => "Dashed" }),
+            h(VButton, { type: "primary", size: "large" }, { default: () => "Primary" }),
+            h(VButton, { type: "text", size: "large" }, { default: () => "Text" }),
+            h(VButton, { type: "link", size: "large" }, { default: () => "Link" }),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "10px", padding: "10px" } },
+          [
+            h("span", { style: { marginBottom: "10px" } }, "Danger"),
+            h(VButton, { type: "default", danger: true }, { default: () => "Default" }),
+            h(VButton, { type: "dashed", danger: true }, { default: () => "Dashed" }),
+            h(VButton, { type: "primary", danger: true }, { default: () => "Primary" }),
+            h(VButton, { type: "text", danger: true }, { default: () => "Text" }),
+            h(VButton, { type: "link", danger: true }, { default: () => "Link" }),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "10px", padding: "10px" } },
+          [
+            h("span", { style: { marginBottom: "10px" } }, "Disabled"),
+            h(VButton, { type: "default", disabled: true }, { default: () => "Default" }),
+            h(VButton, { type: "dashed", disabled: true }, { default: () => "Dashed" }),
+            h(VButton, { type: "primary", disabled: true }, { default: () => "Primary" }),
+            h(VButton, { type: "text", disabled: true }, { default: () => "Text" }),
+            h(VButton, { type: "link", disabled: true }, { default: () => "Link" }),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "10px", padding: "10px" } },
+          [
+            h("span", { style: { marginBottom: "10px" } }, "Shape"),
+            h(VButton, { type: "default", shape: "round" }, { default: () => "Default" }),
+            h(
+              VButton,
+              { type: "dashed", shape: "round" },
+              { default: () => "Dashed", icon: () => h(VSettingsFilledIcon, { size: 14 }) },
+            ),
+            h(
+              VButton,
+              { type: "dashed", shape: "default", iconPosition: "right" },
+              { default: () => "Dashed", icon: () => h(VSettingsFilledIcon, { size: 14 }) },
+            ),
+            h(
+              VButton,
+              { type: "primary", shape: "circle" },
+              { icon: () => h(VSettingsFilledIcon, { size: 14 }) },
+            ),
+            h(
+              VButton,
+              { type: "primary", shape: "default" },
+              { icon: () => h(VSettingsFilledIcon, { size: 14 }) },
+            ),
+          ],
+        ),
+      ]),
   }),
   args: {},
 };

@@ -116,7 +116,7 @@
 
 <style lang="scss" scoped>
   .collapse {
-    border: 1px solid var(--ksd-border);
+    border: 1px solid var(--ksd-border-color);
     border-radius: var(--ksd-border-radius-lg);
     background-color: var(--ksd-collapse-header-bg);
 
@@ -181,7 +181,7 @@
     color: var(--ksd-text-main-color);
     line-height: var(--ksd-line-height);
     font-family: var(--ksd-font-family);
-    border-top: 1px solid var(--ksd-border);
+    border-top: 1px solid var(--ksd-border-color);
     background: var(--ksd-collapse-body-bg);
     border-radius: 0 0 var(--ksd-border-radius-lg) var(--ksd-border-radius-lg);
 
