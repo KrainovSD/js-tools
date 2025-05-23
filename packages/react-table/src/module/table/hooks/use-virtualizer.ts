@@ -121,7 +121,9 @@ export function useVirtualizer<
     //measure dynamic row height, except in firefox because it measures table border height incorrectly
     measureElement:
       typeof window !== "undefined" && navigator.userAgent.includes("Firefox")
-        ? (element) => element?.getBoundingClientRect().height
+        ? (element) => {
+            return Math.round(element?.getBoundingClientRect?.()?.height);
+          }
         : undefined,
     overscan: props.virtualRowOverScan ?? 4,
     enabled: rowVirtualEnabled,

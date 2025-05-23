@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/react-table",
-  "version": "0.5.0-rc3",
+  "version": "0.5.0-beta.1",
   "description": "Krainov react-table",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -28,7 +28,7 @@
     "lib"
   ],
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite --host --force",
     "publish-package": "npm run lint && npm run build && npm publish",
     "clear": "rm -rf ./lib",
     "build-dev": "npm run clear && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",

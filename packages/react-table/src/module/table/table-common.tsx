@@ -34,6 +34,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
   const leftHeadersGroup = props.table.getLeftHeaderGroups();
   const centerHeadersGroup = props.table.getCenterHeaderGroups();
   const rightHeadersGroup = props.table.getRightHeaderGroups();
+  const tableState = props.table.getState();
 
   return (
     <table
@@ -69,8 +70,10 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               rightHeaders={rightHeaders}
               totalWidth={props.table.getTotalSize()}
               headerRowClassName={props.headerRowClassName}
-              page={props.table.getState().pagination.pageIndex}
+              page={tableState.pagination.pageIndex}
               selectedPage={selected}
+              filterState={tableState.columnFilters}
+              sortState={tableState.sorting}
             />
           );
         })}

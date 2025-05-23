@@ -1,4 +1,4 @@
-import type { HeaderGroup } from "@tanstack/react-table";
+import type { ColumnFiltersState, HeaderGroup, SortingState } from "@tanstack/react-table";
 import type { VirtualItem } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
@@ -20,6 +20,8 @@ type Props<RowData extends Record<string, unknown>> = {
     | undefined;
   page: number;
   selectedPage: boolean;
+  filterState: ColumnFiltersState;
+  sortState: SortingState;
 };
 
 export const TableHeaderRow = React.memo(function TableHeaderRow<
