@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { jsonParse } from "@krainovsd/js-helpers";
-  import cloneDeep from "lodash/cloneDeep";
   import { computed, useSlots, useTemplateRef } from "vue";
   import LoadingIcon from "../icons/LoadingIcon.vue";
 
@@ -13,12 +11,11 @@
     danger?: boolean;
     ghost?: boolean;
     iconPosition?: "left" | "right";
+    block?: boolean;
   };
   const props = defineProps<Props>();
   const slots = useSlots();
   const element = useTemplateRef("button");
-
-  const test = cloneDeep(jsonParse('"test"'));
 
   const componentStyles = computed(() => ({
     [`type-${props.type ?? "default"}`]: true,
@@ -29,6 +26,7 @@
     danger: props.danger,
     ghost: props.ghost,
     loading: props.loading,
+    block: props.block,
     // eslint-disable-next-line no-useless-computed-key
     ["icon-only"]: !slots.default,
   }));
@@ -45,7 +43,6 @@
     <slot></slot>
     <slot v-if="iconPosition === 'right' && !$props.loading" name="icon"></slot>
     <LoadingIcon v-if="iconPosition === 'right' && $props.loading" />
-    {{ test }}
   </button>
 </template>
 
@@ -82,6 +79,7 @@
     white-space: nowrap;
     font-family: var(--ksd-font-family);
     font-weight: var(--ksd-font-weight);
+    width: fit-content;
     cursor: pointer;
 
     &:not(.disabled):not(.loading).wave {
@@ -278,6 +276,10 @@
 
     &.disabled {
       cursor: not-allowed;
+    }
+
+    &.block {
+      width: auto;
     }
 
     &:not(.disabled):hover {
