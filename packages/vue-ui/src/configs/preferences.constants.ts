@@ -12,6 +12,7 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-control-height-sm": "24px",
         "ksd-control-height": "32px",
         "ksd-control-height-lg": "40px",
+        "ksd-control-interactive-size": "16px",
       },
 
       shadow: {
@@ -68,6 +69,7 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
       },
       colors: {
         "ksd-bg-color": "#edeef0",
+        "ksd-bg-container-color": "#ffffff",
         "ksd-bg-sidebar-color": "#edeef0",
         "ksd-bg-header-color": "#edeef0",
         "ksd-bg-modal-color": "#ffffff",
@@ -83,12 +85,6 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-text-secondary-hover-color": "",
         "ksd-text-reverse-color": "#ffffff",
         "ksd-text-reverse-secondary-color": "",
-        "ksd-text-accent-hover-color": "#4096ff",
-        "ksd-text-accent-color": "#1677ff",
-        "ksd-text-accent-active-color": "#0958d9",
-        "ksd-border-accent-hover-color": "#4096ff",
-        "ksd-border-accent-color": "#1677ff",
-        "ksd-border-accent-active-color": "#0958d9",
         "ksd-border-color": "#d9d9d9",
         "ksd-border-hover-color": "",
         "ksd-border-split-color": "rgba(5,5,5,0.06)",

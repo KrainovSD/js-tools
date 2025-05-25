@@ -37,7 +37,7 @@
 </script>
 
 <template>
-  <button ref="button" :disabled="$props.disabled" class="button" :class="componentStyles">
+  <button ref="button" :disabled="$props.disabled" class="ksd-button" :class="componentStyles">
     <slot v-if="iconPosition === 'left' && !$props.loading" name="icon"></slot>
     <LoadingIcon v-if="iconPosition === 'left' && $props.loading" />
     <slot></slot>
@@ -64,8 +64,8 @@
   }
 </style>
 
-<style lang="scss" scoped>
-  .button {
+<style lang="scss">
+  .ksd-button {
     outline: none;
     position: relative;
     display: inline-flex;
@@ -167,7 +167,7 @@
     }
 
     &.icon-only {
-      & > :deep(svg) {
+      & > svg {
         margin: auto;
       }
     }
@@ -177,7 +177,7 @@
       color: var(--ksd-text-main-color);
       border-color: var(--ksd-button-border);
       background-color: var(--ksd-button-bg);
-      --wave-color: var(--ksd-border-accent-hover-color);
+      --wave-color: var(--ksd-accent-hover-color);
 
       &.danger {
         color: var(--ksd-error-color);
@@ -203,7 +203,7 @@
       color: var(--ksd-text-main-color);
       border-color: var(--ksd-button-border);
       background-color: var(--ksd-button-bg);
-      --wave-color: var(--ksd-border-accent-hover-color);
+      --wave-color: var(--ksd-accent-hover-color);
 
       &.danger {
         color: var(--ksd-error-color);
@@ -226,9 +226,9 @@
 
     &.type-primary {
       color: var(--ksd-text-reverse-color);
-      border-color: var(--ksd-border-accent-color);
+      border-color: var(--ksd-accent-color);
       background-color: var(--ksd-accent-color);
-      --wave-color: var(--ksd-border-accent-hover-color);
+      --wave-color: var(--ksd-accent-hover-color);
 
       &.danger {
         color: var(--ksd-text-reverse-color);
@@ -238,7 +238,7 @@
       }
 
       &.ghost {
-        color: var(--ksd-text-accent-color);
+        color: var(--ksd-accent-color);
         background-color: transparent;
       }
 
@@ -264,7 +264,7 @@
     }
 
     &.type-link {
-      color: var(--ksd-text-accent-color);
+      color: var(--ksd-accent-color);
       border-color: transparent;
       background-color: transparent;
 
@@ -292,8 +292,8 @@
 
     &:not(.disabled):hover {
       &.type-default {
-        color: var(--ksd-text-accent-hover-color);
-        border-color: var(--ksd-border-accent-hover-color);
+        color: var(--ksd-accent-hover-color);
+        border-color: var(--ksd-accent-hover-color);
 
         &.danger {
           color: var(--ksd-error-hover-color);
@@ -302,8 +302,8 @@
       }
 
       &.type-dashed {
-        color: var(--ksd-text-accent-hover-color);
-        border-color: var(--ksd-border-accent-hover-color);
+        color: var(--ksd-accent-hover-color);
+        border-color: var(--ksd-accent-hover-color);
 
         &.danger {
           color: var(--ksd-error-hover-color);
@@ -312,7 +312,7 @@
       }
 
       &.type-primary {
-        border-color: var(--ksd-border-accent-hover-color);
+        border-color: var(--ksd-accent-hover-color);
         background-color: var(--ksd-accent-hover-color);
 
         &.danger {
@@ -321,7 +321,7 @@
         }
 
         &.ghost {
-          color: var(--ksd-text-accent-hover-color);
+          color: var(--ksd-accent-hover-color);
           background-color: transparent;
         }
       }
@@ -335,7 +335,7 @@
       }
 
       &.type-link {
-        color: var(--ksd-text-accent-hover-color);
+        color: var(--ksd-accent-hover-color);
         &.danger {
           color: var(--ksd-error-hover-color);
         }
@@ -344,16 +344,16 @@
 
     &:not(.disabled):active {
       &.type-default {
-        color: var(--ksd-text-accent-active-color);
-        border-color: var(--ksd-border-accent-active-color);
+        color: var(--ksd-accent-active-color);
+        border-color: var(--ksd-accent-active-color);
         &.danger {
           color: var(--ksd-error-active-color);
           border-color: var(--ksd-error-active-color);
         }
       }
       &.type-dashed {
-        color: var(--ksd-text-accent-active-color);
-        border-color: var(--ksd-border-accent-active-color);
+        color: var(--ksd-accent-active-color);
+        border-color: var(--ksd-accent-active-color);
         &.danger {
           color: var(--ksd-error-active-color);
           border-color: var(--ksd-error-active-color);
@@ -362,13 +362,13 @@
 
       &.type-primary {
         background-color: var(--ksd-accent-active-color);
-        border-color: var(--ksd-border-accent-active-color);
+        border-color: var(--ksd-accent-active-color);
         &.danger {
           background-color: var(--ksd-error-active-color);
           border-color: var(--ksd-error-active-color);
         }
         &.ghost {
-          color: var(--ksd-text-accent-active-color);
+          color: var(--ksd-accent-active-color);
           background-color: transparent;
         }
       }
@@ -382,7 +382,7 @@
       }
 
       &.type-link {
-        color: var(--ksd-text-accent-active-color);
+        color: var(--ksd-accent-active-color);
         &.danger {
           color: var(--ksd-error-active-color);
         }

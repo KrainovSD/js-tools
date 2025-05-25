@@ -8,7 +8,8 @@ export type ThemeTransitionVariable =
 export type ThemeControlHeight =
   | "ksd-control-height"
   | "ksd-control-height-sm"
-  | "ksd-control-height-lg";
+  | "ksd-control-height-lg"
+  | "ksd-control-interactive-size";
 
 export type ThemeShadowVariable =
   | "ksd-shadow"
@@ -56,6 +57,7 @@ export type ThemeMarginVariable =
 
 export type ThemeColorVariable =
   | "ksd-bg-color"
+  | "ksd-bg-container-color"
   | "ksd-bg-mask-color"
   | "ksd-bg-sidebar-color"
   | "ksd-bg-header-color"
@@ -69,15 +71,9 @@ export type ThemeColorVariable =
   | "ksd-text-secondary-color"
   | "ksd-text-secondary-disabled-color"
   | "ksd-text-secondary-hover-color"
-  | "ksd-text-accent-hover-color"
-  | "ksd-text-accent-color"
-  | "ksd-text-accent-active-color"
   | "ksd-text-reverse-color"
   | "ksd-text-reverse-secondary-color"
   | "ksd-border-split-color"
-  | "ksd-border-accent-hover-color"
-  | "ksd-border-accent-color"
-  | "ksd-border-accent-active-color"
   | "ksd-border-color"
   | "ksd-border-hover-color"
   | "ksd-accent-color"
