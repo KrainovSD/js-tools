@@ -48,12 +48,6 @@ export const AllInOne: Story = {
         () => !checkedThird.value && (checked.value || checkedSecond.value),
       );
 
-      function onChange(check: boolean) {
-        checked.value = check;
-      }
-      function onChangeSecond(check: boolean) {
-        checkedSecond.value = check;
-      }
       function onChangeThird(check: boolean) {
         checkedSecond.value = check;
         checked.value = check;
@@ -65,9 +59,7 @@ export const AllInOne: Story = {
         checkedSecond,
         checkedThird,
         indeterminate,
-        onChangeSecond,
         onChangeThird,
-        onChange,
       };
     },
     render() {
@@ -75,26 +67,51 @@ export const AllInOne: Story = {
         h(
           VCheckBox,
           {
-            checked: this.checkedThird,
-            onChange: this.onChangeThird,
+            modelValue: this.checkedThird,
+            "onUpdate:modelValue": this.onChangeThird,
             indeterminate: this.indeterminate,
           },
           () => "Выбрать Оба",
         ),
         h(
           VCheckBox,
-          { checked: this.checkedSecond, onChange: this.onChangeSecond },
+          {
+            modelValue: this.checkedSecond,
+            "onUpdate:modelValue": (newValue) => {
+              this.checkedSecond = newValue;
+            },
+          },
           () => "Выбрать значение 1",
         ),
         h(
           VCheckBox,
-          { checked: this.checked, onChange: this.onChange, block: true },
+          {
+            block: true,
+            modelValue: this.checked,
+            "onUpdate:modelValue": (newValue) => {
+              this.checked = newValue;
+            },
+          },
           () => "Выбрать значение 2",
         ),
-        h(VCheckBox, { checked: true, disabled: true }, () => "Disabled checked"),
-        h(VCheckBox, { checked: false, disabled: true }, () => "Disabled unchecked"),
+        h(
+          VCheckBox,
+          {
+            disabled: true,
+            modelValue: false,
+          },
+          () => "Disabled checked",
+        ),
+        h(
+          VCheckBox,
+          {
+            disabled: true,
+            modelValue: true,
+          },
+          () => "Disabled unchecked",
+        ),
       ]);
     },
   }),
-  args: { checked: false },
+  args: {},
 };

@@ -51,7 +51,7 @@ export const AllInOne: Story = {
           h(VInput, { placeholder: "Large", size: "large" }),
           h(
             VInput,
-            { placeholder: "Prefix and Suffix" },
+            { placeholder: "Prefix and Suffix", class: "test" },
             {
               prefix: () => h(VSettingsFilledIcon, { size: 16 }),
               suffix: () => h(VSettingsFilledIcon, { size: 16 }),

@@ -2,30 +2,22 @@
   import { computed, onMounted, useTemplateRef } from "vue";
 
   type Props = {
+    className?: string;
     indeterminate?: boolean;
     disabled?: boolean;
     autofocus?: boolean;
     block?: boolean;
-    checked: boolean;
-  };
-  type Emits = {
-    change: [checked: boolean];
   };
 
   const props = defineProps<Props>();
-  const emit = defineEmits<Emits>();
   const inputRef = useTemplateRef("input");
+  const model = defineModel<boolean>();
   const inputClasses = computed(() => ({
     disabled: props.disabled,
     indeterminate: props.indeterminate,
-    checked: props.checked,
+    checked: model.value,
   }));
   const rootClasses = computed(() => ({ disabled: props.disabled, block: props.block }));
-
-  function onClick(event: Event) {
-    const target = event.target as HTMLInputElement;
-    emit("change", target.checked);
-  }
 
   onMounted(() => {
     if (props.autofocus && inputRef.value) {
@@ -37,15 +29,15 @@
 </script>
 
 <template>
-  <label class="ksd-checkbox" :class="rootClasses">
+  <label class="ksd-checkbox" :class="[rootClasses, props.className]">
     <span class="ksd-checkbox__wrapper">
       <input
         ref="input"
+        v-model="model"
         class="ksd-checkbox__input"
         type="checkbox"
-        :checked="$props.checked"
         :disabled="$props.disabled"
-        @change="onClick"
+        v-bind="$attrs"
       />
       <span class="ksd-checkbox__inner" :class="[inputClasses]"></span>
     </span>

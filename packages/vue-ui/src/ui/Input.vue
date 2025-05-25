@@ -3,6 +3,7 @@
   import ClearIcon from "../icons/ClearIcon.vue";
 
   type Props = {
+    className?: string;
     variant?: "filled" | "borderless" | "underline" | "outlined";
     size?: "default" | "large" | "small";
     status?: "error" | "warning" | "success" | "default";
@@ -57,14 +58,14 @@
     v-model="model"
     type="text"
     class="ksd-input"
-    :class="[inputClasses]"
+    :class="[inputClasses, $props.className]"
     :disabled="props.disabled"
     v-bind="$attrs"
   />
   <span
     v-if="hasSlots || $props.allowClear"
     class="ksd-input"
-    :class="inputClasses"
+    :class="[inputClasses, $props.className]"
     @click="inputRef?.focus?.()"
   >
     <span
