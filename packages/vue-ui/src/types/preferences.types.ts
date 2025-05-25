@@ -59,12 +59,14 @@ export type ThemeColorVariable =
   | "ksd-bg-color"
   | "ksd-bg-container-color"
   | "ksd-bg-mask-color"
+  | "ksd-bg-fill-color"
+  | "ksd-bg-fill-hover-color"
   | "ksd-bg-sidebar-color"
   | "ksd-bg-header-color"
   | "ksd-bg-modal-color"
-  | "ksd-text-bg-hover-color"
-  | "ksd-text-bg-active-color"
-  | "ksd-text-bg-disabled-color"
+  | "ksd-bg-hover-color"
+  | "ksd-bg-active-color"
+  | "ksd-bg-disabled-color"
   | "ksd-text-main-color"
   | "ksd-text-main-disabled-color"
   | "ksd-text-main-hover-color"
@@ -73,9 +75,12 @@ export type ThemeColorVariable =
   | "ksd-text-secondary-hover-color"
   | "ksd-text-reverse-color"
   | "ksd-text-reverse-secondary-color"
+  | "ksd-text-placeholder-color"
   | "ksd-border-split-color"
   | "ksd-border-color"
   | "ksd-border-hover-color"
+  | "ksd-icon-color"
+  | "ksd-icon-hover-color"
   | "ksd-outline-color"
   | "ksd-accent-color"
   | "ksd-accent-hover-color"
@@ -118,6 +123,15 @@ export type ThemeButtonVariable =
   | "ksd-button-text-disabled-color"
   | "ksd-button-bg-disabled-color";
 export type ThemeDividerVariable = "ksd-divider-color" | "ksd-divider-width";
+export type ThemeInputVariable =
+  | "ksd-input-padding-block"
+  | "ksd-input-padding-inline"
+  | "ksd-input-padding-block-lg"
+  | "ksd-input-padding-inline-lg"
+  | "ksd-input-padding-block-sm"
+  | "ksd-input-padding-inline-sm"
+  | "ksd-input-addon-color"
+  | "ksd-input-active-shadow";
 
 export type ThemeVariableConfig = {
   common: {
@@ -134,5 +148,6 @@ export type ThemeVariableConfig = {
     collapse: Record<ThemeCollapseVariable, string>;
     button: Record<ThemeButtonVariable, string>;
     divider: Record<ThemeDividerVariable, string>;
+    input: Record<ThemeInputVariable, string>;
   };
 };

@@ -327,7 +327,7 @@
       }
 
       &.type-text {
-        background-color: var(--ksd-text-bg-hover-color);
+        background-color: var(--ksd-bg-hover-color);
         &.danger {
           color: var(--ksd-error-hover-color);
           background-color: var(--ksd-error-bg-color);
@@ -374,7 +374,7 @@
       }
 
       &.type-text {
-        background-color: var(--ksd-text-bg-active-color);
+        background-color: var(--ksd-bg-active-color);
         &.danger {
           color: var(--ksd-error-active-color);
           background-color: var(--ksd-error-bg-active-color);

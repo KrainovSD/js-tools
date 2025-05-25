@@ -178,7 +178,7 @@
 
       &.disabled {
         border-color: var(--ksd-border-color);
-        background-color: var(--ksd-text-bg-disabled-color);
+        background-color: var(--ksd-bg-disabled-color);
 
         &:before {
           border-color: var(--ksd-border-color);
