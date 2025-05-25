@@ -193,6 +193,14 @@
       cursor: inherit;
       opacity: 0;
       margin: 0;
+
+      &:focus-visible + .ksd-checkbox__inner {
+        outline: 3px solid var(--ksd-outline-color);
+        outline-offset: 1px;
+        transition:
+          outline-offset 0s,
+          outline 0s;
+      }
     }
     &__text {
       padding-inline-start: var(--ksd-padding-xs);

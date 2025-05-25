@@ -88,6 +88,7 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-border-color": "#d9d9d9",
         "ksd-border-hover-color": "",
         "ksd-border-split-color": "rgba(5,5,5,0.06)",
+        "ksd-outline-color": "#91caff",
         "ksd-accent-color": "#1677ff",
         "ksd-accent-hover-color": "#4096ff",
         "ksd-accent-active-color": "#0958d9",

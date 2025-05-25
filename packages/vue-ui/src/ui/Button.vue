@@ -83,7 +83,7 @@
     cursor: pointer;
 
     &:focus-visible {
-      outline: 3px solid #91caff;
+      outline: 3px solid var(--ksd-outline-color);
       outline-offset: 1px;
       transition:
         outline-offset 0s,

@@ -76,6 +76,7 @@ export type ThemeColorVariable =
   | "ksd-border-split-color"
   | "ksd-border-color"
   | "ksd-border-hover-color"
+  | "ksd-outline-color"
   | "ksd-accent-color"
   | "ksd-accent-hover-color"
   | "ksd-accent-active-color"
