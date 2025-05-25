@@ -3,7 +3,7 @@ import { h } from "vue";
 import { VCollapse } from "../ui";
 
 const meta = {
-  title: "Example/Collapse",
+  title: "Components/Collapse",
   component: VCollapse,
   tags: ["autodocs"],
   argTypes: {},

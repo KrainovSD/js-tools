@@ -4,7 +4,7 @@ import { VSettingsFilledIcon } from "../icons";
 import { VButton } from "../ui";
 
 const meta = {
-  title: "Example/Button",
+  title: "Components/Button",
   component: VButton,
   tags: ["autodocs"],
   argTypes: {},

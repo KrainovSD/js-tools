@@ -82,6 +82,14 @@
     width: fit-content;
     cursor: pointer;
 
+    &:focus-visible {
+      outline: 3px solid #91caff;
+      outline-offset: 1px;
+      transition:
+        outline-offset 0s,
+        outline 0s;
+    }
+
     &:not(.disabled):not(.loading).wave {
       &:after {
         content: "";
