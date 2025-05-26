@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, onMounted, useTemplateRef } from "vue";
 
-  type Props = {
+  export type CheckBoxProps = {
     className?: string;
     indeterminate?: boolean;
     disabled?: boolean;
@@ -9,7 +9,7 @@
     block?: boolean;
   };
 
-  const props = defineProps<Props>();
+  const props = defineProps<CheckBoxProps>();
   const inputRef = useTemplateRef("input");
   const model = defineModel<boolean>();
   const inputClasses = computed(() => ({

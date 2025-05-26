@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed } from "vue";
 
-  type Props = {
+  export type TextProps = {
     ellipsis?: boolean;
     nowrap?: boolean;
     rows?: number;
@@ -15,7 +15,7 @@
     type?: "secondary" | "success" | "warning" | "error";
   };
 
-  const props = defineProps<Props>();
+  const props = defineProps<TextProps>();
   const componentClasses = computed(() => ({
     ellipsis: props.ellipsis,
     nowrap: props.nowrap,

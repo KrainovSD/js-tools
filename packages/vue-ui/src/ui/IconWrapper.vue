@@ -9,11 +9,11 @@
 </script>
 
 <template>
-  <button ref="button" class="icon-wrapper"><slot></slot></button>
+  <button ref="button" class="ksd-icon-wrapper"><slot></slot></button>
 </template>
 
-<style lang="scss" scoped>
-  .icon-wrapper {
+<style lang="scss">
+  .ksd-icon-wrapper {
     outline: none;
     border: none;
     padding: 0;

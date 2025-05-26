@@ -43,7 +43,14 @@ export const AllInOne: Story = {
         "div",
         { style: { display: "flex", flexDirection: "column", gap: "20px", maxWidth: "400px" } },
         [
-          h(VInput, { placeholder: "Outlined", variant: "outlined" }),
+          h(VInput, {
+            modelValue: this.value,
+            onInput: (event: InputEvent) => {
+              this.value = (event.target as HTMLInputElement).value;
+            },
+            placeholder: "Outlined",
+            variant: "outlined",
+          }),
           h(VInput, { placeholder: "Filled", variant: "filled" }),
           h(VInput, { placeholder: "Borderless", variant: "borderless" }),
           h(VInput, { placeholder: "Underline", variant: "underline" }),

@@ -2,7 +2,7 @@
   import { computed, useSlots, useTemplateRef } from "vue";
   import LoadingIcon from "../icons/LoadingIcon.vue";
 
-  type Props = {
+  export type ButtonProps = {
     type?: "primary" | "dashed" | "link" | "text" | "default";
     disabled?: boolean;
     loading?: boolean;
@@ -13,7 +13,7 @@
     iconPosition?: "left" | "right";
     block?: boolean;
   };
-  const props = defineProps<Props>();
+  const props = defineProps<ButtonProps>();
   const slots = useSlots();
   const element = useTemplateRef("button");
 

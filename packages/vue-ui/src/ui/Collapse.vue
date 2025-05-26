@@ -3,7 +3,7 @@
   import ArrowSmallIcon from "../icons/ArrowSmallIcon.vue";
   import Flex from "./Flex.vue";
 
-  type Props = {
+  export type CollapseProps = {
     initialOpen: boolean;
     size?: "default" | "small" | "large";
     ghost?: boolean;
@@ -22,7 +22,7 @@
   const contentRef = useTemplateRef("body");
 
   const emit = defineEmits<Emits>();
-  const props = defineProps<Props>();
+  const props = defineProps<CollapseProps>();
   const open = ref(props.initialOpen ?? false);
 
   const componentStyles = computed(() => ({
@@ -94,28 +94,35 @@
 </script>
 
 <template>
-  <Flex vertical w-full class="collapse" :class="[$props.baseClass, componentStyles]">
+  <Flex vertical w-full class="ksd-collapse" :class="[$props.baseClass, componentStyles]">
     <Flex
-      class="header"
+      class="ksd-collapse__header"
       :class="[$props.headerClass, componentStyles]"
       :gap="12"
       flex-align="center"
       @click.stop="onClick"
     >
-      <ArrowSmallIcon v-if="!$props.noArrow" :size="12" class="arrow" :class="{ open: open }" />
-      <div v-if="$props.header" class="header-text" :class="componentStyles">
+      <ArrowSmallIcon
+        v-if="!$props.noArrow"
+        :size="12"
+        class="ksd-collapse__arrow"
+        :class="{ open: open }"
+      />
+      <div v-if="$props.header" class="ksd-collapse__header-text" :class="componentStyles">
         {{ $props.header }}
       </div>
       <slot name="header"></slot>
     </Flex>
-    <div ref="body" vertical :class="[{ body: true, open }, componentStyles]">
-      <div :class="[$props.bodyClass, componentStyles]" class="body-box"><slot></slot></div>
+    <div ref="body" vertical class="ksd-collapse__body" :class="[{ open }, componentStyles]">
+      <div :class="[$props.bodyClass, componentStyles]" class="ksd-collapse__body-box">
+        <slot></slot>
+      </div>
     </div>
   </Flex>
 </template>
 
-<style lang="scss" scoped>
-  .collapse {
+<style lang="scss">
+  .ksd-collapse {
     border: 1px solid var(--ksd-border-color);
     border-radius: var(--ksd-border-radius-lg);
     background-color: var(--ksd-collapse-header-bg);
@@ -128,102 +135,102 @@
     &.ghost {
       background-color: transparent;
     }
-  }
 
-  .header {
-    cursor: pointer;
+    &__header {
+      cursor: pointer;
 
-    &.default {
-      padding: var(--ksd-padding-sm) var(--ksd-padding);
+      &.default {
+        padding: var(--ksd-padding-sm) var(--ksd-padding);
+      }
+
+      &.small {
+        padding: var(--ksd-padding-xs) var(--ksd-padding-sm);
+      }
+
+      &.large {
+        padding: var(--ksd-padding) var(--ksd-padding-lg);
+      }
     }
 
-    &.small {
-      padding: var(--ksd-padding-xs) var(--ksd-padding-sm);
+    &__arrow {
+      transition: transform var(--ksd-transition-mid) ease-out;
+
+      &.open {
+        transform: rotate(90deg);
+      }
     }
 
-    &.large {
-      padding: var(--ksd-padding) var(--ksd-padding-lg);
-    }
-  }
+    &__header-text {
+      color: var(--ksd-text-main-color);
+      line-height: var(--ksd-line-height);
+      font-family: var(--ksd-font-family);
+      font-size: 1rem;
 
-  .arrow {
-    transition: transform var(--ksd-transition-mid) ease-out;
+      &.small {
+        font-size: var(--ksd-font-size-sm);
+      }
 
-    &.open {
-      transform: rotate(90deg);
-    }
-  }
-
-  .header-text {
-    color: var(--ksd-text-main-color);
-    line-height: var(--ksd-line-height);
-    font-family: var(--ksd-font-family);
-    font-size: 1rem;
-
-    &.small {
-      font-size: var(--ksd-font-size-sm);
+      &.large {
+        font-size: var(--ksd-font-size-lg);
+      }
     }
 
-    &.large {
-      font-size: var(--ksd-font-size-lg);
-    }
-  }
-
-  .body {
-    height: auto;
-    transition:
-      max-height var(--ksd-transition-mid) ease-out,
-      opacity var(--ksd-transition-mid) cubic-bezier(0.01, 0, 1, 0);
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    will-change: max-height, opacity;
-    color: var(--ksd-text-main-color);
-    line-height: var(--ksd-line-height);
-    font-family: var(--ksd-font-family);
-    border-top: 1px solid var(--ksd-border-color);
-    background: var(--ksd-collapse-body-bg);
-    border-radius: 0 0 var(--ksd-border-radius-lg) var(--ksd-border-radius-lg);
-
-    &.open {
-      max-height: none;
-      opacity: 1;
+    &__body {
+      height: auto;
       transition:
         max-height var(--ksd-transition-mid) ease-out,
-        opacity var(--ksd-transition-mid) cubic-bezier(0.3, 1, 0, 1);
-    }
+        opacity var(--ksd-transition-mid) cubic-bezier(0.01, 0, 1, 0);
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      will-change: max-height, opacity;
+      color: var(--ksd-text-main-color);
+      line-height: var(--ksd-line-height);
+      font-family: var(--ksd-font-family);
+      border-top: 1px solid var(--ksd-border-color);
+      background: var(--ksd-collapse-body-bg);
+      border-radius: 0 0 var(--ksd-border-radius-lg) var(--ksd-border-radius-lg);
 
-    &.borderless,
-    &.ghost {
-      border: none;
-      background: transparent;
-    }
-  }
+      &.open {
+        max-height: none;
+        opacity: 1;
+        transition:
+          max-height var(--ksd-transition-mid) ease-out,
+          opacity var(--ksd-transition-mid) cubic-bezier(0.3, 1, 0, 1);
+      }
 
-  .body-box {
-    &.default {
-      padding: var(--ksd-padding);
-
-      &.borderless {
-        padding: var(--ksd-padding-xxs) var(--ksd-padding) var(--ksd-padding);
+      &.borderless,
+      &.ghost {
+        border: none;
+        background: transparent;
       }
     }
 
-    &.small {
-      padding: var(--ksd-padding-sm);
-      font-size: var(--ksd-font-size-sm);
+    &__body-box {
+      &.default {
+        padding: var(--ksd-padding);
 
-      &.borderless {
-        padding: var(--ksd-padding-xxs) var(--ksd-padding-sm) var(--ksd-padding);
+        &.borderless {
+          padding: var(--ksd-padding-xxs) var(--ksd-padding) var(--ksd-padding);
+        }
       }
-    }
 
-    &.large {
-      padding: var(--ksd-padding-lg);
-      font-size: var(--ksd-font-size-lg);
+      &.small {
+        padding: var(--ksd-padding-sm);
+        font-size: var(--ksd-font-size-sm);
 
-      &.borderless {
-        padding: var(--ksd-padding-xxs) var(--ksd-padding-lg) var(--ksd-padding);
+        &.borderless {
+          padding: var(--ksd-padding-xxs) var(--ksd-padding-sm) var(--ksd-padding);
+        }
+      }
+
+      &.large {
+        padding: var(--ksd-padding-lg);
+        font-size: var(--ksd-font-size-lg);
+
+        &.borderless {
+          padding: var(--ksd-padding-xxs) var(--ksd-padding-lg) var(--ksd-padding);
+        }
       }
     }
   }

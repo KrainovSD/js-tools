@@ -5,7 +5,7 @@
   import Flex from "./Flex.vue";
   import Text from "./Text.vue";
 
-  type Props = {
+  export type DrawerProps = {
     ignoreCloseByClick?: HTMLElement[];
     target?: HTMLElement;
     header?: string;
@@ -20,7 +20,7 @@
   type Emits = {
     close: [];
   };
-  const props = withDefaults(defineProps<Props>(), {
+  const props = withDefaults(defineProps<DrawerProps>(), {
     mask: true,
     placement: "right",
     open: false,

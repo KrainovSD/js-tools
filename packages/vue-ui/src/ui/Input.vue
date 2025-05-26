@@ -2,7 +2,7 @@
   import { computed, onMounted, useSlots, useTemplateRef } from "vue";
   import ClearIcon from "../icons/ClearIcon.vue";
 
-  type Props = {
+  export type InputProps = {
     className?: string;
     variant?: "filled" | "borderless" | "underline" | "outlined";
     size?: "default" | "large" | "small";
@@ -13,7 +13,7 @@
     disabled?: boolean;
   };
 
-  const props = defineProps<Props>();
+  const props = defineProps<InputProps>();
   const slots = useSlots();
   const model = defineModel<string>();
   const hasSlots = computed(() => Object.keys(slots).length != 0);

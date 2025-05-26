@@ -39,5 +39,5 @@ export const AllInOne: Story = {
       ]);
     },
   }),
-  args: { checked: false },
+  args: {},
 };

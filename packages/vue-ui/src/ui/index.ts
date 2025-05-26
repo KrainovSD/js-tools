@@ -6,6 +6,28 @@ import VDrawer from "./Drawer.vue";
 import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
+import VPassword from "./Password.vue";
 import VText from "./Text.vue";
 
-export { VButton, VCollapse, VFlex, VDivider, VIconWrapper, VText, VDrawer, VCheckBox, VInput };
+export type { InputProps } from "./Input.vue";
+export type { ButtonProps } from "./Button.vue";
+export type { CheckBoxProps } from "./CheckBox.vue";
+export type { CollapseProps } from "./Collapse.vue";
+export type { DividerProps } from "./Divider.vue";
+export type { DrawerProps } from "./Drawer.vue";
+export type { FlexProps } from "./Flex.vue";
+export type { PasswordProps } from "./Password.vue";
+export type { TextProps } from "./Text.vue";
+
+export {
+  VButton,
+  VCollapse,
+  VFlex,
+  VDivider,
+  VIconWrapper,
+  VText,
+  VDrawer,
+  VCheckBox,
+  VInput,
+  VPassword,
+};

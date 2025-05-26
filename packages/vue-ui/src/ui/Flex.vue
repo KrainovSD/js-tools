@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { useTemplateRef } from "vue";
+  import { computed, useTemplateRef } from "vue";
 
-  type Props = {
+  export type FlexProps = {
     vertical?: boolean;
     wFull?: boolean;
     hFull?: boolean;
@@ -22,9 +22,14 @@
     hMin?: number;
   };
 
-  defineProps<Props>();
+  const props = defineProps<FlexProps>();
 
   const element = useTemplateRef("base");
+  const componentClasses = computed(() => ({
+    vertical: props.vertical,
+    wFull: props.wFull,
+    hFull: props.hFull,
+  }));
 
   defineExpose({
     element,
@@ -34,14 +39,8 @@
 <template>
   <div
     ref="base"
-    :class="[
-      {
-        flex: true,
-        vertical: $props.vertical,
-        wFull: $props.wFull,
-        hFull: $props.hFull,
-      },
-    ]"
+    class="ksd-flex"
+    :class="[componentClasses]"
     :style="{
       gap: $props.gap != undefined ? `${$props.gap}px` : undefined,
       alignItems: $props.flexAlign,
@@ -58,7 +57,7 @@
 </template>
 
 <style lang="scss">
-  .flex {
+  .ksd-flex {
     display: flex;
 
     &.vertical {
