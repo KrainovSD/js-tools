@@ -40,6 +40,10 @@
     model.value = "";
   }
 
+  function onFocus() {
+    if (document.activeElement !== inputRef.value) inputRef.value?.focus?.();
+  }
+
   onMounted(() => {
     if (props.autofocus && inputRef.value) {
       inputRef.value.focus();
@@ -66,8 +70,9 @@
     v-if="hasSlots || $props.allowClear"
     class="ksd-input"
     :class="[inputClasses, $props.className]"
-    @click="inputRef?.focus?.()"
+    @click="onFocus"
   >
+    <slot name="default"></slot>
     <span
       v-if="$slots.prefix"
       role="img"

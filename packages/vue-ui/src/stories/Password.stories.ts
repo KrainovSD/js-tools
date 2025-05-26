@@ -1,5 +1,6 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h, ref } from "vue";
+import { VSettingsFilledIcon } from "../icons";
 import { VPassword } from "../ui";
 
 const meta = {
@@ -50,7 +51,14 @@ export const AllInOne: Story = {
         }),
         h(VPassword, { placeholder: "Filled", variant: "filled" }),
         h(VPassword, { placeholder: "Borderless", variant: "borderless", status: "error" }),
-        h(VPassword, { placeholder: "Underline", variant: "underline" }),
+        h(
+          VPassword,
+          { placeholder: "Underline", variant: "underline" },
+          {
+            suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+            prefix: () => h(VSettingsFilledIcon, { size: 16 }),
+          },
+        ),
       ]);
     },
   }),

@@ -6,6 +6,7 @@ import VDrawer from "./Drawer.vue";
 import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
+import VInputNumber from "./InputNumber.vue";
 import VPassword from "./Password.vue";
 import VText from "./Text.vue";
 
@@ -18,6 +19,7 @@ export type { DrawerProps } from "./Drawer.vue";
 export type { FlexProps } from "./Flex.vue";
 export type { PasswordProps } from "./Password.vue";
 export type { TextProps } from "./Text.vue";
+export type { InputNumberProps } from "./InputNumber.vue";
 
 export {
   VButton,
@@ -30,4 +32,5 @@ export {
   VCheckBox,
   VInput,
   VPassword,
+  VInputNumber,
 };
