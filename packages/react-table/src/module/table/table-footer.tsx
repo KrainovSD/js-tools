@@ -7,7 +7,6 @@ type TableFooterProps<RowData extends Record<string, unknown>> = {
   withPagination: boolean | undefined;
   withTotal: boolean | undefined;
   table: TableInterface<RowData>;
-  filteredRowsCount: number;
 };
 
 export function TableFooter<RowData extends Record<string, unknown>>(
@@ -15,6 +14,8 @@ export function TableFooter<RowData extends Record<string, unknown>>(
 ) {
   const tableState = props.table.getState();
   const pageSizes = props.table.options.meta?.pageSizes;
+  const totalRows =
+    props.table.options.meta?.totalRows ?? props.table.getFilteredRowModel().rows.length;
 
   return (
     <>
@@ -22,7 +23,7 @@ export function TableFooter<RowData extends Record<string, unknown>>(
         <>
           <div className={styles.paginationContainer}>
             {props.withTotal && (
-              <div className={styles.paginationTotal}>{`Всего: ${props.filteredRowsCount}`}</div>
+              <div className={styles.paginationTotal}>{`Всего: ${totalRows}`}</div>
             )}
             {props.withPagination && (
               <>
@@ -30,7 +31,7 @@ export function TableFooter<RowData extends Record<string, unknown>>(
                   <Pagination
                     className={styles.pagination}
                     defaultCurrent={tableState.pagination.pageIndex + 1}
-                    total={props.filteredRowsCount}
+                    total={totalRows}
                     pageSize={tableState.pagination.pageSize}
                     onChange={(page, pageSize) => {
                       props.table.setPageIndex(page - 1);

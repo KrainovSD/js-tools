@@ -80,6 +80,7 @@ export type TableProps<
     withPagination?: boolean;
     withFilters?: boolean;
     withTotal?: boolean;
+    totalRows?: number;
     initialPageSize?: number;
     pageSizes?: number[];
     fullSize?: boolean;
@@ -156,7 +157,6 @@ export function Table<
     initialState: { columnPinning, columns, grouping },
   });
   const tableState = table.getState();
-  const filteredRowsCount = table.getFilteredRowModel().rows.length;
 
   const filters = React.useMemo(() => {
     return Object.fromEntries(
@@ -254,7 +254,6 @@ export function Table<
         )}
 
         <TableFooter
-          filteredRowsCount={filteredRowsCount}
           Pagination={props.Pagination}
           table={table}
           withPagination={props.withPagination && !props.withGantt}

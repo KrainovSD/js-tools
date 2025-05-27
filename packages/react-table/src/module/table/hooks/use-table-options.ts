@@ -44,7 +44,7 @@ export function useTableOptions<
     HeaderClass,
     FilterType,
     SortType
-  > & { initialState: InitialState<Row>; pageSizes?: number[] },
+  > & { initialState: InitialState<Row>; pageSizes?: number[]; totalRows?: number | undefined },
 ) {
   const renderers = React.useMemo<Required<TableRenderers<Row>>>(
     () => ({ expander: props.renderers?.expander ?? Expander }),
@@ -60,6 +60,7 @@ export function useTableOptions<
       meta: {
         renderers,
         pageSizes: props.pageSizes,
+        totalRows: props.totalRows,
       },
       getSubRows: props.getSubRows,
       getRowId: props.getRowId,
@@ -201,6 +202,7 @@ export function useTableOptions<
     props.columnVisibility,
     props.columnOrder,
     props.pageSizes,
+    props.totalRows,
   ]);
 
   const table = useReactTable(tableOptions);
