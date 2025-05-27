@@ -31,7 +31,7 @@ export function limitStreamOfRequests<T>({
     cancel: () => {
       isStopped = true;
     },
-    promise: new Promise((resolve) => {
+    promise: new Promise((resolve, reject) => {
       let currentRequests = 0;
       let currentResponses = 0;
       const results: T[] = [];
@@ -40,12 +40,12 @@ export function limitStreamOfRequests<T>({
         request(promiseGetter(++currentRequests), currentRequests);
       }
 
-      function request(promise: Promise<T>, position: number, tryCount: number = 1) {
+      function request(promise: Promise<T> | T, position: number, tryCount: number = 1) {
         if (isStopped) return void resolve(results);
         if (currentResponses === countRequests) return void resolve(results);
-        if (position > countRequests || promise == undefined) return;
+        if (position > countRequests) resolve(results);
 
-        promise
+        Promise.resolve(promise)
           .then((result) => {
             if (isStopped) return void resolve(results);
 
@@ -68,7 +68,7 @@ export function limitStreamOfRequests<T>({
             }
 
             if (throwError) {
-              throw error;
+              reject(error);
             }
 
             currentResponses++;
