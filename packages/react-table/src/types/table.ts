@@ -198,7 +198,9 @@ export type TableColumnsSettings<
     FilterRender,
     SortRender,
     CellClass,
-    HeaderClass
+    HeaderClass,
+    FilterType,
+    SortType
   >;
 };
 
