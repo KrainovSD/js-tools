@@ -34,7 +34,9 @@ export type ThemeBorderVariable =
   | "ksd-border-radius-sm"
   | "ksd-border-radius"
   | "ksd-border-radius-lg"
-  | "ksd-border-radius-outer";
+  | "ksd-border-radius-outer"
+  | "ksd-line-width"
+  | "ksd-line-type";
 
 export type ThemePaddingVariable =
   | "ksd-padding-xxs"
@@ -136,6 +138,7 @@ export type ThemeRadioVariable = {
   "ksd-radio-dot-size": number;
   "ksd-radio-size": number;
   "ksd-radio-dot-color": string;
+  "ksd-radio-button-padding-inline": string;
 };
 
 export type ThemeVariableConfig = {

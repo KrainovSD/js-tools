@@ -73,7 +73,7 @@
     align-items: center;
     justify-self: center;
     transition: all 0.2s ease-out;
-    border: 1px solid transparent;
+    border: var(--ksd-line-width) var(--ksd-line-type) transparent;
     touch-action: manipulation;
     text-align: center;
     white-space: nowrap;

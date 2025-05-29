@@ -1,17 +1,17 @@
 <script setup lang="ts">
   import { computed } from "vue";
 
+  export type RadioValue = string | number | boolean;
+
   export type RadioProps = {
-    // optionType?: "default" | "button";
     className?: string;
-    size?: "large" | "default" | "small";
     name: string;
     value: string | number | boolean;
     block?: boolean;
     disabled?: boolean;
   };
 
-  const model = defineModel<string | number | undefined | boolean | null>();
+  const model = defineModel<RadioValue>();
   const props = defineProps<RadioProps>();
   const rootClasses = computed(() => ({
     disabled: props.disabled,
@@ -34,11 +34,7 @@
         :disabled="$props.disabled"
         v-bind="$attrs"
         :name="$props.name"
-        @input="
-          (event) => {
-            model = $props.value;
-          }
-        "
+        @input="model = $props.value"
       />
       <span class="ksd-radio__inner" :class="[inputClasses]"></span>
     </span>
@@ -96,7 +92,7 @@
       width: calc(1px * var(--ksd-radio-size));
       height: calc(1px * var(--ksd-radio-size));
       background-color: var(--ksd-bg-container-color);
-      border: 1px solid var(--ksd-border-color);
+      border: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-color);
       border-collapse: separate;
       border-radius: 50%;
       transition: all var(--ksd-transition-slow);

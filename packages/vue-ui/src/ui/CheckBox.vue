@@ -95,7 +95,7 @@
       width: var(--ksd-control-interactive-size);
       height: var(--ksd-control-interactive-size);
       background-color: var(--ksd-bg-container-color);
-      border: 1px solid var(--ksd-border-color);
+      border: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-color);
       border-collapse: separate;
       border-radius: var(--ksd-border-radius-sm);
       transition: all var(--ksd-transition-slow);

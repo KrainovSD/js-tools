@@ -39,6 +39,8 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-border-radius": "6px",
         "ksd-border-radius-lg": "8px",
         "ksd-border-radius-outer": "4px",
+        "ksd-line-type": "solid",
+        "ksd-line-width": "1px",
       },
       padding: {
         "ksd-padding-xxs": "4px",
@@ -157,6 +159,7 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-radio-dot-size": 6,
         "ksd-radio-size": 16,
         "ksd-radio-dot-color": "#ffffff",
+        "ksd-radio-button-padding-inline": "15px",
       },
     },
   },
