@@ -151,8 +151,12 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-input-padding-inline-sm": "7px",
         "ksd-input-padding-block-lg": "7px",
         "ksd-input-padding-inline-lg": "11px",
-        "ksd-input-addon-color": "rgba(0,0,0,0.02)",
         "ksd-input-active-shadow": "0 0 0 2px rgba(5,145,255,0.1)",
+      },
+      radio: {
+        "ksd-radio-dot-size": 6,
+        "ksd-radio-size": 16,
+        "ksd-radio-dot-color": "#ffffff",
       },
     },
   },

@@ -8,6 +8,7 @@ import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
 import VPassword from "./Password.vue";
+import VRadio from "./Radio.vue";
 import VText from "./Text.vue";
 
 export type { InputProps } from "./Input.vue";
@@ -20,6 +21,7 @@ export type { FlexProps } from "./Flex.vue";
 export type { PasswordProps } from "./Password.vue";
 export type { TextProps } from "./Text.vue";
 export type { InputNumberProps } from "./InputNumber.vue";
+export type { RadioProps } from "./Radio.vue";
 
 export {
   VButton,
@@ -33,4 +35,5 @@ export {
   VInput,
   VPassword,
   VInputNumber,
+  VRadio,
 };

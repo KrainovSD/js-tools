@@ -130,8 +130,13 @@ export type ThemeInputVariable =
   | "ksd-input-padding-inline-lg"
   | "ksd-input-padding-block-sm"
   | "ksd-input-padding-inline-sm"
-  | "ksd-input-addon-color"
   | "ksd-input-active-shadow";
+
+export type ThemeRadioVariable = {
+  "ksd-radio-dot-size": number;
+  "ksd-radio-size": number;
+  "ksd-radio-dot-color": string;
+};
 
 export type ThemeVariableConfig = {
   common: {
@@ -149,5 +154,6 @@ export type ThemeVariableConfig = {
     button: Record<ThemeButtonVariable, string>;
     divider: Record<ThemeDividerVariable, string>;
     input: Record<ThemeInputVariable, string>;
+    radio: ThemeRadioVariable;
   };
 };
