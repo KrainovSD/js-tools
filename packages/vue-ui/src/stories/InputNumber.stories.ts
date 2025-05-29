@@ -16,12 +16,15 @@ type Story = StoryObj<typeof meta>;
 const Template: StoryFn<typeof VInputNumber> = (args) => ({
   components: { VInputNumber },
   setup() {
-    return { args };
+    const value = ref(0);
+
+    return { args, value };
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
       h(VInputNumber, {
         ...args,
+        modelValue: this.value,
       }),
     ]);
   },
@@ -34,7 +37,7 @@ export const AllInOne: Story = {
   render: (args) => ({
     components: { VInputNumber },
     setup() {
-      const value = ref("");
+      const value = ref(0);
 
       return { args, value };
     },
@@ -44,12 +47,12 @@ export const AllInOne: Story = {
           VInputNumber,
           {
             modelValue: this.value,
-            onInput: (event: InputEvent) => {
-              this.value = (event.target as HTMLInputElement).value;
-            },
             placeholder: "Outlined",
             variant: "outlined",
             checked: true,
+            step: 2,
+            min: 50,
+            max: 2,
           },
           {
             suffix: () => h(VSettingsFilledIcon, { size: 16 }),
