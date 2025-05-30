@@ -1,0 +1,16 @@
+.base {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: var(--table-loader-opacity);
+  z-index: 8;
+  background: var(--table-loader-bg-color);
+}
+
+.spin {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 8;
+  max-height: var(--table-spin-max-height);
+}

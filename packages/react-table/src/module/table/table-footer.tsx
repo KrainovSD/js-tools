@@ -21,7 +21,7 @@ export function TableFooter<RowData extends Record<string, unknown>>(
     <>
       {(props.withPagination || props.withTotal) && (
         <>
-          <div className={styles.paginationContainer}>
+          <div className={styles.paginationContainer} data-id="footer">
             {props.withTotal && (
               <div className={styles.paginationTotal}>{`Всего: ${totalRows}`}</div>
             )}
@@ -39,6 +39,7 @@ export function TableFooter<RowData extends Record<string, unknown>>(
                     }}
                     defaultPageSize={tableState.pagination.pageSize}
                     pageSizeOptions={pageSizes ?? [10, 25, 50, 100, 150, 200]}
+                    data-id="pagination"
                   />
                 )}
                 {props.Pagination && <props.Pagination table={props.table} />}

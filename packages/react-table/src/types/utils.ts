@@ -21,8 +21,6 @@ export type HeaderContext<RowData extends Record<string, unknown>> = HeaderConte
   unknown
 >;
 export type CellContext<RowData extends Record<string, unknown>> = CellContextLib<RowData, unknown>;
-export type Row<RowData extends Record<string, unknown>> = RowInterface<RowData>;
-export type Table<RowData extends Record<string, unknown>> = TableInterface<RowData>;
 export type FilterFn<RowData extends Record<string, unknown>> = (
   row: RowInterface<RowData>,
   columnId: string,

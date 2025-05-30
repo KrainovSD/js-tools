@@ -136,6 +136,7 @@ export function App() {
             >[]
           }
           rows={(withGantt ? rowsGantt : rows) as CurrentRow[]}
+          // rows={[]}
           Empty={() => <span>Empty</span>}
           // rows={[{ end: "", id: "", name: "", start: "", children: [], dependents: [] }]}
           cellRenders={{ test: () => "" }}
@@ -153,7 +154,8 @@ export function App() {
           virtualRows={true}
           virtualRowSize={69}
           virtualColumn={true}
-          fullSize={false}
+          fullSize={true}
+          loading={false}
           withGantt={withGantt}
           instantGanttSplitter={false}
           columnOrder={!withGantt ? tableColumns : undefined}

@@ -22,7 +22,7 @@ export function TableFilter<RowData extends Record<string, unknown>>(
       {props.withFilters && props.filterOptions.length > 0 && (
         <>
           {!props.Filter && (
-            <div className={styles.filterContainer}>
+            <div className={styles.filterContainer} data-id="filter">
               <FiltersBlock
                 filter={props.filters}
                 filterLabel="Фильтр"

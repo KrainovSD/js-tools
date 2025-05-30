@@ -3,7 +3,7 @@ import type { TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
 import { Gantt } from "./gantt";
-import { TableCommon, TableFilter, TableFooter } from "./module/table";
+import { TableCommon, TableFilter, TableFooter, TableLoading } from "./module/table";
 import { useColumns, useTableOptions, useVirtualizer } from "./module/table/hooks";
 import styles from "./table.module.scss";
 import type {
@@ -99,6 +99,8 @@ export type TableProps<
     }>;
     Pagination?: React.FC<{ table: TableInterface<RowData> }>;
     Empty?: React.FC;
+    Loader?: React.FC;
+    loading?: boolean;
     setTable?: (table: TableInterface<RowData>) => void;
     rootRef?: React.MutableRefObject<HTMLDivElement | null>;
     headerRowClassName?: ((header: HeaderInterface<RowData>) => string | undefined) | string;
@@ -192,7 +194,13 @@ export function Table<
 
   try {
     return (
-      <div className={clsx(styles.base, props.className)} ref={props.rootRef}>
+      <div
+        className={clsx(styles.base, props.className)}
+        style={{ height: props.fullSize ? "100%" : "fit-content" }}
+        ref={props.rootRef}
+      >
+        {!props.Loader && props.loading && <TableLoading />}
+        {props.Loader && props.loading && <props.Loader />}
         <TableFilter
           filterOptions={filterOptions}
           filters={filters}
