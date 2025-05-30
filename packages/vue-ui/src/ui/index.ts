@@ -11,6 +11,7 @@ import VPassword from "./Password.vue";
 import VRadio from "./Radio.vue";
 import VRadioButton from "./RadioButton.vue";
 import VRadioGroup from "./RadioGroup.vue";
+import VSlider from "./Slider.vue";
 import VText from "./Text.vue";
 
 export type { InputProps } from "./Input.vue";
@@ -26,6 +27,7 @@ export type { InputNumberProps } from "./InputNumber.vue";
 export type { RadioProps, RadioValue } from "./Radio.vue";
 export type { RadioGroupProps, RadioOption } from "./RadioGroup.vue";
 export type { RadioButtonProps } from "./RadioButton.vue";
+export type { SlideProps } from "./Slider.vue";
 
 export {
   VButton,
@@ -42,4 +44,5 @@ export {
   VRadio,
   VRadioGroup,
   VRadioButton,
+  VSlider,
 };

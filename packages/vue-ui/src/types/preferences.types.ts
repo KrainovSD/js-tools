@@ -141,6 +141,26 @@ export type ThemeRadioVariable = {
   "ksd-radio-button-padding-inline": string;
 };
 
+export type ThemeSliderVariable =
+  | "ksd-slider-control-size"
+  | "ksd-slider-rail-size"
+  | "ksd-slider-handle-size"
+  | "ksd-slider-handle-size-hover"
+  | "ksd-slider-dot-size"
+  | "ksd-slider-handle-line-width"
+  | "ksd-slider-handle-line-width-hover"
+  | "ksd-slider-rail-bg"
+  | "ksd-slider-rail-hover-bg"
+  | "ksd-slider-track-bg"
+  | "ksd-slider-track-hover-bg"
+  | "ksd-slider-handle-color"
+  | "ksd-slider-handle-active-color"
+  | "ksd-slider-handle-active-outline-color"
+  | "ksd-slider-handle-color-disabled"
+  | "ksd-slider-dot-border-color"
+  | "ksd-slider-dot-active-border-color"
+  | "ksd-slider-track-bg-disabled";
+
 export type ThemeVariableConfig = {
   common: {
     transition: Record<ThemeTransitionVariable, string>;
@@ -158,5 +178,6 @@ export type ThemeVariableConfig = {
     divider: Record<ThemeDividerVariable, string>;
     input: Record<ThemeInputVariable, string>;
     radio: ThemeRadioVariable;
+    slider: Record<ThemeSliderVariable, string>;
   };
 };
