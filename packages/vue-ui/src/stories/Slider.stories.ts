@@ -18,9 +18,19 @@ const Template: StoryFn<typeof VSlider> = (args) => ({
     return { args };
   },
   render() {
-    return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-      h(VSlider, { ...args }),
-    ]);
+    return h(
+      "div",
+      {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          width: "400px",
+          marginLeft: "50px",
+        },
+      },
+      [h(VSlider, { ...args })],
+    );
   },
 });
 
@@ -34,9 +44,33 @@ export const AllInOne: Story = {
       return { args };
     },
     render() {
-      return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-        h(VSlider, { ...args }),
-      ]);
+      return h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+            width: "400px",
+            marginLeft: "50px",
+          },
+        },
+        [
+          h(VSlider, { min: 0, max: 100, modelValue: 12, step: 1 }),
+          h(VSlider, { min: 0, max: 100, modelValue: 16, step: 10 }),
+          h(VSlider, { min: 0, max: 100, modelValue: 24, step: 1, disabled: true }),
+          h(VSlider, { min: 0, max: 100, modelValue: [10, 30], step: 1, range: true }),
+          h(VSlider, { min: 0, max: 100, modelValue: [24, 65], step: 1, range: true }),
+          h(VSlider, {
+            min: 0,
+            max: 100,
+            modelValue: [5, 78],
+            step: 1,
+            range: true,
+            disabled: true,
+          }),
+        ],
+      );
     },
   }),
   args: {},
