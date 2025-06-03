@@ -1,4 +1,4 @@
-import { dateFormat, isArray, isBoolean, isId, isObject, isString } from "@krainovsd/js-helpers";
+import { dateFormat, isArray, isBoolean, isId, isObject } from "@krainovsd/js-helpers";
 import { CheckBox, Tag, Tooltip } from "@krainovsd/react-ui";
 import type { CellContext } from "@tanstack/react-table";
 import type { PresetColorType } from "antd/es/theme/internal";
@@ -38,15 +38,19 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
     | TextCellRenderProps<Row>
     | undefined;
   const Link = cellRenderProps?.Link;
-  const tooltip = cellRenderProps?.pathToTooltip
-    ? getData(props.context.row.original, cellRenderProps.pathToTooltip)
-    : undefined;
+
   const booleanMapping: BooleanMapping = cellRenderProps?.booleanMapping ?? {
     false: "Нет",
     true: "Да",
   };
 
   const content = getData(props.context.row.original, props.context.column.id);
+  const tooltip = cellRenderProps?.pathToTooltip
+    ? getData(props.context.row.original, cellRenderProps.pathToTooltip)
+    : content;
+  const hasTooltip =
+    (isId(tooltip) || isBoolean(tooltip)) && isBoolean(cellRenderProps?.autoTooltip);
+
   const isExpandable = cellRenderProps?.expanded && props.context.row.getCanExpand();
 
   const { isVisible, extraPadding } = useVisibleCell(props.context);
@@ -83,7 +87,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
         >
           {isExpandable && Expander && <Expander context={props.context} />}
           <Link context={props.context}>
-            {isString(tooltip) && (
+            {hasTooltip && (
               <Tooltip
                 classNameContent={styles.tooltip}
                 text={tooltip}
@@ -93,7 +97,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
                 {Node}
               </Tooltip>
             )}
-            {!isString(tooltip) && Node}
+            {!hasTooltip && Node}
           </Link>
         </div>
       )}
@@ -111,7 +115,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
           }}
         >
           {isExpandable && Expander && <Expander context={props.context} />}
-          {isString(tooltip) && (
+          {hasTooltip && (
             <Tooltip
               classNameContent={styles.tooltip}
               text={tooltip}
@@ -121,7 +125,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
               {Node}
             </Tooltip>
           )}
-          {!isString(tooltip) && Node}
+          {!hasTooltip && Node}
         </div>
       )}
     </>
@@ -198,16 +202,22 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
   const { isVisible } = useVisibleCell(props.context);
   if (!cellRenderProps) return;
 
-  const tooltip = cellRenderProps?.pathToTooltip
-    ? getData(props.context.row.original, cellRenderProps.pathToTooltip)
-    : undefined;
-  const renderTooltip = tooltip != undefined ? (isArray(tooltip) ? tooltip : [tooltip]) : undefined;
   const rowValue = getData(props.context.row.original, props.context.column.id);
   const rowContent =
     cellRenderProps?.content?.(props.context) ??
     getData(props.context.row.original, props.context.column.id);
   const renderContent = isArray(rowContent) ? rowContent : [rowContent];
   const renderValue = isArray(rowValue) ? rowValue : [rowValue];
+
+  const tooltip = cellRenderProps?.pathToTooltip
+    ? getData(props.context.row.original, cellRenderProps.pathToTooltip)
+    : rowValue;
+  const renderTooltip =
+    tooltip != undefined && isBoolean(cellRenderProps?.autoTooltip)
+      ? isArray(tooltip)
+        ? tooltip
+        : [tooltip]
+      : undefined;
 
   if (!isVisible || !isArray(renderContent) || !isArray(renderValue)) return null;
 
@@ -262,6 +272,7 @@ export function TagCellRender<Row extends Record<string, unknown>>(props: {
       <div
         className={clsx(
           styles.container,
+          styles.tag__container,
           cellRenderProps?.classes?.map?.((style) => styles[`container__${style}`]),
           typeof cellRenderProps?.className === "function"
             ? cellRenderProps.className(props.context)

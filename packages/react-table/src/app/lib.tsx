@@ -44,10 +44,11 @@ export const columns: TableColumn<Row, "test">[] = [
     filterable: true,
     filterType: "includes-string",
     headerClass: ["common"],
+    cellClass: ["lineClamp", "common"],
     cellRenderProps: {
       expanded: true,
       // pathToLink: "country",
-      pathToTooltip: "lastName",
+      autoTooltip: true,
       classes: ["hCenter"],
     },
   },
@@ -110,6 +111,10 @@ export const columns: TableColumn<Row, "test">[] = [
       ],
     },
     cellClass: ["common", "empty", "lineClamp"],
+    cellRender: "tag",
+    cellRenderProps: {
+      autoTooltip: false,
+    },
   },
   {
     key: "year",

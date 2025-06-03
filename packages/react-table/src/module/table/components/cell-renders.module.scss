@@ -28,7 +28,8 @@ a.container {
 }
 
 .tooltip {
-  font-family: Nunito;
+  font-family: var(--table-font-family);
+  overflow: hidden;
 }
 
 .base {
@@ -41,7 +42,7 @@ a.container {
 .text {
   color: var(--table-text-color);
   font-weight: 500;
-  font-family: Nunito;
+  font-family: var(--table-font-family);
 }
 
 .tag {
@@ -49,7 +50,13 @@ a.container {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  height: fit-content;
   cursor: pointer;
+
+  &__container {
+    height: fit-content;
+    max-width: 100%;
+  }
 }
 
 .select {

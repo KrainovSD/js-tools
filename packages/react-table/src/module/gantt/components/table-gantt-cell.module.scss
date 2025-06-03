@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  font-family: Nunito;
+  font-family: var(--table-font-family);
 
   &__header {
     font-weight: 700;
@@ -42,7 +42,7 @@
     margin-left: 10px;
     margin-right: 10px;
     font-size: 14px;
-    font-family: Nunito;
+    font-family: var(--table-font-family);
 
     &_white {
       color: rgba(255, 255, 255, 0.85);

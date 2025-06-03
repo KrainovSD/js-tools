@@ -122,7 +122,7 @@ export function useTableOptions<
         }
       } else {
         tableOptions.manualExpanding = false;
-        tableOptions.getExpandedRowModel = getExpandedRowModel();
+        tableOptions.getExpandedRowModel = props.getExpandedRowModel?.() ?? getExpandedRowModel();
       }
       /** selecting */
       if (props.rowSelection != undefined && props.onRowSelectionChange != undefined) {
