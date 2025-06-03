@@ -118,7 +118,7 @@ export function useTableOptions<
           tableOptions.getExpandedRowModel = undefined;
         } else {
           tableOptions.manualExpanding = false;
-          tableOptions.getExpandedRowModel = getExpandedRowModel();
+          tableOptions.getExpandedRowModel = props.getExpandedRowModel?.() ?? getExpandedRowModel();
         }
       } else {
         tableOptions.manualExpanding = false;

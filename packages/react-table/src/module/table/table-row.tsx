@@ -21,6 +21,8 @@ type Props<RowData extends Record<string, unknown>> = {
     | ((row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void)
     | undefined;
   columnVirtualEnabled: boolean;
+  expanded: boolean;
+  CustomRow: React.JSX.Element | undefined | null;
 };
 
 export const TableRow = React.memo(function TableRow<RowData extends Record<string, unknown>>(
@@ -56,7 +58,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       }}
     >
       <>
-        {props.columnVirtualEnabled && (
+        {props.columnVirtualEnabled && !props.CustomRow && (
           <>
             {row.getLeftVisibleCells().map((cell, index, cells) => {
               /** CELL */
@@ -104,6 +106,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
           </>
         )}
         {!props.columnVirtualEnabled &&
+          !props.CustomRow &&
           row.getVisibleCells().map((cell, index, cells) => {
             /** CELL */
 
@@ -117,6 +120,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
               />
             );
           })}
+        {props.CustomRow && props.CustomRow}
       </>
     </tr>
   );

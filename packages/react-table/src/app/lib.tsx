@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { TableColumn } from "../types";
+import type { RowInterface, RowModel, TableColumn, TableInterface } from "../types";
 
 export const columns: TableColumn<Row, "test">[] = [
   //   SelectColumn,
@@ -271,6 +271,7 @@ export type Row = {
   sport: string;
   checked: boolean;
   children?: Row[];
+  _EXPANDED_ROW?: boolean;
 };
 
 const sports = [
@@ -371,3 +372,86 @@ export function createRows(): Row[] {
 // } as const;
 
 // type CellRender = keyof typeof cellRenders;
+
+function memo<TDeps extends readonly unknown[], TDepArgs, TResult>(
+  getDeps: (depArgs?: TDepArgs) => [...TDeps],
+  fn: (...args: NoInfer<[...TDeps]>) => TResult,
+  opts: {
+    onChange?: (result: TResult) => void;
+  } = {},
+): (depArgs?: TDepArgs) => TResult {
+  let deps: unknown[] = [];
+  let result: TResult | undefined;
+
+  return (depArgs) => {
+    const newDeps = getDeps(depArgs);
+
+    const depsChanged =
+      newDeps.length !== deps.length ||
+      newDeps.some((dep: unknown, index: number) => deps[index] !== dep);
+
+    if (!depsChanged) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return result!;
+    }
+
+    deps = newDeps;
+
+    result = fn(...newDeps);
+    opts?.onChange?.(result);
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return result!;
+  };
+}
+
+export function getExpandedRowModel(): (table: TableInterface<Row>) => () => RowModel<Row> {
+  return (table) =>
+    memo(
+      () => [
+        table.getState().expanded,
+        table.getPreExpandedRowModel(),
+        table.options.paginateExpandedRows,
+      ],
+      (expanded, rowModel, paginateExpandedRows) => {
+        if (!rowModel.rows.length || (expanded !== true && !Object.keys(expanded ?? {}).length)) {
+          return rowModel;
+        }
+
+        if (!paginateExpandedRows) {
+          // Only expand rows at this point if they are being paginated
+          return rowModel;
+        }
+
+        return expandRows(rowModel);
+      },
+    );
+}
+
+function expandRows<TData extends Record<string, unknown>>(rowModel: RowModel<TData>) {
+  const expandedRows: RowInterface<TData>[] = [];
+
+  const handleRow = (row: RowInterface<TData>) => {
+    expandedRows.push(row);
+
+    if (row.subRows?.length && row.getIsExpanded()) {
+      handleRow({
+        ...row,
+        id: `${row.id}.0`,
+        parentId: row.id,
+        index: 0,
+        depth: 1,
+        getIsExpanded: () => false,
+        original: { ...row.original, id: `${row.original.id}_0`, _EXPANDED_ROW: true },
+      });
+    }
+  };
+
+  rowModel.rows.forEach(handleRow);
+
+  return {
+    rows: expandedRows,
+    flatRows: rowModel.flatRows,
+    rowsById: rowModel.rowsById,
+  };
+}

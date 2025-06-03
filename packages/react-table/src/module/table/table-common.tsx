@@ -20,6 +20,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   onDoubleClickRow:
     | ((row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void)
     | undefined;
+  rowRender: ((row: RowInterface<RowData>) => React.JSX.Element | null | undefined) | undefined;
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
   headerRowClassName:
     | ((header: HeaderInterface<RowData>) => string | undefined)
@@ -91,21 +92,26 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         {props.rowVirtualEnabled &&
           props.rowsVirtual.map((virtualRow) => {
             const selected = props.rows[virtualRow.index]?.getIsSelected?.();
+            const row = props.rows[virtualRow.index];
+            const expanded = row.getIsExpanded();
+            const CustomRow = props.rowRender?.(row);
 
             return (
               <TableRow<RowData>
                 virtualRow={virtualRow}
+                key={`${virtualRow.index}-row`}
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={props.columnsVirtual}
                 rowClassName={props.rowClassName}
                 rows={props.rows}
-                key={`${virtualRow.index}-row`}
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
                 rowVirtualizer={props.rowVirtualizer}
                 totalWidth={props.table.getTotalSize()}
                 row={null}
                 selected={selected}
+                expanded={expanded}
+                CustomRow={CustomRow}
               />
             );
           })}
@@ -115,14 +121,16 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         {!props.rowVirtualEnabled &&
           props.rows.map((row) => {
             const selected = row.getIsSelected();
+            const expanded = row.getIsExpanded();
+            const CustomRow = props.rowRender?.(row);
 
             return (
               <TableRow<RowData>
+                key={`${row.id}-row`}
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={props.columnsVirtual}
                 row={row}
                 rowClassName={props.rowClassName}
-                key={`${row.id}-row`}
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
                 totalWidth={props.table.getTotalSize()}
@@ -130,6 +138,8 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 rows={props.rows}
                 virtualRow={null}
                 selected={selected}
+                expanded={expanded}
+                CustomRow={CustomRow}
               />
             );
           })}

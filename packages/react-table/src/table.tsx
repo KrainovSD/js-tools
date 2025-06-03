@@ -10,6 +10,7 @@ import type {
   GanttProps,
   HeaderInterface,
   RowInterface,
+  RowModel,
   TableColumnsSettings,
   TableInterface,
   TableRenderers,
@@ -105,6 +106,8 @@ export type TableProps<
     rootRef?: React.MutableRefObject<HTMLDivElement | null>;
     headerRowClassName?: ((header: HeaderInterface<RowData>) => string | undefined) | string;
     rowClassName?: ((row: RowInterface<RowData>) => string | undefined) | string;
+    rowRender?: (row: RowInterface<RowData>) => React.JSX.Element | null | undefined;
+    getExpandedRowModel?: () => (table: TableInterface<RowData>) => () => RowModel<RowData>;
   } & GanttProps<RowData, GanttData>;
 
 export function Table<
@@ -228,6 +231,7 @@ export function Table<
               rowClassName={props.rowClassName}
               headerRowClassName={props.headerRowClassName}
               Empty={props.Empty}
+              rowRender={props.rowRender}
             />
           </div>
         )}

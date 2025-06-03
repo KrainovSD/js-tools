@@ -12,11 +12,11 @@ import React from "react";
 import { Table } from "../table";
 import type { RowInterface, TableColumn } from "../types";
 import styles from "./app.module.scss";
-import { type Row, columns, createRows } from "./lib";
+import { type Row, columns, createRows, getExpandedRowModel } from "./lib";
 import { type RowGantt, columnsGantt, createRowsGantt } from "./lib-gantt";
 
 const withGantt: true | false = false;
-const rows: Row[] = createRows();
+const rowsCommon: Row[] = createRows();
 const rowsGantt: RowGantt[] = createRowsGantt();
 
 type CurrentRow = typeof withGantt extends true ? RowGantt : Row;
@@ -135,7 +135,7 @@ export function App() {
               SortTypeKeys
             >[]
           }
-          rows={(withGantt ? rowsGantt : rows) as CurrentRow[]}
+          rows={(withGantt ? rowsGantt : rowsCommon) as CurrentRow[]}
           // rows={[]}
           Empty={() => <span>Empty</span>}
           // rows={[{ end: "", id: "", name: "", start: "", children: [], dependents: [] }]}
@@ -150,10 +150,29 @@ export function App() {
           onClickRow={onClick}
           onDoubleClickRow={onDoubleClick}
           pageSizes={[25, 50, 100, 150, 250, 500]}
+          getExpandedRowModel={getExpandedRowModel}
           withFilters={true}
+          rowRender={(row) => {
+            // eslint-disable-next-line no-underscore-dangle
+            if (!row.original._EXPANDED_ROW) return null;
+
+            return (
+              <td style={{ width: "100%" }}>
+                <Table
+                  columns={columns.toSpliced(0, 1).toSpliced(4)}
+                  rows={row.original.children ?? []}
+                  fullSize={false}
+                  withFilters={false}
+                  withTotal={false}
+                  withPagination={false}
+                  className={styles.inner}
+                />
+              </td>
+            );
+          }}
           virtualRows={true}
           virtualRowSize={69}
-          virtualColumn={true}
+          virtualColumn={false}
           fullSize={true}
           loading={false}
           withGantt={withGantt}
@@ -186,7 +205,7 @@ export function App() {
           onColumnVisibilityChange={setColumnsVisibility}
           expanded={expanded}
           onExpandedChange={setExpanded}
-          rowClassName={styles.row}
+          // rowClassName={styles.row}
           headerRowClassName={styles.headerRow}
         />
       </div>

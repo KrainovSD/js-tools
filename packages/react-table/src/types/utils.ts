@@ -4,6 +4,7 @@ import type {
   ColumnSort as ColumnSortLib,
   HeaderContext as HeaderContextLib,
   PaginationState as PaginationStateLib,
+  RowModel as RowModelLib,
 } from "@tanstack/react-table";
 import type { RowInterface, TableInterface } from "./table";
 
@@ -12,6 +13,7 @@ export type TableTypesGetter<RowData extends Record<string, unknown>> = {
   cellContext: CellContextLib<RowData, unknown>;
   row: RowInterface<RowData>;
   table: TableInterface<RowData>;
+  rowModel: RowModelLib<RowData>;
   filterFn: (row: RowInterface<RowData>, columnId: string, filterValue: unknown) => boolean;
   sortFn: (rowA: RowInterface<RowData>, rowB: RowInterface<RowData>, columnId: string) => number;
 };
@@ -31,6 +33,7 @@ export type SortFn<RowData extends Record<string, unknown>> = (
   rowB: RowInterface<RowData>,
   columnId: string,
 ) => number;
+export type RowModel<RowData extends Record<string, unknown>> = RowModelLib<RowData>;
 
 export type ColumnSort = ColumnSortLib;
 export type ColumnFilter = ColumnFilterLib;
