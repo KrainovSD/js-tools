@@ -113,7 +113,7 @@ export const columns: TableColumn<Row, "test">[] = [
     cellClass: ["common", "empty", "lineClamp"],
     cellRender: "tag",
     cellRenderProps: {
-      autoTooltip: false,
+      autoTooltip: true,
     },
   },
   {

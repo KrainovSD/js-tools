@@ -5,6 +5,7 @@ import type { PresetColorType } from "antd/es/theme/internal";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 import type React from "react";
+import type { RowInterface } from "../../../types";
 import { useVisibleCell } from "../hooks/use-visible-cell";
 import { getData } from "../lib";
 import styles from "./cell-renders.module.scss";
@@ -307,6 +308,26 @@ export type SelectCellRenderProps<RowData extends Record<string, unknown>> = {
   className?: ((context: CellContext<RowData, unknown>) => string) | string;
 };
 
+function collectNumberRecursively<Row extends Record<string, unknown>>(
+  context: CellContext<Row, unknown>,
+  row: RowInterface<Row>,
+) {
+  let number: number[] = [];
+
+  if (row.parentId != undefined) {
+    const parent = context.table.getRow(row.parentId);
+    if (parent != undefined) {
+      const parentNumber = parent.index + 1;
+      number.push(parentNumber);
+
+      const deepParentNumber = collectNumberRecursively(context, parent);
+      number = deepParentNumber.concat(number);
+    }
+  }
+
+  return number;
+}
+
 export function SelectCellRender<Row extends Record<string, unknown>>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
@@ -316,12 +337,13 @@ export function SelectCellRender<Row extends Record<string, unknown>>(props: {
   const { isVisible, extraPadding } = useVisibleCell(props.context);
   const Check = cellRenderProps?.Check ?? CheckBox;
 
-  const number = cellRenderProps?.hover
-    ? props.context.row.id
-        .split(".")
-        .map((id) => +id + 1)
-        .join(".")
-    : 0;
+  let number: string | number = cellRenderProps?.hover ? props.context.row.index + 1 : 0;
+
+  if (props.context.row.parentId != undefined) {
+    const parentNumbers = collectNumberRecursively(props.context, props.context.row);
+    parentNumbers.push(number);
+    number = parentNumbers.join(".");
+  }
 
   const checked = props.context.row.getIsSelected();
   const hover = !checked && cellRenderProps?.hover;

@@ -12,7 +12,7 @@ import React from "react";
 import { Table } from "../table";
 import type { RowInterface, TableColumn } from "../types";
 import styles from "./app.module.scss";
-import { type Row, columns, createRows, getExpandedRowModel } from "./lib";
+import { type Row, columns, createRows } from "./lib";
 import { type RowGantt, columnsGantt, createRowsGantt } from "./lib-gantt";
 
 const withGantt: true | false = false;
@@ -150,7 +150,7 @@ export function App() {
           onClickRow={onClick}
           onDoubleClickRow={onDoubleClick}
           pageSizes={[25, 50, 100, 150, 250, 500]}
-          getExpandedRowModel={getExpandedRowModel}
+          // getExpandedRowModel={getExpandedRowModel}
           withFilters={true}
           rowRender={(row) => {
             // eslint-disable-next-line no-underscore-dangle
@@ -181,6 +181,7 @@ export function App() {
           onColumnOrderChange={!withGantt ? setTableColumns : undefined}
           rowSelection={rowSelection}
           onRowSelectionChange={setRowSelection}
+          getRowId={(row) => row.id}
           // ganttInfoGetter={
           //   withGantt
           //     ? (row) => ({
