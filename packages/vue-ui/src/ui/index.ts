@@ -8,11 +8,13 @@ import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
 import VPassword from "./Password.vue";
+import VPositioner from "./Positioner.vue";
 import VRadio from "./Radio.vue";
 import VRadioButton from "./RadioButton.vue";
 import VRadioGroup from "./RadioGroup.vue";
 import VSlider from "./Slider.vue";
 import VText from "./Text.vue";
+import VTooltip from "./Tooltip.vue";
 
 export type { InputProps } from "./Input.vue";
 export type { ButtonProps } from "./Button.vue";
@@ -28,6 +30,8 @@ export type { RadioProps, RadioValue } from "./Radio.vue";
 export type { RadioGroupProps, RadioOption } from "./RadioGroup.vue";
 export type { RadioButtonProps } from "./RadioButton.vue";
 export type { SlideProps } from "./Slider.vue";
+export type { TooltipProps } from "./Tooltip.vue";
+export type { PositionerProps } from "./Positioner.vue";
 
 export {
   VButton,
@@ -45,4 +49,6 @@ export {
   VRadioGroup,
   VRadioButton,
   VSlider,
+  VTooltip,
+  VPositioner,
 };

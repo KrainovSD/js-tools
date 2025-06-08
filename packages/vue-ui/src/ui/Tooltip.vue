@@ -1,0 +1,175 @@
+<script setup lang="ts">
+  import { type PositionPlacements, startWith } from "@krainovsd/js-helpers";
+  import { computed, ref, shallowRef, useTemplateRef, watchEffect } from "vue";
+  import Positioner, { type PositionerTargetNodePosition } from "./Positioner.vue";
+
+  export type TooltipProps = {
+    text: string | number;
+    openByFocus?: boolean;
+    openByHover?: boolean;
+    openByClick?: boolean;
+    openNotVisible?: boolean;
+    openAboveCursor?: boolean;
+    stickyCursor?: boolean;
+    observe?: boolean;
+    openDelay?: number;
+    closeDelay?: number;
+    zIndex?: number;
+    placement?: Exclude<PositionPlacements, "flex">;
+    modalRoot?: string | HTMLElement | null;
+  };
+
+  defineOptions({
+    inheritAttrs: false,
+  });
+
+  const props = defineProps<TooltipProps>();
+  const elementRef = useTemplateRef("tooltip");
+  const positionerRef = useTemplateRef("positioner");
+  const content = computed(() => elementRef.value?.nextElementSibling as HTMLElement | undefined);
+  const shiftY = computed(() =>
+    props.placement
+      ? startWith(props.placement, "top")
+        ? 16
+        : startWith(props.placement, "bottom")
+          ? 16
+          : 0
+      : 16,
+  );
+  const shiftX = computed(() =>
+    props.placement
+      ? startWith(props.placement, "left")
+        ? 16
+        : startWith(props.placement, "right")
+          ? 16
+          : 0
+      : 16,
+  );
+  const open = ref(false);
+  const openTimer = ref<NodeJS.Timeout | null>(null);
+  const closeTimer = ref<NodeJS.Timeout | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+  const cursorPosition = shallowRef<PositionerTargetNodePosition | null>(null);
+
+  watchEffect((clean) => {
+    if (!content.value) return;
+
+    const eventController = new AbortController();
+
+    function getPlacement(event: MouseEvent | FocusEvent) {
+      const target = event.target as HTMLElement;
+
+      if (props.openNotVisible) {
+        if (target.scrollWidth <= target.clientWidth && target.scrollHeight <= target.clientHeight)
+          return;
+      }
+      if ((props.openAboveCursor || props.stickyCursor) && "clientX" in event) {
+        const { x, y, height, width } = target.getBoundingClientRect();
+
+        const orientation = props.placement
+          ? startWith(props.placement, "bottom") || startWith(props.placement, "top")
+            ? "y"
+            : "x"
+          : "y";
+
+        cursorPosition.value = {
+          width: orientation === "x" ? width : 1,
+          height: orientation === "y" ? height : 1,
+          x: orientation === "x" ? x : event.clientX,
+          y: orientation === "y" ? y : event.clientY,
+        };
+      }
+    }
+
+    function onAppear(event: MouseEvent | FocusEvent) {
+      if (closeTimer.value != undefined) {
+        clearTimeout(closeTimer.value);
+      }
+
+      openTimer.value = setTimeout(() => {
+        getPlacement(event);
+        open.value = true;
+      }, props.openDelay);
+    }
+
+    function onDisAppear() {
+      if (openTimer.value) {
+        clearTimeout(openTimer.value);
+      }
+
+      closeTimer.value = setTimeout(() => {
+        open.value = false;
+
+        if (props.openAboveCursor) {
+          cursorPosition.value = null;
+        }
+      }, props.closeDelay);
+    }
+
+    if (props.openByHover != undefined && !props.openByHover) {
+      content.value.addEventListener("mouseenter", onAppear, { signal: eventController.signal });
+      content.value.addEventListener("mouseleave", onDisAppear, { signal: eventController.signal });
+      if (props.stickyCursor) {
+        content.value.addEventListener("mousemove", getPlacement, {
+          signal: eventController.signal,
+        });
+      }
+    }
+    if (props.openByFocus) {
+      content.value.addEventListener("focus", onAppear, { signal: eventController.signal });
+      content.value.addEventListener("blur", onDisAppear, { signal: eventController.signal });
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        positionerRef.value?.updatePosition?.();
+      });
+    });
+
+    if (props.observe) {
+      observer.observe(content.value, {
+        subtree: false,
+        attributes: true,
+        attributeFilter: ["style"],
+      });
+    }
+
+    clean(() => {
+      eventController.abort();
+      observer.disconnect();
+    });
+  });
+</script>
+
+<template>
+  <span ref="tooltip" class="ksd-tooltip"></span>
+  <slot ref="slot"></slot>
+  <Positioner
+    v-if="open"
+    ref="positioner"
+    arrow
+    :target="cursorPosition != undefined ? cursorPosition : content"
+    class-name="ksd-tooltip__positioner"
+    v-bind="$attrs"
+    :modal-root="props.modalRoot"
+    :placement="props.placement"
+    :shift-x="shiftX"
+    :shift-y="shiftY"
+    >{{ $props.text }}</Positioner
+  >
+</template>
+
+<style lang="scss">
+  .ksd-tooltip {
+    &__positioner {
+      background-color: var(--ksd-bg-reverse-color);
+      min-width: calc(var(--ksd-border-radius) * 2 + 16);
+      min-height: var(--ksd-control-height);
+      padding: calc(var(--ksd-padding-sm) / 2) var(--ksd-padding-xs);
+      word-break: break-word;
+      max-width: 250px;
+      overflow: hidden;
+      max-height: 350px;
+    }
+  }
+</style>

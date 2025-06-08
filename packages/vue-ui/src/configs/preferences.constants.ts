@@ -8,7 +8,7 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-transition-mid": "0.2s",
         "ksd-transition-slow": "0.3s",
       },
-      controlHeight: {
+      sizes: {
         "ksd-control-height-sm": "24px",
         "ksd-control-height": "32px",
         "ksd-control-height-lg": "40px",
@@ -69,6 +69,9 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-font-size-lg": "16px",
         "ksd-font-size-xl": "20px",
       },
+      other: {
+        "ksd-popup-z-index": "10",
+      },
       colors: {
         "ksd-bg-color": "#edeef0",
         "ksd-bg-container-color": "#ffffff",
@@ -81,6 +84,7 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-bg-disabled-color": "rgba(0, 0, 0, 0.04)",
         "ksd-bg-hover-color": "rgba(0, 0, 0, 0.06)",
         "ksd-bg-active-color": "rgba(0, 0, 0, 0.15)",
+        "ksd-bg-reverse-color": "rgba(0, 0, 0, 0.85)",
         "ksd-text-main-color": "#262626",
         "ksd-text-main-disabled-color": "rgba(0, 0, 0, 0.25)",
         "ksd-text-main-hover-color": "",

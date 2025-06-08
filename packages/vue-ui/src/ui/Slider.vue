@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { isArray, isNumber } from "@krainovsd/js-helpers";
-  import { computed, ref, useTemplateRef } from "vue";
+  import { computed, ref, useTemplateRef, watchEffect } from "vue";
   import { findClosestNumber } from "../lib";
+  import Tooltip from "./Tooltip.vue";
 
   export type SlideProps = {
     min?: number;
@@ -51,27 +52,25 @@
   const maxHandle = computed(() => (maxValue.value * 100) / difference.value);
 
   const trackStyles = computed(() => ({
-    left: `${minHandle.value}%`,
-    width: `${maxHandle.value - minHandle.value}%`,
+    left: !props.vertical ? `${minHandle.value}%` : undefined,
+    bottom: props.vertical ? `${minHandle.value}%` : undefined,
+    width: !props.vertical ? `${maxHandle.value - minHandle.value}%` : undefined,
+    height: props.vertical ? `${maxHandle.value - minHandle.value}%` : undefined,
   }));
-  const minHandleStyles = computed(() => ({ left: `${minHandle.value}%` }));
+  const minHandleStyles = computed(() => ({
+    left: !props.vertical ? `${minHandle.value}%` : undefined,
+    bottom: props.vertical ? `${minHandle.value}%` : undefined,
+    top: props.vertical ? "auto" : undefined,
+  }));
   const maxHandleStyles = computed(() => ({
-    left: `${maxHandle.value}%`,
+    left: !props.vertical ? `${maxHandle.value}%` : undefined,
+    bottom: props.vertical ? `${maxHandle.value}%` : undefined,
+    top: props.vertical ? "auto" : undefined,
   }));
 
   const controller = ref<AbortController | null>(null);
 
-  function updateValue(clientX: number, clientY: number) {
-    if (!elementRef.value) return;
-
-    const rect = elementRef.value.getBoundingClientRect();
-    let position = clientX - rect.left;
-    position = Math.max(0, Math.min(position, rect.width));
-
-    const shiftPercent = position / rect.width;
-    const value =
-      Math.round((min.value + shiftPercent * difference.value) / step.value) * step.value;
-
+  function updateValue(value: number) {
     if (props.range && isArray(model.value)) {
       const closestIndex = findClosestNumber(model.value, value);
       if (closestIndex < model.value.length) {
@@ -96,13 +95,51 @@
     }
   }
 
-  function processingDrag(event: MouseEvent | PointerEvent) {
-    updateValue(event.clientX, event.clientY);
+  function processingValue(clientX: number, clientY: number) {
+    if (!elementRef.value) return;
+
+    const rect = elementRef.value.getBoundingClientRect();
+    const size = props.vertical ? rect.height : rect.width;
+    let position = props.vertical ? rect.bottom - clientY : clientX - rect.left;
+
+    position = Math.max(0, Math.min(position, size));
+
+    const shiftPercent = position / size;
+    const value =
+      Math.round((min.value + shiftPercent * difference.value) / step.value) * step.value;
+
+    updateValue(value);
   }
+
+  function processingDrag(event: MouseEvent | PointerEvent) {
+    processingValue(event.clientX, event.clientY);
+  }
+
   function endDrag() {
     if (controller.value) {
       controller.value.abort();
       controller.value = null;
+    }
+  }
+
+  function keyDown(event: KeyboardEvent) {
+    const target = event.target as HTMLElement;
+    const value = target.getAttribute("area-valuenow");
+    const numberValue = value != undefined ? +value : undefined;
+
+    if (Number.isNaN(numberValue) || numberValue == undefined || props.disabled) return;
+
+    if (
+      (!props.vertical && event.key === "ArrowLeft") ||
+      (props.vertical && event.key === "ArrowDown")
+    ) {
+      updateValue(Math.max(min.value, Math.min(numberValue - step.value, max.value)));
+    }
+    if (
+      (!props.vertical && event.key === "ArrowRight") ||
+      (props.vertical && event.key === "ArrowUp")
+    ) {
+      updateValue(Math.max(min.value, Math.min(numberValue + step.value, max.value)));
     }
   }
 
@@ -123,8 +160,18 @@
     document.addEventListener("pointermove", processingDrag, { signal: eventController.signal });
     document.addEventListener("pointerup", endDrag, { signal: eventController.signal });
 
-    updateValue(event.clientX, event.clientY);
+    processingValue(event.clientX, event.clientY);
   }
+
+  watchEffect((clean) => {
+    const eventController = new AbortController();
+    maxHandleRef.value?.addEventListener?.("keydown", keyDown, { signal: eventController.signal });
+    minHandleRef.value?.addEventListener?.("keydown", keyDown, { signal: eventController.signal });
+
+    clean(() => {
+      eventController.abort();
+    });
+  });
 
   defineExpose({ element: elementRef });
 </script>
@@ -139,33 +186,47 @@
   >
     <div class="ksd-slider__rail" :class="commonClasses"></div>
     <div class="ksd-slider__track" :class="commonClasses" :style="trackStyles"></div>
-    <div
-      v-if="$props.range"
-      ref="min-handle"
-      class="ksd-slider__handle"
-      role="slider"
-      tabindex="0"
-      :aria-valuemin="min"
-      :aria-valuemax="max"
-      :area-orientation="$props.vertical ? 'vertical' : 'horizontal'"
-      :area-valuenow="minValue"
-      :area-disabled="$props.disabled"
-      :class="commonClasses"
-      :style="minHandleStyles"
-    ></div>
-    <div
-      ref="max-handle"
-      class="ksd-slider__handle"
-      role="slider"
-      tabindex="0"
-      :aria-valuemin="min"
-      :aria-valuemax="max"
-      :area-orientation="$props.vertical ? 'vertical' : 'horizontal'"
-      :area-valuenow="maxValue"
-      :area-disabled="$props.disabled"
-      :class="commonClasses"
-      :style="maxHandleStyles"
-    ></div>
+    <Tooltip
+      :text="minValue"
+      :placement="$props.vertical ? 'right-center' : 'top-center'"
+      observe
+      open-by-focus
+    >
+      <div
+        v-if="$props.range"
+        ref="min-handle"
+        class="ksd-slider__handle"
+        role="slider"
+        tabindex="0"
+        :aria-valuemin="min"
+        :aria-valuemax="max"
+        :area-orientation="$props.vertical ? 'vertical' : 'horizontal'"
+        :area-valuenow="minValue"
+        :area-disabled="$props.disabled"
+        :class="commonClasses"
+        :style="minHandleStyles"
+      ></div>
+    </Tooltip>
+    <Tooltip
+      :text="maxValue"
+      :placement="$props.vertical ? 'right-center' : 'top-center'"
+      observe
+      open-by-focus
+    >
+      <div
+        ref="max-handle"
+        class="ksd-slider__handle"
+        role="slider"
+        tabindex="0"
+        :aria-valuemin="min"
+        :aria-valuemax="max"
+        :area-orientation="$props.vertical ? 'vertical' : 'horizontal'"
+        :area-valuenow="maxValue"
+        :area-disabled="$props.disabled"
+        :class="commonClasses"
+        :style="maxHandleStyles"
+      ></div
+    ></Tooltip>
   </div>
 </template>
 
@@ -198,6 +259,12 @@
       height: calc(var(--ksd-slider-rail-size) * 3);
     }
 
+    &.vertical {
+      padding-inline: var(--ksd-slider-rail-size);
+      width: calc(var(--ksd-slider-rail-size) * 3);
+      height: 100%;
+    }
+
     &__rail {
       position: absolute;
       background-color: var(--ksd-slider-rail-bg);
@@ -207,6 +274,11 @@
       &.horizontal {
         width: 100%;
         height: var(--ksd-slider-rail-size);
+      }
+
+      &.vertical {
+        height: 100%;
+        width: var(--ksd-slider-rail-size);
       }
     }
 
@@ -218,6 +290,10 @@
 
       &.horizontal {
         height: var(--ksd-slider-rail-size);
+      }
+
+      &.vertical {
+        width: var(--ksd-slider-rail-size);
       }
 
       &.disabled {
@@ -320,6 +396,13 @@
 
       &.horizontal {
         transform: translateX(-50%);
+      }
+
+      &.vertical {
+        transform: translateY(50%);
+        inset-inline-start: calc(
+          (var(--ksd-slider-rail-size) * 3 - var(--ksd-slider-handle-size)) / 2
+        );
       }
     }
   }

@@ -5,7 +5,9 @@ export type ThemeTransitionVariable =
   | "ksd-transition-mid"
   | "ksd-transition-slow";
 
-export type ThemeControlHeight =
+export type ThemeOther = "ksd-popup-z-index";
+
+export type ThemeSizes =
   | "ksd-control-height"
   | "ksd-control-height-sm"
   | "ksd-control-height-lg"
@@ -69,6 +71,7 @@ export type ThemeColorVariable =
   | "ksd-bg-hover-color"
   | "ksd-bg-active-color"
   | "ksd-bg-disabled-color"
+  | "ksd-bg-reverse-color"
   | "ksd-text-main-color"
   | "ksd-text-main-disabled-color"
   | "ksd-text-main-hover-color"
@@ -170,7 +173,8 @@ export type ThemeVariableConfig = {
     padding: Record<ThemePaddingVariable, string>;
     margin: Record<ThemeMarginVariable, string>;
     colors: Record<ThemeColorVariable, string>;
-    controlHeight: Record<ThemeControlHeight, string>;
+    sizes: Record<ThemeSizes, string>;
+    other: Record<ThemeOther, string>;
   };
   components: {
     collapse: Record<ThemeCollapseVariable, string>;

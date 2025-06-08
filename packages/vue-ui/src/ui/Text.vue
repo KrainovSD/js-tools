@@ -5,6 +5,7 @@
     ellipsis?: boolean;
     nowrap?: boolean;
     rows?: number;
+    fit?: boolean;
     weight?: number | string;
     size?: number | "sm" | "lg" | "xl";
     italic?: boolean;
@@ -27,6 +28,7 @@
     underline: props.underline,
     [`type-${props.type ?? "default"}`]: true,
     disabled: props.disabled,
+    fit: props.fit,
   }));
   const componentStyles = computed(() => ({
     "-webkit-line-clamp": props.rows,
@@ -64,6 +66,10 @@
       align-self: stretch;
       display: -webkit-box;
       overflow: hidden;
+    }
+
+    &.fit {
+      width: fit-content;
     }
 
     &.size-default {
