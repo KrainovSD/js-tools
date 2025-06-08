@@ -75,6 +75,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   cells={cells}
                   semanticTag
                   columnPosition={index + 1}
+                  selected={props.selected}
                 />
               );
             })}
@@ -90,6 +91,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   index={virtualColumn.index}
                   cells={centerVisibleCells}
                   semanticTag
+                  selected={props.selected}
                   columnPosition={leftVisibleCells.length + virtualColumn.index + 1}
                 />
               );
@@ -105,6 +107,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   cells={cells}
                   semanticTag
                   columnPosition={leftVisibleCells.length + centerVisibleCells.length + index + 1}
+                  selected={props.selected}
                 />
               );
             })}
@@ -123,6 +126,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                 cells={cells}
                 semanticTag
                 columnPosition={index + 1}
+                selected={props.selected}
               />
             );
           })}

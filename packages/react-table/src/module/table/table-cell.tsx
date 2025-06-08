@@ -11,6 +11,7 @@ type Props<RowData extends Record<string, unknown>> = {
   cells: Cell<RowData, unknown>[];
   virtualLeft?: number;
   semanticTag?: boolean;
+  selected: boolean;
 };
 
 export const TableCell = React.memo(function TableCell<RowData extends Record<string, unknown>>(

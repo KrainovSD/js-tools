@@ -75,6 +75,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
                   index={index}
                   cells={cells}
                   columnPosition={index + 1}
+                  selected={props.selected}
                 />
               );
             })}
@@ -90,6 +91,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
                   index={virtualColumn.index}
                   cells={centerVisibleCells}
                   columnPosition={leftVisibleCells.length + virtualColumn.index + 1}
+                  selected={props.selected}
                 />
               );
             })}
@@ -103,6 +105,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
                   index={index}
                   cells={cells}
                   columnPosition={leftVisibleCells.length + centerVisibleCells.length + index + 1}
+                  selected={props.selected}
                 />
               );
             })}
@@ -119,6 +122,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
                 index={index}
                 cells={cells}
                 columnPosition={index + 1}
+                selected={props.selected}
               />
             );
           })}
