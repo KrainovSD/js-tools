@@ -34,7 +34,7 @@ export function linkHighlight<
 
   if (opts.arrow && opts.arrowByHighlight) {
     /** Highlighted */
-    arrowAlpha = animationByProgress(0, opts.linkOptions.arrowAlpha, opts.highlightProgress);
+    arrowAlpha = 1;
   }
 
   if (opts.highlightForLinkColor) {
