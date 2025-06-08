@@ -31,7 +31,10 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
   const row = props.virtualRow ? props.rows[props.virtualRow.index] : props.row;
 
   if (!row) return;
+  const leftVisibleCells = row.getLeftVisibleCells();
   const centerVisibleCells = row.getCenterVisibleCells();
+  const rightVisibleCells = row.getRightVisibleCells();
+  const visibleCells = row.getVisibleCells();
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -56,18 +59,27 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
         transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
         minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
         maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
+        gridTemplateColumns: visibleCells.map((cell) => `${cell.column.getSize()}px`).join(" "),
       }}
     >
       <>
         {props.columnVirtualEnabled && (
           <>
-            {row.getLeftVisibleCells().map((cell, index, cells) => {
-              /** CELL */
+            {leftVisibleCells.map((cell, index, cells) => {
+              /** LEFT CELL */
 
-              return <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} />;
+              return (
+                <TableCell
+                  key={`${cell.id}-cell`}
+                  cell={cell}
+                  index={index}
+                  cells={cells}
+                  columnPosition={index + 1}
+                />
+              );
             })}
             {props.columnsVirtual.map((virtualColumn) => {
-              /** CELL */
+              /** CENTER CELL */
 
               const cell = centerVisibleCells[virtualColumn.index];
 
@@ -77,15 +89,22 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
                   cell={cell}
                   index={virtualColumn.index}
                   cells={centerVisibleCells}
-                  virtualLeft={virtualColumn.start}
+                  columnPosition={leftVisibleCells.length + virtualColumn.index + 1}
                 />
               );
             })}
-            {row.getRightVisibleCells().length > 0 && <div className={styles.ghost}></div>}
-            {row.getRightVisibleCells().map((cell, index, cells) => {
-              /** CELL */
+            {rightVisibleCells.map((cell, index, cells) => {
+              /** RIGHT CELL */
 
-              return <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} />;
+              return (
+                <TableCell
+                  key={`${cell.id}-cell`}
+                  cell={cell}
+                  index={index}
+                  cells={cells}
+                  columnPosition={leftVisibleCells.length + centerVisibleCells.length + index + 1}
+                />
+              );
             })}
           </>
         )}
@@ -93,7 +112,15 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
           row.getVisibleCells().map((cell, index, cells) => {
             /** CELL */
 
-            return <TableCell key={`${cell.id}-cell`} cell={cell} index={index} cells={cells} />;
+            return (
+              <TableCell
+                key={`${cell.id}-cell`}
+                cell={cell}
+                index={index}
+                cells={cells}
+                columnPosition={index + 1}
+              />
+            );
           })}
       </>
     </div>

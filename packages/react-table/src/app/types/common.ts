@@ -1,0 +1,58 @@
+export type CommonRow = {
+  id: string;
+  country: string;
+  firstName: string;
+  lastName: string;
+  description?: string;
+  date: string;
+  colors: string[];
+  age: number;
+  year: number;
+  sport: string;
+  checked: boolean;
+  children?: CommonRow[];
+  _EXPANDED_ROW?: boolean;
+};
+
+export type CommonRowVirtual = Omit<CommonRow, "children"> & {
+  wide1: number;
+  wide2: number;
+  wide3: number;
+  wide4: number;
+  wide5: number;
+  wide6: number;
+  wide7: number;
+  wide8: number;
+  wide9: number;
+  wide10: number;
+  wide11: number;
+  wide12: number;
+  wide13: number;
+  wide14: number;
+  wide15: number;
+  wide16: number;
+  wide17: number;
+  wide18: number;
+  wide19: number;
+  wide20: number;
+  wide21: number;
+  wide22: number;
+  wide23: number;
+  wide24: number;
+  wide25: number;
+  wide26: number;
+  wide27: number;
+  wide28: number;
+  wide29: number;
+  wide30: number;
+  children: CommonRowVirtual[];
+};
+
+export type CellRenderKeys = "test";
+export type HeaderRenderKeys = undefined;
+export type FilterRenderKeys = undefined;
+export type SortRenderKeys = undefined;
+export type CellClassKeys = undefined;
+export type HeaderClassKeys = undefined;
+export type FilterTypeKeys = undefined;
+export type SortTypeKeys = undefined;

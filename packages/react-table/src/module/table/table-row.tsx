@@ -31,7 +31,10 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
   const row = props.virtualRow ? props.rows[props.virtualRow.index] : props.row;
 
   if (!row) return;
+  const leftVisibleCells = row.getLeftVisibleCells();
   const centerVisibleCells = row.getCenterVisibleCells();
+  const rightVisibleCells = row.getRightVisibleCells();
+  const visibleCells = row.getVisibleCells();
 
   /** ROW */
   return (
@@ -49,6 +52,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       style={{
         transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
         width: props.totalWidth,
+        gridTemplateColumns: visibleCells.map((cell) => `${cell.column.getSize()}px`).join(" "),
       }}
       onClick={(event) => {
         props.onClickRow?.(row, event);
@@ -60,8 +64,8 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       <>
         {props.columnVirtualEnabled && !props.CustomRow && (
           <>
-            {row.getLeftVisibleCells().map((cell, index, cells) => {
-              /** CELL */
+            {leftVisibleCells.map((cell, index, cells) => {
+              /** LEFT CELL */
 
               return (
                 <TableCell
@@ -70,11 +74,12 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   index={index}
                   cells={cells}
                   semanticTag
+                  columnPosition={index + 1}
                 />
               );
             })}
             {props.columnsVirtual.map((virtualColumn) => {
-              /** CELL */
+              /** CENTER CELL */
 
               const cell = centerVisibleCells[virtualColumn.index];
 
@@ -84,14 +89,13 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   cell={cell}
                   index={virtualColumn.index}
                   cells={centerVisibleCells}
-                  virtualLeft={virtualColumn.start}
                   semanticTag
+                  columnPosition={leftVisibleCells.length + virtualColumn.index + 1}
                 />
               );
             })}
-            {row.getRightVisibleCells().length > 0 && <div className={styles.ghost}></div>}
-            {row.getRightVisibleCells().map((cell, index, cells) => {
-              /** CELL */
+            {rightVisibleCells.map((cell, index, cells) => {
+              /** RIGHT CELL */
 
               return (
                 <TableCell
@@ -100,6 +104,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   index={index}
                   cells={cells}
                   semanticTag
+                  columnPosition={leftVisibleCells.length + centerVisibleCells.length + index + 1}
                 />
               );
             })}
@@ -107,7 +112,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
         )}
         {!props.columnVirtualEnabled &&
           !props.CustomRow &&
-          row.getVisibleCells().map((cell, index, cells) => {
+          visibleCells.map((cell, index, cells) => {
             /** CELL */
 
             return (
@@ -117,6 +122,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                 index={index}
                 cells={cells}
                 semanticTag
+                columnPosition={index + 1}
               />
             );
           })}

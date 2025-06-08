@@ -1,17 +1,21 @@
 import type { Cell } from "@tanstack/react-table";
 import clsx from "clsx";
+import React from "react";
 import { getPrevFrozenWidthCell } from "./lib";
 import styles from "./table-cell.module.scss";
 
 type Props<RowData extends Record<string, unknown>> = {
   cell: Cell<RowData, unknown>;
   index: number;
+  columnPosition: number;
   cells: Cell<RowData, unknown>[];
   virtualLeft?: number;
   semanticTag?: boolean;
 };
 
-export function TableCell<RowData extends Record<string, unknown>>(props: Props<RowData>) {
+export const TableCell = React.memo(function TableCell<RowData extends Record<string, unknown>>(
+  props: Props<RowData>,
+) {
   const cellContext = props.cell.getContext();
   const cellClass = props.cell.column.columnDef.cellClass;
   const cellClasses = cellClass.map((style) =>
@@ -51,12 +55,11 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
           cellClasses,
         )}
         style={{
-          width: props.cell.column.getSize(),
-          maxWidth: props.cell.column.getSize(),
-          minWidth: props.cell.column.getSize(),
-          left: frozenPosition === "left" ? prevFrozen : (props.virtualLeft ?? 0),
-          right: frozenPosition === "right" ? prevFrozen : 0,
-          position: props.virtualLeft ? "absolute" : undefined,
+          // left: frozenPosition === "left" ? prevFrozen : (props.virtualLeft ?? 0),
+          // right: frozenPosition === "right" ? prevFrozen : 0,
+          // position: props.virtualLeft ? "absolute" : undefined,
+          display: "block",
+          gridColumnStart: props.columnPosition,
         }}
       >
         {isGroupCell && Expander && <Expander context={cellContext} />}
@@ -96,4 +99,4 @@ export function TableCell<RowData extends Record<string, unknown>>(props: Props<
       <CellRender context={cellContext} />
     </div>
   );
-}
+}) as <RowData extends Record<string, unknown>>(props: Props<RowData>) => React.JSX.Element;
