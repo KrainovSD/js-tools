@@ -9,8 +9,7 @@ import styles from "./table-common-gantt-row.module.scss";
 type Props<RowData extends Record<string, unknown>> = {
   rows: RowInterface<RowData>[];
   row: RowInterface<RowData> | null;
-  totalWidth: number;
-  columnsVirtual: VirtualItem[];
+  columnsVirtual: string[];
   virtualRow: VirtualItem | null;
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
@@ -34,7 +33,6 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
   const leftVisibleCells = row.getLeftVisibleCells();
   const centerVisibleCells = row.getCenterVisibleCells();
   const rightVisibleCells = row.getRightVisibleCells();
-  const visibleCells = row.getVisibleCells();
 
   return (
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -59,7 +57,6 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
         transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
         minHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
         maxHeight: props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT,
-        gridTemplateColumns: visibleCells.map((cell) => `${cell.column.getSize()}px`).join(" "),
       }}
     >
       <>
@@ -79,18 +76,18 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
                 />
               );
             })}
-            {props.columnsVirtual.map((virtualColumn) => {
+            {props.columnsVirtual.map((index) => {
               /** CENTER CELL */
 
-              const cell = centerVisibleCells[virtualColumn.index];
+              const cell = centerVisibleCells[+index];
 
               return (
                 <TableCell
                   key={`${cell.id}-cell`}
                   cell={cell}
-                  index={virtualColumn.index}
+                  index={+index}
                   cells={centerVisibleCells}
-                  columnPosition={leftVisibleCells.length + virtualColumn.index + 1}
+                  columnPosition={leftVisibleCells.length + +index + 1}
                   selected={props.selected}
                 />
               );

@@ -1,5 +1,4 @@
 import type { ColumnFiltersState, HeaderGroup, SortingState } from "@tanstack/react-table";
-import type { VirtualItem } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
 import type { HeaderInterface } from "../../types";
@@ -9,11 +8,10 @@ import styles from "./table-header-row.module.scss";
 type Props<RowData extends Record<string, unknown>> = {
   headerGroup: HeaderGroup<RowData>;
   columnVirtualEnabled: boolean;
-  columnsVirtual: VirtualItem[];
+  columnsVirtual: string[];
   leftHeaders: HeaderGroup<RowData>["headers"];
   rightHeaders: HeaderGroup<RowData>["headers"];
   centerHeaders: HeaderGroup<RowData>["headers"];
-  totalWidth: number;
   headerRowClassName:
     | ((header: HeaderInterface<RowData>) => string | undefined)
     | string
@@ -37,12 +35,6 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
           : props.headerRowClassName,
       )}
       data-id="header-row"
-      style={{
-        width: props.totalWidth,
-        gridTemplateColumns: props.headerGroup.headers
-          .map((header) => `${header.column.getSize()}px`)
-          .join(" "),
-      }}
     >
       {props.columnVirtualEnabled && (
         <>
@@ -61,18 +53,18 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
               />
             );
           })}
-          {props.columnsVirtual.map((virtualColumn) => {
+          {props.columnsVirtual.map((index) => {
             /** CELL HEADER  */
-            const header = props.centerHeaders[virtualColumn.index];
+            const header = props.centerHeaders[+index];
 
             return (
               <TableHeaderCell
                 key={`${header.id}-cell`}
                 header={header}
                 headers={props.centerHeaders}
-                index={virtualColumn.index}
+                index={+index}
                 semanticTag
-                columnPosition={props.leftHeaders.length + virtualColumn.index + 1}
+                columnPosition={props.leftHeaders.length + +index + 1}
                 filterState={props.filterState}
                 selectedPage={props.selectedPage}
                 sortState={props.sortState}

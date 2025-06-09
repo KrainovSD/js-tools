@@ -1,5 +1,6 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
+import React from "react";
 import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
 import styles from "./table-common.module.scss";
 import { TableHeaderRow } from "./table-header-row";
@@ -35,14 +36,28 @@ export function TableCommon<RowData extends Record<string, unknown>>(
   const leftHeadersGroup = props.table.getLeftHeaderGroups();
   const centerHeadersGroup = props.table.getCenterHeaderGroups();
   const rightHeadersGroup = props.table.getRightHeaderGroups();
+  const visibleHeadersGroup = props.table.getHeaderGroups();
   const tableState = props.table.getState();
+
+  const virtualColumnsIndexesKey = props.columnsVirtual.map((virtual) => virtual.index).join(";");
+  const virtualColumns = React.useMemo(() => {
+    return virtualColumnsIndexesKey.split(";");
+  }, [virtualColumnsIndexesKey]);
+
+  const visibleHeaders = visibleHeadersGroup?.[0]?.headers ?? [];
 
   return (
     <table
       className={styles.table}
-      style={{
-        width: props.columnVirtualEnabled ? props.table.getTotalSize() : "100%",
-      }}
+      style={
+        {
+          width: props.columnVirtualEnabled ? props.table.getTotalSize() : "100%",
+          "--table-template-columns": visibleHeaders
+            .map((header) => `${header.getSize()}px`)
+            .join(" "),
+          "--table-total-width": props.table.getTotalSize(),
+        } as React.CSSProperties
+      }
       data-id="table"
     >
       <thead
@@ -52,7 +67,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
         )}
         data-id="header"
       >
-        {props.table.getHeaderGroups().map((headerGroup, index) => {
+        {visibleHeadersGroup.map((headerGroup, index) => {
           const leftHeaders = leftHeadersGroup[index].headers;
           const centerHeaders = centerHeadersGroup[index].headers;
           const rightHeaders = rightHeadersGroup[index].headers;
@@ -64,12 +79,11 @@ export function TableCommon<RowData extends Record<string, unknown>>(
             <TableHeaderRow<RowData>
               key={`${headerGroup.id}-header-row`}
               columnVirtualEnabled={props.columnVirtualEnabled}
-              columnsVirtual={props.columnsVirtual}
+              columnsVirtual={virtualColumns}
               headerGroup={headerGroup}
               centerHeaders={centerHeaders}
               leftHeaders={leftHeaders}
               rightHeaders={rightHeaders}
-              totalWidth={props.table.getTotalSize()}
               headerRowClassName={props.headerRowClassName}
               page={tableState.pagination.pageIndex}
               selectedPage={selected}
@@ -101,13 +115,12 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 virtualRow={virtualRow}
                 key={`${virtualRow.index}-row`}
                 columnVirtualEnabled={props.columnVirtualEnabled}
-                columnsVirtual={props.columnsVirtual}
+                columnsVirtual={virtualColumns}
                 rowClassName={props.rowClassName}
                 rows={props.rows}
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
                 rowVirtualizer={props.rowVirtualizer}
-                totalWidth={props.table.getTotalSize()}
                 row={null}
                 selected={selected}
                 expanded={expanded}
@@ -128,12 +141,11 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               <TableRow<RowData>
                 key={`${row.id}-row`}
                 columnVirtualEnabled={props.columnVirtualEnabled}
-                columnsVirtual={props.columnsVirtual}
+                columnsVirtual={virtualColumns}
                 row={row}
                 rowClassName={props.rowClassName}
                 onClickRow={props.onClickRow}
                 onDoubleClickRow={props.onDoubleClickRow}
-                totalWidth={props.table.getTotalSize()}
                 rowVirtualizer={props.rowVirtualizer}
                 rows={props.rows}
                 virtualRow={null}

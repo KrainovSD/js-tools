@@ -9,8 +9,7 @@ type Props<RowData extends Record<string, unknown>> = {
   rows: RowInterface<RowData>[];
   selected: boolean;
   row: RowInterface<RowData> | null;
-  totalWidth: number;
-  columnsVirtual: VirtualItem[];
+  columnsVirtual: string[];
   virtualRow: VirtualItem | null;
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
@@ -51,8 +50,6 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       ref={props.virtualRow ? (node) => props.rowVirtualizer.measureElement(node) : undefined}
       style={{
         transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
-        width: props.totalWidth,
-        gridTemplateColumns: visibleCells.map((cell) => `${cell.column.getSize()}px`).join(" "),
       }}
       onClick={(event) => {
         props.onClickRow?.(row, event);
@@ -79,20 +76,20 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                 />
               );
             })}
-            {props.columnsVirtual.map((virtualColumn) => {
+            {props.columnsVirtual.map((index) => {
               /** CENTER CELL */
 
-              const cell = centerVisibleCells[virtualColumn.index];
+              const cell = centerVisibleCells[+index];
 
               return (
                 <TableCell
                   key={`${cell.id}-cell`}
                   cell={cell}
-                  index={virtualColumn.index}
+                  index={+index}
                   cells={centerVisibleCells}
                   semanticTag
                   selected={props.selected}
-                  columnPosition={leftVisibleCells.length + virtualColumn.index + 1}
+                  columnPosition={leftVisibleCells.length + +index + 1}
                 />
               );
             })}

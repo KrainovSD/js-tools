@@ -1,5 +1,6 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
+import React from "react";
 import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
 import { TableCommonGanttHeaderRow, TableCommonGanttRow } from "./components";
 import { GANTT_COMMON_TABLE_BODY_ID, GANTT_COMMON_TABLE_HEADER_ID } from "./gantt.constants";
@@ -35,14 +36,29 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
   const leftHeadersGroup = props.table.getLeftHeaderGroups();
   const centerHeadersGroup = props.table.getCenterHeaderGroups();
   const rightHeadersGroup = props.table.getRightHeaderGroups();
+  const visibleHeadersGroup = props.table.getHeaderGroups();
+
+  const virtualColumnsIndexesKey = props.columnsVirtual.map((virtual) => virtual.index).join(";");
+  const virtualColumns = React.useMemo(() => {
+    return virtualColumnsIndexesKey.split(";");
+  }, [virtualColumnsIndexesKey]);
+
+  const visibleHeaders = visibleHeadersGroup?.[0]?.headers ?? [];
 
   return (
     <div
       ref={props.tableRef}
       className={styles.table}
-      style={{
-        width: props.width,
-      }}
+      style={
+        {
+          width: props.width,
+
+          "--table-template-columns": visibleHeaders
+            .map((header) => `${header.getSize()}px`)
+            .join(" "),
+          "--table-total-width": props.table.getTotalSize(),
+        } as React.CSSProperties
+      }
       data-id="table"
     >
       <div
@@ -66,12 +82,11 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
               <TableCommonGanttHeaderRow<RowData>
                 key={`${headerGroup.id}-header-row`}
                 columnVirtualEnabled={props.columnVirtualEnabled}
-                columnsVirtual={props.columnsVirtual}
+                columnsVirtual={virtualColumns}
                 headerGroup={headerGroup}
                 centerHeaders={centerHeaders}
                 leftHeaders={leftHeaders}
                 rightHeaders={rightHeaders}
-                totalWidth={props.table.getTotalSize()}
                 headerRowClassName={props.headerRowClassName}
                 rowHeaderHeight={props.rowHeaderHeight}
                 selectedPage={selected}
@@ -103,14 +118,13 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                 <TableCommonGanttRow<RowData>
                   virtualRow={virtualRow}
                   columnVirtualEnabled={props.columnVirtualEnabled}
-                  columnsVirtual={props.columnsVirtual}
+                  columnsVirtual={virtualColumns}
                   rowClassName={props.rowClassName}
                   rows={props.rows}
                   key={`${virtualRow.index}-row`}
                   onClickRow={props.onClickRow}
                   onDoubleClickRow={props.onDoubleClickRow}
                   rowVirtualizer={props.rowVirtualizer}
-                  totalWidth={props.table.getTotalSize()}
                   row={null}
                   ganttRowMini={props.ganttRowMini}
                   selected={selected}
@@ -124,13 +138,12 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
               return (
                 <TableCommonGanttRow<RowData>
                   columnVirtualEnabled={props.columnVirtualEnabled}
-                  columnsVirtual={props.columnsVirtual}
+                  columnsVirtual={virtualColumns}
                   row={row}
                   rowClassName={props.rowClassName}
                   key={`${row.id}-row`}
                   onClickRow={props.onClickRow}
                   onDoubleClickRow={props.onDoubleClickRow}
-                  totalWidth={props.table.getTotalSize()}
                   rowVirtualizer={props.rowVirtualizer}
                   rows={props.rows}
                   virtualRow={null}

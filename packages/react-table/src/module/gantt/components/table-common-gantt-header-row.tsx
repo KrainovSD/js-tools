@@ -1,4 +1,3 @@
-import type { VirtualItem } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
 import type { HeaderInterface } from "../../../types";
@@ -9,11 +8,10 @@ type Props<RowData extends Record<string, unknown>> = {
   headerGroup: HeaderInterface<RowData>;
   rowHeaderHeight: number;
   columnVirtualEnabled: boolean;
-  columnsVirtual: VirtualItem[];
+  columnsVirtual: string[];
   leftHeaders: HeaderInterface<RowData>["headers"];
   rightHeaders: HeaderInterface<RowData>["headers"];
   centerHeaders: HeaderInterface<RowData>["headers"];
-  totalWidth: number;
   headerRowClassName:
     | ((header: HeaderInterface<RowData>) => string | undefined)
     | string
@@ -36,10 +34,6 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
       style={{
         minHeight: props.rowHeaderHeight,
         maxHeight: props.rowHeaderHeight,
-        width: props.totalWidth,
-        gridTemplateColumns: props.headerGroup.headers
-          .map((header) => `${header.column.getSize()}px`)
-          .join(" "),
       }}
       data-id="header-row"
     >
@@ -57,18 +51,18 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
               />
             );
           })}
-          {props.columnsVirtual.map((virtualColumn) => {
+          {props.columnsVirtual.map((index) => {
             /** CELL HEADER  */
-            const header = props.centerHeaders[virtualColumn.index];
+            const header = props.centerHeaders[+index];
 
             return (
               <TableHeaderCell
                 key={`${header.id}-cell`}
                 header={header}
                 headers={props.centerHeaders}
-                index={virtualColumn.index}
+                index={+index}
                 selectedPage={props.selectedPage}
-                columnPosition={props.leftHeaders.length + virtualColumn.index + 1}
+                columnPosition={props.leftHeaders.length + +index + 1}
               />
             );
           })}
