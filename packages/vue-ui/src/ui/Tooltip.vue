@@ -43,8 +43,9 @@
         : startWith(props.placement, "right")
           ? 16
           : 0
-      : 16,
+      : 0,
   );
+
   const open = ref(false);
   const openTimer = ref<NodeJS.Timeout | null>(null);
   const closeTimer = ref<NodeJS.Timeout | null>(null);
@@ -79,6 +80,8 @@
           y: orientation === "y" ? y : event.clientY,
         };
       }
+
+      open.value = true;
     }
 
     function onAppear(event: MouseEvent | FocusEvent) {
@@ -88,7 +91,6 @@
 
       openTimer.value = setTimeout(() => {
         getPlacement(event);
-        open.value = true;
       }, props.openDelay);
     }
 
@@ -163,8 +165,7 @@
   .ksd-tooltip {
     &__positioner {
       background-color: var(--ksd-bg-reverse-color);
-      min-width: calc(var(--ksd-border-radius) * 2 + 16);
-      min-height: var(--ksd-control-height);
+
       padding: calc(var(--ksd-padding-sm) / 2) var(--ksd-padding-xs);
       word-break: break-word;
       max-width: 250px;

@@ -36,6 +36,10 @@
     flexShift?: boolean;
   };
 
+  const ARROW_SHIFT_FROM_CENTER = 11;
+  const ARROW_SHIFT_FROM_CORNER = 10;
+  const ARROW_SHIFT_FROM_CORNER_MINI = 5;
+
   const props = defineProps<PositionerProps>();
   const elementRef = useTemplateRef("positioner");
   const position = shallowRef<VisiblePosition>({
@@ -93,60 +97,58 @@
       let rotate: string | undefined;
 
       if (position.value.placement === "bottom-left") {
-        top = "-11px";
-        left = "15px";
-        translate = "-50% 0 ";
+        top = `-${ARROW_SHIFT_FROM_CENTER}px`;
+        left = `${ARROW_SHIFT_FROM_CORNER}px`;
       } else if (position.value.placement === "bottom-center") {
-        top = "-11px";
+        top = `-${ARROW_SHIFT_FROM_CENTER}px`;
         left = "50%";
         translate = "-50% 0 ";
       } else if (position.value.placement === "bottom-right") {
-        top = "-11px";
-        left = "calc(100% - 15px)";
-        translate = "-50% 0 ";
+        top = `-${ARROW_SHIFT_FROM_CENTER}px`;
+        left = "auto";
+        right = `${ARROW_SHIFT_FROM_CORNER}px`;
       } else if (position.value.placement === "top-left") {
-        bottom = "-11px";
-        left = "15px";
+        bottom = `-${ARROW_SHIFT_FROM_CENTER}px`;
+        left = `${ARROW_SHIFT_FROM_CORNER}px`;
         rotate = "180deg";
-        translate = "-50% 0 ";
       } else if (position.value.placement === "top-center") {
-        bottom = "-11px";
+        bottom = `-${ARROW_SHIFT_FROM_CENTER}px`;
         left = "50%";
         rotate = "180deg";
         translate = "-50% 0 ";
       } else if (position.value.placement === "top-right") {
-        bottom = "-11px";
-        left = "calc(100% - 15px)";
+        bottom = `-${ARROW_SHIFT_FROM_CENTER}px`;
+        left = "auto";
+        right = `${ARROW_SHIFT_FROM_CORNER}px`;
         rotate = "180deg";
-        translate = "-50% 0 ";
       } else if (position.value.placement === "left-top") {
-        top = "5px";
-        right = "-11px";
+        top = `${ARROW_SHIFT_FROM_CORNER_MINI}px`;
+        right = `-${ARROW_SHIFT_FROM_CENTER}px`;
         rotate = "90deg";
       } else if (position.value.placement === "left-center") {
         top = "50%";
-        right = "-11px";
+        right = `-${ARROW_SHIFT_FROM_CENTER}px`;
         rotate = "90deg";
         translate = "0 -50%";
       } else if (position.value.placement === "left-bottom") {
-        top = "calc(100% - 5px)";
-        right = "-11px";
+        top = "auto";
+        bottom = `${ARROW_SHIFT_FROM_CORNER_MINI}px`;
+        right = `-${ARROW_SHIFT_FROM_CENTER}px`;
         rotate = "90deg";
-        translate = "0 -100%";
       } else if (position.value.placement === "right-top") {
-        top = "5px";
-        left = "-11px";
+        top = `${ARROW_SHIFT_FROM_CORNER_MINI}px`;
+        left = `-${ARROW_SHIFT_FROM_CENTER}px`;
         rotate = "-90deg";
       } else if (position.value.placement === "right-center") {
         top = "50%";
-        left = "-11px";
+        left = `-${ARROW_SHIFT_FROM_CENTER}px`;
         rotate = "-90deg";
         translate = "0 -50%";
       } else if (position.value.placement === "right-bottom") {
-        top = "calc(100% - 5px)";
-        left = "-11px";
+        top = "auto";
+        bottom = `${ARROW_SHIFT_FROM_CORNER_MINI}px`;
+        left = `-${ARROW_SHIFT_FROM_CENTER}px`;
         rotate = "-90deg";
-        translate = "0 -100%";
       }
 
       arrowPosition.value = {
@@ -198,6 +200,8 @@
 
     &__content {
       border-radius: var(--ksd-border-radius);
+      min-width: calc(var(--ksd-border-radius) * 2 + 32px);
+      min-height: var(--ksd-control-height);
     }
   }
 </style>

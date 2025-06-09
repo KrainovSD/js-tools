@@ -20,8 +20,20 @@ const Template: StoryFn<typeof VTooltip> = (args) => ({
   render() {
     return h(
       "div",
-      { style: { display: "flex", flexDirection: "column", gap: "20px", maxWidth: "200px" } },
-      [h(VTooltip, { ...args }, () => h(VText, { ellipsis: true }, () => "Навести"))],
+      {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          paddingTop: "200px",
+          paddingLeft: "200px",
+        },
+      },
+      [
+        h(VTooltip, { ...args, placement: "right-bottom" }, () =>
+          h(VText, { ellipsis: true, fit: true, style: { height: "30px" } }, () => "Навести"),
+        ),
+      ],
     );
   },
 });
@@ -111,6 +123,5 @@ export const AllInOne: Story = {
   }),
   args: {
     text: "Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа",
-    // text: "text",
   },
 };
