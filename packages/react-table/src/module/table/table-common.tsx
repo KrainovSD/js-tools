@@ -39,9 +39,12 @@ export function TableCommon<RowData extends Record<string, unknown>>(
   const visibleHeadersGroup = props.table.getHeaderGroups();
   const tableState = props.table.getState();
 
-  const virtualColumnsIndexesKey = props.columnsVirtual.map((virtual) => virtual.index).join(";");
+  const virtualColumnsIndexesKey =
+    props.columnsVirtual.length === 0
+      ? null
+      : props.columnsVirtual.map((virtual) => virtual.index).join(";");
   const virtualColumns = React.useMemo(() => {
-    return virtualColumnsIndexesKey.split(";");
+    return virtualColumnsIndexesKey ? virtualColumnsIndexesKey.split(";") : [];
   }, [virtualColumnsIndexesKey]);
 
   const visibleHeaders = visibleHeadersGroup?.[0]?.headers ?? [];

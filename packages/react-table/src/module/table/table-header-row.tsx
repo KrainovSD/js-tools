@@ -57,6 +57,13 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
             /** CELL HEADER  */
             const header = props.centerHeaders[+index];
 
+            if (!header) {
+              // eslint-disable-next-line no-console
+              console.log(header, props.centerHeaders, index, props.columnsVirtual);
+
+              return null;
+            }
+
             return (
               <TableHeaderCell
                 key={`${header.id}-cell`}
