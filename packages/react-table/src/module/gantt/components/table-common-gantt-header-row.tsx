@@ -37,6 +37,9 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
         minHeight: props.rowHeaderHeight,
         maxHeight: props.rowHeaderHeight,
         width: props.totalWidth,
+        gridTemplateColumns: props.headerGroup.headers
+          .map((header) => `${header.column.getSize()}px`)
+          .join(" "),
       }}
       data-id="header-row"
     >
@@ -49,6 +52,8 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
                 header={header}
                 headers={headers}
                 index={index}
+                columnPosition={index + 1}
+                selectedPage={props.selectedPage}
               />
             );
           })}
@@ -62,11 +67,11 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
                 header={header}
                 headers={props.centerHeaders}
                 index={virtualColumn.index}
-                virtualLeft={virtualColumn.start}
+                selectedPage={props.selectedPage}
+                columnPosition={props.leftHeaders.length + virtualColumn.index + 1}
               />
             );
           })}
-          {props.rightHeaders.length > 0 && <div className={styles.ghost}></div>}
           {props.rightHeaders.map((header, index, headers) => {
             return (
               <TableHeaderCell
@@ -74,6 +79,8 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
                 header={header}
                 headers={headers}
                 index={index}
+                columnPosition={props.leftHeaders.length + props.centerHeaders.length + index + 1}
+                selectedPage={props.selectedPage}
               />
             );
           })}
@@ -87,6 +94,8 @@ export const TableCommonGanttHeaderRow = React.memo(function TableCommonGanttHea
               header={header}
               headers={headers}
               index={index}
+              columnPosition={index + 1}
+              selectedPage={props.selectedPage}
             />
           );
         })}

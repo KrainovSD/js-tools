@@ -29,7 +29,7 @@ function createRowsGantt(virtual: boolean): (RowGantt | RowGanttVirtual)[] {
     const result: RowGantt[] = [];
     if (deep === 10) return result;
 
-    for (let i = 0; i < faker.number.int({ min: 1, max: 5 }); i++) {
+    for (let i = 0; i < faker.number.int({ min: 1, max: 3 }); i++) {
       const id = `${parentId}.${deep}.${i}`;
       const children = generateInner(deep + 1, id, start);
       const childrenEnd =

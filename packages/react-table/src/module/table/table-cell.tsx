@@ -44,7 +44,6 @@ export const TableCell = React.memo(function TableCell<RowData extends Record<st
         key={props.cell.id}
         className={clsx(
           styles.cell,
-          props.virtualLeft != undefined && styles.cell__virtual,
           frozenPosition === "left" && styles.cell__frozen_left,
           frozenPosition === "right" && styles.cell__frozen_right,
           frozenPosition === "left" &&
@@ -56,10 +55,8 @@ export const TableCell = React.memo(function TableCell<RowData extends Record<st
           cellClasses,
         )}
         style={{
-          // left: frozenPosition === "left" ? prevFrozen : (props.virtualLeft ?? 0),
-          // right: frozenPosition === "right" ? prevFrozen : 0,
-          // position: props.virtualLeft ? "absolute" : undefined,
-          display: "block",
+          left: frozenPosition === "left" ? prevFrozen : undefined,
+          right: frozenPosition === "right" ? prevFrozen : undefined,
           gridColumnStart: props.columnPosition,
         }}
       >
@@ -76,7 +73,6 @@ export const TableCell = React.memo(function TableCell<RowData extends Record<st
       key={props.cell.id}
       className={clsx(
         styles.cell,
-        props.virtualLeft != undefined && styles.cell__virtual,
         frozenPosition === "left" && styles.cell__frozen_left,
         frozenPosition === "right" && styles.cell__frozen_right,
         frozenPosition === "left" &&
@@ -88,12 +84,9 @@ export const TableCell = React.memo(function TableCell<RowData extends Record<st
         cellClasses,
       )}
       style={{
-        width: props.cell.column.getSize(),
-        maxWidth: props.cell.column.getSize(),
-        minWidth: props.cell.column.getSize(),
-        left: frozenPosition === "left" ? prevFrozen : (props.virtualLeft ?? 0),
-        right: frozenPosition === "right" ? prevFrozen : 0,
-        position: props.virtualLeft ? "absolute" : undefined,
+        left: frozenPosition === "left" ? prevFrozen : undefined,
+        right: frozenPosition === "right" ? prevFrozen : undefined,
+        gridColumnStart: props.columnPosition,
       }}
     >
       {isGroupCell && Expander && <Expander context={cellContext} />}

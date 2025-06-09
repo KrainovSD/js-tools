@@ -1,4 +1,5 @@
 import { type FilterFieldType, type FilterInputValueType, FiltersBlock } from "@krainovsd/react-ui";
+import React from "react";
 import type { TableInterface } from "../../types";
 import styles from "./table-filter.module.scss";
 
@@ -14,7 +15,7 @@ type TableFilterProps<RowData extends Record<string, unknown>> = {
   withFilters: boolean;
 };
 
-export function TableFilter<RowData extends Record<string, unknown>>(
+export const TableFilter = React.memo(function TableFilter<RowData extends Record<string, unknown>>(
   props: TableFilterProps<RowData>,
 ) {
   return (
@@ -44,4 +45,6 @@ export function TableFilter<RowData extends Record<string, unknown>>(
       )}
     </>
   );
-}
+}) as <RowData extends Record<string, unknown>>(
+  props: TableFilterProps<RowData>,
+) => React.JSX.Element;

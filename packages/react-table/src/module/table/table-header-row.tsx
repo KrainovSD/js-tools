@@ -37,7 +37,12 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
           : props.headerRowClassName,
       )}
       data-id="header-row"
-      style={{ width: props.totalWidth }}
+      style={{
+        width: props.totalWidth,
+        gridTemplateColumns: props.headerGroup.headers
+          .map((header) => `${header.column.getSize()}px`)
+          .join(" "),
+      }}
     >
       {props.columnVirtualEnabled && (
         <>
@@ -49,6 +54,10 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 headers={headers}
                 index={index}
                 semanticTag
+                columnPosition={index + 1}
+                filterState={props.filterState}
+                selectedPage={props.selectedPage}
+                sortState={props.sortState}
               />
             );
           })}
@@ -62,12 +71,14 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 header={header}
                 headers={props.centerHeaders}
                 index={virtualColumn.index}
-                virtualLeft={virtualColumn.start}
                 semanticTag
+                columnPosition={props.leftHeaders.length + virtualColumn.index + 1}
+                filterState={props.filterState}
+                selectedPage={props.selectedPage}
+                sortState={props.sortState}
               />
             );
           })}
-          {props.rightHeaders.length > 0 && <div className={styles.ghost}></div>}
           {props.rightHeaders.map((header, index, headers) => {
             return (
               <TableHeaderCell
@@ -76,6 +87,10 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 headers={headers}
                 index={index}
                 semanticTag
+                columnPosition={props.leftHeaders.length + props.centerHeaders.length + index + 1}
+                filterState={props.filterState}
+                selectedPage={props.selectedPage}
+                sortState={props.sortState}
               />
             );
           })}
@@ -90,6 +105,10 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
               headers={headers}
               index={index}
               semanticTag
+              columnPosition={index + 1}
+              filterState={props.filterState}
+              selectedPage={props.selectedPage}
+              sortState={props.sortState}
             />
           );
         })}

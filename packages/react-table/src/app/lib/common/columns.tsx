@@ -25,13 +25,14 @@ export const COMMON_COLUMNS: TableColumn<CommonRow, "test">[] = [
   {
     key: "id",
     name: "ID",
-    width: 120,
+    width: 100,
     resizable: true,
     sortType: "string-with-number",
     draggable: false,
     cellRenderProps: {
       classes: ["hCenter"],
     },
+    leftFrozen: true,
   },
   {
     key: "firstName",
@@ -114,6 +115,7 @@ export const COMMON_COLUMNS: TableColumn<CommonRow, "test">[] = [
     cellRender: "tag",
     cellRenderProps: {
       autoTooltip: true,
+      filterable: true,
     },
   },
   {
@@ -139,21 +141,23 @@ export const COMMON_COLUMNS: TableColumn<CommonRow, "test">[] = [
   {
     key: "age",
     name: "Age",
-    width: 200,
+    width: 100,
     resizable: true,
     draggable: false,
     sortType: "number",
     filterable: true,
     filterRender: "number-range",
     filterType: "equals",
+    rightFrozen: true,
   },
   {
     key: "checked",
     name: "Checked",
-    width: 200,
+    width: 100,
     resizable: true,
     draggable: false,
     sortType: "boolean",
+    rightFrozen: true,
   },
   {
     key: "country",

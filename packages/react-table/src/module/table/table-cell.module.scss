@@ -1,9 +1,6 @@
 .cell {
   background: inherit;
-
-  &__virtual {
-    height: 100%;
-  }
+  display: block;
 
   &__frozen {
     &_left {

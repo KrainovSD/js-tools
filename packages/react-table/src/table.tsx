@@ -98,7 +98,13 @@ export type TableProps<
       filters: Record<string, FilterInputValueType>;
       filterOptions: FilterFieldType[];
     }>;
-    Pagination?: React.FC<{ table: TableInterface<RowData> }>;
+    Pagination?: React.FC<{
+      table: TableInterface<RowData>;
+      pageIndex: number;
+      pageSize: number;
+      totalRows: number;
+      pageSizes: number[];
+    }>;
     Empty?: React.FC;
     Loader?: React.FC;
     loading?: boolean;
@@ -270,6 +276,10 @@ export function Table<
           table={table}
           withPagination={props.withPagination && !props.withGantt}
           withTotal={props.withTotal && !props.withGantt}
+          pageIndex={tableState.pagination.pageIndex}
+          pageSize={tableState.pagination.pageSize}
+          pageSizes={props.pageSizes}
+          totalRows={props.totalRows ?? table.getFilteredRowModel().rows.length}
         />
       </div>
     );

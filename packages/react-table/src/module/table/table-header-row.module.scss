@@ -1,11 +1,6 @@
 .headerRow {
   background-color: var(--table-header-bg);
   overflow: initial;
-  display: flex;
+  display: grid;
   position: relative;
-}
-
-.ghost {
-  display: flex;
-  width: 100%;
 }

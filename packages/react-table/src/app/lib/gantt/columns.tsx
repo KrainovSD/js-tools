@@ -3,6 +3,25 @@ import type { RowGantt, RowGanttVirtual } from "../../types/gantt";
 
 export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
   {
+    key: "_select",
+    name: "",
+    width: 50,
+    resizable: false,
+    draggable: false,
+    leftFrozen: true,
+    sortable: false,
+    filterable: false,
+    cellRender: "select",
+    cellRenderProps: {
+      classes: ["hCenter", "wCenter"],
+      hover: true,
+    },
+    headerRender: "select",
+    headerRenderProps: {
+      classes: ["hCenter", "wCenter"],
+    },
+  },
+  {
     key: "name",
     name: "Название",
     resizable: true,

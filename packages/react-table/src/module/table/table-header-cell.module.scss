@@ -1,10 +1,6 @@
 .headerCell {
   position: relative;
-  display: flex;
-
-  &__virtual {
-    height: 100%;
-  }
+  display: block;
 
   &__frozen {
     &_left {
