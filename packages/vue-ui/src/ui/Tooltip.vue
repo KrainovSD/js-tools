@@ -18,7 +18,8 @@
     zIndex?: number;
     placement?: Exclude<PositionPlacements, "flex">;
     modalRoot?: string | HTMLElement | null;
-    animation?: boolean;
+    animationAppear?: boolean;
+    animationDisappear?: boolean;
   };
 
   defineOptions({
@@ -39,7 +40,8 @@
     placement: "bottom-center",
     stickyCursor: false,
     zIndex: undefined,
-    animation: true,
+    animationAppear: true,
+    animationDisappear: true,
   });
   const elementRef = useTemplateRef("tooltip");
   const positionerRef = useTemplateRef("positioner");
@@ -119,10 +121,6 @@
 
       closeTimer.value = setTimeout(() => {
         localOpen.value = false;
-
-        if (props.openAboveCursor) {
-          cursorPosition.value = null;
-        }
       }, props.closeDelay);
     }
 
@@ -175,7 +173,8 @@
     :placement="$props.placement"
     :shift-x="shiftX"
     :shift-y="shiftY"
-    :animation="$props.animation ? 'translate' : undefined"
+    :animation-appear="$props.animationAppear ? 'translate' : undefined"
+    :animation-disappear="$props.animationDisappear ? 'translate' : undefined"
     >{{ $props.text }}</Positioner
   >
 </template>

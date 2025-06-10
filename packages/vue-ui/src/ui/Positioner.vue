@@ -34,7 +34,8 @@
     shiftY?: number;
     target: HTMLElement | PositionerTargetNodePosition | undefined | null;
     arrow?: boolean;
-    animation?: "translate" | "scale" | "scaleY";
+    animationAppear?: "translate" | "scale" | "scaleY";
+    animationDisappear?: "translate" | "scale" | "scaleY";
   };
 
   const ARROW_SHIFT_FROM_CENTER = 11;
@@ -165,8 +166,8 @@
     }
 
     elementRef.value.classList.add(position.value.placement);
-    if (isFirstRender && props.animation) {
-      void execAnimation(`ksd-positioner_${props.animation}-in`);
+    if (isFirstRender && props.animationAppear) {
+      void execAnimation(`ksd-positioner_${props.animationAppear}-in`);
     }
   }
 
@@ -200,8 +201,8 @@
     (value) => {
       if (value) {
         localOpen.value = true;
-      } else if (props.animation) {
-        void execAnimation(`ksd-positioner_${props.animation}-out`).then(() => {
+      } else if (props.animationDisappear) {
+        void execAnimation(`ksd-positioner_${props.animationDisappear}-out`).then(() => {
           if (!props.open) {
             localOpen.value = false;
           }

@@ -285,7 +285,8 @@
       observe
       :show="minHandleTooltipOpen"
       :open-by-hover="false"
-      :animation="minHandleTooltipOpen"
+      :animation-appear="true"
+      :animation-disappear="false"
     >
       <div
         ref="min-handle"
@@ -308,7 +309,8 @@
       observe
       :show="maxHandleTooltipOpen"
       :open-by-hover="false"
-      :animation="maxHandleTooltipOpen"
+      :animation-appear="true"
+      :animation-disappear="false"
     >
       <div
         ref="max-handle"
