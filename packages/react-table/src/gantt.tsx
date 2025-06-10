@@ -8,7 +8,8 @@ import { TableCommonGantt } from "./module/gantt/table-common-gantt";
 import { TableGantt } from "./module/gantt/table-gantt";
 import type {
   GanttInfo,
-  GanttRowInfo,
+  GanttTaskProps,
+  GanttTooltipProps,
   GanttViewType,
   HeaderInterface,
   RowInterface,
@@ -39,24 +40,14 @@ export type GanttProps<
   ganttGrid?: boolean;
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   locale?: string;
-  GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
+  GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
   rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
   headerRowClassName:
     | ((header: HeaderInterface<RowData>) => string | undefined)
     | string
     | undefined;
   ganttView: GanttViewType;
-  GanttTask:
-    | React.FC<{
-        row: RowInterface<RowData>;
-        ganttInfo: GanttInfo<GanttData>;
-        rowInfo: GanttRowInfo;
-        bodyWidth: number | null;
-        rowsMap: Record<string | number, GanttRowInfo | undefined>;
-        hasUpArrow: boolean;
-        hasDownArrow: boolean;
-      }>
-    | undefined;
+  GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
 };
 
 export function Gantt<

@@ -1,18 +1,10 @@
 import { Pagination } from "@krainovsd/react-ui";
 import React from "react";
-import type { TableInterface } from "../../types";
+import type { TableInterface, TablePaginationProps } from "../../types";
 import styles from "./table-footer.module.scss";
 
 type TableFooterProps<RowData extends Record<string, unknown>> = {
-  Pagination:
-    | React.FC<{
-        table: TableInterface<RowData>;
-        pageIndex: number;
-        pageSize: number;
-        totalRows: number;
-        pageSizes: number[];
-      }>
-    | undefined;
+  Pagination: React.FC<TablePaginationProps<RowData>> | undefined;
   withPagination: boolean | undefined;
   withTotal: boolean | undefined;
   table: TableInterface<RowData>;

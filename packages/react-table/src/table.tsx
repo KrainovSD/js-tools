@@ -1,4 +1,4 @@
-import { type FilterFieldType, type FilterInputValueType } from "@krainovsd/react-ui";
+import { type FilterInputValueType } from "@krainovsd/react-ui";
 import type { TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
@@ -12,7 +12,11 @@ import type {
   RowInterface,
   RowModel,
   TableColumnsSettings,
+  TableEmptyProps,
+  TableFilterProps,
   TableInterface,
+  TableLoaderProps,
+  TablePaginationProps,
   TableRenderers,
 } from "./types";
 
@@ -93,20 +97,10 @@ export type TableProps<
     locale?: string;
     onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
     onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
-    Filter?: React.FC<{
-      table: TableInterface<RowData>;
-      filters: Record<string, FilterInputValueType>;
-      filterOptions: FilterFieldType[];
-    }>;
-    Pagination?: React.FC<{
-      table: TableInterface<RowData>;
-      pageIndex: number;
-      pageSize: number;
-      totalRows: number;
-      pageSizes: number[];
-    }>;
-    Empty?: React.FC;
-    Loader?: React.FC;
+    Filter?: React.FC<TableFilterProps<RowData>>;
+    Pagination?: React.FC<TablePaginationProps<RowData>>;
+    Empty?: React.FC<TableEmptyProps>;
+    Loader?: React.FC<TableLoaderProps>;
     loading?: boolean;
     setTable?: (table: TableInterface<RowData>) => void;
     rootRef?: React.MutableRefObject<HTMLDivElement | null>;

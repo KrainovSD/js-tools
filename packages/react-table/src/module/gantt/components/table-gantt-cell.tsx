@@ -4,7 +4,13 @@ import clsx from "clsx";
 import React from "react";
 import { createPortal } from "react-dom";
 import { GanttArrow } from ".";
-import type { GanttInfo, GanttRowInfo, RowInterface } from "../../../types";
+import type {
+  GanttInfo,
+  GanttRowInfo,
+  GanttTaskProps,
+  GanttTooltipProps,
+  RowInterface,
+} from "../../../types";
 import { GANTT_TOP_SHIFT } from "../gantt.constants";
 import styles from "./table-gantt-cell.module.scss";
 
@@ -13,22 +19,8 @@ type GetCellOptions<
   GanttData extends Record<string, unknown>,
 > = {
   ganttInfoGetter: ((row: RowInterface<RowData>) => GanttInfo<GanttData>) | undefined;
-  GanttTooltip:
-    | React.FC<{
-        row: RowInterface<RowData>;
-      }>
-    | undefined;
-  GanttTask:
-    | React.FC<{
-        row: RowInterface<RowData>;
-        ganttInfo: GanttInfo<GanttData>;
-        rowInfo: GanttRowInfo;
-        bodyWidth: number | null;
-        rowsMap: Record<string | number, GanttRowInfo | undefined>;
-        hasUpArrow: boolean;
-        hasDownArrow: boolean;
-      }>
-    | undefined;
+  GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
+  GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
   rowsMap: Record<string | number, GanttRowInfo | undefined>;
   row: RowInterface<RowData>;
   mini: boolean;

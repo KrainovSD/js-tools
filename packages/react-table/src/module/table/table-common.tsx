@@ -1,7 +1,7 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
-import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
+import type { HeaderInterface, RowInterface, TableEmptyProps, TableInterface } from "../../types";
 import styles from "./table-common.module.scss";
 import { TableHeaderRow } from "./table-header-row";
 import { TableRow } from "./table-row";
@@ -27,7 +27,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
     | ((header: HeaderInterface<RowData>) => string | undefined)
     | string
     | undefined;
-  Empty: React.FC | undefined;
+  Empty: React.FC<TableEmptyProps> | undefined;
 };
 
 export function TableCommon<RowData extends Record<string, unknown>>(

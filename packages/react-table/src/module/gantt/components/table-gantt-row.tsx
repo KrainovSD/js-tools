@@ -1,23 +1,19 @@
 import clsx from "clsx";
 import React from "react";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
-import type { GanttInfo, GanttRowInfo, RowInterface } from "../../../types";
+import type {
+  GanttInfo,
+  GanttRowInfo,
+  GanttTaskProps,
+  GanttTooltipProps,
+  RowInterface,
+} from "../../../types";
 import { TableGanttCell } from "./table-gantt-cell";
 import styles from "./table-gantt-row.module.scss";
 
 type Props<RowData extends Record<string, unknown>, GanttData extends Record<string, unknown>> = {
-  GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
-  GanttTask:
-    | React.FC<{
-        row: RowInterface<RowData>;
-        ganttInfo: GanttInfo<GanttData>;
-        rowInfo: GanttRowInfo;
-        bodyWidth: number | null;
-        rowsMap: Record<string | number, GanttRowInfo | undefined>;
-        hasUpArrow: boolean;
-        hasDownArrow: boolean;
-      }>
-    | undefined;
+  GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
+  GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
   rowsMap: Record<string | number, GanttRowInfo | undefined>;
   bodyWidth: number | null;
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;

@@ -3,6 +3,8 @@ import React from "react";
 import type {
   GanttInfo,
   GanttRowInfo,
+  GanttTaskProps,
+  GanttTooltipProps,
   GanttViewType,
   RowInterface,
   TableInterface,
@@ -38,18 +40,8 @@ type TableContainerProps<
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
-  GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
-  GanttTask:
-    | React.FC<{
-        row: RowInterface<RowData>;
-        ganttInfo: GanttInfo<GanttData>;
-        rowInfo: GanttRowInfo;
-        bodyWidth: number | null;
-        rowsMap: Record<string | number, GanttRowInfo | undefined>;
-        hasUpArrow: boolean;
-        hasDownArrow: boolean;
-      }>
-    | undefined;
+  GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
+  GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
   ganttView: GanttViewType;
 };
 

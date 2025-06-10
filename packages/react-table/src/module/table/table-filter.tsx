@@ -1,17 +1,13 @@
 import { type FilterFieldType, type FilterInputValueType, FiltersBlock } from "@krainovsd/react-ui";
 import React from "react";
-import type { TableInterface } from "../../types";
+import type { TableFilterProps as TableFilterPropsCustom, TableInterface } from "../../types";
 import styles from "./table-filter.module.scss";
 
 type TableFilterProps<RowData extends Record<string, unknown>> = {
   filterOptions: FilterFieldType[];
   filters: Record<string, FilterInputValueType>;
   table: TableInterface<RowData>;
-  Filter?: React.FC<{
-    table: TableInterface<RowData>;
-    filters: Record<string, FilterInputValueType>;
-    filterOptions: FilterFieldType[];
-  }>;
+  Filter: React.FC<TableFilterPropsCustom<RowData>> | undefined;
   withFilters: boolean;
 };
 

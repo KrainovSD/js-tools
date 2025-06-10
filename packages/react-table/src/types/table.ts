@@ -1,3 +1,4 @@
+import type { FilterFieldType, FilterInputValueType } from "@krainovsd/react-ui";
 import type {
   CellContext,
   ColumnDef,
@@ -262,6 +263,37 @@ export type TableInterface<TData extends RowData> = Table<TData>;
 export type RowInterface<TData extends RowData> = Row<TData>;
 export type HeaderInterface<TData extends RowData> = HeaderGroup<TData>;
 
+export type TablePaginationProps<RowData extends Record<string, unknown>> = {
+  table: TableInterface<RowData>;
+  pageIndex: number;
+  pageSize: number;
+  totalRows: number;
+  pageSizes: number[];
+};
+export type TableFilterProps<RowData extends Record<string, unknown>> = {
+  table: TableInterface<RowData>;
+  filters: Record<string, FilterInputValueType>;
+  filterOptions: FilterFieldType[];
+};
+export type TableEmptyProps = {};
+export type TableLoaderProps = {};
+
+export type GanttTaskProps<
+  RowData extends Record<string, unknown>,
+  GanttData extends Record<string, unknown>,
+> = {
+  row: RowInterface<RowData>;
+  ganttInfo: GanttInfo<GanttData>;
+  rowInfo: GanttRowInfo;
+  bodyWidth: number | null;
+  rowsMap: Record<string | number, GanttRowInfo | undefined>;
+  hasUpArrow: boolean;
+  hasDownArrow: boolean;
+};
+export type GanttTooltipProps<RowData extends Record<string, unknown>> = {
+  row: RowInterface<RowData>;
+};
+
 export type GanttProps<
   RowData extends Record<string, unknown>,
   GanttData extends Record<string, unknown>,
@@ -273,15 +305,8 @@ export type GanttProps<
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   instantGanttSplitter?: boolean;
   ganttGrid?: boolean;
-  GanttTooltip?: React.FC<{ row: RowInterface<RowData> }>;
-  GanttTask?:
-    | React.FC<{
-        row: RowInterface<RowData>;
-        ganttInfo: GanttInfo<GanttData>;
-        rowInfo: GanttRowInfo;
-        bodyWidth: number | null;
-      }>
-    | undefined;
+  GanttTooltip?: React.FC<GanttTooltipProps<RowData>>;
+  GanttTask?: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
   ganttView?: GanttViewType;
 };
 
