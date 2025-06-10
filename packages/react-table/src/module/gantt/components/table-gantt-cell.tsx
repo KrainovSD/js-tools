@@ -24,6 +24,9 @@ type GetCellOptions<
         ganttInfo: GanttInfo<GanttData>;
         rowInfo: GanttRowInfo;
         bodyWidth: number | null;
+        rowsMap: Record<string | number, GanttRowInfo | undefined>;
+        hasUpArrow: boolean;
+        hasDownArrow: boolean;
       }>
     | undefined;
   rowsMap: Record<string | number, GanttRowInfo | undefined>;
@@ -48,6 +51,26 @@ export function TableGanttCell<
 
   if (!rowInfo) return null;
 
+  let hasUpArrow = false;
+  let hasDownArrow = false;
+  if (ganttInfo.dependents) {
+    for (let i = 0; i < ganttInfo.dependents.length; i++) {
+      const dependent = ganttInfo.dependents[i];
+
+      if (hasDownArrow && hasUpArrow) {
+        break;
+      }
+
+      if (opts.rowsMap[dependent]) {
+        if (rowInfo.index - opts.rowsMap[dependent].index > 0) {
+          hasUpArrow = true;
+        } else if (rowInfo.index - opts.rowsMap[dependent].index < 0) {
+          hasDownArrow = true;
+        }
+      }
+    }
+  }
+
   if (rowInfo.textWidth > rowInfo.width && opts.bodyWidth) {
     textMaxWidth = opts.bodyWidth - rowInfo.width - rowInfo.left - 25;
   }
@@ -60,6 +83,9 @@ export function TableGanttCell<
           ganttInfo={ganttInfo}
           rowInfo={rowInfo}
           bodyWidth={opts.bodyWidth}
+          rowsMap={opts.rowsMap}
+          hasDownArrow={hasDownArrow}
+          hasUpArrow={hasUpArrow}
         />
       )}
       {!opts.GanttTask && (
@@ -119,12 +145,13 @@ export function TableGanttCell<
           </div>
           {rowInfo.textWidth > rowInfo.width && (
             <span
-              className={clsx(
-                styles.item__text,
-                styles.item__text_ellipsis,
-                !!ganttInfo.dependents?.length && styles.item__text_shift,
-              )}
-              style={{ maxWidth: textMaxWidth }}
+              className={clsx(styles.item__text, styles.item__text_ellipsis)}
+              style={{
+                maxWidth: textMaxWidth,
+                marginInlineStart: hasUpArrow && hasDownArrow ? "30px" : "10px",
+                marginBlockStart: hasDownArrow && !hasUpArrow ? "-20px" : "0px",
+                marginBlockEnd: hasUpArrow && !hasDownArrow ? "-20px" : "0px",
+              }}
             >
               {ganttInfo.name}
             </span>

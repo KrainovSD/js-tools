@@ -5,7 +5,7 @@ import React from "react";
 import { Table } from "../../table";
 import type { RowInterface } from "../../types";
 import { COLUMNS_GANTT_VIRTUAL } from "../lib/gantt/columns";
-import { GANTT_ROWS_VIRTUAL } from "../lib/gantt/rows";
+import { GANTT_EASY_ROWS } from "../lib/gantt/rows";
 import type {
   GanttCellClassKeys,
   GanttCellRenderKeys,
@@ -51,7 +51,7 @@ export function GanttVirtual() {
       }
     }
 
-    checkRows(GANTT_ROWS_VIRTUAL);
+    checkRows(GANTT_EASY_ROWS);
 
     return { firstDate, lastDate };
   }, []);
@@ -70,7 +70,8 @@ export function GanttVirtual() {
       GanttSortTypeKeys
     >
       columns={COLUMNS_GANTT_VIRTUAL}
-      rows={GANTT_ROWS_VIRTUAL}
+      // rows={GANTT_ROWS_VIRTUAL}
+      rows={GANTT_EASY_ROWS}
       // rows={[]}
       // rows={[{ end: "", id: "", name: "", start: "", children: [], dependents: [] }]}
       Empty={() => <span>Empty</span>}
@@ -101,7 +102,7 @@ export function GanttVirtual() {
       })}
       firstGanttDate={firstDate?.toISOString?.()}
       lastGanttDate={lastDate?.toDateString?.()}
-      ganttRowMini={true}
+      ganttRowMini={false}
       ganttGrid={true}
       ganttView={"years"}
       expanded={expanded}

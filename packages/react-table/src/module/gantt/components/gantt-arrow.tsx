@@ -1,8 +1,7 @@
-import { CaretRightFilled } from "@krainovsd/react-icons";
-import clsx from "clsx";
-import React from "react";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
 import type { GanttRowInfo } from "../../../types";
+import { GanttArrowDown } from "./gantt-arrow-down";
+import { GanttArrowUp } from "./gantt-arrow-up";
 import styles from "./gantt-arrow.module.scss";
 
 type Props = {
@@ -11,6 +10,9 @@ type Props = {
   rowsMap: Record<string | number, GanttRowInfo | undefined>;
   mini: boolean;
 };
+
+const TOP_SHIFT_MAX = -1;
+const TOP_SHIFT_MINI = -2;
 
 const DEFAULT_LINK_SIZE = 2;
 const DEFAULT_CORNER_SIZE = 4;
@@ -22,8 +24,6 @@ const TOP_TO_BOTTOM_EXTRA_MINI = 13;
 
 const LEFT_TO_RIGHT_SECOND_DEFAULT = 22;
 
-const TOP_SHIFT_MAX = -1;
-const TOP_SHIFT_MINI = -2;
 const END_ARROW_SHIFT = -8;
 const TOP_ARROW_SHIFT = 1;
 
@@ -32,6 +32,7 @@ export function GanttArrow(props: Props) {
   if (!rowInfo) return;
 
   const TOP_SHIFT = props.mini ? TOP_SHIFT_MINI : TOP_SHIFT_MAX;
+  const ROW_HEIGHT = props.mini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT;
   const startTop = rowInfo.top + TOP_SHIFT;
   const startLeft = rowInfo.left + rowInfo.width - 2;
 
@@ -39,187 +40,76 @@ export function GanttArrow(props: Props) {
     <div className={styles.base} style={{ left: startLeft, top: startTop }}>
       {props.dependencies.map((depend, index) => {
         const dependRow = props.rowsMap[depend];
-
         if (!dependRow) return null;
 
-        const dependLeft = dependRow.left;
+        const indexDiff = dependRow.index - rowInfo.index;
+
         const fullFirstCorner =
           startLeft + LEFT_TO_RIGHT_FIRST + DEFAULT_CORNER_SIZE + LEFT_TO_RIGHT_SECOND_DEFAULT;
-        const RIGHT_TO_LEFT = fullFirstCorner - dependLeft;
-        const requireExtraCorner = dependLeft < fullFirstCorner;
+        const RIGHT_TO_LEFT = fullFirstCorner - dependRow.left;
+        const requireExtraCorner = dependRow.left < fullFirstCorner;
 
-        const indexDiff = dependRow.index - rowInfo.index;
-        let TOP_TO_BOTTOM =
-          indexDiff * (props.mini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT) -
-          DEFAULT_CORNER_SIZE * 2;
+        let TOP_TO_BOTTOM = Math.abs(indexDiff * ROW_HEIGHT) - DEFAULT_CORNER_SIZE * 2;
         const TOP_TO_BOTTOM_EXTRA = props.mini ? TOP_TO_BOTTOM_EXTRA_MINI : TOP_TO_BOTTOM_EXTRA_MAX;
-        if (requireExtraCorner) TOP_TO_BOTTOM -= TOP_TO_BOTTOM_EXTRA + DEFAULT_CORNER_SIZE * 2;
+        if (requireExtraCorner) {
+          TOP_TO_BOTTOM -= TOP_TO_BOTTOM_EXTRA + DEFAULT_CORNER_SIZE * 2;
+        }
 
         let LEFT_TO_RIGHT_SECOND =
-          dependLeft - startLeft - LEFT_TO_RIGHT_FIRST - DEFAULT_CORNER_SIZE * 2 + END_ARROW_SHIFT;
+          dependRow.left -
+          startLeft -
+          LEFT_TO_RIGHT_FIRST -
+          DEFAULT_CORNER_SIZE * 2 +
+          END_ARROW_SHIFT;
         if (requireExtraCorner) {
           LEFT_TO_RIGHT_SECOND =
-            dependLeft -
+            dependRow.left -
             (startLeft + LEFT_TO_RIGHT_FIRST - RIGHT_TO_LEFT - DEFAULT_CORNER_SIZE) -
             DEFAULT_CORNER_SIZE +
             END_ARROW_SHIFT;
         }
 
-        if (indexDiff <= 0) return null;
+        if (indexDiff > 0) {
+          return (
+            <GanttArrowDown
+              key={`${props.currentRowId}${depend}${index}`}
+              arrowIndex={index}
+              dependId={depend}
+              rowId={props.currentRowId}
+              arrowSize={DEFAULT_ARROW_SIZE}
+              cornerSize={DEFAULT_CORNER_SIZE}
+              requireExtraCorner={requireExtraCorner}
+              linkSize={DEFAULT_LINK_SIZE}
+              leftToRightFirst={LEFT_TO_RIGHT_FIRST}
+              leftToRightSecond={LEFT_TO_RIGHT_SECOND}
+              rightToLeft={RIGHT_TO_LEFT}
+              topArrowShift={TOP_ARROW_SHIFT}
+              topToBottom={TOP_TO_BOTTOM}
+              topToBottomExtra={TOP_TO_BOTTOM_EXTRA}
+            />
+          );
+        } else if (indexDiff < 0) {
+          return (
+            <GanttArrowUp
+              key={`${props.currentRowId}${depend}${index}`}
+              arrowIndex={index}
+              dependId={depend}
+              rowId={props.currentRowId}
+              arrowSize={DEFAULT_ARROW_SIZE}
+              cornerSize={DEFAULT_CORNER_SIZE}
+              requireExtraCorner={requireExtraCorner}
+              linkSize={DEFAULT_LINK_SIZE}
+              leftToRightFirst={LEFT_TO_RIGHT_FIRST}
+              leftToRightSecond={LEFT_TO_RIGHT_SECOND}
+              rightToLeft={RIGHT_TO_LEFT}
+              topArrowShift={TOP_ARROW_SHIFT}
+              topToBottom={TOP_TO_BOTTOM}
+              topToBottomExtra={TOP_TO_BOTTOM_EXTRA}
+            />
+          );
+        }
 
-        return (
-          <React.Fragment key={`${props.currentRowId}${depend}${index}`}>
-            <div
-              className={clsx(styles.link, styles.one__leftToRight)}
-              style={{ width: LEFT_TO_RIGHT_FIRST, height: DEFAULT_LINK_SIZE, left: 0, top: 0 }}
-            ></div>
-            <div
-              className={clsx(styles.corner, styles.one__radius)}
-              style={{ left: LEFT_TO_RIGHT_FIRST, top: 0 }}
-            ></div>
-            {requireExtraCorner && (
-              <div
-                className={clsx(styles.link, styles.two__topToBottom)}
-                style={{
-                  width: DEFAULT_LINK_SIZE,
-                  height: TOP_TO_BOTTOM_EXTRA,
-                  left: LEFT_TO_RIGHT_FIRST + DEFAULT_CORNER_SIZE,
-                  top: DEFAULT_CORNER_SIZE,
-                }}
-              ></div>
-            )}
-            {requireExtraCorner && (
-              <div
-                className={clsx(styles.corner, styles.two__radius)}
-                style={{
-                  left: LEFT_TO_RIGHT_FIRST,
-                  top: TOP_TO_BOTTOM_EXTRA + DEFAULT_CORNER_SIZE,
-                }}
-              ></div>
-            )}
-            {requireExtraCorner && (
-              <div
-                className={clsx(styles.link, styles.three__rightToLeft)}
-                style={{
-                  width: RIGHT_TO_LEFT,
-                  height: DEFAULT_LINK_SIZE,
-                  left: LEFT_TO_RIGHT_FIRST - RIGHT_TO_LEFT,
-                  top: TOP_TO_BOTTOM_EXTRA + DEFAULT_CORNER_SIZE * 2,
-                }}
-              ></div>
-            )}
-            {requireExtraCorner && (
-              <div
-                className={clsx(styles.corner, styles.three__radius)}
-                style={{
-                  left: LEFT_TO_RIGHT_FIRST - RIGHT_TO_LEFT - DEFAULT_CORNER_SIZE,
-                  top: TOP_TO_BOTTOM_EXTRA + DEFAULT_CORNER_SIZE * 2,
-                }}
-              ></div>
-            )}
-            {requireExtraCorner && (
-              <div
-                className={clsx(styles.link, styles.four__topToBottom)}
-                style={{
-                  width: DEFAULT_LINK_SIZE,
-                  height: TOP_TO_BOTTOM,
-                  left: LEFT_TO_RIGHT_FIRST - RIGHT_TO_LEFT - DEFAULT_CORNER_SIZE,
-                  top: TOP_TO_BOTTOM_EXTRA + DEFAULT_CORNER_SIZE * 3,
-                }}
-              ></div>
-            )}
-            {!requireExtraCorner && (
-              <div
-                className={clsx(styles.link, styles.four__topToBottom)}
-                style={{
-                  width: DEFAULT_LINK_SIZE,
-                  height: TOP_TO_BOTTOM,
-                  left: LEFT_TO_RIGHT_FIRST + DEFAULT_CORNER_SIZE,
-                  top: DEFAULT_CORNER_SIZE,
-                }}
-              ></div>
-            )}
-            {requireExtraCorner && (
-              <div
-                className={clsx(styles.corner, styles.four__radius)}
-                style={{
-                  left: LEFT_TO_RIGHT_FIRST - RIGHT_TO_LEFT - DEFAULT_CORNER_SIZE,
-                  top: TOP_TO_BOTTOM_EXTRA + TOP_TO_BOTTOM + DEFAULT_CORNER_SIZE * 3,
-                }}
-              ></div>
-            )}
-            {!requireExtraCorner && (
-              <div
-                className={clsx(styles.corner, styles.four__radius)}
-                style={{
-                  left: LEFT_TO_RIGHT_FIRST + DEFAULT_CORNER_SIZE,
-                  top: TOP_TO_BOTTOM + DEFAULT_CORNER_SIZE,
-                }}
-              ></div>
-            )}
-            {requireExtraCorner && (
-              <div
-                className={clsx(styles.link, styles.five__leftToRight)}
-                style={{
-                  width: LEFT_TO_RIGHT_SECOND,
-                  height: DEFAULT_LINK_SIZE,
-                  left: LEFT_TO_RIGHT_FIRST - RIGHT_TO_LEFT,
-                  top: TOP_TO_BOTTOM_EXTRA + TOP_TO_BOTTOM + DEFAULT_CORNER_SIZE * 4,
-                }}
-              ></div>
-            )}
-            {!requireExtraCorner && (
-              <div
-                className={clsx(styles.link, styles.five__leftToRight)}
-                style={{
-                  width: LEFT_TO_RIGHT_SECOND,
-                  height: DEFAULT_LINK_SIZE,
-                  left: LEFT_TO_RIGHT_FIRST + DEFAULT_CORNER_SIZE * 2,
-                  top: TOP_TO_BOTTOM + DEFAULT_CORNER_SIZE * 2,
-                }}
-              ></div>
-            )}
-            {requireExtraCorner && (
-              <CaretRightFilled
-                className={styles.arrow}
-                color="inherit"
-                style={{
-                  left:
-                    LEFT_TO_RIGHT_FIRST -
-                    RIGHT_TO_LEFT +
-                    LEFT_TO_RIGHT_SECOND -
-                    DEFAULT_ARROW_SIZE / 2,
-                  top:
-                    TOP_TO_BOTTOM_EXTRA +
-                    TOP_TO_BOTTOM +
-                    DEFAULT_CORNER_SIZE * 4 -
-                    DEFAULT_ARROW_SIZE / 2 +
-                    TOP_ARROW_SHIFT,
-                }}
-                size={DEFAULT_ARROW_SIZE}
-              />
-            )}
-            {!requireExtraCorner && (
-              <CaretRightFilled
-                className={styles.arrow}
-                color="inherit"
-                style={{
-                  left:
-                    LEFT_TO_RIGHT_FIRST +
-                    DEFAULT_CORNER_SIZE * 2 +
-                    LEFT_TO_RIGHT_SECOND -
-                    DEFAULT_ARROW_SIZE / 2,
-                  top:
-                    TOP_TO_BOTTOM +
-                    DEFAULT_CORNER_SIZE * 2 -
-                    DEFAULT_ARROW_SIZE / 2 +
-                    TOP_ARROW_SHIFT,
-                }}
-                size={DEFAULT_ARROW_SIZE}
-              />
-            )}
-          </React.Fragment>
-        );
+        return null;
       })}
     </div>
   );

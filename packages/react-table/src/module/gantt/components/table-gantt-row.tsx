@@ -13,6 +13,9 @@ type Props<RowData extends Record<string, unknown>, GanttData extends Record<str
         ganttInfo: GanttInfo<GanttData>;
         rowInfo: GanttRowInfo;
         bodyWidth: number | null;
+        rowsMap: Record<string | number, GanttRowInfo | undefined>;
+        hasUpArrow: boolean;
+        hasDownArrow: boolean;
       }>
     | undefined;
   rowsMap: Record<string | number, GanttRowInfo | undefined>;

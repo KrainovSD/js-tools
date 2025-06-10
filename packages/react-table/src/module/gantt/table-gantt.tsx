@@ -45,6 +45,9 @@ type TableContainerProps<
         ganttInfo: GanttInfo<GanttData>;
         rowInfo: GanttRowInfo;
         bodyWidth: number | null;
+        rowsMap: Record<string | number, GanttRowInfo | undefined>;
+        hasUpArrow: boolean;
+        hasDownArrow: boolean;
       }>
     | undefined;
   ganttView: GanttViewType;

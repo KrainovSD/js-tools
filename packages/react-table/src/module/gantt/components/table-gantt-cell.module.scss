@@ -39,8 +39,8 @@
   }
 
   &__text {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-inline-end: 10px;
+    margin-inline-start: 10px;
     font-size: 14px;
     font-family: var(--table-font-family);
 
@@ -53,10 +53,6 @@
       max-width: 100%;
       overflow: hidden;
       white-space: nowrap;
-    }
-
-    &_shift {
-      transform: translateY(-50%);
     }
   }
 }
