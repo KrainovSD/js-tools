@@ -4,7 +4,7 @@
     type VisiblePosition,
     getVisiblePosition,
   } from "@krainovsd/js-helpers";
-  import { computed, shallowRef, useTemplateRef, watchEffect } from "vue";
+  import { computed, ref, shallowRef, useTemplateRef, watch, watchEffect } from "vue";
   import CaretUpOutlineIcon from "../icons/CaretUpOutlineIcon.vue";
 
   export type PositionerTargetNodePosition = {
@@ -24,6 +24,7 @@
   };
 
   export type PositionerProps = {
+    open?: boolean;
     visibleArea?: HTMLElement;
     placement?: Exclude<PositionPlacements, "flex">;
     zIndex?: number;
@@ -41,6 +42,7 @@
   const ARROW_SHIFT_FROM_CORNER_MINI = 5;
 
   const props = defineProps<PositionerProps>();
+  const localOpen = ref(false);
   const elementRef = useTemplateRef("positioner");
   const position = shallowRef<VisiblePosition>({
     bottom: 0,
@@ -160,7 +162,49 @@
         translate,
       };
     }
+
+    void execAnimation("ksd-positioner_fade-appear");
   }
+
+  function execAnimation(className: string) {
+    const eventController = new AbortController();
+
+    return new Promise((resolve) => {
+      if (!elementRef.value) {
+        resolve(true);
+
+        return;
+      }
+
+      elementRef.value.addEventListener(
+        "animationend",
+        () => {
+          resolve(true);
+          elementRef.value?.classList?.remove?.(className);
+          eventController.abort();
+        },
+        {
+          signal: eventController.signal,
+        },
+      );
+      elementRef.value.classList.add(className);
+    });
+  }
+
+  watch(
+    () => props.open,
+    (value) => {
+      if (value) {
+        localOpen.value = true;
+      } else {
+        void execAnimation("ksd-positioner_fade-disappear").then(() => {
+          if (!props.open) {
+            localOpen.value = false;
+          }
+        });
+      }
+    },
+  );
 
   watchEffect(() => {
     updatePosition();
@@ -170,7 +214,7 @@
 </script>
 
 <template>
-  <Teleport :to="$props.modalRoot ?? 'body'">
+  <Teleport v-if="localOpen" :to="$props.modalRoot ?? 'body'">
     <div ref="positioner" class="ksd-positioner" :class="$attrs.class" :style="positionerStyles">
       <CaretUpOutlineIcon
         v-if="$props.arrow"
@@ -194,6 +238,17 @@
     z-index: var(--ksd-popup-z-index);
     box-shadow: var(--ksd-shadow-secondary);
 
+    &_fade-appear {
+      animation-name: ksd-positioner-fade-appear;
+      animation-duration: var(--ksd-transition-fast);
+      animation-timing-function: cubic-bezier(0.01, 0, 1, 0);
+    }
+    &_fade-disappear {
+      animation-name: ksd-positioner-fade-disappear;
+      animation-duration: var(--ksd-transition-fast);
+      animation-timing-function: cubic-bezier(0.01, 0, 1, 0);
+    }
+
     &__arrow {
       position: absolute;
     }
@@ -202,6 +257,25 @@
       border-radius: var(--ksd-border-radius);
       min-width: calc(var(--ksd-border-radius) * 2 + 32px);
       min-height: var(--ksd-control-height);
+    }
+  }
+
+  @keyframes ksd-positioner-fade-appear {
+    from {
+      opacity: 0;
+      scale: 0.6;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+  @keyframes ksd-positioner-fade-disappear {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
     }
   }
 </style>

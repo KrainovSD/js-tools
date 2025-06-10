@@ -147,8 +147,8 @@
   <span ref="tooltip" class="ksd-tooltip"></span>
   <slot ref="slot"></slot>
   <Positioner
-    v-if="open"
     ref="positioner"
+    :open="open"
     arrow
     :target="cursorPosition != undefined ? cursorPosition : content"
     class-name="ksd-tooltip__positioner"
