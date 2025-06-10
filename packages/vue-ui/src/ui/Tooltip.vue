@@ -91,7 +91,7 @@
 
       openTimer.value = setTimeout(() => {
         getPlacement(event);
-      }, props.openDelay);
+      }, props.openDelay ?? 100);
     }
 
     function onDisAppear() {
@@ -157,6 +157,7 @@
     :placement="props.placement"
     :shift-x="shiftX"
     :shift-y="shiftY"
+    animation="translate"
     >{{ $props.text }}</Positioner
   >
 </template>

@@ -70,58 +70,62 @@ export const AllInOne: Story = {
         h(VTooltip, { ...args, openAboveCursor: true, stickyCursor: true }, () =>
           h(VText, { ellipsis: true, fit: true }, () => "Стрелочка следует за курсором"),
         ),
-        h(VFlex, { vertical: true, gap: 30, style: { marginLeft: "300px", maxWidth: "390px" } }, [
-          h(VFlex, { gap: 20, flexAlign: "center", justify: "center" }, [
-            h(VTooltip, { ...args, placement: "top-left" }, () =>
-              h(VText, { ellipsis: true, fit: true }, () => "t-left"),
-            ),
-            h(VTooltip, { ...args, placement: "top-center" }, () =>
-              h(VText, { ellipsis: true, fit: true }, () => "t-center"),
-            ),
-            h(VTooltip, { ...args, placement: "top-right" }, () =>
-              h(VText, { ellipsis: true, fit: true }, () => "t-right"),
-            ),
-          ]),
-          h(VFlex, { gap: 280 }, [
-            h(VFlex, { gap: 20, vertical: true }, [
-              h(VTooltip, { ...args, placement: "left-top" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "l-top"),
+        h(
+          VFlex,
+          { vertical: true, gap: 30, style: { marginLeft: "300px", maxWidth: "390px" } },
+          () => [
+            h(VFlex, { gap: 20, flexAlign: "center", justify: "center" }, () => [
+              h(VTooltip, { ...args, placement: "top-left" }, () =>
+                h(VText, { ellipsis: true, fit: true }, () => "t-left"),
               ),
-              h(VTooltip, { ...args, placement: "left-center" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "l-center"),
+              h(VTooltip, { ...args, placement: "top-center" }, () =>
+                h(VText, { ellipsis: true, fit: true }, () => "t-center"),
               ),
-              h(VTooltip, { ...args, placement: "left-bottom" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "l-bottom"),
+              h(VTooltip, { ...args, placement: "top-right" }, () =>
+                h(VText, { ellipsis: true, fit: true }, () => "t-right"),
               ),
             ]),
-            h(VFlex, { gap: 20, vertical: true }, [
-              h(VTooltip, { ...args, placement: "right-top" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "r-top"),
+            h(VFlex, { gap: 280 }, () => [
+              h(VFlex, { gap: 20, vertical: true }, () => [
+                h(VTooltip, { ...args, placement: "left-top" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "l-top"),
+                ),
+                h(VTooltip, { ...args, placement: "left-center" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "l-center"),
+                ),
+                h(VTooltip, { ...args, placement: "left-bottom" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "l-bottom"),
+                ),
+              ]),
+              h(VFlex, { gap: 20, vertical: true }, () => [
+                h(VTooltip, { ...args, placement: "right-top" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "r-top"),
+                ),
+                h(VTooltip, { ...args, placement: "right-center" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "r-center"),
+                ),
+                h(VTooltip, { ...args, placement: "right-bottom" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "r-bottom"),
+                ),
+              ]),
+            ]),
+            h(VFlex, { gap: 20, flexAlign: "center", justify: "center" }, () => [
+              h(VTooltip, { ...args, placement: "bottom-left" }, () =>
+                h(VText, { ellipsis: true, fit: true }, () => "b-left"),
               ),
-              h(VTooltip, { ...args, placement: "right-center" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "r-center"),
+              h(VTooltip, { ...args, placement: "bottom-center" }, () =>
+                h(VText, { ellipsis: true, fit: true }, () => "b-center"),
               ),
-              h(VTooltip, { ...args, placement: "right-bottom" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "r-bottom"),
+              h(VTooltip, { ...args, placement: "bottom-right" }, () =>
+                h(VText, { ellipsis: true, fit: true }, () => "b-right"),
               ),
             ]),
-          ]),
-          h(VFlex, { gap: 20, flexAlign: "center", justify: "center" }, [
-            h(VTooltip, { ...args, placement: "bottom-left" }, () =>
-              h(VText, { ellipsis: true, fit: true }, () => "b-left"),
-            ),
-            h(VTooltip, { ...args, placement: "bottom-center" }, () =>
-              h(VText, { ellipsis: true, fit: true }, () => "b-center"),
-            ),
-            h(VTooltip, { ...args, placement: "bottom-right" }, () =>
-              h(VText, { ellipsis: true, fit: true }, () => "b-right"),
-            ),
-          ]),
-        ]),
+          ],
+        ),
       ]);
     },
   }),
   args: {
-    text: "Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа",
+    text: "Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа",
   },
 };

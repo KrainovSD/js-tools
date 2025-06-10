@@ -34,7 +34,7 @@
     shiftY?: number;
     target: HTMLElement | PositionerTargetNodePosition | undefined | null;
     arrow?: boolean;
-    flexShift?: boolean;
+    animation?: "translate" | "scale" | "scaleY";
   };
 
   const ARROW_SHIFT_FROM_CENTER = 11;
@@ -84,7 +84,6 @@
         position: props.target && "width" in props.target ? props.target : undefined,
       },
       placement: props.placement ?? "bottom-center",
-      flex: props.flexShift,
       stepX: props.shiftX,
       stepY: props.shiftY,
       visibleArea: props.visibleArea,
@@ -163,7 +162,8 @@
       };
     }
 
-    void execAnimation("ksd-positioner_fade-appear");
+    elementRef.value.classList.add(position.value.placement);
+    void execAnimation(`ksd-positioner_${props.animation}-in`);
   }
 
   function execAnimation(className: string) {
@@ -196,12 +196,14 @@
     (value) => {
       if (value) {
         localOpen.value = true;
-      } else {
-        void execAnimation("ksd-positioner_fade-disappear").then(() => {
+      } else if (props.animation) {
+        void execAnimation(`ksd-positioner_${props.animation}-out`).then(() => {
           if (!props.open) {
             localOpen.value = false;
           }
         });
+      } else {
+        localOpen.value = false;
       }
     },
   );
@@ -238,15 +240,118 @@
     z-index: var(--ksd-popup-z-index);
     box-shadow: var(--ksd-shadow-secondary);
 
-    &_fade-appear {
-      animation-name: ksd-positioner-fade-appear;
-      animation-duration: var(--ksd-transition-fast);
-      animation-timing-function: cubic-bezier(0.01, 0, 1, 0);
+    &.bottom-left {
+      transform-origin: left top;
     }
-    &_fade-disappear {
-      animation-name: ksd-positioner-fade-disappear;
-      animation-duration: var(--ksd-transition-fast);
-      animation-timing-function: cubic-bezier(0.01, 0, 1, 0);
+    &.bottom-center {
+      transform-origin: center top;
+    }
+    &.bottom-right {
+      transform-origin: right top;
+    }
+
+    &.top-left {
+      transform-origin: left bottom;
+    }
+    &.top-center {
+      transform-origin: center bottom;
+    }
+    &.top-right {
+      transform-origin: right bottom;
+    }
+
+    &.left-top {
+      transform-origin: right top;
+    }
+    &.left-center {
+      transform-origin: right center;
+    }
+    &.left-bottom {
+      transform-origin: right bottom;
+    }
+
+    &.right-top {
+      transform-origin: left top;
+    }
+    &.right-center {
+      transform-origin: left center;
+    }
+    &.right-bottom {
+      transform-origin: left bottom;
+    }
+
+    &_translate-in {
+      animation-duration: var(--ksd-transition-mid);
+      animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
+
+      &.top-left,
+      &.top-center,
+      &.top-right {
+        animation-name: ksd-positioner-translate-top-in;
+      }
+      &.bottom-left,
+      &.bottom-center,
+      &.bottom-right {
+        animation-name: ksd-positioner-translate-bottom-in;
+      }
+      &.left-top,
+      &.left-center,
+      &.left-bottom {
+        animation-name: ksd-positioner-translate-left-in;
+      }
+      &.right-top,
+      &.right-center,
+      &.right-bottom {
+        animation-name: ksd-positioner-translate-right-in;
+      }
+    }
+    &_translate-out {
+      animation-duration: var(--ksd-transition-mid);
+      animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
+      &.top-left,
+      &.top-center,
+      &.top-right {
+        animation-name: ksd-positioner-translate-top-out;
+      }
+      &.bottom-left,
+      &.bottom-center,
+      &.bottom-right {
+        animation-name: ksd-positioner-translate-bottom-out;
+      }
+      &.left-top,
+      &.left-center,
+      &.left-bottom {
+        animation-name: ksd-positioner-translate-left-out;
+      }
+      &.right-top,
+      &.right-center,
+      &.right-bottom {
+        animation-name: ksd-positioner-translate-right-out;
+      }
+    }
+
+    &_scale-in {
+      animation-name: ksd-positioner-scale-in;
+      animation-duration: var(--ksd-transition-mid);
+      animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
+    }
+
+    &_scale-out {
+      animation-name: ksd-positioner-scale-out;
+      animation-duration: var(--ksd-transition-mid);
+      animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
+    }
+
+    &_scaleY-in {
+      animation-name: ksd-positioner-scaleY-in;
+      animation-duration: var(--ksd-transition-mid);
+      animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
+    }
+
+    &_scaleY-out {
+      animation-name: ksd-positioner-scaleY-out;
+      animation-duration: var(--ksd-transition-mid);
+      animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
     }
 
     &__arrow {
@@ -260,22 +365,129 @@
     }
   }
 
-  @keyframes ksd-positioner-fade-appear {
+  @keyframes ksd-positioner-translate-top-in {
     from {
       opacity: 0;
-      scale: 0.6;
+      translate: 0px -5px;
+    }
+    to {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+  }
+  @keyframes ksd-positioner-translate-top-out {
+    from {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+    to {
+      opacity: 0;
+      translate: 0px -5px;
+    }
+  }
+
+  @keyframes ksd-positioner-translate-bottom-in {
+    from {
+      opacity: 0;
+      translate: 0px 5px;
+    }
+    to {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+  }
+  @keyframes ksd-positioner-translate-bottom-out {
+    from {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+    to {
+      opacity: 0;
+      translate: 0px 5px;
+    }
+  }
+
+  @keyframes ksd-positioner-translate-left-in {
+    from {
+      opacity: 0;
+      translate: -5px 0px;
+    }
+    to {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+  }
+  @keyframes ksd-positioner-translate-left-out {
+    from {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+    to {
+      opacity: 0;
+      translate: -5px 0px;
+    }
+  }
+
+  @keyframes ksd-positioner-translate-right-in {
+    from {
+      opacity: 0;
+      translate: 5px 0px;
+    }
+    to {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+  }
+  @keyframes ksd-positioner-translate-right-out {
+    from {
+      opacity: 1;
+      translate: 0px 0px;
+    }
+    to {
+      opacity: 0;
+      translate: 5px 0px;
+    }
+  }
+
+  @keyframes ksd-positioner-scale-in {
+    from {
+      opacity: 0;
+      scale: 0.89;
     }
     to {
       opacity: 1;
       scale: 1;
     }
   }
-  @keyframes ksd-positioner-fade-disappear {
+  @keyframes ksd-positioner-scale-out {
     from {
       opacity: 1;
+      scale: 1 1;
     }
     to {
       opacity: 0;
+      scale: 0.89;
+    }
+  }
+
+  @keyframes ksd-positioner-scaleY-in {
+    from {
+      opacity: 0;
+      scale: 1 0.8;
+    }
+    to {
+      opacity: 1;
+      scale: 1 1;
+    }
+  }
+  @keyframes ksd-positioner-scaleY-out {
+    from {
+      opacity: 1;
+      scale: 1 1;
+    }
+    to {
+      opacity: 0;
+      scale: 1 0.8;
     }
   }
 </style>
