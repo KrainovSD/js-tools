@@ -4,6 +4,7 @@
   import Positioner, { type PositionerTargetNodePosition } from "./Positioner.vue";
 
   export type TooltipProps = {
+    show?: undefined | boolean;
     text: string | number;
     openByFocus?: boolean;
     openByHover?: boolean;
@@ -17,13 +18,29 @@
     zIndex?: number;
     placement?: Exclude<PositionPlacements, "flex">;
     modalRoot?: string | HTMLElement | null;
+    animation?: boolean;
   };
 
   defineOptions({
     inheritAttrs: false,
   });
 
-  const props = defineProps<TooltipProps>();
+  const props = withDefaults(defineProps<TooltipProps>(), {
+    show: undefined,
+    openDelay: 100,
+    closeDelay: 0,
+    modalRoot: undefined,
+    observe: false,
+    openAboveCursor: false,
+    openByClick: false,
+    openByFocus: false,
+    openByHover: true,
+    openNotVisible: false,
+    placement: "bottom-center",
+    stickyCursor: false,
+    zIndex: undefined,
+    animation: true,
+  });
   const elementRef = useTemplateRef("tooltip");
   const positionerRef = useTemplateRef("positioner");
   const content = computed(() => elementRef.value?.nextElementSibling as HTMLElement | undefined);
@@ -46,11 +63,12 @@
       : 0,
   );
 
-  const open = ref(false);
+  const localOpen = ref(false);
   const openTimer = ref<NodeJS.Timeout | null>(null);
   const closeTimer = ref<NodeJS.Timeout | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   const cursorPosition = shallowRef<PositionerTargetNodePosition | null>(null);
+  const open = computed(() => props.show ?? localOpen.value);
 
   watchEffect((clean) => {
     if (!content.value) return;
@@ -81,7 +99,7 @@
         };
       }
 
-      open.value = true;
+      localOpen.value = true;
     }
 
     function onAppear(event: MouseEvent | FocusEvent) {
@@ -91,7 +109,7 @@
 
       openTimer.value = setTimeout(() => {
         getPlacement(event);
-      }, props.openDelay ?? 100);
+      }, props.openDelay);
     }
 
     function onDisAppear() {
@@ -100,7 +118,7 @@
       }
 
       closeTimer.value = setTimeout(() => {
-        open.value = false;
+        localOpen.value = false;
 
         if (props.openAboveCursor) {
           cursorPosition.value = null;
@@ -108,7 +126,7 @@
       }, props.closeDelay);
     }
 
-    if (props.openByHover != undefined && !props.openByHover) {
+    if (props.openByHover == undefined || props.openByHover) {
       content.value.addEventListener("mouseenter", onAppear, { signal: eventController.signal });
       content.value.addEventListener("mouseleave", onDisAppear, { signal: eventController.signal });
       if (props.stickyCursor) {
@@ -153,11 +171,11 @@
     :target="cursorPosition != undefined ? cursorPosition : content"
     class-name="ksd-tooltip__positioner"
     v-bind="$attrs"
-    :modal-root="props.modalRoot"
-    :placement="props.placement"
+    :modal-root="$props.modalRoot"
+    :placement="$props.placement"
     :shift-x="shiftX"
     :shift-y="shiftY"
-    animation="translate"
+    :animation="$props.animation ? 'translate' : undefined"
     >{{ $props.text }}</Positioner
   >
 </template>

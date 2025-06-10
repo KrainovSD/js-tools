@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { isArray, isNumber } from "@krainovsd/js-helpers";
-  import { computed, ref, useTemplateRef, watchEffect } from "vue";
+  import { computed, ref, shallowRef, useTemplateRef, watchEffect } from "vue";
   import { findClosestNumber } from "../lib";
   import Tooltip from "./Tooltip.vue";
 
@@ -69,13 +69,37 @@
   }));
 
   const controller = ref<AbortController | null>(null);
+  const minHandleTooltipState = shallowRef({ focus: false, hover: false, move: false });
+  const maxHandleTooltipState = shallowRef({ focus: false, hover: false, move: false });
+  const minHandleTooltipOpen = computed(() =>
+    Object.values(minHandleTooltipState.value).some((status) => status),
+  );
+  const maxHandleTooltipOpen = computed(() =>
+    Object.values(maxHandleTooltipState.value).some((status) => status),
+  );
 
-  function updateValue(value: number) {
+  function updateValue(value: number, keyboard: boolean) {
     if (props.range && isArray(model.value)) {
       const closestIndex = findClosestNumber(model.value, value);
       if (closestIndex < model.value.length) {
         model.value = model.value.toSpliced(closestIndex, 1, value);
         if (minHandleRef.value && maxHandleRef.value && document.activeElement) {
+          if (closestIndex === 0 && !keyboard) {
+            minHandleTooltipState.value = {
+              ...minHandleTooltipState.value,
+              move: true,
+              focus: false,
+            };
+            maxHandleTooltipState.value = { ...maxHandleTooltipState.value, move: false };
+          } else if (closestIndex === 1 && !keyboard) {
+            minHandleTooltipState.value = { ...minHandleTooltipState.value, move: false };
+            maxHandleTooltipState.value = {
+              ...maxHandleTooltipState.value,
+              move: true,
+              focus: false,
+            };
+          }
+
           if (closestIndex === 0 && document.activeElement !== minHandleRef.value) {
             minHandleRef.value.focus();
           } else if (closestIndex === 1 && document.activeElement !== maxHandleRef.value) {
@@ -108,7 +132,7 @@
     const value =
       Math.round((min.value + shiftPercent * difference.value) / step.value) * step.value;
 
-    updateValue(value);
+    updateValue(value, false);
   }
 
   function processingDrag(event: MouseEvent | PointerEvent) {
@@ -119,6 +143,9 @@
     if (controller.value) {
       controller.value.abort();
       controller.value = null;
+
+      minHandleTooltipState.value = { ...minHandleTooltipState.value, move: false };
+      maxHandleTooltipState.value = { ...maxHandleTooltipState.value, move: false };
     }
   }
 
@@ -133,13 +160,13 @@
       (!props.vertical && event.key === "ArrowLeft") ||
       (props.vertical && event.key === "ArrowDown")
     ) {
-      updateValue(Math.max(min.value, Math.min(numberValue - step.value, max.value)));
+      updateValue(Math.max(min.value, Math.min(numberValue - step.value, max.value)), true);
     }
     if (
       (!props.vertical && event.key === "ArrowRight") ||
       (props.vertical && event.key === "ArrowUp")
     ) {
-      updateValue(Math.max(min.value, Math.min(numberValue + step.value, max.value)));
+      updateValue(Math.max(min.value, Math.min(numberValue + step.value, max.value)), true);
     }
   }
 
@@ -163,10 +190,75 @@
     processingValue(event.clientX, event.clientY);
   }
 
+  function hoverHandle(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    if (target === minHandleRef.value) {
+      minHandleTooltipState.value = { ...minHandleTooltipState.value, hover: true };
+      maxHandleTooltipState.value = { ...maxHandleTooltipState.value, hover: false };
+    } else {
+      minHandleTooltipState.value = { ...minHandleTooltipState.value, hover: false };
+      maxHandleTooltipState.value = { ...maxHandleTooltipState.value, hover: true };
+    }
+  }
+  function leaveHandle(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    if (target === minHandleRef.value) {
+      minHandleTooltipState.value = { ...minHandleTooltipState.value, hover: false };
+    } else {
+      maxHandleTooltipState.value = { ...maxHandleTooltipState.value, hover: false };
+    }
+  }
+
+  function focusHandle(event: Event) {
+    const target = event.target as HTMLElement;
+
+    if (target === minHandleRef.value) {
+      minHandleTooltipState.value = { ...minHandleTooltipState.value, focus: true };
+    } else {
+      maxHandleTooltipState.value = { ...maxHandleTooltipState.value, focus: true };
+    }
+  }
+  function blurHandle(event: Event) {
+    const target = event.target as HTMLElement;
+
+    if (target === minHandleRef.value) {
+      minHandleTooltipState.value = { ...minHandleTooltipState.value, focus: false };
+    } else {
+      maxHandleTooltipState.value = { ...maxHandleTooltipState.value, focus: false };
+    }
+  }
+
   watchEffect((clean) => {
     const eventController = new AbortController();
     maxHandleRef.value?.addEventListener?.("keydown", keyDown, { signal: eventController.signal });
     minHandleRef.value?.addEventListener?.("keydown", keyDown, { signal: eventController.signal });
+
+    minHandleRef.value?.addEventListener?.("mouseenter", hoverHandle, {
+      signal: eventController.signal,
+    });
+    minHandleRef.value?.addEventListener?.("mouseleave", leaveHandle, {
+      signal: eventController.signal,
+    });
+    maxHandleRef.value?.addEventListener?.("mouseenter", hoverHandle, {
+      signal: eventController.signal,
+    });
+    maxHandleRef.value?.addEventListener?.("mouseleave", leaveHandle, {
+      signal: eventController.signal,
+    });
+    minHandleRef.value?.addEventListener?.("focus", focusHandle, {
+      signal: eventController.signal,
+    });
+    minHandleRef.value?.addEventListener?.("blur", blurHandle, {
+      signal: eventController.signal,
+    });
+    maxHandleRef.value?.addEventListener?.("focus", focusHandle, {
+      signal: eventController.signal,
+    });
+    maxHandleRef.value?.addEventListener?.("blur", blurHandle, {
+      signal: eventController.signal,
+    });
 
     clean(() => {
       eventController.abort();
@@ -187,22 +279,25 @@
     <div class="ksd-slider__rail" :class="commonClasses"></div>
     <div class="ksd-slider__track" :class="commonClasses" :style="trackStyles"></div>
     <Tooltip
+      v-if="$props.range"
       :text="minValue"
       :placement="$props.vertical ? 'right-center' : 'top-center'"
       observe
-      open-by-focus
+      :show="minHandleTooltipOpen"
+      :open-by-hover="false"
+      :animation="minHandleTooltipOpen"
     >
       <div
-        v-if="$props.range"
         ref="min-handle"
         class="ksd-slider__handle"
         role="slider"
-        tabindex="0"
         :aria-valuemin="min"
         :aria-valuemax="max"
         :area-orientation="$props.vertical ? 'vertical' : 'horizontal'"
         :area-valuenow="minValue"
         :area-disabled="$props.disabled"
+        :area-hidden="$props.disabled"
+        :tabindex="$props.disabled ? undefined : 0"
         :class="commonClasses"
         :style="minHandleStyles"
       ></div>
@@ -211,18 +306,21 @@
       :text="maxValue"
       :placement="$props.vertical ? 'right-center' : 'top-center'"
       observe
-      open-by-focus
+      :show="maxHandleTooltipOpen"
+      :open-by-hover="false"
+      :animation="maxHandleTooltipOpen"
     >
       <div
         ref="max-handle"
         class="ksd-slider__handle"
         role="slider"
-        tabindex="0"
         :aria-valuemin="min"
         :aria-valuemax="max"
         :area-orientation="$props.vertical ? 'vertical' : 'horizontal'"
         :area-valuenow="maxValue"
         :area-disabled="$props.disabled"
+        :area-hidden="$props.disabled"
+        :tabindex="$props.disabled ? undefined : 0"
         :class="commonClasses"
         :style="maxHandleStyles"
       ></div

@@ -47,7 +47,7 @@
   const position = shallowRef<VisiblePosition>({
     bottom: 0,
     left: 0,
-    placement: "bottom-center",
+    placement: "flex",
     right: 0,
     top: 0,
   });
@@ -75,6 +75,8 @@
 
   function updatePosition() {
     if (!elementRef.value) return;
+
+    const isFirstRender = position.value.placement === "flex";
 
     position.value = getVisiblePosition({
       node: elementRef.value,
@@ -163,7 +165,9 @@
     }
 
     elementRef.value.classList.add(position.value.placement);
-    void execAnimation(`ksd-positioner_${props.animation}-in`);
+    if (isFirstRender && props.animation) {
+      void execAnimation(`ksd-positioner_${props.animation}-in`);
+    }
   }
 
   function execAnimation(className: string) {
@@ -205,6 +209,8 @@
       } else {
         localOpen.value = false;
       }
+
+      position.value = { ...position.value, placement: "flex" };
     },
   );
 
