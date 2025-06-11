@@ -32,7 +32,6 @@
         : attrs.min
       : undefined,
   );
-  console.log(min.value, max.value);
 
   const step = computed(() => (isNumber(attrs.step) ? attrs.step : 1));
   const componentClasses = computed(() => ({

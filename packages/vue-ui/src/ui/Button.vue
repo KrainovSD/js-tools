@@ -278,7 +278,7 @@
     }
 
     &.loading {
-      opacity: 0.65;
+      opacity: var(--ksd-opacity-loading);
       cursor: inherit;
     }
 

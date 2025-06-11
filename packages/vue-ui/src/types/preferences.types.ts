@@ -5,7 +5,7 @@ export type ThemeTransitionVariable =
   | "ksd-transition-mid"
   | "ksd-transition-slow";
 
-export type ThemeOther = "ksd-popup-z-index";
+export type ThemeOther = "ksd-popup-z-index" | "ksd-opacity-loading";
 
 export type ThemeSizes =
   | "ksd-control-height"
@@ -164,6 +164,25 @@ export type ThemeSliderVariable =
   | "ksd-slider-dot-active-border-color"
   | "ksd-slider-track-bg-disabled";
 
+export type ThemeSwitchVariable =
+  | "ksd-switch-track-height"
+  | "ksd-switch-track-height-sm"
+  | "ksd-switch-track-min-width"
+  | "ksd-switch-track-min-width-sm"
+  | "ksd-switch-track-padding"
+  | "ksd-switch-handle-bg"
+  | "ksd-switch-handle-size"
+  | "ksd-switch-handle-size-sm"
+  | "ksd-switch-handle-shadow"
+  | "ksd-switch-inner-min-margin"
+  | "ksd-switch-inner-max-margin"
+  | "ksd-switch-inner-min-margin-sm"
+  | "ksd-switch-inner-max-margin-sm"
+  | "ksd-switch-bg-unchecked-color"
+  | "ksd-switch-bg-unchecked-hover-color"
+  | "ksd-switch-checked-color"
+  | "ksd-switch-unchecked-color";
+
 export type ThemeVariableConfig = {
   common: {
     transition: Record<ThemeTransitionVariable, string>;
@@ -183,5 +202,6 @@ export type ThemeVariableConfig = {
     input: Record<ThemeInputVariable, string>;
     radio: ThemeRadioVariable;
     slider: Record<ThemeSliderVariable, string>;
+    switch: Record<ThemeSwitchVariable, string>;
   };
 };

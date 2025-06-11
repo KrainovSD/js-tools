@@ -13,6 +13,7 @@ import VRadio from "./Radio.vue";
 import VRadioButton from "./RadioButton.vue";
 import VRadioGroup from "./RadioGroup.vue";
 import VSlider from "./Slider.vue";
+import VSwitch from "./Switch.vue";
 import VText from "./Text.vue";
 import VTooltip from "./Tooltip.vue";
 
@@ -32,6 +33,7 @@ export type { RadioButtonProps } from "./RadioButton.vue";
 export type { SlideProps } from "./Slider.vue";
 export type { TooltipProps } from "./Tooltip.vue";
 export type { PositionerProps } from "./Positioner.vue";
+export type { SwitchProps } from "./Switch.vue";
 
 export {
   VButton,
@@ -51,4 +53,5 @@ export {
   VSlider,
   VTooltip,
   VPositioner,
+  VSwitch,
 };

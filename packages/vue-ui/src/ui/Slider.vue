@@ -109,6 +109,14 @@
       }
     } else {
       model.value = value;
+      if (!keyboard) {
+        maxHandleTooltipState.value = {
+          ...maxHandleTooltipState.value,
+          move: true,
+          focus: false,
+        };
+      }
+
       if (
         document.activeElement &&
         maxHandleRef.value &&
