@@ -148,7 +148,7 @@
       observer.observe(content.value, {
         subtree: false,
         attributes: true,
-        attributeFilter: ["style"],
+        attributeFilter: ["style", "class"],
       });
     }
 
@@ -167,12 +167,14 @@
     :open="open"
     arrow
     :target="cursorPosition != undefined ? cursorPosition : content"
-    class-name="ksd-tooltip__positioner"
+    class-content="ksd-tooltip__positioner-content"
+    :class="'ksd-tooltip__positioner'"
     v-bind="$attrs"
     :modal-root="$props.modalRoot"
     :placement="$props.placement"
     :shift-x="shiftX"
     :shift-y="shiftY"
+    :z-index="$props.zIndex"
     :animation-appear="$props.animationAppear ? 'translate' : undefined"
     :animation-disappear="$props.animationDisappear ? 'translate' : undefined"
     >{{ $props.text }}</Positioner
@@ -182,13 +184,20 @@
 <style lang="scss">
   .ksd-tooltip {
     &__positioner {
-      background-color: var(--ksd-bg-reverse-color);
+      border-radius: var(--ksd-border-radius);
+    }
 
+    &__positioner-content {
+      border-radius: var(--ksd-border-radius);
+      background-color: var(--ksd-bg-reverse-color);
+      color: var(--ksd-text-reverse-color);
       padding: calc(var(--ksd-padding-sm) / 2) var(--ksd-padding-xs);
       word-break: break-word;
       max-width: 250px;
       overflow: hidden;
       max-height: 350px;
+      min-width: calc(var(--ksd-border-radius) * 2 + 32px);
+      min-height: var(--ksd-control-height);
     }
   }
 </style>

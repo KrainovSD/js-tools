@@ -3,11 +3,13 @@ import VCheckBox from "./CheckBox.vue";
 import VCollapse from "./Collapse.vue";
 import VDivider from "./Divider.vue";
 import VDrawer from "./Drawer.vue";
+import VDropDown from "./DropDown.vue";
 import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
 import VPassword from "./Password.vue";
+import VPopper from "./Popper.vue";
 import VPositioner from "./Positioner.vue";
 import VRadio from "./Radio.vue";
 import VRadioButton from "./RadioButton.vue";
@@ -34,6 +36,8 @@ export type { SlideProps } from "./Slider.vue";
 export type { TooltipProps } from "./Tooltip.vue";
 export type { PositionerProps } from "./Positioner.vue";
 export type { SwitchProps } from "./Switch.vue";
+export type { PopperProps } from "./Popper.vue";
+export type { DropDownProps } from "./DropDown.vue";
 
 export {
   VButton,
@@ -54,4 +58,6 @@ export {
   VTooltip,
   VPositioner,
   VSwitch,
+  VPopper,
+  VDropDown,
 };

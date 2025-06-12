@@ -205,6 +205,13 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-switch-checked-color": "#ffffff",
         "ksd-switch-unchecked-color": "#ffffff",
       },
+      popper: {
+        "ksd-popper-inner-padding": "12px",
+      },
+      dropdown: {
+        "ksd-dropdown-inner-padding": "5px 12px",
+        "ksd-dropdown-bg-item-color": "rgba(0,0,0,0.04)",
+      },
     },
   },
 };

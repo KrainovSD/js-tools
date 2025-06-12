@@ -4,8 +4,10 @@
     type VisiblePosition,
     getVisiblePosition,
   } from "@krainovsd/js-helpers";
-  import { computed, ref, shallowRef, useTemplateRef, watch, watchEffect } from "vue";
+  import { computed, ref, shallowRef, useAttrs, useTemplateRef, watch, watchEffect } from "vue";
   import CaretUpOutlineIcon from "../icons/CaretUpOutlineIcon.vue";
+
+  export type PositionerAnimations = "translate" | "scale" | "scaleY";
 
   export type PositionerTargetNodePosition = {
     x: number;
@@ -29,13 +31,13 @@
     placement?: Exclude<PositionPlacements, "flex">;
     zIndex?: number;
     modalRoot?: string | HTMLElement | null;
-    className?: string;
+    classContent?: string;
     shiftX?: number;
     shiftY?: number;
     target: HTMLElement | PositionerTargetNodePosition | undefined | null;
     arrow?: boolean;
-    animationAppear?: "translate" | "scale" | "scaleY";
-    animationDisappear?: "translate" | "scale" | "scaleY";
+    animationAppear?: PositionerAnimations;
+    animationDisappear?: PositionerAnimations;
   };
 
   const ARROW_SHIFT_FROM_CENTER = 11;
@@ -43,6 +45,7 @@
   const ARROW_SHIFT_FROM_CORNER_MINI = 5;
 
   const props = defineProps<PositionerProps>();
+  const attrs = useAttrs();
   const localOpen = ref(false);
   const elementRef = useTemplateRef("positioner");
   const position = shallowRef<VisiblePosition>({
@@ -73,6 +76,8 @@
     translate: arrowPosition.value.translate,
     rotate: arrowPosition.value.rotate,
   }));
+  const role = computed(() => attrs.role as string | undefined);
+  const componentClasses = computed(() => ({ arrow: props.arrow }));
 
   function updatePosition() {
     if (!elementRef.value) return;
@@ -165,7 +170,7 @@
       };
     }
 
-    elementRef.value.classList.add(position.value.placement);
+    elementRef.value.setAttribute("placement", position.value.placement);
     if (isFirstRender && props.animationAppear) {
       void execAnimation(`ksd-positioner_${props.animationAppear}-in`);
     }
@@ -224,15 +229,21 @@
 
 <template>
   <Teleport v-if="localOpen" :to="$props.modalRoot ?? 'body'">
-    <div ref="positioner" class="ksd-positioner" :class="$attrs.class" :style="positionerStyles">
+    <div
+      ref="positioner"
+      class="ksd-positioner"
+      :style="{ ...positionerStyles, ...($attrs.style ?? {}) }"
+      :class="[$attrs.class, componentClasses]"
+    >
       <CaretUpOutlineIcon
         v-if="$props.arrow"
         :size="16"
         class="ksd-positioner__arrow"
         :style="arrowStyles"
-        color="black"
       />
-      <div class="ksd-positioner__content" :class="[$props.className]"><slot></slot></div>
+      <div :role="role" class="ksd-positioner__content" :class="[$props.classContent]">
+        <slot></slot>
+      </div>
     </div>
   </Teleport>
 </template>
@@ -242,48 +253,47 @@
     position: absolute;
     font-family: var(--ksd-font-family);
     font-size: 1rem;
-    color: var(--ksd-text-reverse-color);
     line-height: var(--ksd-line-height);
     z-index: var(--ksd-popup-z-index);
     box-shadow: var(--ksd-shadow-secondary);
 
-    &.bottom-left {
+    &[placement="bottom-left"] {
       transform-origin: left top;
     }
-    &.bottom-center {
+    &[placement="bottom-center"] {
       transform-origin: center top;
     }
-    &.bottom-right {
+    &[placement="bottom-right"] {
       transform-origin: right top;
     }
 
-    &.top-left {
+    &[placement="top-left"] {
       transform-origin: left bottom;
     }
-    &.top-center {
+    &[placement="top-center"] {
       transform-origin: center bottom;
     }
-    &.top-right {
+    &[placement="top-right"] {
       transform-origin: right bottom;
     }
 
-    &.left-top {
+    &[placement="left-top"] {
       transform-origin: right top;
     }
-    &.left-center {
+    &[placement="left-center"] {
       transform-origin: right center;
     }
-    &.left-bottom {
+    &[placement="left-bottom"] {
       transform-origin: right bottom;
     }
 
-    &.right-top {
+    &[placement="right-top"] {
       transform-origin: left top;
     }
-    &.right-center {
+    &[placement="right-center"] {
       transform-origin: left center;
     }
-    &.right-bottom {
+    &[placement="right-bottom"] {
       transform-origin: left bottom;
     }
 
@@ -291,48 +301,48 @@
       animation-duration: var(--ksd-transition-mid);
       animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
 
-      &.top-left,
-      &.top-center,
-      &.top-right {
+      &[placement="top-left"],
+      &[placement="top-center"],
+      &[placement="top-right"] {
         animation-name: ksd-positioner-translate-top-in;
       }
-      &.bottom-left,
-      &.bottom-center,
-      &.bottom-right {
+      &[placement="bottom-left"],
+      &[placement="bottom-center"],
+      &[placement="bottom-right"] {
         animation-name: ksd-positioner-translate-bottom-in;
       }
-      &.left-top,
-      &.left-center,
-      &.left-bottom {
+      &[placement="left-top"],
+      &[placement="left-center"],
+      &[placement="left-bottom"] {
         animation-name: ksd-positioner-translate-left-in;
       }
-      &.right-top,
-      &.right-center,
-      &.right-bottom {
+      &[placement="right-top"],
+      &[placement="right-center"],
+      &[placement="right-bottom"] {
         animation-name: ksd-positioner-translate-right-in;
       }
     }
     &_translate-out {
       animation-duration: var(--ksd-transition-mid);
       animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
-      &.top-left,
-      &.top-center,
-      &.top-right {
+      &[placement="top-left"],
+      &[placement="top-center"],
+      &[placement="top-right"] {
         animation-name: ksd-positioner-translate-top-out;
       }
-      &.bottom-left,
-      &.bottom-center,
-      &.bottom-right {
+      &[placement="bottom-left"],
+      &[placement="bottom-center"],
+      &[placement="bottom-right"] {
         animation-name: ksd-positioner-translate-bottom-out;
       }
-      &.left-top,
-      &.left-center,
-      &.left-bottom {
+      &[placement="left-top"],
+      &[placement="left-center"],
+      &[placement="left-bottom"] {
         animation-name: ksd-positioner-translate-left-out;
       }
-      &.right-top,
-      &.right-center,
-      &.right-bottom {
+      &[placement="right-top"],
+      &[placement="right-center"],
+      &[placement="right-bottom"] {
         animation-name: ksd-positioner-translate-right-out;
       }
     }
@@ -363,12 +373,6 @@
 
     &__arrow {
       position: absolute;
-    }
-
-    &__content {
-      border-radius: var(--ksd-border-radius);
-      min-width: calc(var(--ksd-border-radius) * 2 + 32px);
-      min-height: var(--ksd-control-height);
     }
   }
 

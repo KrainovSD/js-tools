@@ -1,0 +1,443 @@
+<script setup lang="ts">
+  import { type PositionPlacements, isString } from "@krainovsd/js-helpers";
+  import { computed, ref, useTemplateRef, watchEffect } from "vue";
+  import Positioner, { type PositionerAnimations } from "./Positioner.vue";
+
+  export type PopperTrigger = "click" | "hover" | "contextMenu";
+
+  export type PopperProps = {
+    arrow?: boolean;
+    openDelay?: number;
+    hoverDelay?: number;
+    classContent?: string;
+    closeDelay?: number;
+    zIndex?: number;
+    placement?: Exclude<PositionPlacements, "flex">;
+    modalRoot?: string | HTMLElement | null;
+    shiftX?: number;
+    shiftY?: number;
+    animationAppear?: PositionerAnimations;
+    animationDisappear?: PositionerAnimations;
+    triggers?: PopperTrigger[];
+    closeByScroll?: boolean;
+    observe?: boolean;
+    ignoreElements?: (string | HTMLElement | null | undefined)[];
+    fit?: boolean;
+  };
+
+  const props = withDefaults(defineProps<PopperProps>(), {
+    animationAppear: "scaleY",
+    animationDisappear: "scaleY",
+    arrow: false,
+    observe: false,
+    classContent: undefined,
+    closeDelay: 0,
+    openDelay: 100,
+    hoverDelay: 0,
+    modalRoot: undefined,
+    placement: "bottom-center",
+    shiftX: undefined,
+    shiftY: undefined,
+    zIndex: undefined,
+    closeByScroll: true,
+    triggers: (props) => props.triggers ?? ["click"],
+    ignoreElements: undefined,
+    fit: true,
+  });
+  const model = defineModel<boolean>();
+  const elementRef = useTemplateRef("popper");
+  const positionerRef = useTemplateRef("positioner");
+  const triggersKey = computed(() => props.triggers.join(";"));
+  // eslint-disable-next-line vue/no-dupe-keys
+  const triggers = computed(() => {
+    return triggersKey.value.length === 0
+      ? ([] as PopperTrigger[])
+      : (triggersKey.value.split(";") as PopperTrigger[]);
+  });
+  const content = computed(() => elementRef.value?.nextElementSibling as HTMLElement | undefined);
+  const contentWidth = ref(0);
+  const firstPlacement = computed(() => props.placement.split("-")[0]);
+  const lastActive = ref<HTMLElement | null>();
+
+  const shiftY = computed(
+    () =>
+      props.shiftY ??
+      (props.placement
+        ? firstPlacement.value === "bottom"
+          ? props.arrow
+            ? 10
+            : 5
+          : firstPlacement.value === "top"
+            ? props.arrow
+              ? 10
+              : 5
+            : 0
+        : 0),
+  );
+  const shiftX = computed(
+    () =>
+      props.shiftX ??
+      (props.placement
+        ? firstPlacement.value === "left"
+          ? props.arrow
+            ? 10
+            : 5
+          : firstPlacement.value === "right"
+            ? props.arrow
+              ? 10
+              : 5
+            : 0
+        : 0),
+  );
+  const openTimer = ref<NodeJS.Timeout | null>(null);
+  const closeTimer = ref<NodeJS.Timeout | null>(null);
+  const hoverCloseTimer = ref<NodeJS.Timeout | null>(null);
+
+  function onAppear() {
+    if (closeTimer.value != undefined) {
+      clearTimeout(closeTimer.value);
+      closeTimer.value = null;
+    }
+
+    openTimer.value = setTimeout(() => {
+      model.value = true;
+    }, props.openDelay);
+  }
+
+  function onDisAppear() {
+    if (openTimer.value) {
+      clearTimeout(openTimer.value);
+      openTimer.value = null;
+    }
+
+    closeTimer.value = setTimeout(() => {
+      model.value = false;
+    }, props.closeDelay);
+  }
+
+  function checkDisappear(
+    event: MouseEvent | FocusEvent,
+    checkElement?: HTMLElement,
+    cb?: (close: boolean) => void,
+  ) {
+    try {
+      const target = checkElement ?? (event.target as HTMLElement);
+
+      const ignored = props.ignoreElements
+        ? props.ignoreElements.some((element) => {
+            if (isString(element)) {
+              try {
+                const domElement = document.querySelector(element);
+                if (target === domElement) {
+                  return true;
+                }
+              } catch {}
+            } else if (element != undefined && target === element) {
+              return true;
+            }
+
+            return false;
+          })
+        : false;
+      const popper = positionerRef.value?.element?.contains?.(target);
+      const element = content.value?.contains?.(target);
+
+      if (ignored || popper || element) {
+        if (cb) {
+          cb(false);
+        }
+
+        return;
+      }
+
+      if (cb) {
+        return void cb(true);
+      }
+
+      onDisAppear();
+    } catch {
+      onDisAppear();
+    }
+  }
+
+  /** Effect by appear positioner  */
+
+  watchEffect((clean) => {
+    const positioner = positionerRef.value?.element;
+    if (!positioner) return;
+
+    const eventController = new AbortController();
+    /** Close by escape and return focus to last element */
+    positioner.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape") {
+          if (lastActive.value) {
+            lastActive.value.focus();
+            lastActive.value = null;
+          } else {
+            content.value?.focus?.();
+          }
+          onDisAppear();
+        }
+      },
+      { signal: eventController.signal },
+    );
+
+    clean(() => {
+      eventController.abort();
+    });
+  });
+
+  /** Effect by open positioner */
+  watchEffect((clean) => {
+    if (!model.value) return;
+
+    const eventController = new AbortController();
+    lastActive.value = document.activeElement as HTMLElement;
+
+    /** Close by click outside */
+    document.addEventListener("mousedown", checkDisappear, {
+      signal: eventController.signal,
+    });
+    /** Close by focus outside */
+    window.addEventListener("focus", checkDisappear, {
+      signal: eventController.signal,
+      capture: true,
+    });
+    /** Update position by resize */
+    window.addEventListener(
+      "resize",
+      () => {
+        positionerRef.value?.updatePosition?.();
+      },
+      {
+        signal: eventController.signal,
+        passive: true,
+      },
+    );
+    /** Update position by scroll */
+    window.addEventListener(
+      "scroll",
+      () => {
+        positionerRef.value?.updatePosition?.();
+      },
+      {
+        signal: eventController.signal,
+        passive: true,
+      },
+    );
+
+    if (triggers.value.includes("hover")) {
+      /** Close hover trigger by leave */
+      document.addEventListener(
+        "mouseleave",
+        (event) => {
+          if (event.relatedTarget) {
+            checkDisappear(event, event.relatedTarget as HTMLElement, (close) => {
+              if (close) {
+                hoverCloseTimer.value = setTimeout(() => {
+                  onDisAppear();
+                }, props.hoverDelay);
+              } else if (hoverCloseTimer.value) {
+                clearTimeout(hoverCloseTimer.value);
+                hoverCloseTimer.value = null;
+              }
+            });
+          }
+        },
+        {
+          capture: true,
+          signal: eventController.signal,
+        },
+      );
+    }
+
+    clean(() => {
+      eventController.abort();
+    });
+  });
+
+  /** Effect by observe slot */
+  watchEffect((clean) => {
+    if (!content.value) return;
+
+    const eventController = new AbortController();
+
+    function toggleAppearByClick(event: MouseEvent) {
+      event.preventDefault();
+
+      if (model.value) {
+        onDisAppear();
+      } else {
+        onAppear();
+      }
+    }
+
+    if (!props.fit) {
+    }
+
+    if (triggers.value.includes("hover")) {
+      content.value.addEventListener("mouseenter", onAppear, { signal: eventController.signal });
+    }
+    if (triggers.value.includes("click")) {
+      content.value.addEventListener("click", toggleAppearByClick, {
+        signal: eventController.signal,
+      });
+    }
+    if (triggers.value.includes("contextMenu")) {
+      content.value.addEventListener("contextmenu", toggleAppearByClick, {
+        signal: eventController.signal,
+      });
+    }
+
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        positionerRef.value?.updatePosition?.();
+      });
+    });
+
+    if (props.observe) {
+      observer.observe(content.value, {
+        subtree: false,
+        attributes: true,
+        attributeFilter: ["style", "class"],
+      });
+    }
+
+    clean(() => {
+      eventController.abort();
+      observer.disconnect();
+    });
+  });
+
+  defineExpose({ element: positionerRef, content });
+</script>
+
+<template>
+  <span ref="popper" class="ksd-popper"></span>
+  <slot></slot>
+  <Positioner
+    ref="positioner"
+    :open="model"
+    :arrow="$props.arrow"
+    :target="content"
+    :class-content="`ksd-popper__positioner-content ${$props.classContent ?? ''}`"
+    :class="['ksd-popper__positioner']"
+    v-bind="$attrs"
+    :z-index="$props.zIndex"
+    :modal-root="$props.modalRoot"
+    :placement="$props.placement"
+    :shift-x="shiftX"
+    :shift-y="shiftY"
+    :animation-appear="$props.animationAppear"
+    :animation-disappear="$props.animationDisappear"
+    :style="{
+      width: $props.fit ? undefined : contentWidth != undefined ? `${contentWidth}px` : undefined,
+    }"
+    ><slot name="content"></slot
+  ></Positioner>
+</template>
+
+<style lang="scss">
+  .ksd-popper {
+    &__positioner {
+      border-radius: var(--ksd-border-radius-lg);
+      color: var(--ksd-bg-modal-color);
+
+      &[placement="bottom-left"],
+      &[placement="bottom-center"],
+      &[placement="bottom-right"] {
+        &::before {
+          content: "";
+          position: absolute;
+          height: 5px;
+          top: -5px;
+          left: 0;
+          width: 100%;
+        }
+
+        &.arrow {
+          &::before {
+            height: 10px;
+            top: -10px;
+          }
+        }
+      }
+      &[placement="top-left"],
+      &[placement="top-center"],
+      &[placement="top-right"] {
+        &::before {
+          content: "";
+          position: absolute;
+          top: auto;
+          height: 5px;
+          bottom: -5px;
+          left: 0;
+          width: 100%;
+        }
+        &.arrow {
+          &::before {
+            height: 10px;
+            bottom: -10px;
+          }
+        }
+      }
+      &[placement="left-top"],
+      &[placement="left-center"],
+      &[placement="left-bottom"] {
+        &::before {
+          content: "";
+          position: absolute;
+          top: auto;
+          width: 5px;
+          left: -5px;
+          top: 0;
+          height: 100%;
+        }
+        &.arrow {
+          &::before {
+            width: 10px;
+            left: -10px;
+          }
+        }
+      }
+      &[placement="right-top"],
+      &[placement="right-center"],
+      &[placement="right-bottom"] {
+        &::before {
+          content: "";
+          position: absolute;
+          top: auto;
+          width: 5px;
+          right: -5px;
+          left: auto;
+          top: 0;
+          height: 100%;
+        }
+        &.arrow {
+          &::before {
+            width: 10px;
+            right: -10px;
+          }
+        }
+      }
+    }
+
+    &__positioner-content {
+      border-radius: var(--ksd-border-radius-lg);
+      color: var(--ksd-text-main-color);
+      font-size: 1rem;
+      line-height: var(--ksd-line-height);
+      background-color: var(--ksd-bg-modal-color);
+      padding: var(--ksd-popper-inner-padding);
+      min-width: calc(var(--ksd-border-radius) * 2 + 32px);
+      min-height: var(--ksd-control-height);
+      max-height: 550px;
+      overflow: hidden;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+</style>

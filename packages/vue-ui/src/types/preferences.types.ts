@@ -183,6 +183,9 @@ export type ThemeSwitchVariable =
   | "ksd-switch-checked-color"
   | "ksd-switch-unchecked-color";
 
+export type ThemePopperVariable = "ksd-popper-inner-padding";
+export type ThemeDropDownVariable = "ksd-dropdown-inner-padding" | "ksd-dropdown-bg-item-color";
+
 export type ThemeVariableConfig = {
   common: {
     transition: Record<ThemeTransitionVariable, string>;
@@ -203,5 +206,7 @@ export type ThemeVariableConfig = {
     radio: ThemeRadioVariable;
     slider: Record<ThemeSliderVariable, string>;
     switch: Record<ThemeSwitchVariable, string>;
+    popper: Record<ThemePopperVariable, string>;
+    dropdown: Record<ThemeDropDownVariable, string>;
   };
 };

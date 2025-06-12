@@ -1,0 +1,123 @@
+import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
+import { h } from "vue";
+import { VSettingsFilledIcon } from "../icons";
+import { VButton, VDropDown, VText } from "../ui";
+
+const meta = {
+  title: "Components/DropDown",
+  component: VDropDown,
+  tags: ["autodocs"],
+  argTypes: {},
+} satisfies Meta<typeof VDropDown>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+const Template: StoryFn<typeof VDropDown> = (args) => ({
+  components: { VDropDown },
+  setup() {
+    return { args };
+  },
+  render() {
+    return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
+      h(
+        VDropDown,
+        { ...args },
+        {
+          default: () => h(VText, { fit: true, ellipsis: true }, () => "Текст для поппера"),
+          content: () => "Test",
+        },
+      ),
+    ]);
+  },
+});
+
+export const Primary = Template.bind({});
+Primary.args = {
+  menu: [
+    { key: "1", label: "Пункт 1" },
+    { key: "2", label: "Пункт 2" },
+    { key: "3", label: "Пункт 3" },
+    { key: "0", divider: true },
+    {
+      key: "4",
+      label: h(VText, {}, () => "Компонент"),
+      icon: h(VSettingsFilledIcon, { size: 16 }),
+    },
+  ],
+};
+
+export const AllInOne: Story = {
+  render: (args) => ({
+    components: { VDropDown },
+    setup() {
+      return { args };
+    },
+    render() {
+      return h("div", { style: { display: "flex", gap: "20px" } }, [
+        h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
+          h(
+            VDropDown,
+            { ...args, triggers: ["hover"] },
+            {
+              default: () => h(VButton, {}, () => "Dropdown Hover"),
+            },
+          ),
+          h(
+            VDropDown,
+            { ...args, triggers: ["click"] },
+            {
+              default: () => h(VButton, {}, () => "Dropdown Click"),
+            },
+          ),
+          h(
+            VDropDown,
+            { ...args, triggers: ["contextMenu"] },
+            {
+              default: () => h(VButton, {}, () => "Dropdown Context"),
+            },
+          ),
+
+          h(
+            VDropDown,
+            { ...args, arrow: true },
+            {
+              default: () => h(VButton, {}, () => "Dropdown Arrow"),
+            },
+          ),
+
+          h(
+            VDropDown,
+            { ...args, arrow: true, interactiveMode: "focusable" },
+            {
+              default: () => h(VButton, {}, () => "Dropdown Focusable mode"),
+            },
+          ),
+
+          h(
+            VDropDown,
+            { ...args },
+            {
+              default: () => h(VText, {}, () => "Dropdown by not interactive"),
+            },
+          ),
+        ]),
+      ]);
+    },
+  }),
+  args: {
+    menu: [
+      { key: "1", link: true, label: h("a", { href: "#test" }, ["Пункт 1"]) },
+      { key: "2", label: "Пункт 2" },
+      { key: "3", label: "Пункт 3" },
+      { key: "0", divider: true },
+      {
+        key: "4",
+        // eslint-disable-next-line no-console
+        onClick: (event) => console.log(event),
+        label: h(VText, {}, () => "Компонент"),
+        icon: h(VSettingsFilledIcon, { size: 16 }),
+      },
+    ],
+  },
+};
