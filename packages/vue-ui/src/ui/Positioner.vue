@@ -3,8 +3,18 @@
     type PositionPlacements,
     type VisiblePosition,
     getVisiblePosition,
+    isObject,
   } from "@krainovsd/js-helpers";
-  import { computed, ref, shallowRef, useAttrs, useTemplateRef, watch, watchEffect } from "vue";
+  import {
+    type CSSProperties,
+    computed,
+    ref,
+    shallowRef,
+    useAttrs,
+    useTemplateRef,
+    watch,
+    watchEffect,
+  } from "vue";
   import CaretUpOutlineIcon from "../icons/CaretUpOutlineIcon.vue";
 
   export type PositionerAnimations = "translate" | "scale" | "scaleY";
@@ -76,6 +86,9 @@
     right: arrowPosition.value.right,
     translate: arrowPosition.value.translate,
     rotate: arrowPosition.value.rotate,
+  }));
+  const contentStyles = computed<CSSProperties>(() => ({
+    width: isObject(attrs.style) ? (attrs.style.width as string) : undefined,
   }));
   const role = computed(() => attrs.role as string | undefined);
   const componentClasses = computed(() => ({ arrow: props.arrow }));
@@ -235,6 +248,7 @@
     <div
       ref="positioner"
       class="ksd-positioner"
+      v-bind="$attrs"
       :style="{ ...positionerStyles, ...($attrs.style ?? {}) }"
       :class="[$attrs.class, componentClasses]"
     >
@@ -244,7 +258,12 @@
         class="ksd-positioner__arrow"
         :style="arrowStyles"
       />
-      <div :role="role" class="ksd-positioner__content" :class="[$props.classContent]">
+      <div
+        :style="contentStyles"
+        :role="role"
+        class="ksd-positioner__content"
+        :class="[$props.classContent]"
+      >
         <slot></slot>
       </div>
     </div>
