@@ -149,6 +149,31 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
     }
 
     if (!response.ok) {
+      if (response.status === 304) {
+        return responseWithStatus
+          ? {
+              data: undefined as T,
+              status: response.status,
+              headers: Object.fromEntries(response.headers.entries()),
+            }
+          : (undefined as T);
+      }
+
+      if (request.defaultResponse) {
+        const defaultResponse: unknown =
+          typeof request.defaultResponse === "function"
+            ? (request.defaultResponse as () => Incoming)()
+            : request.defaultResponse;
+
+        return responseWithStatus
+          ? {
+              data: defaultResponse as T,
+              status: response.status,
+              headers: Object.fromEntries(response.headers.entries()),
+            }
+          : (defaultResponse as T);
+      }
+
       let result;
       try {
         const contentType = response.headers.get("content-type");
@@ -194,15 +219,6 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
           }
         : (data as T);
     }
-
-    if (request.withoutResponse)
-      return responseWithStatus
-        ? {
-            data: true as T,
-            status: response.status,
-            headers: Object.fromEntries(response.headers.entries()),
-          }
-        : (true as T);
 
     const contentType = response.headers.get("content-type");
     let result: Incoming;

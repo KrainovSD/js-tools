@@ -16,9 +16,9 @@ export type RequestInterface<T, Incoming, Body, Outcoming> = {
   transformOutcomingData?: (data: Body) => Outcoming;
   transformIncomingData?: (data: Incoming) => T;
   mock?: (() => Incoming) | Incoming;
+  defaultResponse?: (() => Incoming) | Incoming;
   downloadFile?: boolean;
   token?: string;
-  withoutResponse?: boolean;
   signal?: AbortSignal;
 };
 

@@ -127,7 +127,6 @@ describe("api core", () => {
       request({
         method: "GET",
         path: "http://test",
-        withoutResponse: true,
       }),
     ).resolves.toEqual({ status, data: true });
   });
@@ -242,7 +241,6 @@ describe("api core", () => {
       request({
         method: "GET",
         path: "http://test",
-        withoutResponse: true,
         mock: data,
       }),
     ).resolves.toEqual({ status: 200, data });

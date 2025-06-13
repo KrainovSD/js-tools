@@ -20,6 +20,7 @@
     modalRoot?: string | HTMLElement | null;
     animationAppear?: boolean;
     animationDisappear?: boolean;
+    visibleArea?: HTMLElement;
   };
 
   defineOptions({
@@ -42,6 +43,7 @@
     zIndex: undefined,
     animationAppear: true,
     animationDisappear: true,
+    visibleArea: undefined,
   });
   const elementRef = useTemplateRef("tooltip");
   const positionerRef = useTemplateRef("positioner");
@@ -160,7 +162,7 @@
 </script>
 
 <template>
-  <span ref="tooltip" class="ksd-tooltip"></span>
+  <span ref="tooltip" class="ksd-tooltip" aria-hidden="true" tabindex="-1"></span>
   <slot ref="slot"></slot>
   <Positioner
     ref="positioner"
@@ -177,12 +179,20 @@
     :z-index="$props.zIndex"
     :animation-appear="$props.animationAppear ? 'translate' : undefined"
     :animation-disappear="$props.animationDisappear ? 'translate' : undefined"
+    :visible-area="$props.visibleArea"
     >{{ $props.text }}</Positioner
   >
 </template>
 
 <style lang="scss">
   .ksd-tooltip {
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+
     &__positioner {
       border-radius: var(--ksd-border-radius);
     }

@@ -1,3 +1,6 @@
+type XPositions = "insideCenter" | "insideLeft" | "insideRight" | "right" | "left";
+type YPosition = "insideCenter" | "insideTop" | "insideBottom" | "bottom" | "top";
+
 export type PositionPlacements =
   | "bottom-center"
   | "bottom-left"
@@ -21,6 +24,12 @@ export type VisiblePosition = {
   placement: PositionPlacements;
 };
 
+type InitialVisiblePosition = {
+  top: number;
+  left: number;
+  placement: PositionPlacements;
+};
+
 type InitialPosition = {
   targetNode?: HTMLElement;
   position?: {
@@ -32,8 +41,8 @@ type InitialPosition = {
 };
 type GetVisiblePositionOptions = {
   node: HTMLElement;
-  visibleArea?: HTMLElement;
   initialPosition?: InitialPosition;
+  visibleArea?: HTMLElement;
   placement?: Exclude<PositionPlacements, "flex">;
   stepX?: number;
   stepY?: number;
@@ -62,49 +71,39 @@ export function getVisiblePosition({
     : 10,
   flex,
 }: GetVisiblePositionOptions): VisiblePosition {
-  const windowWidth = document.documentElement.clientWidth;
-  const windowHeight = document.documentElement.clientHeight;
-  let xStart = 0;
-  let xEnd = windowWidth;
-  let yStart = 0;
-  let yEnd = windowHeight;
+  /** Viewport Variables */
+  const viewport = visibleArea ?? document.documentElement;
+  const scrollTop = document.documentElement.scrollTop;
+  const scrollLeft = document.documentElement.scrollLeft;
+  const rect = viewport.getBoundingClientRect();
+  const viewportWidth = viewport.clientWidth;
+  const viewportHeight = viewport.clientHeight;
+  const xStart = visibleArea ? viewport.offsetLeft - viewport.scrollLeft : Math.abs(rect.left);
+  const xEnd = xStart + viewportWidth;
+  const yStart = visibleArea ? viewport.offsetTop : Math.abs(rect.top);
+  const yEnd = yStart + viewportHeight;
 
-  if (visibleArea) {
-    const { top, left, height, width } = visibleArea.getBoundingClientRect();
-    xStart = left;
-    xEnd = left + width;
-    yStart = top;
-    yEnd = top + height;
-  }
-
+  /** Target Variables */
   let targetHeight = 0;
   let targetWidth = 0;
+  let targetTopPosition = 0;
+  let targetLeftPosition = 0;
 
-  let {
-    top: targetTopPosition,
-    left: targetLeftPosition,
-    height: nodeHeight,
-    width: nodeWidth,
-  } = node.getBoundingClientRect();
+  const { height: nodeHeight, width: nodeWidth } = node.getBoundingClientRect();
 
   if (initialPosition?.targetNode) {
-    const {
-      top: childTop,
-      left: childLeft,
-      height,
-      width,
-    } = initialPosition.targetNode.getBoundingClientRect();
+    const { top, left, height, width } = initialPosition.targetNode.getBoundingClientRect();
     targetHeight = height;
     targetWidth = width;
-    targetTopPosition = childTop;
-    targetLeftPosition = childLeft;
+    targetTopPosition = top + scrollTop;
+    targetLeftPosition = left + scrollLeft;
   }
   if (initialPosition?.position) {
     if (initialPosition.position.x) {
-      targetLeftPosition = initialPosition.position.x;
+      targetLeftPosition = initialPosition.position.x + scrollLeft;
     }
     if (initialPosition.position.y) {
-      targetTopPosition = initialPosition.position.y;
+      targetTopPosition = initialPosition.position.y + scrollTop;
     }
     if (initialPosition.position.height) {
       targetHeight = initialPosition.position.height;
@@ -113,7 +112,27 @@ export function getVisiblePosition({
       targetWidth = initialPosition.position.width;
     }
   }
+  /** Initial Position */
+  const targetXCenter = targetWidth ? targetLeftPosition + targetWidth / 2 : targetLeftPosition;
+  const targetYCenter = targetHeight ? targetTopPosition + targetHeight / 2 : targetTopPosition;
+  const targetYEnd = targetHeight ? targetTopPosition + targetHeight : targetTopPosition;
 
+  const x: Record<XPositions, number> = {
+    insideCenter: targetXCenter - nodeWidth / 2 + stepX,
+    insideRight: targetLeftPosition + targetWidth + stepX - nodeWidth,
+    insideLeft: targetLeftPosition + stepX,
+    left: targetLeftPosition - nodeWidth - stepX,
+    right: targetLeftPosition + targetWidth + stepX,
+  };
+
+  const y: Record<YPosition, number> = {
+    bottom: targetYEnd + stepY,
+    top: targetTopPosition - stepY - nodeHeight,
+    insideCenter: targetYCenter - nodeHeight / 2 + stepY,
+    insideBottom: targetTopPosition + targetHeight - nodeHeight + stepY,
+    insideTop: targetTopPosition + stepY,
+  };
+  /** Find visible position */
   function isCompletelyVisibleX(left: number) {
     const endXPosition = nodeWidth + left;
 
@@ -125,521 +144,389 @@ export function getVisiblePosition({
     return yStart <= top && yEnd >= endYPosition;
   }
 
-  let correctLeft: number | null = targetLeftPosition;
-  let correctTop: number | null = targetTopPosition;
-
-  const { x, y } = getStartPositions({
-    targetHeight,
-    targetWidth,
+  let visiblePositions = processVisiblePositions({
     targetLeftPosition,
+    targetTopPosition,
+    x,
+    y,
+    placement,
+    flex,
     nodeHeight,
     nodeWidth,
-    stepX,
-    stepY,
-    targetTopPosition,
+    xEnd,
+    xStart,
+    yEnd,
+    yStart,
+    isCompletelyVisibleX,
+    isCompletelyVisibleY,
   });
-  switch (placement) {
-    case "bottom-center": {
-      correctLeft = x.bottomCenter;
-      correctTop = y.bottom;
-      let placement: PositionPlacements = "bottom-center";
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.bottomLeft)) {
-          placement = "bottom-left";
-          correctLeft = x.bottomLeft;
-        } else if (isCompletelyVisibleX(x.bottomRight)) {
-          placement = "bottom-right";
-          correctLeft = x.bottomRight;
-        }
-      }
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.top)) {
-          placement = placement.replace("bottom", "top") as PositionPlacements;
-          correctTop = y.top;
-        }
-      }
+  if (
+    flex &&
+    (!isCompletelyVisibleX(visiblePositions.left) || !isCompletelyVisibleY(visiblePositions.top))
+  ) {
+    visiblePositions = getFlexVisiblePosition({
+      initialLeft: visiblePositions.left,
+      initialTop: visiblePositions.top,
+      isCompletelyVisibleX,
+      isCompletelyVisibleY,
+      nodeHeight,
+      nodeWidth,
+      xEnd,
+      yEnd,
+    });
+  }
 
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
+  return {
+    placement: visiblePositions.placement,
+    left: visiblePositions.left,
+    top: visiblePositions.top,
+    bottom: yEnd - scrollTop - (visiblePositions.top + nodeHeight),
+    right: xEnd - scrollLeft - (visiblePositions.left + nodeWidth),
+  };
+}
+
+type ProcessVisiblePositions = {
+  placement: Exclude<PositionPlacements, "flex">;
+  x: Record<XPositions, number>;
+  y: Record<YPosition, number>;
+  targetLeftPosition: number;
+  targetTopPosition: number;
+  nodeWidth: number;
+  nodeHeight: number;
+  xStart: number;
+  xEnd: number;
+  yStart: number;
+  yEnd: number;
+  flex: boolean | undefined;
+  isCompletelyVisibleX: (position: number) => boolean;
+  isCompletelyVisibleY: (position: number) => boolean;
+};
+function processVisiblePositions(opts: ProcessVisiblePositions): InitialVisiblePosition {
+  let correctLeft: number | null = opts.targetLeftPosition;
+  let correctTop: number | null = opts.targetTopPosition;
+
+  switch (opts.placement) {
+    case "bottom-center": {
+      correctLeft = opts.x.insideCenter;
+      correctTop = opts.y.bottom;
+      let placement: PositionPlacements = "bottom-center";
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.insideLeft)) {
+          placement = "bottom-left";
+          correctLeft = opts.x.insideLeft;
+        } else if (opts.isCompletelyVisibleX(opts.x.insideRight)) {
+          placement = "bottom-right";
+          correctLeft = opts.x.insideRight;
+        }
+      }
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.top)) {
+          placement = placement.replace("bottom", "top") as PositionPlacements;
+          correctTop = opts.y.top;
+        }
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "bottom-left": {
-      correctLeft = x.bottomLeft;
-      correctTop = y.bottom;
+      correctLeft = opts.x.insideLeft;
+      correctTop = opts.y.bottom;
       let placement: PositionPlacements = "bottom-left";
 
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.bottomCenter)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.insideCenter)) {
           placement = "bottom-center";
-          correctLeft = x.bottomCenter;
-        } else if (isCompletelyVisibleX(x.bottomRight)) {
+          correctLeft = opts.x.insideCenter;
+        } else if (opts.isCompletelyVisibleX(opts.x.insideRight)) {
           placement = "bottom-right";
-          correctLeft = x.bottomRight;
+          correctLeft = opts.x.insideRight;
         }
       }
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.top)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.top)) {
           placement = placement.replace("bottom", "top") as PositionPlacements;
-          correctTop = y.top;
+          correctTop = opts.y.top;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "bottom-right": {
-      correctLeft = x.bottomRight;
-      correctTop = y.bottom;
+      correctLeft = opts.x.insideRight;
+      correctTop = opts.y.bottom;
       let placement: PositionPlacements = "bottom-right";
 
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.bottomCenter)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.insideCenter)) {
           placement = "bottom-center";
-          correctLeft = x.bottomCenter;
-        } else if (isCompletelyVisibleX(x.bottomLeft)) {
+          correctLeft = opts.x.insideCenter;
+        } else if (opts.isCompletelyVisibleX(opts.x.insideLeft)) {
           placement = "bottom-left";
-          correctLeft = x.bottomLeft;
+          correctLeft = opts.x.insideLeft;
         }
       }
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.top)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.top)) {
           placement = placement.replace("bottom", "top") as PositionPlacements;
-          correctTop = y.top;
+          correctTop = opts.y.top;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "right-bottom": {
-      correctLeft = x.right;
-      correctTop = y.rightBottom;
+      correctLeft = opts.x.right;
+      correctTop = opts.y.insideBottom;
       let placement: PositionPlacements = "right-bottom";
 
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.rightCenter)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.insideCenter)) {
           placement = "right-center";
-          correctTop = y.rightCenter;
-        } else if (isCompletelyVisibleY(y.rightTop)) {
+          correctTop = opts.y.insideCenter;
+        } else if (opts.isCompletelyVisibleY(opts.y.insideTop)) {
           placement = "right-top";
-          correctTop = y.rightTop;
+          correctTop = opts.y.insideTop;
         }
       }
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.left)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.left)) {
           placement = placement.replace("right", "left") as PositionPlacements;
-          correctLeft = x.left;
+          correctLeft = opts.x.left;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "right-center": {
-      correctLeft = x.right;
-      correctTop = y.rightCenter;
+      correctLeft = opts.x.right;
+      correctTop = opts.y.insideCenter;
       let placement: PositionPlacements = "right-center";
 
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.rightTop)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.insideTop)) {
           placement = "right-top";
-          correctTop = y.rightTop;
-        } else if (isCompletelyVisibleY(y.rightBottom)) {
+          correctTop = opts.y.insideTop;
+        } else if (opts.isCompletelyVisibleY(opts.y.insideBottom)) {
           placement = "right-bottom";
-          correctTop = y.rightBottom;
+          correctTop = opts.y.insideBottom;
         }
       }
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.left)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.left)) {
           placement = placement.replace("right", "left") as PositionPlacements;
-          correctLeft = x.left;
+          correctLeft = opts.x.left;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "right-top": {
-      correctLeft = x.right;
-      correctTop = y.rightTop;
+      correctLeft = opts.x.right;
+      correctTop = opts.y.insideTop;
       let placement: PositionPlacements = "right-top";
 
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.rightCenter)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.insideCenter)) {
           placement = "right-center";
-          correctTop = y.rightCenter;
-        } else if (isCompletelyVisibleY(y.rightBottom)) {
+          correctTop = opts.y.insideCenter;
+        } else if (opts.isCompletelyVisibleY(opts.y.insideBottom)) {
           placement = "right-bottom";
-          correctTop = y.rightBottom;
+          correctTop = opts.y.insideBottom;
         }
       }
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.left)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.left)) {
           placement = placement.replace("right", "left") as PositionPlacements;
-          correctLeft = x.left;
+          correctLeft = opts.x.left;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "top-center": {
-      correctLeft = x.bottomCenter;
-      correctTop = y.top;
+      correctLeft = opts.x.insideCenter;
+      correctTop = opts.y.top;
       let placement: PositionPlacements = "top-center";
 
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.bottomLeft)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.insideLeft)) {
           placement = "top-left";
-          correctLeft = x.bottomLeft;
-        } else if (isCompletelyVisibleX(x.bottomRight)) {
+          correctLeft = opts.x.insideLeft;
+        } else if (opts.isCompletelyVisibleX(opts.x.insideRight)) {
           placement = "top-right";
-          correctLeft = x.bottomRight;
+          correctLeft = opts.x.insideRight;
         }
       }
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.bottom)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.bottom)) {
           placement = placement.replace("top", "bottom") as PositionPlacements;
-          correctTop = y.bottom;
+          correctTop = opts.y.bottom;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "top-left": {
-      correctLeft = x.bottomLeft;
-      correctTop = y.top;
+      correctLeft = opts.x.insideLeft;
+      correctTop = opts.y.top;
       let placement: PositionPlacements = "top-left";
 
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.bottomCenter)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.insideCenter)) {
           placement = "top-center";
-          correctLeft = x.bottomCenter;
-        } else if (isCompletelyVisibleX(x.bottomRight)) {
+          correctLeft = opts.x.insideCenter;
+        } else if (opts.isCompletelyVisibleX(opts.x.insideRight)) {
           placement = "top-right";
-          correctLeft = x.bottomRight;
+          correctLeft = opts.x.insideRight;
         }
       }
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.bottom)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.bottom)) {
           placement = placement.replace("top", "bottom") as PositionPlacements;
-          correctTop = y.bottom;
+          correctTop = opts.y.bottom;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "top-right": {
-      correctLeft = x.bottomRight;
-      correctTop = y.top;
+      correctLeft = opts.x.insideRight;
+      correctTop = opts.y.top;
       let placement: PositionPlacements = "top-right";
 
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.bottomCenter)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.insideCenter)) {
           placement = "top-center";
-          correctLeft = x.bottomCenter;
-        } else if (isCompletelyVisibleX(x.bottomLeft)) {
+          correctLeft = opts.x.insideCenter;
+        } else if (opts.isCompletelyVisibleX(opts.x.insideLeft)) {
           placement = "top-left";
-          correctLeft = x.bottomLeft;
+          correctLeft = opts.x.insideLeft;
         }
       }
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.bottom)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.bottom)) {
           placement = placement.replace("top", "bottom") as PositionPlacements;
-          correctTop = y.bottom;
+          correctTop = opts.y.bottom;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "left-bottom": {
-      correctLeft = x.left;
-      correctTop = y.rightBottom;
+      correctLeft = opts.x.left;
+      correctTop = opts.y.insideBottom;
       let placement: PositionPlacements = "left-bottom";
 
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.rightCenter)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.insideCenter)) {
           placement = "left-center";
-          correctTop = y.rightCenter;
-        } else if (isCompletelyVisibleY(y.rightTop)) {
+          correctTop = opts.y.insideCenter;
+        } else if (opts.isCompletelyVisibleY(opts.y.insideTop)) {
           placement = "left-top";
-          correctTop = y.rightTop;
+          correctTop = opts.y.insideTop;
         }
       }
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.right)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.right)) {
           placement = placement.replace("left", "right") as PositionPlacements;
-          correctLeft = x.right;
+          correctLeft = opts.x.right;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "left-center": {
-      correctLeft = x.left;
-      correctTop = y.rightCenter;
+      correctLeft = opts.x.left;
+      correctTop = opts.y.insideCenter;
       let placement: PositionPlacements = "left-center";
 
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.rightTop)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.insideTop)) {
           placement = "left-top";
-          correctTop = y.rightTop;
-        } else if (isCompletelyVisibleY(y.rightBottom)) {
+          correctTop = opts.y.insideTop;
+        } else if (opts.isCompletelyVisibleY(opts.y.insideBottom)) {
           placement = "left-bottom";
-          correctTop = y.rightBottom;
+          correctTop = opts.y.insideBottom;
         }
       }
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.right)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.right)) {
           placement = placement.replace("left", "right") as PositionPlacements;
-          correctLeft = x.right;
+          correctLeft = opts.x.right;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
     case "left-top": {
-      correctLeft = x.left;
-      correctTop = y.rightTop;
+      correctLeft = opts.x.left;
+      correctTop = opts.y.insideTop;
       let placement: PositionPlacements = "left-top";
 
-      if (!isCompletelyVisibleY(correctTop)) {
-        if (isCompletelyVisibleY(y.rightCenter)) {
+      if (!opts.isCompletelyVisibleY(correctTop)) {
+        if (opts.isCompletelyVisibleY(opts.y.insideCenter)) {
           placement = "left-center";
-          correctTop = y.rightCenter;
-        } else if (isCompletelyVisibleY(y.rightBottom)) {
+          correctTop = opts.y.insideCenter;
+        } else if (opts.isCompletelyVisibleY(opts.y.insideBottom)) {
           placement = "left-bottom";
-          correctTop = y.rightBottom;
+          correctTop = opts.y.insideBottom;
         }
       }
-      if (!isCompletelyVisibleX(correctLeft)) {
-        if (isCompletelyVisibleX(x.right)) {
+      if (!opts.isCompletelyVisibleX(correctLeft)) {
+        if (opts.isCompletelyVisibleX(opts.x.right)) {
           placement = placement.replace("left", "right") as PositionPlacements;
 
-          correctLeft = x.right;
+          correctLeft = opts.x.right;
         }
-      }
-
-      if (flex && (!isCompletelyVisibleX(correctLeft) || !isCompletelyVisibleY(correctTop))) {
-        return getFlexVisiblePosition({
-          initialLeft: correctLeft,
-          initialTop: correctTop,
-          isCompletelyVisibleX,
-          isCompletelyVisibleY,
-          nodeHeight,
-          nodeWidth,
-          xEnd,
-          yEnd,
-        });
       }
 
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
         placement,
       };
     }
@@ -647,58 +534,10 @@ export function getVisiblePosition({
       return {
         top: correctTop,
         left: correctLeft,
-        right: xEnd - correctLeft - nodeWidth,
-        bottom: yEnd - correctTop - nodeHeight,
-        placement,
+        placement: opts.placement,
       };
     }
   }
-}
-
-type GetStartPositions = {
-  targetWidth: number;
-  targetHeight: number;
-  nodeWidth: number;
-  nodeHeight: number;
-  targetLeftPosition: number;
-  targetTopPosition: number;
-  stepY: number;
-  stepX: number;
-};
-type XPositions = "bottomCenter" | "bottomLeft" | "bottomRight" | "right" | "left";
-type YPosition = "rightCenter" | "rightTop" | "rightBottom" | "bottom" | "top";
-
-function getStartPositions({
-  targetHeight,
-  targetWidth,
-  nodeHeight,
-  nodeWidth,
-  targetLeftPosition,
-  targetTopPosition,
-  stepX,
-  stepY,
-}: GetStartPositions) {
-  const childBottomCenter = targetWidth ? targetLeftPosition + targetWidth / 2 : targetLeftPosition;
-  const childBottom = targetHeight ? targetTopPosition + targetHeight : targetTopPosition;
-  const childRightCenter = targetHeight ? targetTopPosition + targetHeight / 2 : targetTopPosition;
-
-  const x: Record<XPositions, number> = {
-    bottomCenter: childBottomCenter - nodeWidth / 2 + stepX,
-    bottomRight: targetLeftPosition + targetWidth + stepX - nodeWidth,
-    bottomLeft: targetLeftPosition + stepX,
-    left: targetLeftPosition - nodeWidth - stepX,
-    right: targetLeftPosition + targetWidth + stepX,
-  };
-
-  const y: Record<YPosition, number> = {
-    bottom: childBottom + stepY,
-    top: targetTopPosition - stepY - nodeHeight,
-    rightCenter: childRightCenter - nodeHeight / 2 + stepY,
-    rightBottom: targetTopPosition + targetHeight - nodeHeight + stepY,
-    rightTop: targetTopPosition + stepY,
-  };
-
-  return { x, y };
 }
 
 type GetFlexVisiblePosition = {
@@ -721,7 +560,7 @@ function getFlexVisiblePosition({
   nodeWidth,
   xEnd,
   yEnd,
-}: GetFlexVisiblePosition): VisiblePosition {
+}: GetFlexVisiblePosition): InitialVisiblePosition {
   if (!isCompletelyVisibleY(initialTop)) {
     initialTop = yEnd - nodeHeight;
   }
@@ -732,8 +571,6 @@ function getFlexVisiblePosition({
   return {
     top: initialTop,
     left: initialLeft,
-    bottom: yEnd - initialTop - nodeHeight,
-    right: xEnd - initialLeft - nodeWidth,
     placement: "flex",
   };
 }

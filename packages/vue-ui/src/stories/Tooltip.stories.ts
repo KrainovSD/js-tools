@@ -1,5 +1,5 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
-import { h } from "vue";
+import { h, useTemplateRef } from "vue";
 import { VFlex, VText, VTooltip } from "../ui";
 
 const meta = {
@@ -123,6 +123,194 @@ export const AllInOne: Story = {
           ],
         ),
       ]);
+    },
+  }),
+  args: {
+    text: "Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа",
+  },
+};
+
+export const PositionCheckInVisibleArea: Story = {
+  render: (args) => ({
+    components: { VTooltip },
+    setup() {
+      const div = useTemplateRef("div");
+
+      return { args, div };
+    },
+    render() {
+      return h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            width: "100%",
+            height: "100%",
+          },
+        },
+        [
+          h(
+            "div",
+            {
+              ref: "div",
+              style: {
+                border: "1px solid black",
+                height: "300px",
+                width: "500px",
+                margin: "300px 300px 300px 300px",
+                class: "test-tooltip-position",
+                display: "flex",
+                flexDirection: "column",
+                gap: "50px",
+              },
+            },
+            [
+              h(
+                VTooltip,
+                {
+                  ...args,
+                  visibleArea: this.div,
+                  modalRoot: this.div,
+                  placement: "top-center",
+                },
+                () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip top-center"),
+              ),
+              h(
+                VTooltip,
+                {
+                  ...args,
+                  visibleArea: this.div,
+                  modalRoot: this.div,
+                  placement: "left-center",
+                },
+                () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip left-center"),
+              ),
+              h(
+                VTooltip,
+                {
+                  ...args,
+                  visibleArea: this.div,
+                  modalRoot: this.div,
+                  placement: "right-top",
+                },
+                () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip right-top"),
+              ),
+              h(
+                VTooltip,
+                {
+                  ...args,
+                  visibleArea: this.div,
+                  modalRoot: this.div,
+                  placement: "bottom-right",
+                },
+                () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip bottom-right"),
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  }),
+  args: {
+    text: "Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа",
+  },
+};
+
+export const PositionCheckInVisibleAreaWithScroll: Story = {
+  render: (args) => ({
+    components: { VTooltip },
+    setup() {
+      const div = useTemplateRef("div");
+
+      return { args, div };
+    },
+    render() {
+      return h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            width: "100%",
+            height: "100%",
+          },
+        },
+        [
+          h(
+            "div",
+            {
+              ref: "div",
+              style: {
+                border: "1px solid black",
+                height: "300px",
+                width: "500px",
+                margin: "300px 300px 300px 300px",
+                class: "test-tooltip-position",
+                overflow: "auto",
+              },
+            },
+            [
+              h(
+                "div",
+                {
+                  style: {
+                    height: "600px",
+                    paddingTop: "200px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "50px",
+                  },
+                },
+                [
+                  h(
+                    VTooltip,
+                    {
+                      ...args,
+                      visibleArea: this.div,
+                      modalRoot: this.div,
+                      placement: "top-center",
+                    },
+                    () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip top-center"),
+                  ),
+                  h(
+                    VTooltip,
+                    {
+                      ...args,
+                      visibleArea: this.div,
+                      modalRoot: this.div,
+                      placement: "left-center",
+                    },
+                    () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip left-center"),
+                  ),
+                  h(
+                    VTooltip,
+                    {
+                      ...args,
+                      visibleArea: this.div,
+                      modalRoot: this.div,
+                      placement: "right-top",
+                    },
+                    () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip right-top"),
+                  ),
+                  h(
+                    VTooltip,
+                    {
+                      ...args,
+                      visibleArea: this.div,
+                      modalRoot: this.div,
+                      placement: "bottom-right",
+                    },
+                    () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip bottom-right"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
     },
   }),
   args: {

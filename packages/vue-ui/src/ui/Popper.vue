@@ -35,7 +35,7 @@
     openDelay: 100,
     hoverDelay: 0,
     modalRoot: undefined,
-    placement: "bottom-center",
+    placement: "bottom-left",
     shiftX: undefined,
     shiftY: undefined,
     zIndex: undefined,
@@ -167,22 +167,22 @@
     if (!positioner) return;
 
     const eventController = new AbortController();
+
     /** Close by escape and return focus to last element */
-    positioner.addEventListener(
-      "keydown",
-      (event) => {
-        if (event.key === "Escape") {
-          if (lastActive.value) {
-            lastActive.value.focus();
-            lastActive.value = null;
-          } else {
-            content.value?.focus?.();
-          }
-          onDisAppear();
+    positioner.addEventListener("keydown", closeByEscape, { signal: eventController.signal });
+    content.value?.addEventListener?.("keydown", closeByEscape, { signal: eventController.signal });
+
+    function closeByEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        if (lastActive.value) {
+          lastActive.value.focus();
+          lastActive.value = null;
+        } else {
+          content.value?.focus?.();
         }
-      },
-      { signal: eventController.signal },
-    );
+        onDisAppear();
+      }
+    }
 
     clean(() => {
       eventController.abort();
@@ -220,7 +220,11 @@
     window.addEventListener(
       "scroll",
       () => {
-        positionerRef.value?.updatePosition?.();
+        if (props.closeByScroll) {
+          onDisAppear();
+        } else {
+          positionerRef.value?.updatePosition?.();
+        }
       },
       {
         signal: eventController.signal,
@@ -274,7 +278,12 @@
       }
     }
 
+    const resizeObserver = new ResizeObserver((entries) => {
+      contentWidth.value = entries[0]?.target?.clientWidth ?? 0;
+    });
+
     if (!props.fit) {
+      resizeObserver.observe(content.value);
     }
 
     if (triggers.value.includes("hover")) {
@@ -308,6 +317,7 @@
     clean(() => {
       eventController.abort();
       observer.disconnect();
+      resizeObserver.disconnect();
     });
   });
 
@@ -315,7 +325,7 @@
 </script>
 
 <template>
-  <span ref="popper" class="ksd-popper"></span>
+  <span ref="popper" class="ksd-popper" aria-hidden="true" tabindex="-1"></span>
   <slot></slot>
   <Positioner
     ref="positioner"
@@ -341,6 +351,13 @@
 
 <style lang="scss">
   .ksd-popper {
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+
     &__positioner {
       border-radius: var(--ksd-border-radius-lg);
       color: var(--ksd-bg-modal-color);
