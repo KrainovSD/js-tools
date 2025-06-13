@@ -176,6 +176,7 @@
 
     function closeByEscape(event: KeyboardEvent) {
       if (event.key === "Escape") {
+        event.stopPropagation();
         if (lastActive.value) {
           lastActive.value.focus();
           lastActive.value = null;

@@ -2,7 +2,7 @@
   import { computed } from "vue";
 
   export type ArrowMenuProps = {
-    direction: "top" | "down" | "right" | "left";
+    direction: "up" | "down" | "right" | "left";
   };
 
   const props = defineProps<ArrowMenuProps>();
@@ -32,21 +32,6 @@
         top var(--ksd-transition-slow) ease-in-out,
         color var(--ksd-transition-slow) ease-in-out;
       content: "";
-
-      &.down {
-        transform: rotate(-45deg) translateX(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25));
-      }
-      &.top {
-        transform: rotate(45deg) translateX(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25));
-      }
-      &.right {
-        transform: rotate(45deg)
-          translateY(calc(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25) * -1));
-      }
-      &.left {
-        transform: rotate(-45deg)
-          translateY(calc(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25) * -1));
-      }
     }
 
     &::after {
@@ -61,21 +46,6 @@
         top var(--ksd-transition-slow) ease-in-out,
         color var(--ksd-transition-slow) ease-in-out;
       content: "";
-
-      &.down {
-        transform: rotate(45deg)
-          translateX(calc(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25) * -1));
-      }
-      &.top {
-        transform: rotate(-45deg)
-          translateX(calc(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25) * -1));
-      }
-      &.right {
-        transform: rotate(-45deg) translateY(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25));
-      }
-      &.left {
-        transform: rotate(45deg) translateY(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25));
-      }
     }
 
     &.down {
@@ -87,7 +57,7 @@
           translateX(calc(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25) * -1));
       }
     }
-    &.top {
+    &.up {
       &::before {
         transform: rotate(45deg) translateX(calc(calc(var(--ksd-font-size) / 7 * 5) * 0.25));
       }

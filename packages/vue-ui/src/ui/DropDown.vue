@@ -5,6 +5,8 @@
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
   import Text from "./Text.vue";
 
+  export type DropDownFirstPlacement = "top" | "bottom" | "left" | "right";
+
   export type DropDownMenuItem = {
     key: string;
     danger?: boolean;
@@ -77,7 +79,22 @@
   }
 
   function getFirstPlacementFromInner(placement?: DropDownProps["placement"]) {
-    return (placement ?? "right-top").split("-")[0] as ArrowMenuProps["direction"];
+    return (placement ?? "right-top").split("-")[0] as DropDownFirstPlacement;
+  }
+  function getArrowPosition(placement?: DropDownProps["placement"]): ArrowMenuProps["direction"] {
+    const firstPlacement = getFirstPlacementFromInner(placement);
+
+    if (firstPlacement === "bottom") {
+      return "down";
+    } else if (firstPlacement === "top") {
+      return "up";
+    } else if (firstPlacement === "left") {
+      return "left";
+    } else if (firstPlacement === "right") {
+      return "right";
+    }
+
+    return "right";
   }
 
   watchEffect((clean) => {
@@ -86,13 +103,13 @@
     const eventController = new AbortController();
     lastActive.value = document.activeElement as HTMLElement | null;
 
-    document.addEventListener(
-      "focus",
-      (event) => {
-        console.log(event.target);
-      },
-      { capture: true, signal: eventController.signal },
-    );
+    // document.addEventListener(
+    //   "focus",
+    //   (event) => {
+    //     console.log(event.target);
+    //   },
+    //   { capture: true, signal: eventController.signal },
+    // );
 
     const interactiveElements = Array.from(
       positionerContent.value.querySelectorAll<HTMLDropDownItem>(".ksd-dropdown__element"),
@@ -160,9 +177,10 @@
       }
     }
     function closeByClick(event: MouseEvent | KeyboardEvent) {
-      const target = event.target as HTMLDropDownItem;
+      const target = event.target as HTMLElement;
+      const currentTarget = event.currentTarget as HTMLDropDownItem;
 
-      if (target.classList.contains("parent")) {
+      if (currentTarget.classList.contains("parent")) {
         return;
       }
 
@@ -233,6 +251,8 @@
           event.preventDefault();
         }
       } else if (event.key === "Enter" || event.key === " ") {
+        /** Click */
+
         const mouseEvent = new MouseEvent("click", {
           ctrlKey: event.ctrlKey,
           shiftKey: event.shiftKey,
@@ -242,8 +262,57 @@
           cancelable: true,
         });
         currentFocus.dispatchEvent(mouseEvent);
-        lastActive.value?.focus?.();
         event.preventDefault();
+
+        if (currentFocus.classList.contains("parent")) {
+          return;
+        }
+
+        lastActive.value?.focus?.();
+      } else if (event.key === "ArrowRight") {
+        /** Click for nested */
+
+        const nestedPlacement = currentFocus.getAttribute(
+          "data-nested-placement",
+        ) as DropDownFirstPlacement;
+
+        if (nestedPlacement && nestedPlacement !== "left") {
+          const mouseEvent = new MouseEvent("click", {
+            ctrlKey: event.ctrlKey,
+            shiftKey: event.shiftKey,
+            altKey: event.altKey,
+            metaKey: event.metaKey,
+            bubbles: true,
+            cancelable: true,
+          });
+          currentFocus.dispatchEvent(mouseEvent);
+          event.preventDefault();
+        } else if (props.nested && getFirstPlacementFromInner(props.placement) === "left") {
+          model.value = false;
+          lastActive.value?.focus?.();
+        }
+      } else if (event.key === "ArrowLeft") {
+        /** Click for nested */
+
+        const nestedPlacement = currentFocus.getAttribute(
+          "data-nested-placement",
+        ) as DropDownFirstPlacement;
+
+        if (nestedPlacement && nestedPlacement === "left") {
+          const mouseEvent = new MouseEvent("click", {
+            ctrlKey: event.ctrlKey,
+            shiftKey: event.shiftKey,
+            altKey: event.altKey,
+            metaKey: event.metaKey,
+            bubbles: true,
+            cancelable: true,
+          });
+          currentFocus.dispatchEvent(mouseEvent);
+          event.preventDefault();
+        } else if (props.nested && getFirstPlacementFromInner(props.placement) === "right") {
+          model.value = false;
+          lastActive.value?.focus?.();
+        }
       }
     }
 
@@ -291,6 +360,7 @@
           <div
             role="menuitem"
             class="ksd-dropdown__element parent"
+            :data-nested-placement="getFirstPlacementFromInner(item.innerOptions.placement)"
             :class="[itemClasses, { link: item.link }]"
             :data-level="$props.level"
           >
@@ -299,7 +369,7 @@
                 item.innerOptions.innerArrow &&
                 getFirstPlacementFromInner(item.innerOptions.placement) === 'left'
               "
-              :direction="getFirstPlacementFromInner(item.innerOptions.placement)"
+              :direction="getArrowPosition(item.innerOptions.placement)"
               class="ksd-dropdown__arrow"
             />
             <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
@@ -310,7 +380,7 @@
                 item.innerOptions.innerArrow &&
                 getFirstPlacementFromInner(item.innerOptions.placement) !== 'left'
               "
-              :direction="getFirstPlacementFromInner(item.innerOptions.placement)"
+              :direction="getArrowPosition(item.innerOptions.placement)"
               class="ksd-dropdown__arrow"
             />
           </div>
