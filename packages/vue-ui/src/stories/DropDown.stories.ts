@@ -137,7 +137,11 @@ export const AllInOne: Story = {
                                 innerArrow: true,
                                 placement: "left-top",
                                 menu: [
-                                  { key: "1", label: "Пункт 10" },
+                                  {
+                                    key: "1",
+                                    link: true,
+                                    label: h("a", { href: "#test" }, ["Пункт 10"]),
+                                  },
                                   { key: "2", label: "Пункт 11" },
                                   { key: "3", divider: true },
                                   { key: "4", label: "Пункт 12" },
@@ -177,7 +181,7 @@ export const AllInOne: Story = {
                   innerOptions: {
                     innerArrow: true,
                     placement: "right-top",
-                    triggers: ["hover"],
+                    triggers: ["hover", "click"],
                     menu: [
                       { key: "1", label: "Пункт 4" },
                       { key: "2", label: "Пункт 5 (И длинное описание этого пункта)" },
@@ -186,7 +190,7 @@ export const AllInOne: Story = {
                         key: "4",
                         label: "Пункт 6",
                         innerOptions: {
-                          triggers: ["hover"],
+                          triggers: ["hover", "click"],
                           innerArrow: true,
                           placement: "right-top",
                           menu: [
@@ -197,11 +201,15 @@ export const AllInOne: Story = {
                               key: "4",
                               label: "Пункт 9",
                               innerOptions: {
-                                triggers: ["hover"],
+                                triggers: ["hover", "click"],
                                 innerArrow: true,
                                 placement: "left-top",
                                 menu: [
-                                  { key: "1", label: "Пункт 10" },
+                                  {
+                                    key: "1",
+                                    link: true,
+                                    label: h("a", { href: "#test" }, ["Пункт 10"]),
+                                  },
                                   { key: "2", label: "Пункт 11" },
                                   { key: "3", divider: true },
                                   { key: "4", label: "Пункт 12" },

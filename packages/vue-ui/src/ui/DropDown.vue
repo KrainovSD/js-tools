@@ -103,14 +103,6 @@
     const eventController = new AbortController();
     lastActive.value = document.activeElement as HTMLElement | null;
 
-    // document.addEventListener(
-    //   "focus",
-    //   (event) => {
-    //     console.log(event.target);
-    //   },
-    //   { capture: true, signal: eventController.signal },
-    // );
-
     const interactiveElements = Array.from(
       positionerContent.value.querySelectorAll<HTMLDropDownItem>(".ksd-dropdown__element"),
     );
@@ -145,16 +137,19 @@
       element.prevItem = interactiveElements[prevIndex];
       element.nextItem = interactiveElements[nextIndex];
 
-      element.addEventListener("click", closeByClick, { signal: eventController.signal });
-      element.addEventListener("mousedown", closeByWheelLink, { signal: eventController.signal });
+      element.addEventListener("click", actionClick, { signal: eventController.signal });
+      element.addEventListener("mousedown", actionWheel, { signal: eventController.signal });
       element.addEventListener("mousemove", focusByHover, { signal: eventController.signal });
     });
 
-    positionerContent.value.addEventListener("keydown", clickByKeyboard, {
+    positionerContent.value.addEventListener("keydown", actionKeyboard, {
+      signal: eventController.signal,
+    });
+    positionerRef.value?.addEventListener?.("closedropdown", closeDropDown, {
       signal: eventController.signal,
     });
 
-    function closeByWheelLink(event: MouseEvent) {
+    function actionWheel(event: MouseEvent) {
       const target = event.target as HTMLDropDownItem;
       const wheel = "button" in event && event.button === 1;
 
@@ -176,7 +171,7 @@
         }
       }
     }
-    function closeByClick(event: MouseEvent | KeyboardEvent) {
+    function actionClick(event: MouseEvent | KeyboardEvent) {
       const target = event.target as HTMLElement;
       const currentTarget = event.currentTarget as HTMLDropDownItem;
 
@@ -199,7 +194,8 @@
         }
       }
 
-      model.value = false;
+      const closeEvent = new Event("closedropdown", { bubbles: true, cancelable: true });
+      positionerRef.value?.dispatchEvent?.(closeEvent);
     }
     function focusByHover(event: MouseEvent) {
       const target = event.target as HTMLDropDownItem;
@@ -209,7 +205,7 @@
         target.focus();
       }
     }
-    function clickByKeyboard(event: KeyboardEvent) {
+    function actionKeyboard(event: KeyboardEvent) {
       if (
         event.key !== "ArrowDown" &&
         event.key !== "ArrowUp" &&
@@ -263,12 +259,6 @@
         });
         currentFocus.dispatchEvent(mouseEvent);
         event.preventDefault();
-
-        if (currentFocus.classList.contains("parent")) {
-          return;
-        }
-
-        lastActive.value?.focus?.();
       } else if (event.key === "ArrowRight") {
         /** Click for nested */
 
@@ -314,6 +304,10 @@
           lastActive.value?.focus?.();
         }
       }
+    }
+    function closeDropDown() {
+      model.value = false;
+      lastActive.value?.focus?.();
     }
 
     clean(() => {
