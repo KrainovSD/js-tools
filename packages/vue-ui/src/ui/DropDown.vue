@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { type Component, computed, ref, useTemplateRef, watchEffect } from "vue";
+  import ArrowMenu, { type ArrowMenuProps } from "./ArrowMenu.vue";
   import Divider from "./Divider.vue";
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
   import Text from "./Text.vue";
@@ -13,7 +14,13 @@
     label?: string | Component;
     icon?: Component;
     onClick?: (event: MouseEvent) => void;
+    innerOptions?: DropDownMenuItemInner;
   };
+  export type DropDownMenuItemInner = {
+    innerArrow?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+  } & DropDownProps;
+
   export interface HTMLDropDownItem extends HTMLElement {
     nextItem: HTMLDropDownItem | undefined;
     prevItem: HTMLDropDownItem | undefined;
@@ -24,16 +31,19 @@
   export type DropDownProps = PopperProps & {
     menu: DropDownMenuItem[];
     interactiveMode?: "focusable" | "keyboard";
+    level?: number;
+    size?: "default" | "large";
   };
 
   const props = withDefaults(defineProps<DropDownProps>(), {
     animationAppear: "scaleY",
     animationDisappear: "scaleY",
     placement: "bottom-left",
-    closeByScroll: true,
     triggers: (props) => props.triggers ?? ["click"],
     fit: true,
     interactiveMode: "keyboard",
+    level: 0,
+    size: "default",
   });
   const triggersKey = computed(() => props.triggers.join(";"));
   const triggers = computed(() => {
@@ -55,12 +65,19 @@
   const lastActive = ref<HTMLElement | null>();
 
   const model = defineModel<boolean>();
-  const itemClasses = computed(() => ({ focusable: props.interactiveMode === "focusable" }));
+  const itemClasses = computed(() => ({
+    focusable: props.interactiveMode === "focusable",
+    large: props.size === "large",
+  }));
 
   function isComponent(component: string | undefined | Component) {
     if (component != undefined && typeof component !== "string") return true;
 
     return false;
+  }
+
+  function getFirstPlacementFromInner(placement?: DropDownProps["placement"]) {
+    return (placement ?? "right-top").split("-")[0] as ArrowMenuProps["direction"];
   }
 
   watchEffect((clean) => {
@@ -144,6 +161,10 @@
     }
     function closeByClick(event: MouseEvent | KeyboardEvent) {
       const target = event.target as HTMLDropDownItem;
+
+      if (target.classList.contains("parent")) {
+        return;
+      }
 
       if (target.classList.contains("link")) {
         const link = target.querySelector<HTMLElement>("a");
@@ -240,14 +261,16 @@
     :triggers="triggers"
     role="menu"
     :class-content="`ksd-dropdown__positioner-content ${$props.classContent ?? ''}`"
+    :class="[$attrs.class, 'ksd-dropdown__positioner']"
   >
     <slot></slot>
     <template #content>
       <template v-for="item in $props.menu" :key="item.key">
         <div
-          v-if="!item.divider"
+          v-if="!item.divider && !item.innerOptions"
           role="menuitem"
           class="ksd-dropdown__element"
+          :data-level="$props.level"
           :class="[itemClasses, { link: item.link }]"
           @click="item.onClick"
         >
@@ -256,6 +279,42 @@
           <Text v-else>{{ item.label }}</Text>
         </div>
         <Divider v-if="item.divider" class="ksd-dropdown__divider" role="separator" />
+        <DropDown
+          v-if="item.innerOptions"
+          v-bind="item.innerOptions"
+          :modal-root="positionerRef"
+          :placement="item.innerOptions.placement ?? 'right-top'"
+          :size="item.innerOptions.size ?? $props.size"
+          :nested="true"
+          :level="($props.level ?? 0) + 1"
+        >
+          <div
+            role="menuitem"
+            class="ksd-dropdown__element parent"
+            :class="[itemClasses, { link: item.link }]"
+            :data-level="$props.level"
+          >
+            <ArrowMenu
+              v-if="
+                item.innerOptions.innerArrow &&
+                getFirstPlacementFromInner(item.innerOptions.placement) === 'left'
+              "
+              :direction="getFirstPlacementFromInner(item.innerOptions.placement)"
+              class="ksd-dropdown__arrow"
+            />
+            <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
+            <component :is="item.label" v-if="isComponent(item.label)" />
+            <Text v-else>{{ item.label }}</Text>
+            <ArrowMenu
+              v-if="
+                item.innerOptions.innerArrow &&
+                getFirstPlacementFromInner(item.innerOptions.placement) !== 'left'
+              "
+              :direction="getFirstPlacementFromInner(item.innerOptions.placement)"
+              class="ksd-dropdown__arrow"
+            />
+          </div>
+        </DropDown>
       </template>
     </template>
   </Popper>
@@ -276,6 +335,11 @@
       cursor: pointer;
       transition: all var(--ksd-transition-mid);
       border-radius: var(--ksd-border-radius-sm);
+
+      &.large {
+        padding: var(--ksd-dropdown-inner-padding-lg);
+        min-width: var(--ksd-dropdown-inner-min-width-lg);
+      }
 
       &:focus-within {
         background-color: var(--ksd-dropdown-bg-item-color);
@@ -299,6 +363,20 @@
 
     &__divider {
       margin: var(--ksd-margin-xxs) 0;
+    }
+
+    &__arrow {
+      &.up {
+        margin-inline-start: auto;
+      }
+      &.down {
+        margin-inline-start: auto;
+      }
+      &.left {
+      }
+      &.right {
+        margin-inline-start: auto;
+      }
     }
 
     &__positioner-content {

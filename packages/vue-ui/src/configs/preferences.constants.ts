@@ -66,6 +66,7 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-font-weight": "400",
         "ksd-line-height": "1.5",
         "ksd-font-size-sm": "12px",
+        "ksd-font-size": "14px",
         "ksd-font-size-lg": "16px",
         "ksd-font-size-xl": "20px",
       },
@@ -210,6 +211,8 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
       },
       dropdown: {
         "ksd-dropdown-inner-padding": "5px 12px",
+        "ksd-dropdown-inner-padding-lg": "12px",
+        "ksd-dropdown-inner-min-width-lg": "150px",
         "ksd-dropdown-bg-item-color": "rgba(0,0,0,0.04)",
       },
     },

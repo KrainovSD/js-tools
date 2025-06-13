@@ -47,6 +47,7 @@ type GetVisiblePositionOptions = {
   stepX?: number;
   stepY?: number;
   flex?: boolean;
+  nested?: boolean;
 };
 export function getVisiblePosition({
   initialPosition,
@@ -70,6 +71,7 @@ export function getVisiblePosition({
     ? 0
     : 10,
   flex,
+  nested,
 }: GetVisiblePositionOptions): VisiblePosition {
   /** Viewport Variables */
   const viewport = visibleArea ?? document.documentElement;
@@ -112,6 +114,16 @@ export function getVisiblePosition({
       targetWidth = initialPosition.position.width;
     }
   }
+
+  /** Inherit Position */
+  let inheritLeft = 0;
+  let inheritTop = 0;
+  if (nested) {
+    const { left = 0, top = 0 } = node.parentElement?.getBoundingClientRect?.() ?? {};
+    inheritLeft = left + scrollLeft;
+    inheritTop = top + scrollTop;
+  }
+
   /** Initial Position */
   const targetXCenter = targetWidth ? targetLeftPosition + targetWidth / 2 : targetLeftPosition;
   const targetYCenter = targetHeight ? targetTopPosition + targetHeight / 2 : targetTopPosition;
@@ -175,6 +187,9 @@ export function getVisiblePosition({
       yEnd,
     });
   }
+
+  visiblePositions.left -= inheritLeft;
+  visiblePositions.top -= inheritTop;
 
   return {
     placement: visiblePositions.placement,

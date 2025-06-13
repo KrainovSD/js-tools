@@ -23,6 +23,7 @@
     observe?: boolean;
     ignoreElements?: (string | HTMLElement | null | undefined)[];
     fit?: boolean;
+    nested?: boolean;
   };
 
   const props = withDefaults(defineProps<PopperProps>(), {
@@ -39,10 +40,11 @@
     shiftX: undefined,
     shiftY: undefined,
     zIndex: undefined,
-    closeByScroll: true,
+    closeByScroll: false,
     triggers: (props) => props.triggers ?? ["click"],
     ignoreElements: undefined,
     fit: true,
+    nested: false,
   });
   const model = defineModel<boolean>();
   const elementRef = useTemplateRef("popper");
@@ -342,6 +344,7 @@
     :shift-y="shiftY"
     :animation-appear="$props.animationAppear"
     :animation-disappear="$props.animationDisappear"
+    :nested="$props.nested"
     :style="{
       width: $props.fit ? undefined : contentWidth != undefined ? `${contentWidth}px` : undefined,
     }"
@@ -361,6 +364,7 @@
     &__positioner {
       border-radius: var(--ksd-border-radius-lg);
       color: var(--ksd-bg-modal-color);
+      max-width: 400px;
 
       &[placement="bottom-left"],
       &[placement="bottom-center"],
@@ -387,7 +391,6 @@
         &::before {
           content: "";
           position: absolute;
-          top: auto;
           height: 5px;
           bottom: -5px;
           left: 0;
@@ -406,9 +409,9 @@
         &::before {
           content: "";
           position: absolute;
-          top: auto;
           width: 5px;
-          left: -5px;
+          right: -5px;
+          left: auto;
           top: 0;
           height: 100%;
         }
@@ -425,17 +428,15 @@
         &::before {
           content: "";
           position: absolute;
-          top: auto;
           width: 5px;
-          right: -5px;
-          left: auto;
+          left: -5px;
           top: 0;
           height: 100%;
         }
         &.arrow {
           &::before {
             width: 10px;
-            right: -10px;
+            left: -10px;
           }
         }
       }
@@ -455,6 +456,7 @@
       max-width: 400px;
       display: flex;
       flex-direction: column;
+      width: max-content;
     }
   }
 </style>

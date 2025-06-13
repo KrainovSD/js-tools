@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "lodash": "4.17.21",
-    "@krainovsd/js-helpers": "0.13.5"
+    "@krainovsd/js-helpers": "0.13.6"
   },
   "devDependencies": {
     "@krainovsd/presets": "0.2.0",

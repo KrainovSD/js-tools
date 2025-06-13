@@ -38,6 +38,7 @@
     arrow?: boolean;
     animationAppear?: PositionerAnimations;
     animationDisappear?: PositionerAnimations;
+    nested?: boolean;
   };
 
   const ARROW_SHIFT_FROM_CENTER = 11;
@@ -91,6 +92,7 @@
           props.target && "getBoundingClientRect" in props.target ? props.target : undefined,
         position: props.target && "width" in props.target ? props.target : undefined,
       },
+      nested: props.nested,
       placement: props.placement ?? "bottom-center",
       stepX: props.shiftX,
       stepY: props.shiftY,
@@ -218,6 +220,7 @@
 
       position.value = { ...position.value, placement: "flex" };
     },
+    { immediate: true },
   );
 
   watchEffect(() => {

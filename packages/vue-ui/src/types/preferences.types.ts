@@ -25,6 +25,7 @@ export type ThemeShadowVariable =
 
 export type ThemeFontVariable =
   | "ksd-font-size-sm"
+  | "ksd-font-size"
   | "ksd-font-size-lg"
   | "ksd-font-size-xl"
   | "ksd-font-family"
@@ -184,7 +185,11 @@ export type ThemeSwitchVariable =
   | "ksd-switch-unchecked-color";
 
 export type ThemePopperVariable = "ksd-popper-inner-padding";
-export type ThemeDropDownVariable = "ksd-dropdown-inner-padding" | "ksd-dropdown-bg-item-color";
+export type ThemeDropDownVariable =
+  | "ksd-dropdown-inner-padding"
+  | "ksd-dropdown-inner-padding-lg"
+  | "ksd-dropdown-inner-min-width-lg"
+  | "ksd-dropdown-bg-item-color";
 
 export type ThemeVariableConfig = {
   common: {
