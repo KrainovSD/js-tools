@@ -97,6 +97,10 @@
     return "right";
   }
 
+  watchEffect(() => {
+    popperRef.value?.content?.setAttribute?.("aria-haspopup", "true");
+  });
+
   watchEffect((clean) => {
     if (!positionerContent.value) return;
 
@@ -357,6 +361,7 @@
             :data-nested-placement="getFirstPlacementFromInner(item.innerOptions.placement)"
             :class="[itemClasses, { link: item.link }]"
             :data-level="$props.level"
+            aria-haspopup="true"
           >
             <ArrowMenu
               v-if="
