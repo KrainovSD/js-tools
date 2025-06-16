@@ -77,13 +77,12 @@ export function GanttVirtualRow() {
       getSubRows={(row) => row.children}
       onClickRow={onClick}
       onDoubleClickRow={onDoubleClick}
-      virtualRows={false}
-      virtualRowSize={69}
+      virtualRows={true}
       virtualColumn={false}
       fullSize={true}
       loading={false}
       withGantt={true}
-      instantGanttSplitter={false}
+      instantGanttSplitter={true}
       rowSelection={rowSelection}
       onRowSelectionChange={setRowSelection}
       getRowId={(row) => row.id}

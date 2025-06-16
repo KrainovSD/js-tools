@@ -102,7 +102,7 @@ export function GanttVirtual() {
       })}
       firstGanttDate={firstDate?.toISOString?.()}
       lastGanttDate={lastDate?.toDateString?.()}
-      ganttRowMini={false}
+      ganttRowMini={true}
       ganttGrid={true}
       ganttView={"years"}
       expanded={expanded}

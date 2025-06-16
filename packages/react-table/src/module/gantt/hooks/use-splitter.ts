@@ -8,9 +8,9 @@ export function useSplitter(instantSizing: boolean = false) {
   const splitterOverflowRef = React.useRef<HTMLDivElement | null>(null);
 
   const parentWidthRef = React.useRef(0);
-  const sizesRef = React.useRef([10, 10]);
-  const tempSizesRef = React.useRef([10, 10]);
-  const [sizes, setSizes] = React.useState([10, 10]);
+  const sizesRef = React.useRef([0, 0]);
+  const tempSizesRef = React.useRef([0, 0]);
+  const [sizes, setSizes] = React.useState([0, 0]);
   const [isDragging, setIsDragging] = React.useState(false);
 
   const startDrag = React.useCallback(() => {
@@ -45,6 +45,8 @@ export function useSplitter(instantSizing: boolean = false) {
         splitterOverflowRef.current.style.width = `${containerRect.width}px`;
         splitterOverflowRef.current.style.left = `-${containerRect.width - tempSizesRef.current[1]}px`;
       }
+    } else {
+      sizesRef.current = tempSizesRef.current;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instantSizing]);
@@ -79,12 +81,12 @@ export function useSplitter(instantSizing: boolean = false) {
     if (event) {
       newSize = event.clientX - containerRect.left;
     } else {
-      newSize = containerRect.width / 2;
+      newSize = sizesRef.current[0] || containerRect.width / 2;
     }
     if (newSize < minWidth) newSize = minWidth;
     else if (newSize > maxWidth) newSize = maxWidth;
 
-    return [newSize, containerRect.width - newSize];
+    return [Math.round(newSize), Math.round(containerRect.width - newSize)];
   }
 
   const onDrag = React.useCallback(
@@ -101,6 +103,7 @@ export function useSplitter(instantSizing: boolean = false) {
         tempSizesRef.current = sizes;
       } else {
         setSizes(sizes);
+        tempSizesRef.current = sizes;
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,32 +114,49 @@ export function useSplitter(instantSizing: boolean = false) {
     const container = getContainer();
     if (!container) return;
 
-    const observer = new ResizeObserver((entities) => {
-      const currentWidth = entities[0].target.clientWidth;
-      if (currentWidth === parentWidthRef.current) return;
+    function updateSize(width: number) {
+      if (width === parentWidthRef.current) return;
 
-      parentWidthRef.current = currentWidth;
+      parentWidthRef.current = width;
       const sizes = getSizes();
       if (!sizes) return;
       setSizes(sizes);
       if (!instantSizing) {
-        const contentRect = entities[0].contentRect;
         sizesRef.current = sizes;
         tempSizesRef.current = sizes;
         if (splitterGhostRef.current) {
           splitterGhostRef.current.style.left = "0px";
         }
         if (splitterOverflowRef.current) {
-          splitterOverflowRef.current.style.width = `${contentRect.width}px`;
-          splitterOverflowRef.current.style.left = `-${contentRect.width - sizes[1]}px`;
+          splitterOverflowRef.current.style.width = `${width}px`;
+          splitterOverflowRef.current.style.left = `-${width - sizes[1]}px`;
         }
+      } else {
+        sizesRef.current = sizes;
+        tempSizesRef.current = sizes;
       }
+    }
+    function onResize() {
+      const container = getContainer();
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      if (!rect) return;
+
+      updateSize(Math.round(rect.width));
+    }
+
+    const observer = new ResizeObserver((entities) => {
+      const currentWidth = entities[0].target.clientWidth;
+      updateSize(currentWidth);
     });
 
     observer.observe(container);
+    window.addEventListener("resize", onResize);
 
     return () => {
       observer.disconnect();
+      window.removeEventListener("resize", onResize);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
