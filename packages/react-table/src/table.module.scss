@@ -71,6 +71,7 @@
   border: 1px solid var(--table-border);
   background-color: var(--table-container-color);
   height: fit-content;
+  scrollbar-gutter: stable;
 
   &_full {
     height: 100%;

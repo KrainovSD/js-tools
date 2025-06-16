@@ -55,7 +55,6 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
       style={
         {
           width: props.width,
-
           "--table-template-columns": visibleHeaders
             .map((header) => `${header.getSize()}px`)
             .join(" "),

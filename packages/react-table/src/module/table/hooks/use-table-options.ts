@@ -12,6 +12,7 @@ import {
 import type { ColumnDef, ColumnPinningState } from "@tanstack/react-table";
 import React from "react";
 import type { TableProps } from "../../../table";
+import { DEFAULT_TABLE_COLUMN_SIZE } from "../../../table.constants";
 import type { TableRenderers } from "../../../types";
 import { Expander } from "../components";
 
@@ -67,6 +68,11 @@ export function useTableOptions<
       getCoreRowModel: getCoreRowModel(),
       columnResizeMode: props.columnResizeMode ?? "onChange",
       groupedColumnMode: "reorder",
+      defaultColumn: {
+        size: props.defaultColumnOptions?.width ?? DEFAULT_TABLE_COLUMN_SIZE,
+        minSize: props.defaultColumnOptions?.minWidth,
+        maxSize: props.defaultColumnOptions?.maxWidth,
+      },
     };
 
     if (tableOptions.state) {
@@ -189,8 +195,14 @@ export function useTableOptions<
     return tableOptions;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    renderers,
     props.rows,
+    props.getSubRows,
+    props.getRowId,
+    props.columnResizeMode,
     props.initialState.columns,
+    props.initialState.columnPinning,
+    props.initialState.grouping,
     props.pagination,
     props.columnFilters,
     props.columnPinning,
@@ -203,6 +215,17 @@ export function useTableOptions<
     props.columnOrder,
     props.pageSizes,
     props.totalRows,
+    props.manualGrouping,
+    props.manualExpanding,
+    props.manualFiltering,
+    props.manualPagination,
+    props.manualSorting,
+    props.withPagination,
+    props.withGantt,
+    props.initialPageSize,
+    props.defaultColumnOptions?.maxWidth,
+    props.defaultColumnOptions?.minWidth,
+    props.defaultColumnOptions?.width,
   ]);
 
   const table = useReactTable(tableOptions);

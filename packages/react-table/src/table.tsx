@@ -90,6 +90,7 @@ export type TableProps<
     pageSizes?: number[];
     fullSize?: boolean;
     virtualColumn?: boolean;
+    rubberColumn?: boolean;
     virtualColumnOverScan?: number;
     virtualRows?: boolean;
     virtualRowSize?: number;
@@ -155,6 +156,7 @@ export function Table<
     sortTypes: props.sortTypes,
     withGantt: props.withGantt,
     withFilters: props.withFilters ?? false,
+    rubberColumn: props.rubberColumn ?? false,
   });
 
   const table = useTableOptions({
@@ -223,6 +225,7 @@ export function Table<
               columnsVirtual={columnsVirtual}
               rowsVirtual={rowVirtual}
               frozenHeader={props.frozenHeader ?? true}
+              rubberColumn={props.rubberColumn ?? false}
               rowVirtualizer={rowVirtualizer}
               rows={rows}
               table={table}

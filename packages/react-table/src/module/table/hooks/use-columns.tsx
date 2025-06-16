@@ -79,7 +79,7 @@ export function useColumns<
     HeaderClass,
     FilterType,
     SortType
-  > & { withGantt: boolean | undefined; withFilters: boolean },
+  > & { withGantt: boolean | undefined; withFilters: boolean; rubberColumn: boolean },
 ) {
   const {
     cellRender = "text",
@@ -199,13 +199,10 @@ export function useColumns<
       const sortTypeKey = column.sortType ?? sortType;
       const filterTypeKey = column.filterType ?? filterType;
 
-      return {
+      const columnDef: ColumnDef<Row> = {
         accessorKey: column.key,
         id: column.key,
         name: column.name,
-        size: column.width,
-        maxSize: column.maxWidth,
-        minSize: column.minWidth,
         cellRender:
           props.cellRenders?.[cellRenderKey as CellRender] ??
           cellRenders[cellRenderKey as TableCellRenderKey],
@@ -261,6 +258,23 @@ export function useColumns<
         filterFn:
           props.filterTypes?.[filterTypeKey as FilterType] ?? filters[filterTypeKey as FilterKey],
       };
+
+      if (column.width != undefined) {
+        columnDef.size = column.width;
+      }
+
+      if (column.width == undefined && props.rubberColumn) {
+        columnDef.minSize = 0;
+        columnDef.size = 0;
+      }
+      if (column.minWidth != undefined) {
+        columnDef.minSize = column.minWidth;
+      }
+      if (column.maxWidth != undefined) {
+        columnDef.maxSize = column.maxWidth;
+      }
+
+      return columnDef;
     });
 
     const filterOptions: FilterFieldType[] = [];

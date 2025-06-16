@@ -249,6 +249,7 @@
       ref="positioner"
       class="ksd-positioner"
       v-bind="$attrs"
+      :role="undefined"
       :style="{ ...positionerStyles, ...($attrs.style ?? {}) }"
       :class="[$attrs.class, componentClasses]"
     >

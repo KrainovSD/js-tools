@@ -148,6 +148,9 @@ export type TableDefaultColumnOptions<
   | "sortRender"
   | "sortType"
   | "filterType"
+  | "width"
+  | "minWidth"
+  | "maxWidth"
 >;
 
 export type TableColumnsSettings<

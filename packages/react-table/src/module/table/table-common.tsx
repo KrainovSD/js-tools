@@ -1,12 +1,15 @@
+import type { ColumnSizingState } from "@tanstack/react-table";
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
+import { DEFAULT_TABLE_COLUMN_SIZE } from "../../table.constants";
 import type { HeaderInterface, RowInterface, TableEmptyProps, TableInterface } from "../../types";
 import styles from "./table-common.module.scss";
 import { TableHeaderRow } from "./table-header-row";
 import { TableRow } from "./table-row";
 
 type TableContainerProps<RowData extends Record<string, unknown>> = {
+  rubberColumn: boolean;
   columnVirtualEnabled: boolean;
   rowVirtualEnabled: boolean;
   table: TableInterface<RowData>;
@@ -38,6 +41,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
   const rightHeadersGroup = props.table.getRightHeaderGroups();
   const visibleHeadersGroup = props.table.getHeaderGroups();
   const tableState = props.table.getState();
+  const tableRef = React.useRef<HTMLTableElement | null>(null);
 
   const virtualColumnsIndexesKey =
     props.columnsVirtual.length === 0
@@ -47,20 +51,61 @@ export function TableCommon<RowData extends Record<string, unknown>>(
     return virtualColumnsIndexesKey ? virtualColumnsIndexesKey.split(";") : [];
   }, [virtualColumnsIndexesKey]);
 
-  const visibleHeaders = visibleHeadersGroup?.[0]?.headers ?? [];
+  const templateColumns =
+    visibleHeadersGroup[0]?.headers?.map?.((header) => `${header.column.getSize()}px`) ?? [];
+
+  React.useLayoutEffect(() => {
+    if (!tableRef.current || !props.rubberColumn) return;
+
+    const tableWidth = tableRef.current.getBoundingClientRect().width;
+    const visibleHeaders = visibleHeadersGroup?.[0]?.headers ?? [];
+    // eslint-disable-next-line no-underscore-dangle
+    const defaultColumnSize = props.table._getDefaultColumnDef().size ?? DEFAULT_TABLE_COLUMN_SIZE;
+
+    const columnSizing: ColumnSizingState = {};
+    let totalWidth = 0;
+    let totalWidthWithFlexColumn = 0;
+    let flexColumnCount = 0;
+
+    for (let i = 0; i < visibleHeaders.length; i++) {
+      const width = visibleHeaders[i].column.getSize();
+      const id = visibleHeaders[i].column.id;
+
+      if (width === 0) {
+        totalWidthWithFlexColumn += defaultColumnSize;
+        flexColumnCount += 1;
+      } else {
+        totalWidthWithFlexColumn += width;
+        totalWidth += width;
+      }
+      columnSizing[id] = width;
+    }
+
+    if (flexColumnCount === 0) return;
+
+    const flexColumnSize =
+      tableWidth >= totalWidthWithFlexColumn
+        ? (tableWidth - totalWidth) / flexColumnCount
+        : defaultColumnSize;
+    for (const [key, value] of Object.entries(columnSizing)) {
+      if (value === 0) columnSizing[key] = flexColumnSize;
+    }
+
+    props.table.setColumnSizing(columnSizing);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <table
       className={styles.table}
       style={
         {
-          width: props.columnVirtualEnabled ? props.table.getTotalSize() : "100%",
-          "--table-template-columns": visibleHeaders
-            .map((header) => `${header.getSize()}px`)
-            .join(" "),
+          "--table-template-columns": templateColumns.join(" "),
           "--table-total-width": props.table.getTotalSize(),
         } as React.CSSProperties
       }
+      ref={tableRef}
       data-id="table"
     >
       <thead

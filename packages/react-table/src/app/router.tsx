@@ -1,6 +1,7 @@
 import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router";
 import { Layout } from "./layout";
 import { Common } from "./routes/common";
+import { CommonFlexColumn } from "./routes/common-flex-column";
 import { CommonInnerTable } from "./routes/common-inner-table";
 import { CommonVirtual } from "./routes/common-virtual";
 import { CommonVirtualRow } from "./routes/common-virtual-row";
@@ -16,6 +17,7 @@ type Route = {
 
 export const ROUTES: Route[] = [
   { name: "Common", path: "common", element: Common },
+  { name: "Flex Column", path: "flex", element: CommonFlexColumn },
   { name: "Virtual Row", path: "virtual-row", element: CommonVirtualRow },
   { name: "Virtual", path: "virtual", element: CommonVirtual },
   { name: "Common Inner Table", path: "common-inner-table", element: CommonInnerTable },
