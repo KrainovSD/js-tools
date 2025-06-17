@@ -59,15 +59,20 @@ type CreateRequestClientInstance = {
 };
 
 export type RequestInstance = {
-  <T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
-    request: RequestInterface<T, Incoming, Body, Outcoming>,
-  ): Promise<T>;
+  <IncomingApi, Incoming = IncomingApi, Outcoming = unknown, OutcomingApi = Outcoming>(
+    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+  ): Promise<Incoming>;
   setOptions: (options: CreateRequestClientInstance) => void;
 };
 
 export function createRequestClientInstance(options: CreateRequestClientInstance) {
-  let executeMiddlewares: <T, Incoming, Body, Outcoming>(
-    request: RequestInterface<T, Incoming, Body, Outcoming>,
+  let executeMiddlewares: <
+    IncomingApi,
+    Incoming = IncomingApi,
+    Outcoming = unknown,
+    OutcomingApi = Outcoming,
+  >(
+    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
   ) => Promise<unknown>;
 
   let executePostMiddlewares: (response: Response | NodeResponse | undefined) => Promise<unknown>;
@@ -95,10 +100,15 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
 
   setMiddlewares(options);
 
-  async function handleRequest<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
-    request: RequestInterface<T, Incoming, Body, Outcoming>,
+  async function handleRequest<
+    IncomingApi,
+    Incoming = IncomingApi,
+    Outcoming = unknown,
+    OutcomingApi = Outcoming,
+  >(
+    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
     responseWithStatus?: boolean,
-  ): Promise<{ data: T; status: number; headers: Record<string, string> } | T> {
+  ): Promise<{ data: Incoming; status: number; headers: Record<string, string> } | Incoming> {
     if (request.delay) {
       await wait(request.delay);
     }
@@ -107,8 +117,8 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
         typeof request.mock === "function" ? (request.mock as () => Incoming)() : request.mock;
 
       const transformedResult = request.transformIncomingData
-        ? request.transformIncomingData(mock as Incoming)
-        : (mock as T);
+        ? request.transformIncomingData(mock as IncomingApi)
+        : (mock as Incoming);
 
       return responseWithStatus
         ? { data: transformedResult, status: 200, headers: {} }
@@ -120,14 +130,15 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
     const { method, body, path, params, headers } = request;
 
     const url = createURLWithParams({ baseURL: path, params });
-    let preparedBody = body;
+    let preparedBody: OutcomingApi | undefined = body as OutcomingApi;
 
     if (body && !(preparedBody instanceof FormData)) {
       if (request.transformOutcomingData) {
-        preparedBody = request.transformOutcomingData(body as Body);
+        preparedBody = request.transformOutcomingData(body);
       }
 
-      if (isObject(body) || isArray(body)) preparedBody = JSON.stringify(preparedBody) as Outcoming;
+      if (isObject(body) || isArray(body))
+        preparedBody = JSON.stringify(preparedBody) as OutcomingApi;
     }
 
     const response: Response | NodeResponse | undefined = await options.client(url, {
@@ -152,11 +163,11 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
       if (response.status === 304) {
         return responseWithStatus
           ? {
-              data: undefined as T,
+              data: undefined as Incoming,
               status: response.status,
               headers: Object.fromEntries(response.headers.entries()),
             }
-          : (undefined as T);
+          : (undefined as Incoming);
       }
 
       if (request.defaultResponse) {
@@ -165,13 +176,17 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
             ? (request.defaultResponse as () => Incoming)()
             : request.defaultResponse;
 
+        const transformedResult = request.transformIncomingData
+          ? request.transformIncomingData(defaultResponse as IncomingApi)
+          : (defaultResponse as Incoming);
+
         return responseWithStatus
           ? {
-              data: defaultResponse as T,
+              data: transformedResult,
               status: response.status,
               headers: Object.fromEntries(response.headers.entries()),
             }
-          : (defaultResponse as T);
+          : transformedResult;
       }
 
       let result;
@@ -213,27 +228,27 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
 
       return responseWithStatus
         ? {
-            data: data as T,
+            data: data as Incoming,
             status: response.status,
             headers: Object.fromEntries(response.headers.entries()),
           }
-        : (data as T);
+        : (data as Incoming);
     }
 
     const contentType = response.headers.get("content-type");
-    let result: Incoming;
+    let result: Incoming | IncomingApi;
 
     if (contentType?.includes?.("text")) {
-      result = (await response.text()) as Incoming;
+      result = (await response.text()) as Incoming | IncomingApi;
     } else if (contentType?.includes?.("json")) {
-      result = (await response.json()) as Incoming;
+      result = (await response.json()) as Incoming | IncomingApi;
     } else {
-      result = (await response.blob()) as Incoming;
+      result = (await response.blob()) as Incoming | IncomingApi;
     }
 
     const transformedResult = request.transformIncomingData
-      ? request.transformIncomingData(result)
-      : (result as unknown as T);
+      ? request.transformIncomingData(result as IncomingApi)
+      : (result as Incoming);
 
     return responseWithStatus
       ? {
@@ -244,17 +259,25 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
       : transformedResult;
   }
 
-  async function requestApi<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
-    request: RequestInterface<T, Incoming, Body, Outcoming>,
-  ): Promise<T> {
-    return handleRequest(request, false) as Promise<T>;
+  async function requestApi<
+    IncomingApi,
+    Incoming = IncomingApi,
+    Outcoming = unknown,
+    OutcomingApi = Outcoming,
+  >(request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>): Promise<Incoming> {
+    return handleRequest(request, false) as Promise<Incoming>;
   }
 
-  async function requestApiWithMeta<T, Incoming = unknown, Body = unknown, Outcoming = unknown>(
-    request: RequestInterface<T, Incoming, Body, Outcoming>,
-  ): Promise<{ data: T; status: number; headers: Record<string, string> }> {
+  async function requestApiWithMeta<
+    IncomingApi,
+    Incoming = IncomingApi,
+    Outcoming = unknown,
+    OutcomingApi = Outcoming,
+  >(
+    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+  ): Promise<{ data: Incoming; status: number; headers: Record<string, string> }> {
     return handleRequest(request, true) as Promise<{
-      data: T;
+      data: Incoming;
       status: number;
       headers: Record<string, string>;
     }>;

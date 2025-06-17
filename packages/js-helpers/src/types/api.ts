@@ -1,29 +1,48 @@
 import type { Headers as NodeHeaders, Response as NodeResponse } from "node-fetch";
 import { type API_MIDDLEWARES, type POST_API_MIDDLEWARES } from "../constants";
-import type { ValueOf } from "./common";
+import type { IsEqual, ValueOf } from "./common";
 
 export type ParamValueType = string | number | boolean;
 export type ParamsType = Record<string, ParamValueType | ParamValueType[] | null | undefined>;
 export type RequestMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-export type RequestInterface<T, Incoming, Body, Outcoming> = {
+export type RequestInterface<
+  IncomingApi,
+  Incoming = IncomingApi,
+  Outcoming = unknown,
+  OutcomingApi = Outcoming,
+> = {
   path: string;
   method: RequestMethod;
-  body?: Body | Outcoming;
+  body?: Outcoming;
   params?: ParamsType;
   headers?: Record<string, string | undefined>;
   delay?: number;
-  transformOutcomingData?: (data: Body) => Outcoming;
-  transformIncomingData?: (data: Incoming) => T;
-  mock?: (() => Incoming) | Incoming;
-  defaultResponse?: (() => Incoming) | Incoming;
+  mock?: (() => IncomingApi) | IncomingApi;
+  defaultResponse?: (() => IncomingApi) | IncomingApi;
   downloadFile?: boolean;
-  token?: string;
   signal?: AbortSignal;
-};
+  token?: string;
+} & RequestTransformIncoming<IncomingApi, Incoming> &
+  RequestTransformOutcoming<Outcoming, OutcomingApi>;
+export type RequestTransformOutcoming<Outcoming, OutcomingApi> =
+  IsEqual<OutcomingApi, Outcoming> extends true
+    ? { transformOutcomingData?: never }
+    : { transformOutcomingData: (data: Outcoming) => OutcomingApi };
+export type RequestTransformIncoming<IncomingApi, Incoming> =
+  IsEqual<Incoming, IncomingApi> extends true
+    ? { transformIncomingData?: never }
+    : {
+        transformIncomingData: (data: IncomingApi) => Incoming;
+      };
 
-export type Middleware = <T, Incoming, Body, Outcoming>(
-  request: RequestInterface<T, Incoming, Body, Outcoming>,
+export type Middleware = <
+  IncomingApi,
+  Incoming = IncomingApi,
+  Outcoming = unknown,
+  OutcomingApi = Outcoming,
+>(
+  request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
 ) => Promise<unknown>;
 
 export type PostMiddleware = (response: Response | NodeResponse | undefined) => Promise<unknown>;

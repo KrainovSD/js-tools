@@ -45,25 +45,17 @@ describe("api core", () => {
     });
 
     const result = await request<
-      Record<string, unknown>,
-      Record<string, unknown>,
-      Record<string, unknown>,
-      Record<string, unknown>
+      { test2: string } | { test: string },
+      { test: string },
+      typeof outcomingData,
+      typeof outcomingData & { test: string }
     >({
       method: "POST",
       path: "http://test",
       body: outcomingData,
-      transformIncomingData: (data) => {
-        receivedInitialIncomingData = data;
-
-        return { ...data, data: transformedIncomingData.data };
-      },
-      transformOutcomingData: (data) => {
-        receivedInitialOutcomingData = data;
-
-        return { ...data, data: transformedOutcomingData.data };
-      },
       delay: 1,
+      transformIncomingData: (data) => ({ test: "test" in data ? data.test : data.test2 }),
+      transformOutcomingData: (data) => ({ data: data.data, mark: data.mark, test: "" }),
     });
 
     expect(result.data).toEqual(transformedIncomingData);

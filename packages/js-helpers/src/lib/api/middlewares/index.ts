@@ -45,9 +45,12 @@ export function generateMiddlewares(
     }
   }
 
-  return function executeMiddlewares<T, Incoming, Body, Outcoming>(
-    request: RequestInterface<T, Incoming, Body, Outcoming>,
-  ) {
+  return function executeMiddlewares<
+    IncomingApi,
+    Incoming = IncomingApi,
+    Outcoming = unknown,
+    OutcomingApi = Outcoming,
+  >(request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>) {
     return new Promise((resolve) => {
       void (async () => {
         for (const middleware of selectedMiddlewares) {
