@@ -15,6 +15,7 @@ import type {
   ThemeDividerVariable,
   ThemeDropDownVariable,
   ThemeInputVariable,
+  ThemePopConfirmVariable,
   ThemePopperVariable,
   ThemeRadioVariable,
   ThemeSelectVariable,
@@ -47,5 +48,6 @@ export type ThemeVariableConfig = {
     popper: Record<ThemePopperVariable, string>;
     dropdown: Record<ThemeDropDownVariable, string>;
     select: Record<ThemeSelectVariable, string>;
+    popconfirm: Record<ThemePopConfirmVariable, string>;
   };
 };

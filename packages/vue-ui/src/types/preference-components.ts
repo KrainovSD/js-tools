@@ -99,3 +99,5 @@ export type ThemeSelectVariable =
   | "ksd-select-active-outline-color"
   | "ksd-select-select-affix-padding"
   | "ksd-select-selector-padding-sm";
+
+export type ThemePopConfirmVariable = "ksd-pop-confirm-inner-padding";

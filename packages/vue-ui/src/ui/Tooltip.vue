@@ -1,7 +1,10 @@
 <script setup lang="ts">
-  import { type PositionPlacements, startWith } from "@krainovsd/js-helpers";
+  import { startWith } from "@krainovsd/js-helpers";
   import { computed, ref, shallowRef, useTemplateRef, watchEffect } from "vue";
-  import Positioner, { type PositionerTargetNodePosition } from "./Positioner.vue";
+  import Positioner, {
+    type PositionerProps,
+    type PositionerTargetNodePosition,
+  } from "./Positioner.vue";
 
   export type TooltipProps = {
     show?: undefined | boolean;
@@ -15,13 +18,9 @@
     observe?: boolean;
     openDelay?: number;
     closeDelay?: number;
-    zIndex?: number;
-    placement?: Exclude<PositionPlacements, "flex">;
-    modalRoot?: string | HTMLElement | null;
     animationAppear?: boolean;
     animationDisappear?: boolean;
-    visibleArea?: HTMLElement;
-  };
+  } & Pick<PositionerProps, "placement" | "zIndex" | "modalRoot" | "visibleArea">;
 
   defineOptions({
     inheritAttrs: false,

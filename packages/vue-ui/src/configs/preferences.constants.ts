@@ -64,6 +64,7 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
       font: {
         "ksd-font-family": "Nunito",
         "ksd-font-weight": "400",
+        "ksd-font-weight-strong": "600",
         "ksd-line-height": "1.5",
         "ksd-font-size-sm": "12px",
         "ksd-font-size": "14px",
@@ -245,6 +246,9 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-select-active-outline-color": "rgba(5, 145, 255, 0.1)",
         "ksd-select-select-affix-padding": "4px",
         "ksd-select-selector-padding-sm": "8px",
+      },
+      popconfirm: {
+        "ksd-pop-confirm-inner-padding": "12px",
       },
     },
   },

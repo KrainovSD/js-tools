@@ -28,7 +28,8 @@ export type ThemeFontVariable =
   | "ksd-font-size-xl"
   | "ksd-font-family"
   | "ksd-line-height"
-  | "ksd-font-weight";
+  | "ksd-font-weight"
+  | "ksd-font-weight-strong";
 
 export type ThemeBorderVariable =
   | "ksd-border-radius-xs"
