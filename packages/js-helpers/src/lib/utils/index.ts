@@ -18,3 +18,4 @@ export * from "./start-with";
 export * from "./get-caller-function-name";
 export * from "./translit";
 export * from "./join-paths";
+export * from "./speed-test";

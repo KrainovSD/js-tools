@@ -14,6 +14,7 @@ import VPositioner from "./Positioner.vue";
 import VRadio from "./Radio.vue";
 import VRadioButton from "./RadioButton.vue";
 import VRadioGroup from "./RadioGroup.vue";
+import VSearch from "./Search.vue";
 import VSelect from "./Select.vue";
 import VSlider from "./Slider.vue";
 import VSwitch from "./Switch.vue";
@@ -40,6 +41,7 @@ export type { SwitchProps } from "./Switch.vue";
 export type { PopperProps } from "./Popper.vue";
 export type { DropDownProps } from "./DropDown.vue";
 export type { SelectProps } from "./Select.vue";
+export type { SearchProps } from "./Search.vue";
 
 export {
   VButton,
@@ -63,4 +65,5 @@ export {
   VPopper,
   VDropDown,
   VSelect,
+  VSearch,
 };

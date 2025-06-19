@@ -48,7 +48,8 @@
   },
   "dependencies": {
     "lodash": "4.17.21",
-    "@krainovsd/js-helpers": "0.13.6"
+    "@krainovsd/js-helpers": "0.14.1",
+    "fuzzysort": "3.1.0"
   },
   "devDependencies": {
     "@krainovsd/presets": "0.2.0",

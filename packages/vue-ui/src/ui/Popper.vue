@@ -466,7 +466,7 @@
       min-width: calc(var(--ksd-border-radius) * 2 + 32px);
       min-height: var(--ksd-control-height);
       max-height: 550px;
-      overflow: hidden;
+      overflow: auto;
       max-width: 400px;
       display: flex;
       flex-direction: column;

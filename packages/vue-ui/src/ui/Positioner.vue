@@ -240,6 +240,7 @@
     () => props.open,
     (value) => {
       if (value) {
+        position.value = { ...position.value, placement: "flex" };
         localOpen.value = true;
       } else if (props.animationDisappear) {
         void execAnimation(`ksd-positioner_${props.animationDisappear}-out`).then(() => {
@@ -250,8 +251,6 @@
       } else {
         localOpen.value = false;
       }
-
-      position.value = { ...position.value, placement: "flex" };
     },
     { immediate: true },
   );

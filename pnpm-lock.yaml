@@ -1339,8 +1339,11 @@ importers:
   packages/vue-ui:
     dependencies:
       '@krainovsd/js-helpers':
-        specifier: 0.13.6
-        version: 0.13.6
+        specifier: 0.14.1
+        version: 0.14.1
+      fuzzysort:
+        specifier: 3.1.0
+        version: 3.1.0
       lodash:
         specifier: 4.17.21
         version: 4.17.21
@@ -2905,8 +2908,8 @@ packages:
       node-fetch:
         optional: true
 
-  '@krainovsd/js-helpers@0.13.6':
-    resolution: {integrity: sha512-f+RMxnMxo5xO2fy3wd8bcXKv0oxR2gIRbuUWYwvjZDpCnGR1ZsuSHLiS4K9KDkk7rY3Rv9z+rON50wZ46YpnIA==}
+  '@krainovsd/js-helpers@0.14.1':
+    resolution: {integrity: sha512-jEdXOzAiUAZXKO82FeCAj3h+n9fd8c1QCNf16klBXSRJU3dOqFNEx1Tb/t3ujJPArU4+CTTHeDkUXgi2HmKCew==}
 
   '@krainovsd/nest-logger-service@0.2.1':
     resolution: {integrity: sha512-O+8IgLgg0uxb24S32A56t+cSgoIVw5eDMSzxxq7hwB8vqJlNcxeHGCVrJgNboVqlLtaUdvBN+9YdwLfiCSCE+Q==}
@@ -6750,6 +6753,9 @@ packages:
 
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
+
+  fuzzysort@3.1.0:
+    resolution: {integrity: sha512-sR9BNCjBg6LNgwvxlBd0sBABvQitkLzoVY9MYYROQVX/FvfJ4Mai9LsGhDgd8qYdds0bY77VzYd5iuB+v5rwQQ==}
 
   generic-names@4.0.0:
     resolution: {integrity: sha512-ySFolZQfw9FoDb3ed9d80Cm9f0+r7qj+HJkWjeD9RBfpxEVTlVhol+gvaQB/78WbwYfbnNh8nWHHBSlg072y6A==}
@@ -12895,7 +12901,7 @@ snapshots:
     optionalDependencies:
       node-fetch: 3.3.2
 
-  '@krainovsd/js-helpers@0.13.6':
+  '@krainovsd/js-helpers@0.14.1':
     dependencies:
       dayjs: 1.11.13
       lodash: 4.17.21
@@ -18320,6 +18326,8 @@ snapshots:
       is-callable: 1.2.7
 
   functions-have-names@1.2.3: {}
+
+  fuzzysort@3.1.0: {}
 
   generic-names@4.0.0:
     dependencies:

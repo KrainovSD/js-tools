@@ -276,6 +276,7 @@
     (value, oldValue) => {
       if (value) {
         value.addActiveMark();
+        value.scrollIntoView({ block: "nearest" });
       }
       if (oldValue) {
         oldValue.removeActiveMark();
@@ -306,6 +307,7 @@
     { immediate: true },
   );
 
+  /** Resize input in multiple mode */
   watch(
     searchValue,
     (search) => {
