@@ -26,7 +26,9 @@ const Template: StoryFn<typeof VSelect> = (args) => ({
 });
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  options: Array.from({ length: 100 }, (_, i) => ({ label: `Значение ${i}`, value: i })),
+};
 
 export const AllInOne: Story = {
   render: (args) => ({

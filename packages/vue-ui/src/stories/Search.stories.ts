@@ -21,13 +21,19 @@ const Template: StoryFn<typeof VSearch> = (args) => ({
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-      h(VSearch, { ...args }, () => "Выбрать значение"),
+      // eslint-disable-next-line no-console
+      h(VSearch, { ...args, onClick: (key) => console.log(key), placeholder: "Поиск" }),
     ]);
   },
 });
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  options: Array.from<unknown, SearchOption>({ length: 300 }, (_, i) => ({
+    key: i,
+    label: randomString(50),
+  })),
+};
 
 export const AllInOne: Story = {
   render: (args) => ({

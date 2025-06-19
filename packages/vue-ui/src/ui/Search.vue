@@ -364,13 +364,11 @@
 
     &__positioner {
       max-width: none;
-      max-height: 500px;
     }
 
     &__positioner-content {
       padding: var(--ksd-padding-xxs);
       max-width: none;
-      max-height: 500px;
     }
   }
 </style>
