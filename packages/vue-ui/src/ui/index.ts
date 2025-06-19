@@ -14,6 +14,7 @@ import VPositioner from "./Positioner.vue";
 import VRadio from "./Radio.vue";
 import VRadioButton from "./RadioButton.vue";
 import VRadioGroup from "./RadioGroup.vue";
+import VSelect from "./Select.vue";
 import VSlider from "./Slider.vue";
 import VSwitch from "./Switch.vue";
 import VText from "./Text.vue";
@@ -38,6 +39,7 @@ export type { PositionerProps } from "./Positioner.vue";
 export type { SwitchProps } from "./Switch.vue";
 export type { PopperProps } from "./Popper.vue";
 export type { DropDownProps } from "./DropDown.vue";
+export type { SelectProps } from "./Select.vue";
 
 export {
   VButton,
@@ -60,4 +62,5 @@ export {
   VSwitch,
   VPopper,
   VDropDown,
+  VSelect,
 };

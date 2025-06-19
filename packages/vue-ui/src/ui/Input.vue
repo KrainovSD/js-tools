@@ -8,7 +8,6 @@
     size?: "default" | "large" | "small";
     status?: "error" | "warning" | "success" | "default";
     autofocus?: boolean;
-    value?: string;
     allowClear?: boolean;
     disabled?: boolean;
   };

@@ -2,6 +2,7 @@
   import { computed, ref } from "vue";
   import EyeHideIcon from "../icons/EyeHideIcon.vue";
   import EyeIcon from "../icons/EyeIcon.vue";
+  import IconWrapper from "./IconWrapper.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
 
@@ -21,8 +22,12 @@
     </template>
 
     <template v-if="!$slots.suffix" #suffix>
-      <EyeHideIcon v-if="!visible" class="ksd-password__icon" @click="visible = true" />
-      <EyeIcon v-if="visible" class="ksd-password__icon" @click="visible = false" />
+      <IconWrapper v-if="!visible" @click="visible = true">
+        <EyeHideIcon class="ksd-password__icon" />
+      </IconWrapper>
+      <IconWrapper v-if="visible" @click="visible = false">
+        <EyeIcon v-if="visible" class="ksd-password__icon" />
+      </IconWrapper>
     </template>
   </Input>
 </template>

@@ -56,8 +56,10 @@
       ? ([] as PopperTrigger[])
       : (triggersKey.value.split(";") as PopperTrigger[]);
   });
-  const content = computed(() => elementRef.value?.nextElementSibling as HTMLElement | undefined);
-  const contentWidth = ref(0);
+  const targetNode = computed(
+    () => elementRef.value?.nextElementSibling as HTMLElement | undefined,
+  );
+  const targetNodeWidth = ref(0);
   const firstPlacement = computed(() => props.placement.split("-")[0]);
   const lastActive = ref<HTMLElement | null>();
 
@@ -142,7 +144,7 @@
           })
         : false;
       const popper = positionerRef.value?.element?.contains?.(target);
-      const element = content.value?.contains?.(target);
+      const element = targetNode.value?.contains?.(target);
 
       if (ignored || popper || element) {
         if (cb) {
@@ -172,7 +174,9 @@
 
     /** Close by escape and return focus to last element */
     positioner.addEventListener("keydown", closeByEscape, { signal: eventController.signal });
-    content.value?.addEventListener?.("keydown", closeByEscape, { signal: eventController.signal });
+    targetNode.value?.addEventListener?.("keydown", closeByEscape, {
+      signal: eventController.signal,
+    });
 
     function closeByEscape(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -181,7 +185,7 @@
           lastActive.value.focus();
           lastActive.value = null;
         } else {
-          content.value?.focus?.();
+          targetNode.value?.focus?.();
         }
         onDisAppear();
       }
@@ -267,7 +271,7 @@
 
   /** Effect by observe slot */
   watchEffect((clean) => {
-    if (!content.value) return;
+    if (!targetNode.value) return;
 
     const eventController = new AbortController();
 
@@ -282,49 +286,54 @@
     }
 
     const resizeObserver = new ResizeObserver((entries) => {
-      contentWidth.value = entries[0]?.target?.clientWidth ?? 0;
+      targetNodeWidth.value = entries[0]?.target?.clientWidth ?? 0;
     });
 
     if (!props.fit) {
-      resizeObserver.observe(content.value);
+      resizeObserver.observe(targetNode.value);
     }
 
     if (triggers.value.includes("hover")) {
-      content.value.addEventListener("mouseenter", onAppear, { signal: eventController.signal });
+      targetNode.value.addEventListener("mouseenter", onAppear, { signal: eventController.signal });
     }
     if (triggers.value.includes("click")) {
-      content.value.addEventListener("click", toggleAppearByClick, {
+      targetNode.value.addEventListener("click", toggleAppearByClick, {
         signal: eventController.signal,
       });
     }
     if (triggers.value.includes("contextMenu")) {
-      content.value.addEventListener("contextmenu", toggleAppearByClick, {
+      targetNode.value.addEventListener("contextmenu", toggleAppearByClick, {
         signal: eventController.signal,
       });
     }
 
-    const observer = new MutationObserver((mutations) => {
+    const mutationObserver = new MutationObserver((mutations) => {
       mutations.forEach(() => {
         positionerRef.value?.updatePosition?.();
       });
     });
+    const sizeContentObserver = new ResizeObserver(() => {
+      positionerRef.value?.updatePosition?.();
+    });
 
     if (props.observe) {
-      observer.observe(content.value, {
+      mutationObserver.observe(targetNode.value, {
         subtree: false,
         attributes: true,
         attributeFilter: ["style", "class"],
       });
+      sizeContentObserver.observe(targetNode.value);
     }
 
     clean(() => {
       eventController.abort();
-      observer.disconnect();
+      mutationObserver.disconnect();
+      sizeContentObserver.disconnect();
       resizeObserver.disconnect();
     });
   });
 
-  defineExpose({ element: positionerRef, content });
+  defineExpose({ positioner: positionerRef, targetNode });
 </script>
 
 <template>
@@ -334,7 +343,7 @@
     ref="positioner"
     :open="model"
     :arrow="$props.arrow"
-    :target="content"
+    :target="targetNode"
     :class-content="`ksd-popper__positioner-content ${$props.classContent ?? ''}`"
     :class="['ksd-popper__positioner']"
     v-bind="$attrs"
@@ -347,7 +356,11 @@
     :animation-disappear="$props.animationDisappear"
     :nested="$props.nested"
     :style="{
-      width: $props.fit ? undefined : contentWidth != undefined ? `${contentWidth}px` : undefined,
+      width: $props.fit
+        ? undefined
+        : targetNodeWidth != undefined
+          ? `${targetNodeWidth}px`
+          : undefined,
     }"
     ><slot name="content"></slot
   ></Positioner>

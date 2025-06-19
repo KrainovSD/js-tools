@@ -22,5 +22,13 @@
     display: flex;
     background: inherit;
     cursor: pointer;
+
+    &:focus-visible {
+      outline: 3px solid var(--ksd-outline-color);
+      outline-offset: 1px;
+      transition:
+        outline-offset 0s,
+        outline 0s;
+    }
   }
 </style>

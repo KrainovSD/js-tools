@@ -13,7 +13,6 @@
     useAttrs,
     useTemplateRef,
     watch,
-    watchEffect,
   } from "vue";
   import CaretUpOutlineIcon from "../icons/CaretUpOutlineIcon.vue";
 
@@ -74,11 +73,31 @@
     rotate: undefined,
     translate: undefined,
   });
-  const positionerStyles = computed(() => ({
-    left: `${Math.round(position.value.left)}px`,
-    top: `${Math.round(position.value.top)}px`,
-    zIndex: props.zIndex,
-  }));
+  const positionerStyles = computed(() => {
+    const placement = position.value.placement;
+    if (
+      placement === "bottom-center" ||
+      placement === "bottom-left" ||
+      placement === "bottom-right" ||
+      placement === "right-top" ||
+      placement === "right-center" ||
+      placement === "left-top" ||
+      placement === "left-center"
+    ) {
+      return {
+        left: `${Math.round(position.value.left)}px`,
+        top: `${Math.round(position.value.top)}px`,
+        zIndex: props.zIndex,
+      };
+    }
+
+    return {
+      left: `${Math.round(position.value.left)}px`,
+      bottom: `${Math.round(position.value.bottom)}px`,
+      top: "auto",
+      zIndex: props.zIndex,
+    };
+  });
   const arrowStyles = computed(() => ({
     left: arrowPosition.value.left,
     top: arrowPosition.value.top,
@@ -216,6 +235,7 @@
     });
   }
 
+  /** Animation by close */
   watch(
     () => props.open,
     (value) => {
@@ -236,9 +256,16 @@
     { immediate: true },
   );
 
-  watchEffect(() => {
-    updatePosition();
-  });
+  /** Check position */
+  watch(
+    () => [elementRef.value],
+    () => {
+      if (!elementRef.value) return;
+
+      updatePosition();
+    },
+    { immediate: true },
+  );
 
   defineExpose({ element: elementRef, updatePosition });
 </script>

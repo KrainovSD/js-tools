@@ -54,7 +54,7 @@
       : (triggersKey.value.split(";") as PopperTrigger[]);
   });
   const popperRef = useTemplateRef("popper");
-  const positionerRef = computed(() => popperRef.value?.element?.element);
+  const positionerRef = computed(() => popperRef.value?.positioner?.element);
   const positionerContent = computed(() => {
     const children = positionerRef.value?.children;
 
@@ -98,7 +98,7 @@
   }
 
   watchEffect(() => {
-    popperRef.value?.content?.setAttribute?.("aria-haspopup", "true");
+    popperRef.value?.targetNode?.setAttribute?.("aria-haspopup", "true");
   });
 
   watchEffect((clean) => {
@@ -441,8 +441,7 @@
       &.down {
         margin-inline-start: auto;
       }
-      &.left {
-      }
+
       &.right {
         margin-inline-start: auto;
       }

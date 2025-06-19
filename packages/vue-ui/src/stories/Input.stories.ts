@@ -72,7 +72,12 @@ export const AllInOne: Story = {
               this.value = newValue;
             },
           }),
-          h(VInput, { placeholder: "Outlined disabled", variant: "outlined", disabled: true }),
+          h(VInput, {
+            modelValue: "Disabled",
+            placeholder: "Outlined disabled",
+            variant: "outlined",
+            disabled: true,
+          }),
           h(VInput, { placeholder: "Filled disabled", variant: "filled", disabled: true }),
           h(VInput, { placeholder: "Borderless disabled", variant: "borderless", disabled: true }),
           h(VInput, { placeholder: "Underline disabled", variant: "underline", disabled: true }),
