@@ -1,6 +1,6 @@
+import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h } from "vue";
-import { VSettingsFilledIcon } from "../icons";
 import { VButton, VDropDown, VText } from "../ui";
 
 const meta = {
@@ -42,7 +42,7 @@ Primary.args = {
     {
       key: "4",
       label: h(VText, {}, () => "Компонент"),
-      icon: h(VSettingsFilledIcon, { size: 16 }),
+      icon: h(VSettingFilled, { size: 16 }),
     },
   ],
 };
@@ -160,7 +160,7 @@ export const AllInOne: Story = {
                   // eslint-disable-next-line no-console
                   onClick: (event) => console.log(event),
                   label: h(VText, {}, () => "Компонент"),
-                  icon: h(VSettingsFilledIcon, { size: 16 }),
+                  icon: h(VSettingFilled, { size: 16 }),
                 },
               ],
             },
@@ -228,7 +228,7 @@ export const AllInOne: Story = {
                   // eslint-disable-next-line no-console
                   onClick: (event) => console.log(event),
                   label: h(VText, {}, () => "Компонент"),
-                  icon: h(VSettingsFilledIcon, { size: 16 }),
+                  icon: h(VSettingFilled, { size: 16 }),
                 },
               ],
             },
@@ -251,7 +251,7 @@ export const AllInOne: Story = {
         // eslint-disable-next-line no-console
         onClick: (event) => console.log(event),
         label: h(VText, {}, () => "Компонент"),
-        icon: h(VSettingsFilledIcon, { size: 16 }),
+        icon: h(VSettingFilled, { size: 16 }),
       },
     ],
   },

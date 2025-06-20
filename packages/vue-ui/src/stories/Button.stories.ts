@@ -1,6 +1,6 @@
+import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h } from "vue";
-import { VSettingsFilledIcon } from "../icons";
 import { VButton } from "../ui";
 
 const meta = {
@@ -142,22 +142,22 @@ export const AllInOne: Story = {
             h(
               VButton,
               { type: "dashed", shape: "round" },
-              { default: () => "Dashed", icon: () => h(VSettingsFilledIcon, { size: 14 }) },
+              { default: () => "Dashed", icon: () => h(VSettingFilled, { size: 14 }) },
             ),
             h(
               VButton,
               { type: "dashed", shape: "default", iconPosition: "right" },
-              { default: () => "Dashed", icon: () => h(VSettingsFilledIcon, { size: 14 }) },
+              { default: () => "Dashed", icon: () => h(VSettingFilled, { size: 14 }) },
             ),
             h(
               VButton,
               { type: "primary", shape: "circle" },
-              { icon: () => h(VSettingsFilledIcon, { size: 14 }) },
+              { icon: () => h(VSettingFilled, { size: 14 }) },
             ),
             h(
               VButton,
               { type: "primary", shape: "default" },
-              { icon: () => h(VSettingsFilledIcon, { size: 14 }) },
+              { icon: () => h(VSettingFilled, { size: 14 }) },
             ),
           ],
         ),

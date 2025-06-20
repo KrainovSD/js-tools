@@ -1,12 +1,14 @@
 <script setup lang="ts">
   import { arrayToMapByKey, isArray, randomString } from "@krainovsd/js-helpers";
+  import {
+    VCheckOutlined,
+    VCloseCircleFilled,
+    VCloseOutlined,
+    VDownOutlined,
+    VLoadingOutlined,
+    VSearchOutlined,
+  } from "@krainovsd/vue-icons";
   import { type Component, computed, ref, useTemplateRef, watch } from "vue";
-  import ArrowDownIcon from "../icons/ArrowDownIcon.vue";
-  import CheckIcon from "../icons/CheckIcon.vue";
-  import CloseCircleFilledIcon from "../icons/CloseCircleFilledIcon.vue";
-  import CloseIcon from "../icons/CloseIcon.vue";
-  import LoadingIcon from "../icons/LoadingIcon.vue";
-  import SearchOutlineIcon from "../icons/SearchOutlineIcon.vue";
   import IconWrapper from "./IconWrapper.vue";
   import Popper, { type PopperProps } from "./Popper.vue";
 
@@ -414,7 +416,7 @@
                     }
                   "
                 >
-                  <CloseIcon :size="10" />
+                  <VCloseOutlined :size="10" />
                 </IconWrapper>
               </span>
             </div>
@@ -461,12 +463,12 @@
         </span>
       </div>
       <span class="ksd-select__selection-suffix">
-        <ArrowDownIcon
+        <VDownOutlined
           v-if="!searchIcon && !cancelIcon && !loadingIcon"
           :size="12"
           aria-hidden="true"
         />
-        <SearchOutlineIcon
+        <VSearchOutlined
           v-if="searchIcon && !cancelIcon && !loadingIcon"
           :size="12"
           aria-hidden="true"
@@ -477,9 +479,9 @@
           aria-label="clear"
           @click.prevent.stop="model = undefined"
         >
-          <CloseCircleFilledIcon :size="12" />
+          <VCloseCircleFilled :size="12" />
         </IconWrapper>
-        <LoadingIcon v-if="loadingIcon" :size="12" aria-hidden="true" />
+        <VLoadingOutlined v-if="loadingIcon" :size="12" aria-hidden="true" />
       </span>
     </div>
 
@@ -497,7 +499,7 @@
       >
         <component :is="item.desc" v-if="isComponent(item.desc)" />
         <span v-else class="ksd-select__popper-item-content">{{ item.desc ?? item.label }}</span>
-        <CheckIcon
+        <VCheckOutlined
           v-if="
             (isArray(model) ? model.includes(item.value) : model === item.value) &&
             !isComponent(item.desc) &&

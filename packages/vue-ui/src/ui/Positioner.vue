@@ -5,6 +5,7 @@
     getVisiblePosition,
     isObject,
   } from "@krainovsd/js-helpers";
+  import { VCaretUpFilled } from "@krainovsd/vue-icons";
   import {
     type CSSProperties,
     computed,
@@ -14,7 +15,6 @@
     useTemplateRef,
     watch,
   } from "vue";
-  import CaretUpOutlineIcon from "../icons/CaretUpOutlineIcon.vue";
 
   export type PositionerAnimations = "translate" | "scale" | "scaleY";
 
@@ -279,7 +279,7 @@
       :style="{ ...positionerStyles, ...($attrs.style ?? {}) }"
       :class="[$attrs.class, componentClasses]"
     >
-      <CaretUpOutlineIcon
+      <VCaretUpFilled
         v-if="$props.arrow"
         :size="16"
         class="ksd-positioner__arrow"

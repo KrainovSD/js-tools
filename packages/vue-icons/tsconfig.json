@@ -1,0 +1,21 @@
+{
+  "extends": "@krainovsd/presets/typescript/common",
+  "compilerOptions": {
+    "types": ["node", "vite/client"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.vue",
+    "eslint.config.js",
+    ".storybook/**/*",
+    "src/vite-env.d.ts",
+    ".prettierrc.mjs"
+  ],
+  "exclude": ["node_modules", "dist"],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}

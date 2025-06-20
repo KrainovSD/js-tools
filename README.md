@@ -15,6 +15,8 @@ List of packages for JS development.
   
 ### Vue
 - [vue-ui [0.0.1]](https://www.npmjs.com/package/@krainovsd/vue-ui)
+- [vue-icons [0.0.1]](https://www.npmjs.com/package/@krainovsd/vue-icons)
+
 
 ### Fastify
 - [fastify-trace [0.0.2]](https://www.npmjs.com/package/@krainovsd/fastify-trace)

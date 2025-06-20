@@ -1,0 +1,9 @@
+{
+  "extends": "@krainovsd/presets/typescript/common-build",
+  "compilerOptions": {
+    "outDir": "tmp",
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.vue", "src/vite-env.d.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.stories.ts"]
+}

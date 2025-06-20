@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { VLoadingOutlined } from "@krainovsd/vue-icons";
   import { computed, useTemplateRef } from "vue";
-  import LoadingIcon from "../icons/LoadingIcon.vue";
 
   export type SwitchProps = {
     disabled?: boolean;
@@ -35,7 +35,7 @@
     @click="model = !model"
   >
     <div class="ksd-switch__handle" :class="[commonClasses]">
-      <LoadingIcon v-if="$props.loading" :size="$props.size === 'small' ? 8 : 12" />
+      <VLoadingOutlined v-if="$props.loading" :size="$props.size === 'small' ? 8 : 12" />
     </div>
     <span
       v-if="Object.values($slots).length > 0"

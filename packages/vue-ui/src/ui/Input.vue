@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { VCloseCircleFilled } from "@krainovsd/vue-icons";
   import { computed, onMounted, useSlots, useTemplateRef } from "vue";
-  import ClearIcon from "../icons/ClearIcon.vue";
 
   export type InputProps = {
     className?: string;
@@ -95,7 +95,7 @@
       :class="suffixClasses"
     >
       <slot name="suffix"></slot>
-      <ClearIcon
+      <VCloseCircleFilled
         v-if="!$slots.suffix && visibleClear"
         class="ksd-input__clear"
         :size="12"

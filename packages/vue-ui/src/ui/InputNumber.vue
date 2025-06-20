@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { isNumber } from "@krainovsd/js-helpers";
+  import { VDownOutlined, VUpOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
-  import ArrowDownIcon from "../icons/ArrowDownIcon.vue";
-  import ArrowUpIcon from "../icons/ArrowUpIcon.vue";
   import Flex from "./Flex.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -186,7 +185,7 @@
         :class="componentClasses"
         @mousedown="(event) => onMouseDown(event, 'up')"
       >
-        <ArrowUpIcon :size="7" aria-hidden="true" focusable="false" />
+        <VUpOutlined :size="7" aria-hidden="true" focusable="false" />
       </span>
       <span
         unselectable="on"
@@ -196,7 +195,7 @@
         class="ksd-input-number__control down"
         :class="componentClasses"
         @mousedown="(event) => onMouseDown(event, 'down')"
-        ><ArrowDownIcon :size="7" aria-hidden="true" focusable="false" />
+        ><VDownOutlined :size="7" aria-hidden="true" focusable="false" />
       </span>
     </Flex>
   </Input>

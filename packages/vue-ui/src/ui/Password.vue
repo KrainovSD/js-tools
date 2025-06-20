@@ -1,7 +1,6 @@
 <script setup lang="ts">
+  import { VEyeInvisibleOutlined, VEyeOutlined } from "@krainovsd/vue-icons";
   import { computed, ref } from "vue";
-  import EyeHideIcon from "../icons/EyeHideIcon.vue";
-  import EyeIcon from "../icons/EyeIcon.vue";
   import IconWrapper from "./IconWrapper.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -23,10 +22,10 @@
 
     <template v-if="!$slots.suffix" #suffix>
       <IconWrapper v-if="!visible" @click="visible = true">
-        <EyeHideIcon class="ksd-password__icon" />
+        <VEyeInvisibleOutlined class="ksd-password__icon" />
       </IconWrapper>
       <IconWrapper v-if="visible" @click="visible = false">
-        <EyeIcon v-if="visible" class="ksd-password__icon" />
+        <VEyeOutlined v-if="visible" class="ksd-password__icon" />
       </IconWrapper>
     </template>
   </Input>

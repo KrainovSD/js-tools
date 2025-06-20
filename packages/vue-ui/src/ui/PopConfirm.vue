@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { VExclamationCircleFilled } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
-  import ExclamationCircleIcon from "../icons/ExclamationCircleIcon.vue";
   import Button from "./Button.vue";
   import type { PopperProps } from "./Popper.vue";
   import Popper from "./Popper.vue";
@@ -154,7 +154,9 @@
     <template #content>
       <div class="ksd-popconfirm__content">
         <div class="ksd-popconfirm__content-body">
-          <div class="ksd-popconfirm__content-body-icon"><ExclamationCircleIcon :size="14" /></div>
+          <div class="ksd-popconfirm__content-body-icon">
+            <VExclamationCircleFilled :size="14" />
+          </div>
           <div class="ksd-popconfirm__content-body-info">
             <div class="ksd-popconfirm__content-body-title">{{ props.title }}</div>
             <div class="ksd-popconfirm__content-body-text">{{ props.text }}</div>

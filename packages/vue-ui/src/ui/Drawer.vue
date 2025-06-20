@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, useTemplateRef, watchEffect } from "vue";
-  import CloseIcon from "../icons/CloseIcon.vue";
   import Button from "./Button.vue";
   import Flex from "./Flex.vue";
   import Text from "./Text.vue";
@@ -155,7 +155,7 @@
               size="small"
               class="ksd-drawer__header-close"
               @click="$emit('close')"
-              ><template #icon> <CloseIcon :size="16" /> </template>
+              ><template #icon> <VCloseOutlined :size="16" /> </template>
             </Button>
             <Text v-if="$props.header" size="lg" class="ksd-drawer__header-text">{{
               $props.header

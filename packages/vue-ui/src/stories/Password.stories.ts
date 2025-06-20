@@ -1,6 +1,6 @@
+import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h, ref } from "vue";
-import { VSettingsFilledIcon } from "../icons";
 import { VPassword } from "../ui";
 
 const meta = {
@@ -55,8 +55,8 @@ export const AllInOne: Story = {
           VPassword,
           { placeholder: "Underline", variant: "underline" },
           {
-            suffix: () => h(VSettingsFilledIcon, { size: 16 }),
-            prefix: () => h(VSettingsFilledIcon, { size: 16 }),
+            suffix: () => h(VSettingFilled, { size: 16 }),
+            prefix: () => h(VSettingFilled, { size: 16 }),
           },
         ),
       ]);

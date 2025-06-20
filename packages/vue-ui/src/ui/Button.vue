@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { VLoadingOutlined } from "@krainovsd/vue-icons";
   import { computed, useSlots, useTemplateRef } from "vue";
-  import LoadingIcon from "../icons/LoadingIcon.vue";
 
   export type ButtonProps = {
     type?: "primary" | "dashed" | "link" | "text" | "default";
@@ -39,10 +39,10 @@
 <template>
   <button ref="button" :disabled="$props.disabled" class="ksd-button" :class="componentStyles">
     <slot v-if="iconPosition === 'left' && !$props.loading" name="icon"></slot>
-    <LoadingIcon v-if="iconPosition === 'left' && $props.loading" />
+    <VLoadingOutlined v-if="iconPosition === 'left' && $props.loading" />
     <slot></slot>
     <slot v-if="iconPosition === 'right' && !$props.loading" name="icon"></slot>
-    <LoadingIcon v-if="iconPosition === 'right' && $props.loading" />
+    <VLoadingOutlined v-if="iconPosition === 'right' && $props.loading" />
   </button>
 </template>
 

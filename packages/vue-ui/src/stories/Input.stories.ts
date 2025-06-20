@@ -1,6 +1,6 @@
+import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h, ref } from "vue";
-import { VSettingsFilledIcon } from "../icons";
 import { VInput } from "../ui";
 
 const meta = {
@@ -32,7 +32,7 @@ Primary.args = {};
 
 export const AllInOne: Story = {
   render: (args) => ({
-    components: { VInput, VSettingsFilledIcon },
+    components: { VInput, VSettingFilled },
     setup() {
       const value = ref("");
 
@@ -60,8 +60,8 @@ export const AllInOne: Story = {
             VInput,
             { placeholder: "Prefix and Suffix", class: "test" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(VInput, {
@@ -85,48 +85,48 @@ export const AllInOne: Story = {
             VInput,
             { placeholder: "Outlined error", variant: "outlined", status: "error" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Filled error", variant: "filled", status: "error" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Borderless error", variant: "borderless", status: "error" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Underline error", variant: "underline", status: "error" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Outlined warning", variant: "outlined", status: "warning" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Filled warning", variant: "filled", status: "warning" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
@@ -137,32 +137,32 @@ export const AllInOne: Story = {
               status: "warning",
             },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Underline warning", variant: "underline", status: "warning" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Outlined success", variant: "outlined", status: "success" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Filled success", variant: "filled", status: "success" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
@@ -173,16 +173,16 @@ export const AllInOne: Story = {
               status: "success",
             },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
             VInput,
             { placeholder: "Underline success", variant: "underline", status: "success" },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
@@ -194,8 +194,8 @@ export const AllInOne: Story = {
               disabled: true,
             },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
@@ -207,8 +207,8 @@ export const AllInOne: Story = {
               disabled: true,
             },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
@@ -220,8 +220,8 @@ export const AllInOne: Story = {
               disabled: true,
             },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
           h(
@@ -233,8 +233,8 @@ export const AllInOne: Story = {
               disabled: true,
             },
             {
-              prefix: () => h(VSettingsFilledIcon, { size: 16 }),
-              suffix: () => h(VSettingsFilledIcon, { size: 16 }),
+              prefix: () => h(VSettingFilled, { size: 16 }),
+              suffix: () => h(VSettingFilled, { size: 16 }),
             },
           ),
         ],

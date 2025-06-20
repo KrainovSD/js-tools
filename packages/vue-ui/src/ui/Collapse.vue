@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { VRightOutlined } from "@krainovsd/vue-icons";
   import { computed, onMounted, ref, useTemplateRef } from "vue";
-  import ArrowSmallIcon from "../icons/ArrowSmallIcon.vue";
   import Flex from "./Flex.vue";
 
   export type CollapseProps = {
@@ -102,7 +102,7 @@
       flex-align="center"
       @click.stop="onClick"
     >
-      <ArrowSmallIcon
+      <VRightOutlined
         v-if="!$props.noArrow"
         :size="12"
         class="ksd-collapse__arrow"

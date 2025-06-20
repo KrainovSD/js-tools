@@ -1,6 +1,6 @@
+import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h } from "vue";
-import { VSettingsFilledIcon } from "../icons";
 import { VSelect, VText } from "../ui";
 
 const meta = {
@@ -274,7 +274,7 @@ export const AllInOne: Story = {
         value: 5,
         label: "Значение 5",
         desc: h("div", { style: { display: "flex", gap: "10px", alignItems: "center" } }, [
-          h(VSettingsFilledIcon, { size: 14 }),
+          h(VSettingFilled, { size: 14 }),
           h(VText, {}, () => "Особое значение 5"),
         ]),
       },
