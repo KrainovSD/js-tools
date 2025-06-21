@@ -123,7 +123,9 @@
       }
     });
 
-    const firstInteractive = interactiveElements[0].innerInteractive ?? interactiveElements[0];
+    const firstInteractive =
+      interactiveElements[0].innerInteractive ??
+      (interactiveElements[0] as HTMLDropDownItem | undefined);
     if (firstInteractive && !triggers.value.includes("hover")) {
       firstInteractive.focus();
     }
@@ -226,7 +228,7 @@
           (element) =>
             element === document.activeElement ||
             element.innerInteractive === document.activeElement,
-        ) ?? interactiveElements[0];
+        ) ?? (interactiveElements[0] as HTMLDropDownItem | undefined);
 
       if (!currentFocus) return;
 
@@ -266,11 +268,11 @@
       } else if (event.key === "ArrowRight") {
         /** Click for nested */
 
-        const nestedPlacement = currentFocus.getAttribute(
-          "data-nested-placement",
-        ) as DropDownFirstPlacement;
+        const nestedPlacement = currentFocus.getAttribute("data-nested-placement") as
+          | DropDownFirstPlacement
+          | undefined;
 
-        if (nestedPlacement && nestedPlacement !== "left") {
+        if (nestedPlacement != undefined && nestedPlacement !== "left") {
           const mouseEvent = new MouseEvent("click", {
             ctrlKey: event.ctrlKey,
             shiftKey: event.shiftKey,
@@ -288,11 +290,11 @@
       } else if (event.key === "ArrowLeft") {
         /** Click for nested */
 
-        const nestedPlacement = currentFocus.getAttribute(
-          "data-nested-placement",
-        ) as DropDownFirstPlacement;
+        const nestedPlacement = currentFocus.getAttribute("data-nested-placement") as
+          | DropDownFirstPlacement
+          | undefined;
 
-        if (nestedPlacement && nestedPlacement === "left") {
+        if (nestedPlacement != undefined && nestedPlacement === "left") {
           const mouseEvent = new MouseEvent("click", {
             ctrlKey: event.ctrlKey,
             shiftKey: event.shiftKey,

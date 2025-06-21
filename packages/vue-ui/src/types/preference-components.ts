@@ -101,3 +101,8 @@ export type ThemeSelectVariable =
   | "ksd-select-selector-padding-sm";
 
 export type ThemePopConfirmVariable = "ksd-pop-confirm-inner-padding";
+
+export type ThemeMessageVariable =
+  | "ksd-message-z-index-popup"
+  | "ksd-message-content-bg"
+  | "ksd-message-content-padding";

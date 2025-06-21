@@ -250,6 +250,11 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
       popconfirm: {
         "ksd-pop-confirm-inner-padding": "12px",
       },
+      message: {
+        "ksd-message-z-index-popup": "2010",
+        "ksd-message-content-bg": "#ffffff",
+        "ksd-message-content-padding": "9px 12px",
+      },
     },
   },
 };

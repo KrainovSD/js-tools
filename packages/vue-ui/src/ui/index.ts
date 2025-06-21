@@ -8,6 +8,7 @@ import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
+import VMessage from "./Message.vue";
 import VPassword from "./Password.vue";
 import VPopConfirm from "./PopConfirm.vue";
 import VPopper from "./Popper.vue";
@@ -44,6 +45,7 @@ export type { DropDownProps } from "./DropDown.vue";
 export type { SelectProps } from "./Select.vue";
 export type { SearchProps } from "./Search.vue";
 export type { PopConfirmProps } from "./PopConfirm.vue";
+export type { MessageProps } from "./Message.vue";
 
 export {
   VButton,
@@ -69,4 +71,5 @@ export {
   VSelect,
   VSearch,
   VPopConfirm,
+  VMessage,
 };

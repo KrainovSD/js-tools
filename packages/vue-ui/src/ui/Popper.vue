@@ -66,32 +66,28 @@
   const shiftY = computed(
     () =>
       props.shiftY ??
-      (props.placement
-        ? firstPlacement.value === "bottom"
+      (firstPlacement.value === "bottom"
+        ? props.arrow
+          ? 10
+          : 5
+        : firstPlacement.value === "top"
           ? props.arrow
             ? 10
             : 5
-          : firstPlacement.value === "top"
-            ? props.arrow
-              ? 10
-              : 5
-            : 0
-        : 0),
+          : 0),
   );
   const shiftX = computed(
     () =>
       props.shiftX ??
-      (props.placement
-        ? firstPlacement.value === "left"
+      (firstPlacement.value === "left"
+        ? props.arrow
+          ? 10
+          : 5
+        : firstPlacement.value === "right"
           ? props.arrow
             ? 10
             : 5
-          : firstPlacement.value === "right"
-            ? props.arrow
-              ? 10
-              : 5
-            : 0
-        : 0),
+          : 0),
   );
   const openTimer = ref<NodeJS.Timeout | null>(null);
   const closeTimer = ref<NodeJS.Timeout | null>(null);

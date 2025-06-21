@@ -15,6 +15,7 @@
     useTemplateRef,
     watch,
   } from "vue";
+  import { execAnimation } from "../lib";
 
   export type PositionerAnimations = "translate" | "scale" | "scaleY";
 
@@ -205,34 +206,9 @@
     }
 
     elementRef.value.setAttribute("placement", position.value.placement);
-    if (isFirstRender && props.animationAppear) {
-      void execAnimation(`ksd-positioner_${props.animationAppear}-in`);
+    if (isFirstRender && props.animationAppear != undefined) {
+      void execAnimation(elementRef.value, `ksd-positioner_${props.animationAppear}-in`);
     }
-  }
-
-  function execAnimation(className: string) {
-    const eventController = new AbortController();
-
-    return new Promise((resolve) => {
-      if (!elementRef.value) {
-        resolve(true);
-
-        return;
-      }
-
-      elementRef.value.addEventListener(
-        "animationend",
-        () => {
-          resolve(true);
-          elementRef.value?.classList?.remove?.(className);
-          eventController.abort();
-        },
-        {
-          signal: eventController.signal,
-        },
-      );
-      elementRef.value.classList.add(className);
-    });
   }
 
   /** Animation by close */
@@ -242,12 +218,14 @@
       if (value) {
         position.value = { ...position.value, placement: "flex" };
         localOpen.value = true;
-      } else if (props.animationDisappear) {
-        void execAnimation(`ksd-positioner_${props.animationDisappear}-out`).then(() => {
-          if (!props.open) {
-            localOpen.value = false;
-          }
-        });
+      } else if (props.animationDisappear != undefined) {
+        void execAnimation(elementRef.value, `ksd-positioner_${props.animationDisappear}-out`).then(
+          () => {
+            if (!props.open) {
+              localOpen.value = false;
+            }
+          },
+        );
       } else {
         localOpen.value = false;
       }

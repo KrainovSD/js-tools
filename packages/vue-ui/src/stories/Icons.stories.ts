@@ -43,28 +43,40 @@ const Template: StoryFn<typeof FIRST_ICON> = (args) => ({
     return { args, search, copyToClipboard };
   },
   render() {
-    return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-      h(VInput, {
-        modelValue: this.search,
-        "onUpdate:modelValue": (value) => {
-          this.search = value;
+    return h(
+      "div",
+      {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          gap: "20px",
+          overflow: "hidden",
+          maxHeight: "calc(100vh - 30px)",
         },
-      }),
-      h("div", { style: { display: "flex", gap: "10px", flexWrap: "wrap" } }, [
-        Object.entries(IconsLibrary).map(([name, icon]) => {
-          if (!name.toLocaleLowerCase().includes(this.search.toLocaleLowerCase())) return null;
-
-          return h(
-            VButton,
-            {
-              onClick: () => this.copyToClipboard(name),
-              style: { flexDirection: "column", height: "fit-content", paddingBlock: "5px" },
-            },
-            { default: () => name, icon: () => h(icon, { size: 24 }) },
-          );
+      },
+      [
+        h(VInput, {
+          modelValue: this.search,
+          "onUpdate:modelValue": (value) => {
+            this.search = value;
+          },
         }),
-      ]),
-    ]);
+        h("div", { style: { display: "flex", gap: "10px", flexWrap: "wrap", overflow: "auto" } }, [
+          Object.entries(IconsLibrary).map(([name, icon]) => {
+            if (!name.toLocaleLowerCase().includes(this.search.toLocaleLowerCase())) return null;
+
+            return h(
+              VButton,
+              {
+                onClick: () => this.copyToClipboard(name),
+                style: { flexDirection: "column", height: "fit-content", paddingBlock: "5px" },
+              },
+              { default: () => name, icon: () => h(icon, { size: 24 }) },
+            );
+          }),
+        ]),
+      ],
+    );
   },
 });
 

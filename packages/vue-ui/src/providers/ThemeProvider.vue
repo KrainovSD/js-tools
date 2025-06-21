@@ -36,4 +36,13 @@
   <slot></slot>
 </template>
 
-<style lang="scss" module></style>
+<style lang="scss">
+  .ksd-icon {
+    width: 1em;
+    height: 1em;
+    min-width: 1em;
+    min-height: 1em;
+    max-width: 1em;
+    max-height: 1em;
+  }
+</style>

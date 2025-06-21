@@ -216,7 +216,7 @@
       inset-block-start: 0px;
       inset-inline-end: 0px;
       width: 0px;
-      opacity: var(--ant-input-number-handle-opacity);
+      opacity: var(--ksd-input-number-handle-opacity);
       height: 100%;
       border-start-start-radius: 0;
       border-start-end-radius: var(--ksd-border-radius);

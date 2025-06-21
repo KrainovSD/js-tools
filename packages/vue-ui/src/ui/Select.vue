@@ -156,7 +156,7 @@
     } else if (selectedValue != undefined) {
       const nextValue = isArray(model.value) ? [...model.value] : [];
       const indexValue = nextValue.findIndex((val) => val === selectedValue);
-      if (~indexValue) {
+      if (~indexValue != 0) {
         nextValue.splice(indexValue, 1);
       } else {
         nextValue.push(selectedValue);

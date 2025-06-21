@@ -27,7 +27,7 @@
   const model = defineModel<RadioValue>();
 
   const optionType = computed(() =>
-    props.optionType === "default" || !props.optionType ? "default" : "button",
+    props.optionType === "default" || props.optionType == undefined ? "default" : "button",
   );
   const name = computed(() => props.name ?? randomString(5));
 </script>
