@@ -5,9 +5,9 @@
     VInfoCircleFilled,
     VLoadingOutlined,
   } from "@krainovsd/vue-icons";
-  import { computed, provide, ref, shallowReactive } from "vue";
+  import { computed, provide, ref, shallowReactive, useTemplateRef } from "vue";
   import { SET_MESSAGE_INJECT_TOKEN } from "../hooks/useMessage";
-  import { execAnimation } from "../lib";
+  import { createGlobalId, execAnimation } from "../lib";
 
   export type MessageType = "success" | "warning" | "error" | "info" | "loading";
   export type Message = {
@@ -22,35 +22,24 @@
     maxCount?: number;
     defaultDuration?: number;
     defaultType?: MessageType;
-    maxWidth?: string;
   };
-
-  const createId = (function createId() {
-    let lastId = 0;
-
-    return () => {
-      return lastId++;
-    };
-  })();
 
   const props = withDefaults(defineProps<MessageProps>(), {
     left: "0",
     top: "20px",
-    maxWidth: "70%",
     maxCount: 0,
     defaultDuration: 2,
     defaultType: "info",
   });
-
+  const messageRef = useTemplateRef("message");
   const autoClosing = ref(0);
   const messages = shallowReactive<Message[]>([]);
   const styles = computed(() => ({ left: props.left, top: props.top }));
-  const itemStyles = computed(() => ({ maxWidth: props.maxWidth }));
 
   async function closeMessage(messageId?: number) {
     if (messageId == undefined) return;
 
-    const node = document.querySelector<HTMLElement>(
+    const node = messageRef.value?.querySelector?.<HTMLElement>(
       `.ksd-message__item-wrap[data-id='${messageId}']`,
     );
     if (!node) {
@@ -69,8 +58,11 @@
     }
   }
 
-  function createMessage(text: string, opts: Pick<Message, "duration" | "type"> & { id?: number }) {
-    const messageId = opts.id ?? createId();
+  function createMessage(
+    text: string,
+    opts: Pick<Message, "duration" | "type"> & { id?: number } = {},
+  ) {
+    const messageId = opts.id ?? createGlobalId();
     const duration = opts.duration ?? props.defaultDuration;
     const type = opts.type ?? props.defaultType;
 
@@ -109,17 +101,18 @@
   }
 
   provide(SET_MESSAGE_INJECT_TOKEN, createMessage);
+  defineExpose({ createMessage });
 </script>
 
 <template>
-  <div v-bind="$attrs" class="ksd-message" :style="styles">
+  <div ref="message" v-bind="$attrs" class="ksd-message" :style="styles">
     <div
       v-for="message of messages"
       :key="message.id"
       :data-id="message.id"
       class="ksd-message__item-wrap"
     >
-      <div class="ksd-message__item" :style="itemStyles">
+      <div class="ksd-message__item">
         <VCheckCircleFilled
           v-if="message.type === 'success'"
           :size="16"
@@ -189,6 +182,7 @@
       pointer-events: all;
       gap: var(--ksd-margin-xs);
       align-items: center;
+      max-width: 70%;
     }
 
     &__icon {

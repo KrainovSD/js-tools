@@ -9,6 +9,7 @@ import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
 import VMessage from "./Message.vue";
+import VNotification from "./Notification.vue";
 import VPassword from "./Password.vue";
 import VPopConfirm from "./PopConfirm.vue";
 import VPopper from "./Popper.vue";
@@ -38,14 +39,25 @@ export type { RadioGroupProps, RadioOption } from "./RadioGroup.vue";
 export type { RadioButtonProps } from "./RadioButton.vue";
 export type { SlideProps } from "./Slider.vue";
 export type { TooltipProps } from "./Tooltip.vue";
-export type { PositionerProps } from "./Positioner.vue";
+export type {
+  PositionerProps,
+  PositionerAnimations,
+  PositionerTargetNodePosition,
+} from "./Positioner.vue";
 export type { SwitchProps } from "./Switch.vue";
-export type { PopperProps } from "./Popper.vue";
-export type { DropDownProps } from "./DropDown.vue";
-export type { SelectProps } from "./Select.vue";
-export type { SearchProps } from "./Search.vue";
+export type { PopperProps, PopperTrigger } from "./Popper.vue";
+export type {
+  DropDownProps,
+  DropDownFirstPlacement,
+  DropDownMenuItem,
+  DropDownMenuItemInner,
+  HTMLDropDownItem,
+} from "./DropDown.vue";
+export type { SelectProps, SelectItem, SelectValue } from "./Select.vue";
+export type { SearchProps, SearchOption } from "./Search.vue";
 export type { PopConfirmProps } from "./PopConfirm.vue";
-export type { MessageProps } from "./Message.vue";
+export type { MessageProps, Message, MessageType } from "./Message.vue";
+export type { Notification, NotificationProps, NotificationType } from "./Notification.vue";
 
 export {
   VButton,
@@ -72,4 +84,5 @@ export {
   VSearch,
   VPopConfirm,
   VMessage,
+  VNotification,
 };

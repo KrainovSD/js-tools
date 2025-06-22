@@ -106,3 +106,9 @@ export type ThemeMessageVariable =
   | "ksd-message-z-index-popup"
   | "ksd-message-content-bg"
   | "ksd-message-content-padding";
+
+export type ThemeNotificationVariable =
+  | "ksd-notification-z-index-popup"
+  | "ksd-notification-width"
+  | "ksd-notification-inline-margin"
+  | "ksd-notification-block-margin";
