@@ -112,3 +112,24 @@ export type ThemeNotificationVariable =
   | "ksd-notification-width"
   | "ksd-notification-inline-margin"
   | "ksd-notification-block-margin";
+
+export type ThemeModalVariable =
+  | "ksd-modal-footer-bg"
+  | "ksd-modal-header-bg"
+  | "ksd-modal-title-line-height"
+  | "ksd-modal-title-font-size"
+  | "ksd-modal-content-bg"
+  | "ksd-modal-title-color"
+  | "ksd-modal-content-padding"
+  | "ksd-modal-header-padding"
+  | "ksd-modal-header-border-bottom"
+  | "ksd-modal-header-margin-bottom"
+  | "ksd-modal-body-padding"
+  | "ksd-modal-footer-padding"
+  | "ksd-modal-footer-border-top"
+  | "ksd-modal-footer-border-radius"
+  | "ksd-modal-footer-margin-top"
+  | "ksd-modal-confirm-body-padding"
+  | "ksd-modal-confirm-icon-margin-inline-end"
+  | "ksd-modal-confirm-btns-margin-top"
+  | "ksd-modal-margin-block";

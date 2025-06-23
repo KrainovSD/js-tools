@@ -9,6 +9,7 @@ import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
 import VMessage from "./Message.vue";
+import VModal from "./Modal.vue";
 import VNotification from "./Notification.vue";
 import VPassword from "./Password.vue";
 import VPopConfirm from "./PopConfirm.vue";
@@ -58,6 +59,7 @@ export type { SearchProps, SearchOption } from "./Search.vue";
 export type { PopConfirmProps } from "./PopConfirm.vue";
 export type { MessageProps, Message, MessageType } from "./Message.vue";
 export type { Notification, NotificationProps, NotificationType } from "./Notification.vue";
+export type { ModalProps } from "./Modal.vue";
 
 export {
   VButton,
@@ -85,4 +87,5 @@ export {
   VPopConfirm,
   VMessage,
   VNotification,
+  VModal,
 };

@@ -16,6 +16,7 @@ import type {
   ThemeDropDownVariable,
   ThemeInputVariable,
   ThemeMessageVariable,
+  ThemeModalVariable,
   ThemeNotificationVariable,
   ThemePopConfirmVariable,
   ThemePopperVariable,
@@ -53,5 +54,6 @@ export type ThemeVariableConfig = {
     popconfirm: Record<ThemePopConfirmVariable, string>;
     message: Record<ThemeMessageVariable, string>;
     notification: Record<ThemeNotificationVariable, string>;
+    modal: Record<ThemeModalVariable, string>;
   };
 };
