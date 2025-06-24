@@ -13,56 +13,53 @@
     iconPosition?: "left" | "right";
     block?: boolean;
   };
-  const props = defineProps<ButtonProps>();
+  const props = withDefaults(defineProps<ButtonProps>(), {
+    block: false,
+    danger: false,
+    disabled: false,
+    ghost: false,
+    loading: false,
+    iconPosition: "left",
+    shape: "default",
+    size: "default",
+    type: "default",
+  });
   const slots = useSlots();
-  const element = useTemplateRef("button");
+  const buttonRef = useTemplateRef("button");
 
-  const componentStyles = computed(() => ({
-    [`type-${props.type ?? "default"}`]: true,
-    [`size-${props.size ?? "default"}`]: true,
-    [`shape-${props.shape ?? "default"}`]: true,
+  const rootClasses = computed(() => ({
+    [`type-${props.type}`]: true,
+    [`size-${props.size}`]: true,
+    [`shape-${props.shape}`]: true,
     wave: props.type !== "link" && props.type !== "text",
     disabled: props.disabled,
     danger: props.danger,
     ghost: props.ghost,
     loading: props.loading,
     block: props.block,
-    // eslint-disable-next-line no-useless-computed-key
-    ["icon-only"]: !slots.default,
+    "icon-only": !slots.default,
   }));
 
-  const iconPosition = computed(() => (props.iconPosition === "right" ? "right" : "left"));
-
-  defineExpose({ element });
+  defineExpose({ buttonRef });
 </script>
 
 <template>
-  <button ref="button" :disabled="$props.disabled" class="ksd-button" :class="componentStyles">
-    <slot v-if="iconPosition === 'left' && !$props.loading" name="icon"></slot>
-    <VLoadingOutlined v-if="iconPosition === 'left' && $props.loading" />
+  <button
+    ref="button"
+    v-bind="$attrs"
+    :disabled="$props.disabled"
+    class="ksd-button"
+    :class="rootClasses"
+  >
+    <slot v-if="$props.iconPosition === 'left' && !$props.loading" name="icon"></slot>
+    <VLoadingOutlined v-if="$props.iconPosition === 'left' && $props.loading" />
     <slot></slot>
-    <slot v-if="iconPosition === 'right' && !$props.loading" name="icon"></slot>
-    <VLoadingOutlined v-if="iconPosition === 'right' && $props.loading" />
+    <slot v-if="$props.iconPosition === 'right' && !$props.loading" name="icon"></slot>
+    <VLoadingOutlined v-if="$props.iconPosition === 'right' && $props.loading" />
   </button>
 </template>
 
-<style>
-  .wave-effect {
-    position: absolute;
-    border-radius: 50%;
-    background-color: rgba(22, 119, 255, 0.7);
-    transform: scale(1);
-    animation: wave 0.6s linear;
-    pointer-events: none;
-  }
-
-  @keyframes wave {
-    100% {
-      transform: scale(1.2);
-      opacity: 0;
-    }
-  }
-</style>
+<style></style>
 
 <style lang="scss">
   .ksd-button {
@@ -75,7 +72,6 @@
     transition: all 0.2s ease-out;
     border: var(--ksd-line-width) var(--ksd-line-type) transparent;
     touch-action: manipulation;
-    text-align: center;
     white-space: nowrap;
     font-family: var(--ksd-font-family);
     font-weight: var(--ksd-font-weight);
@@ -83,14 +79,14 @@
     cursor: pointer;
 
     &:focus-visible {
-      outline: 3px solid var(--ksd-outline-color);
+      outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
       outline-offset: 1px;
       transition:
         outline-offset 0s,
         outline 0s;
     }
 
-    &:not(.disabled):not(.loading).wave {
+    &:where(:not(.disabled):not(.loading).wave) {
       &:after {
         content: "";
         display: block;
@@ -119,7 +115,7 @@
     /** Size */
     &.size-default {
       height: var(--ksd-control-height);
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
       padding: 0px var(--ksd-button-padding);
       border-radius: var(--ksd-border-radius);
 

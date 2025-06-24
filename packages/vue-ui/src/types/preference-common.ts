@@ -40,7 +40,9 @@ export type ThemeBorderVariable =
   | "ksd-border-radius-lg"
   | "ksd-border-radius-outer"
   | "ksd-line-width"
-  | "ksd-line-type";
+  | "ksd-line-type"
+  | "ksd-outline-width"
+  | "ksd-outline-type";
 
 export type ThemePaddingVariable =
   | "ksd-padding-xxs"

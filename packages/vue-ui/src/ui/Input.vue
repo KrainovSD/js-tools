@@ -190,13 +190,13 @@
     }
 
     &.size-default {
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
       padding: var(--ksd-input-padding-block) var(--ksd-input-padding-inline);
       border-radius: var(--ksd-border-radius);
       min-height: var(--ksd-control-height);
     }
     &.size-small {
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
       padding: var(--ksd-input-padding-block-sm) var(--ksd-input-padding-inline-sm);
       border-radius: var(--ksd-border-radius-sm);
       min-height: var(--ksd-control-height-sm);

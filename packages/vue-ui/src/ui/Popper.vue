@@ -456,7 +456,7 @@
     &__positioner-content {
       border-radius: var(--ksd-border-radius-lg);
       color: var(--ksd-text-main-color);
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
       line-height: var(--ksd-line-height);
       background-color: var(--ksd-bg-modal-color);
       padding: var(--ksd-popper-inner-padding);

@@ -401,7 +401,7 @@
       padding: var(--ksd-dropdown-inner-padding);
       color: var(--ksd-text-main-color);
       font-weight: var(--ksd-font-weight);
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
       line-height: var(--ksd-line-height);
       cursor: pointer;
       transition: all var(--ksd-transition-mid);
@@ -423,7 +423,7 @@
 
       &.focusable {
         &:focus-visible {
-          outline: 3px solid var(--ksd-outline-color);
+          outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
           outline-offset: 1px;
           transition:
             outline-offset 0s,

@@ -260,7 +260,7 @@
       line-height: 0;
       text-align: center;
       cursor: pointer;
-      border-inline-start: 1px solid var(--ksd-border-color);
+      border-inline-start: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-color);
       transition: all var(--ksd-transition-mid) linear;
       display: flex;
       align-items: center;
@@ -270,7 +270,7 @@
 
       &.up {
         border-start-end-radius: var(--ksd-border-radius);
-        border-block-end: 1px solid var(--ksd-border-color);
+        border-block-end: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-color);
 
         &.variant-borderless,
         &.variant-underline {

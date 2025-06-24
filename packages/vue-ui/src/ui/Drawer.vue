@@ -220,7 +220,7 @@
       font-size: var(--ksd-font-size-lg);
       font-family: var(--ksd-font-family);
       line-height: var(--ksd-line-height);
-      border-bottom: 1px solid var(--ksd-border-split-color);
+      border-bottom: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-split-color);
       padding: var(--ksd-padding) var(--ksd-padding-lg);
     }
 

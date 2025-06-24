@@ -73,7 +73,7 @@
     }
 
     &.size-default {
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
     }
     &.size-sm {
       font-size: var(--ksd-font-size-sm);

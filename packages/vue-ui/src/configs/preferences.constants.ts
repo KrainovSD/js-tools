@@ -41,6 +41,8 @@ export const THEME_COLORS: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-border-radius-outer": "4px",
         "ksd-line-type": "solid",
         "ksd-line-width": "1px",
+        "ksd-outline-type": "solid",
+        "ksd-outline-width": "3px",
       },
       padding: {
         "ksd-padding-xxs": "4px",

@@ -82,7 +82,7 @@
     gap: var(--ksd-margin-xs);
 
     &:focus-visible {
-      outline: 3px solid var(--ksd-outline-color);
+      outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
       outline-offset: 1px;
       transition:
         outline-offset 0s,

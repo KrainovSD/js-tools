@@ -50,7 +50,7 @@
     padding: 0;
     color: var(--ksd-text-main-color);
     font-family: var(--ksd-font-family);
-    font-size: 1rem;
+    font-size: var(--ksd-font-size);
     line-height: var(--ksd-line-height);
     display: inline-flex;
     width: fit-content;
@@ -78,7 +78,7 @@
       padding: 0;
       color: var(--ksd-text-main-color);
       font-family: var(--ksd-font-family);
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
       line-height: 1;
       list-style: none;
       position: relative;
@@ -169,7 +169,7 @@
       margin: 0;
 
       &:focus-visible + .ksd-checkbox__inner {
-        outline: 3px solid var(--ksd-outline-color);
+        outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
         outline-offset: 1px;
         transition:
           outline-offset 0s,

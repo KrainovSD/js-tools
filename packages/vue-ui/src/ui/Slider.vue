@@ -343,7 +343,7 @@
     box-sizing: border-box;
     padding: 0;
     color: var(--ksd-main-text-color);
-    font-size: 1rem;
+    font-size: var(--ksd-font-size);
     line-height: var(--ksd-line-height);
     list-style: none;
     font-family: var(--ksd-font-family);

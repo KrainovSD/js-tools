@@ -58,13 +58,13 @@
       padding-inline: var(--ksd-radio-button-padding-inline);
       height: var(--ksd-control-height);
       line-height: calc(var(--ksd-control-height) - var(--ksd-line-width) * 2);
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
     }
     &.size-small {
       padding-inline: calc(var(--ksd-padding-xs) - var(--ksd-line-width));
       height: var(--ksd-control-height-sm);
       line-height: calc(var(--ksd-control-height-sm) - var(--ksd-line-width) * 2);
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
     }
     &.size-large {
       padding-inline: var(--ksd-radio-button-padding-inline);

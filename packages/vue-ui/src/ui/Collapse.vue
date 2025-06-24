@@ -10,80 +10,51 @@
     borderless?: boolean;
     noArrow?: boolean;
     header?: string;
-    bodyClass?: string;
-    headerClass?: string;
-    baseClass?: string;
+    classNameBody?: string;
+    classNameHeader?: string;
+    classNameRoot?: string;
   };
 
   type Emits = {
     toggle: [open: boolean];
   };
 
-  const contentRef = useTemplateRef("body");
+  const bodyRef = useTemplateRef("body");
+  const collapseRef = useTemplateRef("collapse");
 
   const emit = defineEmits<Emits>();
   const props = defineProps<CollapseProps>();
   const open = ref(props.initialOpen ?? false);
 
-  const componentStyles = computed(() => ({
+  const commonClasses = computed(() => ({
     default: props.size === "default" || props.size == undefined,
     small: props.size === "small",
     large: props.size === "large",
     borderless: props.borderless,
     ghost: props.ghost,
+    open: open.value,
   }));
 
   onMounted(() => {
-    if (props.initialOpen) contentRef.value?.classList?.add?.("open");
+    if (props.initialOpen) bodyRef.value?.classList?.add?.("open");
   });
 
-  // function beforeEnter(el: Element) {
-  //   (el as HTMLElement).style.maxHeight = "0";
-  // }
-  // function enter(el: Element) {
-  //   (el as HTMLElement).style.maxHeight = `${el.scrollHeight}px`;
-  // }
-  // function afterEnter(el: Element) {
-  //   (el as HTMLElement).style.maxHeight = "none";
-  // }
-  // function beforeLeave(el: Element) {
-  //   (el as HTMLElement).style.maxHeight = `${el.clientHeight}px`;
-  // }
-  // function leave(el: Element) {
-  //   (el as HTMLElement).style.maxHeight = "0";
-  // }
-  // <Transition
-  //   @before-enter="beforeEnter"
-  //   @enter="enter"
-  //   @leave="leave"
-  //   @after-enter="afterEnter"
-  //   @before-leave="beforeLeave"
-  // >
-  //   <Flex
-  //     v-show="open"
-  //     ref="body"
-  //     vertical
-  //     :class="[{ body: true, open }, sizeStyle, $props.bodyClass]"
-  //   >
-  //     <slot></slot> </Flex
-  // ></Transition>
-
-  function onClick() {
-    const content = contentRef.value;
-    if (!content) return;
+  function onToggle() {
+    const body = bodyRef.value;
+    if (!body) return;
     open.value = !open.value;
     emit("toggle", open.value);
 
     const keyframesOpen: Keyframe[] = [
-      { maxHeight: `${content.clientHeight}px`, offset: 0 },
-      { maxHeight: `${content.scrollHeight}px`, offset: 1 },
+      { maxHeight: `${body.clientHeight}px`, offset: 0 },
+      { maxHeight: `${body.scrollHeight}px`, offset: 1 },
     ];
     const keyframesClose: Keyframe[] = [
-      { maxHeight: `${content.clientHeight}px`, offset: 0 },
+      { maxHeight: `${body.clientHeight}px`, offset: 0 },
       { maxHeight: "0", offset: 1 },
     ];
 
-    const animate = content.animate(open.value ? keyframesOpen : keyframesClose, {
+    const animate = body.animate(open.value ? keyframesOpen : keyframesClose, {
       duration: 200,
       fill: "forwards",
     });
@@ -91,16 +62,37 @@
       animate.cancel();
     };
   }
+
+  function onClickHeader() {
+    onToggle();
+  }
+  function onKeyDownHeader(event: KeyboardEvent) {
+    if (event.key === "Enter" || event.key === " ") {
+      onToggle();
+    }
+  }
+
+  defineExpose({ collapseRef, bodyRef });
 </script>
 
 <template>
-  <Flex vertical w-full class="ksd-collapse" :class="[$props.baseClass, componentStyles]">
+  <Flex
+    ref="collapse"
+    vertical
+    w-full
+    class="ksd-collapse"
+    :class="[$props.classNameRoot, commonClasses]"
+  >
     <Flex
       class="ksd-collapse__header"
-      :class="[$props.headerClass, componentStyles]"
+      :class="[$props.classNameHeader, commonClasses]"
       :gap="12"
       flex-align="center"
-      @click.stop="onClick"
+      role="button"
+      :aria-expanded="open"
+      tabindex="0"
+      @click="onClickHeader"
+      @keydown="onKeyDownHeader"
     >
       <VRightOutlined
         v-if="!$props.noArrow"
@@ -108,13 +100,13 @@
         class="ksd-collapse__arrow"
         :class="{ open: open }"
       />
-      <div v-if="$props.header" class="ksd-collapse__header-text" :class="componentStyles">
+      <div v-if="$props.header" class="ksd-collapse__header-text" :class="commonClasses">
         {{ $props.header }}
       </div>
       <slot name="header"></slot>
     </Flex>
-    <div ref="body" vertical class="ksd-collapse__body" :class="[{ open }, componentStyles]">
-      <div :class="[$props.bodyClass, componentStyles]" class="ksd-collapse__body-box">
+    <div ref="body" vertical class="ksd-collapse__body" :class="commonClasses">
+      <div :class="[$props.classNameBody, commonClasses]" class="ksd-collapse__body-box">
         <slot></slot>
       </div>
     </div>
@@ -123,7 +115,7 @@
 
 <style lang="scss">
   .ksd-collapse {
-    border: 1px solid var(--ksd-border-color);
+    border: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-color);
     border-radius: var(--ksd-border-radius-lg);
     background-color: var(--ksd-collapse-header-bg);
 
@@ -138,6 +130,21 @@
 
     &__header {
       cursor: pointer;
+      border-radius: var(--ksd-border-radius-lg);
+
+      &:focus-visible {
+        position: relative;
+        z-index: 1;
+        outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
+        outline-offset: 1px;
+        transition:
+          outline-offset 0s,
+          outline 0s;
+      }
+
+      &.open {
+        border-radius: var(--ksd-border-radius-lg) var(--ksd-border-radius-lg) 0 0;
+      }
 
       &.default {
         padding: var(--ksd-padding-sm) var(--ksd-padding);
@@ -164,7 +171,7 @@
       color: var(--ksd-text-main-color);
       line-height: var(--ksd-line-height);
       font-family: var(--ksd-font-family);
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
 
       &.small {
         font-size: var(--ksd-font-size-sm);
@@ -187,7 +194,7 @@
       color: var(--ksd-text-main-color);
       line-height: var(--ksd-line-height);
       font-family: var(--ksd-font-family);
-      border-top: 1px solid var(--ksd-border-color);
+      border-top: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-color);
       background: var(--ksd-collapse-body-bg);
       border-radius: 0 0 var(--ksd-border-radius-lg) var(--ksd-border-radius-lg);
 

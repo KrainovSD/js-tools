@@ -279,7 +279,7 @@
   .ksd-positioner {
     position: absolute;
     font-family: var(--ksd-font-family);
-    font-size: 1rem;
+    font-size: var(--ksd-font-size);
     line-height: var(--ksd-line-height);
     z-index: var(--ksd-popup-z-index);
     box-shadow: var(--ksd-shadow-secondary);

@@ -2,7 +2,7 @@
   import { computed, onMounted, useTemplateRef } from "vue";
 
   export type CheckBoxProps = {
-    className?: string;
+    classNameRoot?: string;
     indeterminate?: boolean;
     disabled?: boolean;
     autofocus?: boolean;
@@ -11,11 +11,11 @@
 
   const props = defineProps<CheckBoxProps>();
   const inputRef = useTemplateRef("input");
-  const model = defineModel<boolean>();
+  const checked = defineModel<boolean>();
   const inputClasses = computed(() => ({
     disabled: props.disabled,
     indeterminate: props.indeterminate,
-    checked: model.value,
+    checked: checked.value,
   }));
   const rootClasses = computed(() => ({ disabled: props.disabled, block: props.block }));
 
@@ -29,15 +29,15 @@
 </script>
 
 <template>
-  <label class="ksd-checkbox" :class="[rootClasses, props.className]">
+  <label class="ksd-checkbox" :class="[rootClasses, props.classNameRoot]">
     <span class="ksd-checkbox__wrapper">
       <input
         ref="input"
-        v-model="model"
+        v-bind="$attrs"
+        v-model="checked"
         class="ksd-checkbox__input"
         type="checkbox"
         :disabled="$props.disabled"
-        v-bind="$attrs"
       />
       <span class="ksd-checkbox__inner" :class="[inputClasses]"></span>
     </span>
@@ -53,7 +53,7 @@
     padding: 0;
     color: var(--ksd-text-main-color);
     font-family: var(--ksd-font-family);
-    font-size: 1rem;
+    font-size: var(--ksd-font-size);
     line-height: var(--ksd-line-height);
     display: inline-flex;
     width: fit-content;
@@ -81,7 +81,7 @@
       padding: 0;
       color: var(--ksd-text-main-color);
       font-family: var(--ksd-font-family);
-      font-size: 1rem;
+      font-size: var(--ksd-font-size);
       line-height: 1;
       list-style: none;
       position: relative;
@@ -187,7 +187,7 @@
       margin: 0;
 
       &:focus-visible + .ksd-checkbox__inner {
-        outline: 3px solid var(--ksd-outline-color);
+        outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
         outline-offset: 1px;
         transition:
           outline-offset 0s,
