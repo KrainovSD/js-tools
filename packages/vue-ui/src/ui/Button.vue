@@ -2,15 +2,20 @@
   import { VLoadingOutlined } from "@krainovsd/vue-icons";
   import { computed, useSlots, useTemplateRef } from "vue";
 
+  export type ButtonType = "primary" | "dashed" | "link" | "text" | "default";
+  export type ButtonSize = "large" | "default" | "small";
+  export type ButtonShape = "circle" | "default" | "round";
+  export type ButtonIconPosition = "left" | "right";
+
   export type ButtonProps = {
-    type?: "primary" | "dashed" | "link" | "text" | "default";
+    type?: ButtonType;
     disabled?: boolean;
     loading?: boolean;
-    size?: "large" | "default" | "small";
-    shape?: "circle" | "default" | "round";
+    size?: ButtonSize;
+    shape?: ButtonShape;
     danger?: boolean;
     ghost?: boolean;
-    iconPosition?: "left" | "right";
+    iconPosition?: ButtonIconPosition;
     block?: boolean;
   };
   const props = withDefaults(defineProps<ButtonProps>(), {

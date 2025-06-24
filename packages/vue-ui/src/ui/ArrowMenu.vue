@@ -1,8 +1,10 @@
 <script setup lang="ts">
   import { computed } from "vue";
 
+  export type ArrowMenuDirection = "up" | "down" | "right" | "left";
+
   export type ArrowMenuProps = {
-    direction: "up" | "down" | "right" | "left";
+    direction: ArrowMenuDirection;
   };
 
   const props = defineProps<ArrowMenuProps>();

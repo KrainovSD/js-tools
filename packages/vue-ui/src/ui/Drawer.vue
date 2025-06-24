@@ -1,21 +1,22 @@
 <script setup lang="ts">
   import { VCloseOutlined } from "@krainovsd/vue-icons";
-  import { computed, useTemplateRef, watchEffect } from "vue";
+  import { computed, ref, useTemplateRef, watch } from "vue";
+  import { execAnimation } from "../lib";
   import Button from "./Button.vue";
   import Flex from "./Flex.vue";
   import Text from "./Text.vue";
 
+  export type DrawerPlacement = "top" | "right" | "bottom" | "left";
   export type DrawerProps = {
     ignoreCloseByClick?: HTMLElement[];
     target?: HTMLElement;
     header?: string;
-    open?: boolean;
     zIndex?: number;
-    placement?: "top" | "right" | "bottom" | "left";
+    placement?: DrawerPlacement;
     mask?: boolean;
     width?: number;
     height?: number;
-    rootClassName?: string;
+    classNameRoot?: string;
   };
   type Emits = {
     close: [];
@@ -30,144 +31,150 @@
     target: undefined,
     width: 378,
     height: 378,
-    rootClassName: undefined,
+    classNameRoot: undefined,
   });
   const emit = defineEmits<Emits>();
-  const modalRefComponent = useTemplateRef("modal");
-  const modalRefElement = computed(() => modalRefComponent.value?.element);
-  const componentStyles = computed(() => ({ zIndex: props.zIndex }));
-  const modalClasses = computed(() => ({
-    [props.placement ?? "right"]: true,
+  const open = defineModel<boolean>();
+  const drawerComponentRef = useTemplateRef("drawer");
+  const maskComponentRef = useTemplateRef("mask");
+  const drawerRef = computed(() => drawerComponentRef.value?.element);
+  const maskRef = computed(() => maskComponentRef.value?.element);
+  const commonStyles = computed(() => ({ zIndex: props.zIndex }));
+  const commonClasses = computed(() => ({
+    [props.placement]: true,
   }));
-  const modalStyles = computed(() => ({
+  const drawerStyles = computed(() => ({
     width:
       props.placement === "right" || props.placement === "left" ? `${props.width}px` : undefined,
     height:
       props.placement === "top" || props.placement === "bottom" ? `${props.height}px` : undefined,
   }));
   const modalMode = computed(() => props.mask || props.mask == undefined);
+  const prevActiveElement = ref<HTMLElement | null>(null);
 
-  watchEffect((onCleanup) => {
-    if (!props.open || !modalRefElement.value) return;
+  function onClose() {
+    if (prevActiveElement.value && modalMode.value) {
+      prevActiveElement.value.focus();
+    }
 
-    const controller = new AbortController();
-    const previousActiveElement = document.activeElement as HTMLElement | null;
+    const animationPromises = [execAnimation(drawerRef.value, "out")];
+    if (modalMode.value) {
+      animationPromises.push(execAnimation(maskRef.value, "out"));
+    }
 
-    function onClose() {
+    void Promise.all(animationPromises).then(() => {
+      open.value = false;
       emit("close");
-      if (modalMode.value && previousActiveElement) {
-        previousActiveElement.focus();
-      }
-    }
+    });
+  }
 
-    function closeByClickOutside(event: MouseEvent | TouchEvent) {
-      const node = event.target as Node;
+  watch(
+    drawerRef,
+    (drawerRef, _, clean) => {
+      if (!drawerRef) return;
 
-      if (
-        modalRefElement.value?.contains?.(node) ||
-        props.ignoreCloseByClick?.some?.((element) => element?.contains?.(node))
-      )
-        return;
+      const controller = new AbortController();
+      prevActiveElement.value = document.activeElement as HTMLElement | null;
 
-      onClose();
-    }
+      function closeByClickOutside(event: MouseEvent | TouchEvent) {
+        const node = event.target as Node;
 
-    function closeByEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
+        if (
+          drawerRef?.contains?.(node) ||
+          props.ignoreCloseByClick?.some?.((element) => element?.contains?.(node))
+        )
+          return;
+
         onClose();
       }
-    }
 
-    const focusableElements = modalRefElement.value.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-    const firstFocusable = focusableElements.item(0) as HTMLElement | null;
-
-    if (firstFocusable) {
-      firstFocusable.focus();
-    }
-
-    if (modalMode.value) {
-      let focusableIndex = 0;
-
-      if (focusableElements.length !== 0) {
-        function focusTrap(event: KeyboardEvent) {
-          if (event.key !== "Tab") return;
-
-          event.preventDefault();
-
-          if (event.shiftKey) {
-            focusableIndex--;
-          } else {
-            focusableIndex++;
-          }
-
-          if (focusableIndex < 0) {
-            focusableIndex = focusableElements.length - 1;
-          } else if (focusableIndex >= focusableElements.length) {
-            focusableIndex = 0;
-          }
-
-          const element = focusableElements.item(focusableIndex) as HTMLElement;
-          element.focus();
+      function closeByEscape(event: KeyboardEvent) {
+        if (event.key === "Escape") {
+          onClose();
         }
-
-        modalRefElement.value.addEventListener("keydown", focusTrap, { signal: controller.signal });
       }
-    }
 
-    document.addEventListener("mousedown", closeByClickOutside, { signal: controller.signal });
-    document.addEventListener("touchstart", closeByClickOutside, { signal: controller.signal });
-    document.addEventListener("pointerdown", closeByClickOutside, { signal: controller.signal });
-    document.addEventListener("keydown", closeByEscape, { signal: controller.signal });
+      const focusableElements = drawerRef.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      const firstFocusable = focusableElements.item(0) as HTMLElement | null;
 
-    onCleanup(() => {
-      controller.abort();
-    });
-  });
+      if (firstFocusable) {
+        firstFocusable.focus();
+      }
+
+      if (modalMode.value) {
+        let focusableIndex = 0;
+
+        if (focusableElements.length !== 0) {
+          function focusTrap(event: KeyboardEvent) {
+            if (event.key !== "Tab") return;
+
+            event.preventDefault();
+
+            if (event.shiftKey) {
+              focusableIndex--;
+            } else {
+              focusableIndex++;
+            }
+
+            if (focusableIndex < 0) {
+              focusableIndex = focusableElements.length - 1;
+            } else if (focusableIndex >= focusableElements.length) {
+              focusableIndex = 0;
+            }
+
+            const element = focusableElements.item(focusableIndex) as HTMLElement;
+            element.focus();
+          }
+
+          drawerRef.addEventListener("keydown", focusTrap, { signal: controller.signal });
+        }
+      }
+
+      document.addEventListener("mousedown", closeByClickOutside, { signal: controller.signal });
+      document.addEventListener("touchstart", closeByClickOutside, { signal: controller.signal });
+      document.addEventListener("pointerdown", closeByClickOutside, { signal: controller.signal });
+      drawerRef.addEventListener("keydown", closeByEscape, { signal: controller.signal });
+
+      clean(() => {
+        controller.abort();
+      });
+    },
+    { immediate: true },
+  );
+
+  defineExpose({ drawerRef, maskRef });
 </script>
 
 <template>
-  <Teleport :to="$props.target ?? 'body'">
-    <Flex class="ksd-drawer" :class="$props.rootClassName" :style="componentStyles">
-      <Transition name="ksd-drawer-fade">
-        <Flex
-          v-if="$props.open && modalMode"
-          class="ksd-drawer__mask"
-          :style="componentStyles"
-        ></Flex>
-      </Transition>
-      <Transition :name="`ksd-drawer-slide-${props.placement}`">
-        <Flex
-          v-if="$props.open"
-          ref="modal"
-          class="ksd-drawer__base"
-          :style="[componentStyles, modalStyles]"
-          :class="[modalClasses, $attrs.class, $attrs.style]"
-          role="dialog"
-          aria-modal="true"
-          vertical
-        >
-          <slot v-if="$slots['custom-header']" name="custom-header"></slot>
-          <Flex v-if="!$slots['custom-header']" flex-align="center" class="ksd-drawer__header">
-            <Button
-              type="text"
-              size="small"
-              class="ksd-drawer__header-close"
-              @click="$emit('close')"
-              ><template #icon> <VCloseOutlined :size="16" /> </template>
-            </Button>
-            <Text v-if="$props.header" size="lg" class="ksd-drawer__header-text">{{
-              $props.header
-            }}</Text>
-            <slot v-if="$slots.header" name="header"></slot>
-          </Flex>
-          <slot v-if="$slots.body" name="body"></slot>
-          <Flex v-if="!$slots.body" class="ksd-drawer__body">
-            <slot></slot>
-          </Flex>
+  <Teleport v-if="open" :to="$props.target ?? 'body'">
+    <Flex class="ksd-drawer" :class="$props.classNameRoot" :style="commonStyles">
+      <Flex v-if="modalMode" ref="mask" class="ksd-drawer__mask" :style="commonStyles"></Flex>
+      <Flex
+        ref="drawer"
+        class="ksd-drawer__base"
+        :style="[commonStyles, drawerStyles]"
+        :class="[commonClasses, $attrs.class, $attrs.style]"
+        role="dialog"
+        aria-modal="true"
+        vertical
+      >
+        <slot v-if="$slots['custom-header']" name="custom-header"></slot>
+        <Flex v-if="!$slots['custom-header']" flex-align="center" class="ksd-drawer__header">
+          <Button type="text" size="small" class="ksd-drawer__header-close" @click="onClose"
+            ><template #icon> <VCloseOutlined :size="16" /> </template>
+          </Button>
+          <Text v-if="$props.header" size="lg" class="ksd-drawer__header-text">{{
+            $props.header
+          }}</Text>
+          <slot v-if="$slots.header" name="header"></slot>
         </Flex>
-      </Transition>
+        <slot v-if="$slots.body" name="body"></slot>
+        <Flex v-if="!$slots.body" class="ksd-drawer__body">
+          <slot></slot>
+        </Flex>
+      </Flex>
     </Flex>
   </Teleport>
 </template>
@@ -185,6 +192,10 @@
       inset: 0;
       background-color: var(--ksd-bg-mask-color);
       pointer-events: auto;
+      animation: ksd-drawer-mask-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+      &.out {
+        animation: ksd-drawer-mask-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+      }
     }
 
     &__base {
@@ -214,6 +225,32 @@
         inset-inline: 0;
         box-shadow: var(--ksd-shadow-bottom);
       }
+
+      &.right {
+        animation: ksd-drawer-right-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+
+        &.out {
+          animation: ksd-drawer-right-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
+      }
+      &.top {
+        animation: ksd-drawer-top-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        &.out {
+          animation: ksd-drawer-top-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
+      }
+      &.left {
+        animation: ksd-drawer-left-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        &.out {
+          animation: ksd-drawer-left-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
+      }
+      &.bottom {
+        animation: ksd-drawer-bottom-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        &.out {
+          animation: ksd-drawer-bottom-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
+      }
     }
 
     &__header {
@@ -236,49 +273,85 @@
     }
   }
 
-  .ksd-drawer-slide-right-enter-active,
-  .ksd-drawer-slide-right-leave-active {
-    transition: transform 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  @keyframes ksd-drawer-mask-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes ksd-drawer-mask-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
 
-  .ksd-drawer-slide-right-enter-from,
-  .ksd-drawer-slide-right-leave-to {
-    transform: translateX(100%);
+  @keyframes ksd-drawer-right-in {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0%);
+    }
   }
-  .ksd-drawer-slide-left-enter-active,
-  .ksd-drawer-slide-left-leave-active {
-    transition: transform 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  @keyframes ksd-drawer-right-out {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(100%);
+    }
   }
-
-  .ksd-drawer-slide-left-enter-from,
-  .ksd-drawer-slide-left-leave-to {
-    transform: translateX(-100%);
+  @keyframes ksd-drawer-left-in {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0%);
+    }
   }
-  .ksd-drawer-slide-top-enter-active,
-  .ksd-drawer-slide-top-leave-active {
-    transition: transform 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  @keyframes ksd-drawer-left-out {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
   }
-
-  .ksd-drawer-slide-top-enter-from,
-  .ksd-drawer-slide-top-leave-to {
-    transform: translateY(-100%);
+  @keyframes ksd-drawer-top-in {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0%);
+    }
   }
-  .ksd-drawer-slide-bottom-enter-active,
-  .ksd-drawer-slide-bottom-leave-active {
-    transition: transform 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  @keyframes ksd-drawer-top-out {
+    from {
+      transform: translateY(0%);
+    }
+    to {
+      transform: translateY(-100%);
+    }
   }
-
-  .ksd-drawer-slide-bottom-enter-from,
-  .ksd-drawer-slide-bottom-leave-to {
-    transform: translateY(100%);
+  @keyframes ksd-drawer-bottom-in {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0%);
+    }
   }
-  .ksd-drawer-fade-enter-active,
-  .ksd-drawer-fade-leave-active {
-    transition: opacity 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
-  }
-
-  .ksd-drawer-fade-enter-from,
-  .ksd-drawer-fade-leave-to {
-    opacity: 0;
+  @keyframes ksd-drawer-bottom-out {
+    from {
+      transform: translateY(0%);
+    }
+    to {
+      transform: translateY(100%);
+    }
   }
 </style>

@@ -52,6 +52,7 @@ export const AllInOne: Story = {
     setup() {
       const openFirst = ref(false);
       function toggleFirst() {
+        console.log("toggle first");
         openFirst.value = !openFirst.value;
       }
       const openSecond = ref(false);
@@ -112,8 +113,8 @@ export const AllInOne: Story = {
         h(
           VDrawer,
           {
-            onClose: this.toggleFirst,
-            open: this.openFirst,
+            modelValue: this.openFirst,
+            "onUpdate:modelValue": (value) => (this.openFirst = value),
             header: "Right Modal",
           },
           {
@@ -125,8 +126,8 @@ export const AllInOne: Story = {
         h(
           VDrawer,
           {
-            onClose: this.toggleSecond,
-            open: this.openSecond,
+            "onUpdate:modelValue": (value) => (this.openSecond = value),
+            modelValue: this.openSecond,
             header: "Bottom Modal",
             placement: "bottom",
           },
@@ -139,8 +140,8 @@ export const AllInOne: Story = {
         h(
           VDrawer,
           {
-            onClose: this.toggleThird,
-            open: this.openThird,
+            "onUpdate:modelValue": (value) => (this.openThird = value),
+            modelValue: this.openThird,
             header: "Left Modal",
             placement: "left",
           },
@@ -153,8 +154,8 @@ export const AllInOne: Story = {
         h(
           VDrawer,
           {
-            onClose: this.toggleFourth,
-            open: this.openFourth,
+            "onUpdate:modelValue": (value) => (this.openFourth = value),
+            modelValue: this.openFourth,
             header: "Top Modal",
             placement: "top",
           },
@@ -167,8 +168,8 @@ export const AllInOne: Story = {
         h(
           VDrawer,
           {
-            onClose: this.toggleFifth,
-            open: this.openFifth,
+            "onUpdate:modelValue": (value) => (this.openFifth = value),
+            modelValue: this.openFifth,
             header: "Without Mask",
             mask: false,
             ignoreCloseByClick: this.ignore,
@@ -182,8 +183,8 @@ export const AllInOne: Story = {
         h(
           VDrawer,
           {
-            onClose: this.toggleSixth,
-            open: this.openSixth,
+            "onUpdate:modelValue": (value) => (this.openSixth = value),
+            modelValue: this.openSixth,
           },
           {
             default: () => this.content,

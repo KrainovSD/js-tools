@@ -1,26 +1,30 @@
 <script setup lang="ts">
   import { computed } from "vue";
 
+  export type DividerType = "horizontal" | "vertical";
+  export type DividerVariant = "solid" | "dotted" | "dashed";
+  export type DividerOrientation = "left" | "right" | "center";
   export type DividerProps = {
-    type?: "horizontal" | "vertical";
-    variant?: "solid" | "dotted" | "dashed";
-    orientation?: "left" | "right" | "center";
+    type?: DividerType;
+    variant?: DividerVariant;
+    orientation?: DividerOrientation;
   };
 
-  const props = defineProps<DividerProps>();
+  const props = withDefaults(defineProps<DividerProps>(), {
+    orientation: "center",
+    type: "horizontal",
+    variant: "solid",
+  });
 
-  const componentStyles = computed(() => ({
-    [props.variant ?? "solid"]: true,
-    [props.type ?? "horizontal"]: true,
-    [props.orientation ?? "center"]: true,
+  const rootClasses = computed(() => ({
+    [props.variant]: true,
+    [props.type]: true,
+    [props.orientation]: true,
   }));
 </script>
 
 <template>
-  <div
-    class="ksd-divider"
-    :class="[componentStyles, { slot: $slots.default, alone: !$slots.default }]"
-  >
+  <div class="ksd-divider" :class="[rootClasses, { slot: $slots.default, alone: !$slots.default }]">
     <slot></slot>
   </div>
 </template>

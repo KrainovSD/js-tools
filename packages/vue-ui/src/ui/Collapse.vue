@@ -3,13 +3,14 @@
   import { computed, onMounted, ref, useTemplateRef } from "vue";
   import Flex from "./Flex.vue";
 
+  export type CollapseSize = "default" | "small" | "large";
   export type CollapseProps = {
-    initialOpen: boolean;
-    size?: "default" | "small" | "large";
+    initialOpen?: boolean;
+    size?: CollapseSize;
     ghost?: boolean;
     borderless?: boolean;
     noArrow?: boolean;
-    header?: string;
+    header: string;
     classNameBody?: string;
     classNameHeader?: string;
     classNameRoot?: string;
@@ -23,13 +24,20 @@
   const collapseRef = useTemplateRef("collapse");
 
   const emit = defineEmits<Emits>();
-  const props = defineProps<CollapseProps>();
+  const props = withDefaults(defineProps<CollapseProps>(), {
+    borderless: false,
+    classNameBody: undefined,
+    classNameHeader: undefined,
+    classNameRoot: undefined,
+    ghost: false,
+    initialOpen: false,
+    noArrow: false,
+    size: "default",
+  });
   const open = ref(props.initialOpen ?? false);
 
   const commonClasses = computed(() => ({
-    default: props.size === "default" || props.size == undefined,
-    small: props.size === "small",
-    large: props.size === "large",
+    [props.size]: true,
     borderless: props.borderless,
     ghost: props.ghost,
     open: open.value,
