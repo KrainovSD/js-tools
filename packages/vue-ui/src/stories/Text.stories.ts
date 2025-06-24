@@ -62,8 +62,32 @@ export const AllInOne: Story = {
             { ellipsis: true },
             {
               default: () =>
+                "[Default] " +
+                Array.from({ length: 5 }, () => "Длинный текст ограниченный контейнером.").join(
+                  " ",
+                ),
+            },
+          ),
+        ]),
+        h("div", { style: { display: "flex", maxWidth: "400px" } }, [
+          h(
+            VText,
+            {},
+            {
+              default: () =>
+                "[Break] " +
+                Array.from({ length: 5 }, () => "ДлинныйТекстОграниченныйКонтейнером").join(""),
+            },
+          ),
+        ]),
+        h("div", { style: { display: "flex", maxWidth: "400px" } }, [
+          h(
+            VText,
+            {},
+            {
+              default: () =>
                 "[Ellipsis] " +
-                Array.from({ length: 10 }, () => "Длинный текст ограниченный контейнером.").join(
+                Array.from({ length: 5 }, () => "Длинный текст ограниченный контейнером.").join(
                   " ",
                 ),
             },

@@ -23,7 +23,7 @@
           ),
         )
         .flat(2)
-        .filter((el) => el)
+        .filter((el) => el != "")
         .join(" ");
 
       document.documentElement.style.cssText = `font-size: ${state[1]}px; ${variables} `;

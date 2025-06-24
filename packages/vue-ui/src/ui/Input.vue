@@ -116,8 +116,11 @@
     display: inline-flex;
     width: 100%;
     min-width: 0;
-    transition: all var(--ksd-transition-mid);
+    transition:
+      border var(--ksd-transition-mid),
+      background var(--ksd-transition-mid);
     outline: 0;
+    min-height: var(--ksd-control-height);
 
     &__icon {
       display: flex;
@@ -190,17 +193,20 @@
       font-size: 1rem;
       padding: var(--ksd-input-padding-block) var(--ksd-input-padding-inline);
       border-radius: var(--ksd-border-radius);
+      min-height: var(--ksd-control-height);
     }
     &.size-small {
       font-size: 1rem;
       padding: var(--ksd-input-padding-block-sm) var(--ksd-input-padding-inline-sm);
       border-radius: var(--ksd-border-radius-sm);
+      min-height: var(--ksd-control-height-sm);
     }
 
     &.size-large {
       font-size: var(--ksd-font-size-lg);
       padding: var(--ksd-input-padding-block-lg) var(--ksd-input-padding-inline-lg);
       border-radius: var(--ksd-border-radius-lg);
+      min-height: var(--ksd-control-height-lg);
     }
 
     &.variant-outlined {
@@ -332,6 +338,34 @@
       }
       &.status-success {
         border-color: transparent transparent var(--ksd-success-color) transparent;
+      }
+
+      &:not(.disabled):hover {
+        border-color: transparent transparent var(--ksd-accent-hover-color) transparent;
+
+        &.status-error {
+          border-color: transparent transparent var(--ksd-error-hover-color) transparent;
+        }
+        &.status-warning {
+          border-color: transparent transparent var(--ksd-warning-hover-color) transparent;
+        }
+        &.status-success {
+          border-color: transparent transparent var(--ksd-success-hover-color) transparent;
+        }
+      }
+      &:not(.disabled):focus,
+      &:not(.disabled):focus-within {
+        border-color: transparent transparent var(--ksd-accent-color) transparent;
+
+        &.status-error {
+          border-color: transparent transparent var(--ksd-error-color) transparent;
+        }
+        &.status-warning {
+          border-color: transparent transparent var(--ksd-warning-color) transparent;
+        }
+        &.status-success {
+          border-color: transparent transparent var(--ksd-success-color) transparent;
+        }
       }
     }
     &.disabled {

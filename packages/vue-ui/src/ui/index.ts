@@ -20,9 +20,13 @@ import VRadioButton from "./RadioButton.vue";
 import VRadioGroup from "./RadioGroup.vue";
 import VSearch from "./Search.vue";
 import VSelect from "./Select.vue";
+import VSkeleton from "./Skeleton.vue";
 import VSlider from "./Slider.vue";
 import VSwitch from "./Switch.vue";
+import VTag from "./Tag.vue";
+import VTagCheckable from "./TagCheckable.vue";
 import VText from "./Text.vue";
+import VTextArea from "./TextArea.vue";
 import VTooltip from "./Tooltip.vue";
 
 export type { InputProps } from "./Input.vue";
@@ -60,6 +64,10 @@ export type { PopConfirmProps } from "./PopConfirm.vue";
 export type { MessageProps, Message, MessageType } from "./Message.vue";
 export type { Notification, NotificationProps, NotificationType } from "./Notification.vue";
 export type { ModalProps } from "./Modal.vue";
+export type { TextAreaProps } from "./TextArea.vue";
+export type { TagProps } from "./Tag.vue";
+export type { CheckableProps, TagCheckableValue } from "./TagCheckable.vue";
+export type { SkeletonProps, SkeletonType, SkeletonShape, SkeletonSize } from "./Skeleton.vue";
 
 export {
   VButton,
@@ -88,4 +96,8 @@ export {
   VMessage,
   VNotification,
   VModal,
+  VTextArea,
+  VTag,
+  VTagCheckable,
+  VSkeleton,
 };
