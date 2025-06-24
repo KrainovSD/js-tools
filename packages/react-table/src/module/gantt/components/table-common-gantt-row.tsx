@@ -1,3 +1,4 @@
+import type { Cell } from "@tanstack/react-table";
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
@@ -22,6 +23,8 @@ type Props<RowData extends Record<string, unknown>> = {
   columnVirtualEnabled: boolean;
   ganttRowMini: boolean | undefined;
   selected: boolean;
+  visibleCells: Cell<RowData, unknown>[];
+  expanded: boolean;
 };
 
 export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
@@ -109,7 +112,7 @@ export const TableCommonGanttRow = React.memo(function TableCommonGanttRow<
           </>
         )}
         {!props.columnVirtualEnabled &&
-          row.getVisibleCells().map((cell, index, cells) => {
+          props.visibleCells.map((cell, index, cells) => {
             /** CELL */
 
             return (

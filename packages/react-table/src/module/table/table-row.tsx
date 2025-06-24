@@ -1,3 +1,4 @@
+import type { Cell } from "@tanstack/react-table";
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
@@ -22,6 +23,7 @@ type Props<RowData extends Record<string, unknown>> = {
   columnVirtualEnabled: boolean;
   expanded: boolean;
   CustomRow: React.JSX.Element | undefined | null;
+  visibleCells: Cell<RowData, unknown>[];
 };
 
 export const TableRow = React.memo(function TableRow<RowData extends Record<string, unknown>>(
@@ -33,7 +35,6 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
   const leftVisibleCells = row.getLeftVisibleCells();
   const centerVisibleCells = row.getCenterVisibleCells();
   const rightVisibleCells = row.getRightVisibleCells();
-  const visibleCells = row.getVisibleCells();
 
   /** ROW */
   return (
@@ -112,7 +113,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
         )}
         {!props.columnVirtualEnabled &&
           !props.CustomRow &&
-          visibleCells.map((cell, index, cells) => {
+          props.visibleCells.map((cell, index, cells) => {
             /** CELL */
 
             return (

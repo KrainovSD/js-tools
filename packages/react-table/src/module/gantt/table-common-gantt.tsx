@@ -115,6 +115,9 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
           {props.rowVirtualEnabled &&
             props.rowsVirtual.map((virtualRow) => {
               const selected = props.rows[virtualRow.index]?.getIsSelected?.();
+              const row = props.rows[virtualRow.index];
+              const expanded = row.getIsExpanded();
+              const visibleCells = row.getVisibleCells();
 
               return (
                 <TableCommonGanttRow<RowData>
@@ -130,12 +133,16 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                   row={null}
                   ganttRowMini={props.ganttRowMini}
                   selected={selected}
+                  visibleCells={visibleCells}
+                  expanded={expanded}
                 />
               );
             })}
           {!props.rowVirtualEnabled &&
             props.rows.map((row) => {
               const selected = row.getIsSelected();
+              const expanded = row.getIsExpanded();
+              const visibleCells = row.getVisibleCells();
 
               return (
                 <TableCommonGanttRow<RowData>
@@ -151,6 +158,8 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                   virtualRow={null}
                   ganttRowMini={props.ganttRowMini}
                   selected={selected}
+                  visibleCells={visibleCells}
+                  expanded={expanded}
                 />
               );
             })}

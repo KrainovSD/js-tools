@@ -157,6 +157,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
             const row = props.rows[virtualRow.index];
             const expanded = row.getIsExpanded();
             const CustomRow = props.rowRender?.(row);
+            const visibleCells = row.getVisibleCells();
 
             return (
               <TableRow<RowData>
@@ -173,6 +174,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 selected={selected}
                 expanded={expanded}
                 CustomRow={CustomRow}
+                visibleCells={visibleCells}
               />
             );
           })}
@@ -184,6 +186,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
             const selected = row.getIsSelected();
             const expanded = row.getIsExpanded();
             const CustomRow = props.rowRender?.(row);
+            const visibleCells = row.getVisibleCells();
 
             return (
               <TableRow<RowData>
@@ -200,6 +203,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 selected={selected}
                 expanded={expanded}
                 CustomRow={CustomRow}
+                visibleCells={visibleCells}
               />
             );
           })}
