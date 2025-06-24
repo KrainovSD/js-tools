@@ -1,11 +1,13 @@
 <script setup lang="ts">
-  import { type Component, computed, ref, useTemplateRef, watchEffect } from "vue";
+  import { type Component, computed, ref, useTemplateRef, watch, watchEffect } from "vue";
   import ArrowMenu, { type ArrowMenuProps } from "./ArrowMenu.vue";
   import Divider from "./Divider.vue";
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
   import Text from "./Text.vue";
 
   export type DropDownFirstPlacement = "top" | "bottom" | "left" | "right";
+  export type DropDownInteractiveMode = "focusable" | "keyboard";
+  export type DropDownSize = "default" | "large";
 
   export type DropDownMenuItem = {
     key: string;
@@ -20,7 +22,6 @@
   };
   export type DropDownMenuItemInner = {
     innerArrow?: boolean;
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   } & DropDownProps;
 
   export interface HTMLDropDownItem extends HTMLElement {
@@ -29,13 +30,31 @@
     innerInteractive: HTMLElement | undefined;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-  export type DropDownProps = PopperProps & {
+  export type DropDownProps = {
     menu: DropDownMenuItem[];
-    interactiveMode?: "focusable" | "keyboard";
+    interactiveMode?: DropDownInteractiveMode;
     level?: number;
-    size?: "default" | "large";
-  };
+    size?: DropDownSize;
+  } & Pick<
+    PopperProps,
+    | "animationAppear"
+    | "animationDisappear"
+    | "arrow"
+    | "classNamePositionerContent"
+    | "closeByScroll"
+    | "closeDelay"
+    | "fit"
+    | "ignoreElements"
+    | "modalRoot"
+    | "observe"
+    | "openDelay"
+    | "shiftX"
+    | "shiftY"
+    | "placement"
+    | "zIndex"
+    | "triggers"
+    | "nested"
+  >;
 
   const props = withDefaults(defineProps<DropDownProps>(), {
     animationAppear: "scaleY",
@@ -48,25 +67,17 @@
     size: "default",
   });
   const triggersKey = computed(() => props.triggers.join(";"));
-  const triggers = computed(() => {
+  const triggersArray = computed(() => {
     return triggersKey.value.length === 0
       ? ([] as PopperTrigger[])
       : (triggersKey.value.split(";") as PopperTrigger[]);
   });
   const popperRef = useTemplateRef("popper");
-  const positionerRef = computed(() => popperRef.value?.positioner?.element);
-  const positionerContent = computed(() => {
-    const children = positionerRef.value?.children;
-
-    return children
-      ? children.length === 1
-        ? (children[0] as HTMLElement)
-        : (children[1] as HTMLElement)
-      : undefined;
-  });
+  const positionerRef = computed(() => popperRef.value?.positioner?.positionerRef);
+  const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
   const lastActive = ref<HTMLElement | null>();
 
-  const model = defineModel<boolean>();
+  const open = defineModel<boolean>();
   const itemClasses = computed(() => ({
     focusable: props.interactiveMode === "focusable",
     large: props.size === "large",
@@ -101,178 +112,162 @@
     popperRef.value?.targetNode?.setAttribute?.("aria-haspopup", "true");
   });
 
-  watchEffect((clean) => {
-    if (!positionerContent.value) return;
+  watch(
+    positionerContentRef,
+    (positionerContentRef, _, clean) => {
+      if (!positionerContentRef) return;
 
-    const eventController = new AbortController();
-    lastActive.value = document.activeElement as HTMLElement | null;
+      const eventController = new AbortController();
+      lastActive.value = document.activeElement as HTMLElement | null;
 
-    const interactiveElements = Array.from(
-      positionerContent.value.querySelectorAll<HTMLDropDownItem>(".ksd-dropdown__element"),
-    );
-
-    interactiveElements.forEach((element) => {
-      const interactive = element.querySelector<HTMLDropDownItem>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      const interactiveElements = Array.from(
+        positionerContentRef.querySelectorAll<HTMLDropDownItem>(".ksd-dropdown__element"),
       );
-      if (interactive) {
-        element.innerInteractive = interactive;
-        element.setAttribute("tabindex", "-1");
-      } else {
-        element.setAttribute("tabindex", "0");
-      }
-    });
 
-    const firstInteractive =
-      interactiveElements[0].innerInteractive ??
-      (interactiveElements[0] as HTMLDropDownItem | undefined);
-    if (firstInteractive && !triggers.value.includes("hover")) {
-      firstInteractive.focus();
-    }
-
-    interactiveElements.forEach((element, index) => {
-      let prevIndex = index - 1;
-      let nextIndex = index + 1;
-      if (prevIndex < 0) {
-        prevIndex = interactiveElements.length - 1;
-      }
-      if (nextIndex >= interactiveElements.length) {
-        nextIndex = 0;
-      }
-
-      element.prevItem = interactiveElements[prevIndex];
-      element.nextItem = interactiveElements[nextIndex];
-
-      element.addEventListener("click", actionClick, { signal: eventController.signal });
-      element.addEventListener("mousedown", actionWheel, { signal: eventController.signal });
-      element.addEventListener("mousemove", focusByHover, { signal: eventController.signal });
-    });
-
-    positionerContent.value.addEventListener("keydown", actionKeyboard, {
-      signal: eventController.signal,
-    });
-    positionerRef.value?.addEventListener?.("closedropdown", closeDropDown, {
-      signal: eventController.signal,
-    });
-
-    function actionWheel(event: MouseEvent) {
-      const target = event.target as HTMLDropDownItem;
-      const wheel = "button" in event && event.button === 1;
-
-      if (!wheel) return;
-
-      if (target.classList.contains("link")) {
-        const link = target.querySelector<HTMLElement>("a");
-        if (link) {
-          event.preventDefault();
-
-          const mouseEvent = new MouseEvent("click", {
-            ctrlKey: true,
-            bubbles: false,
-            cancelable: false,
-          });
-
-          link.dispatchEvent(mouseEvent);
-          model.value = false;
+      interactiveElements.forEach((element) => {
+        const interactive = element.querySelector<HTMLDropDownItem>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (interactive) {
+          element.innerInteractive = interactive;
+          element.setAttribute("tabindex", "-1");
+        } else {
+          element.setAttribute("tabindex", "0");
         }
-      }
-    }
-    function actionClick(event: MouseEvent | KeyboardEvent) {
-      const target = event.target as HTMLElement;
-      const currentTarget = event.currentTarget as HTMLDropDownItem;
+      });
 
-      if (currentTarget.classList.contains("parent")) {
-        return;
+      const firstInteractive =
+        interactiveElements[0].innerInteractive ??
+        (interactiveElements[0] as HTMLDropDownItem | undefined);
+      if (firstInteractive && !triggersArray.value.includes("hover")) {
+        firstInteractive.focus();
       }
 
-      if (target.classList.contains("link")) {
-        const link = target.querySelector<HTMLElement>("a");
-        if (link) {
-          const mouseEvent = new MouseEvent("click", {
-            ctrlKey: event.ctrlKey,
-            shiftKey: event.shiftKey,
-            altKey: event.altKey,
-            metaKey: event.metaKey,
-            bubbles: false,
-            cancelable: false,
-          });
-          link.dispatchEvent(mouseEvent);
+      interactiveElements.forEach((element, index) => {
+        let prevIndex = index - 1;
+        let nextIndex = index + 1;
+        if (prevIndex < 0) {
+          prevIndex = interactiveElements.length - 1;
         }
-      }
+        if (nextIndex >= interactiveElements.length) {
+          nextIndex = 0;
+        }
 
-      const closeEvent = new Event("closedropdown", { bubbles: true, cancelable: true });
-      positionerRef.value?.dispatchEvent?.(closeEvent);
-    }
-    function focusByHover(event: MouseEvent) {
-      const target = event.target as HTMLDropDownItem;
-      if (target.innerInteractive) {
-        target.innerInteractive.focus();
-      } else {
-        target.focus();
-      }
-    }
-    function actionKeyboard(event: KeyboardEvent) {
-      if (
-        event.key !== "ArrowDown" &&
-        event.key !== "ArrowUp" &&
-        event.key !== "ArrowLeft" &&
-        event.key !== "ArrowRight" &&
-        event.key !== "Tab" &&
-        event.key !== "Enter" &&
-        event.key !== " "
-      )
-        return;
+        element.prevItem = interactiveElements[prevIndex];
+        element.nextItem = interactiveElements[nextIndex];
 
-      const currentFocus =
-        interactiveElements.find(
-          (element) =>
-            element === document.activeElement ||
-            element.innerInteractive === document.activeElement,
-        ) ?? (interactiveElements[0] as HTMLDropDownItem | undefined);
+        element.addEventListener("click", actionClick, { signal: eventController.signal });
+        element.addEventListener("mousedown", actionWheel, { signal: eventController.signal });
+        element.addEventListener("mousemove", focusByHover, { signal: eventController.signal });
+      });
 
-      if (!currentFocus) return;
+      positionerContentRef.addEventListener("keydown", actionKeyboard, {
+        signal: eventController.signal,
+      });
+      positionerRef.value?.addEventListener?.("closedropdown", closeDropDown, {
+        signal: eventController.signal,
+      });
 
-      if (event.key === "ArrowDown" || (event.key === "Tab" && !event.shiftKey)) {
-        /** Down */
-        if (currentFocus.nextItem) {
-          if (currentFocus.nextItem.innerInteractive) {
-            currentFocus.nextItem.innerInteractive.focus();
-          } else {
-            currentFocus.nextItem.focus();
+      function actionWheel(event: MouseEvent) {
+        const target = event.target as HTMLDropDownItem;
+        const wheel = "button" in event && event.button === 1;
+
+        if (!wheel) return;
+
+        if (target.classList.contains("link")) {
+          const link = target.querySelector<HTMLElement>("a");
+          if (link) {
+            event.preventDefault();
+
+            const mouseEvent = new MouseEvent("click", {
+              ctrlKey: true,
+              bubbles: false,
+              cancelable: false,
+            });
+
+            link.dispatchEvent(mouseEvent);
+            open.value = false;
           }
-          event.preventDefault();
         }
-      } else if (event.key === "ArrowUp" || (event.key === "Tab" && event.shiftKey)) {
-        /** Up */
-        if (currentFocus.prevItem) {
-          if (currentFocus.prevItem.innerInteractive) {
-            currentFocus.prevItem.innerInteractive.focus();
-          } else {
-            currentFocus.prevItem.focus();
+      }
+      function actionClick(event: MouseEvent | KeyboardEvent) {
+        const target = event.target as HTMLElement;
+        const currentTarget = event.currentTarget as HTMLDropDownItem;
+
+        if (currentTarget.classList.contains("parent")) {
+          return;
+        }
+
+        if (target.classList.contains("link")) {
+          const link = target.querySelector<HTMLElement>("a");
+          if (link) {
+            const mouseEvent = new MouseEvent("click", {
+              ctrlKey: event.ctrlKey,
+              shiftKey: event.shiftKey,
+              altKey: event.altKey,
+              metaKey: event.metaKey,
+              bubbles: false,
+              cancelable: false,
+            });
+            link.dispatchEvent(mouseEvent);
           }
-          event.preventDefault();
         }
-      } else if (event.key === "Enter" || event.key === " ") {
-        /** Click */
 
-        const mouseEvent = new MouseEvent("click", {
-          ctrlKey: event.ctrlKey,
-          shiftKey: event.shiftKey,
-          altKey: event.altKey,
-          metaKey: event.metaKey,
-          bubbles: true,
-          cancelable: true,
-        });
-        currentFocus.dispatchEvent(mouseEvent);
-        event.preventDefault();
-      } else if (event.key === "ArrowRight") {
-        /** Click for nested */
+        const closeEvent = new Event("closedropdown", { bubbles: true, cancelable: true });
+        positionerRef.value?.dispatchEvent?.(closeEvent);
+      }
+      function focusByHover(event: MouseEvent) {
+        const target = event.target as HTMLDropDownItem;
+        if (target.innerInteractive) {
+          target.innerInteractive.focus();
+        } else {
+          target.focus();
+        }
+      }
+      function actionKeyboard(event: KeyboardEvent) {
+        if (
+          event.key !== "ArrowDown" &&
+          event.key !== "ArrowUp" &&
+          event.key !== "ArrowLeft" &&
+          event.key !== "ArrowRight" &&
+          event.key !== "Tab" &&
+          event.key !== "Enter" &&
+          event.key !== " "
+        )
+          return;
 
-        const nestedPlacement = currentFocus.getAttribute("data-nested-placement") as
-          | DropDownFirstPlacement
-          | undefined;
+        const currentFocus =
+          interactiveElements.find(
+            (element) =>
+              element === document.activeElement ||
+              element.innerInteractive === document.activeElement,
+          ) ?? (interactiveElements[0] as HTMLDropDownItem | undefined);
 
-        if (nestedPlacement != undefined && nestedPlacement !== "left") {
+        if (!currentFocus) return;
+
+        if (event.key === "ArrowDown" || (event.key === "Tab" && !event.shiftKey)) {
+          /** Down */
+          if (currentFocus.nextItem) {
+            if (currentFocus.nextItem.innerInteractive) {
+              currentFocus.nextItem.innerInteractive.focus();
+            } else {
+              currentFocus.nextItem.focus();
+            }
+            event.preventDefault();
+          }
+        } else if (event.key === "ArrowUp" || (event.key === "Tab" && event.shiftKey)) {
+          /** Up */
+          if (currentFocus.prevItem) {
+            if (currentFocus.prevItem.innerInteractive) {
+              currentFocus.prevItem.innerInteractive.focus();
+            } else {
+              currentFocus.prevItem.focus();
+            }
+            event.preventDefault();
+          }
+        } else if (event.key === "Enter" || event.key === " ") {
+          /** Click */
+
           const mouseEvent = new MouseEvent("click", {
             ctrlKey: event.ctrlKey,
             shiftKey: event.shiftKey,
@@ -283,53 +278,89 @@
           });
           currentFocus.dispatchEvent(mouseEvent);
           event.preventDefault();
-        } else if (props.nested && getFirstPlacementFromInner(props.placement) === "left") {
-          model.value = false;
-          lastActive.value?.focus?.();
-        }
-      } else if (event.key === "ArrowLeft") {
-        /** Click for nested */
+        } else if (event.key === "ArrowRight") {
+          /** Click for nested */
 
-        const nestedPlacement = currentFocus.getAttribute("data-nested-placement") as
-          | DropDownFirstPlacement
-          | undefined;
+          const nestedPlacement = currentFocus.getAttribute("data-nested-placement") as
+            | DropDownFirstPlacement
+            | undefined;
 
-        if (nestedPlacement != undefined && nestedPlacement === "left") {
-          const mouseEvent = new MouseEvent("click", {
-            ctrlKey: event.ctrlKey,
-            shiftKey: event.shiftKey,
-            altKey: event.altKey,
-            metaKey: event.metaKey,
-            bubbles: true,
-            cancelable: true,
-          });
-          currentFocus.dispatchEvent(mouseEvent);
-          event.preventDefault();
-        } else if (props.nested && getFirstPlacementFromInner(props.placement) === "right") {
-          model.value = false;
-          lastActive.value?.focus?.();
+          if (nestedPlacement != undefined && nestedPlacement !== "left") {
+            const mouseEvent = new MouseEvent("click", {
+              ctrlKey: event.ctrlKey,
+              shiftKey: event.shiftKey,
+              altKey: event.altKey,
+              metaKey: event.metaKey,
+              bubbles: true,
+              cancelable: true,
+            });
+            currentFocus.dispatchEvent(mouseEvent);
+            event.preventDefault();
+          } else if (props.nested && getFirstPlacementFromInner(props.placement) === "left") {
+            open.value = false;
+            lastActive.value?.focus?.();
+          }
+        } else if (event.key === "ArrowLeft") {
+          /** Click for nested */
+
+          const nestedPlacement = currentFocus.getAttribute("data-nested-placement") as
+            | DropDownFirstPlacement
+            | undefined;
+
+          if (nestedPlacement != undefined && nestedPlacement === "left") {
+            const mouseEvent = new MouseEvent("click", {
+              ctrlKey: event.ctrlKey,
+              shiftKey: event.shiftKey,
+              altKey: event.altKey,
+              metaKey: event.metaKey,
+              bubbles: true,
+              cancelable: true,
+            });
+            currentFocus.dispatchEvent(mouseEvent);
+            event.preventDefault();
+          } else if (props.nested && getFirstPlacementFromInner(props.placement) === "right") {
+            open.value = false;
+            lastActive.value?.focus?.();
+          }
         }
       }
-    }
-    function closeDropDown() {
-      model.value = false;
-      lastActive.value?.focus?.();
-    }
+      function closeDropDown() {
+        open.value = false;
+        lastActive.value?.focus?.();
+      }
 
-    clean(() => {
-      eventController.abort();
-    });
-  });
+      clean(() => {
+        eventController.abort();
+      });
+    },
+    { immediate: true },
+  );
+
+  defineExpose({ popper: popperRef });
 </script>
 
 <template>
   <Popper
     ref="popper"
-    v-bind="$props"
-    v-model="model"
-    :triggers="triggers"
+    v-model="open"
+    v-bind="$attrs"
     role="menu"
-    :class-content="`ksd-dropdown__positioner-content ${$props.classContent ?? ''}`"
+    :triggers="triggersArray"
+    :animation-appear="$props.animationAppear"
+    :animation-disappear="$props.animationDisappear"
+    :arrow="$props.arrow"
+    :close-by-scroll="$props.closeByScroll"
+    :fit="$props.fit"
+    :close-delay="$props.closeDelay"
+    :ignore-elements="$props.ignoreElements"
+    :modal-root="$props.modalRoot"
+    :open-delay="$props.openDelay"
+    :shift-x="$props.shiftX"
+    :shift-y="$props.shiftY"
+    :placement="$props.placement"
+    :z-index="$props.zIndex"
+    :nested="$props.nested"
+    :class-name-positioner-content="`ksd-dropdown__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class="[$attrs.class, 'ksd-dropdown__positioner']"
   >
     <slot></slot>

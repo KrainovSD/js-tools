@@ -58,7 +58,7 @@ export const AllInOne: Story = {
         h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
           h(
             VDropDown,
-            { ...args, triggers: ["hover"] },
+            { ...args, triggers: ["hover"], classNamePositionerContent: "test-class" },
             {
               default: () => h(VButton, {}, () => "Dropdown Hover"),
             },

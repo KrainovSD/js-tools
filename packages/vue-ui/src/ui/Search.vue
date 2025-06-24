@@ -29,7 +29,7 @@
       | "animationAppear"
       | "animationDisappear"
       | "arrow"
-      | "classContent"
+      | "classNamePositionerContent"
       | "closeByScroll"
       | "closeDelay"
       | "fit"
@@ -65,17 +65,8 @@
   const emit = defineEmits<Emits>();
   const model = defineModel<string>();
   const popperRef = useTemplateRef("popper");
-  const positionerRef = computed(() => popperRef.value?.positioner?.element);
-  const positionerContent = computed(() => {
-    const children = positionerRef.value?.children;
-
-    return children
-      ? children.length === 1
-        ? (children[0] as HTMLElement)
-        : (children[1] as HTMLElement)
-      : undefined;
-  });
-  const expanded = ref(false);
+  const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
+  const open = ref(false);
   const focusable = ref(false);
 
   const activeItem = ref<SearchHTMLElement | null>(null);
@@ -148,8 +139,8 @@
 
   function actionInputKeyboard(event: KeyboardEvent) {
     if (event.key === "Enter") {
-      if (!expanded.value) {
-        expanded.value = true;
+      if (!open.value) {
+        open.value = true;
 
         return;
       }
@@ -175,7 +166,7 @@
 
   /** Clear search after close positioner content */
   watch(
-    positionerContent,
+    positionerContentRef,
     (value) => {
       if (!value) {
         model.value = "";
@@ -186,13 +177,13 @@
 
   /** Collect interactive items */
   watch(
-    () => [positionerContent.value, filteredOptions.value],
+    () => [positionerContentRef.value, filteredOptions.value],
     (_, __, clean) => {
-      if (!positionerContent.value || !expanded.value) return;
+      if (!positionerContentRef.value || !open.value) return;
 
       const eventController = new AbortController();
       const contentItems = Array.from(
-        positionerContent.value.querySelectorAll<SearchHTMLElement>(".ksd-search__popper-item"),
+        positionerContentRef.value.querySelectorAll<SearchHTMLElement>(".ksd-search__popper-item"),
       );
       contentItems.forEach((element, index) => {
         let prevIndex = index - 1;
@@ -249,20 +240,23 @@
 
   /** Close expand if not focusable */
   watch(
-    expanded,
+    open,
     (value) => {
       if (value && !focusable.value) {
-        expanded.value = false;
+        open.value = false;
       }
     },
     { immediate: true },
   );
+
+  defineExpose({ popper: popperRef });
 </script>
 
 <template>
   <Popper
     ref="popper"
-    v-model="expanded"
+    v-model="open"
+    v-bind="$attrs"
     role="listbox"
     :animation-appear="$props.animationAppear"
     :animation-disappear="$props.animationDisappear"
@@ -278,7 +272,7 @@
     :shift-y="$props.shiftY"
     :placement="$props.placement"
     :z-index="$props.zIndex"
-    :class-content="`ksd-search__positioner-content ${$props.classContent ?? ''}`"
+    :class-name-positioner-content="`ksd-search__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class="`ksd-search__positioner ${$attrs.class ?? ''}`"
   >
     <Input
@@ -290,10 +284,11 @@
       :autofocus="$props.autofocus"
       :allow-clear="$props.allowClear"
       :disabled="$props.disabled"
+      :area-expanded="open"
       @keydown="actionInputKeyboard"
       @blur="
         () => {
-          expanded = false;
+          open = false;
           focusable = false;
         }
       "
@@ -314,7 +309,7 @@
         @click="
           () => {
             emit('click', item.key);
-            expanded = false;
+            open = false;
           }
         "
       >

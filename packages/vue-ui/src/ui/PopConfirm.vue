@@ -16,7 +16,7 @@
     | "animationAppear"
     | "animationDisappear"
     | "arrow"
-    | "classContent"
+    | "classNamePositionerContent"
     | "closeByScroll"
     | "closeDelay"
     | "fit"
@@ -50,22 +50,13 @@
     okButton: "Да",
   });
   const emit = defineEmits<Emits>();
-  const expanded = ref(false);
+  const open = ref(false);
   const popperRef = useTemplateRef("popper");
-  const positionerRef = computed(() => popperRef.value?.positioner?.element);
-  const positionerContent = computed(() => {
-    const children = positionerRef.value?.children;
-
-    return children
-      ? children.length === 1
-        ? (children[0] as HTMLElement)
-        : (children[1] as HTMLElement)
-      : undefined;
-  });
+  const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
   const lastActive = ref<HTMLElement | null>(null);
 
   watch(
-    positionerContent,
+    positionerContentRef,
     (positionerContent, _, clean) => {
       if (!positionerContent) return;
 
@@ -79,7 +70,7 @@
 
       function actionKeyboard(event: KeyboardEvent) {
         if (event.key === "Escape") {
-          expanded.value = false;
+          open.value = false;
         }
         if (event.key === "Tab") {
           event.preventDefault();
@@ -111,7 +102,7 @@
   );
 
   watch(
-    expanded,
+    open,
     (value) => {
       if (!value && lastActive.value) {
         lastActive.value.focus();
@@ -119,17 +110,20 @@
       }
       if (value && !props.active) {
         emit("click");
-        expanded.value = false;
+        open.value = false;
       }
     },
     { immediate: true },
   );
+
+  defineExpose({ popper: popperRef });
 </script>
 
 <template>
   <Popper
     ref="popper"
-    v-model="expanded"
+    v-bind="$attrs"
+    v-model="open"
     role="dialog"
     aria-modal="true"
     :animation-appear="$props.animationAppear"
@@ -146,7 +140,7 @@
     :shift-y="$props.shiftY"
     :placement="$props.placement"
     :z-index="$props.zIndex"
-    :class-content="`ksd-popconfirm__positioner-content ${$props.classContent ?? ''}`"
+    :class-name-positioner-content="`ksd-popconfirm__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class="`ksd-popconfirm__positioner ${$attrs.class ?? ''}`"
   >
     <slot></slot>
@@ -163,13 +157,13 @@
           </div>
         </div>
         <div class="ksd-popconfirm__content-footer">
-          <Button size="small" @click="expanded = false">{{ props.cancelButton }}</Button>
+          <Button size="small" @click="open = false">{{ props.cancelButton }}</Button>
           <Button
             size="small"
             type="primary"
             @click="
               () => {
-                expanded = false;
+                open = false;
                 emit('click');
               }
             "

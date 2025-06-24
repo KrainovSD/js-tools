@@ -41,7 +41,7 @@
     placement?: Exclude<PositionPlacements, "flex">;
     zIndex?: number;
     modalRoot?: string | HTMLElement | null;
-    classContent?: string;
+    classNameContent?: string;
     shiftX?: number;
     shiftY?: number;
     target: HTMLElement | PositionerTargetNodePosition | undefined | null;
@@ -58,7 +58,16 @@
   const props = defineProps<PositionerProps>();
   const attrs = useAttrs();
   const localOpen = ref(false);
-  const elementRef = useTemplateRef("positioner");
+  const positionerRef = useTemplateRef("positioner");
+  const positionerContentRef = computed(() => {
+    const children = positionerRef.value?.children;
+
+    return children
+      ? children.length === 1
+        ? (children[0] as HTMLElement)
+        : (children[1] as HTMLElement)
+      : undefined;
+  });
   const position = shallowRef<VisiblePosition>({
     bottom: 0,
     left: 0,
@@ -114,12 +123,12 @@
   const componentClasses = computed(() => ({ arrow: props.arrow }));
 
   function updatePosition() {
-    if (!elementRef.value) return;
+    if (!positionerRef.value) return;
 
     const isFirstRender = position.value.placement === "flex";
 
     position.value = getVisiblePosition({
-      node: elementRef.value,
+      node: positionerRef.value,
       initialPosition: {
         targetNode:
           props.target && "getBoundingClientRect" in props.target ? props.target : undefined,
@@ -205,9 +214,9 @@
       };
     }
 
-    elementRef.value.setAttribute("placement", position.value.placement);
+    positionerRef.value.setAttribute("placement", position.value.placement);
     if (isFirstRender && props.animationAppear != undefined) {
-      void execAnimation(elementRef.value, `ksd-positioner_${props.animationAppear}-in`);
+      void execAnimation(positionerRef.value, `ksd-positioner_${props.animationAppear}-in`);
     }
   }
 
@@ -219,13 +228,14 @@
         position.value = { ...position.value, placement: "flex" };
         localOpen.value = true;
       } else if (props.animationDisappear != undefined) {
-        void execAnimation(elementRef.value, `ksd-positioner_${props.animationDisappear}-out`).then(
-          () => {
-            if (!props.open) {
-              localOpen.value = false;
-            }
-          },
-        );
+        void execAnimation(
+          positionerRef.value,
+          `ksd-positioner_${props.animationDisappear}-out`,
+        ).then(() => {
+          if (!props.open) {
+            localOpen.value = false;
+          }
+        });
       } else {
         localOpen.value = false;
       }
@@ -235,16 +245,16 @@
 
   /** Check position */
   watch(
-    () => [elementRef.value],
+    () => [positionerRef.value],
     () => {
-      if (!elementRef.value) return;
+      if (!positionerRef.value) return;
 
       updatePosition();
     },
     { immediate: true },
   );
 
-  defineExpose({ element: elementRef, updatePosition });
+  defineExpose({ positionerRef, positionerContentRef, updatePosition });
 </script>
 
 <template>
@@ -267,7 +277,7 @@
         :style="contentStyles"
         :role="role"
         class="ksd-positioner__content"
-        :class="[$props.classContent]"
+        :class="[$props.classNameContent]"
       >
         <slot></slot>
       </div>

@@ -45,7 +45,7 @@
     | "animationAppear"
     | "animationDisappear"
     | "arrow"
-    | "classContent"
+    | "classNamePositionerContent"
     | "closeByScroll"
     | "closeDelay"
     | "fit"
@@ -78,18 +78,9 @@
   });
   const model = defineModel<SelectValue | SelectValue[] | null | undefined>(undefined);
   const popperRef = useTemplateRef("popper");
-  const positionerRef = computed(() => popperRef.value?.positioner?.element);
-  const positionerContent = computed(() => {
-    const children = positionerRef.value?.children;
+  const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
 
-    return children
-      ? children.length === 1
-        ? (children[0] as HTMLElement)
-        : (children[1] as HTMLElement)
-      : undefined;
-  });
-
-  const expanded = ref(false);
+  const open = ref(false);
   const focusable = ref(false);
   const searchValue = ref("");
   const emptySearch = computed(() => searchValue.value.length === 0);
@@ -106,7 +97,7 @@
     multiple: props.multiple,
     disabled: props.disabled,
     loading: props.loading,
-    opened: expanded.value,
+    opened: open.value,
     filled: filledModel.value,
   }));
   const searchWidth = ref(4);
@@ -152,7 +143,7 @@
   function selectValue(selectedValue: SelectValue | undefined | null) {
     if (!props.multiple && selectedValue != undefined) {
       model.value = selectedValue;
-      expanded.value = false;
+      open.value = false;
     } else if (selectedValue != undefined) {
       const nextValue = isArray(model.value) ? [...model.value] : [];
       const indexValue = nextValue.findIndex((val) => val === selectedValue);
@@ -168,8 +159,8 @@
 
   function actionInputKeyboard(event: KeyboardEvent) {
     if (event.key === "Enter") {
-      if (!expanded.value) {
-        expanded.value = true;
+      if (!open.value) {
+        open.value = true;
 
         return;
       }
@@ -180,7 +171,7 @@
 
       return;
     }
-    if (event.key === "Tab" && expanded.value) {
+    if (event.key === "Tab" && open.value) {
       event.preventDefault();
       event.stopPropagation();
       if (activeItem?.value?.valueKey != undefined) {
@@ -201,13 +192,13 @@
 
   /** Collect interactive items */
   watch(
-    () => [positionerContent.value, filteredOptions.value],
+    () => [positionerContentRef.value, filteredOptions.value],
     (_, __, clean) => {
-      if (!positionerContent.value || !expanded.value) return;
+      if (!positionerContentRef.value || !open.value) return;
 
       const eventController = new AbortController();
       const contentItems = Array.from(
-        positionerContent.value.querySelectorAll<SelectHTMLElement>(".ksd-select__popper-item"),
+        positionerContentRef.value.querySelectorAll<SelectHTMLElement>(".ksd-select__popper-item"),
       );
       let findActive = false;
       contentItems.forEach((element, index) => {
@@ -289,9 +280,9 @@
 
   /** Clear search after close positioner content */
   watch(
-    positionerContent,
-    (value) => {
-      if (!value) {
+    positionerContentRef,
+    (positionerContentRef) => {
+      if (!positionerContentRef) {
         searchValue.value = "";
       }
     },
@@ -300,10 +291,10 @@
 
   /** Close expand if not focusable */
   watch(
-    expanded,
+    open,
     (value) => {
       if (value && !focusable.value) {
-        expanded.value = false;
+        open.value = false;
       }
     },
     { immediate: true },
@@ -321,12 +312,15 @@
     },
     { immediate: true },
   );
+
+  defineExpose({ popper: popperRef });
 </script>
 
 <template>
   <Popper
     ref="popper"
-    v-model="expanded"
+    v-model="open"
+    v-bind="$attrs"
     role="listbox"
     :animation-appear="$props.animationAppear"
     :animation-disappear="$props.animationDisappear"
@@ -342,7 +336,7 @@
     :shift-y="$props.shiftY"
     :placement="$props.placement"
     :z-index="$props.zIndex"
-    :class-content="`ksd-select__popper ${$props.classContent ?? ''}`"
+    :class-name-positioner-content="`ksd-select__popper ${$props.classNamePositionerContent ?? ''}`"
   >
     <div
       class="ksd-select"
@@ -373,11 +367,11 @@
                 :class="commonClasses"
                 :readonly="!props.search || $props.disabled"
                 :disabled="props.disabled"
-                :aria-expanded="expanded"
+                :aria-expanded="open"
                 @keydown="actionInputKeyboard"
                 @blur="
                   () => {
-                    expanded = false;
+                    open = false;
                     focusable = false;
                   }
                 "
@@ -443,12 +437,12 @@
                 type="search"
                 :class="commonClasses"
                 :readonly="!props.search || $props.disabled"
-                :aria-expanded="expanded"
+                :aria-expanded="open"
                 :disabled="props.disabled"
                 @keydown="actionInputKeyboard"
                 @blur="
                   () => {
-                    expanded = false;
+                    open = false;
                     focusable = false;
                   }
                 "

@@ -9,7 +9,7 @@
     arrow?: boolean;
     openDelay?: number;
     hoverDelay?: number;
-    classContent?: string;
+    classNamePositionerContent?: string;
     closeDelay?: number;
     zIndex?: number;
     placement?: Exclude<PositionPlacements, "flex">;
@@ -31,7 +31,7 @@
     animationDisappear: "scaleY",
     arrow: false,
     observe: false,
-    classContent: undefined,
+    classNamePositionerContent: undefined,
     closeDelay: 0,
     openDelay: 100,
     hoverDelay: 0,
@@ -46,9 +46,9 @@
     fit: true,
     nested: false,
   });
-  const model = defineModel<boolean>();
-  const elementRef = useTemplateRef("popper");
-  const positionerRef = useTemplateRef("positioner");
+  const open = defineModel<boolean>();
+  const popperRef = useTemplateRef("popper");
+  const positionerComponentRef = useTemplateRef("positioner");
   const triggersKey = computed(() => props.triggers.join(";"));
   // eslint-disable-next-line vue/no-dupe-keys
   const triggers = computed(() => {
@@ -56,9 +56,7 @@
       ? ([] as PopperTrigger[])
       : (triggersKey.value.split(";") as PopperTrigger[]);
   });
-  const targetNode = computed(
-    () => elementRef.value?.nextElementSibling as HTMLElement | undefined,
-  );
+  const targetNode = computed(() => popperRef.value?.nextElementSibling as HTMLElement | undefined);
   const targetNodeWidth = ref(0);
   const firstPlacement = computed(() => props.placement.split("-")[0]);
   const lastActive = ref<HTMLElement | null>();
@@ -100,7 +98,7 @@
     }
 
     openTimer.value = setTimeout(() => {
-      model.value = true;
+      open.value = true;
     }, props.openDelay);
   }
 
@@ -111,7 +109,7 @@
     }
 
     closeTimer.value = setTimeout(() => {
-      model.value = false;
+      open.value = false;
     }, props.closeDelay);
   }
 
@@ -139,7 +137,7 @@
             return false;
           })
         : false;
-      const popper = positionerRef.value?.element?.contains?.(target);
+      const popper = positionerComponentRef.value?.positionerRef?.contains?.(target);
       const element = targetNode.value?.contains?.(target);
 
       if (ignored || popper || element) {
@@ -163,7 +161,7 @@
   /** Effect by appear positioner  */
 
   watchEffect((clean) => {
-    const positioner = positionerRef.value?.element;
+    const positioner = positionerComponentRef.value?.positionerRef;
     if (!positioner) return;
 
     const eventController = new AbortController();
@@ -194,7 +192,7 @@
 
   /** Effect by open positioner */
   watchEffect((clean) => {
-    if (!model.value) return;
+    if (!open.value) return;
 
     const eventController = new AbortController();
     lastActive.value = document.activeElement as HTMLElement;
@@ -212,7 +210,7 @@
     window.addEventListener(
       "resize",
       () => {
-        positionerRef.value?.updatePosition?.();
+        positionerComponentRef.value?.updatePosition?.();
       },
       {
         signal: eventController.signal,
@@ -226,7 +224,7 @@
         if (props.closeByScroll) {
           onDisAppear();
         } else {
-          positionerRef.value?.updatePosition?.();
+          positionerComponentRef.value?.updatePosition?.();
         }
       },
       {
@@ -274,7 +272,7 @@
     function toggleAppearByClick(event: MouseEvent) {
       event.preventDefault();
 
-      if (model.value) {
+      if (open.value) {
         onDisAppear();
       } else {
         onAppear();
@@ -305,11 +303,11 @@
 
     const mutationObserver = new MutationObserver((mutations) => {
       mutations.forEach(() => {
-        positionerRef.value?.updatePosition?.();
+        positionerComponentRef.value?.updatePosition?.();
       });
     });
     const sizeContentObserver = new ResizeObserver(() => {
-      positionerRef.value?.updatePosition?.();
+      positionerComponentRef.value?.updatePosition?.();
     });
 
     if (props.observe) {
@@ -329,7 +327,7 @@
     });
   });
 
-  defineExpose({ positioner: positionerRef, targetNode });
+  defineExpose({ positioner: positionerComponentRef, targetNode });
 </script>
 
 <template>
@@ -337,10 +335,10 @@
   <slot></slot>
   <Positioner
     ref="positioner"
-    :open="model"
+    :open="open"
     :arrow="$props.arrow"
     :target="targetNode"
-    :class-content="`ksd-popper__positioner-content ${$props.classContent ?? ''}`"
+    :class-name-content="`ksd-popper__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class="['ksd-popper__positioner']"
     v-bind="$attrs"
     :z-index="$props.zIndex"
