@@ -1128,6 +1128,7 @@
 
     &__popper {
       padding: var(--ksd-padding-xxs);
+      z-index: var(--ksd-select-z-index-popup);
     }
   }
 </style>

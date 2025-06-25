@@ -14,19 +14,27 @@
   watch(
     (): [T, number] => [props.theme, props.fontSize],
     (state) => {
-      const variables = Object.values(props.themeConfig[state[0]])
-        .map((category) =>
-          Object.values(category).map((type) =>
-            Object.entries(type).map(([key, value]) =>
-              value ? `--${key}: ${value as string};` : "",
-            ),
+      const themeConfig = props.themeConfig[state[0]];
+      const common = Object.values(themeConfig.common)
+        .map((type) =>
+          Object.entries(type).map(([key, value]) =>
+            value != undefined ? `--${key}: ${value};` : "",
+          ),
+        )
+        .flat(2)
+        .filter((el) => el != "")
+        .join(" ");
+      const components = Object.values(themeConfig.components)
+        .map((type) =>
+          Object.entries(type).map(([key, value]) =>
+            value != undefined ? `--${key}: ${value};` : "",
           ),
         )
         .flat(2)
         .filter((el) => el != "")
         .join(" ");
 
-      document.documentElement.style.cssText = `font-size: ${state[1]}px; ${variables} `;
+      document.documentElement.style.cssText = `font-size: ${state[1]}px; ${common} ${components} `;
     },
     { immediate: true },
   );

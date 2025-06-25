@@ -28,7 +28,7 @@ import type {
   ThemeTagVariable,
 } from "./preference-components";
 
-export type ThemeName = "light";
+export type ThemeName = "light" | "dark";
 
 export type ThemeVariableConfig = {
   common: {

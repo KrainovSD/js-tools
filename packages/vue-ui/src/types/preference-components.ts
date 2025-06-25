@@ -30,7 +30,6 @@ export type ThemeSliderVariable =
   | "ksd-slider-rail-size"
   | "ksd-slider-handle-size"
   | "ksd-slider-handle-size-hover"
-  | "ksd-slider-dot-size"
   | "ksd-slider-handle-line-width"
   | "ksd-slider-handle-line-width-hover"
   | "ksd-slider-rail-bg"
@@ -41,8 +40,6 @@ export type ThemeSliderVariable =
   | "ksd-slider-handle-active-color"
   | "ksd-slider-handle-active-outline-color"
   | "ksd-slider-handle-color-disabled"
-  | "ksd-slider-dot-border-color"
-  | "ksd-slider-dot-active-border-color"
   | "ksd-slider-track-bg-disabled";
 
 export type ThemeSwitchVariable =
@@ -82,22 +79,13 @@ export type ThemeSelectVariable =
   | "ksd-select-option-font-size"
   | "ksd-select-option-line-height"
   | "ksd-select-option-height"
-  | "ksd-select-selector-bg"
-  | "ksd-select-clear-bg"
   | "ksd-select-single-item-height-lg"
   | "ksd-select-multiple-item-bg"
   | "ksd-select-multiple-item-border-color"
   | "ksd-select-multiple-item-height"
   | "ksd-select-multiple-item-height-sm"
   | "ksd-select-multiple-item-height-lg"
-  | "ksd-select-multiple-selector-bg-disabled"
-  | "ksd-select-multiple-item-color-disabled"
-  | "ksd-select-multiple-item-border-color-disabled"
   | "ksd-select-show-arrow-padding-inline-end"
-  | "ksd-select-hover-border-color"
-  | "ksd-select-active-border-color"
-  | "ksd-select-active-outline-color"
-  | "ksd-select-select-affix-padding"
   | "ksd-select-selector-padding-sm";
 
 export type ThemePopConfirmVariable = "ksd-pop-confirm-inner-padding";
@@ -129,9 +117,6 @@ export type ThemeModalVariable =
   | "ksd-modal-footer-border-top"
   | "ksd-modal-footer-border-radius"
   | "ksd-modal-footer-margin-top"
-  | "ksd-modal-confirm-body-padding"
-  | "ksd-modal-confirm-icon-margin-inline-end"
-  | "ksd-modal-confirm-btns-margin-top"
   | "ksd-modal-margin-block";
 
 export type ThemeTagVariable =
@@ -184,11 +169,7 @@ export type ThemeTagVariable =
   | "ksd-tag-default-color";
 
 export type ThemeSkeletonVariable =
-  | "ksd-skeleton-color"
-  | "ksd-skeleton-color-gradient-end"
   | "ksd-skeleton-gradient-from-color"
   | "ksd-skeleton-gradient-to-color"
   | "ksd-skeleton-title-height"
-  | "ksd-skeleton-block-radius"
-  | "ksd-skeleton-paragraph-margin-top"
-  | "ksd-skeleton-paragraph-li-height";
+  | "ksd-skeleton-block-radius";

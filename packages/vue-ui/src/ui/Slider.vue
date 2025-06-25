@@ -360,6 +360,9 @@
       & .ksd-slider__track {
         background-color: var(--ksd-slider-track-hover-bg);
       }
+      & .ksd-slider__rail {
+        background-color: var(--ksd-slider-rail-hover-bg);
+      }
     }
 
     &.horizontal {
