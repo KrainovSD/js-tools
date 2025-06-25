@@ -50,79 +50,95 @@ export const AllInOne: Story = {
       return { args };
     },
     render() {
-      return h("div", { style: { display: "flex", flexDirection: "column", gap: "10px" } }, [
-        h(VTooltip, { ...args }, () =>
-          h(VText, { ellipsis: true, fit: true }, () => "Обычный тултип"),
-        ),
-        h(VTooltip, { ...args, openNotVisible: true }, () =>
-          h(
-            VText,
-            { ellipsis: true, fit: true, style: { maxWidth: "100px" } },
-            () => "Повляется когда текст не помещается",
+      return h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            width: "200vw",
+            height: "200vh",
+          },
+        },
+        [
+          h(VTooltip, { ...args }, () =>
+            h(VText, { ellipsis: true, fit: true }, () => "Обычный тултип"),
           ),
-        ),
-        h(VTooltip, { ...args, openNotVisible: true }, () =>
-          h(VText, { ellipsis: true, fit: true }, () => "Повляется когда текст не помещается"),
-        ),
-        h(VTooltip, { ...args, openAboveCursor: true }, () =>
-          h(VText, { ellipsis: true, fit: true }, () => "Стрелочка под курсором"),
-        ),
-        h(VTooltip, { ...args, openAboveCursor: true, stickyCursor: true }, () =>
-          h(VText, { ellipsis: true, fit: true }, () => "Стрелочка следует за курсором"),
-        ),
-        h(
-          VFlex,
-          { vertical: true, gap: 30, style: { marginLeft: "300px", maxWidth: "390px" } },
-          () => [
-            h(VFlex, { gap: 20, flexAlign: "center", justify: "center" }, () => [
-              h(VTooltip, { ...args, placement: "top-left" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "t-left"),
-              ),
-              h(VTooltip, { ...args, placement: "top-center" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "t-center"),
-              ),
-              h(VTooltip, { ...args, placement: "top-right" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "t-right"),
-              ),
-            ]),
-            h(VFlex, { gap: 280 }, () => [
-              h(VFlex, { gap: 20, vertical: true }, () => [
-                h(VTooltip, { ...args, placement: "left-top" }, () =>
-                  h(VText, { ellipsis: true, fit: true }, () => "l-top"),
+          h(VTooltip, { ...args, openNotVisible: true }, () =>
+            h(
+              VText,
+              { ellipsis: true, fit: true, style: { maxWidth: "100px" } },
+              () => "Повляется когда текст не помещается",
+            ),
+          ),
+          h(VTooltip, { ...args, openNotVisible: true }, () =>
+            h(VText, { ellipsis: true, fit: true }, () => "Повляется когда текст не помещается"),
+          ),
+          h(VTooltip, { ...args, openAboveCursor: true }, () =>
+            h(VText, { ellipsis: true, fit: true }, () => "Стрелочка под курсором"),
+          ),
+          h(VTooltip, { ...args, openAboveCursor: true, stickyCursor: true }, () =>
+            h(VText, { ellipsis: true, fit: true }, () => "Стрелочка следует за курсором"),
+          ),
+          h(
+            VFlex,
+            {
+              vertical: true,
+              gap: 30,
+              style: { marginLeft: "300px", marginTop: "300px", maxWidth: "390px" },
+            },
+            () => [
+              h(VFlex, { gap: 20, flexAlign: "center", justify: "center" }, () => [
+                h(VTooltip, { ...args, placement: "top-left" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "t-left"),
                 ),
-                h(VTooltip, { ...args, placement: "left-center" }, () =>
-                  h(VText, { ellipsis: true, fit: true }, () => "l-center"),
+                h(VTooltip, { ...args, placement: "top-center" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "t-center"),
                 ),
-                h(VTooltip, { ...args, placement: "left-bottom" }, () =>
-                  h(VText, { ellipsis: true, fit: true }, () => "l-bottom"),
+                h(VTooltip, { ...args, placement: "top-right" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "t-right"),
                 ),
               ]),
-              h(VFlex, { gap: 20, vertical: true }, () => [
-                h(VTooltip, { ...args, placement: "right-top" }, () =>
-                  h(VText, { ellipsis: true, fit: true }, () => "r-top"),
+              h(VFlex, { gap: 280 }, () => [
+                h(VFlex, { gap: 20, vertical: true }, () => [
+                  h(VTooltip, { ...args, placement: "left-top" }, () =>
+                    h(VText, { ellipsis: true, fit: true }, () => "l-top"),
+                  ),
+                  h(VTooltip, { ...args, placement: "left-center" }, () =>
+                    h(VText, { ellipsis: true, fit: true }, () => "l-center"),
+                  ),
+                  h(VTooltip, { ...args, placement: "left-bottom" }, () =>
+                    h(VText, { ellipsis: true, fit: true }, () => "l-bottom"),
+                  ),
+                ]),
+                h(VFlex, { gap: 20, vertical: true }, () => [
+                  h(VTooltip, { ...args, placement: "right-top" }, () =>
+                    h(VText, { ellipsis: true, fit: true }, () => "r-top"),
+                  ),
+                  h(VTooltip, { ...args, placement: "right-center" }, () =>
+                    h(VText, { ellipsis: true, fit: true }, () => "r-center"),
+                  ),
+                  h(VTooltip, { ...args, placement: "right-bottom" }, () =>
+                    h(VText, { ellipsis: true, fit: true }, () => "r-bottom"),
+                  ),
+                ]),
+              ]),
+              h(VFlex, { gap: 20, flexAlign: "center", justify: "center" }, () => [
+                h(VTooltip, { ...args, placement: "bottom-left" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "b-left"),
                 ),
-                h(VTooltip, { ...args, placement: "right-center" }, () =>
-                  h(VText, { ellipsis: true, fit: true }, () => "r-center"),
+                h(VTooltip, { ...args, placement: "bottom-center" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "b-center"),
                 ),
-                h(VTooltip, { ...args, placement: "right-bottom" }, () =>
-                  h(VText, { ellipsis: true, fit: true }, () => "r-bottom"),
+                h(VTooltip, { ...args, placement: "bottom-right" }, () =>
+                  h(VText, { ellipsis: true, fit: true }, () => "b-right"),
                 ),
               ]),
-            ]),
-            h(VFlex, { gap: 20, flexAlign: "center", justify: "center" }, () => [
-              h(VTooltip, { ...args, placement: "bottom-left" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "b-left"),
-              ),
-              h(VTooltip, { ...args, placement: "bottom-center" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "b-center"),
-              ),
-              h(VTooltip, { ...args, placement: "bottom-right" }, () =>
-                h(VText, { ellipsis: true, fit: true }, () => "b-right"),
-              ),
-            ]),
-          ],
-        ),
-      ]);
+            ],
+          ),
+        ],
+      );
     },
   }),
   args: {
@@ -163,6 +179,7 @@ export const PositionCheckInVisibleArea: Story = {
                 class: "test-tooltip-position",
                 display: "flex",
                 flexDirection: "column",
+                position: "relative",
                 gap: "50px",
               },
             },
@@ -172,7 +189,6 @@ export const PositionCheckInVisibleArea: Story = {
                 {
                   ...args,
                   visibleArea: this.div,
-                  modalRoot: this.div,
                   placement: "top-center",
                 },
                 () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip top-center"),
@@ -182,7 +198,6 @@ export const PositionCheckInVisibleArea: Story = {
                 {
                   ...args,
                   visibleArea: this.div,
-                  modalRoot: this.div,
                   placement: "left-center",
                 },
                 () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip left-center"),
@@ -192,7 +207,6 @@ export const PositionCheckInVisibleArea: Story = {
                 {
                   ...args,
                   visibleArea: this.div,
-                  modalRoot: this.div,
                   placement: "right-top",
                 },
                 () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip right-top"),
@@ -202,7 +216,6 @@ export const PositionCheckInVisibleArea: Story = {
                 {
                   ...args,
                   visibleArea: this.div,
-                  modalRoot: this.div,
                   placement: "bottom-right",
                 },
                 () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip bottom-right"),
@@ -262,6 +275,7 @@ export const PositionCheckInVisibleAreaWithScroll: Story = {
                     display: "flex",
                     flexDirection: "column",
                     gap: "50px",
+                    position: "relative",
                   },
                 },
                 [
@@ -270,7 +284,6 @@ export const PositionCheckInVisibleAreaWithScroll: Story = {
                     {
                       ...args,
                       visibleArea: this.div,
-                      modalRoot: this.div,
                       placement: "top-center",
                     },
                     () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip top-center"),
@@ -280,7 +293,6 @@ export const PositionCheckInVisibleAreaWithScroll: Story = {
                     {
                       ...args,
                       visibleArea: this.div,
-                      modalRoot: this.div,
                       placement: "left-center",
                     },
                     () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip left-center"),
@@ -290,7 +302,6 @@ export const PositionCheckInVisibleAreaWithScroll: Story = {
                     {
                       ...args,
                       visibleArea: this.div,
-                      modalRoot: this.div,
                       placement: "right-top",
                     },
                     () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip right-top"),
@@ -300,7 +311,6 @@ export const PositionCheckInVisibleAreaWithScroll: Story = {
                     {
                       ...args,
                       visibleArea: this.div,
-                      modalRoot: this.div,
                       placement: "bottom-right",
                     },
                     () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip bottom-right"),

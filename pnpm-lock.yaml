@@ -1406,8 +1406,8 @@ importers:
   packages/vue-ui:
     dependencies:
       '@krainovsd/js-helpers':
-        specifier: 0.14.1
-        version: 0.14.1
+        specifier: 0.14.2
+        version: 0.14.2
       '@krainovsd/vue-icons':
         specifier: 0.1.0
         version: 0.1.0(vue@3.5.14(typescript@5.7.3))
@@ -2983,6 +2983,9 @@ packages:
 
   '@krainovsd/js-helpers@0.14.1':
     resolution: {integrity: sha512-jEdXOzAiUAZXKO82FeCAj3h+n9fd8c1QCNf16klBXSRJU3dOqFNEx1Tb/t3ujJPArU4+CTTHeDkUXgi2HmKCew==}
+
+  '@krainovsd/js-helpers@0.14.2':
+    resolution: {integrity: sha512-L0caURmU8hT/V6tS5/PEeikKKEXckc83j0f3GPCCfmC1KdcCS3YKpvYJ+Bz/U4ilikOe0jlmgG9yam/GofBRBA==}
 
   '@krainovsd/nest-logger-service@0.2.1':
     resolution: {integrity: sha512-O+8IgLgg0uxb24S32A56t+cSgoIVw5eDMSzxxq7hwB8vqJlNcxeHGCVrJgNboVqlLtaUdvBN+9YdwLfiCSCE+Q==}
@@ -12993,6 +12996,11 @@ snapshots:
       node-fetch: 3.3.2
 
   '@krainovsd/js-helpers@0.14.1':
+    dependencies:
+      dayjs: 1.11.13
+      lodash: 4.17.21
+
+  '@krainovsd/js-helpers@0.14.2':
     dependencies:
       dayjs: 1.11.13
       lodash: 4.17.21

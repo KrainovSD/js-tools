@@ -245,7 +245,7 @@
 
   /** Check position */
   watch(
-    () => [positionerRef.value],
+    () => [positionerRef.value, props.target, props.visibleArea],
     () => {
       if (!positionerRef.value) return;
 

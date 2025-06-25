@@ -74,6 +74,8 @@ export function getVisiblePosition({
   nested,
 }: GetVisiblePositionOptions): VisiblePosition {
   /** Viewport Variables */
+  const totalHeight = document.documentElement.scrollHeight;
+  const totalWidth = document.documentElement.scrollWidth;
   const viewport = visibleArea ?? document.documentElement;
   const scrollTop = document.documentElement.scrollTop;
   const scrollLeft = document.documentElement.scrollLeft;
@@ -101,16 +103,16 @@ export function getVisiblePosition({
     targetLeftPosition = left + scrollLeft;
   }
   if (initialPosition?.position) {
-    if (initialPosition.position.x) {
+    if (initialPosition.position.x != undefined) {
       targetLeftPosition = initialPosition.position.x + scrollLeft;
     }
-    if (initialPosition.position.y) {
+    if (initialPosition.position.y != undefined) {
       targetTopPosition = initialPosition.position.y + scrollTop;
     }
-    if (initialPosition.position.height) {
+    if (initialPosition.position.height != undefined) {
       targetHeight = initialPosition.position.height;
     }
-    if (initialPosition.position.width) {
+    if (initialPosition.position.width != undefined) {
       targetWidth = initialPosition.position.width;
     }
   }
@@ -125,9 +127,12 @@ export function getVisiblePosition({
   }
 
   /** Initial Position */
-  const targetXCenter = targetWidth ? targetLeftPosition + targetWidth / 2 : targetLeftPosition;
-  const targetYCenter = targetHeight ? targetTopPosition + targetHeight / 2 : targetTopPosition;
-  const targetYEnd = targetHeight ? targetTopPosition + targetHeight : targetTopPosition;
+  const targetXCenter =
+    targetWidth != undefined ? targetLeftPosition + targetWidth / 2 : targetLeftPosition;
+  const targetYCenter =
+    targetHeight != undefined ? targetTopPosition + targetHeight / 2 : targetTopPosition;
+  const targetYEnd =
+    targetHeight != undefined ? targetTopPosition + targetHeight : targetTopPosition;
 
   const x: Record<XPositions, number> = {
     insideCenter: targetXCenter - nodeWidth / 2 + stepX,
@@ -195,8 +200,8 @@ export function getVisiblePosition({
     placement: visiblePositions.placement,
     left: visiblePositions.left,
     top: visiblePositions.top,
-    bottom: yEnd - scrollTop - (visiblePositions.top + nodeHeight),
-    right: xEnd - scrollLeft - (visiblePositions.left + nodeWidth),
+    bottom: totalHeight - (visiblePositions.top + nodeHeight),
+    right: totalWidth - (visiblePositions.left + nodeWidth),
   };
 }
 
