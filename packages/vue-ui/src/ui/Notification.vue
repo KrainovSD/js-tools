@@ -120,41 +120,37 @@
       `.ksd-notification__item-wrap[data-id='${notificationId}']`,
     );
 
-    if (!node) {
-      const index = notifications.findIndex((message) => message.id === notificationId);
-      if (~index != 0) {
+    const index = notifications.findIndex((message) => message.id === notificationId);
+    const notification = notifications[index];
+    if (index === -1 || notification == undefined) return;
+
+    if (!node || (squash.value && index < notifications.length - props.maxCount)) {
+      if (notification.onClose) {
+        notification.onClose(notification.id);
+      }
+
+      notifications.splice(index, 1);
+
+      void nextTick(() => {
+        updateTranslates();
+      });
+    } else {
+      void execAnimation(node, "ksd-notification__item-wrap-out").then(() => {
+        const index = notifications.findIndex((message) => message.id === notificationId);
         const notification = notifications[index];
+        if (index === -1 || notification == undefined) return;
+
         if (notification.onClose) {
           notification.onClose(notification.id);
         }
 
         notifications.splice(index, 1);
-      }
 
-      void nextTick(() => {
-        updateTranslates();
+        void nextTick(() => {
+          updateTranslates();
+        });
       });
-
-      return;
     }
-
-    void execAnimation(node, "ksd-notification__item-wrap-out").then(() => {
-      const index = notifications.findIndex((message) => message.id === notificationId);
-      if (~index != 0) {
-        const notification = notifications[index];
-        if (notification.onClose) {
-          notification.onClose(notification.id);
-        }
-
-        notifications.splice(index, 1);
-      }
-
-      void nextTick(() => {
-        updateTranslates();
-      });
-    });
-
-    updateTranslates();
   }
 
   function createNotification(
@@ -261,7 +257,6 @@
     "
     @mouseleave="
       () => {
-        console.log('leave');
         hovered = false;
       }
     "

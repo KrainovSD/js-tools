@@ -168,7 +168,7 @@
     :open="open"
     arrow
     :target="cursorPosition != undefined ? cursorPosition : content"
-    class-content="ksd-tooltip__positioner-content"
+    class-name-content="ksd-tooltip__positioner-content"
     :class="'ksd-tooltip__positioner'"
     v-bind="$attrs"
     :modal-root="$props.modalRoot"

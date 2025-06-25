@@ -5,8 +5,10 @@
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
 
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-  export type PasswordProps = {} & InputProps;
+  export type PasswordProps = {} & Pick<
+    InputProps,
+    "allowClear" | "autofocus" | "disabled" | "size" | "status" | "variant" | "classNameRoot"
+  >;
   const visible = ref(false);
   const model = defineModel<string>();
   const type = computed(() => (visible.value ? "text" : "password"));
@@ -15,7 +17,19 @@
 </script>
 
 <template>
-  <Input v-bind="{ ...$props, ...$attrs }" v-model="model" :type="type" class="ksd-password">
+  <Input
+    v-bind="$attrs"
+    v-model="model"
+    :class-name-root="$props.classNameRoot"
+    :allow-clear="$props.allowClear"
+    :autofocus="$props.autofocus"
+    :disabled="$props.disabled"
+    :size="$props.size"
+    :status="$props.status"
+    :variant="$props.variant"
+    :type="type"
+    class="ksd-password"
+  >
     <template v-for="(_, name) in $slots" #[name]="slotData">
       <slot :name="name" v-bind="slotData"></slot>
     </template>

@@ -39,206 +39,230 @@ export const AllInOne: Story = {
       return { args, value };
     },
     render() {
-      return h(
-        "div",
-        { style: { display: "flex", flexDirection: "column", gap: "20px", maxWidth: "400px" } },
-        [
-          h(VInput, {
-            modelValue: this.value,
-            onInput: (event: InputEvent) => {
-              this.value = (event.target as HTMLInputElement).value;
-            },
-            placeholder: "Outlined",
-            variant: "outlined",
-          }),
-          h(VInput, { placeholder: "Filled", variant: "filled" }),
-          h(VInput, { placeholder: "Borderless", variant: "borderless" }),
-          h(VInput, { placeholder: "Underline", variant: "underline" }),
-          h(VInput, { placeholder: "Small", size: "small" }),
-          h(VInput, { placeholder: "Large", size: "large" }),
-          h(
-            VInput,
-            { placeholder: "Prefix and Suffix", class: "test" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(VInput, {
-            placeholder: "Clear",
-            allowClear: true,
-            modelValue: this.value,
-            "onUpdate:modelValue": (newValue) => {
-              this.value = newValue;
-            },
-          }),
-          h(VInput, {
-            modelValue: "Disabled",
-            placeholder: "Outlined disabled",
-            variant: "outlined",
-            disabled: true,
-          }),
-          h(VInput, { placeholder: "Filled disabled", variant: "filled", disabled: true }),
-          h(VInput, { placeholder: "Borderless disabled", variant: "borderless", disabled: true }),
-          h(VInput, { placeholder: "Underline disabled", variant: "underline", disabled: true }),
-          h(
-            VInput,
-            { placeholder: "Outlined error", variant: "outlined", status: "error" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Filled error", variant: "filled", status: "error" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Borderless error", variant: "borderless", status: "error" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Underline error", variant: "underline", status: "error" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Outlined warning", variant: "outlined", status: "warning" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Filled warning", variant: "filled", status: "warning" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            {
-              placeholder: "Borderless warning",
-              variant: "borderless",
-              status: "warning",
-            },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Underline warning", variant: "underline", status: "warning" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Outlined success", variant: "outlined", status: "success" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Filled success", variant: "filled", status: "success" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            {
-              placeholder: "Borderless success",
-              variant: "borderless",
-              status: "success",
-            },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            { placeholder: "Underline success", variant: "underline", status: "success" },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            {
-              placeholder: "Outlined error disabled",
+      return h("div", { style: { display: "flex", gap: "20px" } }, [
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "20px", maxWidth: "400px" } },
+          [
+            h(VInput, {
+              modelValue: this.value,
+              onInput: (event: InputEvent) => {
+                this.value = (event.target as HTMLInputElement).value;
+              },
+              placeholder: "Outlined",
               variant: "outlined",
-              status: "error",
+            }),
+            h(VInput, { placeholder: "Filled", variant: "filled" }),
+            h(VInput, { placeholder: "Borderless", variant: "borderless" }),
+            h(VInput, { placeholder: "Underline", variant: "underline" }),
+            h(VInput, { placeholder: "Small", size: "small" }),
+            h(VInput, { placeholder: "Large", size: "large" }),
+            h(
+              VInput,
+              { placeholder: "Prefix and Suffix", class: "test" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(VInput, {
+              placeholder: "Clear",
+              allowClear: true,
+              modelValue: this.value,
+              "onUpdate:modelValue": (newValue) => {
+                this.value = newValue;
+              },
+            }),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "20px", maxWidth: "400px" } },
+          [
+            h(
+              VInput,
+              { placeholder: "Filled error", variant: "filled", status: "error" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              { placeholder: "Borderless error", variant: "borderless", status: "error" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              { placeholder: "Underline error", variant: "underline", status: "error" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              { placeholder: "Outlined error", variant: "outlined", status: "error" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              { placeholder: "Outlined warning", variant: "outlined", status: "warning" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              { placeholder: "Filled warning", variant: "filled", status: "warning" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              {
+                placeholder: "Borderless warning",
+                variant: "borderless",
+                status: "warning",
+              },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              { placeholder: "Underline warning", variant: "underline", status: "warning" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "20px", maxWidth: "400px" } },
+          [
+            h(
+              VInput,
+              { placeholder: "Outlined success", variant: "outlined", status: "success" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              { placeholder: "Filled success", variant: "filled", status: "success" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              {
+                placeholder: "Borderless success",
+                variant: "borderless",
+                status: "success",
+              },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              { placeholder: "Underline success", variant: "underline", status: "success" },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              {
+                placeholder: "Outlined error disabled",
+                variant: "outlined",
+                status: "error",
+                disabled: true,
+              },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              {
+                placeholder: "Filled error disabled",
+                variant: "filled",
+                status: "error",
+                disabled: true,
+              },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              {
+                placeholder: "Borderless error disabled",
+                variant: "borderless",
+                status: "error",
+                disabled: true,
+              },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+            h(
+              VInput,
+              {
+                placeholder: "Underline error disabled",
+                variant: "underline",
+                status: "error",
+                disabled: true,
+              },
+              {
+                prefix: () => h(VSettingFilled, { size: 16 }),
+                suffix: () => h(VSettingFilled, { size: 16 }),
+              },
+            ),
+          ],
+        ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "20px", maxWidth: "400px" } },
+          [
+            h(VInput, {
+              modelValue: "Disabled",
+              placeholder: "Outlined disabled",
+              variant: "outlined",
               disabled: true,
-            },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            {
-              placeholder: "Filled error disabled",
-              variant: "filled",
-              status: "error",
-              disabled: true,
-            },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            {
-              placeholder: "Borderless error disabled",
+            }),
+            h(VInput, { placeholder: "Filled disabled", variant: "filled", disabled: true }),
+            h(VInput, {
+              placeholder: "Borderless disabled",
               variant: "borderless",
-              status: "error",
               disabled: true,
-            },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-          h(
-            VInput,
-            {
-              placeholder: "Underline error disabled",
-              variant: "underline",
-              status: "error",
-              disabled: true,
-            },
-            {
-              prefix: () => h(VSettingFilled, { size: 16 }),
-              suffix: () => h(VSettingFilled, { size: 16 }),
-            },
-          ),
-        ],
-      );
+            }),
+            h(VInput, { placeholder: "Underline disabled", variant: "underline", disabled: true }),
+          ],
+        ),
+      ]);
     },
   }),
   args: {},

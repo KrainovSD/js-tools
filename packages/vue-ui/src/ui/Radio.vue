@@ -4,7 +4,7 @@
   export type RadioValue = string | number | boolean;
 
   export type RadioProps = {
-    className?: string;
+    classNameRoot?: string;
     name: string;
     value: string | number | boolean;
     block?: boolean;
@@ -17,14 +17,15 @@
     disabled: props.disabled,
     block: props.block,
   }));
+  const checked = computed(() => model.value === props.value);
   const inputClasses = computed(() => ({
     disabled: props.disabled,
-    checked: model.value === props.value,
+    checked: checked.value,
   }));
 </script>
 
 <template>
-  <label class="ksd-radio" :class="[rootClasses, props.className]">
+  <label class="ksd-radio" :class="[rootClasses, props.classNameRoot]">
     <span class="ksd-radio__wrapper">
       <input
         ref="input"
@@ -33,6 +34,7 @@
         :value="$props.value"
         :disabled="$props.disabled"
         v-bind="$attrs"
+        :checked="checked"
         :name="$props.name"
         @input="model = $props.value"
       />

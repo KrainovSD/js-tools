@@ -29,19 +29,31 @@ import VText from "./Text.vue";
 import VTextArea from "./TextArea.vue";
 import VTooltip from "./Tooltip.vue";
 
-export type { InputProps } from "./Input.vue";
-export type { ButtonProps } from "./Button.vue";
+export type { InputProps, InputSize, InputStatus, InputVariant } from "./Input.vue";
+export type {
+  ButtonProps,
+  ButtonIconPosition,
+  ButtonShape,
+  ButtonSize,
+  ButtonType,
+} from "./Button.vue";
 export type { CheckBoxProps } from "./CheckBox.vue";
-export type { CollapseProps } from "./Collapse.vue";
-export type { DividerProps } from "./Divider.vue";
-export type { DrawerProps } from "./Drawer.vue";
-export type { FlexProps } from "./Flex.vue";
+export type { CollapseProps, CollapseSize } from "./Collapse.vue";
+export type { DividerProps, DividerOrientation, DividerType, DividerVariant } from "./Divider.vue";
+export type { DrawerProps, DrawerPlacement } from "./Drawer.vue";
+export type { FlexProps, FlexAlign, FlexJustify, FlexOverflow } from "./Flex.vue";
 export type { PasswordProps } from "./Password.vue";
-export type { TextProps } from "./Text.vue";
+export type { TextProps, TextSize, TextType } from "./Text.vue";
 export type { InputNumberProps } from "./InputNumber.vue";
 export type { RadioProps, RadioValue } from "./Radio.vue";
-export type { RadioGroupProps, RadioOption } from "./RadioGroup.vue";
-export type { RadioButtonProps } from "./RadioButton.vue";
+export type {
+  RadioGroupProps,
+  RadioOption,
+  RadioGroupButtonStyle,
+  RadioGroupOptionType,
+  RadioGroupSize,
+} from "./RadioGroup.vue";
+export type { RadioButtonProps, RadioButtonSize, RadioButtonStyle } from "./RadioButton.vue";
 export type { SlideProps } from "./Slider.vue";
 export type { TooltipProps } from "./Tooltip.vue";
 export type {
@@ -49,7 +61,7 @@ export type {
   PositionerAnimations,
   PositionerTargetNodePosition,
 } from "./Positioner.vue";
-export type { SwitchProps } from "./Switch.vue";
+export type { SwitchProps, SwitchSize } from "./Switch.vue";
 export type { PopperProps, PopperTrigger } from "./Popper.vue";
 export type {
   DropDownProps,
@@ -57,15 +69,30 @@ export type {
   DropDownMenuItem,
   DropDownMenuItemInner,
   HTMLDropDownItem,
+  DropDownInteractiveMode,
+  DropDownSize,
 } from "./DropDown.vue";
-export type { SelectProps, SelectItem, SelectValue } from "./Select.vue";
+export type {
+  SelectProps,
+  SelectItem,
+  SelectValue,
+  SelectHTMLElement,
+  SelectSize,
+  SelectStatus,
+  SelectVariant,
+} from "./Select.vue";
 export type { SearchProps, SearchOption } from "./Search.vue";
 export type { PopConfirmProps } from "./PopConfirm.vue";
 export type { MessageProps, Message, MessageType } from "./Message.vue";
-export type { Notification, NotificationProps, NotificationType } from "./Notification.vue";
+export type {
+  Notification,
+  NotificationProps,
+  NotificationType,
+  NotificationPosition,
+} from "./Notification.vue";
 export type { ModalProps } from "./Modal.vue";
-export type { TextAreaProps } from "./TextArea.vue";
-export type { TagProps } from "./Tag.vue";
+export type { TextAreaProps, TextAreaResize } from "./TextArea.vue";
+export type { TagProps, TagSize } from "./Tag.vue";
 export type { CheckableProps, TagCheckableValue } from "./TagCheckable.vue";
 export type { SkeletonProps, SkeletonType, SkeletonShape, SkeletonSize } from "./Skeleton.vue";
 

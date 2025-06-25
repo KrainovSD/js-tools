@@ -15,7 +15,7 @@
 
   const props = defineProps<SlideProps>();
   const model = defineModel<number | number[]>();
-  const elementRef = useTemplateRef("slider");
+  const sliderRef = useTemplateRef("slider");
   const minHandleRef = useTemplateRef("min-handle");
   const maxHandleRef = useTemplateRef("max-handle");
   const commonClasses = computed(() => ({
@@ -128,9 +128,9 @@
   }
 
   function processingValue(clientX: number, clientY: number) {
-    if (!elementRef.value) return;
+    if (!sliderRef.value) return;
 
-    const rect = elementRef.value.getBoundingClientRect();
+    const rect = sliderRef.value.getBoundingClientRect();
     const size = props.vertical ? rect.height : rect.width;
     let position = props.vertical ? rect.bottom - clientY : clientX - rect.left;
 
@@ -273,7 +273,7 @@
     });
   });
 
-  defineExpose({ element: elementRef });
+  defineExpose({ sliderRef });
 </script>
 
 <template>

@@ -2,10 +2,12 @@
   import { computed, useTemplateRef, watch } from "vue";
   import type { InputProps } from "./Input.vue";
 
+  export type TextAreaResize = "vertical" | "horizontal" | "both";
+
   export type TextAreaProps = {
     rows?: number;
     maxLength?: number;
-    resize?: "vertical" | "horizontal" | "both";
+    resize?: TextAreaResize;
     autoSize?: boolean;
   } & Omit<InputProps, "allowClear" | "className">;
 

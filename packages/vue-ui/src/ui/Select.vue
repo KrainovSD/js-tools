@@ -20,7 +20,7 @@
     desc?: string | Component;
   };
 
-  interface SelectHTMLElement extends HTMLElement {
+  export interface SelectHTMLElement extends HTMLElement {
     next: SelectHTMLElement;
     prev: SelectHTMLElement;
     valueKey: string | undefined | null;
@@ -28,10 +28,14 @@
     removeActiveMark: (this: SelectHTMLElement) => void;
   }
 
+  export type SelectVariant = "filled" | "borderless" | "underline" | "outlined";
+  export type SelectSize = "default" | "large" | "small";
+  export type SelectStatus = "error" | "warning" | "success" | "default";
+
   export type SelectProps = {
-    variant?: "filled" | "borderless" | "underline" | "outlined";
-    size?: "default" | "large" | "small";
-    status?: "error" | "warning" | "success" | "default";
+    variant?: SelectVariant;
+    size?: SelectSize;
+    status?: SelectStatus;
     search?: boolean;
     clear?: boolean;
     disabled?: boolean;

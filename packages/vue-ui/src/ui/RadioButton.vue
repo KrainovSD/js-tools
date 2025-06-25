@@ -2,30 +2,37 @@
   import { computed } from "vue";
   import type { RadioProps, RadioValue } from "./Radio.vue";
 
+  export type RadioButtonSize = "large" | "default" | "small";
+  export type RadioButtonStyle = "outline" | "solid";
+
   export type RadioButtonProps = {
-    size?: "large" | "default" | "small";
-    buttonStyle?: "outline" | "solid";
+    size?: RadioButtonSize;
+    buttonStyle?: RadioButtonStyle;
   } & Omit<RadioProps, "block">;
 
-  const props = defineProps<RadioButtonProps>();
+  const props = withDefaults(defineProps<RadioButtonProps>(), {
+    buttonStyle: "outline",
+    size: "default",
+  });
   const model = defineModel<RadioValue>();
-
+  const checked = computed(() => model.value === props.value);
   const rootClasses = computed(() => ({
     disabled: props.disabled,
-    checked: model.value === props.value,
-    [`size-${props.size ?? "default"}`]: true,
-    [`type-${props.buttonStyle ?? "outline"}`]: true,
+    checked: checked.value,
+    [`size-${props.size}`]: true,
+    [`type-${props.buttonStyle}`]: true,
   }));
 </script>
 
 <template>
-  <label class="ksd-radio-button" :class="[rootClasses, $props.className]">
+  <label class="ksd-radio-button" :class="[rootClasses, $props.classNameRoot]">
     <input
       ref="input"
       class="ksd-radio-button__input"
       type="radio"
       :value="$props.value"
       :disabled="$props.disabled"
+      :checked="checked"
       v-bind="$attrs"
       :name="$props.name"
       @input="model = $props.value"

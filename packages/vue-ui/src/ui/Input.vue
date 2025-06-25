@@ -2,35 +2,47 @@
   import { VCloseCircleFilled } from "@krainovsd/vue-icons";
   import { computed, onMounted, useSlots, useTemplateRef } from "vue";
 
+  export type InputVariant = "filled" | "borderless" | "underline" | "outlined";
+  export type InputSize = "default" | "large" | "small";
+  export type InputStatus = "error" | "warning" | "success" | "default";
+
   export type InputProps = {
-    className?: string;
-    variant?: "filled" | "borderless" | "underline" | "outlined";
-    size?: "default" | "large" | "small";
-    status?: "error" | "warning" | "success" | "default";
+    classNameRoot?: string;
+    variant?: InputVariant;
+    size?: InputSize;
+    status?: InputStatus;
     autofocus?: boolean;
     allowClear?: boolean;
     disabled?: boolean;
   };
 
-  const props = defineProps<InputProps>();
+  const props = withDefaults(defineProps<InputProps>(), {
+    allowClear: false,
+    autofocus: false,
+    classNameRoot: undefined,
+    disabled: false,
+    size: "default",
+    status: "default",
+    variant: "outlined",
+  });
   const slots = useSlots();
   const model = defineModel<string>();
   const hasSlots = computed(() => Object.keys(slots).length != 0);
 
   const inputRef = useTemplateRef("input");
   const inputClasses = computed(() => ({
-    [`variant-${props.variant ?? "outlined"}`]: true,
-    [`size-${props.size ?? "default"}`]: true,
-    [`status-${props.status ?? "default"}`]: props.status != undefined,
+    [`variant-${props.variant}`]: true,
+    [`size-${props.size}`]: true,
+    [`status-${props.status}`]: props.status != undefined,
     disabled: props.disabled,
   }));
   const suffixClasses = computed(() => ({
     clear: props.allowClear && !slots.suffix,
-    [`status-${props.status ?? "default"}`]: props.status != undefined,
+    [`status-${props.status}`]: props.status != undefined,
     disabled: props.disabled,
   }));
   const prefixClasses = computed(() => ({
-    [`status-${props.status ?? "default"}`]: props.status != undefined,
+    [`status-${props.status}`]: props.status != undefined,
     disabled: props.disabled,
   }));
   const visibleClear = computed(() => props.allowClear && !slots.suffix && model.value);
@@ -50,7 +62,7 @@
   });
 
   defineExpose({
-    element: inputRef,
+    inputRef,
   });
 </script>
 
@@ -58,17 +70,17 @@
   <input
     v-if="!hasSlots && !$props.allowClear"
     ref="input"
+    v-bind="$attrs"
     v-model="model"
     type="text"
     class="ksd-input"
-    :class="[inputClasses, $props.className]"
+    :class="[inputClasses, $props.classNameRoot]"
     :disabled="props.disabled"
-    v-bind="$attrs"
   />
   <span
     v-if="hasSlots || $props.allowClear"
     class="ksd-input"
-    :class="[inputClasses, $props.className]"
+    :class="[inputClasses, $props.classNameRoot]"
     @click="onFocus"
   >
     <slot name="default"></slot>

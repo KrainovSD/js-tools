@@ -1,28 +1,44 @@
 <script setup lang="ts">
   import { computed, useTemplateRef } from "vue";
 
+  export type FlexAlign = "center" | "end" | "start" | "flex-start" | "flex-end";
+  export type FlexJustify =
+    | "center"
+    | "end"
+    | "start"
+    | "flex-end"
+    | "flex-start"
+    | "space-between"
+    | "space-around";
+  export type FlexOverflow = "auto" | "scroll" | "visible" | "hidden";
+
   export type FlexProps = {
     vertical?: boolean;
     wFull?: boolean;
     hFull?: boolean;
     gap?: number;
-    flexAlign?: "center" | "end" | "start" | "flex-start" | "flex-end";
-    justify?:
-      | "center"
-      | "end"
-      | "start"
-      | "flex-end"
-      | "flex-start"
-      | "space-between"
-      | "space-around";
-    overflow?: "auto" | "scroll" | "visible" | "hidden";
+    flexAlign?: FlexAlign;
+    justify?: FlexJustify;
+    overflow?: FlexOverflow;
     wMax?: number;
     hMax?: number;
     wMin?: number;
     hMin?: number;
   };
 
-  const props = defineProps<FlexProps>();
+  const props = withDefaults(defineProps<FlexProps>(), {
+    flexAlign: undefined,
+    gap: undefined,
+    hFull: false,
+    wFull: false,
+    hMax: undefined,
+    hMin: undefined,
+    wMax: undefined,
+    wMin: undefined,
+    justify: undefined,
+    overflow: undefined,
+    vertical: false,
+  });
 
   const element = useTemplateRef("base");
   const componentClasses = computed(() => ({

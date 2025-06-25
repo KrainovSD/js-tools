@@ -22,10 +22,9 @@ const Template: StoryFn<typeof VDropDown> = (args) => ({
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
       h(
         VDropDown,
-        { ...args },
+        { ...args, triggers: ["click"] },
         {
-          default: () => h(VText, { fit: true, ellipsis: true }, () => "Текст для поппера"),
-          content: () => "Test",
+          default: () => h(VButton, {}, () => "Dropdown Click"),
         },
       ),
     ]);

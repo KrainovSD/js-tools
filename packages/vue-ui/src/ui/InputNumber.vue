@@ -6,8 +6,10 @@
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
 
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-  export type InputNumberProps = { classNameNumber?: string } & InputProps;
+  export type InputNumberProps = Pick<
+    InputProps,
+    "allowClear" | "autofocus" | "disabled" | "size" | "status" | "variant" | "classNameRoot"
+  >;
   const props = defineProps<InputNumberProps>();
   const attrs = useAttrs();
   const model = defineModel<number>();
@@ -44,8 +46,8 @@
       model.value != undefined && min.value != undefined ? model.value <= min.value : false,
   }));
 
-  const inputRef = useTemplateRef("input");
-  const inputElement = computed(() => inputRef.value?.element);
+  const inputComponentRef = useTemplateRef("input");
+  const inputRef = computed(() => inputComponentRef.value?.inputRef);
   const intervalId = ref<NodeJS.Timeout | null>(null);
   const timeoutId = ref<NodeJS.Timeout | null>(null);
   const controller = ref<AbortController | null>(null);
@@ -146,13 +148,20 @@
     { flush: "pre" },
   );
 
-  defineExpose({ element: inputElement });
+  defineExpose({ inputRef });
 </script>
 
 <template>
   <Input
     ref="input"
-    v-bind="{ ...$props, ...$attrs }"
+    v-bind="$attrs"
+    :allow-clear="$props.allowClear"
+    :autofocus="$props.autofocus"
+    :disabled="$props.disabled"
+    :size="$props.size"
+    :status="$props.status"
+    :variant="$props.variant"
+    :class-name-root="$props.classNameRoot"
     :model-value="value"
     type="text"
     autocomplete="off"
@@ -239,9 +248,6 @@
 
       &:not(.disabled):has(~ .ksd-input__input:focus),
       &:not(.disabled):has(~ .ksd-input__input:focus-within) {
-        /* width: 22px;
-        opacity: 1; */
-
         &.variant-filled {
           background: var(--ksd-bg-container-color);
         }

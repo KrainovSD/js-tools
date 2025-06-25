@@ -2,10 +2,12 @@
   import { VLoadingOutlined } from "@krainovsd/vue-icons";
   import { computed, useTemplateRef } from "vue";
 
+  export type SwitchSize = "small" | "default";
+
   export type SwitchProps = {
     disabled?: boolean;
     loading?: boolean;
-    size?: "small" | "default";
+    size?: SwitchSize;
     block?: boolean;
   };
 

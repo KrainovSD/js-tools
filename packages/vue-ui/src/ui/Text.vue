@@ -1,32 +1,48 @@
 <script setup lang="ts">
   import { computed } from "vue";
 
+  export type TextSize = "sm" | "lg" | "xl" | "default";
+  export type TextType = "secondary" | "success" | "warning" | "error" | "default";
+
   export type TextProps = {
     ellipsis?: boolean;
     nowrap?: boolean;
     rows?: number;
     fit?: boolean;
     weight?: number | string;
-    size?: number | "sm" | "lg" | "xl";
+    size?: number | TextSize;
     italic?: boolean;
     strong?: boolean;
     delete?: boolean;
     underline?: boolean;
     disabled?: boolean;
-    type?: "secondary" | "success" | "warning" | "error";
+    type?: TextType;
   };
 
-  const props = defineProps<TextProps>();
+  const props = withDefaults(defineProps<TextProps>(), {
+    delete: false,
+    size: "default",
+    type: "default",
+    italic: false,
+    nowrap: false,
+    strong: false,
+    underline: false,
+    weight: undefined,
+    rows: undefined,
+    disabled: false,
+    ellipsis: false,
+    fit: false,
+  });
   const componentClasses = computed(() => ({
     ellipsis: props.ellipsis,
     nowrap: props.nowrap,
     rows: props.rows != undefined,
-    [`size-${typeof props.size === "string" ? props.size : "default"}`]: true,
+    [`size-${props.size}`]: true,
     italic: props.italic,
     strong: props.strong,
     delete: props.delete,
     underline: props.underline,
-    [`type-${props.type ?? "default"}`]: true,
+    [`type-${props.type}`]: true,
     disabled: props.disabled,
     fit: props.fit,
   }));

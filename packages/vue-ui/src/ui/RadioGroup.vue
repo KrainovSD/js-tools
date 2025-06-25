@@ -5,6 +5,9 @@
   import Radio from "./Radio.vue";
   import RadioButton from "./RadioButton.vue";
 
+  export type RadioGroupOptionType = "default" | "button";
+  export type RadioGroupButtonStyle = "outline" | "solid";
+  export type RadioGroupSize = "small" | "default" | "large";
   export type RadioOption = {
     label: string;
     value: RadioValue;
@@ -17,10 +20,9 @@
     options: RadioOption[];
     disabled?: boolean;
     name?: string;
-    className?: string;
-    optionType?: "default" | "button";
-    buttonStyle?: "outline" | "solid";
-    size?: "small" | "default" | "large";
+    optionType?: RadioGroupOptionType;
+    buttonStyle?: RadioGroupButtonStyle;
+    size?: RadioGroupSize;
   };
 
   const props = defineProps<RadioGroupProps>();
@@ -34,7 +36,13 @@
 
 <template>
   <template v-for="option in $props.options" :key="option.value">
-    <Radio v-if="optionType === 'default'" v-model="model" :value="option.value" :name="name">
+    <Radio
+      v-if="optionType === 'default'"
+      v-model="model"
+      :value="option.value"
+      :name="name"
+      :class="option.className"
+    >
       {{ option.label }}
     </Radio>
     <RadioButton
@@ -45,6 +53,7 @@
       :button-style="$props.buttonStyle"
       :size="$props.size"
       :disabled="$props.disabled || option.disabled"
+      :class="option.className"
     >
       {{ option.label }}
     </RadioButton>
