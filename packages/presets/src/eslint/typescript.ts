@@ -51,9 +51,20 @@ export const TS_LINTER_PLUGIN = {
             ignorePrimitives: { string: false, number: false, bigint: false, boolean: true },
           },
         ],
+        "@typescript-eslint/strict-boolean-expressions": [
+          "error",
+          {
+            allowAny: true,
+            allowNullableBoolean: true,
+            allowNullableEnum: true,
+            allowNullableNumber: false,
+            allowNullableObject: true,
+            allowNullableString: true,
+            allowNumber: false,
+            allowString: false,
+          },
+        ],
       },
     },
   ] as Linter.Config[],
 };
-
-export default [...TS_LINTER_PLUGIN.ts, ...TS_LINTER_PLUGIN.krainovTS] as Linter.Config[];

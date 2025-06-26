@@ -32,7 +32,7 @@ export const REACT_LINTER_PLUGINS = {
       rules: { ...reactHooksPlugin.configs["recommended-latest"].rules },
     },
   ] as Linter.Config[],
-  a11y: [
+  reactA11y: [
     {
       files: ["**/*.{js,mjs,cjs,jsx,mjsx,ts,tsx,mtsx}"],
       plugins: {
@@ -41,15 +41,8 @@ export const REACT_LINTER_PLUGINS = {
       rules: { ...jsxA11yPlugin.flatConfigs.recommended.rules },
     },
   ] as Linter.Config[],
-  testingReact: [
+  reactTesting: [
     testingPlugin.configs["flat/react"],
     testingPlugin.configs["flat/dom"],
   ] as Linter.Config[],
 };
-
-export default [
-  ...REACT_LINTER_PLUGINS.react,
-  ...REACT_LINTER_PLUGINS.reactHooks,
-  ...REACT_LINTER_PLUGINS.a11y,
-  ...REACT_LINTER_PLUGINS.testingReact,
-] as Linter.Config[];

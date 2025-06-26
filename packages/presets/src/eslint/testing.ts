@@ -13,5 +13,3 @@ export const TESTING_LINTER_PLUGINS = {
     },
   ] as Linter.Config[],
 };
-
-export default [...TESTING_LINTER_PLUGINS.jest] as Linter.Config[];

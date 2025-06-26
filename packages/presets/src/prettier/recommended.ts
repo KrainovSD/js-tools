@@ -19,6 +19,7 @@ export const recommended: Config = {
     "^@/features/(.*)$",
     "^@/entities/(.*)$",
     "^@/shared/(.*)$",
+    "^@/templates/(.*)$",
     "^@/organisms/(.*)$",
     "^@/molecules/(.*)$",
     "^@/atoms/(.*)$",

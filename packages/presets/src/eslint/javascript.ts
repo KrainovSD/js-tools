@@ -1,15 +1,8 @@
 import jsPlugin from "@eslint/js";
 import type { Linter } from "eslint";
-import prettierConfig from "eslint-config-prettier";
-import prettierPluginRecommended from "eslint-plugin-prettier/recommended";
 
 export const JS_LINTER_PLUGINS = {
   js: [jsPlugin.configs.all] as Linter.Config[],
-  prettier: [
-    prettierConfig,
-    prettierPluginRecommended,
-    { rules: { "prettier/prettier": ["error", { endOfLine: "auto" }] } },
-  ] as Linter.Config[],
   krainovJS: [
     {
       ignores: ["dist/**", "node_modules/**", "bin/**", "build/**", "lib/**", "tmp/**"],
@@ -78,9 +71,3 @@ export const JS_LINTER_PLUGINS = {
     },
   ] as Linter.Config[],
 };
-
-export default [
-  ...JS_LINTER_PLUGINS.js,
-  ...JS_LINTER_PLUGINS.prettier,
-  ...JS_LINTER_PLUGINS.krainovJS,
-] as Linter.Config[];
