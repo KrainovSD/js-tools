@@ -29,6 +29,7 @@ export default [
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "no-underscore-dangle": "off",
+      "no-bitwise": "off",
       "@typescript-eslint/strict-boolean-expressions": [
         "error",
         {

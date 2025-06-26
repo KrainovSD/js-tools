@@ -2,6 +2,7 @@
   import {
     type PositionPlacements,
     type VisiblePosition,
+    execAnimation,
     getVisiblePosition,
     isObject,
   } from "@krainovsd/js-helpers";
@@ -15,7 +16,6 @@
     useTemplateRef,
     watch,
   } from "vue";
-  import { execAnimation } from "../lib";
 
   export type PositionerAnimations = "translate" | "scale" | "scaleY";
 

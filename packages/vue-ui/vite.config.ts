@@ -20,7 +20,7 @@ export default defineConfig({
       tsconfigPath: "./tsconfig.build.json",
     }),
     vueDevTools(),
-    visualizer(),
+    visualizer({ gzipSize: true, filename: "./stats/stats.html" }),
   ],
   publicDir: production ? false : undefined,
   build: {

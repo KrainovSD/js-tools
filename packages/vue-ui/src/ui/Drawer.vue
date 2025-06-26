@@ -1,7 +1,7 @@
 <script setup lang="ts">
+  import { execAnimation } from "@krainovsd/js-helpers";
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
-  import { execAnimation } from "../lib";
   import Button from "./Button.vue";
   import Flex from "./Flex.vue";
   import Text from "./Text.vue";

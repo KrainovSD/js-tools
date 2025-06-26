@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { createGlobalId, execAnimation } from "@krainovsd/js-helpers";
   import {
     VCheckCircleFilled,
     VCloseCircleFilled,
@@ -7,7 +8,6 @@
   } from "@krainovsd/vue-icons";
   import { computed, provide, ref, shallowReactive, useTemplateRef } from "vue";
   import { SET_MESSAGE_INJECT_TOKEN } from "../hooks/useMessage";
-  import { createGlobalId, execAnimation } from "../lib";
 
   export type MessageType = "success" | "warning" | "error" | "info" | "loading";
   export type Message = {

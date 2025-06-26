@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { createGlobalId, execAnimation } from "@krainovsd/js-helpers";
   import {
     VCheckCircleFilled,
     VCloseCircleFilled,
@@ -8,7 +9,6 @@
   } from "@krainovsd/vue-icons";
   import { computed, nextTick, provide, ref, shallowReactive, useTemplateRef, watch } from "vue";
   import { SET_NOTIFICATION_INJECT_TOKEN } from "../hooks";
-  import { createGlobalId, execAnimation } from "../lib";
   import Button from "./Button.vue";
   import IconWrapper from "./IconWrapper.vue";
 
