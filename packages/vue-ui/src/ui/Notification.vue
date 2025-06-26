@@ -339,7 +339,7 @@
     list-style: none;
     font-family: var(--ksd-font-family);
     position: fixed;
-    z-index: var(--ksd-notification-z-index-popup);
+    z-index: var(--ksd-notification-z-index);
     margin-right: var(--ksd-margin-lg);
 
     &:where(.top-right) {

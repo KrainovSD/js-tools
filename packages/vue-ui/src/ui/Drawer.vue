@@ -25,7 +25,7 @@
     mask: true,
     placement: "right",
     open: false,
-    zIndex: 1000,
+    zIndex: undefined,
     header: undefined,
     ignoreCloseByClick: undefined,
     target: undefined,
@@ -186,6 +186,7 @@
     position: fixed;
     inset: 0;
     pointer-events: none;
+    z-index: var(--ksd-modal-z-index);
 
     &__mask {
       position: absolute;

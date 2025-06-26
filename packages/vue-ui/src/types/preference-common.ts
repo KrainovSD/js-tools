@@ -3,7 +3,7 @@ export type ThemeTransitionVariable =
   | "ksd-transition-mid"
   | "ksd-transition-slow";
 
-export type ThemeOther = "ksd-popup-z-index" | "ksd-opacity-loading";
+export type ThemeOther = "ksd-popup-z-index" | "ksd-opacity-loading" | "ksd-tooltip-z-index";
 
 export type ThemeSizes =
   | "ksd-control-height"

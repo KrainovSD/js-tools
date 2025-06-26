@@ -325,6 +325,11 @@
 </template>
 
 <style lang="scss">
+  div.ksd-search__positioner {
+    z-index: var(--ksd-select-z-index);
+    max-width: none;
+  }
+
   .ksd-search {
     &__popper-item {
       position: relative;
@@ -355,10 +360,6 @@
       & b {
         font-weight: 700;
       }
-    }
-
-    &__positioner {
-      max-width: none;
     }
 
     &__positioner-content {

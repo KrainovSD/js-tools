@@ -176,6 +176,10 @@
 </template>
 
 <style lang="scss">
+  div.ksd-popconfirm__positioner {
+    z-index: var(--ksd-pop-confirm-z-index);
+  }
+
   .ksd-popconfirm {
     &__positioner-content {
       padding: var(--ksd-pop-confirm-inner-padding);

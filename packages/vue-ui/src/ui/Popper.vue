@@ -377,6 +377,7 @@
       color: var(--ksd-bg-popper-color);
       max-width: 400px;
       max-height: 400px;
+      z-index: var(--ksd-popper-z-index);
 
       &[placement="bottom-left"],
       &[placement="bottom-center"],

@@ -341,6 +341,7 @@
     :placement="$props.placement"
     :z-index="$props.zIndex"
     :class-name-positioner-content="`ksd-select__popper ${$props.classNamePositionerContent ?? ''}`"
+    :class="`ksd-select__positioner ${$attrs.class ?? ''}`"
   >
     <div
       class="ksd-select"
@@ -512,6 +513,10 @@
 </template>
 
 <style lang="scss">
+  div.ksd-select__positioner {
+    z-index: var(--ksd-select-z-index);
+  }
+
   .ksd-select {
     margin: 0;
     padding: 0;
@@ -1128,7 +1133,6 @@
 
     &__popper {
       padding: var(--ksd-padding-xxs);
-      z-index: var(--ksd-select-z-index-popup);
     }
   }
 </style>

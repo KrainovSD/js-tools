@@ -61,16 +61,17 @@ export type ThemeSwitchVariable =
   | "ksd-switch-checked-color"
   | "ksd-switch-unchecked-color";
 
-export type ThemePopperVariable = "ksd-popper-inner-padding";
+export type ThemePopperVariable = "ksd-popper-inner-padding" | "ksd-popper-z-index";
 export type ThemeDropDownVariable =
   | "ksd-dropdown-inner-padding"
   | "ksd-dropdown-inner-padding-lg"
   | "ksd-dropdown-inner-min-width-lg"
-  | "ksd-dropdown-bg-item-color";
+  | "ksd-dropdown-bg-item-color"
+  | "ksd-dropdown-z-index";
 
 export type ThemeSelectVariable =
   | "ksd-select-internal_fixed_item_margin"
-  | "ksd-select-z-index-popup"
+  | "ksd-select-z-index"
   | "ksd-select-option-selected-color"
   | "ksd-select-option-selected-font-weight"
   | "ksd-select-option-selected-bg"
@@ -88,15 +89,14 @@ export type ThemeSelectVariable =
   | "ksd-select-show-arrow-padding-inline-end"
   | "ksd-select-selector-padding-sm";
 
-export type ThemePopConfirmVariable = "ksd-pop-confirm-inner-padding";
-
+export type ThemePopConfirmVariable = "ksd-pop-confirm-inner-padding" | "ksd-pop-confirm-z-index";
 export type ThemeMessageVariable =
-  | "ksd-message-z-index-popup"
+  | "ksd-message-z-index"
   | "ksd-message-content-bg"
   | "ksd-message-content-padding";
 
 export type ThemeNotificationVariable =
-  | "ksd-notification-z-index-popup"
+  | "ksd-notification-z-index"
   | "ksd-notification-width"
   | "ksd-notification-inline-margin"
   | "ksd-notification-block-margin"
@@ -118,7 +118,8 @@ export type ThemeModalVariable =
   | "ksd-modal-footer-border-top"
   | "ksd-modal-footer-border-radius"
   | "ksd-modal-footer-margin-top"
-  | "ksd-modal-margin-block";
+  | "ksd-modal-margin-block"
+  | "ksd-modal-z-index";
 
 export type ThemeTagVariable =
   | "ksd-tag-bg-color-magenta"

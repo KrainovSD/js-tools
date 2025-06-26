@@ -156,7 +156,7 @@
     position: fixed;
     width: 100%;
     top: 8px;
-    z-index: var(--ksd-message-z-index-popup);
+    z-index: var(--ksd-message-z-index);
     text-align: center;
 
     &__item-wrap {

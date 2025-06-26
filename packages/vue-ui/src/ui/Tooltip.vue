@@ -185,6 +185,11 @@
 </template>
 
 <style lang="scss">
+  div.ksd-tooltip__positioner {
+    z-index: var(--ksd-tooltip-z-index);
+    border-radius: var(--ksd-border-radius);
+  }
+
   .ksd-tooltip {
     width: 1px;
     height: 1px;
@@ -192,10 +197,6 @@
     overflow: hidden;
     position: absolute;
     white-space: nowrap;
-
-    &__positioner {
-      border-radius: var(--ksd-border-radius);
-    }
 
     &__positioner-content {
       border-radius: var(--ksd-border-radius);

@@ -208,7 +208,7 @@
     }
 
     &__mask {
-      z-index: 1000;
+      z-index: var(--ksd-modal-z-index);
       position: fixed;
       inset: 0;
       height: 100%;

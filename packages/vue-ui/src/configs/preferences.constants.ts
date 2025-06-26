@@ -1,5 +1,19 @@
 import type { ThemeName, ThemeVariableConfig } from "../types";
 
+/**
+Z-index:
+
+Modal - 100
+Popper - 110
+DropDown - 120
+PopConfirm - 130
+Select - 140
+Search - 140
+Notification - 150
+Message - 160
+Tooltip - 170
+ */
+
 export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
   light: {
     common: {
@@ -76,8 +90,9 @@ export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-font-size-xl": "20px",
       },
       other: {
-        "ksd-popup-z-index": "10",
+        "ksd-popup-z-index": "110",
         "ksd-opacity-loading": "0.65",
+        "ksd-tooltip-z-index": "170",
       },
       colors: {
         "ksd-bg-color": "#ffffff",
@@ -224,16 +239,18 @@ export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
       },
       popper: {
         "ksd-popper-inner-padding": "12px",
+        "ksd-popper-z-index": "110",
       },
       dropdown: {
         "ksd-dropdown-inner-padding": "5px 12px",
         "ksd-dropdown-inner-padding-lg": "12px",
         "ksd-dropdown-inner-min-width-lg": "150px",
         "ksd-dropdown-bg-item-color": "var(--ksd-bg-hover-color)",
+        "ksd-dropdown-z-index": "120",
       },
       select: {
         "ksd-select-internal_fixed_item_margin": "2px",
-        "ksd-select-z-index-popup": "1050",
+        "ksd-select-z-index": "140",
         "ksd-select-option-selected-color": "var(--ksd-text-main-color)",
         "ksd-select-option-selected-font-weight": "var(--ksd-font-weight-strong)",
         "ksd-select-option-selected-bg": "var(--ksd-accent-bg-color)",
@@ -253,14 +270,15 @@ export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
       },
       popconfirm: {
         "ksd-pop-confirm-inner-padding": "12px",
+        "ksd-pop-confirm-z-index": "130",
       },
       message: {
-        "ksd-message-z-index-popup": "2010",
+        "ksd-message-z-index": "160",
         "ksd-message-content-bg": "var(--ksd-bg-notice-color)",
         "ksd-message-content-padding": "9px 12px",
       },
       notification: {
-        "ksd-notification-z-index-popup": "2050",
+        "ksd-notification-z-index": "150",
         "ksd-notification-width": "384px",
         "ksd-notification-block-margin": "24px",
         "ksd-notification-inline-margin": "24px",
@@ -283,6 +301,7 @@ export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-modal-footer-border-radius": "0px",
         "ksd-modal-footer-margin-top": "12px",
         "ksd-modal-margin-block": "100px",
+        "ksd-modal-z-index": "100",
       },
       tag: {
         "ksd-tag-bg-color-magenta": "#fff0f6",
@@ -416,8 +435,9 @@ export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-font-size-xl": "20px",
       },
       other: {
-        "ksd-popup-z-index": "10",
+        "ksd-popup-z-index": "110",
         "ksd-opacity-loading": "0.65",
+        "ksd-tooltip-z-index": "170",
       },
       colors: {
         "ksd-bg-color": "#141414",
@@ -564,16 +584,18 @@ export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
       },
       popper: {
         "ksd-popper-inner-padding": "12px",
+        "ksd-popper-z-index": "110",
       },
       dropdown: {
         "ksd-dropdown-inner-padding": "5px 12px",
         "ksd-dropdown-inner-padding-lg": "12px",
         "ksd-dropdown-inner-min-width-lg": "150px",
         "ksd-dropdown-bg-item-color": "var(--ksd-bg-hover-color)",
+        "ksd-dropdown-z-index": "120",
       },
       select: {
         "ksd-select-internal_fixed_item_margin": "2px",
-        "ksd-select-z-index-popup": "1050",
+        "ksd-select-z-index": "140",
         "ksd-select-option-selected-color": "var(--ksd-text-main-color)",
         "ksd-select-option-selected-font-weight": "var(--ksd-font-weight-strong)",
         "ksd-select-option-selected-bg": "var(--ksd-accent-bg-color)",
@@ -593,14 +615,15 @@ export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
       },
       popconfirm: {
         "ksd-pop-confirm-inner-padding": "12px",
+        "ksd-pop-confirm-z-index": "130",
       },
       message: {
-        "ksd-message-z-index-popup": "2010",
+        "ksd-message-z-index": "160",
         "ksd-message-content-bg": "var(--ksd-bg-notice-color)",
         "ksd-message-content-padding": "9px 12px",
       },
       notification: {
-        "ksd-notification-z-index-popup": "2050",
+        "ksd-notification-z-index": "150",
         "ksd-notification-width": "384px",
         "ksd-notification-block-margin": "24px",
         "ksd-notification-inline-margin": "24px",
@@ -623,6 +646,7 @@ export const THEME_CONFIG: Record<ThemeName, ThemeVariableConfig> = {
         "ksd-modal-footer-border-radius": "0px",
         "ksd-modal-footer-margin-top": "12px",
         "ksd-modal-margin-block": "100px",
+        "ksd-modal-z-index": "100",
       },
       tag: {
         "ksd-tag-bg-color-magenta": "#291321",

@@ -423,6 +423,10 @@
 </template>
 
 <style lang="scss">
+  div.ksd-dropdown__positioner {
+    z-index: var(--ksd-dropdown-z-index);
+  }
+
   .ksd-dropdown {
     &__element {
       display: flex;
