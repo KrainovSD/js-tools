@@ -133,7 +133,7 @@
       document.addEventListener("mousedown", actionClick, { signal: eventController.signal });
       document.addEventListener("touchstart", actionClick, { signal: eventController.signal });
       document.addEventListener("pointerdown", actionClick, { signal: eventController.signal });
-      modalRef.addEventListener("keydown", actionKeyBoard, { signal: eventController.signal });
+      document.addEventListener("keydown", actionKeyBoard, { signal: eventController.signal });
 
       clean(() => {
         eventController.abort();

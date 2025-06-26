@@ -138,7 +138,7 @@
       document.addEventListener("mousedown", closeByClickOutside, { signal: controller.signal });
       document.addEventListener("touchstart", closeByClickOutside, { signal: controller.signal });
       document.addEventListener("pointerdown", closeByClickOutside, { signal: controller.signal });
-      drawerRef.addEventListener("keydown", closeByEscape, { signal: controller.signal });
+      document.addEventListener("keydown", closeByEscape, { signal: controller.signal });
 
       clean(() => {
         controller.abort();
