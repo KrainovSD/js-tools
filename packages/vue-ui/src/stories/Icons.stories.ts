@@ -20,7 +20,7 @@ const Template: StoryFn<typeof FIRST_ICON> = (args) => ({
     const search = ref("");
 
     function copyToClipboard(textToCopy: string) {
-      if (navigator.clipboard && window.isSecureContext) {
+      if (navigator.clipboard != undefined && window.isSecureContext) {
         return navigator.clipboard.writeText(textToCopy);
       }
 

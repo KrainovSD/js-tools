@@ -1,9 +1,8 @@
+import { presets } from "@krainovsd/presets/rollup";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 import type { InputPluginOption } from "rollup";
-import externals from "rollup-plugin-peer-deps-external";
-import { visualizer } from "rollup-plugin-visualizer";
-import { defineConfig } from "vite";
+import { type PluginOption, defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import vueDevTools from "vite-plugin-vue-devtools";
 
@@ -20,7 +19,7 @@ export default defineConfig({
       tsconfigPath: "./tsconfig.build.json",
     }),
     vueDevTools(),
-    visualizer(),
+    presets.plugins.visualizer() as PluginOption,
   ],
   publicDir: production ? false : undefined,
   build: {
@@ -42,7 +41,7 @@ export default defineConfig({
           generatedCode: "es2015",
         },
       ],
-      plugins: [externals({ includeDependencies: true }) as InputPluginOption],
+      plugins: [presets.plugins.externals({ includeDependencies: true }) as InputPluginOption],
     },
   },
   server: {
