@@ -133,7 +133,8 @@
       initialPosition: {
         targetNode:
           props.target && "getBoundingClientRect" in props.target ? props.target : undefined,
-        position: props.target && "width" in props.target ? props.target : undefined,
+        position:
+          props.target && !("getBoundingClientRect" in props.target) ? props.target : undefined,
       },
       nested: props.nested,
       placement: props.placement ?? "bottom-center",

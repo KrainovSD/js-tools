@@ -133,7 +133,7 @@
           };
         });
       },
-      { name: "test", iterations: 1 },
+      { name: "fuzzy-search", iterations: 1 },
     );
   });
 
