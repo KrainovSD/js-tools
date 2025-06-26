@@ -10,6 +10,7 @@
     openDelay?: number;
     hoverDelay?: number;
     classNamePositionerContent?: string;
+    classNamePositionerArrow?: string;
     closeDelay?: number;
     zIndex?: number;
     placement?: Exclude<PositionPlacements, "flex">;
@@ -32,6 +33,7 @@
     arrow: false,
     observe: false,
     classNamePositionerContent: undefined,
+    classNamePositionerArrow: undefined,
     closeDelay: 0,
     openDelay: 100,
     hoverDelay: 0,
@@ -339,6 +341,7 @@
     :arrow="$props.arrow"
     :target="targetNode"
     :class-name-content="`ksd-popper__positioner-content ${$props.classNamePositionerContent ?? ''}`"
+    :class-name-arrow="`ksd-popper__positioner-arrow ${props.classNamePositionerArrow ?? ''}`"
     :class="['ksd-popper__positioner']"
     v-bind="$attrs"
     :z-index="$props.zIndex"
@@ -449,6 +452,10 @@
           }
         }
       }
+    }
+
+    &__positioner-arrow {
+      color: var(--ksd-bg-popper-color);
     }
 
     &__positioner-content {

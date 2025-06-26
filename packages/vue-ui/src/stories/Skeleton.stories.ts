@@ -25,7 +25,9 @@ const Template: StoryFn<typeof VSkeleton> = (args) => ({
 });
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  type: "button",
+};
 
 export const AllInOne: Story = {
   render: (args) => ({

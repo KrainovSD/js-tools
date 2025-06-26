@@ -15,19 +15,14 @@ type Story = StoryObj<typeof meta>;
 const Template: StoryFn<typeof VCheckBox> = (args) => ({
   components: { VCheckBox },
   setup() {
-    const checked = ref(false);
-
-    function onChange(check: boolean) {
-      checked.value = check;
-    }
-
-    return { args, checked, onChange };
+    return { args };
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
       h(
         VCheckBox,
-        { ...args, checked: this.checked, onChange: this.onChange },
+
+        { ...args },
         () => "Выбрать значение",
       ),
     ]);

@@ -74,6 +74,7 @@ export type ThemeColorVariable =
   | "ksd-bg-sidebar-color"
   | "ksd-bg-header-color"
   | "ksd-bg-modal-color"
+  | "ksd-bg-tooltip-color"
   | "ksd-bg-hover-color"
   | "ksd-bg-active-color"
   | "ksd-bg-disabled-color"

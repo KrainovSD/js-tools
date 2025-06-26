@@ -170,6 +170,7 @@
     :target="cursorPosition != undefined ? cursorPosition : content"
     class-name-content="ksd-tooltip__positioner-content"
     :class="'ksd-tooltip__positioner'"
+    class-name-arrow="ksd-tooltip__positioner-arrow"
     v-bind="$attrs"
     :modal-root="$props.modalRoot"
     :placement="$props.placement"
@@ -198,7 +199,7 @@
 
     &__positioner-content {
       border-radius: var(--ksd-border-radius);
-      background-color: var(--ksd-bg-reverse-color);
+      background-color: var(--ksd-bg-tooltip-color);
       color: var(--ksd-text-reverse-color);
       padding: calc(var(--ksd-padding-sm) / 2) var(--ksd-padding-xs);
       word-break: break-word;
@@ -207,6 +208,10 @@
       max-height: 350px;
       min-width: calc(var(--ksd-border-radius) * 2 + 32px);
       min-height: var(--ksd-control-height);
+    }
+
+    &__positioner-arrow {
+      color: var(--ksd-bg-tooltip-color);
     }
   }
 </style>

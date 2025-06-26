@@ -35,7 +35,7 @@ const Template: StoryFn<typeof VDrawer> = (args) => ({
       h(VDrawer, {
         ...args,
         onClose: this.toggleDrawer,
-        open: this.open,
+        modelValue: this.open,
       }),
     ]);
   },
@@ -52,7 +52,6 @@ export const AllInOne: Story = {
     setup() {
       const openFirst = ref(false);
       function toggleFirst() {
-        console.log("toggle first");
         openFirst.value = !openFirst.value;
       }
       const openSecond = ref(false);

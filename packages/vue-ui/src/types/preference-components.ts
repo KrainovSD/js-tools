@@ -99,7 +99,8 @@ export type ThemeNotificationVariable =
   | "ksd-notification-z-index-popup"
   | "ksd-notification-width"
   | "ksd-notification-inline-margin"
-  | "ksd-notification-block-margin";
+  | "ksd-notification-block-margin"
+  | "ksd-notification-blur-bg-color";
 
 export type ThemeModalVariable =
   | "ksd-modal-footer-bg"

@@ -30,6 +30,8 @@ const themeDecorator = <T extends Record<string, string>>({
 
     injectThemeStyle({ fontSize: 14, theme: selected as ThemeName, themeConfig: THEME_CONFIG });
     document.documentElement.style.cssText += `background: var(--ksd-bg-color)`;
+    document.documentElement.style.cssText += `color: var(--ksd-text-main-color)`;
+    document.documentElement.style.cssText += `position: relative`;
 
     return {
       components: { story, ThemeProvider },

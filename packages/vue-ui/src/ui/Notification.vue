@@ -413,7 +413,7 @@
       }
 
       &:not(:last-child):where(.squash) {
-        background: transparent;
+        background: var(--ksd-notification-blur-bg-color);
         backdrop-filter: blur(10px);
         -webkit-backdrop-filter: blur(10px);
       }

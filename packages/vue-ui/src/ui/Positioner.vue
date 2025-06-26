@@ -42,6 +42,7 @@
     zIndex?: number;
     modalRoot?: string | HTMLElement | null;
     classNameContent?: string;
+    classNameArrow?: string;
     shiftX?: number;
     shiftY?: number;
     target: HTMLElement | PositionerTargetNodePosition | undefined | null;
@@ -271,6 +272,7 @@
         v-if="$props.arrow"
         :size="16"
         class="ksd-positioner__arrow"
+        :class="$props.classNameArrow"
         :style="arrowStyles"
       />
       <div

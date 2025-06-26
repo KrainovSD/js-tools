@@ -16,17 +16,43 @@ type Story = StoryObj<typeof meta>;
 const Template: StoryFn<typeof VModal> = (args) => ({
   components: { VModal },
   setup() {
-    return { args };
+    const open = ref(false);
+
+    return { args, open };
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-      h(VModal, { ...args }, () => "Выбрать значение"),
+      h(
+        VButton,
+        {
+          onClick: () => {
+            this.open = true;
+          },
+        },
+        () => "Default",
+      ),
+      h(
+        VModal,
+        {
+          ...args,
+          style: {
+            minWidth: "50%",
+          },
+          modelValue: this.open,
+          "onUpdate:modelValue": (value) => {
+            this.open = value;
+          },
+        },
+        () => "Контент",
+      ),
     ]);
   },
 });
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  header: "Title",
+};
 
 export const AllInOne: Story = {
   render: (args) => ({
