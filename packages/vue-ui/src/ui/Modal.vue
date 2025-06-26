@@ -90,7 +90,10 @@
       }
 
       function actionClick(event: MouseEvent | TouchEvent) {
-        const node = event.target as Node;
+        const node = event.target as HTMLElement;
+        if (node.closest("[ksd-popper]")) {
+          return;
+        }
 
         if (
           modalRef?.contains?.(node) ||

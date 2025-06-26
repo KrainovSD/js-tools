@@ -352,6 +352,7 @@
     :animation-appear="$props.animationAppear"
     :animation-disappear="$props.animationDisappear"
     :nested="$props.nested"
+    :ksd-popper="true"
     :style="{
       width: $props.fit
         ? undefined
