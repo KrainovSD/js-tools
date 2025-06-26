@@ -1,40 +1,21 @@
 <script setup lang="ts" generic="T extends string">
   import "@krainovsd/vue-icons/styles";
   import { watch } from "vue";
+  import { injectThemeStyle } from "../lib";
   import type { ThemeVariableConfig } from "../types";
 
   type Props = {
-    theme: T;
-    fontSize: number;
-    themeConfig: Record<T, ThemeVariableConfig>;
+    theme?: T;
+    fontSize?: number;
+    themeConfig?: Record<T, ThemeVariableConfig>;
   };
 
   const props = defineProps<Props>();
 
   watch(
-    (): [T, number] => [props.theme, props.fontSize],
+    (): [T | undefined, number | undefined] => [props.theme, props.fontSize],
     (state) => {
-      const themeConfig = props.themeConfig[state[0]];
-      const common = Object.values(themeConfig.common)
-        .map((type) =>
-          Object.entries(type).map(([key, value]) =>
-            value != undefined ? `--${key}: ${value};` : "",
-          ),
-        )
-        .flat(2)
-        .filter((el) => el != "")
-        .join(" ");
-      const components = Object.values(themeConfig.components)
-        .map((type) =>
-          Object.entries(type).map(([key, value]) =>
-            value != undefined ? `--${key}: ${value};` : "",
-          ),
-        )
-        .flat(2)
-        .filter((el) => el != "")
-        .join(" ");
-
-      document.documentElement.style.cssText = `font-size: ${state[1]}px; ${common} ${components} `;
+      injectThemeStyle({ fontSize: state[1], theme: state[0], themeConfig: props.themeConfig });
     },
     { immediate: true },
   );

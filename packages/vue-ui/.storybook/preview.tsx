@@ -1,7 +1,8 @@
 import { DecoratorHelpers } from "@storybook/addon-themes";
 import { type Decorator, setup } from "@storybook/vue3";
 import { computed } from "vue";
-import { THEME_COLORS } from "../src/configs/preferences.constants";
+import { THEME_CONFIG } from "../src/configs/preferences.constants";
+import { injectThemeStyle } from "../src/lib/inject-theme-style";
 import ThemeProvider from "../src/providers/ThemeProvider.vue";
 import type { ThemeName } from "../src/types";
 import "./global.css";
@@ -24,33 +25,11 @@ const themeDecorator = <T extends Record<string, string>>({
     const selectedTheme = pluckThemeFromContext(context);
     const themeOverride = (context.parameters.theme ?? context.globals.theme) as string | undefined;
 
-    const selected = themeOverride ?? selectedTheme ?? defaultTheme;
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/strict-boolean-expressions
+    const selected = themeOverride || selectedTheme || defaultTheme;
 
-    function changeTheme() {
-      const themeConfig = THEME_COLORS[selected as ThemeName];
-      const common = Object.values(themeConfig.common)
-        .map((type) =>
-          Object.entries(type).map(([key, value]) =>
-            value != undefined ? `--${key}: ${value};` : "",
-          ),
-        )
-        .flat(2)
-        .filter((el) => el != "")
-        .join(" ");
-      const components = Object.values(themeConfig.components)
-        .map((type) =>
-          Object.entries(type).map(([key, value]) =>
-            value != undefined ? `--${key}: ${value};` : "",
-          ),
-        )
-        .flat(2)
-        .filter((el) => el != "")
-        .join(" ");
-
-      document.documentElement.style.cssText = `font-size: 14px; ${common} ${components} `;
-    }
-
-    changeTheme();
+    injectThemeStyle({ fontSize: 14, theme: selected as ThemeName, themeConfig: THEME_CONFIG });
+    document.documentElement.style.cssText += `background: var(--ksd-bg-color)`;
 
     return {
       components: { story, ThemeProvider },
@@ -59,10 +38,9 @@ const themeDecorator = <T extends Record<string, string>>({
 
         return {
           theme,
-          THEME_COLORS,
         };
       },
-      template: `<ThemeProvider :theme="theme" :theme-config="THEME_COLORS" :font-size="14">
+      template: `<ThemeProvider>
                       <story />
                 </ThemeProvider>`,
     };

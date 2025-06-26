@@ -365,7 +365,7 @@
 
     &__item-wrap {
       margin-inline-start: auto;
-      background: var(--ksd-bg-modal-color);
+      background: var(--ksd-bg-notice-color);
       border-radius: var(--ksd-border-radius-lg);
       box-shadow: var(--ksd-shadow);
       overflow: unset;

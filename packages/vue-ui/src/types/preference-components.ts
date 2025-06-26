@@ -8,7 +8,7 @@ export type ThemeButtonVariable =
   | "ksd-button-border-disabled-color"
   | "ksd-button-text-disabled-color"
   | "ksd-button-bg-disabled-color";
-export type ThemeDividerVariable = "ksd-divider-color" | "ksd-divider-width";
+export type ThemeDividerVariable = "ksd-divider-width";
 export type ThemeInputVariable =
   | "ksd-input-padding-block"
   | "ksd-input-padding-inline"

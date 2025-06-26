@@ -371,7 +371,7 @@
 
     &__positioner {
       border-radius: var(--ksd-border-radius-lg);
-      color: var(--ksd-bg-modal-color);
+      color: var(--ksd-bg-popper-color);
       max-width: 400px;
       max-height: 400px;
 
@@ -456,7 +456,7 @@
       color: var(--ksd-text-main-color);
       font-size: var(--ksd-font-size);
       line-height: var(--ksd-line-height);
-      background-color: var(--ksd-bg-modal-color);
+      background-color: var(--ksd-bg-popper-color);
       padding: var(--ksd-popper-inner-padding);
       min-width: calc(var(--ksd-border-radius) * 2 + 32px);
       min-height: var(--ksd-control-height);
