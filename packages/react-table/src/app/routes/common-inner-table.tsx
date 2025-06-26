@@ -72,7 +72,6 @@ export function CommonInnerTable() {
       expanded={expanded}
       onExpandedChange={setExpanded}
       rowRender={(row) => {
-        // eslint-disable-next-line no-underscore-dangle
         if (!row.original._EXPANDED_ROW) return null;
 
         return (

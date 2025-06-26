@@ -51,7 +51,7 @@
     "@krainovsd/js-helpers": "0.14.3"
   },
   "devDependencies": {
-    "@krainovsd/presets": "0.3.1",
+    "@krainovsd/presets": "0.3.5",
     "rollup": "4.34.9",
     "prettier": "3.6.1",
     "eslint": "9.29.0",

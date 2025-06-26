@@ -63,7 +63,7 @@ export function TableGanttCell<
     }
   }
 
-  if (rowInfo.textWidth > rowInfo.width && opts.bodyWidth) {
+  if (rowInfo.textWidth > rowInfo.width && opts.bodyWidth != undefined) {
     textMaxWidth = opts.bodyWidth - rowInfo.width - rowInfo.left - 25;
   }
 
@@ -150,7 +150,8 @@ export function TableGanttCell<
           )}
         </Tooltip>
       )}
-      {!!ganttInfo.dependents?.length &&
+      {ganttInfo.dependents &&
+        ganttInfo.dependents.length > 0 &&
         opts.arrowContainer &&
         createPortal(
           <GanttArrow

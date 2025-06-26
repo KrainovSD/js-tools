@@ -59,7 +59,6 @@ export function TableCommon<RowData extends Record<string, unknown>>(
 
     const tableWidth = tableRef.current.getBoundingClientRect().width;
     const visibleHeaders = visibleHeadersGroup?.[0]?.headers ?? [];
-    // eslint-disable-next-line no-underscore-dangle
     const defaultColumnSize = props.table._getDefaultColumnDef().size ?? DEFAULT_TABLE_COLUMN_SIZE;
 
     const columnSizing: ColumnSizingState = {};

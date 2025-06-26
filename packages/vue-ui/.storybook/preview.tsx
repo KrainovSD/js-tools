@@ -25,7 +25,7 @@ const themeDecorator = <T extends Record<string, string>>({
     const selectedTheme = pluckThemeFromContext(context);
     const themeOverride = (context.parameters.theme ?? context.globals.theme) as string | undefined;
 
-    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing, @typescript-eslint/strict-boolean-expressions
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const selected = themeOverride || selectedTheme || defaultTheme;
 
     injectThemeStyle({ fontSize: 14, theme: selected as ThemeName, themeConfig: THEME_CONFIG });

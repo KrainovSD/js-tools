@@ -83,7 +83,10 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
               : cellRenderProps?.className,
           )}
           style={{
-            paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
+            paddingLeft:
+              cellRenderProps?.shift != undefined
+                ? extraPadding * cellRenderProps.shift
+                : undefined,
           }}
         >
           {isExpandable && Expander && <Expander context={props.context} />}
@@ -112,7 +115,10 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
               : cellRenderProps?.className,
           )}
           style={{
-            paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
+            paddingLeft:
+              cellRenderProps?.shift != undefined
+                ? extraPadding * cellRenderProps.shift
+                : undefined,
           }}
         >
           {isExpandable && Expander && <Expander context={props.context} />}
@@ -169,7 +175,8 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
             : cellRenderProps?.className,
         )}
         style={{
-          paddingLeft: cellRenderProps.shift ? extraPadding * cellRenderProps.shift : undefined,
+          paddingLeft:
+            cellRenderProps.shift != undefined ? extraPadding * cellRenderProps.shift : undefined,
         }}
       >
         {isExpandable && Expander && <Expander context={props.context} />}
@@ -363,7 +370,8 @@ export function SelectCellRender<Row extends Record<string, unknown>>(props: {
             : cellRenderProps?.className,
         )}
         style={{
-          paddingLeft: cellRenderProps?.shift ? extraPadding * cellRenderProps.shift : undefined,
+          paddingLeft:
+            cellRenderProps?.shift != undefined ? extraPadding * cellRenderProps.shift : undefined,
         }}
         onClick={(event) => event.stopPropagation()}
         onDoubleClick={(event) => event.stopPropagation()}

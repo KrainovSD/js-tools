@@ -50,7 +50,7 @@ export type RowGanttVirtual = Omit<RowGantt, "children"> & {
   wide28: number;
   wide29: number;
   wide30: number;
-  children: RowGanttVirtual[];
+  children?: RowGanttVirtual[];
 };
 
 export type GanttMeta = {};

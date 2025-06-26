@@ -47,6 +47,9 @@ export const JS_LINTER_PLUGINS = {
         "no-invalid-this": "off",
         "no-nested-ternary": "off",
         "no-duplicate-imports": "off",
+        "no-underscore-dangle": "off",
+        "id-length": "off",
+        "no-bitwise": "off",
 
         "no-console": ["warn", { allow: ["warn", "error"] }],
         "no-await-in-loop": "error",
@@ -55,7 +58,6 @@ export const JS_LINTER_PLUGINS = {
           { blankLine: "always", prev: "*", next: "return" },
         ],
         "prefer-const": ["error", { destructuring: "all" }],
-        "no-bitwise": ["error", { allow: ["~"] }],
         "no-implicit-coercion": [
           "error",
           {
@@ -66,7 +68,6 @@ export const JS_LINTER_PLUGINS = {
             number: true,
           },
         ],
-        "id-length": ["error", { exceptions: ["x", "y", "z", "i", "j", "_", "t"] }],
       },
     },
   ] as Linter.Config[],

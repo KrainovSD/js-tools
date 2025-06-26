@@ -33,6 +33,8 @@ export const TS_LINTER_PLUGIN = {
         "@typescript-eslint/consistent-type-definitions": "off",
         "@typescript-eslint/no-for-in-array": "off",
         "@typescript-eslint/no-unnecessary-type-assertion": "off",
+        "@typescript-eslint/prefer-for-of": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off",
 
         "@typescript-eslint/no-confusing-void-expression": [
           "error",
@@ -49,19 +51,6 @@ export const TS_LINTER_PLUGIN = {
             ignoreBooleanCoercion: true,
             ignoreConditionalTests: true,
             ignorePrimitives: { string: false, number: false, bigint: false, boolean: true },
-          },
-        ],
-        "@typescript-eslint/strict-boolean-expressions": [
-          "error",
-          {
-            allowAny: true,
-            allowNullableBoolean: true,
-            allowNullableEnum: true,
-            allowNullableNumber: false,
-            allowNullableObject: true,
-            allowNullableString: true,
-            allowNumber: false,
-            allowString: false,
           },
         ],
       },

@@ -285,7 +285,7 @@ export function Table<
 
     return null;
   } finally {
-    if (props.showPerf && startRender) {
+    if (props.showPerf && startRender != undefined) {
       const endRender = performance.now();
       // eslint-disable-next-line no-console
       console.log(endRender - startRender);
