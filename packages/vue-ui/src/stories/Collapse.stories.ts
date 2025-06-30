@@ -64,5 +64,5 @@ export const AllInOne: Story = {
         ),
       ]),
   }),
-  args: { initialOpen: true },
+  args: { initialOpen: true, header: "Header" },
 };
