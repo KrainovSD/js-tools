@@ -28,6 +28,7 @@
     | "shiftY"
     | "placement"
     | "zIndex"
+    | "nested"
   >;
   type Emits = {
     click: [];
@@ -140,6 +141,7 @@
     :shift-y="$props.shiftY"
     :placement="$props.placement"
     :z-index="$props.zIndex"
+    :nested="$props.nested"
     :class-name-positioner-content="`ksd-popconfirm__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class="`ksd-popconfirm__positioner ${$attrs.class ?? ''}`"
   >

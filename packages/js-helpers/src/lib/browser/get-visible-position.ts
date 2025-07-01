@@ -120,10 +120,19 @@ export function getVisiblePosition({
   /** Inherit Position */
   let inheritLeft = 0;
   let inheritTop = 0;
+  let inheritHeight = 0;
+  let inheritWidth = 0;
   if (nested) {
-    const { left = 0, top = 0 } = node.parentElement?.getBoundingClientRect?.() ?? {};
+    const {
+      left = 0,
+      top = 0,
+      height = 0,
+      width = 0,
+    } = node.parentElement?.getBoundingClientRect?.() ?? {};
     inheritLeft = left + scrollLeft;
     inheritTop = top + scrollTop;
+    inheritHeight = height;
+    inheritWidth = width;
   }
 
   /** Initial Position */
@@ -200,8 +209,12 @@ export function getVisiblePosition({
     placement: visiblePositions.placement,
     left: visiblePositions.left,
     top: visiblePositions.top,
-    bottom: totalHeight - (visiblePositions.top + nodeHeight),
-    right: totalWidth - (visiblePositions.left + nodeWidth),
+    bottom: nested
+      ? inheritHeight - (visiblePositions.top + nodeHeight)
+      : totalHeight - (visiblePositions.top + nodeHeight),
+    right: nested
+      ? inheritWidth - (visiblePositions.left + nodeWidth)
+      : totalWidth - (visiblePositions.left + nodeWidth),
   };
 }
 

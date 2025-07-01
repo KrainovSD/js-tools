@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { type Component, computed, ref, useTemplateRef, watch, watchEffect } from "vue";
+  import { VPopConfirm } from ".";
   import ArrowMenu, { type ArrowMenuProps } from "./ArrowMenu.vue";
   import Divider from "./Divider.vue";
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
@@ -9,15 +10,23 @@
   export type DropDownInteractiveMode = "focusable" | "keyboard";
   export type DropDownSize = "default" | "large";
 
+  export type DropDownItemPopConfirmOptions = {
+    okText?: string;
+    cancelText?: string;
+    title: string;
+    text: string;
+  };
+
   export type DropDownMenuItem = {
     key: string;
     danger?: boolean;
     divider?: boolean;
     disabled?: boolean;
     link?: boolean;
+    popConfirm?: DropDownItemPopConfirmOptions;
     label?: string | Component;
     icon?: Component;
-    onClick?: (event: MouseEvent) => void;
+    onClick?: (event?: MouseEvent) => void;
     innerOptions?: DropDownMenuItemInner;
   };
   export type DropDownMenuItemInner = {
@@ -108,6 +117,11 @@
     return "right";
   }
 
+  function actionClickPopConfirm() {
+    const closeEvent = new Event("closedropdown", { bubbles: true, cancelable: true });
+    positionerRef.value?.dispatchEvent?.(closeEvent);
+  }
+
   watchEffect(() => {
     popperRef.value?.targetNode?.setAttribute?.("aria-haspopup", "true");
   });
@@ -156,9 +170,11 @@
         element.prevItem = interactiveElements[prevIndex];
         element.nextItem = interactiveElements[nextIndex];
 
+        element.addEventListener("mousemove", focusByHover, { signal: eventController.signal });
+
+        if (element.hasAttribute("aria-haspopup")) return;
         element.addEventListener("click", actionClick, { signal: eventController.signal });
         element.addEventListener("mousedown", actionWheel, { signal: eventController.signal });
-        element.addEventListener("mousemove", focusByHover, { signal: eventController.signal });
       });
 
       positionerContentRef.addEventListener("keydown", actionKeyboard, {
@@ -192,11 +208,6 @@
       }
       function actionClick(event: MouseEvent | KeyboardEvent) {
         const target = event.target as HTMLElement;
-        const currentTarget = event.currentTarget as HTMLDropDownItem;
-
-        if (currentTarget.classList.contains("parent")) {
-          return;
-        }
 
         if (target.classList.contains("link")) {
           const link = target.querySelector<HTMLElement>("a");
@@ -366,21 +377,47 @@
     <slot></slot>
     <template #content>
       <template v-for="item in $props.menu" :key="item.key">
+        <Divider v-if="item.divider" class="ksd-dropdown__divider" role="separator" />
         <div
-          v-if="!item.divider && !item.innerOptions"
+          v-if="!item.divider && !item.innerOptions && !item.popConfirm"
           role="menuitem"
           class="ksd-dropdown__element"
           :data-level="$props.level"
-          :class="[itemClasses, { link: item.link }]"
+          :class="[itemClasses, { link: item.link, danger: item.danger }]"
           @click="item.onClick"
         >
           <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
           <component :is="item.label" v-if="isComponent(item.label)" />
           <Text v-else>{{ item.label }}</Text>
         </div>
-        <Divider v-if="item.divider" class="ksd-dropdown__divider" role="separator" />
+        <VPopConfirm
+          v-if="!item.divider && !item.innerOptions && item.popConfirm"
+          :text="item.popConfirm.text"
+          :title="item.popConfirm.title"
+          :modal-root="positionerRef"
+          placement="right-top"
+          :nested="true"
+          @click="
+            () => {
+              item.onClick?.();
+              actionClickPopConfirm();
+            }
+          "
+        >
+          <div
+            role="menuitem"
+            class="ksd-dropdown__element"
+            :data-level="$props.level"
+            :class="[itemClasses, { link: item.link, danger: item.danger }]"
+            aria-haspopup="true"
+          >
+            <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
+            <component :is="item.label" v-if="isComponent(item.label)" />
+            <Text v-else>{{ item.label }}</Text>
+          </div>
+        </VPopConfirm>
         <DropDown
-          v-if="item.innerOptions"
+          v-if="!item.divider && item.innerOptions"
           v-bind="item.innerOptions"
           :modal-root="positionerRef"
           :placement="item.innerOptions.placement ?? 'right-top'"
@@ -390,7 +427,7 @@
         >
           <div
             role="menuitem"
-            class="ksd-dropdown__element parent"
+            class="ksd-dropdown__element"
             :data-nested-placement="getFirstPlacementFromInner(item.innerOptions.placement)"
             :class="[itemClasses, { link: item.link }]"
             :data-level="$props.level"
@@ -442,6 +479,14 @@
       transition: all var(--ksd-transition-mid);
       border-radius: var(--ksd-border-radius-sm);
 
+      &.danger {
+        color: var(--ksd-error-color);
+
+        & span {
+          color: var(--ksd-error-color);
+        }
+      }
+
       &.large {
         padding: var(--ksd-dropdown-inner-padding-lg);
         min-width: var(--ksd-dropdown-inner-min-width-lg);
@@ -450,6 +495,15 @@
       &:focus-within {
         background-color: var(--ksd-dropdown-bg-item-color);
         outline: none;
+
+        &.danger {
+          color: var(--ksd-text-reverse-color);
+          background-color: var(--ksd-error-color);
+
+          & span {
+            color: var(--ksd-text-reverse-color);
+          }
+        }
       }
 
       &:focus-visible {

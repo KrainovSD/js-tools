@@ -243,7 +243,12 @@ export const AllInOne: Story = {
     menu: [
       { key: "1", link: true, label: h("a", { href: "#test" }, ["Пункт 1"]) },
       { key: "2", label: "Пункт 2" },
-      { key: "3", label: "Пункт 3" },
+      {
+        key: "3",
+        label: "Пункт 3 (pop)",
+        popConfirm: { text: "Спасибо за внимание!", title: "Внимание" },
+      },
+      { key: "5", label: "Опасный пункт", danger: true },
       { key: "0", divider: true },
       {
         key: "4",
