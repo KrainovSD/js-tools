@@ -1394,8 +1394,8 @@ importers:
         specifier: 0.14.3
         version: 0.14.3
       '@krainovsd/vue-icons':
-        specifier: 0.1.0
-        version: 0.1.0(vue@3.5.14(typescript@5.8.3))
+        specifier: 0.1.1
+        version: 0.1.1(vue@3.5.14(typescript@5.8.3))
       fuzzysort:
         specifier: 3.1.0
         version: 3.1.0
@@ -2991,9 +2991,6 @@ packages:
       node-fetch:
         optional: true
 
-  '@krainovsd/js-helpers@0.14.1':
-    resolution: {integrity: sha512-jEdXOzAiUAZXKO82FeCAj3h+n9fd8c1QCNf16klBXSRJU3dOqFNEx1Tb/t3ujJPArU4+CTTHeDkUXgi2HmKCew==}
-
   '@krainovsd/js-helpers@0.14.3':
     resolution: {integrity: sha512-kSwS8CbDKHoiWagjsP4G7qI0oR3tAoon/OHdgnEj3vfhpt3qHnDk78jBWbKzmY0ZXq7GqtTFcNE+HF7aQs0KFA==}
 
@@ -3063,8 +3060,8 @@ packages:
   '@krainovsd/utils@0.1.1':
     resolution: {integrity: sha512-kVZ2uu3hOuUyUrOAAz8EM35Dv2EABVIHZwgYJKsEWHGoqJN8LAa/ARGg7WA9ymVyjQ35NxOtB2wqMwNe2UNOpA==}
 
-  '@krainovsd/vue-icons@0.1.0':
-    resolution: {integrity: sha512-JqvIKai5qIBpnP0cShhuhjWX1Vp/W571fBxNiALScOXh4jQLa3wxKu4h3fq7nQdfr//iwAUdp6DZOT70NiqcRA==}
+  '@krainovsd/vue-icons@0.1.1':
+    resolution: {integrity: sha512-g3hXWpxopD/7kFj1RoypA/jmXulIgZOQx4JdCoT+9IuBhfCEndfwqh9yFloOLPA3V5n53lamYNbeZvAZPOt99g==}
     peerDependencies:
       vue: ^3.4.0
 
@@ -10875,6 +10872,9 @@ packages:
   vue-component-type-helpers@2.2.10:
     resolution: {integrity: sha512-iDUO7uQK+Sab2tYuiP9D1oLujCWlhHELHMgV/cB13cuGbG4qwkLHvtfWb6FzvxrIOPDnU0oHsz2MlQjhYDeaHA==}
 
+  vue-component-type-helpers@3.0.0:
+    resolution: {integrity: sha512-J1HtqhZIqmYoNg4SLcYVFdCdsVUkMo4Z6/Wx4sQMfY8TFIIqDmd3mS2whfBIKzAA7dHMexarwYbvtB/fOUuEsw==}
+
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
     peerDependencies:
@@ -13389,11 +13389,6 @@ snapshots:
     optionalDependencies:
       node-fetch: 3.3.2
 
-  '@krainovsd/js-helpers@0.14.1':
-    dependencies:
-      dayjs: 1.11.13
-      lodash: 4.17.21
-
   '@krainovsd/js-helpers@0.14.3':
     dependencies:
       dayjs: 1.11.13
@@ -13918,9 +13913,9 @@ snapshots:
       lodash: 4.17.21
       nanoid: 4.0.2
 
-  '@krainovsd/vue-icons@0.1.0(vue@3.5.14(typescript@5.8.3))':
+  '@krainovsd/vue-icons@0.1.1(vue@3.5.14(typescript@5.8.3))':
     dependencies:
-      '@krainovsd/js-helpers': 0.14.1
+      '@krainovsd/js-helpers': 0.14.3
       vue: 3.5.14(typescript@5.8.3)
 
   '@lezer/common@1.2.3': {}
@@ -15541,7 +15536,7 @@ snapshots:
       storybook: 9.0.13(@testing-library/dom@10.4.0)(prettier@3.6.1)
       type-fest: 2.19.0
       vue: 3.5.14(typescript@5.8.3)
-      vue-component-type-helpers: 2.2.10
+      vue-component-type-helpers: 3.0.0
 
   '@sveltejs/acorn-typescript@1.0.5(acorn@8.14.1)':
     dependencies:
@@ -23976,6 +23971,8 @@ snapshots:
       typescript: 5.8.3
 
   vue-component-type-helpers@2.2.10: {}
+
+  vue-component-type-helpers@3.0.0: {}
 
   vue-docgen-api@4.79.2(vue@3.5.14(typescript@5.8.3)):
     dependencies:
