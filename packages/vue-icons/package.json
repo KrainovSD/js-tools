@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/vue-icons",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Krainov vue-icons",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -47,9 +47,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
-  "dependencies": {
-    "@krainovsd/js-helpers": "0.14.3"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@krainovsd/presets": "0.3.5",
     "rollup": "4.34.9",

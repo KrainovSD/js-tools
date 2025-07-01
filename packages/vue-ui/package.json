@@ -49,7 +49,7 @@
   "dependencies": {
     "lodash": "4.17.21",
     "@krainovsd/js-helpers": "0.14.4",
-    "@krainovsd/vue-icons": "0.1.1",
+    "@krainovsd/vue-icons": "0.1.2",
     "fuzzysort": "3.1.0"
   },
   "devDependencies": {
