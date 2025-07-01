@@ -241,8 +241,9 @@ export const AllInOne: Story = {
   }),
   args: {
     menu: [
+      { key: "0", label: "Name", noInteractive: true },
       { key: "1", link: true, label: h("a", { href: "#test" }, ["Пункт 1"]) },
-      { key: "2", label: "Пункт 2" },
+      { key: "2", label: "Пункт 2 (disabled)", disabled: true },
       {
         key: "3",
         label: "Пункт 3 (pop)",

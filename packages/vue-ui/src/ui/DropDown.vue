@@ -23,6 +23,7 @@
     divider?: boolean;
     disabled?: boolean;
     link?: boolean;
+    noInteractive?: boolean;
     popConfirm?: DropDownItemPopConfirmOptions;
     label?: string | Component;
     icon?: Component;
@@ -135,7 +136,9 @@
       lastActive.value = document.activeElement as HTMLElement | null;
 
       const interactiveElements = Array.from(
-        positionerContentRef.querySelectorAll<HTMLDropDownItem>(".ksd-dropdown__element"),
+        positionerContentRef.querySelectorAll<HTMLDropDownItem>(
+          ".ksd-dropdown__element.interactive",
+        ),
       );
 
       interactiveElements.forEach((element) => {
@@ -151,7 +154,7 @@
       });
 
       const firstInteractive =
-        interactiveElements[0].innerInteractive ??
+        interactiveElements[0]?.innerInteractive ??
         (interactiveElements[0] as HTMLDropDownItem | undefined);
       if (firstInteractive && !triggersArray.value.includes("hover")) {
         firstInteractive.focus();
@@ -379,11 +382,19 @@
       <template v-for="item in $props.menu" :key="item.key">
         <Divider v-if="item.divider" class="ksd-dropdown__divider" role="separator" />
         <div
-          v-if="!item.divider && !item.innerOptions && !item.popConfirm"
+          v-if="!item.divider && ((!item.innerOptions && !item.popConfirm) || item.disabled)"
           role="menuitem"
           class="ksd-dropdown__element"
           :data-level="$props.level"
-          :class="[itemClasses, { link: item.link, danger: item.danger }]"
+          :class="[
+            itemClasses,
+            {
+              link: item.link,
+              danger: item.danger,
+              disabled: item.disabled,
+              interactive: !item.disabled && !item.noInteractive,
+            },
+          ]"
           @click="item.onClick"
         >
           <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
@@ -391,7 +402,7 @@
           <Text v-else>{{ item.label }}</Text>
         </div>
         <VPopConfirm
-          v-if="!item.divider && !item.innerOptions && item.popConfirm"
+          v-if="!item.divider && !item.disabled && item.popConfirm"
           :text="item.popConfirm.text"
           :title="item.popConfirm.title"
           :modal-root="positionerRef"
@@ -408,7 +419,14 @@
             role="menuitem"
             class="ksd-dropdown__element"
             :data-level="$props.level"
-            :class="[itemClasses, { link: item.link, danger: item.danger }]"
+            :class="[
+              itemClasses,
+              {
+                link: item.link,
+                danger: item.danger,
+                interactive: !item.disabled && !item.noInteractive,
+              },
+            ]"
             aria-haspopup="true"
           >
             <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
@@ -417,7 +435,7 @@
           </div>
         </VPopConfirm>
         <DropDown
-          v-if="!item.divider && item.innerOptions"
+          v-if="!item.divider && !item.disabled && item.innerOptions"
           v-bind="item.innerOptions"
           :modal-root="positionerRef"
           :placement="item.innerOptions.placement ?? 'right-top'"
@@ -429,7 +447,14 @@
             role="menuitem"
             class="ksd-dropdown__element"
             :data-nested-placement="getFirstPlacementFromInner(item.innerOptions.placement)"
-            :class="[itemClasses, { link: item.link }]"
+            :class="[
+              itemClasses,
+              {
+                link: item.link,
+                danger: item.danger,
+                interactive: !item.disabled && !item.noInteractive,
+              },
+            ]"
             :data-level="$props.level"
             aria-haspopup="true"
           >
@@ -487,6 +512,15 @@
         }
       }
 
+      &.disabled {
+        color: var(--ksd-text-main-disabled-color);
+        cursor: not-allowed;
+
+        & span {
+          color: var(--ksd-text-main-disabled-color);
+        }
+      }
+
       &.large {
         padding: var(--ksd-dropdown-inner-padding-lg);
         min-width: var(--ksd-dropdown-inner-min-width-lg);
@@ -502,6 +536,15 @@
 
           & span {
             color: var(--ksd-text-reverse-color);
+          }
+        }
+
+        &.disabled {
+          background-color: transparent;
+          color: var(--ksd-text-main-disabled-color);
+
+          & span {
+            color: var(--ksd-text-main-disabled-color);
           }
         }
       }
