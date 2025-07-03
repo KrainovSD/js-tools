@@ -1,6 +1,6 @@
 # @krainovsd/fastify-auth
 
-The library of helpers for logger fastify with pino transport. 
+The library of helpers.
 
 
 ## Installing

@@ -96,7 +96,7 @@ export class ImageWidget extends WidgetType {
     this.registerListeners(container);
     IMAGE_NODES[this.key] = container;
 
-    if (!interval) interval = setInterval(garbageCollectorInterval, INTERVAL_DELAY);
+    interval ??= setInterval(garbageCollectorInterval, INTERVAL_DELAY);
 
     return container;
   }

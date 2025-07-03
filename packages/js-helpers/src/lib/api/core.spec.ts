@@ -24,7 +24,9 @@ describe("api core", () => {
     };
 
     let receivedFetch: string | undefined;
+    // eslint-disable-next-line no-unassigned-vars
     let receivedInitialIncomingData: Record<string, unknown> | undefined;
+    // eslint-disable-next-line no-unassigned-vars
     let receivedInitialOutcomingData: Record<string, unknown> | undefined;
 
     Object.defineProperty(global, "fetch", {

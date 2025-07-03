@@ -46,9 +46,10 @@ export type SingletonConfigOptions = {
   input: InputOption;
   stats?: boolean;
   withDeps?: boolean;
-  cjs?: boolean;
-  esm?: boolean;
   singleton?: boolean;
   sourcemap?: boolean;
+  node?: boolean;
   compress?: boolean;
+  esm: boolean | OutputOptions;
+  cjs: boolean | OutputOptions;
 };

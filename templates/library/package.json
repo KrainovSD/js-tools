@@ -33,17 +33,17 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@krainovsd/presets": "0.2.0",
-    "eslint": "9.21.0",
-    "prettier": "3.5.2",
+    "@krainovsd/presets": "0.3.6",
     "rollup": "4.34.9",
-    "typescript": "5.7.3",
-    "typescript-transform-paths": "3.5.3",
+    "prettier": "3.6.1",
+    "eslint": "9.29.0",
+    "typescript": "5.8.3",
+    "typescript-transform-paths": "3.5.5",
     "ts-patch": "3.3.0",
     "@swc/core": "1.11.5",
     "@swc/jest": "0.2.37",
     "@types/jest": "29.5.14",
-    "@types/node": "22.10.2",
+    "@types/node": "22.13.8",
     "jest": "29.7.0",
     "ts-jest": "29.2.5"
   }

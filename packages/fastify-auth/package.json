@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/fastify-auth",
-  "version": "0.0.3",
+  "version": "0.1.1",
   "description": "Krainov fastify auth",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -46,18 +46,18 @@
     "test-coverage": "jest --coverage"
   },
   "devDependencies": {
-    "@krainovsd/presets": "0.1.5",
-    "eslint": "9.21.0",
-    "prettier": "3.5.2",
+    "@krainovsd/presets": "0.3.6",
     "rollup": "4.34.9",
-    "typescript": "5.7.3",
-    "typescript-transform-paths": "3.5.3",
+    "prettier": "3.6.1",
+    "eslint": "9.29.0",
+    "typescript": "5.8.3",
+    "typescript-transform-paths": "3.5.5",
     "ts-patch": "3.3.0",
-    "@types/node": "22.10.2",
+    "@types/node": "22.13.8",
     "fastify": "5.2.1"
   },
   "dependencies": {
-    "@krainovsd/js-helpers": "^0.13.0",
+    "@krainovsd/js-helpers": "^0.14.6",
     "jose": "^5.9.6"
   },
   "peerDependencies": {

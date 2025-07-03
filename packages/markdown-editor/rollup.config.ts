@@ -1,33 +1,22 @@
-import { createRollupConfig } from "@krainovsd/presets/rollup";
+import { presets } from "@krainovsd/presets/rollup";
 import { defineConfig } from "rollup";
 
 const DEV = process.env.NODE_ENV === "development";
 
-export default defineConfig(
-  createRollupConfig([
-    {
-      input: "./src/index.ts",
-      outputs: [
-        { format: "es" },
-        {
-          format: "cjs",
-          override: {
-            dir: "./lib/cjs",
-            format: "cjs",
-            generatedCode: "es2015",
-            sourcemap: true,
-          },
-        },
-      ],
-      plugins: {
-        externals: { enabled: true, override: { includeDependencies: !DEV } },
-        typescript: { enabled: true },
-        json: { enabled: true },
-        postCSS: { enabled: true },
-        nodeResolver: { enabled: DEV },
-        commonJS: { enabled: DEV },
-        dts: { enabled: !DEV, input: "./tmp/index.d.ts", output: "./lib/index.d.ts" },
-      },
+export default defineConfig([
+  presets.configs.library({
+    input: "./src/index.ts",
+    cjs: {
+      file: undefined,
+      dir: "./lib/cjs",
     },
-  ]),
-);
+    esm: true,
+    singleton: false,
+    compress: false,
+    sourcemap: true,
+    node: true,
+    stats: DEV,
+    withDeps: DEV,
+  }),
+  presets.configs.types({ input: "./tmp/index.d.ts", output: "./lib/index.d.ts" }),
+]);

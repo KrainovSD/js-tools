@@ -88,7 +88,7 @@ function getCodeSelectionDecorations({
   if (node.name === NAME_OF_INLINE_CODE) {
     codeContent = view.state.doc.sliceString(startMarkPosition.to, endMarkPosition.from).trim();
   }
-  if (!language) language = "copy";
+  language ??= "copy";
 
   if (lines.length > 1) {
     lines.forEach((line) => {

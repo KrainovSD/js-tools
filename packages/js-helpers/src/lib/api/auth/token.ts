@@ -84,9 +84,7 @@ export async function getAuthTokenNoRefresh(options: AuthTokenNoRefreshRequestOp
     "width=800,height=600,left=100,top=100",
   );
 
-  if (!windowInstance) {
-    windowInstance = window.open(url.toString());
-  }
+  windowInstance ??= window.open(url.toString());
 
   if (!windowInstance) {
     if (options.onWindowOpenError) options.onWindowOpenError();

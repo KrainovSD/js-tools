@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { dirname as dirnamePath } from "path";
 import { fileURLToPath } from "url";
 

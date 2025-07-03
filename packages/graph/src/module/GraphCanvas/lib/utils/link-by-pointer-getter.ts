@@ -1,4 +1,3 @@
-/* eslint-disable id-length */
 import { isObject } from "@krainovsd/js-helpers";
 import { greatest } from "d3-array";
 import type { ZoomTransform } from "d3-zoom";

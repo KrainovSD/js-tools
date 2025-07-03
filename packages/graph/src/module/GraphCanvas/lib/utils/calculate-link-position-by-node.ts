@@ -1,4 +1,3 @@
-/* eslint-disable id-length */
 import { COMMON_SETTINGS } from "../../constants";
 import type { LinkInterface, NodeInterface } from "../../types";
 

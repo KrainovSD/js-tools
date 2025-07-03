@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/react-icons",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Krainov react icons",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -43,20 +43,20 @@
     "type-debug": "tsc --showConfig > typescript-config.json"
   },
   "devDependencies": {
-    "@krainovsd/presets": "0.1.5",
-    "eslint": "9.21.0",
-    "prettier": "3.5.2",
+    "@krainovsd/presets": "0.3.6",
     "rollup": "4.34.9",
-    "typescript": "5.7.3",
-    "typescript-transform-paths": "3.5.3",
+    "prettier": "3.6.1",
+    "eslint": "9.29.0",
+    "typescript": "5.8.3",
+    "typescript-transform-paths": "3.5.5",
     "ts-patch": "3.3.0",
-    "@types/node": "22.10.2",
+    "@types/node": "22.13.8",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@vitejs/plugin-react": "4.3.4",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "vite": "6.0.11"
+    "vite": "6.2.1"
   },
   "peerDependencies": {
     "react": "^18.0.0"

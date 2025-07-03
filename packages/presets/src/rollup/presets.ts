@@ -59,7 +59,6 @@ const PLUGINS: RollupPluginPresets = {
   nodeResolver: (opts) => nodeResolve(opts),
   externals: (opts) => externals(opts) as InputPluginOption,
   json: (opts) => json(opts),
-
   terser: (opts) => terser(opts ?? { mangle: true, compress: true }),
   typescript: (opts) => typescript(opts),
 };
@@ -102,8 +101,9 @@ const CONFIGS: RollupConfigPresets = {
   library: (opts) => {
     const {
       input,
-      cjs = true,
-      esm = true,
+      cjs,
+      esm,
+      node = true,
       compress = false,
       withDeps = false,
       singleton = false,
@@ -114,12 +114,12 @@ const CONFIGS: RollupConfigPresets = {
     return {
       input,
       output: [
-        ...(cjs ? [{ ...OUTPUTS.cjs, sourcemap }] : []),
+        ...(cjs ? [{ ...OUTPUTS.cjs, sourcemap, ...(typeof cjs === "object" ? cjs : {}) }] : []),
         ...(esm
           ? [
               ...(singleton
-                ? [{ ...OUTPUTS.esmSingle, sourcemap }]
-                : [{ ...OUTPUTS.esmMultiple, sourcemap }]),
+                ? [{ ...OUTPUTS.esmSingle, sourcemap, ...(typeof esm === "object" ? esm : {}) }]
+                : [{ ...OUTPUTS.esmMultiple, sourcemap, ...(typeof esm === "object" ? esm : {}) }]),
             ]
           : []),
       ],
@@ -127,9 +127,8 @@ const CONFIGS: RollupConfigPresets = {
         PLUGINS.externals({ includeDependencies: !withDeps }),
         PLUGINS.typescript(),
         PLUGINS.json(),
-        PLUGINS.nodeResolver(),
-        PLUGINS.commonJS(),
         PLUGINS.postCSS(),
+        ...(node ? [PLUGINS.nodeResolver(), PLUGINS.commonJS()] : []),
         ...(stats ? [PLUGINS.bundleStats(), PLUGINS.visualizer] : []),
         ...(compress ? [PLUGINS.terser()] : []),
       ],

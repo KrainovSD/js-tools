@@ -27,7 +27,7 @@ export class Auth<User extends Record<string, unknown>> {
   }
 
   async getUserInfo(headers: IncomingHttpHeaders = {}, token: string | null | undefined = null) {
-    if (!token) token = this.getToken(headers);
+    token ??= this.getToken(headers);
     if (!this.tokenSecret || !token || !this.usernameField) return null;
 
     try {
