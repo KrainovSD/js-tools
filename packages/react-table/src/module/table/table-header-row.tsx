@@ -20,13 +20,15 @@ type Props<RowData extends Record<string, unknown>> = {
   selectedPage: boolean;
   filterState: ColumnFiltersState;
   sortState: SortingState;
+  height: number | undefined;
 };
 
 export const TableHeaderRow = React.memo(function TableHeaderRow<
   RowData extends Record<string, unknown>,
 >(props: Props<RowData>) {
   return (
-    <tr
+    <div
+      role="rowheader"
       key={`${props.headerGroup.id}-row`}
       className={clsx(
         styles.headerRow,
@@ -35,6 +37,10 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
           : props.headerRowClassName,
       )}
       data-id="header-row"
+      style={{
+        minHeight: props.height,
+        maxHeight: props.height,
+      }}
     >
       {props.columnVirtualEnabled && (
         <>
@@ -45,7 +51,6 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 header={header}
                 headers={headers}
                 index={index}
-                semanticTag
                 columnPosition={index + 1}
                 filterState={props.filterState}
                 selectedPage={props.selectedPage}
@@ -57,20 +62,12 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
             /** CELL HEADER  */
             const header = props.centerHeaders[+index];
 
-            if (!header) {
-              // eslint-disable-next-line no-console
-              console.log(header, props.centerHeaders, index, props.columnsVirtual);
-
-              return null;
-            }
-
             return (
               <TableHeaderCell
                 key={`${header.id}-cell`}
                 header={header}
                 headers={props.centerHeaders}
                 index={+index}
-                semanticTag
                 columnPosition={props.leftHeaders.length + +index + 1}
                 filterState={props.filterState}
                 selectedPage={props.selectedPage}
@@ -85,7 +82,6 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
                 header={header}
                 headers={headers}
                 index={index}
-                semanticTag
                 columnPosition={props.leftHeaders.length + props.centerHeaders.length + index + 1}
                 filterState={props.filterState}
                 selectedPage={props.selectedPage}
@@ -103,7 +99,6 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
               header={header}
               headers={headers}
               index={index}
-              semanticTag
               columnPosition={index + 1}
               filterState={props.filterState}
               selectedPage={props.selectedPage}
@@ -111,6 +106,6 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
             />
           );
         })}
-    </tr>
+    </div>
   );
 }) as <RowData extends Record<string, unknown>>(props: Props<RowData>) => React.JSX.Element;

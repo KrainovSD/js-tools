@@ -24,6 +24,7 @@ type Props<RowData extends Record<string, unknown>> = {
   expanded: boolean;
   CustomRow: React.JSX.Element | undefined | null;
   visibleCells: Cell<RowData, unknown>[];
+  height: number | undefined;
 };
 
 export const TableRow = React.memo(function TableRow<RowData extends Record<string, unknown>>(
@@ -36,10 +37,33 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
   const centerVisibleCells = row.getCenterVisibleCells();
   const rightVisibleCells = row.getRightVisibleCells();
 
+  function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if ((event.key === " " || event.key === "Enter") && event.target === event.currentTarget) {
+      event.preventDefault();
+      event.currentTarget.click();
+    }
+    if (
+      event.key === "ArrowUp" &&
+      event.currentTarget.previousElementSibling instanceof HTMLDivElement
+    ) {
+      event.currentTarget.previousElementSibling.focus();
+      event.preventDefault();
+    }
+    if (
+      event.key === "ArrowDown" &&
+      event.currentTarget.nextElementSibling instanceof HTMLDivElement
+    ) {
+      event.currentTarget.nextElementSibling.focus();
+      event.preventDefault();
+    }
+  }
+
   /** ROW */
   return (
-    <tr
+    <div
       data-id="row"
+      role="row"
+      tabIndex={0}
       key={row.id}
       className={clsx(
         styles.row,
@@ -51,6 +75,8 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       ref={props.virtualRow ? (node) => props.rowVirtualizer.measureElement(node) : undefined}
       style={{
         transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
+        minHeight: props.height,
+        maxHeight: props.height,
       }}
       onClick={(event) => {
         props.onClickRow?.(row, event);
@@ -58,6 +84,7 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       onDoubleClick={(event) => {
         props.onDoubleClickRow?.(row, event);
       }}
+      onKeyDown={onKeyDown}
     >
       <>
         {props.columnVirtualEnabled && !props.CustomRow && (
@@ -71,7 +98,6 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   cell={cell}
                   index={index}
                   cells={cells}
-                  semanticTag
                   columnPosition={index + 1}
                   selected={props.selected}
                 />
@@ -88,7 +114,6 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   cell={cell}
                   index={+index}
                   cells={centerVisibleCells}
-                  semanticTag
                   selected={props.selected}
                   columnPosition={leftVisibleCells.length + +index + 1}
                 />
@@ -103,7 +128,6 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                   cell={cell}
                   index={index}
                   cells={cells}
-                  semanticTag
                   columnPosition={leftVisibleCells.length + centerVisibleCells.length + index + 1}
                   selected={props.selected}
                 />
@@ -122,7 +146,6 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
                 cell={cell}
                 index={index}
                 cells={cells}
-                semanticTag
                 columnPosition={index + 1}
                 selected={props.selected}
               />
@@ -130,6 +153,6 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
           })}
         {props.CustomRow && props.CustomRow}
       </>
-    </tr>
+    </div>
   );
 }) as <RowData extends Record<string, unknown>>(props: Props<RowData>) => React.JSX.Element;

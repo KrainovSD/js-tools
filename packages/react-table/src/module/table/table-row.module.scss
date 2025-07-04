@@ -20,6 +20,11 @@
       background-color: var(--table-selected-row-hover-bg);
     }
   }
+
+  &:focus-visible {
+    background-color: var(--table-row-hover-bg);
+    outline: none;
+  }
 }
 
 .ghost {

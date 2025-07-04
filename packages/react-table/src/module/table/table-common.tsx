@@ -96,7 +96,8 @@ export function TableCommon<RowData extends Record<string, unknown>>(
   }, []);
 
   return (
-    <table
+    <div
+      role="table"
       className={styles.table}
       style={
         {
@@ -107,7 +108,8 @@ export function TableCommon<RowData extends Record<string, unknown>>(
       ref={tableRef}
       data-id="table"
     >
-      <thead
+      <div
+        role="rowgroup"
         className={clsx(
           styles.header,
           (props.frozenHeader || props.frozenHeader == undefined) && styles.header__frozen,
@@ -132,15 +134,17 @@ export function TableCommon<RowData extends Record<string, unknown>>(
               leftHeaders={leftHeaders}
               rightHeaders={rightHeaders}
               headerRowClassName={props.headerRowClassName}
-              page={tableState.pagination.pageIndex}
               selectedPage={selected}
+              page={tableState.pagination.pageIndex}
               filterState={tableState.columnFilters}
               sortState={tableState.sorting}
+              height={undefined}
             />
           );
         })}
-      </thead>
-      <tbody
+      </div>
+      <div
+        role="rowgroup"
         className={styles.body}
         style={{
           height:
@@ -174,6 +178,7 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 expanded={expanded}
                 CustomRow={CustomRow}
                 visibleCells={visibleCells}
+                height={undefined}
               />
             );
           })}
@@ -203,11 +208,12 @@ export function TableCommon<RowData extends Record<string, unknown>>(
                 expanded={expanded}
                 CustomRow={CustomRow}
                 visibleCells={visibleCells}
+                height={undefined}
               />
             );
           })}
         {!props.rowVirtualEnabled && props.rows.length === 0 && props.Empty && <props.Empty />}
-      </tbody>
-    </table>
+      </div>
+    </div>
   );
 }

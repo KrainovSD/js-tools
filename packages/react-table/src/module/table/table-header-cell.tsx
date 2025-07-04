@@ -17,7 +17,6 @@ type Props<RowData extends Record<string, unknown>> = {
   header: Header<RowData, unknown>;
   index: number;
   headers: Header<RowData, unknown>[];
-  semanticTag?: boolean;
   columnPosition: number;
   selectedPage: boolean;
   filterState?: ColumnFiltersState;
@@ -43,65 +42,10 @@ export const TableHeaderCell = React.memo(function TableHeaderCell<
 
   if (!HeaderRender) return null;
 
-  if (props.semanticTag) {
-    return (
-      <th
-        data-id="header-cell"
-        data-column-id={headerContext.column.id}
-        key={props.header.id}
-        colSpan={props.header.colSpan}
-        className={clsx(
-          styles.headerCell,
-          frozenPosition === "left" && styles.headerCell__frozen_left,
-          frozenPosition === "right" && styles.headerCell__frozen_right,
-          frozenPosition === "left" &&
-            props.header.column.getIsLastColumn("left") &&
-            styles.headerCell__frozen_left_last,
-          frozenPosition === "right" &&
-            props.header.column.getIsFirstColumn("right") &&
-            styles.headerCell__frozen_right_first,
-          headerClasses,
-        )}
-        style={{
-          left: frozenPosition === "left" ? prevFrozen : undefined,
-          right: frozenPosition === "right" ? prevFrozen : undefined,
-          cursor: draggable ? "move" : "inherit",
-          gridColumnStart: props.columnPosition,
-        }}
-        draggable={draggable}
-        onDragOver={draggable ? (event) => event.preventDefault() : undefined}
-        onDragStart={draggable ? handleDragStart : undefined}
-        onDragEnd={draggable ? handleDragEnd : undefined}
-        onDragEnter={draggable ? handleDragEnter : undefined}
-        onDragLeave={draggable ? handleDragLeave : undefined}
-        onDrop={
-          draggable
-            ? handleDropGetter(
-                headerContext.table.getState().columnOrder,
-                headerContext.table.setColumnOrder,
-              )
-            : undefined
-        }
-      >
-        <HeaderRender context={headerContext} />
-
-        {props.header.column.getCanResize() && (
-          // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-          <div
-            onMouseDown={props.header.getResizeHandler()}
-            onTouchStart={props.header.getResizeHandler()}
-            className={styles.headerResize}
-            style={{
-              width: RESIZE_HANDLE_WIDTH,
-            }}
-          />
-        )}
-      </th>
-    );
-  }
-
   return (
     <div
+      role="columnheader"
+      tabIndex={0}
       data-id="header-cell"
       data-column-id={headerContext.column.id}
       key={props.header.id}
@@ -139,6 +83,7 @@ export const TableHeaderCell = React.memo(function TableHeaderCell<
       }
     >
       <HeaderRender context={headerContext} />
+
       {props.header.column.getCanResize() && (
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions
         <div

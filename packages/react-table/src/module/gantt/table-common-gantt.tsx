@@ -1,8 +1,10 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
+import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../table.constants";
 import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
-import { TableCommonGanttHeaderRow, TableCommonGanttRow } from "./components";
+import { TableHeaderRow } from "../table/table-header-row";
+import { TableRow } from "../table/table-row";
 import { GANTT_COMMON_TABLE_BODY_ID, GANTT_COMMON_TABLE_HEADER_ID } from "./gantt.constants";
 import styles from "./table-common-gantt.module.scss";
 
@@ -37,6 +39,7 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
   const centerHeadersGroup = props.table.getCenterHeaderGroups();
   const rightHeadersGroup = props.table.getRightHeaderGroups();
   const visibleHeadersGroup = props.table.getHeaderGroups();
+  const tableState = props.table.getState();
 
   const virtualColumnsIndexesKey =
     props.columnsVirtual.length === 0
@@ -81,7 +84,7 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
             const selected = props.table.getIsAllPageRowsSelected();
 
             return (
-              <TableCommonGanttHeaderRow<RowData>
+              <TableHeaderRow<RowData>
                 key={`${headerGroup.id}-header-row`}
                 columnVirtualEnabled={props.columnVirtualEnabled}
                 columnsVirtual={virtualColumns}
@@ -90,8 +93,11 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                 leftHeaders={leftHeaders}
                 rightHeaders={rightHeaders}
                 headerRowClassName={props.headerRowClassName}
-                rowHeaderHeight={props.rowHeaderHeight}
+                height={props.rowHeaderHeight}
                 selectedPage={selected}
+                page={tableState.pagination.pageIndex}
+                filterState={tableState.columnFilters}
+                sortState={tableState.sorting}
               />
             );
           })}
@@ -120,7 +126,7 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
               const visibleCells = row.getVisibleCells();
 
               return (
-                <TableCommonGanttRow<RowData>
+                <TableRow<RowData>
                   virtualRow={virtualRow}
                   columnVirtualEnabled={props.columnVirtualEnabled}
                   columnsVirtual={virtualColumns}
@@ -131,10 +137,11 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                   onDoubleClickRow={props.onDoubleClickRow}
                   rowVirtualizer={props.rowVirtualizer}
                   row={null}
-                  ganttRowMini={props.ganttRowMini}
                   selected={selected}
                   visibleCells={visibleCells}
                   expanded={expanded}
+                  height={props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT}
+                  CustomRow={undefined}
                 />
               );
             })}
@@ -145,7 +152,7 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
               const visibleCells = row.getVisibleCells();
 
               return (
-                <TableCommonGanttRow<RowData>
+                <TableRow<RowData>
                   columnVirtualEnabled={props.columnVirtualEnabled}
                   columnsVirtual={virtualColumns}
                   row={row}
@@ -156,7 +163,8 @@ export function TableCommonGantt<RowData extends Record<string, unknown>>(
                   rowVirtualizer={props.rowVirtualizer}
                   rows={props.rows}
                   virtualRow={null}
-                  ganttRowMini={props.ganttRowMini}
+                  height={props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT}
+                  CustomRow={undefined}
                   selected={selected}
                   visibleCells={visibleCells}
                   expanded={expanded}
