@@ -1,15 +1,16 @@
 import { CheckBox } from "@krainovsd/react-ui";
 import type { HeaderContext } from "@tanstack/react-table";
 import clsx from "clsx";
+import type { DefaultRow } from "../../../types";
 import styles from "./header-renders.module.scss";
 
 export type HeaderRenderClasses = "hCenter" | "wCenter";
 
-export type CommonHeaderRenderProps<RowData extends Record<string, unknown>> = {
+export type CommonHeaderRenderProps<RowData extends DefaultRow> = {
   classes?: HeaderRenderClasses[];
   className?: ((context: HeaderContext<RowData, unknown>) => string) | string;
 };
-export function CommonHeaderRender<RowData extends Record<string, unknown>>(props: {
+export function CommonHeaderRender<RowData extends DefaultRow>(props: {
   context: HeaderContext<RowData, unknown>;
 }) {
   const headerRenderProps = props.context.column.columnDef.headerRenderProps as
@@ -38,12 +39,12 @@ type CheckProps = (props: {
   checked: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 }) => React.ReactNode;
-export type SelectHeaderRenderProps<RowData extends Record<string, unknown>> = {
+export type SelectHeaderRenderProps<RowData extends DefaultRow> = {
   Check?: CheckProps;
   classes?: HeaderRenderClasses[];
   className?: ((context: HeaderContext<RowData, unknown>) => string) | string;
 };
-export function SelectHeaderRender<RowData extends Record<string, unknown>>(props: {
+export function SelectHeaderRender<RowData extends DefaultRow>(props: {
   context: HeaderContext<RowData, unknown>;
 }) {
   const headerRenderProps = props.context.column.columnDef.headerRenderProps as

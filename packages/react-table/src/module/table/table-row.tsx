@@ -2,11 +2,11 @@ import type { Cell } from "@tanstack/react-table";
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
-import type { RowInterface } from "../../types";
+import type { DefaultRow, RowInterface } from "../../types";
 import { TableCell } from "./table-cell";
 import styles from "./table-row.module.scss";
 
-type Props<RowData extends Record<string, unknown>> = {
+type Props<RowData extends DefaultRow> = {
   rows: RowInterface<RowData>[];
   selected: boolean;
   row: RowInterface<RowData> | null;
@@ -27,7 +27,7 @@ type Props<RowData extends Record<string, unknown>> = {
   height: number | undefined;
 };
 
-export const TableRow = React.memo(function TableRow<RowData extends Record<string, unknown>>(
+export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>(
   props: Props<RowData>,
 ) {
   const row = props.virtualRow ? props.rows[props.virtualRow.index] : props.row;
@@ -155,4 +155,4 @@ export const TableRow = React.memo(function TableRow<RowData extends Record<stri
       </>
     </div>
   );
-}) as <RowData extends Record<string, unknown>>(props: Props<RowData>) => React.JSX.Element;
+}) as <RowData extends DefaultRow>(props: Props<RowData>) => React.JSX.Element;

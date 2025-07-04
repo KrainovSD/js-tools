@@ -3,7 +3,7 @@
 import type { ColumnOrderState, ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";
 import { Table } from "../../table";
-import type { RowInterface, RowModel, TableInterface } from "../../types";
+import type { DefaultRow, RowInterface, RowModel, TableInterface } from "../../types";
 import { COMMON_COLUMNS } from "../lib/common/columns";
 import { COMMON_ROW } from "../lib/common/rows";
 import type {
@@ -152,7 +152,7 @@ export function getExpandedRowModel(): (
     );
 }
 
-function expandRows<TData extends Record<string, unknown>>(rowModel: RowModel<TData>) {
+function expandRows<TData extends DefaultRow>(rowModel: RowModel<TData>) {
   const expandedRows: RowInterface<TData>[] = [];
 
   const handleRow = (row: RowInterface<TData>) => {

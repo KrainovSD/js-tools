@@ -1,5 +1,5 @@
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
-import type { GanttInfo, GanttViewType } from "../../../types";
+import type { DefaultGanttData, GanttInfo, GanttViewType } from "../../../types";
 import { GANTT_LEFT_SHIFT } from "../gantt.constants";
 import type { HeaderItem } from "../hooks";
 import { getDayOfYear } from "./get-day-of-year";
@@ -8,7 +8,7 @@ import { getMonthDifference } from "./get-month-difference";
 
 const MIN_ITEM_WIDTH = 10;
 
-type GetGanttInitialCoordinates<GanttData extends Record<string, unknown>> = {
+type GetGanttInitialCoordinates<GanttData extends DefaultGanttData> = {
   ganttView?: GanttViewType;
   ganttInfo: GanttInfo<GanttData>;
   ganttRowMini?: boolean;
@@ -16,7 +16,7 @@ type GetGanttInitialCoordinates<GanttData extends Record<string, unknown>> = {
   headerItems: HeaderItem[];
 };
 
-export function getGanttInitialCoordinates<GanttData extends Record<string, unknown>>(
+export function getGanttInitialCoordinates<GanttData extends DefaultGanttData>(
   opts: GetGanttInitialCoordinates<GanttData>,
 ): {
   width: number;

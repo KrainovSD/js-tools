@@ -2,9 +2,10 @@ import { ArrowUpFillLegacy, CaretDownFilled, CaretUpFilled } from "@krainovsd/re
 import { Flex } from "@krainovsd/react-ui";
 import type { HeaderContext } from "@tanstack/react-table";
 import clsx from "clsx";
+import type { DefaultRow } from "../../../types";
 import styles from "./sort-renders.module.scss";
 
-export function SingleArrowSortRender<Row extends Record<string, unknown>>(props: {
+export function SingleArrowSortRender<Row extends DefaultRow>(props: {
   context: HeaderContext<Row, unknown>;
 }) {
   const sortIndex = props.context.column.getSortIndex();
@@ -40,7 +41,7 @@ export function SingleArrowSortRender<Row extends Record<string, unknown>>(props
   );
 }
 
-export function DoubleArrowSortRender<Row extends Record<string, unknown>>(props: {
+export function DoubleArrowSortRender<Row extends DefaultRow>(props: {
   context: HeaderContext<Row, unknown>;
 }) {
   const sortIndex = props.context.column.getSortIndex();

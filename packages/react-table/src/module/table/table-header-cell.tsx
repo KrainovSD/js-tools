@@ -7,13 +7,14 @@ import type {
 } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
+import type { DefaultRow } from "../../types";
 import { getPrevFrozenWidthHeader } from "./lib";
 import styles from "./table-header-cell.module.scss";
 
 const RESIZE_HANDLE_WIDTH = 10;
 const THRESHOLD = 2;
 
-type Props<RowData extends Record<string, unknown>> = {
+type Props<RowData extends DefaultRow> = {
   header: Header<RowData, unknown>;
   index: number;
   headers: Header<RowData, unknown>[];
@@ -23,9 +24,9 @@ type Props<RowData extends Record<string, unknown>> = {
   sortState?: SortingState;
 };
 
-export const TableHeaderCell = React.memo(function TableHeaderCell<
-  RowData extends Record<string, unknown>,
->(props: Props<RowData>) {
+export const TableHeaderCell = React.memo(function TableHeaderCell<RowData extends DefaultRow>(
+  props: Props<RowData>,
+) {
   const headerContext = props.header.getContext();
   const headerClass = props.header.column.columnDef.headerClass;
   const headerClasses = headerClass.map((style) =>
@@ -97,7 +98,7 @@ export const TableHeaderCell = React.memo(function TableHeaderCell<
       )}
     </div>
   );
-}) as <RowData extends Record<string, unknown>>(props: Props<RowData>) => React.JSX.Element;
+}) as <RowData extends DefaultRow>(props: Props<RowData>) => React.JSX.Element;
 
 function handleDragStart(event: React.DragEvent<HTMLElement>) {
   const { left, width } = event.currentTarget.getBoundingClientRect();

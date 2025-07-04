@@ -5,14 +5,14 @@ import type { PresetColorType } from "antd/es/theme/internal";
 import clsx from "clsx";
 import type { ReactNode } from "react";
 import type React from "react";
-import type { RowInterface } from "../../../types";
+import type { DefaultRow, RowInterface } from "../../../types";
 import { useVisibleCell } from "../hooks/use-visible-cell";
 import { getData } from "../lib";
 import styles from "./cell-renders.module.scss";
 
 export type CellRenderClasses = "hCenter" | "wCenter";
 
-export type TextCellRenderProps<RowData extends Record<string, unknown>> = {
+export type TextCellRenderProps<RowData extends DefaultRow> = {
   expanded?: boolean;
   shift?: number;
   pathToTooltip?: string;
@@ -32,7 +32,7 @@ type BooleanMapping = {
   false: string | ReactNode;
 };
 
-export function TextCellRender<Row extends Record<string, unknown>>(props: {
+export function TextCellRender<Row extends DefaultRow>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as
@@ -139,7 +139,7 @@ export function TextCellRender<Row extends Record<string, unknown>>(props: {
   );
 }
 
-export type DateCellRenderProps<RowData extends Record<string, unknown>> = {
+export type DateCellRenderProps<RowData extends DefaultRow> = {
   format: string;
   expanded?: boolean;
   shift?: number;
@@ -147,7 +147,7 @@ export type DateCellRenderProps<RowData extends Record<string, unknown>> = {
   className?: ((context: CellContext<RowData, unknown>) => string) | string;
 };
 
-export function DateCellRender<Row extends Record<string, unknown>>(props: {
+export function DateCellRender<Row extends DefaultRow>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as
@@ -186,7 +186,7 @@ export function DateCellRender<Row extends Record<string, unknown>>(props: {
   );
 }
 
-export type TagCellRenderProps<Row extends Record<string, unknown>> = {
+export type TagCellRenderProps<Row extends DefaultRow> = {
   color?:
     | ((context: CellContext<Row, unknown>) => keyof PresetColorType | undefined)
     | keyof PresetColorType
@@ -201,7 +201,7 @@ export type TagCellRenderProps<Row extends Record<string, unknown>> = {
   className?: ((context: CellContext<Row, unknown>) => string) | string;
 };
 
-export function TagCellRender<Row extends Record<string, unknown>>(props: {
+export function TagCellRender<Row extends DefaultRow>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as
@@ -307,7 +307,7 @@ type CheckProps = (props: {
   checked: boolean;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
 }) => ReactNode;
-export type SelectCellRenderProps<RowData extends Record<string, unknown>> = {
+export type SelectCellRenderProps<RowData extends DefaultRow> = {
   Check?: CheckProps;
   shift?: number;
   classes?: CellRenderClasses[];
@@ -315,7 +315,7 @@ export type SelectCellRenderProps<RowData extends Record<string, unknown>> = {
   className?: ((context: CellContext<RowData, unknown>) => string) | string;
 };
 
-function collectNumberRecursively<Row extends Record<string, unknown>>(
+function collectNumberRecursively<Row extends DefaultRow>(
   context: CellContext<Row, unknown>,
   row: RowInterface<Row>,
 ) {
@@ -335,7 +335,7 @@ function collectNumberRecursively<Row extends Record<string, unknown>>(
   return number;
 }
 
-export function SelectCellRender<Row extends Record<string, unknown>>(props: {
+export function SelectCellRender<Row extends DefaultRow>(props: {
   context: CellContext<Row, unknown>;
 }): ReactNode {
   const cellRenderProps = props.context.column.columnDef.cellRenderProps as

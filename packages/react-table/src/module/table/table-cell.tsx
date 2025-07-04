@@ -1,10 +1,11 @@
 import type { Cell } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
+import type { DefaultRow } from "../../types";
 import { getPrevFrozenWidthCell } from "./lib";
 import styles from "./table-cell.module.scss";
 
-type Props<RowData extends Record<string, unknown>> = {
+type Props<RowData extends DefaultRow> = {
   cell: Cell<RowData, unknown>;
   index: number;
   columnPosition: number;
@@ -13,7 +14,7 @@ type Props<RowData extends Record<string, unknown>> = {
   selected: boolean;
 };
 
-export const TableCell = React.memo(function TableCell<RowData extends Record<string, unknown>>(
+export const TableCell = React.memo(function TableCell<RowData extends DefaultRow>(
   props: Props<RowData>,
 ) {
   const cellContext = props.cell.getContext();
@@ -61,4 +62,4 @@ export const TableCell = React.memo(function TableCell<RowData extends Record<st
       {CellRender && <CellRender context={cellContext} />}
     </div>
   );
-}) as <RowData extends Record<string, unknown>>(props: Props<RowData>) => React.JSX.Element;
+}) as <RowData extends DefaultRow>(props: Props<RowData>) => React.JSX.Element;

@@ -1,6 +1,8 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import React from "react";
 import type {
+  DefaultGanttData,
+  DefaultRow,
   GanttInfo,
   GanttRowInfo,
   GanttTaskProps,
@@ -16,10 +18,7 @@ import { useGanttColumns } from "./hooks";
 import { getGanttColumnWidth, getGanttInitialCoordinates } from "./lib";
 import styles from "./table-gantt.module.scss";
 
-type TableContainerProps<
-  RowData extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
-> = {
+type TableContainerProps<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
   width?: number;
   tableRef?: React.LegacyRef<HTMLTableElement>;
   firstGanttDate?: string;
@@ -45,10 +44,9 @@ type TableContainerProps<
   ganttView: GanttViewType;
 };
 
-export function TableGantt<
-  RowData extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
->(props: TableContainerProps<RowData, GanttData>) {
+export function TableGantt<RowData extends DefaultRow, GanttData extends DefaultGanttData>(
+  props: TableContainerProps<RowData, GanttData>,
+) {
   const arrowContainerRef = React.useRef<HTMLDivElement | null>(null);
   const [bodyWidth, setBodyWidth] = React.useState<number | null>(null);
 

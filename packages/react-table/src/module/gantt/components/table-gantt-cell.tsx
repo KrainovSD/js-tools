@@ -5,6 +5,8 @@ import React from "react";
 import { createPortal } from "react-dom";
 import { GanttArrow } from ".";
 import type {
+  DefaultGanttData,
+  DefaultRow,
   GanttInfo,
   GanttRowInfo,
   GanttTaskProps,
@@ -14,10 +16,7 @@ import type {
 import { GANTT_TOP_SHIFT } from "../gantt.constants";
 import styles from "./table-gantt-cell.module.scss";
 
-type GetCellOptions<
-  RowData extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
-> = {
+type GetCellOptions<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
   ganttInfoGetter: ((row: RowInterface<RowData>) => GanttInfo<GanttData>) | undefined;
   GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
   GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
@@ -28,10 +27,9 @@ type GetCellOptions<
   bodyWidth: number | null;
 };
 
-export function TableGanttCell<
-  RowData extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
->(opts: GetCellOptions<RowData, GanttData>) {
+export function TableGanttCell<RowData extends DefaultRow, GanttData extends DefaultGanttData>(
+  opts: GetCellOptions<RowData, GanttData>,
+) {
   const ganttInfo = opts.ganttInfoGetter?.(opts.row);
   if (!ganttInfo) return null;
 

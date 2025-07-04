@@ -12,6 +12,7 @@ import type {
 } from "@tanstack/react-table";
 import React from "react";
 import {
+  type DefaultRow,
   type FilterKey,
   type SortingKey,
   type TableCellClassKey,
@@ -59,26 +60,52 @@ import {
 import classes from "./classes.module.scss";
 
 export function useColumns<
-  Row extends Record<string, unknown>,
-  CellRender = undefined,
-  HeaderRender = undefined,
-  FilterRender = undefined,
-  SortRender = undefined,
-  CellClass = undefined,
-  HeaderClass = undefined,
-  FilterType = undefined,
-  SortType = undefined,
+  RowData extends DefaultRow,
+  CellRender extends string | undefined = undefined,
+  CellRenderProps extends Record<CellRender extends string ? CellRender : string, unknown> = Record<
+    CellRender extends string ? CellRender : string,
+    unknown
+  >,
+  HeaderRender extends string | undefined = undefined,
+  HeaderRenderProps extends Record<
+    HeaderRender extends string ? HeaderRender : string,
+    unknown
+  > = Record<HeaderRender extends string ? HeaderRender : string, unknown>,
+  FilterRender extends string | undefined = undefined,
+  FilterRenderProps extends Record<
+    FilterRender extends string ? FilterRender : string,
+    unknown
+  > = Record<FilterRender extends string ? FilterRender : string, unknown>,
+  SortRender extends string | undefined = undefined,
+  SortRenderProps extends Record<SortRender extends string ? SortRender : string, unknown> = Record<
+    SortRender extends string ? SortRender : string,
+    unknown
+  >,
+  CellClass extends string | undefined = undefined,
+  CellClassProps = unknown,
+  HeaderClass extends string | undefined = undefined,
+  HeaderClassProps = unknown,
+  FilterType extends string | undefined = undefined,
+  SortType extends string | undefined = undefined,
+  ColumnProps = unknown,
 >(
   props: TableColumnsSettings<
-    Row,
+    RowData,
     CellRender,
+    CellRenderProps,
     HeaderRender,
+    HeaderRenderProps,
     FilterRender,
+    FilterRenderProps,
     SortRender,
+    SortRenderProps,
     CellClass,
+    CellClassProps,
     HeaderClass,
+    HeaderClassProps,
     FilterType,
-    SortType
+    SortType,
+    ColumnProps
   > & { withGantt: boolean | undefined; withFilters: boolean; rubberColumn: boolean },
 ) {
   const {
@@ -97,7 +124,7 @@ export function useColumns<
     filterType = "includes-string",
   } = props.defaultColumnOptions ?? {};
 
-  const cellRenders = React.useMemo<TableCellRenders<Row>>(
+  const cellRenders = React.useMemo<TableCellRenders<RowData>>(
     () => ({
       select: SelectCellRender,
       date: DateCellRender,
@@ -107,11 +134,11 @@ export function useColumns<
     }),
     [],
   );
-  const headerRenders = React.useMemo<TableHeaderRenders<Row>>(
+  const headerRenders = React.useMemo<TableHeaderRenders<RowData>>(
     () => ({ common: CommonHeaderRender, select: SelectHeaderRender, empty: () => "" }),
     [],
   );
-  const filterRenders = React.useMemo<TableFilterRenders<Row>>(
+  const filterRenders = React.useMemo<TableFilterRenders<RowData>>(
     () => ({
       string: StringFilterRender,
       select: SelectFilterRender,
@@ -122,7 +149,7 @@ export function useColumns<
     }),
     [],
   );
-  const sortRenders = React.useMemo<TableSortRenders<Row>>(
+  const sortRenders = React.useMemo<TableSortRenders<RowData>>(
     () => ({
       "single-arrow": SingleArrowSortRender,
       "double-arrow": DoubleArrowSortRender,
@@ -130,7 +157,7 @@ export function useColumns<
     [],
   );
 
-  const headerClasses = React.useMemo<TableHeaderClasses<Row>>(
+  const headerClasses = React.useMemo<TableHeaderClasses<RowData>>(
     () => ({
       common: classes.header__common,
       empty: classes.header__empty,
@@ -139,7 +166,7 @@ export function useColumns<
     }),
     [],
   );
-  const cellClasses = React.useMemo<TableCellClasses<Row>>(
+  const cellClasses = React.useMemo<TableCellClasses<RowData>>(
     () => ({
       common: classes.cell__common,
       empty: classes.cell__empty,
@@ -149,7 +176,7 @@ export function useColumns<
     [],
   );
 
-  const sorts = React.useMemo<Record<SortingKey, SortingFn<Row> | BuiltInSortingFn>>(
+  const sorts = React.useMemo<Record<SortingKey, SortingFn<RowData> | BuiltInSortingFn>>(
     () => ({
       "string-with-number": "alphanumeric",
       array: arraySort,
@@ -160,7 +187,7 @@ export function useColumns<
     }),
     [],
   );
-  const filters = React.useMemo<Record<FilterKey, FilterFnOption<Row>>>(
+  const filters = React.useMemo<Record<FilterKey, FilterFnOption<RowData>>>(
     () => ({
       "date-in-range": dateRangeFilter,
       "includes-array-every": "arrIncludesAll",
@@ -179,15 +206,15 @@ export function useColumns<
     const grouping: GroupingState = [];
     const columnPinning: ColumnPinningState = { left: [], right: [] };
 
-    const columns: ColumnDef<Row>[] = props.columns.map<ColumnDef<Row>>((column) => {
+    const columns: ColumnDef<RowData>[] = props.columns.map<ColumnDef<RowData>>((column) => {
       if (column.leftFrozen) {
-        columnPinning.left?.push?.(column.key);
+        columnPinning.left?.push?.(column.key as string);
       }
       if (column.rightFrozen) {
-        columnPinning.right?.push?.(column.key);
+        columnPinning.right?.push?.(column.key as string);
       }
       if (column.grouping) {
-        grouping.push(column.key);
+        grouping.push(column.key as string);
       }
 
       const cellRenderKey = column.cellRender ?? cellRender;
@@ -199,26 +226,25 @@ export function useColumns<
       const sortTypeKey = column.sortType ?? sortType;
       const filterTypeKey = column.filterType ?? filterType;
 
-      const columnDef: ColumnDef<Row> = {
+      const columnDef: ColumnDef<RowData> = {
         accessorKey: column.key,
-        id: column.key,
+        id: column.key as string,
         name: column.name,
         cellRender:
-          props.cellRenders?.[cellRenderKey as CellRender] ??
-          cellRenders[cellRenderKey as TableCellRenderKey],
+          props.cellRenders?.[cellRenderKey] ?? cellRenders[cellRenderKey as TableCellRenderKey],
         headerRender:
-          props.headerRenders?.[headerRenderKey as HeaderRender] ??
+          props.headerRenders?.[headerRenderKey] ??
           headerRenders[headerRenderKey as TableHeaderRenderKey],
         filterRender:
-          props.filterRenders?.[filterRenderKey as FilterRender] ??
+          props.filterRenders?.[filterRenderKey] ??
           filterRenders[filterRenderKey as TableFilterRenderKey],
         sortRender:
-          props.sortRenders?.[sortRenderKey as SortRender] ??
-          sortRenders[sortRenderKey as TableSortRenderKey],
+          props.sortRenders?.[sortRenderKey] ?? sortRenders[sortRenderKey as TableSortRenderKey],
         cellClass: cellClassKey.reduce(
-          (result: (string | ((props: CellContext<Row, unknown>) => string))[], key) => {
-            const style =
-              props.cellClasses?.[key as CellClass] ?? cellClasses[key as TableCellClassKey];
+          (result: (string | ((props: CellContext<RowData, unknown>) => string))[], key) => {
+            if (!key) return result;
+
+            const style = props.cellClasses?.[key] ?? cellClasses[key as TableCellClassKey];
 
             if (style) result.push(style);
 
@@ -227,10 +253,10 @@ export function useColumns<
           [],
         ),
         headerClass: headerClassKey.reduce(
-          (result: (string | ((props: HeaderContext<Row, unknown>) => string))[], key) => {
-            const style =
-              props.headerClasses?.[key as HeaderClass] ??
-              headerClasses[key as TableHeaderClassKey];
+          (result: (string | ((props: HeaderContext<RowData, unknown>) => string))[], key) => {
+            if (!key) return result;
+
+            const style = props.headerClasses?.[key] ?? headerClasses[key as TableHeaderClassKey];
 
             if (style) result.push(style);
 
@@ -238,6 +264,7 @@ export function useColumns<
           },
           [],
         ),
+        // cellRenderProps: "cellRenderProps" in column ? column.cellRenderProps : undefined,
         cellRenderProps: column.cellRenderProps,
         headerRenderProps: column.headerRenderProps,
         filterRenderProps: column.filterRenderProps,
@@ -254,9 +281,8 @@ export function useColumns<
         enableDraggable: column.draggable ?? draggable,
         sortUndefined: 1,
         sortDescFirst: (column.sortDirectionFirst ?? sortDirectionFirst) === "desc",
-        sortingFn: props.sortTypes?.[sortTypeKey as SortType] ?? sorts[sortTypeKey],
-        filterFn:
-          props.filterTypes?.[filterTypeKey as FilterType] ?? filters[filterTypeKey as FilterKey],
+        sortingFn: props.sortTypes?.[sortTypeKey] ?? sorts[sortTypeKey as SortingKey],
+        filterFn: props.filterTypes?.[filterTypeKey] ?? filters[filterTypeKey as FilterKey],
       };
 
       if (column.width != undefined) {

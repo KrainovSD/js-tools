@@ -13,47 +13,73 @@ import type { ColumnDef, ColumnPinningState } from "@tanstack/react-table";
 import React from "react";
 import type { TableProps } from "../../../table";
 import { DEFAULT_TABLE_COLUMN_SIZE } from "../../../table.constants";
-import type { TableRenderers } from "../../../types";
+import type { DefaultGanttData, DefaultRow, TableRenderers } from "../../../types";
 import { Expander } from "../components";
 
-type InitialState<Row extends Record<string, unknown>> = {
+type InitialState<Row extends DefaultRow> = {
   grouping: GroupingState;
   columnPinning: ColumnPinningState;
   columns: ColumnDef<Row>[];
 };
 
 export function useTableOptions<
-  Row extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
-  CellRender = undefined,
-  HeaderRender = undefined,
-  FilterRender = undefined,
-  SortRender = undefined,
-  CellClass = undefined,
-  HeaderClass = undefined,
-  FilterType = undefined,
-  SortType = undefined,
+  RowData extends DefaultRow,
+  GanttData extends DefaultGanttData,
+  CellRender extends string | undefined = undefined,
+  CellRenderProps extends Record<CellRender extends string ? CellRender : string, unknown> = Record<
+    CellRender extends string ? CellRender : string,
+    unknown
+  >,
+  HeaderRender extends string | undefined = undefined,
+  HeaderRenderProps extends Record<
+    HeaderRender extends string ? HeaderRender : string,
+    unknown
+  > = Record<HeaderRender extends string ? HeaderRender : string, unknown>,
+  FilterRender extends string | undefined = undefined,
+  FilterRenderProps extends Record<
+    FilterRender extends string ? FilterRender : string,
+    unknown
+  > = Record<FilterRender extends string ? FilterRender : string, unknown>,
+  SortRender extends string | undefined = undefined,
+  SortRenderProps extends Record<SortRender extends string ? SortRender : string, unknown> = Record<
+    SortRender extends string ? SortRender : string,
+    unknown
+  >,
+  CellClass extends string | undefined = undefined,
+  CellClassProps = unknown,
+  HeaderClass extends string | undefined = undefined,
+  HeaderClassProps = unknown,
+  FilterType extends string | undefined = undefined,
+  SortType extends string | undefined = undefined,
+  ColumnProps = unknown,
 >(
   props: TableProps<
-    Row,
+    RowData,
     GanttData,
     CellRender,
+    CellRenderProps,
     HeaderRender,
+    HeaderRenderProps,
     FilterRender,
+    FilterRenderProps,
     SortRender,
+    SortRenderProps,
     CellClass,
+    CellClassProps,
     HeaderClass,
+    HeaderClassProps,
     FilterType,
-    SortType
-  > & { initialState: InitialState<Row>; pageSizes?: number[]; totalRows?: number | undefined },
+    SortType,
+    ColumnProps
+  > & { initialState: InitialState<RowData>; pageSizes?: number[]; totalRows?: number | undefined },
 ) {
-  const renderers = React.useMemo<Required<TableRenderers<Row>>>(
+  const renderers = React.useMemo<Required<TableRenderers<RowData>>>(
     () => ({ expander: props.renderers?.expander ?? Expander }),
     [props.renderers],
   );
 
   const tableOptions = React.useMemo(() => {
-    const tableOptions: TableOptions<Row> = {
+    const tableOptions: TableOptions<RowData> = {
       data: props.rows,
       columns: props.initialState.columns,
       state: {},

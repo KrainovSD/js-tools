@@ -7,6 +7,8 @@ import { useScroll, useSplitter } from "./module/gantt/hooks";
 import { TableCommonGantt } from "./module/gantt/table-common-gantt";
 import { TableGantt } from "./module/gantt/table-gantt";
 import type {
+  DefaultGanttData,
+  DefaultRow,
   GanttInfo,
   GanttTaskProps,
   GanttTooltipProps,
@@ -16,10 +18,7 @@ import type {
   TableInterface,
 } from "./types";
 
-export type GanttProps<
-  RowData extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
-> = {
+export type GanttProps<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
   fullSize: boolean | undefined;
   tableContainerRef?: React.LegacyRef<HTMLDivElement>;
   columnVirtualEnabled: boolean;
@@ -50,10 +49,9 @@ export type GanttProps<
   GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
 };
 
-export function Gantt<
-  RowData extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
->(props: GanttProps<RowData, GanttData>) {
+export function Gantt<RowData extends DefaultRow, GanttData extends DefaultGanttData>(
+  props: GanttProps<RowData, GanttData>,
+) {
   const { sizes, startDrag, splitterRef, isDragging, splitterGhostRef, splitterOverflowRef } =
     useSplitter(props.instantGanttSplitter);
 

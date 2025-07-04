@@ -7,6 +7,8 @@ import { TableCommon, TableFilter, TableFooter, TableLoading } from "./module/ta
 import { useColumns, useTableOptions, useVirtualizer } from "./module/table/hooks";
 import styles from "./table.module.scss";
 import type {
+  DefaultGanttData,
+  DefaultRow,
   GanttProps,
   HeaderInterface,
   RowInterface,
@@ -21,26 +23,52 @@ import type {
 } from "./types";
 
 export type TableProps<
-  RowData extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
-  CellRender = undefined,
-  HeaderRender = undefined,
-  FilterRender = undefined,
-  SortRender = undefined,
-  CellClass = undefined,
-  HeaderClass = undefined,
-  FilterType = undefined,
-  SortType = undefined,
+  RowData extends DefaultRow,
+  GanttData extends DefaultGanttData,
+  CellRender extends string | undefined = undefined,
+  CellRenderProps extends Record<CellRender extends string ? CellRender : string, unknown> = Record<
+    CellRender extends string ? CellRender : string,
+    unknown
+  >,
+  HeaderRender extends string | undefined = undefined,
+  HeaderRenderProps extends Record<
+    HeaderRender extends string ? HeaderRender : string,
+    unknown
+  > = Record<HeaderRender extends string ? HeaderRender : string, unknown>,
+  FilterRender extends string | undefined = undefined,
+  FilterRenderProps extends Record<
+    FilterRender extends string ? FilterRender : string,
+    unknown
+  > = Record<FilterRender extends string ? FilterRender : string, unknown>,
+  SortRender extends string | undefined = undefined,
+  SortRenderProps extends Record<SortRender extends string ? SortRender : string, unknown> = Record<
+    SortRender extends string ? SortRender : string,
+    unknown
+  >,
+  CellClass extends string | undefined = undefined,
+  CellClassProps = unknown,
+  HeaderClass extends string | undefined = undefined,
+  HeaderClassProps = unknown,
+  FilterType extends string | undefined = undefined,
+  SortType extends string | undefined = undefined,
+  ColumnProps = unknown,
 > = TableColumnsSettings<
   RowData,
   CellRender,
+  CellRenderProps,
   HeaderRender,
+  HeaderRenderProps,
   FilterRender,
+  FilterRenderProps,
   SortRender,
+  SortRenderProps,
   CellClass,
+  CellClassProps,
   HeaderClass,
+  HeaderClassProps,
   FilterType,
-  SortType
+  SortType,
+  ColumnProps
 > &
   Pick<
     TableOptions<RowData>,
@@ -112,28 +140,54 @@ export type TableProps<
   } & GanttProps<RowData, GanttData>;
 
 export function Table<
-  Row extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
-  CellRender = undefined,
-  HeaderRender = undefined,
-  FilterRender = undefined,
-  SortRender = undefined,
-  CellClass = undefined,
-  HeaderClass = undefined,
-  FilterType = undefined,
-  SortType = undefined,
+  RowData extends DefaultRow,
+  GanttData extends DefaultGanttData,
+  CellRender extends string | undefined = undefined,
+  CellRenderProps extends Record<CellRender extends string ? CellRender : string, unknown> = Record<
+    CellRender extends string ? CellRender : string,
+    unknown
+  >,
+  HeaderRender extends string | undefined = undefined,
+  HeaderRenderProps extends Record<
+    HeaderRender extends string ? HeaderRender : string,
+    unknown
+  > = Record<HeaderRender extends string ? HeaderRender : string, unknown>,
+  FilterRender extends string | undefined = undefined,
+  FilterRenderProps extends Record<
+    FilterRender extends string ? FilterRender : string,
+    unknown
+  > = Record<FilterRender extends string ? FilterRender : string, unknown>,
+  SortRender extends string | undefined = undefined,
+  SortRenderProps extends Record<SortRender extends string ? SortRender : string, unknown> = Record<
+    SortRender extends string ? SortRender : string,
+    unknown
+  >,
+  CellClass extends string | undefined = undefined,
+  CellClassProps = unknown,
+  HeaderClass extends string | undefined = undefined,
+  HeaderClassProps = unknown,
+  FilterType extends string | undefined = undefined,
+  SortType extends string | undefined = undefined,
+  ColumnProps = unknown,
 >(
   props: TableProps<
-    Row,
+    RowData,
     GanttData,
     CellRender,
+    CellRenderProps,
     HeaderRender,
+    HeaderRenderProps,
     FilterRender,
+    FilterRenderProps,
     SortRender,
+    SortRenderProps,
     CellClass,
+    CellClassProps,
     HeaderClass,
+    HeaderClassProps,
     FilterType,
-    SortType
+    SortType,
+    ColumnProps
   >,
 ) {
   let startRender = 0;

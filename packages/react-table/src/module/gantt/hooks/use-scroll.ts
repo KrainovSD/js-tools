@@ -198,8 +198,8 @@ export function useScroll() {
     });
 
     thumb.addEventListener("mousedown", onMouseDown);
-    mainBody.addEventListener("wheel", onWheelTable);
-    otherBody.addEventListener("wheel", onWheelTable);
+    mainBody.addEventListener("wheel", onWheelTable, { passive: false });
+    otherBody.addEventListener("wheel", onWheelTable, { passive: false });
 
     return () => {
       thumb.removeEventListener("mousedown", onMouseDown);
@@ -270,8 +270,8 @@ export function useScroll() {
     });
 
     thumb.addEventListener("mousedown", onMouseDown);
-    mainBody.addEventListener("wheel", onWheelTable);
-    otherBody.addEventListener("wheel", onWheelTable);
+    mainBody.addEventListener("wheel", onWheelTable, { passive: false });
+    otherBody.addEventListener("wheel", onWheelTable, { passive: false });
 
     return () => {
       thumb.removeEventListener("mousedown", onMouseDown);

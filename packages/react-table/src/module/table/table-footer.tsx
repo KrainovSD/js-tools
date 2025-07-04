@@ -1,9 +1,9 @@
 import { Pagination } from "@krainovsd/react-ui";
 import React from "react";
-import type { TableInterface, TablePaginationProps } from "../../types";
+import type { DefaultRow, TableInterface, TablePaginationProps } from "../../types";
 import styles from "./table-footer.module.scss";
 
-type TableFooterProps<RowData extends Record<string, unknown>> = {
+type TableFooterProps<RowData extends DefaultRow> = {
   Pagination: React.FC<TablePaginationProps<RowData>> | undefined;
   withPagination: boolean | undefined;
   withTotal: boolean | undefined;
@@ -14,7 +14,7 @@ type TableFooterProps<RowData extends Record<string, unknown>> = {
   pageSizes?: number[];
 };
 
-export const TableFooter = React.memo(function TableFooter<RowData extends Record<string, unknown>>(
+export const TableFooter = React.memo(function TableFooter<RowData extends DefaultRow>(
   props: TableFooterProps<RowData>,
 ) {
   const pageSizes = React.useMemo(() => {
@@ -62,6 +62,4 @@ export const TableFooter = React.memo(function TableFooter<RowData extends Recor
       )}
     </>
   );
-}) as <RowData extends Record<string, unknown>>(
-  props: TableFooterProps<RowData>,
-) => React.JSX.Element;
+}) as <RowData extends DefaultRow>(props: TableFooterProps<RowData>) => React.JSX.Element;

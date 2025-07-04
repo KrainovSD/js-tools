@@ -2,13 +2,13 @@ import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../table.constants";
-import type { HeaderInterface, RowInterface, TableInterface } from "../../types";
+import type { DefaultRow, HeaderInterface, RowInterface, TableInterface } from "../../types";
 import { TableHeaderRow } from "../table/table-header-row";
 import { TableRow } from "../table/table-row";
 import { GANTT_COMMON_TABLE_BODY_ID, GANTT_COMMON_TABLE_HEADER_ID } from "./gantt.constants";
 import styles from "./table-common-gantt.module.scss";
 
-type TableContainerProps<RowData extends Record<string, unknown>> = {
+type TableContainerProps<RowData extends DefaultRow> = {
   width?: number;
   rowHeaderHeight: number;
   tableRef?: React.LegacyRef<HTMLTableElement>;
@@ -32,9 +32,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
     | undefined;
 };
 
-export function TableCommonGantt<RowData extends Record<string, unknown>>(
-  props: TableContainerProps<RowData>,
-) {
+export function TableCommonGantt<RowData extends DefaultRow>(props: TableContainerProps<RowData>) {
   const leftHeadersGroup = props.table.getLeftHeaderGroups();
   const centerHeadersGroup = props.table.getCenterHeaderGroups();
   const rightHeadersGroup = props.table.getRightHeaderGroups();

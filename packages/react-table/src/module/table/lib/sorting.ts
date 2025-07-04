@@ -1,8 +1,9 @@
 import { isArray, isId } from "@krainovsd/js-helpers";
 import type { Row as RowLibrary } from "@tanstack/react-table";
+import type { DefaultRow } from "../../../types";
 import { getData } from "./lodash";
 
-export function stringSort<Row extends Record<string, unknown>>(
+export function stringSort<Row extends DefaultRow>(
   rowA: RowLibrary<Row>,
   rowB: RowLibrary<Row>,
   columnId: string,
@@ -15,7 +16,7 @@ export function stringSort<Row extends Record<string, unknown>>(
   return dataA > dataB ? 1 : -1;
 }
 
-export function numberSort<Row extends Record<string, unknown>>(
+export function numberSort<Row extends DefaultRow>(
   rowA: RowLibrary<Row>,
   rowB: RowLibrary<Row>,
   columnId: string,
@@ -30,7 +31,7 @@ export function numberSort<Row extends Record<string, unknown>>(
   return dataA - dataB;
 }
 
-export function booleanSort<Row extends Record<string, unknown>>(
+export function booleanSort<Row extends DefaultRow>(
   rowA: RowLibrary<Row>,
   rowB: RowLibrary<Row>,
   columnId: string,
@@ -41,7 +42,7 @@ export function booleanSort<Row extends Record<string, unknown>>(
   return dataA - dataB;
 }
 
-export function arraySort<Row extends Record<string, unknown>>(
+export function arraySort<Row extends DefaultRow>(
   rowA: RowLibrary<Row>,
   rowB: RowLibrary<Row>,
   columnId: string,
@@ -54,7 +55,7 @@ export function arraySort<Row extends Record<string, unknown>>(
   return dataA - dataB;
 }
 
-export function dateSort<Row extends Record<string, unknown>>(
+export function dateSort<Row extends DefaultRow>(
   rowA: RowLibrary<Row>,
   rowB: RowLibrary<Row>,
   columnId: string,

@@ -1,12 +1,13 @@
 import type { Cell, ColumnPinningPosition, Header } from "@tanstack/react-table";
+import type { DefaultRow } from "../../../types";
 
-type GetPrevFrozenWidthCellsOptions<Row extends Record<string, unknown>> = {
+type GetPrevFrozenWidthCellsOptions<Row extends DefaultRow> = {
   frozenPosition: ColumnPinningPosition;
   index: number;
   cells: Cell<Row, unknown>[];
 };
 
-export function getPrevFrozenWidthCell<Row extends Record<string, unknown>>(
+export function getPrevFrozenWidthCell<Row extends DefaultRow>(
   opts: GetPrevFrozenWidthCellsOptions<Row>,
 ) {
   switch (opts.frozenPosition) {
@@ -36,13 +37,13 @@ export function getPrevFrozenWidthCell<Row extends Record<string, unknown>>(
   }
 }
 
-type GetPrevFrozenWidthHeaderOptions<Row extends Record<string, unknown>> = {
+type GetPrevFrozenWidthHeaderOptions<Row extends DefaultRow> = {
   frozenPosition: ColumnPinningPosition;
   index: number;
   headers: Header<Row, unknown>[];
 };
 
-export function getPrevFrozenWidthHeader<Row extends Record<string, unknown>>(
+export function getPrevFrozenWidthHeader<Row extends DefaultRow>(
   opts: GetPrevFrozenWidthHeaderOptions<Row>,
 ) {
   switch (opts.frozenPosition) {

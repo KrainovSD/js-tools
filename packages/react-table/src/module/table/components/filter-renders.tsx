@@ -7,6 +7,7 @@ import {
   type SelectItemInterface,
 } from "@krainovsd/react-ui";
 import type { ColumnDef } from "@tanstack/react-table";
+import type { DefaultRow } from "../../../types";
 
 export function StringFilterRender() {
   return <Input placeholder={"Введите значение"} variant="outlined" size="middle" />;
@@ -16,7 +17,7 @@ export type SelectFilterRenderProps = {
   options: SelectItemInterface[];
   multiple?: boolean;
 };
-export function SelectFilterRender<Row extends Record<string, unknown>>(props: ColumnDef<Row>) {
+export function SelectFilterRender<Row extends DefaultRow>(props: ColumnDef<Row>) {
   const filterRenderProps = props.filterRenderProps as SelectFilterRenderProps | undefined;
 
   return (
@@ -34,12 +35,12 @@ export function SelectFilterRender<Row extends Record<string, unknown>>(props: C
 export type DateFilterRenderProps = {
   format: string;
 };
-export function DateRangeFilterRender<Row extends Record<string, unknown>>(props: ColumnDef<Row>) {
+export function DateRangeFilterRender<Row extends DefaultRow>(props: ColumnDef<Row>) {
   const filterRenderProps = props.filterRenderProps as DateFilterRenderProps | undefined;
 
   return <DateRangePicker format={filterRenderProps?.format} />;
 }
-export function DateFilterRender<Row extends Record<string, unknown>>(props: ColumnDef<Row>) {
+export function DateFilterRender<Row extends DefaultRow>(props: ColumnDef<Row>) {
   const filterRenderProps = props.filterRenderProps as DateFilterRenderProps | undefined;
 
   return <DatePicker format={filterRenderProps?.format} />;

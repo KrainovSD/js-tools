@@ -2,6 +2,8 @@ import clsx from "clsx";
 import React from "react";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
 import type {
+  DefaultGanttData,
+  DefaultRow,
   GanttInfo,
   GanttRowInfo,
   GanttTaskProps,
@@ -11,7 +13,7 @@ import type {
 import { TableGanttCell } from "./table-gantt-cell";
 import styles from "./table-gantt-row.module.scss";
 
-type Props<RowData extends Record<string, unknown>, GanttData extends Record<string, unknown>> = {
+type Props<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
   GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
   GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
   rowsMap: Record<string | number, GanttRowInfo | undefined>;
@@ -24,8 +26,8 @@ type Props<RowData extends Record<string, unknown>, GanttData extends Record<str
 };
 
 export const TableGanttRow = React.memo(function TableGanttRow<
-  RowData extends Record<string, unknown>,
-  GanttData extends Record<string, unknown>,
+  RowData extends DefaultRow,
+  GanttData extends DefaultGanttData,
 >(props: Props<RowData, GanttData>) {
   return (
     <>
@@ -54,6 +56,6 @@ export const TableGanttRow = React.memo(function TableGanttRow<
       ></div>
     </>
   );
-}) as <RowData extends Record<string, unknown>, GanttData extends Record<string, unknown>>(
+}) as <RowData extends DefaultRow, GanttData extends DefaultGanttData>(
   props: Props<RowData, GanttData>,
 ) => React.JSX.Element;

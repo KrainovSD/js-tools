@@ -1,6 +1,7 @@
 import type { CellContext } from "@tanstack/react-table";
+import type { DefaultRow } from "../../../types";
 
-function checkVisible<Row extends Record<string, unknown>>(props: CellContext<Row, unknown>) {
+function checkVisible<Row extends DefaultRow>(props: CellContext<Row, unknown>) {
   const isGroupChildrenRow = props.column.getIsGrouped() && !props.row.getIsGrouped();
   const isGroupRow = props.row.getIsGrouped();
 
@@ -10,9 +11,7 @@ function checkVisible<Row extends Record<string, unknown>>(props: CellContext<Ro
   return true;
 }
 
-export function useVisibleCell<Row extends Record<string, unknown>>(
-  props: CellContext<Row, unknown>,
-) {
+export function useVisibleCell<Row extends DefaultRow>(props: CellContext<Row, unknown>) {
   const isVisible = checkVisible(props);
   const extraPadding = props.row.getParentRows().reduce((acc: number, row) => {
     if (row.getIsExpanded() && !row.getIsGrouped()) acc++;

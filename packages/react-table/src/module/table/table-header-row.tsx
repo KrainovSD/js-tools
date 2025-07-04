@@ -1,11 +1,11 @@
 import type { ColumnFiltersState, HeaderGroup, SortingState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
-import type { HeaderInterface } from "../../types";
+import type { DefaultRow, HeaderInterface } from "../../types";
 import { TableHeaderCell } from "./table-header-cell";
 import styles from "./table-header-row.module.scss";
 
-type Props<RowData extends Record<string, unknown>> = {
+type Props<RowData extends DefaultRow> = {
   headerGroup: HeaderGroup<RowData>;
   columnVirtualEnabled: boolean;
   columnsVirtual: string[];
@@ -23,9 +23,9 @@ type Props<RowData extends Record<string, unknown>> = {
   height: number | undefined;
 };
 
-export const TableHeaderRow = React.memo(function TableHeaderRow<
-  RowData extends Record<string, unknown>,
->(props: Props<RowData>) {
+export const TableHeaderRow = React.memo(function TableHeaderRow<RowData extends DefaultRow>(
+  props: Props<RowData>,
+) {
   return (
     <div
       role="rowheader"
@@ -108,4 +108,4 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<
         })}
     </div>
   );
-}) as <RowData extends Record<string, unknown>>(props: Props<RowData>) => React.JSX.Element;
+}) as <RowData extends DefaultRow>(props: Props<RowData>) => React.JSX.Element;

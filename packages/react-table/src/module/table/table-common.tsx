@@ -3,12 +3,18 @@ import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
 import { DEFAULT_TABLE_COLUMN_SIZE } from "../../table.constants";
-import type { HeaderInterface, RowInterface, TableEmptyProps, TableInterface } from "../../types";
+import type {
+  DefaultRow,
+  HeaderInterface,
+  RowInterface,
+  TableEmptyProps,
+  TableInterface,
+} from "../../types";
 import styles from "./table-common.module.scss";
 import { TableHeaderRow } from "./table-header-row";
 import { TableRow } from "./table-row";
 
-type TableContainerProps<RowData extends Record<string, unknown>> = {
+type TableContainerProps<RowData extends DefaultRow> = {
   rubberColumn: boolean;
   columnVirtualEnabled: boolean;
   rowVirtualEnabled: boolean;
@@ -33,9 +39,7 @@ type TableContainerProps<RowData extends Record<string, unknown>> = {
   Empty: React.FC<TableEmptyProps> | undefined;
 };
 
-export function TableCommon<RowData extends Record<string, unknown>>(
-  props: TableContainerProps<RowData>,
-) {
+export function TableCommon<RowData extends DefaultRow>(props: TableContainerProps<RowData>) {
   const leftHeadersGroup = props.table.getLeftHeaderGroups();
   const centerHeadersGroup = props.table.getCenterHeaderGroups();
   const rightHeadersGroup = props.table.getRightHeaderGroups();

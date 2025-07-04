@@ -1,10 +1,9 @@
 import { MinusOutlined, PlusOutlined } from "@krainovsd/react-icons";
 import type { CellContext } from "@tanstack/react-table";
+import type { DefaultRow } from "../../../types";
 import styles from "./renderers.module.scss";
 
-export function Expander<Row extends Record<string, unknown>>(props: {
-  context: CellContext<Row, unknown>;
-}) {
+export function Expander<Row extends DefaultRow>(props: { context: CellContext<Row, unknown> }) {
   const isExpanded = props.context.row.getIsExpanded();
 
   return (
