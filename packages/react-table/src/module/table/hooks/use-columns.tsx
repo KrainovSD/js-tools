@@ -196,11 +196,11 @@ export function useColumns<
   const filters = React.useMemo<Record<FilterKey, FilterFnOption<RowData>>>(
     () => ({
       "date-in-range": dateRangeFilter,
-      "includes-array-every": "arrIncludesAll",
-      "includes-array-some": "arrIncludesSome",
-      "includes-array-all": arrayAllFilter,
+      "array-every-in-array": "arrIncludesAll",
+      "array-some-in-array": "arrIncludesSome",
+      "array-equals": arrayAllFilter,
       "includes-string": "includesString",
-      "includes-string-one-of-array": stringByArrayFilter,
+      "array-some-in-primitive": stringByArrayFilter,
       date: dateFilter,
       equals: "equals",
       "number-in-range": "inNumberRange",

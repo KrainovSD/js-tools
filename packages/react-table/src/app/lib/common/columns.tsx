@@ -57,6 +57,7 @@ export const COMMON_COLUMNS: TableColumn<
     additionalHeaderClass: ["hCenter", "wCenter"],
   },
   {
+    renderKey: "id_",
     key: "id",
     name: "ID",
     width: 100,
@@ -130,7 +131,7 @@ export const COMMON_COLUMNS: TableColumn<
     draggable: false,
     sortType: "array",
     filterable: true,
-    filterType: "includes-array-all",
+    filterType: "array-every-in-array",
     filterRender: "select",
     filterRenderProps: {
       multiple: true,
@@ -157,7 +158,7 @@ export const COMMON_COLUMNS: TableColumn<
     resizable: true,
     filterable: true,
     draggable: false,
-    filterType: "includes-string-one-of-array",
+    filterType: "array-some-in-primitive",
     filterRender: "select",
     filterRenderProps: {
       multiple: true,

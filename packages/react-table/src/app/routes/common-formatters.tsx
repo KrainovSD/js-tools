@@ -135,9 +135,9 @@ const COMMON_COLUMNS: TableColumn<
     cellRender: "tag",
     filterable: true,
     filterRender: "select",
-    filterType: "includes-array-some",
+    filterType: "array-equals",
     filterRenderProps: {
-      multiple: false,
+      multiple: true,
       options: [
         { label: "Красный", value: "red" },
         { label: "Синий", value: "blue" },

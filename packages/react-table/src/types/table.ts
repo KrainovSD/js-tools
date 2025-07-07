@@ -54,14 +54,14 @@ export type TableRenderers<RowData extends DefaultRow> = {
 export type SortingKey = "number" | "string" | "boolean" | "date" | "array" | "string-with-number";
 export type FilterKey =
   | "equals"
+  | "array-some-in-array"
+  | "array-every-in-array"
+  | "array-equals"
+  | "array-some-in-primitive"
   | "date-in-range"
   | "date"
   | "number-in-range"
-  | "includes-string"
-  | "includes-string-one-of-array"
-  | "includes-array-every"
-  | "includes-array-all"
-  | "includes-array-some";
+  | "includes-string";
 
 export type TablePaginationProps<RowData extends DefaultRow> = {
   table: TableInterface<RowData>;
