@@ -2,6 +2,7 @@
 import { faker } from "@faker-js/faker";
 import type { ColumnOrderState, ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";
+import { Link } from "react-router";
 import { Table } from "../../table";
 import type { RowInterface, TableColumn } from "../../types";
 import type {
@@ -21,6 +22,7 @@ import type {
   SortRenderProps,
   SortTypeKeys,
 } from "../types/common";
+import styles from "./common-formatters.module.scss";
 
 type CommonRow = {
   string: string;
@@ -65,16 +67,21 @@ const COMMON_COLUMNS: TableColumn<
       hover: true,
     },
     headerRender: "select",
-    headerRenderProps: {
-      classes: ["hCenter", "wCenter"],
-    },
+    additionalHeaderClass: ["wCenter", "hCenter"],
   },
   {
     key: "string",
     name: "String",
     width: 250,
     cellRender: "default",
+    cellRenderProps: {
+      Link: (props) => {
+        // eslint-disable-next-line react/prop-types
+        return <Link to={"/common-formatters"}>{props.children}</Link>;
+      },
+    },
     additionalCellClass: ["hCenter", "wCenter", "nowrap"],
+    additionalHeaderClass: ["wCenter", "hCenter"],
     tooltip: {
       auto: true,
     },
@@ -100,6 +107,10 @@ const COMMON_COLUMNS: TableColumn<
       floatFixed: 2,
     },
     additionalCellClass: ["hCenter", "wCenter", "nowrap"],
+    className: (context) => {
+      const number = Math.round(context.row.original.number);
+      if (number < 1) return styles.red;
+    },
   },
   {
     key: "boolean",

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import type { CellContext, DefaultRow, HeaderContext, TableInterface } from "./utils";
 
 export type TableCellRenderKey = "default" | "select" | "tag" | "empty";
-export type TableHeaderRenderKey = "common" | "select" | "empty";
+export type TableHeaderRenderKey = "default" | "select" | "empty";
 export type TableFilterRenderKey =
   | "number"
   | "number-range"
@@ -13,14 +13,7 @@ export type TableFilterRenderKey =
   | "date"
   | "date-range";
 export type TableSortRenderKey = "single-arrow" | "double-arrow";
-export type TableCellClassKey =
-  | "common"
-  | "empty"
-  | "nowrap"
-  | "lineClamp"
-  | "wCenter"
-  | "hCenter"
-  | "padding";
+export type TableCellClassKey = "common" | "empty" | "nowrap" | "lineClamp" | "wCenter" | "hCenter";
 export type TableHeaderClassKey =
   | "common"
   | "empty"

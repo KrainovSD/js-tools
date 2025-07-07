@@ -32,7 +32,7 @@ declare module "@tanstack/react-table" {
           arraySeparator?: string;
         }
       | boolean;
-    className?: ((context: CellContext<TData, unknown>) => string) | string;
+    className?: ((context: CellContext<TData, unknown>) => string | undefined) | string;
   }
 
   interface TableMeta<TData extends RowData> {

@@ -1,7 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import type {
-  CommonHeaderRenderProps,
   DateFilterRenderProps,
   DefaultCellRenderProps,
   SelectCellRenderProps,
@@ -68,13 +67,13 @@ export type TableColumn<
   expandable?: boolean;
   expandedShift?: number;
   tooltip?: ColumnTooltipSettings<RowData> | boolean;
-  className?: ((context: CellContext<RowData>) => string) | string;
+  className?: ((context: CellContext<RowData>) => string | undefined) | string;
   sortDirectionFirst?: "asc" | "desc";
   sortType?: SortType | SortingKey;
   filterType?: FilterType | FilterKey;
   props?: ColumnProps;
 } & TableCellRendersProps<RowData, CellRender, CellRenderProps> &
-  TableHeaderRendersProps<RowData, HeaderRender, HeaderRenderProps> &
+  TableHeaderRendersProps<HeaderRender, HeaderRenderProps> &
   TableFilterRendersProps<FilterRender, FilterRenderProps> &
   TableSortRendersProps<SortRender, SortRenderProps> &
   TableCellClassesProps<CellClass, CellClassProps> &
@@ -99,9 +98,9 @@ export type DefaultTableCellRenderProps<RowData extends DefaultRow> =
       cellRender?: Exclude<TableCellRenderKey, "text" | "tag" | "select">;
       cellRenderProps?: never;
     };
-export type DefaultHeaderRenderProps<RowData extends DefaultRow> =
-  | { headerRender?: "select"; headerRenderProps?: SelectHeaderRenderProps<RowData> }
-  | { headerRender?: "common"; headerRenderProps?: CommonHeaderRenderProps<RowData> }
+export type DefaultHeaderRenderProps =
+  | { headerRender?: "select"; headerRenderProps?: SelectHeaderRenderProps }
+  | { headerRender?: "default"; headerRenderProps?: unknown }
   | {
       headerRender?: Exclude<TableHeaderRenderKey, "select" | "common">;
       headerRenderProps?: never;
@@ -146,7 +145,6 @@ export type TableCellRendersProps<
   : DefaultTableCellRenderProps<RowData>;
 
 export type TableHeaderRendersProps<
-  RowData extends DefaultRow,
   HeaderRender extends string | undefined = undefined,
   HeaderRenderProps extends Record<
     HeaderRender extends string ? HeaderRender : string,
@@ -161,11 +159,9 @@ export type TableHeaderRendersProps<
               headerRenderProps?: HeaderRenderProps[K];
             };
           }[HeaderRender]
-        | DefaultHeaderRenderProps<RowData>
-    :
-        | { headerRender: HeaderRender; headerRenderProps?: unknown }
-        | DefaultHeaderRenderProps<RowData>
-  : DefaultHeaderRenderProps<RowData>;
+        | DefaultHeaderRenderProps
+    : { headerRender: HeaderRender; headerRenderProps?: unknown } | DefaultHeaderRenderProps
+  : DefaultHeaderRenderProps;
 
 export type TableFilterRendersProps<
   FilterRender extends string | undefined = undefined,

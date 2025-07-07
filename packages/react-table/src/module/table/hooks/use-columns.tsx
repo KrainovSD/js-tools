@@ -30,10 +30,10 @@ import {
   type TableSortRenders,
 } from "../../../types";
 import {
-  CommonHeaderRender,
   DateFilterRender,
   DateRangeFilterRender,
   DefaultCellRender,
+  DefaultHeaderRender,
   DoubleArrowSortRender,
   NumberFilterRender,
   NumberRangeFilterRender,
@@ -109,10 +109,10 @@ export function useColumns<
 ) {
   const {
     cellRender = "default",
-    headerRender = "common",
+    headerRender = "default",
     filterRender = "string",
     sortRender = "double-arrow",
-    cellClass = ["common", "padding"],
+    cellClass = ["common"],
     headerClass = ["common"],
     draggable = true,
     filterable = false,
@@ -137,7 +137,7 @@ export function useColumns<
     [],
   );
   const headerRenders = React.useMemo<TableHeaderRenders<RowData>>(
-    () => ({ common: CommonHeaderRender, select: SelectHeaderRender, empty: () => "" }),
+    () => ({ default: DefaultHeaderRender, select: SelectHeaderRender, empty: () => "" }),
     [],
   );
   const filterRenders = React.useMemo<TableFilterRenders<RowData>>(
@@ -178,7 +178,6 @@ export function useColumns<
       lineClamp: classes.cell__lineClamp,
       hCenter: classes.cell__hCenter,
       wCenter: classes.cell__wCenter,
-      padding: classes.cell__padding,
     }),
     [],
   );

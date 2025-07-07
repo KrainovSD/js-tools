@@ -2,7 +2,6 @@
   &__common {
     border-block-end: 1px solid var(--table-border);
     border-inline-end: 1px solid var(--table-border);
-    padding: 0 8px;
     border-spacing: 0px;
     overflow: hidden;
     white-space: pre-wrap;
@@ -17,6 +16,31 @@
     font-family: var(--table-font-family);
     min-height: 35px;
     background: inherit;
+    padding: 0 8px;
+
+    & > div {
+      height: fit-content;
+      display: flex;
+      align-items: center;
+      max-width: 100%;
+      overflow: hidden;
+      justify-content: space-between;
+      width: 100%;
+    }
+  }
+
+  &__wCenter {
+    & > div {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  &__hCenter {
+    & > div {
+      height: 100%;
+      align-items: center;
+    }
   }
 
   &__empty {
@@ -53,8 +77,9 @@
     font-weight: 500;
     font-family: var(--table-font-family);
     background-color: inherit;
+    padding: 12px 8px;
 
-    & > :global(.ksd-table-cell-container) {
+    & > div {
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -63,15 +88,11 @@
     }
   }
 
-  &__padding {
-    padding: 12px 8px;
-  }
-
   &__wCenter {
     width: 100%;
     justify-content: center;
 
-    & > :global(.ksd-table-cell-container) {
+    & > div {
       width: 100%;
       justify-content: center;
     }
@@ -81,7 +102,7 @@
     height: 100%;
     align-items: center;
 
-    & > :global(.ksd-table-cell-container) {
+    & > div {
       height: 100%;
       align-items: center;
     }

@@ -17,9 +17,7 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
     },
     additionalCellClass: ["wCenter", "hCenter"],
     headerRender: "select",
-    headerRenderProps: {
-      classes: ["hCenter", "wCenter"],
-    },
+    additionalHeaderClass: ["wCenter", "hCenter"],
   },
   {
     key: "name",
@@ -36,6 +34,7 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
       pathToContent: "name",
     },
     expandedShift: 8,
+    headerRender: "default",
   },
   {
     key: "start",

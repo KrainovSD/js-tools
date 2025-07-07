@@ -53,9 +53,7 @@ export const COMMON_COLUMNS: TableColumn<
     },
     additionalCellClass: ["wCenter", "hCenter"],
     headerRender: "select",
-    headerRenderProps: {
-      classes: ["hCenter", "wCenter"],
-    },
+    additionalHeaderClass: ["hCenter", "wCenter"],
   },
   {
     key: "id",
