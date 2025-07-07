@@ -1,7 +1,42 @@
 import type { TableColumn } from "../../../types";
-import type { CommonRow, CommonRowVirtual } from "../../types/common";
+import type {
+  CellClassKeys,
+  CellClassProps,
+  CellRenderKeys,
+  CellRenderProps,
+  ColumnProps,
+  CommonRow,
+  CommonRowVirtual,
+  FilterRenderKeys,
+  FilterRenderProps,
+  FilterTypeKeys,
+  HeaderClassKeys,
+  HeaderClassProps,
+  HeaderRenderKeys,
+  HeaderRenderProps,
+  SortRenderKeys,
+  SortRenderProps,
+  SortTypeKeys,
+} from "../../types/common";
 
-export const COMMON_COLUMNS: TableColumn<CommonRow, "test">[] = [
+export const COMMON_COLUMNS: TableColumn<
+  CommonRow,
+  CellRenderKeys,
+  CellRenderProps,
+  HeaderRenderKeys,
+  HeaderRenderProps,
+  FilterRenderKeys,
+  FilterRenderProps,
+  SortRenderKeys,
+  SortRenderProps,
+  CellClassKeys,
+  CellClassProps,
+  HeaderClassKeys,
+  HeaderClassProps,
+  FilterTypeKeys,
+  SortTypeKeys,
+  ColumnProps
+>[] = [
   //   SelectColumn,
   {
     key: "_select",
@@ -194,9 +229,63 @@ export const COMMON_COLUMNS: TableColumn<CommonRow, "test">[] = [
   },
 ];
 
-export const COMMON_COLUMNS_VIRTUAL: TableColumn<CommonRowVirtual, "test">[] = [
-  ...(COMMON_COLUMNS as TableColumn<CommonRowVirtual, "test">[]),
-  ...Array.from<unknown, TableColumn<CommonRowVirtual, "test">>({ length: 30 }, (_, index) => ({
+export const COMMON_COLUMNS_VIRTUAL: TableColumn<
+  CommonRowVirtual,
+  CellRenderKeys,
+  CellRenderProps,
+  HeaderRenderKeys,
+  HeaderRenderProps,
+  FilterRenderKeys,
+  FilterRenderProps,
+  SortRenderKeys,
+  SortRenderProps,
+  CellClassKeys,
+  CellClassProps,
+  HeaderClassKeys,
+  HeaderClassProps,
+  FilterTypeKeys,
+  SortTypeKeys,
+  ColumnProps
+>[] = [
+  ...(COMMON_COLUMNS as TableColumn<
+    CommonRowVirtual,
+    CellRenderKeys,
+    CellRenderProps,
+    HeaderRenderKeys,
+    HeaderRenderProps,
+    FilterRenderKeys,
+    FilterRenderProps,
+    SortRenderKeys,
+    SortRenderProps,
+    CellClassKeys,
+    CellClassProps,
+    HeaderClassKeys,
+    HeaderClassProps,
+    FilterTypeKeys,
+    SortTypeKeys,
+    ColumnProps
+  >[]),
+  ...Array.from<
+    unknown,
+    TableColumn<
+      CommonRowVirtual,
+      CellRenderKeys,
+      CellRenderProps,
+      HeaderRenderKeys,
+      HeaderRenderProps,
+      FilterRenderKeys,
+      FilterRenderProps,
+      SortRenderKeys,
+      SortRenderProps,
+      CellClassKeys,
+      CellClassProps,
+      HeaderClassKeys,
+      HeaderClassProps,
+      FilterTypeKeys,
+      SortTypeKeys,
+      ColumnProps
+    >
+  >({ length: 30 }, (_, index) => ({
     key: `wide${index + 1}`,
     name: `wide${index + 1}`,
     draggable: false,

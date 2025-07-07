@@ -1,13 +1,20 @@
 import type { GanttTypeShapes } from "../../types";
 
 export type GanttCellRenderKeys = "test";
+export type GanttCellRenderProps = { test: unknown };
 export type GanttHeaderRenderKeys = undefined;
+export type GanttHeaderRenderProps = Record<string, unknown>;
 export type GanttFilterRenderKeys = undefined;
+export type GanttFilterRenderProps = Record<string, unknown>;
 export type GanttSortRenderKeys = undefined;
+export type GanttSortRenderProps = Record<string, unknown>;
 export type GanttCellClassKeys = undefined;
+export type GanttCellClassProps = unknown;
 export type GanttHeaderClassKeys = undefined;
+export type GanttHeaderClassProps = unknown;
 export type GanttFilterTypeKeys = undefined;
 export type GanttSortTypeKeys = undefined;
+export type GanttColumnProps = unknown;
 
 export type RowGantt = {
   id: string;

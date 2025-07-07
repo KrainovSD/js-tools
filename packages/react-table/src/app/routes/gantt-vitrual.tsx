@@ -8,13 +8,20 @@ import { COLUMNS_GANTT_VIRTUAL } from "../lib/gantt/columns";
 import { GANTT_EASY_ROWS } from "../lib/gantt/rows";
 import type {
   GanttCellClassKeys,
+  GanttCellClassProps,
   GanttCellRenderKeys,
+  GanttCellRenderProps,
+  GanttColumnProps,
   GanttFilterRenderKeys,
+  GanttFilterRenderProps,
   GanttFilterTypeKeys,
   GanttHeaderClassKeys,
+  GanttHeaderClassProps,
   GanttHeaderRenderKeys,
+  GanttHeaderRenderProps,
   GanttMeta,
   GanttSortRenderKeys,
+  GanttSortRenderProps,
   GanttSortTypeKeys,
   RowGantt,
   RowGanttVirtual,
@@ -61,13 +68,20 @@ export function GanttVirtual() {
       RowGanttVirtual,
       GanttMeta,
       GanttCellRenderKeys,
+      GanttCellRenderProps,
       GanttHeaderRenderKeys,
+      GanttHeaderRenderProps,
       GanttFilterRenderKeys,
+      GanttFilterRenderProps,
       GanttSortRenderKeys,
+      GanttSortRenderProps,
       GanttCellClassKeys,
+      GanttCellClassProps,
       GanttHeaderClassKeys,
+      GanttHeaderClassProps,
       GanttFilterTypeKeys,
-      GanttSortTypeKeys
+      GanttSortTypeKeys,
+      GanttColumnProps
     >
       columns={COLUMNS_GANTT_VIRTUAL}
       // rows={GANTT_ROWS_VIRTUAL}

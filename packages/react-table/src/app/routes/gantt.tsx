@@ -8,13 +8,20 @@ import { COLUMNS_GANTT } from "../lib/gantt/columns";
 import { GANTT_ROWS } from "../lib/gantt/rows";
 import type {
   GanttCellClassKeys,
+  GanttCellClassProps,
   GanttCellRenderKeys,
+  GanttCellRenderProps,
+  GanttColumnProps,
   GanttFilterRenderKeys,
+  GanttFilterRenderProps,
   GanttFilterTypeKeys,
   GanttHeaderClassKeys,
+  GanttHeaderClassProps,
   GanttHeaderRenderKeys,
+  GanttHeaderRenderProps,
   GanttMeta,
   GanttSortRenderKeys,
+  GanttSortRenderProps,
   GanttSortTypeKeys,
   RowGantt,
 } from "../types/gantt";
@@ -62,13 +69,20 @@ export function Gantt() {
       RowGantt,
       GanttMeta,
       GanttCellRenderKeys,
+      GanttCellRenderProps,
       GanttHeaderRenderKeys,
+      GanttHeaderRenderProps,
       GanttFilterRenderKeys,
+      GanttFilterRenderProps,
       GanttSortRenderKeys,
+      GanttSortRenderProps,
       GanttCellClassKeys,
+      GanttCellClassProps,
       GanttHeaderClassKeys,
+      GanttHeaderClassProps,
       GanttFilterTypeKeys,
-      GanttSortTypeKeys
+      GanttSortTypeKeys,
+      GanttColumnProps
     >
       columns={COLUMNS_GANTT}
       rows={GANTT_ROWS}

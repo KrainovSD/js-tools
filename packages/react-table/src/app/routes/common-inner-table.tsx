@@ -1,20 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 /* eslint-disable no-console */
 import type { ColumnOrderState, ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";
 import { Table } from "../../table";
-import type { DefaultRow, RowInterface, RowModel, TableInterface } from "../../types";
+import type { RowInterface, RowModel, TableInterface } from "../../types";
 import { COMMON_COLUMNS } from "../lib/common/columns";
 import { COMMON_ROW } from "../lib/common/rows";
 import type {
   CellClassKeys,
+  CellClassProps,
   CellRenderKeys,
+  CellRenderProps,
+  ColumnProps,
   CommonRow,
   FilterRenderKeys,
+  FilterRenderProps,
   FilterTypeKeys,
   HeaderClassKeys,
+  HeaderClassProps,
   HeaderRenderKeys,
+  HeaderRenderProps,
   SortRenderKeys,
+  SortRenderProps,
   SortTypeKeys,
 } from "../types/common";
 import styles from "./styles.module.scss";
@@ -38,13 +44,20 @@ export function CommonInnerTable() {
       CommonRow,
       Record<string, unknown>,
       CellRenderKeys,
+      CellRenderProps,
       HeaderRenderKeys,
+      HeaderRenderProps,
       FilterRenderKeys,
+      FilterRenderProps,
       SortRenderKeys,
+      SortRenderProps,
       CellClassKeys,
+      CellClassProps,
       HeaderClassKeys,
+      HeaderClassProps,
       FilterTypeKeys,
-      SortTypeKeys
+      SortTypeKeys,
+      ColumnProps
     >
       columns={COMMON_COLUMNS}
       rows={COMMON_ROW}
@@ -152,10 +165,10 @@ export function getExpandedRowModel(): (
     );
 }
 
-function expandRows<TData extends DefaultRow>(rowModel: RowModel<TData>) {
-  const expandedRows: RowInterface<TData>[] = [];
+function expandRows(rowModel: RowModel<CommonRow>) {
+  const expandedRows: RowInterface<CommonRow>[] = [];
 
-  const handleRow = (row: RowInterface<TData>) => {
+  const handleRow = (row: RowInterface<CommonRow>) => {
     expandedRows.push(row);
 
     if (row.subRows?.length && row.getIsExpanded()) {

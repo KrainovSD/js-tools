@@ -49,10 +49,17 @@ export type CommonRowVirtual = Omit<CommonRow, "children"> & {
 };
 
 export type CellRenderKeys = "test";
+export type CellRenderProps = { test: unknown };
 export type HeaderRenderKeys = undefined;
+export type HeaderRenderProps = Record<string, unknown>;
 export type FilterRenderKeys = undefined;
+export type FilterRenderProps = Record<string, unknown>;
 export type SortRenderKeys = undefined;
+export type SortRenderProps = Record<string, unknown>;
 export type CellClassKeys = undefined;
+export type CellClassProps = unknown;
 export type HeaderClassKeys = undefined;
+export type HeaderClassProps = unknown;
 export type FilterTypeKeys = undefined;
 export type SortTypeKeys = undefined;
+export type ColumnProps = undefined;

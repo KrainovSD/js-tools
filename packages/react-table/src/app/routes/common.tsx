@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 /* eslint-disable no-console */
 import type { ColumnOrderState, ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";
@@ -8,13 +7,20 @@ import { COMMON_COLUMNS } from "../lib/common/columns";
 import { COMMON_ROW } from "../lib/common/rows";
 import type {
   CellClassKeys,
+  CellClassProps,
   CellRenderKeys,
+  CellRenderProps,
+  ColumnProps,
   CommonRow,
   FilterRenderKeys,
+  FilterRenderProps,
   FilterTypeKeys,
   HeaderClassKeys,
+  HeaderClassProps,
   HeaderRenderKeys,
+  HeaderRenderProps,
   SortRenderKeys,
+  SortRenderProps,
   SortTypeKeys,
 } from "../types/common";
 
@@ -37,13 +43,20 @@ export function Common() {
       CommonRow,
       Record<string, unknown>,
       CellRenderKeys,
+      CellRenderProps,
       HeaderRenderKeys,
+      HeaderRenderProps,
       FilterRenderKeys,
+      FilterRenderProps,
       SortRenderKeys,
+      SortRenderProps,
       CellClassKeys,
+      CellClassProps,
       HeaderClassKeys,
+      HeaderClassProps,
       FilterTypeKeys,
-      SortTypeKeys
+      SortTypeKeys,
+      ColumnProps
     >
       columns={COMMON_COLUMNS}
       rows={COMMON_ROW}

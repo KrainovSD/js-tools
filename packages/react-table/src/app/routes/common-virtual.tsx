@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 import type { ColumnOrderState, ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";
 import { Table } from "../../table";
@@ -8,13 +7,20 @@ import { COMMON_COLUMNS, COMMON_COLUMNS_VIRTUAL } from "../lib/common/columns";
 import { COMMON_ROW_VIRTUAL } from "../lib/common/rows";
 import type {
   CellClassKeys,
+  CellClassProps,
   CellRenderKeys,
+  CellRenderProps,
+  ColumnProps,
   CommonRowVirtual,
   FilterRenderKeys,
+  FilterRenderProps,
   FilterTypeKeys,
   HeaderClassKeys,
+  HeaderClassProps,
   HeaderRenderKeys,
+  HeaderRenderProps,
   SortRenderKeys,
+  SortRenderProps,
   SortTypeKeys,
 } from "../types/common";
 import styles from "./styles.module.scss";
@@ -38,13 +44,20 @@ export function CommonVirtual() {
       CommonRowVirtual,
       Record<string, unknown>,
       CellRenderKeys,
+      CellRenderProps,
       HeaderRenderKeys,
+      HeaderRenderProps,
       FilterRenderKeys,
+      FilterRenderProps,
       SortRenderKeys,
+      SortRenderProps,
       CellClassKeys,
+      CellClassProps,
       HeaderClassKeys,
+      HeaderClassProps,
       FilterTypeKeys,
-      SortTypeKeys
+      SortTypeKeys,
+      ColumnProps
     >
       columns={COMMON_COLUMNS_VIRTUAL}
       rows={COMMON_ROW_VIRTUAL}
