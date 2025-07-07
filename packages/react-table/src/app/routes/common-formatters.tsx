@@ -54,7 +54,8 @@ const COMMON_COLUMNS: TableColumn<
   ColumnProps
 >[] = [
   {
-    key: "_select",
+    renderKey: "_select",
+    key: "string",
     name: "",
     width: 50,
     resizable: false,

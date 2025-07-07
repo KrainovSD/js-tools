@@ -39,7 +39,8 @@ export const COMMON_COLUMNS: TableColumn<
 >[] = [
   //   SelectColumn,
   {
-    key: "_select",
+    renderKey: "_select",
+    key: "id",
     name: "",
     width: 50,
     resizable: false,
@@ -282,7 +283,7 @@ export const COMMON_COLUMNS_VIRTUAL: TableColumn<
       ColumnProps
     >
   >({ length: 30 }, (_, index) => ({
-    key: `wide${index + 1}`,
+    key: `wide${index + 1}` as keyof CommonRowVirtual,
     name: `wide${index + 1}`,
     draggable: false,
     resizable: true,

@@ -53,7 +53,7 @@ export type TableColumn<
   renderKey?: string;
   icon?: ReactNode;
   name: string;
-  key: keyof RowData | string;
+  key: keyof RowData;
   width?: number;
   minWidth?: number;
   maxWidth?: number;
