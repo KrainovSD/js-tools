@@ -1,0 +1,13 @@
+.base {
+  height: fit-content;
+  max-width: 100%;
+}
+
+.tag {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  height: fit-content;
+  cursor: pointer;
+}

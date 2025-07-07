@@ -44,18 +44,47 @@
     border-inline-end: 1px solid var(--table-border);
     border-spacing: 0px;
     border-collapse: collapse;
-    padding: 12px 8px;
     overflow: hidden;
     white-space: pre-wrap;
     display: flex;
-    gap: 5px;
-    align-items: flex-start;
     color: var(--table-text-color);
     line-height: 22px;
     font-size: 14px;
     font-weight: 500;
     font-family: var(--table-font-family);
     background-color: inherit;
+
+    & > :global(.ksd-table-cell-container) {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      gap: 10px;
+      display: flex;
+    }
+  }
+
+  &__padding {
+    padding: 12px 8px;
+  }
+
+  &__wCenter {
+    width: 100%;
+    justify-content: center;
+
+    & > :global(.ksd-table-cell-container) {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  &__hCenter {
+    height: 100%;
+    align-items: center;
+
+    & > :global(.ksd-table-cell-container) {
+      height: 100%;
+      align-items: center;
+    }
   }
 
   &__empty {

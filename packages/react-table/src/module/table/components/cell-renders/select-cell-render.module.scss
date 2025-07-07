@@ -1,0 +1,19 @@
+.select {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  &:hover {
+    & > .number {
+      display: none;
+    }
+    & > .check {
+      display: block;
+    }
+  }
+}
+.number {
+  display: block;
+}
+.check {
+  display: none;
+}

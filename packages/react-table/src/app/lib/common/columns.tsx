@@ -49,9 +49,9 @@ export const COMMON_COLUMNS: TableColumn<
     filterable: false,
     cellRender: "select",
     cellRenderProps: {
-      classes: ["hCenter", "wCenter"],
       hover: true,
     },
+    additionalCellClass: ["wCenter", "hCenter"],
     headerRender: "select",
     headerRenderProps: {
       classes: ["hCenter", "wCenter"],
@@ -64,9 +64,7 @@ export const COMMON_COLUMNS: TableColumn<
     resizable: true,
     sortType: "string-with-number",
     draggable: false,
-    cellRenderProps: {
-      classes: ["hCenter"],
-    },
+    additionalCellClass: ["hCenter"],
     leftFrozen: true,
   },
   {
@@ -75,17 +73,16 @@ export const COMMON_COLUMNS: TableColumn<
     resizable: true,
     draggable: true,
     sortable: true,
-    cellRender: "text",
+    expandable: true,
+    expandedShift: 8,
+    cellRender: "default",
     filterRender: "string",
     filterable: true,
     filterType: "includes-string",
     headerClass: ["common"],
-    cellClass: ["lineClamp", "common"],
-    cellRenderProps: {
-      expanded: true,
-      // pathToLink: "country",
-      autoTooltip: true,
-      classes: ["hCenter"],
+    additionalCellClass: ["lineClamp", "hCenter"],
+    tooltip: {
+      auto: true,
     },
   },
   {
@@ -95,13 +92,10 @@ export const COMMON_COLUMNS: TableColumn<
     filterable: true,
     filterRender: "string",
     filterType: "includes-string",
-    cellRender: "text",
-    cellRenderProps: {
-      classes: ["hCenter"],
-    },
     resizable: true,
     draggable: true,
     sortable: true,
+    additionalCellClass: ["hCenter"],
     // leftFrozen: true,
   },
   {
@@ -114,12 +108,14 @@ export const COMMON_COLUMNS: TableColumn<
     resizable: true,
     draggable: true,
     sortable: true,
-    cellClass: ["common", "empty", "lineClamp"],
+    additionalCellClass: ["lineClamp"],
     headerClass: ["common", "lineClamp"],
-    cellRender: "text",
+    cellRender: "default",
+    tooltip: {
+      auto: true,
+      pathToContent: "description",
+    },
     cellRenderProps: {
-      pathToTooltip: "description",
-      autoTooltip: true,
       Link: (props) => {
         // eslint-disable-next-line react/prop-types
         return <a href={props.context.row.original.country}>{props.children}</a>;
@@ -146,11 +142,13 @@ export const COMMON_COLUMNS: TableColumn<
         { label: "teal", value: "teal" },
       ],
     },
-    cellClass: ["common", "empty", "lineClamp"],
+    additionalCellClass: ["empty", "lineClamp"],
     cellRender: "tag",
     cellRenderProps: {
-      autoTooltip: true,
       filterable: true,
+    },
+    tooltip: {
+      auto: true,
     },
   },
   {
@@ -216,9 +214,9 @@ export const COMMON_COLUMNS: TableColumn<
     sortType: "date",
     resizable: false,
     draggable: false,
-    cellRender: "date",
+    cellRender: "default",
     cellRenderProps: {
-      format: "DD/MM/YYYY",
+      dateFormat: "DD/MM/YYYY",
     },
     filterable: true,
     filterRender: "date-range",

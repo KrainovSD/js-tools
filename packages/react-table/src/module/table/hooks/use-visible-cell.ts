@@ -13,11 +13,11 @@ function checkVisible<Row extends DefaultRow>(props: CellContext<Row, unknown>) 
 
 export function useVisibleCell<Row extends DefaultRow>(props: CellContext<Row, unknown>) {
   const isVisible = checkVisible(props);
-  const extraPadding = props.row.getParentRows().reduce((acc: number, row) => {
+  const level = props.row.getParentRows().reduce((acc: number, row) => {
     if (row.getIsExpanded() && !row.getIsGrouped()) acc++;
 
     return acc;
   }, 0);
 
-  return { isVisible, extraPadding };
+  return { isVisible, level };
 }

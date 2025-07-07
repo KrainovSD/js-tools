@@ -31,9 +31,9 @@ import {
 } from "../../../types";
 import {
   CommonHeaderRender,
-  DateCellRender,
   DateFilterRender,
   DateRangeFilterRender,
+  DefaultCellRender,
   DoubleArrowSortRender,
   NumberFilterRender,
   NumberRangeFilterRender,
@@ -43,7 +43,6 @@ import {
   SingleArrowSortRender,
   StringFilterRender,
   TagCellRender,
-  TextCellRender,
 } from "../components";
 import {
   arrayAllFilter,
@@ -109,11 +108,11 @@ export function useColumns<
   > & { withGantt: boolean | undefined; withFilters: boolean; rubberColumn: boolean },
 ) {
   const {
-    cellRender = "text",
+    cellRender = "default",
     headerRender = "common",
     filterRender = "string",
     sortRender = "double-arrow",
-    cellClass = ["common", "empty"],
+    cellClass = ["common", "padding"],
     headerClass = ["common"],
     draggable = true,
     filterable = false,
@@ -122,14 +121,17 @@ export function useColumns<
     sortable = true,
     sortType = "string",
     filterType = "includes-string",
+    tooltip = false,
+    className = undefined,
+    expandable = false,
+    expandedShift = 0,
   } = props.defaultColumnOptions ?? {};
 
   const cellRenders = React.useMemo<TableCellRenders<RowData>>(
     () => ({
       select: SelectCellRender,
-      date: DateCellRender,
-      text: TextCellRender,
       tag: TagCellRender,
+      default: DefaultCellRender,
       empty: () => "",
     }),
     [],
@@ -163,6 +165,8 @@ export function useColumns<
       empty: classes.header__empty,
       nowrap: classes.header__nowrap,
       lineClamp: classes.header__lineClamp,
+      hCenter: classes.header__hCenter,
+      wCenter: classes.header__wCenter,
     }),
     [],
   );
@@ -172,6 +176,9 @@ export function useColumns<
       empty: classes.cell__empty,
       nowrap: classes.cell__nowrap,
       lineClamp: classes.cell__lineClamp,
+      hCenter: classes.cell__hCenter,
+      wCenter: classes.cell__wCenter,
+      padding: classes.cell__padding,
     }),
     [],
   );
@@ -222,11 +229,14 @@ export function useColumns<
       const filterRenderKey = column.filterRender ?? filterRender;
       const sortRenderKey = column.sortRender ?? sortRender;
       const cellClassKey = column.cellClass ?? cellClass;
+      const additionalCellClassKey = column.additionalCellClass ?? [];
       const headerClassKey = column.headerClass ?? headerClass;
+      const additionalHeaderClassKey = column.additionalHeaderClass ?? [];
       const sortTypeKey = column.sortType ?? sortType;
       const filterTypeKey = column.filterType ?? filterType;
 
       const columnDef: ColumnDef<RowData> = {
+        renderKey: column.renderKey ?? (column.key as string),
         accessorKey: column.key,
         id: column.key as string,
         name: column.name,
@@ -240,7 +250,7 @@ export function useColumns<
           filterRenders[filterRenderKey as TableFilterRenderKey],
         sortRender:
           props.sortRenders?.[sortRenderKey] ?? sortRenders[sortRenderKey as TableSortRenderKey],
-        cellClass: cellClassKey.reduce(
+        cellClass: [...cellClassKey, ...additionalCellClassKey].reduce(
           (result: (string | ((props: CellContext<RowData, unknown>) => string))[], key) => {
             if (!key) return result;
 
@@ -252,7 +262,7 @@ export function useColumns<
           },
           [],
         ),
-        headerClass: headerClassKey.reduce(
+        headerClass: [...headerClassKey, ...additionalHeaderClassKey].reduce(
           (result: (string | ((props: HeaderContext<RowData, unknown>) => string))[], key) => {
             if (!key) return result;
 
@@ -264,17 +274,19 @@ export function useColumns<
           },
           [],
         ),
-        // cellRenderProps: "cellRenderProps" in column ? column.cellRenderProps : undefined,
         cellRenderProps: column.cellRenderProps,
         headerRenderProps: column.headerRenderProps,
         filterRenderProps: column.filterRenderProps,
         sortRenderProps: column.sortRenderProps,
         props: column.props,
-
+        tooltip: column.tooltip ?? tooltip,
+        className: column.className ?? className,
         enableResizing: column.rightFrozen ? false : (column.resizable ?? resizable),
         enableColumnFilter: props.withGantt ? false : (column.filterable ?? filterable),
         enableSorting: props.withGantt ? false : (column.sortable ?? sortable),
         enableMultiSort: props.withGantt ? false : (column.sortable ?? sortable),
+        expandable: column.expandable ?? expandable,
+        expandedShift: column.expandedShift ?? expandedShift,
         enableHiding: true,
         enablePinning: true,
         enableGrouping: true,

@@ -1,5 +1,6 @@
 import type {
   CellContext as CellContextLib,
+  ColumnDef as ColumnDefLib,
   ColumnFilter as ColumnFilterLib,
   ColumnSort as ColumnSortLib,
   HeaderContext as HeaderContextLib,
@@ -12,6 +13,8 @@ import type {
 } from "@tanstack/react-table";
 
 export type TableTypesGetter<RowData extends DefaultRow> = {
+  headerRenderProps: HeaderRenderProps<RowData>;
+  cellRenderProps: CellRenderProps<RowData>;
   headerContext: HeaderContextLib<RowData, unknown>;
   cellContext: CellContextLib<RowData, unknown>;
   row: RowInterface<RowData>;
@@ -21,6 +24,10 @@ export type TableTypesGetter<RowData extends DefaultRow> = {
   sortFn: (rowA: RowInterface<RowData>, rowB: RowInterface<RowData>, columnId: string) => number;
 };
 
+export type CellRenderProps<RowData extends DefaultRow> = { context: CellContext<RowData> };
+export type HeaderRenderProps<RowData extends DefaultRow> = {
+  context: HeaderContext<RowData>;
+};
 export type HeaderContext<RowData extends DefaultRow> = HeaderContextLib<RowData, unknown>;
 export type CellContext<RowData extends DefaultRow> = CellContextLib<RowData, unknown>;
 export type FilterFn<RowData extends DefaultRow> = (
@@ -36,6 +43,7 @@ export type SortFn<RowData extends DefaultRow> = (
 export type RowModel<RowData extends DefaultRow> = RowModelLib<RowData>;
 
 export type DefaultRow = RowData;
+export type ColumnDef<RowData extends DefaultRow> = ColumnDefLib<RowData>;
 export type DefaultGanttData = Record<string, unknown>;
 export type ColumnSort = ColumnSortLib;
 export type ColumnFilter = ColumnFilterLib;

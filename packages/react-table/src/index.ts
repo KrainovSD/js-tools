@@ -11,7 +11,7 @@ declare module "@tanstack/react-table" {
     sortRender: ((props: { context: HeaderContext<TData, unknown> }) => ReactNode) | undefined;
     headerClass: (string | ((props: HeaderContext<TData, unknown>) => string))[];
     cellClass: (string | ((props: CellContext<TData, unknown>) => string))[];
-
+    renderKey: string;
     name: string;
     icon?: ReactNode;
 
@@ -20,8 +20,19 @@ declare module "@tanstack/react-table" {
     filterRenderProps?: unknown;
     sortRenderProps?: unknown;
     props?: unknown;
-
+    expandable?: boolean;
+    expandedShift?: number;
     enableDraggable?: boolean;
+    tooltip?:
+      | {
+          auto?: boolean;
+          zIndex?: number;
+          pathToContent?: keyof TData;
+          customContent?: string;
+          arraySeparator?: string;
+        }
+      | boolean;
+    className?: ((context: CellContext<TData, unknown>) => string) | string;
   }
 
   interface TableMeta<TData extends RowData> {

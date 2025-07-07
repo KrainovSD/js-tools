@@ -2,13 +2,12 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import type {
   CommonHeaderRenderProps,
-  DateCellRenderProps,
   DateFilterRenderProps,
+  DefaultCellRenderProps,
   SelectCellRenderProps,
   SelectFilterRenderProps,
   SelectHeaderRenderProps,
   TagCellRenderProps,
-  TextCellRenderProps,
 } from "../module/table/components";
 import type {
   FilterKey,
@@ -52,6 +51,7 @@ export type TableColumn<
   SortType extends string | undefined = undefined,
   ColumnProps = unknown,
 > = {
+  renderKey?: string;
   icon?: ReactNode;
   name: string;
   key: keyof RowData | string;
@@ -65,6 +65,10 @@ export type TableColumn<
   filterable?: boolean;
   draggable?: boolean;
   grouping?: boolean;
+  expandable?: boolean;
+  expandedShift?: number;
+  tooltip?: ColumnTooltipSettings<RowData> | boolean;
+  className?: ((context: CellContext<RowData>) => string) | string;
   sortDirectionFirst?: "asc" | "desc";
   sortType?: SortType | SortingKey;
   filterType?: FilterType | FilterKey;
@@ -76,14 +80,21 @@ export type TableColumn<
   TableCellClassesProps<CellClass, CellClassProps> &
   TableHeaderClassesProps<HeaderClass, HeaderClassProps>;
 
+export type ColumnTooltipSettings<RowData extends DefaultRow> = {
+  auto?: boolean;
+  zIndex?: number;
+  pathToContent?: keyof RowData;
+  customContent?: string;
+  arraySeparator?: string;
+};
+
 export type DefaultTableCellRenderProps<RowData extends DefaultRow> =
   | {
-      cellRender?: "date";
-      cellRenderProps?: DateCellRenderProps<RowData>;
+      cellRender?: "default";
+      cellRenderProps?: DefaultCellRenderProps<RowData>;
     }
-  | { cellRender?: "text"; cellRenderProps?: TextCellRenderProps<RowData> }
-  | { cellRender?: "tag"; cellRenderProps?: TagCellRenderProps<RowData> }
-  | { cellRender?: "select"; cellRenderProps?: SelectCellRenderProps<RowData> }
+  | { cellRender?: "tag"; cellRenderProps?: TagCellRenderProps }
+  | { cellRender?: "select"; cellRenderProps?: SelectCellRenderProps }
   | {
       cellRender?: Exclude<TableCellRenderKey, "text" | "tag" | "select">;
       cellRenderProps?: never;
@@ -98,7 +109,7 @@ export type DefaultHeaderRenderProps<RowData extends DefaultRow> =
 export type DefaultFilterRenderProps =
   | {
       filterRender?: "select";
-      filterRenderProps: SelectFilterRenderProps;
+      filterRenderProps?: SelectFilterRenderProps;
     }
   | {
       filterRender?: "date";
@@ -199,6 +210,7 @@ export type TableCellClassesProps<
   CellClassProps = unknown,
 > = {
   cellClass?: (CellClass | TableCellClassKey)[];
+  additionalCellClass?: (CellClass | TableCellClassKey)[];
   cellClassProps?: CellClassProps;
 };
 export type TableHeaderClassesProps<
@@ -206,6 +218,7 @@ export type TableHeaderClassesProps<
   HeaderClassProps = unknown,
 > = {
   headerClass?: (HeaderClass | TableHeaderClassKey)[];
+  additionalHeaderClass?: (HeaderClass | TableHeaderClassKey)[];
   headerClassProps?: HeaderClassProps;
 };
 
@@ -252,6 +265,7 @@ export type TableDefaultColumnOptions<
     SortType
   >,
   | "resizable"
+  | "expandable"
   | "sortable"
   | "filterable"
   | "draggable"
@@ -267,6 +281,9 @@ export type TableDefaultColumnOptions<
   | "width"
   | "minWidth"
   | "maxWidth"
+  | "tooltip"
+  | "className"
+  | "expandedShift"
 >;
 
 export type TableColumnsSettings<

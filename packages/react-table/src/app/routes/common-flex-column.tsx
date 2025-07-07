@@ -53,9 +53,6 @@ const COMMON_COLUMNS: TableColumn<
     resizable: true,
     sortType: "string-with-number",
     draggable: false,
-    cellRenderProps: {
-      classes: ["hCenter"],
-    },
     leftFrozen: true,
   },
   {
@@ -64,17 +61,14 @@ const COMMON_COLUMNS: TableColumn<
     resizable: true,
     draggable: true,
     sortable: true,
-    cellRender: "text",
+    expandable: true,
     filterRender: "string",
     filterable: true,
     filterType: "includes-string",
     headerClass: ["common"],
-    cellClass: ["lineClamp", "common"],
-    cellRenderProps: {
-      expanded: true,
-      // pathToLink: "country",
-      autoTooltip: true,
-      classes: ["hCenter"],
+    additionalCellClass: ["lineClamp", "hCenter"],
+    tooltip: {
+      auto: true,
     },
   },
   {
@@ -84,10 +78,7 @@ const COMMON_COLUMNS: TableColumn<
     filterable: true,
     filterRender: "string",
     filterType: "includes-string",
-    cellRender: "text",
-    cellRenderProps: {
-      classes: ["hCenter"],
-    },
+    additionalCellClass: ["hCenter"],
     resizable: true,
     draggable: true,
     sortable: true,
@@ -103,12 +94,10 @@ const COMMON_COLUMNS: TableColumn<
     resizable: true,
     draggable: true,
     sortable: true,
-    cellClass: ["common", "empty", "lineClamp"],
+    additionalCellClass: ["common", "empty", "lineClamp"],
     headerClass: ["common", "lineClamp"],
-    cellRender: "text",
+    cellRender: "default",
     cellRenderProps: {
-      pathToTooltip: "description",
-      autoTooltip: true,
       Link: (props) => {
         // eslint-disable-next-line react/prop-types
         return <a href={props.context.row.original.country}>{props.children}</a>;

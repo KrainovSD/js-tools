@@ -3,7 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import type { CellContext, DefaultRow, HeaderContext, TableInterface } from "./utils";
 
-export type TableCellRenderKey = "date" | "text" | "empty" | "tag" | "select";
+export type TableCellRenderKey = "default" | "select" | "tag" | "empty";
 export type TableHeaderRenderKey = "common" | "select" | "empty";
 export type TableFilterRenderKey =
   | "number"
@@ -13,8 +13,21 @@ export type TableFilterRenderKey =
   | "date"
   | "date-range";
 export type TableSortRenderKey = "single-arrow" | "double-arrow";
-export type TableCellClassKey = "common" | "empty" | "nowrap" | "lineClamp";
-export type TableHeaderClassKey = "common" | "empty" | "nowrap" | "lineClamp";
+export type TableCellClassKey =
+  | "common"
+  | "empty"
+  | "nowrap"
+  | "lineClamp"
+  | "wCenter"
+  | "hCenter"
+  | "padding";
+export type TableHeaderClassKey =
+  | "common"
+  | "empty"
+  | "nowrap"
+  | "lineClamp"
+  | "wCenter"
+  | "hCenter";
 
 export type TableCellRenders<RowData extends DefaultRow> = Record<
   TableCellRenderKey,

@@ -47,7 +47,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<RowData extends
           {props.leftHeaders.map((header, index, headers) => {
             return (
               <TableHeaderCell
-                key={`${header.id}-cell`}
+                key={header.column.columnDef.renderKey}
                 header={header}
                 headers={headers}
                 index={index}
@@ -64,7 +64,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<RowData extends
 
             return (
               <TableHeaderCell
-                key={`${header.id}-cell`}
+                key={header.column.columnDef.renderKey}
                 header={header}
                 headers={props.centerHeaders}
                 index={+index}
@@ -78,7 +78,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<RowData extends
           {props.rightHeaders.map((header, index, headers) => {
             return (
               <TableHeaderCell
-                key={`${header.id}-cell`}
+                key={header.column.columnDef.renderKey}
                 header={header}
                 headers={headers}
                 index={index}
@@ -95,7 +95,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<RowData extends
         props.headerGroup.headers.map((header, index, headers) => {
           return (
             <TableHeaderCell
-              key={`${header.id}-cell`}
+              key={header.column.columnDef.renderKey}
               header={header}
               headers={headers}
               index={index}

@@ -13,9 +13,9 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
     filterable: false,
     cellRender: "select",
     cellRenderProps: {
-      classes: ["hCenter", "wCenter"],
       hover: true,
     },
+    additionalCellClass: ["wCenter", "hCenter"],
     headerRender: "select",
     headerRenderProps: {
       classes: ["hCenter", "wCenter"],
@@ -26,32 +26,28 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
     name: "Название",
     resizable: true,
     draggable: false,
+    expandable: true,
     width: 300,
     minWidth: 200,
-    cellRender: "text",
-    cellClass: ["common", "empty", "nowrap"],
-    cellRenderProps: {
-      expanded: true,
-      pathToTooltip: "lastName",
-      shift: 15,
-      // Link: (props) => {
-      //   // eslint-disable-next-line react/prop-types
-      //   return <a href={props.row.id}>{props.children}</a>;
-      // },
+    cellRender: "default",
+    additionalCellClass: ["common", "empty", "nowrap"],
+    tooltip: {
+      auto: true,
+      pathToContent: "name",
     },
+    expandedShift: 8,
   },
   {
     key: "start",
     name: "Начало",
     width: 150,
     minWidth: 150,
-    cellClass: ["common", "empty", "nowrap"],
+    additionalCellClass: ["common", "empty", "nowrap"],
     resizable: true,
-    cellRender: "date",
+    cellRender: "default",
     draggable: false,
-
     cellRenderProps: {
-      format: "DD/MM/YYYY",
+      dateFormat: "DD/MM/YYYY",
     },
   },
   {
@@ -59,13 +55,12 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
     name: "Окончание",
     width: 150,
     minWidth: 150,
-    cellClass: ["common", "empty", "nowrap"],
+    additionalCellClass: ["common", "empty", "nowrap"],
     resizable: true,
     draggable: false,
-
-    cellRender: "date",
+    cellRender: "default",
     cellRenderProps: {
-      format: "DD/MM/YYYY",
+      dateFormat: "DD/MM/YYYY",
     },
   },
 ];
