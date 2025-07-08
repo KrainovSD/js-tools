@@ -369,9 +369,12 @@ export type TableColumnsSettings<
     SortRender,
     SortRenderProps,
     CellClass,
+    CellClassProps,
     HeaderClass,
+    HeaderClassProps,
     FilterType,
-    SortType
+    SortType,
+    ColumnProps
   >;
 };
 

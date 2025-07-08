@@ -4,3 +4,6 @@ export * from "./header-renders";
 export * from "./sort-renders";
 export * from "./cell-renders";
 export * from "./header-renders";
+export * from "./cell-render-tooltip";
+export * from "./cell-render-link";
+export * from "./cell-render-wrapper";
