@@ -126,6 +126,8 @@ export function useColumns<
     className = undefined,
     expandable = false,
     expandedShift = 0,
+    minWidth = undefined,
+    maxWidth = undefined,
   } = props.defaultColumnOptions ?? {};
 
   const cellRenders = React.useMemo<TableCellRenders<RowData>>(
@@ -242,6 +244,9 @@ export function useColumns<
         accessorFn: (row: RowData) => getData(row, column.key),
         id: columnId,
         name: column.name,
+        size: column.width,
+        minSize: column.minWidth ?? minWidth,
+        maxSize: column.maxWidth ?? maxWidth,
         cellRender:
           props.cellRenders?.[cellRenderKey] ?? cellRenders[cellRenderKey as TableCellRenderKey],
         headerRender:
@@ -299,19 +304,8 @@ export function useColumns<
         filterFn: props.filterTypes?.[filterTypeKey] ?? filters[filterTypeKey as FilterKey],
       };
 
-      if (column.width != undefined) {
-        columnDef.size = column.width;
-      }
-
       if (column.width == undefined && props.rubberColumn) {
-        columnDef.minSize = 0;
         columnDef.size = 0;
-      }
-      if (column.minWidth != undefined) {
-        columnDef.minSize = column.minWidth;
-      }
-      if (column.maxWidth != undefined) {
-        columnDef.maxSize = column.maxWidth;
       }
 
       return columnDef;

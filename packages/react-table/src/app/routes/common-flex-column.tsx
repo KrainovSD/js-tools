@@ -58,6 +58,7 @@ const COMMON_COLUMNS: TableColumn<
   {
     key: "firstName",
     name: "First Name",
+    minWidth: 500,
     resizable: true,
     draggable: true,
     sortable: true,
@@ -74,6 +75,20 @@ const COMMON_COLUMNS: TableColumn<
   {
     key: "lastName",
     name: "Last Name",
+    filterable: true,
+    width: 200,
+    filterRender: "string",
+    filterType: "includes-string",
+    additionalCellClass: ["hCenter"],
+    resizable: true,
+    draggable: true,
+    sortable: true,
+    // leftFrozen: true,
+  },
+  {
+    id: "lastName_2",
+    key: "lastName",
+    name: "Last Name 2",
     width: 200,
     filterable: true,
     filterRender: "string",
@@ -87,7 +102,7 @@ const COMMON_COLUMNS: TableColumn<
   {
     key: "description",
     name: "Очень длинное название колонки для тестов переноса строк",
-    width: 234,
+    width: 250,
     filterable: true,
     filterRender: "string",
     filterType: "includes-string",

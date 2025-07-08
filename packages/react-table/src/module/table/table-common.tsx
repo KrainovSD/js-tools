@@ -2,8 +2,8 @@ import type { ColumnSizingState } from "@tanstack/react-table";
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
-import { DEFAULT_TABLE_COLUMN_SIZE } from "../../table.constants";
 import type {
+  ColumnSizingSettings,
   DefaultRow,
   HeaderInterface,
   RowInterface,
@@ -63,35 +63,84 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
 
     const tableWidth = tableRef.current.getBoundingClientRect().width;
     const visibleHeaders = visibleHeadersGroup?.[0]?.headers ?? [];
-    const defaultColumnSize = props.table._getDefaultColumnDef().size ?? DEFAULT_TABLE_COLUMN_SIZE;
 
     const columnSizing: ColumnSizingState = {};
+    const columnSizingSettings: ColumnSizingSettings = {};
     let totalWidth = 0;
-    let totalWidthWithFlexColumn = 0;
     let flexColumnCount = 0;
 
     for (let i = 0; i < visibleHeaders.length; i++) {
-      const width = visibleHeaders[i].column.getSize();
-      const id = visibleHeaders[i].column.id;
+      const column = visibleHeaders[i].column;
+      const size = column.columnDef.size;
+      const maxSize = column.columnDef.maxSize;
+      const minSize = column.columnDef.minSize;
 
-      if (width === 0) {
-        totalWidthWithFlexColumn += defaultColumnSize;
+      const width = column.getSize();
+      const id = column.id;
+
+      if (size === 0) {
         flexColumnCount += 1;
       } else {
-        totalWidthWithFlexColumn += width;
         totalWidth += width;
       }
-      columnSizing[id] = width;
+      columnSizing[id] = size === 0 ? 0 : width;
+      columnSizingSettings[id] = {
+        maxSize,
+        minSize,
+      };
     }
 
     if (flexColumnCount === 0) return;
 
-    const flexColumnSize =
-      tableWidth >= totalWidthWithFlexColumn
-        ? (tableWidth - totalWidth) / flexColumnCount
-        : defaultColumnSize;
+    let hasConflictSize = true;
+    /** Processing max size less then flex size and min size greater than flex size  */
+    while (hasConflictSize) {
+      hasConflictSize = false;
+      let flexColumnSize = (tableWidth - totalWidth) / flexColumnCount;
+
+      for (const [key, value] of Object.entries(columnSizing)) {
+        if (value === 0) {
+          const maxSize = columnSizingSettings[key].maxSize;
+
+          if (maxSize != undefined && maxSize < flexColumnSize) {
+            columnSizing[key] = maxSize;
+            totalWidth += maxSize;
+            flexColumnCount -= 1;
+            hasConflictSize = true;
+            continue;
+          }
+        }
+      }
+
+      flexColumnSize = (tableWidth - totalWidth) / flexColumnCount;
+
+      for (const [key, value] of Object.entries(columnSizing)) {
+        if (value === 0) {
+          const minSize = columnSizingSettings[key].minSize;
+
+          if (minSize != undefined && minSize > flexColumnSize) {
+            columnSizing[key] = minSize;
+            totalWidth += minSize;
+            flexColumnCount -= 1;
+            hasConflictSize = true;
+            continue;
+          }
+        }
+      }
+    }
+
+    if (flexColumnCount === 0) {
+      props.table.setColumnSizing(columnSizing);
+
+      return;
+    }
+
+    /** Processing flex size  */
+    const flexColumnSize = (tableWidth - totalWidth) / flexColumnCount;
     for (const [key, value] of Object.entries(columnSizing)) {
-      if (value === 0) columnSizing[key] = flexColumnSize;
+      if (value === 0) {
+        columnSizing[key] = flexColumnSize;
+      }
     }
 
     props.table.setColumnSizing(columnSizing);

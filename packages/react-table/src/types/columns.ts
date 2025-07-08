@@ -394,3 +394,8 @@ export type KeyofDeep<
           : `${Key}[${number}]` | `${Key}`
         : `${Key}`
     : never;
+
+export type ColumnSizingSettings = Record<
+  string,
+  { minSize: number | undefined; maxSize: number | undefined }
+>;
