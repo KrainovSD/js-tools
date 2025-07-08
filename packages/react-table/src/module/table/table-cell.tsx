@@ -12,6 +12,7 @@ type Props<RowData extends DefaultRow> = {
   cells: Cell<RowData, unknown>[];
   virtualLeft?: number;
   selected: boolean;
+  expanded: boolean;
 };
 
 export const TableCell = React.memo(function TableCell<RowData extends DefaultRow>(

@@ -140,6 +140,8 @@ export function TableCommonGantt<RowData extends DefaultRow>(props: TableContain
                   expanded={expanded}
                   height={props.ganttRowMini ? GANTT_ROW_HEIGHT_MINI : GANTT_ROW_HEIGHT}
                   CustomRow={undefined}
+                  draggableRow={false}
+                  onDraggableRow={undefined}
                 />
               );
             })}
@@ -166,6 +168,8 @@ export function TableCommonGantt<RowData extends DefaultRow>(props: TableContain
                   selected={selected}
                   visibleCells={visibleCells}
                   expanded={expanded}
+                  draggableRow={false}
+                  onDraggableRow={undefined}
                 />
               );
             })}

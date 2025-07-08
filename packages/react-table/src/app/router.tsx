@@ -4,6 +4,7 @@ import { Common } from "./routes/common";
 import { CommonFlexColumn } from "./routes/common-flex-column";
 import { CommonFormatters } from "./routes/common-formatters";
 import { CommonInnerTable } from "./routes/common-inner-table";
+import { CommonRowDrag } from "./routes/common-row-drag";
 import { CommonVirtual } from "./routes/common-virtual";
 import { CommonVirtualRow } from "./routes/common-virtual-row";
 import { Gantt } from "./routes/gantt";
@@ -21,7 +22,8 @@ export const ROUTES: Route[] = [
   { name: "Flex Column", path: "flex", element: CommonFlexColumn },
   { name: "Virtual Row", path: "virtual-row", element: CommonVirtualRow },
   { name: "Virtual", path: "virtual", element: CommonVirtual },
-  { name: "Common Inner Table", path: "common-inner-table", element: CommonInnerTable },
+  { name: "Inner Table", path: "common-inner-table", element: CommonInnerTable },
+  { name: "Row Drag", path: "row-drag", element: CommonRowDrag },
   { name: "Formatters", path: "common-formatters", element: CommonFormatters },
   { name: "Gantt", path: "gantt", element: Gantt },
   { name: "Gantt Virtual Row", path: "gantt-virtual-row", element: GanttVirtualRow },

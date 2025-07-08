@@ -3,7 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 import type { CellContext, DefaultRow, HeaderContext, TableInterface } from "./utils";
 
-export type TableCellRenderKey = "default" | "select" | "tag" | "empty";
+export type TableCellRenderKey = "default" | "select" | "tag" | "empty" | "drag";
 export type TableHeaderRenderKey = "default" | "select" | "empty";
 export type TableFilterRenderKey =
   | "number"
@@ -77,3 +77,10 @@ export type TableFilterProps<RowData extends DefaultRow> = {
 };
 export type TableEmptyProps = {};
 export type TableLoaderProps = {};
+
+export type DragRowHandler = (
+  sourceIndex: number,
+  targetIndex: number,
+  sourceId: number | string,
+  targetId: number | string,
+) => void;

@@ -5,6 +5,7 @@ import React from "react";
 import type {
   ColumnSizingSettings,
   DefaultRow,
+  DragRowHandler,
   HeaderInterface,
   RowInterface,
   TableEmptyProps,
@@ -37,6 +38,8 @@ type TableContainerProps<RowData extends DefaultRow> = {
     | string
     | undefined;
   Empty: React.FC<TableEmptyProps> | undefined;
+  draggableRow: boolean;
+  onDraggableRow: DragRowHandler | undefined;
 };
 
 export function TableCommon<RowData extends DefaultRow>(props: TableContainerProps<RowData>) {
@@ -232,6 +235,8 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
                 CustomRow={CustomRow}
                 visibleCells={visibleCells}
                 height={undefined}
+                draggableRow={props.draggableRow}
+                onDraggableRow={props.onDraggableRow}
               />
             );
           })}
@@ -262,6 +267,8 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
                 CustomRow={CustomRow}
                 visibleCells={visibleCells}
                 height={undefined}
+                draggableRow={props.draggableRow}
+                onDraggableRow={props.onDraggableRow}
               />
             );
           })}

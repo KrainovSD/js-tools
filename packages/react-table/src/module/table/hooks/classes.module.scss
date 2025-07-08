@@ -77,9 +77,11 @@
     font-weight: 500;
     font-family: var(--table-font-family);
     background-color: inherit;
-    padding: 12px 8px;
 
     & > :global(.ksd-table-cell-container) {
+      padding: 12px 8px;
+      width: 100%;
+      height: 100%;
       max-width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;

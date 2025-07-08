@@ -2,7 +2,7 @@ import type { Cell } from "@tanstack/react-table";
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
 import clsx from "clsx";
 import React from "react";
-import type { DefaultRow, RowInterface } from "../../types";
+import type { DefaultRow, DragRowHandler, RowInterface } from "../../types";
 import { TableCell } from "./table-cell";
 import styles from "./table-row.module.scss";
 
@@ -25,12 +25,15 @@ type Props<RowData extends DefaultRow> = {
   CustomRow: React.JSX.Element | undefined | null;
   visibleCells: Cell<RowData, unknown>[];
   height: number | undefined;
+  draggableRow: boolean;
+  onDraggableRow: DragRowHandler | undefined;
 };
 
 export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>(
   props: Props<RowData>,
 ) {
   const row = props.virtualRow ? props.rows[props.virtualRow.index] : props.row;
+  const draggable = Boolean(props.draggableRow && props.onDraggableRow);
 
   if (!row) return;
   const leftVisibleCells = row.getLeftVisibleCells();
@@ -85,6 +88,13 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
         props.onDoubleClickRow?.(row, event);
       }}
       onKeyDown={onKeyDown}
+      draggable={draggable}
+      onDragOver={draggable ? (event) => event.preventDefault() : undefined}
+      onDragStart={draggable ? handleDragStart : undefined}
+      onDragEnd={draggable ? handleDragEnd : undefined}
+      onDragEnter={draggable ? handleDragEnter : undefined}
+      onDragLeave={draggable ? handleDragLeave : undefined}
+      onDrop={draggable ? handleDropGetter(props.rows, props.onDraggableRow) : undefined}
     >
       <>
         {props.columnVirtualEnabled && !props.CustomRow && (
@@ -100,6 +110,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
                   cells={cells}
                   columnPosition={index + 1}
                   selected={props.selected}
+                  expanded={props.expanded}
                 />
               );
             })}
@@ -116,6 +127,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
                   cells={centerVisibleCells}
                   selected={props.selected}
                   columnPosition={leftVisibleCells.length + +index + 1}
+                  expanded={props.expanded}
                 />
               );
             })}
@@ -130,6 +142,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
                   cells={cells}
                   columnPosition={leftVisibleCells.length + centerVisibleCells.length + index + 1}
                   selected={props.selected}
+                  expanded={props.expanded}
                 />
               );
             })}
@@ -148,6 +161,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
                 cells={cells}
                 columnPosition={index + 1}
                 selected={props.selected}
+                expanded={props.expanded}
               />
             );
           })}
@@ -156,3 +170,66 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
     </div>
   );
 }) as <RowData extends DefaultRow>(props: Props<RowData>) => React.JSX.Element;
+
+function isDragHandle(element: HTMLElement) {
+  return (
+    element.classList.contains("ksd-table-drag-handle") || element.closest(".ksd-table-drag-handle")
+  );
+}
+
+function handleDragStart(event: React.DragEvent<HTMLElement>) {
+  const target = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement | null;
+
+  if (!target || !isDragHandle(target)) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    return;
+  }
+
+  if (event.dataTransfer) {
+    const index = event.currentTarget.getAttribute("data-index");
+    if (!index) return;
+
+    event.dataTransfer.effectAllowed = "move";
+    event.dataTransfer.setData("text", index);
+    event.currentTarget.style.opacity = "var(--table-header-drag-opacity)";
+  }
+}
+function handleDragEnd(event: React.DragEvent<HTMLElement>) {
+  event.preventDefault();
+  event.currentTarget.style.opacity = "1";
+}
+function handleDragEnter(event: React.DragEvent<HTMLElement>) {
+  event.currentTarget.style.background = "var(--table-row-drag-bg)";
+}
+function handleDragLeave(event: React.DragEvent<HTMLElement>) {
+  if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget as Node))
+    event.currentTarget.style.background = "";
+}
+function handleDropGetter<RowData extends DefaultRow>(
+  rows: RowInterface<RowData>[],
+  onDraggableRow: DragRowHandler | undefined,
+) {
+  return function handleDrop(event: React.DragEvent<HTMLElement>) {
+    event.preventDefault();
+    event.currentTarget.style.background = "";
+
+    const sourceIndex = +event.dataTransfer?.getData?.("text");
+    let targetIndex: number | string | null = event.currentTarget.getAttribute("data-index");
+    if (targetIndex != undefined) targetIndex = +targetIndex;
+
+    if (
+      Number.isNaN(sourceIndex) ||
+      targetIndex == undefined ||
+      Number.isNaN(targetIndex) ||
+      sourceIndex === targetIndex
+    )
+      return;
+
+    const sourceId = rows[sourceIndex].id;
+    const targetId = rows[targetIndex].id;
+
+    onDraggableRow?.(sourceIndex, targetIndex, sourceId, targetId);
+  };
+}

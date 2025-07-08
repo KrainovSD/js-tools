@@ -6,6 +6,8 @@ export default [
     ignores: ["tmp/", "node_modules/", "lib/", ".turbo/", "stats/", "coverage/", "dist/"],
   },
   {
-    rules: {},
+    rules: {
+      "max-params": ["error", 4],
+    },
   },
 ];

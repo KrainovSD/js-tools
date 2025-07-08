@@ -6,31 +6,26 @@ export type CellRenderWrapperProps<RowData extends DefaultRow> = {
   level: number;
   context: CellContext<RowData>;
   column: ColumnDef<RowData>;
-  onClick?: (event: React.MouseEvent) => void;
-  onDoubleClick?: (event: React.MouseEvent) => void;
-};
+} & React.HTMLAttributes<HTMLDivElement>;
 
 export function CellRenderWrapper<RowData extends DefaultRow>(
   props: React.PropsWithChildren<CellRenderWrapperProps<RowData>>,
 ) {
+  const { column, context, level, className, style, ...rest } = props;
+
   return (
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
+      {...rest}
       className={clsx(
         "ksd-table-cell-container",
-        props.className,
-        typeof props.column?.className === "function"
-          ? props.column.className(props.context)
-          : props.column?.className,
+        className,
+        typeof column?.className === "function" ? column.className(context) : column?.className,
       )}
       style={{
         paddingLeft:
-          props.column.expandedShift != undefined
-            ? props.column.expandedShift * props.level
-            : undefined,
+          column.expandedShift != undefined && level > 0 ? column.expandedShift * level : undefined,
+        ...style,
       }}
-      onClick={props.onClick}
-      onDoubleClick={props.onDoubleClick}
     >
       {props.children}
     </div>

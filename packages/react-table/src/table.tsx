@@ -9,6 +9,7 @@ import styles from "./table.module.scss";
 import type {
   DefaultGanttData,
   DefaultRow,
+  DragRowHandler,
   GanttProps,
   HeaderInterface,
   RowInterface,
@@ -137,6 +138,8 @@ export type TableProps<
     rowClassName?: ((row: RowInterface<RowData>) => string | undefined) | string;
     rowRender?: (row: RowInterface<RowData>) => React.JSX.Element | null | undefined;
     getExpandedRowModel?: () => (table: TableInterface<RowData>) => () => RowModel<RowData>;
+    draggableRow?: boolean;
+    onDraggableRow?: DragRowHandler;
   } & GanttProps<RowData, GanttData>;
 
 export function Table<
@@ -289,6 +292,8 @@ export function Table<
               headerRowClassName={props.headerRowClassName}
               Empty={props.Empty}
               rowRender={props.rowRender}
+              draggableRow={props.draggableRow ?? false}
+              onDraggableRow={props.onDraggableRow}
             />
           </div>
         )}

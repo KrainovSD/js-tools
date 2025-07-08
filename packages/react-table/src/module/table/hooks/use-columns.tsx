@@ -35,6 +35,7 @@ import {
   DefaultCellRender,
   DefaultHeaderRender,
   DoubleArrowSortRender,
+  DragCellRender,
   NumberFilterRender,
   NumberRangeFilterRender,
   SelectCellRender,
@@ -125,7 +126,7 @@ export function useColumns<
     tooltip = false,
     className = undefined,
     expandable = false,
-    expandedShift = 0,
+    expandedShift = undefined,
     minWidth = undefined,
     maxWidth = undefined,
   } = props.defaultColumnOptions ?? {};
@@ -136,6 +137,7 @@ export function useColumns<
       tag: TagCellRender,
       default: DefaultCellRender,
       empty: () => "",
+      drag: DragCellRender,
     }),
     [],
   );

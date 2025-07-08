@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type {
   DateFilterRenderProps,
   DefaultCellRenderProps,
+  DragCellRenderProps,
   SelectCellRenderProps,
   SelectFilterRenderProps,
   SelectHeaderRenderProps,
@@ -94,8 +95,9 @@ export type DefaultTableCellRenderProps<RowData extends DefaultRow> =
     }
   | { cellRender?: "tag"; cellRenderProps?: TagCellRenderProps }
   | { cellRender?: "select"; cellRenderProps?: SelectCellRenderProps }
+  | { cellRender?: "drag"; cellRenderProps?: DragCellRenderProps<RowData> }
   | {
-      cellRender?: Exclude<TableCellRenderKey, "text" | "tag" | "select">;
+      cellRender?: Exclude<TableCellRenderKey, "text" | "tag" | "select" | "drag">;
       cellRenderProps?: never;
     };
 export type DefaultHeaderRenderProps =
