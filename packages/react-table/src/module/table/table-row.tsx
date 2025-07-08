@@ -73,6 +73,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
         props.selected && styles.row__selected,
         props.virtualRow && styles.row__virtual,
         typeof props.rowClassName === "function" ? props.rowClassName(row) : props.rowClassName,
+        "ksd-table-row",
       )}
       data-index={props.virtualRow ? props.virtualRow.index : row.index}
       ref={props.virtualRow ? (node) => props.rowVirtualizer.measureElement(node) : undefined}

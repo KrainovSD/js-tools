@@ -35,6 +35,7 @@ export const TableHeaderRow = React.memo(function TableHeaderRow<RowData extends
         typeof props.headerRowClassName === "function"
           ? props.headerRowClassName(props.headerGroup)
           : props.headerRowClassName,
+        "ksd-table-header-row",
       )}
       data-id="header-row"
       style={{

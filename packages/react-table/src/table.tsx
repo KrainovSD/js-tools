@@ -257,7 +257,7 @@ export function Table<
   try {
     return (
       <div
-        className={clsx(styles.base, props.className)}
+        className={clsx(styles.base, props.className, "ksd-table-wrapper")}
         style={{ height: props.fullSize ? "100%" : "fit-content" }}
         ref={props.rootRef}
       >
@@ -273,7 +273,11 @@ export function Table<
         {!props.withGantt && (
           <div
             ref={tableContainerRef}
-            className={clsx(styles.container, props.fullSize && styles.container_full)}
+            className={clsx(
+              styles.container,
+              props.fullSize && styles.container_full,
+              "ksd-table-container",
+            )}
             data-id={"container"}
           >
             <TableCommon

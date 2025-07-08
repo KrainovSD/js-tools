@@ -1,4 +1,5 @@
 import { type FilterFieldType, type FilterInputValueType, FiltersBlock } from "@krainovsd/react-ui";
+import clsx from "clsx";
 import React from "react";
 import type {
   DefaultRow,
@@ -23,7 +24,10 @@ export const TableFilter = React.memo(function TableFilter<RowData extends Defau
       {props.withFilters && props.filterOptions.length > 0 && (
         <>
           {!props.Filter && (
-            <div className={styles.filterContainer} data-id="filter">
+            <div
+              className={clsx(styles.filterContainer, "ksd-table-filter-container")}
+              data-id="filter"
+            >
               <FiltersBlock
                 filter={props.filters}
                 filterLabel="Фильтр"

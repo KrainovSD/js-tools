@@ -19,7 +19,7 @@ export function DragCellRender<Row extends DefaultRow>(props: CellRenderProps<Ro
 
   const { isVisible, level } = useVisibleCell(props.context);
 
-  if (!isVisible) return;
+  if (!isVisible || level > 0) return;
 
   return (
     <CellRenderWrapper

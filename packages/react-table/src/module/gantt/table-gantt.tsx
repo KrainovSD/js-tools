@@ -1,4 +1,5 @@
 import type { VirtualItem, Virtualizer } from "@tanstack/react-virtual";
+import clsx from "clsx";
 import React from "react";
 import type {
   DefaultGanttData,
@@ -115,7 +116,7 @@ export function TableGantt<RowData extends DefaultRow, GanttData extends Default
     <div
       data-id="table"
       ref={props.tableRef}
-      className={styles.table}
+      className={clsx(styles.table, "ksd-gantt")}
       style={{
         width: props.width,
       }}
@@ -127,11 +128,15 @@ export function TableGantt<RowData extends DefaultRow, GanttData extends Default
         locale={props.locale}
         frozenHeader={props.frozenHeader}
       />
-      <div id={GANTT_BODY_ID} className={styles.bodyContainer} data-id="body-container">
+      <div
+        id={GANTT_BODY_ID}
+        className={clsx(styles.bodyContainer, "ksd-gantt-body-container")}
+        data-id="body-container"
+      >
         <div
           data-id="body"
           ref={arrowContainerRef}
-          className={styles.body}
+          className={clsx(styles.body, "ksd-gantt-body")}
           style={{
             height: props.rowVirtualEnabled
               ? `${props.rowVirtualizer.getTotalSize()}px`

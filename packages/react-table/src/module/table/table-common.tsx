@@ -154,7 +154,7 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
   return (
     <div
       role="table"
-      className={styles.table}
+      className={clsx(styles.table, "ksd-table")}
       style={
         {
           "--table-template-columns": templateColumns.join(" "),
@@ -169,6 +169,7 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
         className={clsx(
           styles.header,
           (props.frozenHeader || props.frozenHeader == undefined) && styles.header__frozen,
+          "ksd-table-header",
         )}
         data-id="header"
       >
@@ -201,7 +202,7 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
       </div>
       <div
         role="rowgroup"
-        className={styles.body}
+        className={clsx(styles.body, "ksd-table-body")}
         style={{
           height:
             props.rowVirtualEnabled && props.rowsVirtual.length > 0

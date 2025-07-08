@@ -22,10 +22,11 @@ export const TableGanttHeaderRow = React.memo(function TableGanttHeaderRow(props
       className={clsx(
         styles.headerContainer,
         (props.frozenHeader || props.frozenHeader == undefined) && styles.headerContainer__frozen,
+        "ksd-gantt-header-container",
       )}
     >
       <div
-        className={clsx(styles.header)}
+        className={clsx(styles.header, "ksd-gantt-header")}
         style={{ minHeight: GANTT_HEADER_HEIGHT * 2 }}
         data-id="header"
       >

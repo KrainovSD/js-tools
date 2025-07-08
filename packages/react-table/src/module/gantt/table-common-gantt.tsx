@@ -52,7 +52,7 @@ export function TableCommonGantt<RowData extends DefaultRow>(props: TableContain
   return (
     <div
       ref={props.tableRef}
-      className={styles.table}
+      className={clsx(styles.table, "ksd-table-gantt")}
       style={
         {
           width: props.width,
@@ -69,10 +69,11 @@ export function TableCommonGantt<RowData extends DefaultRow>(props: TableContain
         className={clsx(
           styles.headerContainer,
           (props.frozenHeader || props.frozenHeader == undefined) && styles.headerContainer__frozen,
+          "ksd-table-gantt-header-container",
         )}
         data-id="header-container"
       >
-        <div className={clsx(styles.header)} data-id="header">
+        <div className={clsx(styles.header, "ksd-table-gantt-header")} data-id="header">
           {props.table.getHeaderGroups().map((headerGroup, index) => {
             /** ROW HEADER */
             const leftHeaders = leftHeadersGroup[index].headers;
@@ -103,11 +104,11 @@ export function TableCommonGantt<RowData extends DefaultRow>(props: TableContain
       </div>
       <div
         data-id="body-container"
-        className={styles.bodyContainer}
+        className={clsx(styles.bodyContainer, "ksd-table-gantt-body-container")}
         id={GANTT_COMMON_TABLE_BODY_ID}
       >
         <div
-          className={styles.body}
+          className={clsx(styles.body, "ksd-table-gantt-body")}
           style={{
             height: props.rowVirtualEnabled
               ? `${props.rowVirtualizer.getTotalSize()}px`

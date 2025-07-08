@@ -52,6 +52,7 @@ export const TableCell = React.memo(function TableCell<RowData extends DefaultRo
           props.cell.column.getIsFirstColumn("right") &&
           styles.cell__frozen_right_first,
         cellClasses,
+        "ksd-table-cell",
       )}
       style={{
         left: frozenPosition === "left" ? prevFrozen : undefined,

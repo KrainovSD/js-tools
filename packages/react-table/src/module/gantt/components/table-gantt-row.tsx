@@ -46,6 +46,7 @@ export const TableGanttRow = React.memo(function TableGanttRow<
         className={clsx(
           props.virtualStart == undefined && styles.row,
           props.virtualStart != undefined && styles.fake__row,
+          "ksd-gantt-row",
         )}
         style={{
           transform:

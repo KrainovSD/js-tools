@@ -1,4 +1,5 @@
 import { Pagination } from "@krainovsd/react-ui";
+import clsx from "clsx";
 import React from "react";
 import type { DefaultRow, TableInterface, TablePaginationProps } from "../../types";
 import styles from "./table-footer.module.scss";
@@ -25,7 +26,7 @@ export const TableFooter = React.memo(function TableFooter<RowData extends Defau
     <>
       {(props.withPagination || props.withTotal) && (
         <>
-          <div className={styles.paginationContainer} data-id="footer">
+          <div className={clsx(styles.paginationContainer, "ksd-table-footer")} data-id="footer">
             {props.withTotal && (
               <div className={styles.paginationTotal}>{`Всего: ${props.totalRows}`}</div>
             )}

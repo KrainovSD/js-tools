@@ -61,6 +61,7 @@ export const TableHeaderCell = React.memo(function TableHeaderCell<RowData exten
           props.header.column.getIsFirstColumn("right") &&
           styles.headerCell__frozen_right_first,
         headerClasses,
+        "ksd-table-header-cell",
       )}
       style={{
         left: frozenPosition === "left" ? prevFrozen : undefined,
