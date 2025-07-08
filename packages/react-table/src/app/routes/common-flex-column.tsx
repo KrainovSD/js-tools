@@ -111,7 +111,7 @@ export function CommonFlexColumn() {
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [tableColumns, setTableColumns] = React.useState<ColumnOrderState>(
-    COMMON_COLUMNS.map((col) => col.key),
+    COMMON_COLUMNS.map((col) => col.id ?? col.key),
   );
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({ id: 65 });
 

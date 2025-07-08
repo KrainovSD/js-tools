@@ -3,7 +3,7 @@ import type { RowGantt, RowGanttVirtual } from "../../types/gantt";
 
 export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
   {
-    renderKey: "_select",
+    id: "_select",
     key: "id",
     name: "",
     width: 50,

@@ -94,7 +94,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
 
               return (
                 <TableCell
-                  key={cell.column.columnDef.renderKey}
+                  key={cell.column.columnDef.id}
                   cell={cell}
                   index={index}
                   cells={cells}
@@ -110,7 +110,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
 
               return (
                 <TableCell
-                  key={cell.column.columnDef.renderKey}
+                  key={cell.column.columnDef.id}
                   cell={cell}
                   index={+index}
                   cells={centerVisibleCells}
@@ -124,7 +124,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
 
               return (
                 <TableCell
-                  key={cell.column.columnDef.renderKey}
+                  key={cell.column.columnDef.id}
                   cell={cell}
                   index={index}
                   cells={cells}
@@ -142,7 +142,7 @@ export const TableRow = React.memo(function TableRow<RowData extends DefaultRow>
 
             return (
               <TableCell
-                key={cell.column.columnDef.renderKey}
+                key={cell.column.columnDef.id}
                 cell={cell}
                 index={index}
                 cells={cells}

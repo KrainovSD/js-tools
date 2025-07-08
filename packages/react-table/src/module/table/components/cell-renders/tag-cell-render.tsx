@@ -3,7 +3,6 @@ import { Tag } from "@krainovsd/react-ui";
 import type { PresetColorType } from "antd/es/theme/internal";
 import type { CellRenderProps, DefaultRow } from "../../../../types";
 import { useVisibleCell } from "../../hooks";
-import { getData } from "../../lib";
 import { CellRenderTooltip } from "../cell-render-tooltip";
 import { CellRenderWrapper } from "../cell-render-wrapper";
 import styles from "./tag-cell-render.module.scss";
@@ -34,7 +33,10 @@ export function TagCellRender<RowData extends DefaultRow>(props: CellRenderProps
   const filterable =
     props.context.column.columnDef.enableColumnFilter && cellRenderProps.filterable;
 
-  let initialContent: unknown[] = getData(props.context.row.original, props.context.column.id);
+  let initialContent: unknown[] = props.context.column.accessorFn?.(
+    props.context.row.original,
+    props.context.row.index,
+  ) as unknown[];
   if (!isArray(initialContent)) {
     initialContent = [initialContent];
   }

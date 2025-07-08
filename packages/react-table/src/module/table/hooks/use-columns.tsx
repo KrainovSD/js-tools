@@ -51,6 +51,7 @@ import {
   dateFilter,
   dateRangeFilter,
   dateSort,
+  getData,
   isDayjsDate,
   numberSort,
   stringByArrayFilter,
@@ -213,14 +214,16 @@ export function useColumns<
     const columnPinning: ColumnPinningState = { left: [], right: [] };
 
     const columns: ColumnDef<RowData>[] = props.columns.map<ColumnDef<RowData>>((column) => {
+      const columnId = column.id ?? (column.key as string);
+
       if (column.leftFrozen) {
-        columnPinning.left?.push?.(column.key as string);
+        columnPinning.left?.push?.(columnId);
       }
       if (column.rightFrozen) {
-        columnPinning.right?.push?.(column.key as string);
+        columnPinning.right?.push?.(columnId);
       }
       if (column.grouping) {
-        grouping.push(column.key as string);
+        grouping.push(columnId);
       }
 
       const cellRenderKey = column.cellRender ?? cellRender;
@@ -235,9 +238,9 @@ export function useColumns<
       const filterTypeKey = column.filterType ?? filterType;
 
       const columnDef: ColumnDef<RowData> = {
-        renderKey: column.renderKey ?? (column.key as string),
-        accessorKey: column.key,
-        id: column.key as string,
+        accessorKey: column.key as string,
+        accessorFn: (row: RowData) => getData(row, column.key),
+        id: columnId,
         name: column.name,
         cellRender:
           props.cellRenders?.[cellRenderKey] ?? cellRenders[cellRenderKey as TableCellRenderKey],

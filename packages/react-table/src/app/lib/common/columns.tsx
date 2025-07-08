@@ -39,7 +39,7 @@ export const COMMON_COLUMNS: TableColumn<
 >[] = [
   //   SelectColumn,
   {
-    renderKey: "_select",
+    id: "_select",
     key: "id",
     name: "",
     width: 50,
@@ -57,7 +57,6 @@ export const COMMON_COLUMNS: TableColumn<
     additionalHeaderClass: ["hCenter", "wCenter"],
   },
   {
-    renderKey: "id_",
     key: "id",
     name: "ID",
     width: 100,

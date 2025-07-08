@@ -39,7 +39,10 @@ export function DefaultCellRender<RowData extends DefaultRow>(props: CellRenderP
 
   const Expander = props.context.table.options.meta?.renderers?.expander;
 
-  const initialContent: unknown = getData(props.context.row.original, props.context.column.id);
+  const initialContent: unknown = props.context.column.accessorFn?.(
+    props.context.row.original,
+    props.context.row.index,
+  );
   let content = initialContent;
   if (isObject(initialContent) && cellRenderProps.objectPath) {
     content = getData(initialContent, cellRenderProps.objectPath);

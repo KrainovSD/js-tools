@@ -50,10 +50,10 @@ export type TableColumn<
   SortType extends string | undefined = undefined,
   ColumnProps = unknown,
 > = {
-  renderKey?: string;
+  id?: string;
+  key: KeyofDeep<RowData>;
   icon?: ReactNode;
   name: string;
-  key: keyof RowData;
   width?: number;
   minWidth?: number;
   maxWidth?: number;
@@ -82,7 +82,7 @@ export type TableColumn<
 export type ColumnTooltipSettings<RowData extends DefaultRow> = {
   auto?: boolean;
   zIndex?: number;
-  pathToContent?: keyof RowData;
+  pathToContent?: KeyofDeep<RowData>;
   customContent?: string;
   arraySeparator?: string;
 };
@@ -241,9 +241,12 @@ export type TableDefaultColumnOptions<
     unknown
   >,
   CellClass extends string | undefined = undefined,
+  CellClassProps = unknown,
   HeaderClass extends string | undefined = undefined,
+  HeaderClassProps = unknown,
   FilterType extends string | undefined = undefined,
   SortType extends string | undefined = undefined,
+  ColumnProps = unknown,
 > = Pick<
   TableColumn<
     RowData,
@@ -256,9 +259,12 @@ export type TableDefaultColumnOptions<
     SortRender,
     SortRenderProps,
     CellClass,
+    CellClassProps,
     HeaderClass,
+    HeaderClassProps,
     FilterType,
-    SortType
+    SortType,
+    ColumnProps
   >,
   | "resizable"
   | "expandable"
@@ -366,3 +372,25 @@ export type TableColumnsSettings<
     SortType
   >;
 };
+
+type IncrementDepth<N extends number, Limit extends number[]> = Limit[N];
+export type KeyofDeep<
+  T,
+  Key extends keyof T = keyof T,
+  MaxDepth extends number[] = [1, 2, 3, 4, 5],
+  Depth extends number = 0,
+> = Depth extends MaxDepth["length"]
+  ? never
+  : Key extends string
+    ? T[Key] extends Record<string, unknown>
+      ?
+          | `${Key}.${KeyofDeep<T[Key], keyof T[Key], MaxDepth, IncrementDepth<Depth, MaxDepth>>}`
+          | `${Key}`
+      : T[Key] extends (infer U)[]
+        ? U extends Record<string, unknown>
+          ?
+              | `${Key}[${number}].${KeyofDeep<U, keyof U, MaxDepth, IncrementDepth<Depth, MaxDepth>>}`
+              | `${Key}`
+          : `${Key}[${number}]` | `${Key}`
+        : `${Key}`
+    : never;

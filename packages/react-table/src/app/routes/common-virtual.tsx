@@ -29,7 +29,7 @@ export function CommonVirtual() {
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [tableColumns, setTableColumns] = React.useState<ColumnOrderState>(
-    COMMON_COLUMNS.map((col) => col.key),
+    COMMON_COLUMNS.map((col) => col.id ?? col.key),
   );
 
   function onClick(row: RowInterface<CommonRowVirtual>) {

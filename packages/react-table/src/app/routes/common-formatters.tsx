@@ -54,7 +54,7 @@ const COMMON_COLUMNS: TableColumn<
   ColumnProps
 >[] = [
   {
-    renderKey: "_select",
+    id: "_select",
     key: "string",
     name: "",
     width: 50,
@@ -128,7 +128,7 @@ const COMMON_COLUMNS: TableColumn<
     additionalCellClass: ["hCenter", "wCenter", "nowrap"],
   },
   {
-    renderKey: "number-2",
+    id: "number-2",
     key: "enums",
     name: "enums",
     width: 250,
@@ -225,7 +225,7 @@ export function CommonFormatters() {
   const [expanded, setExpanded] = React.useState<ExpandedState>({});
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const [tableColumns, setTableColumns] = React.useState<ColumnOrderState>(
-    COMMON_COLUMNS.map((col) => col.key),
+    COMMON_COLUMNS.map((col) => col.id ?? col.key),
   );
 
   function onClick(row: RowInterface<CommonRow>) {

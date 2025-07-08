@@ -1,6 +1,6 @@
 import type { CellContext, ColumnDef, HeaderContext, RowData } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import type { TableRenderers } from "./types";
+import type { ColumnTooltipSettings, TableRenderers } from "./types";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -11,10 +11,9 @@ declare module "@tanstack/react-table" {
     sortRender: ((props: { context: HeaderContext<TData, unknown> }) => ReactNode) | undefined;
     headerClass: (string | ((props: HeaderContext<TData, unknown>) => string))[];
     cellClass: (string | ((props: CellContext<TData, unknown>) => string))[];
-    renderKey: string;
     name: string;
     icon?: ReactNode;
-
+    accessorKey: string;
     cellRenderProps?: unknown;
     headerRenderProps?: unknown;
     filterRenderProps?: unknown;
@@ -23,15 +22,7 @@ declare module "@tanstack/react-table" {
     expandable?: boolean;
     expandedShift?: number;
     enableDraggable?: boolean;
-    tooltip?:
-      | {
-          auto?: boolean;
-          zIndex?: number;
-          pathToContent?: keyof TData;
-          customContent?: string;
-          arraySeparator?: string;
-        }
-      | boolean;
+    tooltip?: ColumnTooltipSettings<TData> | boolean;
     className?: ((context: CellContext<TData, unknown>) => string | undefined) | string;
   }
 
