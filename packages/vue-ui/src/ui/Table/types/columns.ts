@@ -33,15 +33,15 @@ import type {
 } from "./utils";
 
 export type TableColumn<
-  RowData extends DefaultRow,
-  CellRender extends Record<string, CellRenderComponent<RowData>>,
-  HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
-  FilterRender extends Record<string, FilterRenderComponent<RowData>>,
-  SortRender extends Record<string, SortRenderComponent<RowData>>,
-  CellClass extends Record<string, string | CellClassFn<RowData>>,
-  HeaderClass extends Record<string, string | HeaderClassFn<RowData>>,
-  FilterType extends Record<string, FilterFn<RowData>>,
-  SortType extends Record<string, SortFn<RowData>>,
+  RowData extends DefaultRow = DefaultRow,
+  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
+  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
+  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
+  CellClass extends Record<string, string | CellClassFn<RowData>> = {},
+  HeaderClass extends Record<string, string | HeaderClassFn<RowData>> = {},
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+  SortType extends Record<string, SortFn<RowData>> = {},
 > = {
   id?: string;
   key: KeyofDeep<RowData>;
@@ -208,15 +208,15 @@ export type TableHeaderClassesProps<
 };
 
 export type TableDefaultColumnOptions<
-  RowData extends DefaultRow,
-  CellRender extends Record<string, CellRenderComponent<RowData>>,
-  HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
-  FilterRender extends Record<string, FilterRenderComponent<RowData>>,
-  SortRender extends Record<string, SortRenderComponent<RowData>>,
-  CellClass extends Record<string, string | CellClassFn<RowData>>,
-  HeaderClass extends Record<string, string | HeaderClassFn<RowData>>,
-  FilterType extends Record<string, FilterFn<RowData>>,
-  SortType extends Record<string, SortFn<RowData>>,
+  RowData extends DefaultRow = DefaultRow,
+  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
+  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
+  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
+  CellClass extends Record<string, string | CellClassFn<RowData>> = {},
+  HeaderClass extends Record<string, string | HeaderClassFn<RowData>> = {},
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+  SortType extends Record<string, SortFn<RowData>> = {},
 > = {
   width?: number;
   minWidth?: number;
@@ -228,14 +228,14 @@ export type TableDefaultColumnOptions<
   expandedShift?: number;
   tooltip?: ColumnTooltipSettings<RowData> | boolean;
   sortDirectionFirst?: "asc" | "desc";
-  sortType?: SortType | SortingKey;
-  filterType?: FilterType | FilterKey;
-  cellClass?: (CellClass | TableCellClassKey)[];
-  headerClass?: (HeaderClass | TableHeaderClassKey)[];
+  sortType?: keyof SortType | SortingKey;
+  filterType?: keyof FilterType | FilterKey;
+  cellClass?: (keyof CellClass | TableCellClassKey)[];
+  headerClass?: (keyof HeaderClass | TableHeaderClassKey)[];
   cellRender?: keyof CellRender | TableCellRenderKey;
   headerRender?: keyof HeaderRender | TableHeaderRenderKey;
   filterRender?: keyof FilterRender | TableFilterRenderKey;
-  fortRender?: keyof SortRender | TableSortRenderKey;
+  sortRender?: keyof SortRender | TableSortRenderKey;
 };
 
 export type TableColumnsSettings<

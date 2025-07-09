@@ -1,6 +1,15 @@
 import type { Column, DefaultColumn } from "./types";
 
-export const DEFAULT_COLUMN: DefaultColumn = {};
+export const DEFAULT_COLUMN: DefaultColumn = {
+  cellRender: "customNumber",
+  headerRender: "custom",
+  filterRender: "customNumber",
+  sortRender: "customDoubleArrow",
+  cellClass: ["customRed"],
+  headerClass: ["customBlue"],
+  filterType: "customFuzzy",
+  sortType: "customArrayByLength",
+};
 
 export const COLUMNS: Column[] = [
   {
