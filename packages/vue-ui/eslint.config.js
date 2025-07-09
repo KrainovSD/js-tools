@@ -13,4 +13,10 @@ export default [
       "storybook-static/",
     ],
   },
+  {
+    rules: {
+      "max-params": ["error", 4],
+      "vue/prop-name-casing": "off",
+    },
+  },
 ];

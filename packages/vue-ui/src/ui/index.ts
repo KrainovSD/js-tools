@@ -128,3 +128,4 @@ export {
   VTagCheckable,
   VSkeleton,
 };
+export * from "./Table";

@@ -382,7 +382,7 @@ type IncrementDepth<N extends number, Limit extends number[]> = Limit[N];
 export type KeyofDeep<
   T,
   Key extends keyof T = keyof T,
-  MaxDepth extends number[] = [1, 2, 3, 4, 5],
+  MaxDepth extends number[] = [1, 2],
   Depth extends number = 0,
 > = Depth extends MaxDepth["length"]
   ? never
