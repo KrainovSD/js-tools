@@ -10,79 +10,69 @@ import {
   getSortedRowModel,
   useVueTable,
 } from "@tanstack/vue-table";
-import React from "react";
-import type { DefaultGanttData, DefaultRow, TableRenderers } from "../../types";
+import { computed } from "vue";
+import { ExpanderRenderer } from "../../components";
+import { DEFAULT_TABLE_COLUMN_SIZE } from "../../constants";
+import type {
+  CellClassInterface,
+  CellRenderComponent,
+  DefaultGanttData,
+  DefaultRow,
+  FilterFn,
+  FilterRenderComponent,
+  HeaderClassInterface,
+  HeaderRenderComponent,
+  SortFn,
+  SortRenderComponent,
+  TableProps,
+  TableRenderers,
+} from "../../types";
 
 type InitialState<Row extends DefaultRow> = {
-  grouping: GroupingState;
-  columnPinning: ColumnPinningState;
+  grouped: GroupingState;
+  pinned: ColumnPinningState;
   columns: ColumnDef<Row>[];
+};
+
+const RENDERERS: Required<TableRenderers<DefaultRow>> = {
+  expander: ExpanderRenderer,
 };
 
 export function useTableOptions<
   RowData extends DefaultRow,
   GanttData extends DefaultGanttData,
-  CellRender extends string | undefined = undefined,
-  CellRenderProps extends Record<CellRender extends string ? CellRender : string, unknown> = Record<
-    CellRender extends string ? CellRender : string,
-    unknown
-  >,
-  HeaderRender extends string | undefined = undefined,
-  HeaderRenderProps extends Record<
-    HeaderRender extends string ? HeaderRender : string,
-    unknown
-  > = Record<HeaderRender extends string ? HeaderRender : string, unknown>,
-  FilterRender extends string | undefined = undefined,
-  FilterRenderProps extends Record<
-    FilterRender extends string ? FilterRender : string,
-    unknown
-  > = Record<FilterRender extends string ? FilterRender : string, unknown>,
-  SortRender extends string | undefined = undefined,
-  SortRenderProps extends Record<SortRender extends string ? SortRender : string, unknown> = Record<
-    SortRender extends string ? SortRender : string,
-    unknown
-  >,
-  CellClass extends string | undefined = undefined,
-  CellClassProps = unknown,
-  HeaderClass extends string | undefined = undefined,
-  HeaderClassProps = unknown,
-  FilterType extends string | undefined = undefined,
-  SortType extends string | undefined = undefined,
-  ColumnProps = unknown,
+  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
+  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
+  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
+  CellClass extends Record<string, CellClassInterface<RowData>> = {},
+  HeaderClass extends Record<string, HeaderClassInterface<RowData>> = {},
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+  SortType extends Record<string, SortFn<RowData>> = {},
 >(
   props: TableProps<
     RowData,
     GanttData,
     CellRender,
-    CellRenderProps,
     HeaderRender,
-    HeaderRenderProps,
     FilterRender,
-    FilterRenderProps,
     SortRender,
-    SortRenderProps,
     CellClass,
-    CellClassProps,
     HeaderClass,
-    HeaderClassProps,
     FilterType,
-    SortType,
-    ColumnProps
+    SortType
   > & { initialState: InitialState<RowData>; pageSizes?: number[]; totalRows?: number | undefined },
 ) {
-  const renderers = React.useMemo<Required<TableRenderers<RowData>>>(
-    () => ({ expander: props.renderers?.expander ?? Expander }),
-    [props.renderers],
-  );
-
-  const tableOptions = React.useMemo(() => {
+  const options = computed<TableOptions<RowData>>(() => {
     const tableOptions: TableOptions<RowData> = {
       data: props.rows,
       columns: props.initialState.columns,
-      state: {},
+      state: {
+        grouping: props.grouping,
+      },
       initialState: {},
       meta: {
-        renderers,
+        renderers: RENDERERS as TableRenderers<RowData>,
         pageSizes: props.pageSizes,
         totalRows: props.totalRows,
       },
@@ -111,8 +101,8 @@ export function useTableOptions<
           tableOptions.manualGrouping = false;
           tableOptions.getGroupedRowModel = getGroupedRowModel();
         }
-      } else if (props.initialState.grouping.length > 0) {
-        tableOptions.state.grouping = props.initialState.grouping;
+      } else if (props.initialState.grouped.length > 0) {
+        tableOptions.state.grouping = props.initialState.grouped;
         tableOptions.manualGrouping = false;
         tableOptions.getGroupedRowModel = getGroupedRowModel();
       }
@@ -121,7 +111,7 @@ export function useTableOptions<
         tableOptions.state.columnPinning = props.columnPinning;
         tableOptions.onColumnPinningChange = props.onColumnPinningChange;
       } else {
-        tableOptions.state.columnPinning = props.initialState.columnPinning;
+        tableOptions.state.columnPinning = props.initialState.pinned;
       }
       /** visibility */
       if (props.columnVisibility != undefined && props.onColumnVisibilityChange != undefined) {
@@ -216,42 +206,9 @@ export function useTableOptions<
     }
 
     return tableOptions;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    renderers,
-    props.rows,
-    props.getSubRows,
-    props.getRowId,
-    props.columnResizeMode,
-    props.initialState.columns,
-    props.initialState.columnPinning,
-    props.initialState.grouping,
-    props.pagination,
-    props.columnFilters,
-    props.columnPinning,
-    props.sorting,
-    props.expanded,
-    props.grouping,
-    props.rowSelection,
-    props.columnSizing,
-    props.columnVisibility,
-    props.columnOrder,
-    props.pageSizes,
-    props.totalRows,
-    props.manualGrouping,
-    props.manualExpanding,
-    props.manualFiltering,
-    props.manualPagination,
-    props.manualSorting,
-    props.withPagination,
-    props.withGantt,
-    props.initialPageSize,
-    props.defaultColumnOptions?.maxWidth,
-    props.defaultColumnOptions?.minWidth,
-    props.defaultColumnOptions?.width,
-  ]);
+  });
 
-  const table = useReactTable(tableOptions);
+  const table = useVueTable(options.value);
 
   return table;
 }

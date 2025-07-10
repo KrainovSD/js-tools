@@ -1,16 +1,17 @@
-import type { ColumnDef, TableOptions, TableState } from "@tanstack/vue-table";
-import type { ReactNode } from "react";
+import type { TableOptions, TableState } from "@tanstack/vue-table";
+import type { Component } from "vue";
 import type { TableColumnsSettings } from "./columns";
 import type { GanttProps } from "./gantt";
 import type {
-  CellClassFn,
+  CellClassInterface,
   CellContext,
   CellRenderComponent,
+  CellRenderProps,
   DefaultGanttData,
   DefaultRow,
   FilterFn,
   FilterRenderComponent,
-  HeaderClassFn,
+  HeaderClassInterface,
   HeaderContext,
   HeaderInterface,
   HeaderRenderComponent,
@@ -42,19 +43,19 @@ export type TableHeaderClassKey =
 
 export type TableCellRenders<RowData extends DefaultRow> = Record<
   TableCellRenderKey,
-  (props: { context: CellContext<RowData> }) => ReactNode
+  CellRenderComponent<RowData>
 >;
 export type TableHeaderRenders<RowData extends DefaultRow> = Record<
   TableHeaderRenderKey,
-  (props: { context: HeaderContext<RowData> }) => ReactNode
+  HeaderRenderComponent<RowData>
 >;
 export type TableFilterRenders<RowData extends DefaultRow> = Record<
   TableFilterRenderKey,
-  (props: ColumnDef<RowData>) => ReactNode
+  FilterRenderComponent<RowData>
 >;
 export type TableSortRenders<RowData extends DefaultRow> = Record<
   TableSortRenderKey,
-  (props: { context: HeaderContext<RowData> }) => ReactNode
+  SortRenderComponent<RowData>
 >;
 export type TableCellClasses<RowData extends DefaultRow> = Record<
   TableCellClassKey,
@@ -66,7 +67,7 @@ export type TableHeaderClasses<RowData extends DefaultRow> = Record<
 >;
 
 export type TableRenderers<RowData extends DefaultRow> = {
-  expander?: (props: { context: CellContext<RowData> }) => ReactNode;
+  expander?: Component<CellRenderProps<RowData, never>>;
 };
 
 export type SortingKey = "number" | "string" | "boolean" | "date" | "array" | "string-with-number";
@@ -110,8 +111,8 @@ export type TableProps<
   HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
   FilterRender extends Record<string, FilterRenderComponent<RowData>>,
   SortRender extends Record<string, SortRenderComponent<RowData>>,
-  CellClass extends Record<string, string | CellClassFn<RowData>>,
-  HeaderClass extends Record<string, string | HeaderClassFn<RowData>>,
+  CellClass extends Record<string, CellClassInterface<RowData>>,
+  HeaderClass extends Record<string, HeaderClassInterface<RowData>>,
   FilterType extends Record<string, FilterFn<RowData>>,
   SortType extends Record<string, SortFn<RowData>>,
 > = TableColumnsSettings<

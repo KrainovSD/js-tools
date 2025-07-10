@@ -36,7 +36,7 @@
     "clear": "rm -rf ./lib",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "vite build",
-    "build:types": "vue-tsc -p tsconfig.build.json",
+    "build:types": "vue-tsc -p tsconfig.build.json --diagnostics",
     "lint": "eslint . -c ./eslint.config.js --color --max-warnings 0",
     "lint-check": "eslint --debug eslint.config.js",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json,vue}'",

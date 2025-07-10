@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { ref } from "vue";
   import { VTable } from "../../ui";
-  import { CELL_RENDERS, COLUMNS } from "./types";
+  import { COLUMNS } from "./columns";
+  import { CELL_RENDERS, FILTER_RENDERS, HEADER_RENDERS } from "./constants";
 
   type Test = {
     test: string;
@@ -11,7 +12,7 @@
 </script>
 
 <template>
-  <VTable :columns="COLUMNS" :rows="rows" :cell-renders="CELL_RENDERS" />
+  <VTable :columns="COLUMNS" :rows="rows" />
 </template>
 
 <style lang="scss" module></style>

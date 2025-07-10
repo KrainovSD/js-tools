@@ -54,10 +54,12 @@ export type SortRenderProps<RowData extends DefaultRow, Settings = any> = {
 };
 export type SortRenderComponent<RowData extends DefaultRow> = Component<SortRenderProps<RowData>>;
 
+export type CellClassInterface<RowData extends DefaultRow> = string | CellClassFn<RowData>;
 export type CellClassFn<RowData extends DefaultRow, Settings = any> = (
   context: CellContext<RowData>,
   settings: Settings,
 ) => string | undefined;
+export type HeaderClassInterface<RowData extends DefaultRow> = string | HeaderClassFn<RowData>;
 export type HeaderClassFn<RowData extends DefaultRow, Settings = any> = (
   context: HeaderContext<RowData>,
   settings: Settings,
