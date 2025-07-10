@@ -157,8 +157,8 @@ export function useColumns<
   } = props.defaultColumnOptions ?? {};
 
   const columns = shallowRef<ColumnDef<RowData>[]>([]);
-  const pinned = shallowRef<ColumnPinningState>();
-  const grouped = shallowRef<GroupingState>([]);
+  const columnPinning = shallowRef<ColumnPinningState>();
+  const grouping = shallowRef<GroupingState>([]);
 
   effect(() => {
     const newGrouped: GroupingState = [];
@@ -279,9 +279,9 @@ export function useColumns<
     }
 
     columns.value = newColumns;
-    pinned.value = newPinned;
-    grouped.value = newGrouped;
+    columnPinning.value = newPinned;
+    grouping.value = newGrouped;
   });
 
-  return { columns, pinned, grouped };
+  return { columns, columnPinning, grouping };
 }

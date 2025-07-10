@@ -29,8 +29,8 @@ import type {
 } from "../../types";
 
 type InitialState<Row extends DefaultRow> = {
-  grouped: GroupingState;
-  pinned: ColumnPinningState;
+  initialGrouping: GroupingState;
+  initialColumnPinning: ColumnPinningState;
   columns: ColumnDef<Row>[];
 };
 
@@ -61,15 +61,14 @@ export function useTableOptions<
     HeaderClass,
     FilterType,
     SortType
-  > & { initialState: InitialState<RowData>; pageSizes?: number[]; totalRows?: number | undefined },
+  > &
+    InitialState<RowData> & { pageSizes?: number[]; totalRows?: number | undefined },
 ) {
   const options = computed<TableOptions<RowData>>(() => {
     const tableOptions: TableOptions<RowData> = {
       data: props.rows,
-      columns: props.initialState.columns,
-      state: {
-        grouping: props.grouping,
-      },
+      columns: props.columns,
+      state: {},
       initialState: {},
       meta: {
         renderers: RENDERERS as TableRenderers<RowData>,
@@ -86,122 +85,145 @@ export function useTableOptions<
         minSize: props.defaultColumnOptions?.minWidth,
         maxSize: props.defaultColumnOptions?.maxWidth,
       },
+      /** grouped */
+      onGroupingChange: props.onGroupingChange,
+      manualGrouping: props.manualGrouping,
+      getGroupedRowModel:
+        (props.grouping != undefined ||
+          (props.grouping == undefined && props.initialGrouping.length > 0)) &&
+        !props.manualGrouping
+          ? getGroupedRowModel()
+          : undefined,
+      onColumnPinningChange: props.onColumnPinningChange,
+      onColumnVisibilityChange: props.onColumnVisibilityChange,
+      onColumnSizingChange: props.onColumnSizingChange,
+      onColumnOrderChange: props.onColumnOrderChange,
+      /** expanded */
+      onExpandedChange: props.onExpandedChange,
+      manualExpanding: props.manualExpanding,
+      getExpandedRowModel:
+        props.getExpandedRowModel?.() ??
+        (props.expanded != undefined && !props.manualExpanding ? getExpandedRowModel() : undefined),
+      onRowSelectionChange: props.onRowSelectionChange,
+      /** sorted */
+      onSortingChange: props.onSortingChange,
+      manualSorting: props.manualSorting,
+      getSortedRowModel:
+        props.sorting != undefined && !props.manualSorting ? getSortedRowModel() : undefined,
+      /** filtered */
+      onColumnFiltersChange: props.onColumnFiltersChange,
+      manualFiltering: props.manualFiltering,
+      getFilteredRowModel:
+        props.columnFilters != undefined && !props.manualFiltering
+          ? getFilteredRowModel()
+          : undefined,
+      /** pagination */
+      onPaginationChange: props.onPaginationChange,
+      manualPagination: props.manualPagination,
+      getPaginationRowModel:
+        !props.withGantt && props.withPagination && !props.manualPagination
+          ? getPaginationRowModel()
+          : undefined,
     };
 
-    if (tableOptions.state) {
+    if (tableOptions.state && tableOptions.initialState) {
       /** grouping */
-      if (props.grouping != undefined && props.onGroupingChange != undefined) {
-        tableOptions.state.grouping = props.grouping;
-        tableOptions.onGroupingChange = props.onGroupingChange;
-
-        if (props.manualGrouping) {
-          tableOptions.manualGrouping = true;
-          tableOptions.getGroupedRowModel = undefined;
+      if (props.grouping != undefined) {
+        if (props.onGroupingChange != undefined) {
+          tableOptions.state.grouping = props.grouping;
         } else {
-          tableOptions.manualGrouping = false;
-          tableOptions.getGroupedRowModel = getGroupedRowModel();
+          tableOptions.initialState.grouping = props.grouping;
         }
-      } else if (props.initialState.grouped.length > 0) {
-        tableOptions.state.grouping = props.initialState.grouped;
-        tableOptions.manualGrouping = false;
-        tableOptions.getGroupedRowModel = getGroupedRowModel();
-      }
-      /** pinning */
-      if (props.columnPinning != undefined && props.onColumnPinningChange != undefined) {
-        tableOptions.state.columnPinning = props.columnPinning;
-        tableOptions.onColumnPinningChange = props.onColumnPinningChange;
       } else {
-        tableOptions.state.columnPinning = props.initialState.pinned;
+        tableOptions.initialState.grouping = props.initialGrouping;
       }
+
+      /** pining */
+      if (props.columnPinning != undefined) {
+        if (props.onColumnPinningChange != undefined) {
+          tableOptions.state.columnPinning = props.columnPinning;
+        } else {
+          tableOptions.initialState.columnPinning = props.columnPinning;
+        }
+      } else {
+        tableOptions.initialState.columnPinning = props.initialColumnPinning;
+      }
+
       /** visibility */
-      if (props.columnVisibility != undefined && props.onColumnVisibilityChange != undefined) {
-        tableOptions.state.columnVisibility = props.columnVisibility;
-        tableOptions.onColumnVisibilityChange = props.onColumnVisibilityChange;
+      if (props.columnVisibility != undefined) {
+        if (props.onColumnVisibilityChange != undefined) {
+          tableOptions.state.columnVisibility = props.columnVisibility;
+        } else {
+          tableOptions.initialState.columnVisibility = props.columnVisibility;
+        }
       }
+
       /** sizing */
-      if (props.columnSizing != undefined && props.onColumnSizingChange != undefined) {
-        tableOptions.state.columnSizing = props.columnSizing;
-        tableOptions.onColumnSizingChange = props.onColumnSizingChange;
+      if (props.columnSizing != undefined) {
+        if (props.onColumnSizingChange != undefined) {
+          tableOptions.state.columnSizing = props.columnSizing;
+        } else {
+          tableOptions.initialState.columnSizing = props.columnSizing;
+        }
       }
+
       /** order */
-      if (props.columnOrder != undefined && props.onColumnOrderChange != undefined) {
-        tableOptions.state.columnOrder = props.columnOrder;
-        tableOptions.onColumnOrderChange = props.onColumnOrderChange;
+      if (props.columnOrder != undefined) {
+        if (props.onColumnOrderChange != undefined) {
+          tableOptions.state.columnOrder = props.columnOrder;
+        } else {
+          tableOptions.initialState.columnOrder = props.columnOrder;
+        }
       }
+
       /** expanded */
-      if (props.expanded != undefined && props.onExpandedChange != undefined) {
-        tableOptions.state.expanded = props.expanded;
-        tableOptions.onExpandedChange = props.onExpandedChange;
-        if (props.manualExpanding) {
-          tableOptions.manualExpanding = true;
-          tableOptions.getExpandedRowModel = undefined;
+      if (props.expanded != undefined) {
+        if (props.onExpandedChange != undefined) {
+          tableOptions.state.expanded = props.expanded;
         } else {
-          tableOptions.manualExpanding = false;
-          tableOptions.getExpandedRowModel = props.getExpandedRowModel?.() ?? getExpandedRowModel();
+          tableOptions.initialState.expanded = props.expanded;
         }
-      } else {
-        tableOptions.manualExpanding = false;
-        tableOptions.getExpandedRowModel = props.getExpandedRowModel?.() ?? getExpandedRowModel();
       }
-      /** selecting */
-      if (props.rowSelection != undefined && props.onRowSelectionChange != undefined) {
-        tableOptions.state.rowSelection = props.rowSelection;
-        tableOptions.onRowSelectionChange = props.onRowSelectionChange;
+
+      /** selection */
+      if (props.rowSelection != undefined) {
+        if (props.onRowSelectionChange != undefined) {
+          tableOptions.state.rowSelection = props.rowSelection;
+        } else {
+          tableOptions.initialState.rowSelection = props.rowSelection;
+        }
       }
+
       /** sorting */
-      if (props.sorting != undefined && props.onSortingChange != undefined) {
-        tableOptions.state.sorting = props.sorting;
-        tableOptions.onSortingChange = props.onSortingChange;
-
-        if (props.manualSorting) {
-          tableOptions.manualSorting = true;
-          tableOptions.getSortedRowModel = undefined;
+      if (props.sorting != undefined) {
+        if (props.onSortingChange != undefined) {
+          tableOptions.state.sorting = props.sorting;
         } else {
-          tableOptions.manualSorting = false;
-          tableOptions.getSortedRowModel = getSortedRowModel();
+          tableOptions.initialState.sorting = props.sorting;
         }
-      } else {
-        tableOptions.manualSorting = false;
-        tableOptions.getSortedRowModel = getSortedRowModel();
-      }
-      /** filter */
-      if (props.columnFilters != undefined && props.onColumnFiltersChange != undefined) {
-        tableOptions.state.columnFilters = props.columnFilters;
-        tableOptions.onColumnFiltersChange = props.onColumnFiltersChange;
-
-        if (props.manualFiltering) {
-          tableOptions.manualFiltering = true;
-          tableOptions.getFilteredRowModel = undefined;
-        } else {
-          tableOptions.manualFiltering = false;
-          tableOptions.getFilteredRowModel = getFilteredRowModel();
-        }
-      } else {
-        tableOptions.manualFiltering = false;
-        tableOptions.getFilteredRowModel = getFilteredRowModel();
       }
 
-      if (props.withPagination && !props.withGantt) {
-        /** paginating */
-        if (props.pagination != undefined && props.onPaginationChange != undefined) {
+      /** filters */
+      if (props.columnFilters != undefined) {
+        if (props.onColumnFiltersChange != undefined) {
+          tableOptions.state.columnFilters = props.columnFilters;
+        } else {
+          tableOptions.initialState.columnFilters = props.columnFilters;
+        }
+      }
+
+      /** pagination */
+      if (props.pagination != undefined) {
+        if (props.onPaginationChange != undefined) {
           tableOptions.state.pagination = props.pagination;
-          tableOptions.onPaginationChange = props.onPaginationChange;
-
-          if (props.manualPagination) {
-            tableOptions.manualPagination = true;
-            tableOptions.getPaginationRowModel = undefined;
-          } else {
-            tableOptions.manualPagination = false;
-            tableOptions.getPaginationRowModel = getPaginationRowModel();
-          }
-        } else if (tableOptions.initialState) {
-          tableOptions.manualPagination = false;
-          tableOptions.getPaginationRowModel = getPaginationRowModel();
-          tableOptions.initialState.pagination = {
-            pageIndex: 0,
-            pageSize: props.initialPageSize ?? props.pageSizes?.[0] ?? 50,
-          };
+        } else {
+          tableOptions.initialState.pagination = props.pagination;
         }
+      } else {
+        tableOptions.initialState.pagination = {
+          pageIndex: 0,
+          pageSize: props.initialPageSize ?? props.pageSizes?.[0] ?? 50,
+        };
       }
     }
 
