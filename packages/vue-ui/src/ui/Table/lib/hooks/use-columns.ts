@@ -177,10 +177,10 @@ export function useColumns<
         newGrouped.push(columnId);
       }
 
-      const cellRenderKey = column.cellRender ?? cellRender;
-      const headerRenderKey = column.headerRender ?? headerRender;
-      const filterRenderKey = column.filterRender ?? filterRender;
-      const sortRenderKey = column.sortRender ?? sortRender;
+      const cellRenderKey = column.cellRender.component ?? cellRender;
+      const headerRenderKey = column.headerRender.component ?? headerRender;
+      const filterRenderKey = column.filterRender.component ?? filterRender;
+      const sortRenderKey = column.sortRender.component ?? sortRender;
       const cellClassKey = column.cellClass ?? cellClass;
       const additionalCellClassKey = column.additionalCellClass ?? [];
       const headerClassKey = column.headerClass ?? headerClass;
@@ -240,10 +240,10 @@ export function useColumns<
           },
           [],
         ),
-        cellRenderProps: column.cellRenderProps,
-        headerRenderProps: column.headerRenderProps,
-        filterRenderProps: column.filterRenderProps,
-        sortRenderProps: column.sortRenderProps,
+        cellRenderProps: column.cellRender.props,
+        headerRenderProps: column.headerRender.props,
+        filterRenderProps: column.filterRender.props,
+        sortRenderProps: column.sortRender.props,
         props: column.props,
         tooltip: column.tooltip ?? tooltip,
         className: column.className,

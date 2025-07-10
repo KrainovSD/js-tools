@@ -15,14 +15,22 @@ export const COLUMNS: Column[] = [
   {
     key: "test",
     name: "test",
-    cellRender: "customArray",
-    cellRenderProps: { pathToObject: "path" },
-    headerRender: "custom",
-    headerRenderProps: { withFilter: true },
-    filterRender: "customNumber",
-    filterRenderProps: { max: 0, min: -5 },
-    sortRender: "customOneArrow",
-    sortRenderProps: { field: "CURRENT" },
+    cellRender: {
+      component: "customArray",
+      props: { pathToObject: "path" },
+    },
+    headerRender: {
+      component: "custom",
+      props: { withFilter: true },
+    },
+    filterRender: {
+      component: "customNumber",
+      props: { max: 0, min: -5 },
+    },
+    sortRender: {
+      component: "customOneArrow",
+      props: { field: "CURRENT" },
+    },
     cellClass: ["customRed", "customBlack"],
     additionalCellClass: ["customYellow"],
     cellClassProps: { active: true, black: false },

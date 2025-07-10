@@ -65,12 +65,23 @@ export type TableColumn<
   sortType?: keyof SortType | SortingKey;
   filterType?: keyof FilterType | FilterKey;
   props?: unknown;
-} & TableCellRendersProps<RowData, CellRender> &
-  TableHeaderRendersProps<RowData, HeaderRender> &
-  TableFilterRendersProps<RowData, FilterRender> &
-  TableSortRendersProps<RowData, SortRender> &
-  TableCellClassesProps<RowData, CellClass> &
-  TableHeaderClassesProps<RowData, HeaderClass>;
+
+  cellRender: TableCellRendersProps<RowData, CellRender>;
+  headerRender: TableHeaderRendersProps<RowData, HeaderRender>;
+  filterRender: TableFilterRendersProps<RowData, FilterRender>;
+  sortRender: TableSortRendersProps<RowData, SortRender>;
+  headerClass?: (keyof HeaderClass | TableHeaderClassKey)[];
+  additionalHeaderClass?: (keyof HeaderClass | TableHeaderClassKey)[];
+  cellClass?: (keyof CellClass | TableCellClassKey)[];
+  additionalCellClass?: (keyof CellClass | TableCellClassKey)[];
+
+  headerClassProps?: {
+    [K in keyof HeaderClass]: FnSettings<HeaderClass[K]>;
+  }[keyof HeaderClass];
+  cellClassProps?: {
+    [K in keyof CellClass]: FnSettings<CellClass[K]>;
+  }[keyof CellClass];
+};
 
 export type ColumnTooltipSettings<RowData extends DefaultRow> = {
   auto?: boolean;
@@ -82,49 +93,49 @@ export type ColumnTooltipSettings<RowData extends DefaultRow> = {
 
 export type DefaultTableCellRenderProps<RowData extends DefaultRow> =
   | {
-      cellRender?: "default";
-      cellRenderProps?: DefaultCellRenderProps<RowData>;
+      component?: "default";
+      props?: DefaultCellRenderProps<RowData>;
     }
-  | { cellRender?: "tag"; cellRenderProps?: TagCellRenderProps }
-  | { cellRender?: "select"; cellRenderProps?: SelectCellRenderProps }
-  | { cellRender?: "drag"; cellRenderProps?: DragCellRenderProps<RowData> }
+  | { component?: "tag"; props?: TagCellRenderProps }
+  | { component?: "select"; props?: SelectCellRenderProps }
+  | { component?: "drag"; props?: DragCellRenderProps<RowData> }
   | {
-      cellRender?: Exclude<TableCellRenderKey, "default" | "tag" | "select" | "drag">;
-      cellRenderProps?: never;
+      component?: Exclude<TableCellRenderKey, "default" | "tag" | "select" | "drag">;
+      props?: never;
     };
 export type DefaultHeaderRenderProps =
-  | { headerRender?: "select"; headerRenderProps?: SelectHeaderRenderProps }
-  | { headerRender?: "default"; headerRenderProps?: unknown }
+  | { component?: "select"; props?: SelectHeaderRenderProps }
+  | { component?: "default"; props?: unknown }
   | {
-      headerRender?: Exclude<TableHeaderRenderKey, "select" | "default">;
-      headerRenderProps?: never;
+      component?: Exclude<TableHeaderRenderKey, "select" | "default">;
+      props?: never;
     };
 export type DefaultFilterRenderProps =
   | {
-      filterRender?: "select";
-      filterRenderProps?: SelectFilterRenderProps;
+      component?: "select";
+      props?: SelectFilterRenderProps;
     }
   | {
-      filterRender?: "date";
-      filterRenderProps?: DateFilterRenderProps;
+      component?: "date";
+      props?: DateFilterRenderProps;
     }
   | {
-      filterRender?: "date-range";
-      filterRenderProps?: DateFilterRenderProps;
+      component?: "date-range";
+      props?: DateFilterRenderProps;
     }
   | {
-      filterRender?: Exclude<TableFilterRenderKey, "select" | "date" | "date-range">;
-      filterRenderProps?: never;
+      component?: Exclude<TableFilterRenderKey, "select" | "date" | "date-range">;
+      props?: never;
     };
-export type DefaultSortRenderProps = { sortRender?: TableSortRenderKey; sortRenderProps?: never };
+export type DefaultSortRenderProps = { component?: TableSortRenderKey; props?: never };
 
-type CellRenderMap<
+export type CellRenderMap<
   RowData extends DefaultRow,
   CellRender extends Record<string, CellRenderComponent<RowData>>,
 > = {
   [K in keyof CellRender]: {
-    cellRender?: K;
-    cellRenderProps?: ComponentProps<CellRender[K]>;
+    component?: K;
+    props?: ComponentProps<CellRender[K]>;
   };
 }[keyof CellRender];
 
@@ -133,79 +144,64 @@ export type TableCellRendersProps<
   CellRender extends Record<string, CellRenderComponent<RowData>> = {},
 > = CellRenderMap<RowData, CellRender> | DefaultTableCellRenderProps<RowData>;
 
-// type HeaderRenderMap<
-//   RowData extends DefaultRow,
-//   HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
-// > = {
-//   [K in keyof HeaderRender]: {
-//     headerRender?: K;
-//     headerRenderProps?: ComponentProps<HeaderRender[K]>;
-//   };
-// }[keyof HeaderRender];
+export type HeaderRenderMap<
+  RowData extends DefaultRow,
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
+> = {
+  [K in keyof HeaderRender]: {
+    component?: K;
+    props?: ComponentProps<HeaderRender[K]>;
+  };
+}[keyof HeaderRender];
 
 export type TableHeaderRendersProps<
   RowData extends DefaultRow,
   HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
-> =
-  | {
-      headerRender: keyof HeaderRender;
-      headerRenderProps: unknown;
-    }
-  | DefaultHeaderRenderProps;
+> = HeaderRenderMap<RowData, HeaderRender> | DefaultHeaderRenderProps;
 
-// type FilterRenderMap<
-//   RowData extends DefaultRow,
-//   FilterRender extends Record<string, FilterRenderComponent<RowData>>,
-// > = {
-//   [K in keyof FilterRender]: {
-//     filterRender?: K;
-//     filterRenderProps?: ComponentProps<FilterRender[K]>;
-//   };
-// }[keyof FilterRender];
+export type FilterRenderMap<
+  RowData extends DefaultRow,
+  FilterRender extends Record<string, FilterRenderComponent<RowData>>,
+> = {
+  [K in keyof FilterRender]: {
+    component?: K;
+    props?: ComponentProps<FilterRender[K]>;
+  };
+}[keyof FilterRender];
 
 export type TableFilterRendersProps<
   RowData extends DefaultRow,
   FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
-> =
-  | {
-      filterRender: keyof FilterRender;
-      filterRenderProps: unknown;
-    }
-  | DefaultFilterRenderProps;
+> = FilterRenderMap<RowData, FilterRender> | DefaultFilterRenderProps;
 
 type ComponentProps<T> = T extends (args: infer P extends Record<string, any>) => any
   ? P["settings"]
   : unknown;
-// type FnSettings<T> = T extends (context: infer P, settings: infer S) => any ? S : undefined;
+type FnSettings<T> = T extends (context: infer P, settings: infer S) => any ? S : undefined;
 
-// type SortRenderMap<
-//   RowData extends DefaultRow,
-//   SortRender extends Record<string, SortRenderComponent<RowData>>,
-// > = {
-//   [K in keyof SortRender]: {
-//     sortRender?: K;
-//     sortRenderProps?: ComponentProps<SortRender[K]>;
-//   };
-// }[keyof SortRender];
+export type SortRenderMap<
+  RowData extends DefaultRow,
+  SortRender extends Record<string, SortRenderComponent<RowData>>,
+> = {
+  [K in keyof SortRender]: {
+    component?: K;
+    props?: ComponentProps<SortRender[K]>;
+  };
+}[keyof SortRender];
 
 export type TableSortRendersProps<
   RowData extends DefaultRow,
   SortRender extends Record<string, SortRenderComponent<RowData>> = {},
-> =
-  | {
-      sortRender: keyof SortRender;
-      sortRenderProps: unknown;
-    }
-  | DefaultSortRenderProps;
+> = SortRenderMap<RowData, SortRender> | DefaultSortRenderProps;
 
-// type TableCellClassesMapM<
-//   RowData extends DefaultRow,
-//   CellClass extends Record<string, CellClassInterface<RowData>>,
-// > = {
-//   cellClassProps?: {
-//     [K in keyof CellClass]: FnSettings<CellClass[K]>;
-//   }[keyof CellClass];
-// };
+export type TableCellClassesMap<
+  RowData extends DefaultRow,
+  CellClass extends Record<string, CellClassInterface<RowData>>,
+> = {
+  cellClassProps?: {
+    [K in keyof CellClass]: FnSettings<CellClass[K]>;
+  }[keyof CellClass];
+};
 
 export type TableCellClassesProps<
   RowData extends DefaultRow,
@@ -213,17 +209,17 @@ export type TableCellClassesProps<
 > = {
   cellClass?: (keyof CellClass | TableCellClassKey)[];
   additionalCellClass?: (keyof CellClass | TableCellClassKey)[];
-  cellClassProps?: unknown;
+  cellClassProps?: TableCellClassesMap<RowData, CellClass>;
 };
 
-// type TableHeaderClassesMapM<
-//   RowData extends DefaultRow,
-//   HeaderClass extends Record<string, HeaderClassInterface<RowData>>,
-// > = {
-//   headerClassProps?: {
-//     [K in keyof HeaderClass]: FnSettings<HeaderClass[K]>;
-//   }[keyof HeaderClass];
-// };
+export type TableHeaderClassesMap<
+  RowData extends DefaultRow,
+  HeaderClass extends Record<string, HeaderClassInterface<RowData>>,
+> = {
+  headerClassProps?: {
+    [K in keyof HeaderClass]: FnSettings<HeaderClass[K]>;
+  }[keyof HeaderClass];
+};
 
 export type TableHeaderClassesProps<
   RowData extends DefaultRow,
@@ -231,7 +227,7 @@ export type TableHeaderClassesProps<
 > = {
   headerClass?: (keyof HeaderClass | TableHeaderClassKey)[];
   additionalHeaderClass?: (keyof HeaderClass | TableHeaderClassKey)[];
-  headerClassProps?: unknown;
+  headerClassProps?: TableHeaderClassesMap<RowData, HeaderClass>;
 };
 
 export type TableDefaultColumnOptions<
