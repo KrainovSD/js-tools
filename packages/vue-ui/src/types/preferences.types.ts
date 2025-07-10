@@ -25,6 +25,7 @@ import type {
   ThemeSkeletonVariable,
   ThemeSliderVariable,
   ThemeSwitchVariable,
+  ThemeTableVariable,
   ThemeTagVariable,
 } from "./preference-components";
 
@@ -59,5 +60,6 @@ export type ThemeVariableConfig = {
     modal: Record<ThemeModalVariable, string>;
     tag: Record<ThemeTagVariable, string>;
     skeleton: Record<ThemeSkeletonVariable, string>;
+    table: Record<ThemeTableVariable, string>;
   };
 };

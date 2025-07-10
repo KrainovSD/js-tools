@@ -156,9 +156,9 @@ export function useColumns<
     maxWidth = undefined,
   } = props.defaultColumnOptions ?? {};
 
-  const columns = shallowRef<ColumnDef<RowData>[]>([]);
-  const columnPinning = shallowRef<ColumnPinningState>();
-  const grouping = shallowRef<GroupingState>([]);
+  const initialColumns = shallowRef<ColumnDef<RowData>[]>([]);
+  const initialColumnPinning = shallowRef<ColumnPinningState>();
+  const initialGrouping = shallowRef<GroupingState>([]);
 
   effect(() => {
     const newGrouped: GroupingState = [];
@@ -278,10 +278,10 @@ export function useColumns<
       newPinned.left?.unshift?.(...newGrouped);
     }
 
-    columns.value = newColumns;
-    columnPinning.value = newPinned;
-    grouping.value = newGrouped;
+    initialColumns.value = newColumns;
+    initialColumnPinning.value = newPinned;
+    initialGrouping.value = newGrouped;
   });
 
-  return { columns, columnPinning, grouping };
+  return { initialColumns, initialColumnPinning, initialGrouping };
 }

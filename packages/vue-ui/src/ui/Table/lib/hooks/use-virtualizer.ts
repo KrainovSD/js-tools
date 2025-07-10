@@ -3,7 +3,7 @@ import {
   type VirtualizerOptions,
   useVirtualizer as useVirtualizerLibrary,
 } from "@tanstack/vue-virtual";
-import { computed, watch } from "vue";
+import { type ComputedRef, computed, watch } from "vue";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../constants";
 import type {
   CellClassInterface,
@@ -43,7 +43,7 @@ type UseVirtualizerProps<
     SortType
   >[];
   table: TableInterface<RowData>;
-  tableContainerRef: HTMLDivElement | null;
+  tableContainerRef: ComputedRef<HTMLDivElement | null | undefined>;
   virtualColumn: boolean | undefined;
   virtualColumnOverScan: number | undefined;
   virtualRows: boolean | undefined;
@@ -107,7 +107,7 @@ export function useVirtualizer<
     return {
       count: visibleColumns.length,
       estimateSize: (index) => visibleColumns[index].getSize(),
-      getScrollElement: () => props.tableContainerRef,
+      getScrollElement: () => props.tableContainerRef.value ?? null,
       horizontal: true,
       overscan: props.virtualColumnOverScan ?? 2,
       enabled: columnVirtualEnabled.value,
@@ -137,7 +137,7 @@ export function useVirtualizer<
             ? GANTT_ROW_HEIGHT_MINI
             : GANTT_ROW_HEIGHT
           : (props.virtualRowSize ?? 35),
-      getScrollElement: () => props.tableContainerRef,
+      getScrollElement: () => props.tableContainerRef.value ?? null,
       measureElement:
         typeof window !== "undefined" && navigator.userAgent.includes("Firefox")
           ? (element) => {

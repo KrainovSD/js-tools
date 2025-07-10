@@ -14,6 +14,9 @@
     SortType extends Record<string, SortFn<RowData>> = {}
   "
 >
+  import { computed, useTemplateRef } from "vue";
+  import { Gantt, TableCommon, TableFilter, TableFooter, TableLoading } from "./components";
+  import { useColumns, useTableOptions, useVirtualizer } from "./lib";
   import type {
     CellClassInterface,
     CellRenderComponent,
@@ -28,24 +31,95 @@
     TableProps,
   } from "./types";
 
-  defineProps<
-    TableProps<
-      RowData,
-      GanttData,
-      CellRender,
-      HeaderRender,
-      FilterRender,
-      SortRender,
-      CellClass,
-      HeaderClass,
-      FilterType,
-      SortType
-    >
-  >();
+  const props =
+    defineProps<
+      TableProps<
+        RowData,
+        GanttData,
+        CellRender,
+        HeaderRender,
+        FilterRender,
+        SortRender,
+        CellClass,
+        HeaderClass,
+        FilterType,
+        SortType
+      >
+    >();
+
+  const rootRef = useTemplateRef("root");
+  const ganttComponentRef = useTemplateRef("gantt");
+  const ganttContainerRef = computed(() => ganttComponentRef.value?.ganttContainerRef);
+  const tableContainerRef = useTemplateRef("table-container");
+  const containerRef = computed(() =>
+    props.withGantt ? ganttContainerRef.value : tableContainerRef.value,
+  );
+
+  const { initialColumnPinning, initialColumns, initialGrouping } = useColumns({
+    columns: props.columns,
+    cellRenders: props.cellRenders,
+    headerRenders: props.headerRenders,
+    filterRenders: props.filterRenders,
+    sortRenders: props.sortRenders,
+    cellClasses: props.cellClasses,
+    headerClasses: props.headerClasses,
+    defaultColumnOptions: props.defaultColumnOptions,
+    filterTypes: props.filterTypes,
+    sortTypes: props.sortTypes,
+    withGantt: props.withGantt,
+    withFilters: props.withFilters ?? false,
+    rubberColumn: props.rubberColumn ?? false,
+  });
+
+  const table = useTableOptions({
+    ...props,
+    initialColumnPinning,
+    columns: initialColumns,
+    initialGrouping,
+  });
+  const tableState = computed(() => table.getState());
+
+  const {
+    columnVirtualEnabled,
+    columnVirtualizer,
+    columnsVirtual,
+    rowVirtual,
+    rowVirtualEnabled,
+    rowVirtualizer,
+    rows,
+  } = useVirtualizer({
+    initialColumns: props.columns,
+    rows: props.rows,
+    table,
+    tableContainerRef: containerRef,
+    virtualColumn: props.virtualColumn,
+    virtualRows: props.virtualRows,
+    virtualRowSize: props.virtualRowSize,
+    gantt: props.withGantt,
+    ganttMini: props.ganttRowMini,
+    virtualColumnOverScan: props.virtualColumnOverScan,
+    virtualRowOverScan: props.virtualRowOverScan,
+  });
+
+  defineExpose({ rootRef, tableInstance: table });
 </script>
 
 <template>
-  <div>component</div>
+  <div ref="root" v-bind="$attrs" class="ksd-table-wrapper" :class="{ full: props.fullSize }">
+    <TableLoading v-if="!props.Loader && props.loading" />
+    <component :is="props.Loader" v-if="props.Loader && props.loading" />
+    <TableFilter />
+    <div
+      v-if="!props.withGantt"
+      ref="table-container"
+      class="ksd-table-container"
+      :class="{ full: props.fullSize }"
+    >
+      <TableCommon />
+    </div>
+    <Gantt v-if="props.withGantt" ref="gantt" />
+    <TableFooter />
+  </div>
 </template>
 
-<style lang="scss" module></style>
+<style lang="scss"></style>

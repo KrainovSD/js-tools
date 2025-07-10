@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   useVueTable,
 } from "@tanstack/vue-table";
-import { computed } from "vue";
+import { type ShallowRef, computed } from "vue";
 import { ExpanderRenderer } from "../../components";
 import { DEFAULT_TABLE_COLUMN_SIZE } from "../../constants";
 import type {
@@ -29,9 +29,9 @@ import type {
 } from "../../types";
 
 type InitialState<Row extends DefaultRow> = {
-  initialGrouping: GroupingState;
-  initialColumnPinning: ColumnPinningState;
-  columns: ColumnDef<Row>[];
+  initialGrouping: ShallowRef<GroupingState>;
+  initialColumnPinning: ShallowRef<ColumnPinningState | undefined>;
+  columns: ShallowRef<ColumnDef<Row>[]>;
 };
 
 const RENDERERS: Required<TableRenderers<DefaultRow>> = {
@@ -67,7 +67,7 @@ export function useTableOptions<
   const options = computed<TableOptions<RowData>>(() => {
     const tableOptions: TableOptions<RowData> = {
       data: props.rows,
-      columns: props.columns,
+      columns: props.columns.value,
       state: {},
       initialState: {},
       meta: {
@@ -90,7 +90,7 @@ export function useTableOptions<
       manualGrouping: props.manualGrouping,
       getGroupedRowModel:
         (props.grouping != undefined ||
-          (props.grouping == undefined && props.initialGrouping.length > 0)) &&
+          (props.grouping == undefined && props.initialGrouping.value.length > 0)) &&
         !props.manualGrouping
           ? getGroupedRowModel()
           : undefined,
@@ -135,7 +135,7 @@ export function useTableOptions<
           tableOptions.initialState.grouping = props.grouping;
         }
       } else {
-        tableOptions.initialState.grouping = props.initialGrouping;
+        tableOptions.initialState.grouping = props.initialGrouping.value;
       }
 
       /** pining */
@@ -146,7 +146,7 @@ export function useTableOptions<
           tableOptions.initialState.columnPinning = props.columnPinning;
         }
       } else {
-        tableOptions.initialState.columnPinning = props.initialColumnPinning;
+        tableOptions.initialState.columnPinning = props.initialColumnPinning.value;
       }
 
       /** visibility */
