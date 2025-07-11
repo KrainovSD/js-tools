@@ -15,6 +15,8 @@ export const COLUMNS: Column[] = [
   {
     key: "test",
     name: "test",
+    filterable: true,
+    grouping: true,
     cellRender: {
       component: "customArray",
       props: { pathToObject: "path" },
@@ -37,7 +39,7 @@ export const COLUMNS: Column[] = [
     headerClass: ["customBlue", "customGreen"],
     additionalHeaderClass: ["customWhite"],
     headerClassProps: { active: true, white: false },
-    filterType: "customFuzzy",
+    filterType: "equals",
     sortType: "customArrayByLength",
   },
 ];

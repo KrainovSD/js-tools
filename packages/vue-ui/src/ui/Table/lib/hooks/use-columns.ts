@@ -6,7 +6,7 @@ import type {
   GroupingState,
   SortingFn,
 } from "@tanstack/vue-table";
-import { shallowRef, watchEffect } from "vue";
+import { computed } from "vue";
 import {
   DateFilterRender,
   DateRangeFilterRender,
@@ -29,6 +29,7 @@ import type {
   CellClassInterface,
   CellRenderComponent,
   ColumnDef,
+  DefaultGanttData,
   DefaultRow,
   FilterFn,
   FilterKey,
@@ -42,13 +43,14 @@ import type {
   TableCellClasses,
   TableCellRenderKey,
   TableCellRenders,
-  TableColumnsSettings,
+  TableDefaultColumnOptions,
   TableFilterRenderKey,
   TableFilterRenders,
   TableHeaderClassKey,
   TableHeaderClasses,
   TableHeaderRenderKey,
   TableHeaderRenders,
+  TableProps,
   TableSortRenderKey,
   TableSortRenders,
 } from "../../types";
@@ -115,19 +117,41 @@ const FILTERS: Record<FilterKey, FilterFnOption<DefaultRow>> = {
   "number-in-range": "inNumberRange",
 };
 
+const DEFAULT_COLUMNS_SETTINGS: TableDefaultColumnOptions = {
+  cellRender: "default",
+  headerRender: "default",
+  filterRender: "string",
+  sortRender: "double-arrow",
+  cellClass: ["common"],
+  headerClass: ["common"],
+  draggable: true,
+  filterable: false,
+  resizable: true,
+  sortDirectionFirst: "asc",
+  sortable: true,
+  sortType: "string",
+  filterType: "includes-string",
+  tooltip: false,
+  expandedShift: undefined,
+  minWidth: undefined,
+  maxWidth: undefined,
+};
+
 export function useColumns<
   RowData extends DefaultRow,
-  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
-  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
-  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
-  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
-  CellClass extends Record<string, CellClassInterface<RowData>> = {},
-  HeaderClass extends Record<string, HeaderClassInterface<RowData>> = {},
-  FilterType extends Record<string, FilterFn<RowData>> = {},
-  SortType extends Record<string, SortFn<RowData>> = {},
+  GanttData extends DefaultGanttData,
+  CellRender extends Record<string, CellRenderComponent<RowData>>,
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
+  FilterRender extends Record<string, FilterRenderComponent<RowData>>,
+  SortRender extends Record<string, SortRenderComponent<RowData>>,
+  CellClass extends Record<string, CellClassInterface<RowData>>,
+  HeaderClass extends Record<string, HeaderClassInterface<RowData>>,
+  FilterType extends Record<string, FilterFn<RowData>>,
+  SortType extends Record<string, SortFn<RowData>>,
 >(
-  props: TableColumnsSettings<
+  props: TableProps<
     RowData,
+    GanttData,
     CellRender,
     HeaderRender,
     FilterRender,
@@ -136,59 +160,46 @@ export function useColumns<
     HeaderClass,
     FilterType,
     SortType
-  > & { withGantt: boolean | undefined; withFilters: boolean; rubberColumn: boolean },
+  >,
 ) {
-  const {
-    cellRender = "default",
-    headerRender = "default",
-    filterRender = "string",
-    sortRender = "double-arrow",
-    cellClass = ["common"],
-    headerClass = ["common"],
-    draggable = true,
-    filterable = false,
-    resizable = true,
-    sortDirectionFirst = "asc",
-    sortable = true,
-    sortType = "string",
-    filterType = "includes-string",
-    tooltip = false,
-    expandedShift = undefined,
-    minWidth = undefined,
-    maxWidth = undefined,
-  } = props.defaultColumnOptions ?? {};
-
-  const initialColumns = shallowRef<ColumnDef<RowData>[]>([]);
-  const initialColumnPinning = shallowRef<ColumnPinningState>();
-  const initialGrouping = shallowRef<GroupingState>([]);
-
-  watchEffect(() => {
-    const newGrouped: GroupingState = [];
-    const newPinned: ColumnPinningState = { left: [], right: [] };
-
-    const newColumns: ColumnDef<RowData>[] = props.columns.map<ColumnDef<RowData>>((column) => {
+  const columnsDef = computed(() => {
+    return props.columns.map<ColumnDef<RowData>>((column) => {
       const columnId = column.id ?? (column.key as string);
 
-      if (column.leftFrozen) {
-        newPinned.left?.push?.(columnId);
-      }
-      if (column.rightFrozen) {
-        newPinned.right?.push?.(columnId);
-      }
-      if (column.grouping) {
-        newGrouped.push(columnId);
-      }
-
-      const cellRenderKey = column.cellRender.component ?? cellRender;
-      const headerRenderKey = column.headerRender.component ?? headerRender;
-      const filterRenderKey = column.filterRender.component ?? filterRender;
-      const sortRenderKey = column.sortRender.component ?? sortRender;
-      const cellClassKey = column.cellClass ?? cellClass;
+      const cellRenderKey =
+        column.cellRender.component ??
+        props.defaultColumnOptions?.cellRender ??
+        DEFAULT_COLUMNS_SETTINGS.cellRender;
+      const headerRenderKey =
+        column.headerRender.component ??
+        props.defaultColumnOptions?.headerRender ??
+        DEFAULT_COLUMNS_SETTINGS.headerRender;
+      const filterRenderKey =
+        column.filterRender.component ??
+        props.defaultColumnOptions?.filterRender ??
+        DEFAULT_COLUMNS_SETTINGS.filterRender;
+      const sortRenderKey =
+        column.sortRender.component ??
+        props.defaultColumnOptions?.sortRender ??
+        DEFAULT_COLUMNS_SETTINGS.sortRender;
+      const cellClassKey =
+        column.cellClass ??
+        props.defaultColumnOptions?.cellClass ??
+        DEFAULT_COLUMNS_SETTINGS.cellClass;
       const additionalCellClassKey = column.additionalCellClass ?? [];
-      const headerClassKey = column.headerClass ?? headerClass;
+      const headerClassKey =
+        column.headerClass ??
+        props.defaultColumnOptions?.headerClass ??
+        DEFAULT_COLUMNS_SETTINGS.headerClass;
       const additionalHeaderClassKey = column.additionalHeaderClass ?? [];
-      const sortTypeKey = column.sortType ?? sortType;
-      const filterTypeKey = column.filterType ?? filterType;
+      const sortTypeKey =
+        column.sortType ??
+        props.defaultColumnOptions?.sortType ??
+        DEFAULT_COLUMNS_SETTINGS.sortType;
+      const filterTypeKey =
+        column.filterType ??
+        props.defaultColumnOptions?.filterType ??
+        DEFAULT_COLUMNS_SETTINGS.filterType;
 
       const columnDef: ColumnDef<RowData> = {
         accessorKey: column.key as string,
@@ -196,25 +207,31 @@ export function useColumns<
         id: columnId,
         name: column.name,
         size: column.width,
-        minSize: column.minWidth ?? minWidth,
-        maxSize: column.maxWidth ?? maxWidth,
+        minSize:
+          column.minWidth ??
+          props.defaultColumnOptions?.minWidth ??
+          DEFAULT_COLUMNS_SETTINGS.minWidth,
+        maxSize:
+          column.maxWidth ??
+          props.defaultColumnOptions?.maxWidth ??
+          DEFAULT_COLUMNS_SETTINGS.maxWidth,
         cellRender:
-          props.cellRenders?.[cellRenderKey] ??
+          (cellRenderKey ? props.cellRenders?.[cellRenderKey] : undefined) ??
           (CELL_RENDERS[cellRenderKey as TableCellRenderKey] as CellRenderComponent<RowData>),
         headerRender:
-          props.headerRenders?.[headerRenderKey] ??
+          (headerRenderKey ? props.headerRenders?.[headerRenderKey] : undefined) ??
           (HEADER_RENDERS[
             headerRenderKey as TableHeaderRenderKey
           ] as HeaderRenderComponent<RowData>),
         filterRender:
-          props.filterRenders?.[filterRenderKey] ??
+          (filterRenderKey ? props.filterRenders?.[filterRenderKey] : undefined) ??
           (FILTER_RENDERS[
             filterRenderKey as TableFilterRenderKey
           ] as FilterRenderComponent<RowData>),
         sortRender:
-          props.sortRenders?.[sortRenderKey] ??
+          (sortRenderKey ? props.sortRenders?.[sortRenderKey] : undefined) ??
           (SORT_RENDERS[sortRenderKey as TableSortRenderKey] as SortRenderComponent<RowData>),
-        cellClass: [...cellClassKey, ...additionalCellClassKey].reduce(
+        cellClass: [...(cellClassKey ?? []), ...additionalCellClassKey].reduce(
           (result: CellClassInterface<RowData>[], key) => {
             if (!key) return result;
 
@@ -228,7 +245,7 @@ export function useColumns<
           },
           [],
         ),
-        headerClass: [...headerClassKey, ...additionalHeaderClassKey].reduce(
+        headerClass: [...(headerClassKey ?? []), ...additionalHeaderClassKey].reduce(
           (result: HeaderClassInterface<RowData>[], key) => {
             if (!key) return result;
 
@@ -247,25 +264,51 @@ export function useColumns<
         filterRenderProps: column.filterRender.props,
         sortRenderProps: column.sortRender.props,
         props: column.props,
-        tooltip: column.tooltip ?? tooltip,
+        tooltip:
+          column.tooltip ?? props.defaultColumnOptions?.tooltip ?? DEFAULT_COLUMNS_SETTINGS.tooltip,
         className: column.className,
-        enableResizing: column.rightFrozen ? false : (column.resizable ?? resizable),
-        enableColumnFilter: props.withGantt ? false : (column.filterable ?? filterable),
-        enableSorting: props.withGantt ? false : (column.sortable ?? sortable),
-        enableMultiSort: props.withGantt ? false : (column.sortable ?? sortable),
+        enableResizing: column.rightFrozen
+          ? false
+          : (column.resizable ??
+            props.defaultColumnOptions?.resizable ??
+            DEFAULT_COLUMNS_SETTINGS.resizable),
+        enableColumnFilter: props.withGantt
+          ? false
+          : (column.filterable ??
+            props.defaultColumnOptions?.filterable ??
+            DEFAULT_COLUMNS_SETTINGS.filterable),
+        enableSorting: props.withGantt
+          ? false
+          : (column.sortable ??
+            props.defaultColumnOptions?.sortable ??
+            DEFAULT_COLUMNS_SETTINGS.sortable),
+        enableMultiSort: props.withGantt
+          ? false
+          : (column.sortable ??
+            props.defaultColumnOptions?.sortable ??
+            DEFAULT_COLUMNS_SETTINGS.sortable),
         expandable: column.expandable,
-        expandedShift: column.expandedShift ?? expandedShift,
+        expandedShift:
+          column.expandedShift ??
+          props.defaultColumnOptions?.expandedShift ??
+          DEFAULT_COLUMNS_SETTINGS.expandedShift,
         enableHiding: true,
         enablePinning: true,
         enableGrouping: true,
-        enableDraggable: column.draggable ?? draggable,
+        enableDraggable:
+          column.draggable ??
+          props.defaultColumnOptions?.draggable ??
+          DEFAULT_COLUMNS_SETTINGS.draggable,
         sortUndefined: 1,
-        sortDescFirst: (column.sortDirectionFirst ?? sortDirectionFirst) === "desc",
+        sortDescFirst:
+          (column.sortDirectionFirst ??
+            props.defaultColumnOptions?.sortDirectionFirst ??
+            DEFAULT_COLUMNS_SETTINGS.sortDirectionFirst) === "desc",
         sortingFn:
-          props.sortTypes?.[sortTypeKey] ??
+          (sortTypeKey ? props.sortTypes?.[sortTypeKey] : undefined) ??
           (SORTS[sortTypeKey as SortingKey] as SortingFn<RowData> | BuiltInSortingFn),
         filterFn:
-          props.filterTypes?.[filterTypeKey] ??
+          (filterTypeKey ? props.filterTypes?.[filterTypeKey] : undefined) ??
           (FILTERS[filterTypeKey as FilterKey] as FilterFnOption<RowData>),
       };
 
@@ -275,15 +318,36 @@ export function useColumns<
 
       return columnDef;
     });
+  });
+  const initialState = computed(() => {
+    const columnPinning: ColumnPinningState = { left: [], right: [] };
+    const grouping: GroupingState = [];
 
-    if (newGrouped.length > 0) {
-      newPinned.left?.unshift?.(...newGrouped);
+    for (let i = 0; i < props.columns.length; i++) {
+      const column = props.columns[i];
+      const columnId = column.id ?? (column.key as string);
+
+      if (column.grouping) {
+        grouping.push(columnId);
+      } else {
+        if (column.leftFrozen) {
+          columnPinning.left?.push?.(columnId);
+        }
+        if (column.rightFrozen) {
+          columnPinning.right?.push?.(columnId);
+        }
+      }
     }
 
-    initialColumns.value = newColumns;
-    initialColumnPinning.value = newPinned;
-    initialGrouping.value = newGrouped;
+    if (grouping.length > 0) {
+      columnPinning.left?.unshift?.(...grouping);
+    }
+
+    return {
+      columnPinning,
+      grouping,
+    };
   });
 
-  return { initialColumns, initialColumnPinning, initialGrouping };
+  return { columnsDef, initialState };
 }

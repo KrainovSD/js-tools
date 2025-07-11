@@ -1,7 +1,8 @@
-import type { ColumnDef, ColumnPinningState } from "@tanstack/vue-table";
+import type { ColumnDef, TableMeta } from "@tanstack/vue-table";
 import {
   type GroupingState,
   type TableOptions,
+  type TableState as TableOptionsState,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
@@ -10,28 +11,62 @@ import {
   getSortedRowModel,
   useVueTable,
 } from "@tanstack/vue-table";
-import { type ShallowRef, computed } from "vue";
+import {
+  type ComputedRef,
+  type ModelRef,
+  type ShallowRef,
+  computed,
+  toRaw,
+  watch,
+  watchEffect,
+} from "vue";
+import { useWatchDebug } from "../../../../hooks";
 import { ExpanderRenderer } from "../../components";
-import { DEFAULT_TABLE_COLUMN_SIZE } from "../../constants";
 import type {
   CellClassInterface,
   CellRenderComponent,
+  ColumnFiltersState,
+  ColumnOrderState,
+  ColumnPinningState,
+  ColumnSizingState,
+  ColumnsVisibleState,
   DefaultGanttData,
   DefaultRow,
+  ExpandedState,
   FilterFn,
   FilterRenderComponent,
   HeaderClassInterface,
   HeaderRenderComponent,
+  PaginationState,
+  RowSelectionState,
   SortFn,
   SortRenderComponent,
+  SortingState,
   TableProps,
   TableRenderers,
 } from "../../types";
 
-type InitialState<Row extends DefaultRow> = {
-  initialGrouping: ShallowRef<GroupingState>;
-  initialColumnPinning: ShallowRef<ColumnPinningState | undefined>;
-  columns: ShallowRef<ColumnDef<Row>[]>;
+type ExtraProps<Row extends DefaultRow> = {
+  columnsDef: ComputedRef<ColumnDef<Row>[]>;
+  initialState: ComputedRef<InitialState>;
+};
+
+type InitialState = {
+  columnPinning: ColumnPinningState;
+  grouping: GroupingState;
+};
+
+type TableState = {
+  sorting: ModelRef<SortingState | undefined>;
+  columnFilters: ModelRef<ColumnFiltersState | undefined>;
+  columnOrder: ModelRef<ColumnOrderState | undefined>;
+  columnPinning: ModelRef<ColumnPinningState | undefined>;
+  columnSizing: ModelRef<ColumnSizingState | undefined>;
+  columnVisibility: ModelRef<ColumnsVisibleState | undefined>;
+  expanded: ModelRef<ExpandedState | undefined>;
+  grouping: ModelRef<GroupingState | undefined>;
+  pagination: ModelRef<PaginationState | undefined>;
+  rowSelection: ModelRef<RowSelectionState | undefined>;
 };
 
 const RENDERERS: Required<TableRenderers<DefaultRow>> = {
@@ -41,14 +76,14 @@ const RENDERERS: Required<TableRenderers<DefaultRow>> = {
 export function useTableOptions<
   RowData extends DefaultRow,
   GanttData extends DefaultGanttData,
-  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
-  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
-  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
-  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
-  CellClass extends Record<string, CellClassInterface<RowData>> = {},
-  HeaderClass extends Record<string, HeaderClassInterface<RowData>> = {},
-  FilterType extends Record<string, FilterFn<RowData>> = {},
-  SortType extends Record<string, SortFn<RowData>> = {},
+  CellRender extends Record<string, CellRenderComponent<RowData>>,
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
+  FilterRender extends Record<string, FilterRenderComponent<RowData>>,
+  SortRender extends Record<string, SortRenderComponent<RowData>>,
+  CellClass extends Record<string, CellClassInterface<RowData>>,
+  HeaderClass extends Record<string, HeaderClassInterface<RowData>>,
+  FilterType extends Record<string, FilterFn<RowData>>,
+  SortType extends Record<string, SortFn<RowData>>,
 >(
   props: TableProps<
     RowData,
@@ -61,176 +96,323 @@ export function useTableOptions<
     HeaderClass,
     FilterType,
     SortType
-  > &
-    InitialState<RowData> & { pageSizes?: number[]; totalRows?: number | undefined },
+  >,
+  extra: ExtraProps<RowData>,
+  state: TableState,
 ) {
-  const options = computed<TableOptions<RowData>>(() => {
-    const tableOptions: TableOptions<RowData> = {
-      data: props.rows,
-      columns: props.columns.value,
-      state: {},
-      initialState: {},
-      meta: {
-        renderers: RENDERERS as TableRenderers<RowData>,
-        pageSizes: props.pageSizes,
-        totalRows: props.totalRows,
+  const tableState: Partial<TableOptionsState> = {};
+
+  /** STATE GETTERS */
+  // eslint-disable-next-line no-lone-blocks
+  {
+    if (state.columnPinning.value != undefined) {
+      Object.defineProperty(tableState, "columnPinning", {
+        get() {
+          return state.columnPinning.value;
+        },
+        enumerable: true,
+      });
+    } else {
+      Object.defineProperty(tableState, "columnPinning", {
+        get() {
+          return extra.initialState.value.columnPinning;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.grouping.value != undefined) {
+      Object.defineProperty(tableState, "grouping", {
+        get() {
+          return state.grouping.value;
+        },
+        enumerable: true,
+      });
+    } else {
+      Object.defineProperty(tableState, "grouping", {
+        get() {
+          return extra.initialState.value.grouping;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.sorting.value != undefined) {
+      Object.defineProperty(tableState, "sorting", {
+        get() {
+          return state.sorting.value;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.columnFilters.value != undefined) {
+      Object.defineProperty(tableState, "columnFilters", {
+        get() {
+          return state.columnFilters.value;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.columnOrder.value != undefined) {
+      Object.defineProperty(tableState, "columnOrder", {
+        get() {
+          return state.columnOrder.value;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.columnSizing.value != undefined) {
+      Object.defineProperty(tableState, "columnSizing", {
+        get() {
+          return state.columnSizing.value;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.columnVisibility.value != undefined) {
+      Object.defineProperty(tableState, "columnVisibility", {
+        get() {
+          return state.columnVisibility.value;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.expanded.value != undefined) {
+      Object.defineProperty(tableState, "expanded", {
+        get() {
+          return state.expanded.value;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.pagination.value != undefined) {
+      Object.defineProperty(tableState, "pagination", {
+        get() {
+          return state.pagination.value;
+        },
+        enumerable: true,
+      });
+    }
+    if (state.rowSelection.value != undefined) {
+      Object.defineProperty(tableState, "rowSelection", {
+        get() {
+          return state.rowSelection.value;
+        },
+        enumerable: true,
+      });
+    }
+  }
+
+  const tableInitialState: Partial<TableOptionsState> = {};
+
+  /** STATE INITIAL GETTERS */
+  // eslint-disable-next-line no-lone-blocks
+  {
+    if (props.initialColumnPinning != undefined) {
+      Object.defineProperty(tableState, "columnPinning", {
+        get() {
+          return props.initialColumnPinning;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialGrouping != undefined) {
+      Object.defineProperty(tableState, "grouping", {
+        get() {
+          return props.initialGrouping;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialSorting != undefined) {
+      Object.defineProperty(tableState, "sorting", {
+        get() {
+          return props.initialSorting;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialColumnFilters != undefined) {
+      Object.defineProperty(tableState, "columnFilters", {
+        get() {
+          return props.initialColumnFilters;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialColumnOrder != undefined) {
+      Object.defineProperty(tableState, "columnOrder", {
+        get() {
+          return props.initialColumnOrder;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialColumnSizing != undefined) {
+      Object.defineProperty(tableState, "columnSizing", {
+        get() {
+          return props.initialColumnSizing;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialColumnVisibility != undefined) {
+      Object.defineProperty(tableState, "columnVisibility", {
+        get() {
+          return props.initialColumnVisibility;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialExpanded != undefined) {
+      Object.defineProperty(tableState, "expanded", {
+        get() {
+          return props.initialExpanded;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialPagination != undefined) {
+      Object.defineProperty(tableState, "pagination", {
+        get() {
+          return props.initialPagination;
+        },
+        enumerable: true,
+      });
+    }
+    if (props.initialRowSelection != undefined) {
+      Object.defineProperty(tableState, "rowSelection", {
+        get() {
+          return props.initialRowSelection;
+        },
+        enumerable: true,
+      });
+    }
+  }
+
+  const meta = computed<TableMeta<RowData>>(() => ({
+    renderers: { ...(RENDERERS as TableRenderers<RowData>), ...props.renderers },
+    pageSizes: props.pageSizes,
+    totalRows: props.totalRows,
+  }));
+
+  const table = useVueTable({
+    get data() {
+      return props.rows;
+    },
+    get columns() {
+      return extra.columnsDef.value;
+    },
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: props.getExpandedRowModel?.() ?? getExpandedRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    state: tableState,
+    initialState: tableInitialState,
+    onGroupingChange:
+      state.grouping.value != undefined
+        ? (updater) => {
+            state.grouping.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.grouping.value!) : updater;
+          }
+        : undefined,
+    onColumnOrderChange:
+      state.columnOrder.value != undefined
+        ? (updater) => {
+            state.columnOrder.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.columnOrder.value!) : updater;
+          }
+        : undefined,
+    onColumnPinningChange:
+      state.columnPinning.value != undefined
+        ? (updater) => {
+            state.columnPinning.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.columnPinning.value!) : updater;
+          }
+        : undefined,
+    onColumnSizingChange:
+      state.columnSizing.value != undefined
+        ? (updater) => {
+            state.columnSizing.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.columnSizing.value!) : updater;
+          }
+        : undefined,
+    onColumnVisibilityChange:
+      state.columnVisibility.value != undefined
+        ? (updater) => {
+            state.columnVisibility.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.columnVisibility.value!) : updater;
+          }
+        : undefined,
+    onExpandedChange:
+      state.expanded.value != undefined
+        ? (updater) => {
+            state.expanded.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.expanded.value!) : updater;
+          }
+        : undefined,
+    onRowSelectionChange:
+      state.rowSelection.value != undefined
+        ? (updater) => {
+            state.rowSelection.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.rowSelection.value!) : updater;
+          }
+        : undefined,
+    onSortingChange:
+      state.sorting.value != undefined
+        ? (updater) => {
+            state.sorting.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.sorting.value!) : updater;
+          }
+        : undefined,
+    onColumnFiltersChange:
+      state.columnFilters.value != undefined
+        ? (updater) => {
+            state.columnFilters.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.columnFilters.value!) : updater;
+          }
+        : undefined,
+    onPaginationChange:
+      state.pagination.value != undefined
+        ? (updater) => {
+            state.pagination.value =
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              updater instanceof Function ? updater(state.pagination.value!) : updater;
+          }
+        : undefined,
+  });
+
+  watchEffect(() => {
+    table.setOptions((prev) => ({
+      ...prev,
+      get data() {
+        return props.rows;
+      },
+      get columns() {
+        return extra.columnsDef.value;
+      },
+      get meta() {
+        return meta.value;
       },
       getSubRows: props.getSubRows,
       getRowId: props.getRowId,
-      getCoreRowModel: getCoreRowModel(),
       columnResizeMode: props.columnResizeMode ?? "onChange",
-      groupedColumnMode: "reorder",
-      defaultColumn: {
-        size: props.defaultColumnOptions?.width ?? DEFAULT_TABLE_COLUMN_SIZE,
-        minSize: props.defaultColumnOptions?.minWidth,
-        maxSize: props.defaultColumnOptions?.maxWidth,
-      },
-      /** grouped */
-      onGroupingChange: props.onGroupingChange,
-      manualGrouping: props.manualGrouping,
-      getGroupedRowModel:
-        (props.grouping != undefined ||
-          (props.grouping == undefined && props.initialGrouping.value.length > 0)) &&
-        !props.manualGrouping
-          ? getGroupedRowModel()
-          : undefined,
-      onColumnPinningChange: props.onColumnPinningChange,
-      onColumnVisibilityChange: props.onColumnVisibilityChange,
-      onColumnSizingChange: props.onColumnSizingChange,
-      onColumnOrderChange: props.onColumnOrderChange,
-      /** expanded */
-      onExpandedChange: props.onExpandedChange,
-      manualExpanding: props.manualExpanding,
-      getExpandedRowModel:
-        props.getExpandedRowModel?.() ??
-        (props.expanded != undefined && !props.manualExpanding ? getExpandedRowModel() : undefined),
-      onRowSelectionChange: props.onRowSelectionChange,
-      /** sorted */
-      onSortingChange: props.onSortingChange,
-      manualSorting: props.manualSorting,
-      getSortedRowModel:
-        props.sorting != undefined && !props.manualSorting ? getSortedRowModel() : undefined,
-      /** filtered */
-      onColumnFiltersChange: props.onColumnFiltersChange,
-      manualFiltering: props.manualFiltering,
-      getFilteredRowModel:
-        props.columnFilters != undefined && !props.manualFiltering
-          ? getFilteredRowModel()
-          : undefined,
-      /** pagination */
-      onPaginationChange: props.onPaginationChange,
-      manualPagination: props.manualPagination,
-      getPaginationRowModel:
-        !props.withGantt && props.withPagination && !props.manualPagination
-          ? getPaginationRowModel()
-          : undefined,
-    };
-
-    if (tableOptions.state && tableOptions.initialState) {
-      /** grouping */
-      if (props.grouping != undefined) {
-        if (props.onGroupingChange != undefined) {
-          tableOptions.state.grouping = props.grouping;
-        } else {
-          tableOptions.initialState.grouping = props.grouping;
-        }
-      } else {
-        tableOptions.initialState.grouping = props.initialGrouping.value;
-      }
-
-      /** pining */
-      if (props.columnPinning != undefined) {
-        if (props.onColumnPinningChange != undefined) {
-          tableOptions.state.columnPinning = props.columnPinning;
-        } else {
-          tableOptions.initialState.columnPinning = props.columnPinning;
-        }
-      } else {
-        tableOptions.initialState.columnPinning = props.initialColumnPinning.value;
-      }
-
-      /** visibility */
-      if (props.columnVisibility != undefined) {
-        if (props.onColumnVisibilityChange != undefined) {
-          tableOptions.state.columnVisibility = props.columnVisibility;
-        } else {
-          tableOptions.initialState.columnVisibility = props.columnVisibility;
-        }
-      }
-
-      /** sizing */
-      if (props.columnSizing != undefined) {
-        if (props.onColumnSizingChange != undefined) {
-          tableOptions.state.columnSizing = props.columnSizing;
-        } else {
-          tableOptions.initialState.columnSizing = props.columnSizing;
-        }
-      }
-
-      /** order */
-      if (props.columnOrder != undefined) {
-        if (props.onColumnOrderChange != undefined) {
-          tableOptions.state.columnOrder = props.columnOrder;
-        } else {
-          tableOptions.initialState.columnOrder = props.columnOrder;
-        }
-      }
-
-      /** expanded */
-      if (props.expanded != undefined) {
-        if (props.onExpandedChange != undefined) {
-          tableOptions.state.expanded = props.expanded;
-        } else {
-          tableOptions.initialState.expanded = props.expanded;
-        }
-      }
-
-      /** selection */
-      if (props.rowSelection != undefined) {
-        if (props.onRowSelectionChange != undefined) {
-          tableOptions.state.rowSelection = props.rowSelection;
-        } else {
-          tableOptions.initialState.rowSelection = props.rowSelection;
-        }
-      }
-
-      /** sorting */
-      if (props.sorting != undefined) {
-        if (props.onSortingChange != undefined) {
-          tableOptions.state.sorting = props.sorting;
-        } else {
-          tableOptions.initialState.sorting = props.sorting;
-        }
-      }
-
-      /** filters */
-      if (props.columnFilters != undefined) {
-        if (props.onColumnFiltersChange != undefined) {
-          tableOptions.state.columnFilters = props.columnFilters;
-        } else {
-          tableOptions.initialState.columnFilters = props.columnFilters;
-        }
-      }
-
-      /** pagination */
-      if (props.pagination != undefined) {
-        if (props.onPaginationChange != undefined) {
-          tableOptions.state.pagination = props.pagination;
-        } else {
-          tableOptions.initialState.pagination = props.pagination;
-        }
-      } else {
-        tableOptions.initialState.pagination = {
-          pageIndex: 0,
-          pageSize: props.initialPageSize ?? props.pageSizes?.[0] ?? 50,
-        };
-      }
-    }
-
-    return tableOptions;
+      groupedColumnMode: "reorder" as const,
+    }));
   });
 
-  const table = useVueTable(options.value);
+  setTimeout(() => {
+    table.getColumn("test")?.setFilterValue?.("filterMe!");
+  }, 3000);
 
   return table;
 }

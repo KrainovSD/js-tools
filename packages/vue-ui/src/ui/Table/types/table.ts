@@ -1,4 +1,15 @@
-import type { TableOptions, TableState } from "@tanstack/vue-table";
+import type {
+  ColumnFiltersState,
+  ColumnOrderState,
+  ColumnPinningState,
+  ColumnSizingState,
+  ExpandedState,
+  GroupingState,
+  RowSelectionState,
+  SortingState,
+  TableOptions,
+} from "@tanstack/vue-table";
+import type { PaginationState } from "@tanstack/vue-table";
 import type { Component } from "vue";
 import type { TableColumnsSettings } from "./columns";
 import type { GanttProps } from "./gantt";
@@ -7,6 +18,7 @@ import type {
   CellContext,
   CellRenderComponent,
   CellRenderProps,
+  ColumnsVisibleState,
   DefaultGanttData,
   DefaultRow,
   FilterFn,
@@ -126,68 +138,67 @@ export type TableProps<
   FilterType,
   SortType
 > & {
-  getSubRows: TableOptions<RowData>["getSubRows"];
-  onExpandedChange: TableOptions<RowData>["onExpandedChange"];
-  columnResizeMode: TableOptions<RowData>["columnResizeMode"];
-  onGroupingChange: TableOptions<RowData>["onGroupingChange"];
-  onColumnOrderChange: TableOptions<RowData>["onColumnOrderChange"];
-  manualFiltering: TableOptions<RowData>["manualFiltering"];
-  manualExpanding: TableOptions<RowData>["manualExpanding"];
-  manualGrouping: TableOptions<RowData>["manualGrouping"];
-  manualPagination: TableOptions<RowData>["manualPagination"];
-  manualSorting: TableOptions<RowData>["manualSorting"];
-  onColumnFiltersChange: TableOptions<RowData>["onColumnFiltersChange"];
-  onColumnPinningChange: TableOptions<RowData>["onColumnPinningChange"];
-  onColumnSizingChange: TableOptions<RowData>["onColumnSizingChange"];
-  onColumnSizingInfoChange: TableOptions<RowData>["onColumnSizingInfoChange"];
-  onColumnVisibilityChange: TableOptions<RowData>["onColumnVisibilityChange"];
-  onPaginationChange: TableOptions<RowData>["onPaginationChange"];
-  onSortingChange: TableOptions<RowData>["onSortingChange"];
-  onRowSelectionChange: TableOptions<RowData>["onRowSelectionChange"];
-  getRowId: TableOptions<RowData>["getRowId"];
-} & Pick<
-    Partial<TableState>,
-    | "sorting"
-    | "columnFilters"
-    | "columnOrder"
-    | "columnPinning"
-    | "columnSizing"
-    | "columnVisibility"
-    | "expanded"
-    | "grouping"
-    | "pagination"
-    | "rowSelection"
-  > & {
-    rows: RowData[];
-    frozenHeader?: boolean;
-    showPerf?: boolean;
-    className?: string;
-    renderers?: TableRenderers<RowData>;
-    withPagination?: boolean;
-    withFilters?: boolean;
-    withTotal?: boolean;
-    totalRows?: number;
-    initialPageSize?: number;
-    pageSizes?: number[];
-    fullSize?: boolean;
-    virtualColumn?: boolean;
-    rubberColumn?: boolean;
-    virtualColumnOverScan?: number;
-    virtualRows?: boolean;
-    virtualRowSize?: number;
-    virtualRowOverScan?: number;
-    locale?: string;
-    onClickRow?: (row: RowInterface<RowData>, event: MouseEvent) => void;
-    onDoubleClickRow?: (row: RowInterface<RowData>, event: MouseEvent) => void;
-    Filter?: Component<TableFilterProps<RowData>>;
-    Pagination?: Component<TablePaginationProps<RowData>>;
-    Empty?: Component<TableEmptyProps>;
-    Loader?: Component<TableLoaderProps>;
-    loading?: boolean;
-    headerRowClassName?: ((header: HeaderInterface<RowData>) => string | undefined) | string;
-    rowClassName?: ((row: RowInterface<RowData>) => string | undefined) | string;
-    rowRender?: (row: RowInterface<RowData>) => React.JSX.Element | null | undefined;
-    getExpandedRowModel?: () => (table: TableInterface<RowData>) => () => RowModel<RowData>;
-    draggableRow?: boolean;
-    onDraggableRow?: DragRowHandler;
-  } & GanttProps<RowData, GanttData>;
+  getSubRows?: TableOptions<RowData>["getSubRows"];
+  onExpandedChange?: TableOptions<RowData>["onExpandedChange"];
+  columnResizeMode?: TableOptions<RowData>["columnResizeMode"];
+  onGroupingChange?: TableOptions<RowData>["onGroupingChange"];
+  onColumnOrderChange?: TableOptions<RowData>["onColumnOrderChange"];
+  manualFiltering?: TableOptions<RowData>["manualFiltering"];
+  manualExpanding?: TableOptions<RowData>["manualExpanding"];
+  manualGrouping?: TableOptions<RowData>["manualGrouping"];
+  manualPagination?: TableOptions<RowData>["manualPagination"];
+  manualSorting?: TableOptions<RowData>["manualSorting"];
+  onColumnFiltersChange?: TableOptions<RowData>["onColumnFiltersChange"];
+  onColumnPinningChange?: TableOptions<RowData>["onColumnPinningChange"];
+  onColumnSizingChange?: TableOptions<RowData>["onColumnSizingChange"];
+  onColumnSizingInfoChange?: TableOptions<RowData>["onColumnSizingInfoChange"];
+  onColumnVisibilityChange?: TableOptions<RowData>["onColumnVisibilityChange"];
+  onPaginationChange?: TableOptions<RowData>["onPaginationChange"];
+  onSortingChange?: TableOptions<RowData>["onSortingChange"];
+  onRowSelectionChange?: TableOptions<RowData>["onRowSelectionChange"];
+  getRowId?: TableOptions<RowData>["getRowId"];
+} & {
+  initialSorting: SortingState;
+  initialColumnFilters: ColumnFiltersState;
+  initialColumnOrder: ColumnOrderState;
+  initialColumnPinning: ColumnPinningState;
+  initialColumnSizing: ColumnSizingState;
+  initialColumnVisibility: ColumnsVisibleState;
+  initialExpanded: ExpandedState;
+  initialGrouping: GroupingState;
+  initialPagination: PaginationState;
+  initialRowSelection: RowSelectionState;
+} & {
+  rows: RowData[];
+  frozenHeader?: boolean;
+  showPerf?: boolean;
+  className?: string;
+  renderers?: TableRenderers<RowData>;
+  withPagination?: boolean;
+  withFilters?: boolean;
+  withTotal?: boolean;
+  totalRows?: number;
+  initialPageSize?: number;
+  pageSizes?: number[];
+  fullSize?: boolean;
+  virtualColumn?: boolean;
+  rubberColumn?: boolean;
+  virtualColumnOverScan?: number;
+  virtualRows?: boolean;
+  virtualRowSize?: number;
+  virtualRowOverScan?: number;
+  locale?: string;
+  onClickRow?: (row: RowInterface<RowData>, event: MouseEvent) => void;
+  onDoubleClickRow?: (row: RowInterface<RowData>, event: MouseEvent) => void;
+  Filter?: Component<TableFilterProps<RowData>>;
+  Pagination?: Component<TablePaginationProps<RowData>>;
+  Empty?: Component<TableEmptyProps>;
+  Loader?: Component<TableLoaderProps>;
+  loading?: boolean;
+  headerRowClassName?: ((header: HeaderInterface<RowData>) => string | undefined) | string;
+  rowClassName?: ((row: RowInterface<RowData>) => string | undefined) | string;
+  rowRender?: (row: RowInterface<RowData>) => React.JSX.Element | null | undefined;
+  getExpandedRowModel?: () => (table: TableInterface<RowData>) => () => RowModel<RowData>;
+  draggableRow?: boolean;
+  onDraggableRow?: DragRowHandler;
+} & GanttProps<RowData, GanttData>;

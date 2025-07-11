@@ -3,16 +3,28 @@ import type {
   CellContext as CellContextLib,
   ColumnDef as ColumnDefLib,
   ColumnFilter as ColumnFilterLib,
+  ColumnFiltersState as ColumnFiltersStateLib,
+  ColumnOrderState as ColumnOrderStateLib,
+  ColumnPinningState as ColumnPinningStateLib,
+  ColumnSizingState as ColumnSizingStateLib,
   ColumnSort as ColumnSortLib,
+  ExpandedState as ExpandedStateLib,
+  GroupingState as GroupingStateLib,
   HeaderContext as HeaderContextLib,
   HeaderGroup,
   PaginationState as PaginationStateLib,
   Row,
   RowData,
   RowModel as RowModelLib,
+  RowSelectionState as RowSelectionStateLib,
+  SortingState as SortingStateLib,
   Table,
 } from "@tanstack/vue-table";
-import type { Component } from "vue";
+import type { Component, Ref } from "vue";
+
+export type ToRef<T extends Record<string, unknown>> = {
+  [K in keyof T]: Ref<T[K]>;
+};
 
 export type TableTypesGetter<RowData extends DefaultRow> = {
   headerRenderProps: HeaderRenderProps<RowData>;
@@ -86,11 +98,20 @@ export type ColumnSort = ColumnSortLib;
 export type ColumnFilter = ColumnFilterLib;
 export type ColumnsSortingState = ColumnSort[];
 export type ColumnsFilterState = ColumnFilter[];
-export type ColumnsVisibleState = Record<string, boolean>;
 export type ColumnsSizingState = Record<string, number>;
 export type ColumnsExpandState = Record<string, boolean>;
 export type ColumnsOrderState = string[];
-export type PaginationState = PaginationStateLib;
 export type TableInterface<TData extends RowData> = Table<TData>;
 export type RowInterface<TData extends RowData> = Row<TData>;
 export type HeaderInterface<TData extends RowData> = HeaderGroup<TData>;
+
+export type SortingState = SortingStateLib;
+export type ColumnFiltersState = ColumnFiltersStateLib;
+export type ColumnOrderState = ColumnOrderStateLib;
+export type ColumnPinningState = ColumnPinningStateLib;
+export type ColumnSizingState = ColumnSizingStateLib;
+export type ColumnsVisibleState = Record<string, boolean>;
+export type ExpandedState = ExpandedStateLib;
+export type GroupingState = GroupingStateLib;
+export type PaginationState = PaginationStateLib;
+export type RowSelectionState = RowSelectionStateLib;
