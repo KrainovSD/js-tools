@@ -80,12 +80,12 @@
   const tableState = computed(() => table.getState());
 
   const {
-    columnVirtualEnabled,
-    columnVirtualizer,
-    columnsVirtual,
-    rowVirtual,
-    rowVirtualEnabled,
-    rowVirtualizer,
+    // columnVirtualEnabled,
+    // columnVirtualizer,
+    // columnsVirtual,
+    // rowVirtual,
+    // rowVirtualEnabled,
+    // rowVirtualizer,
     rows,
   } = useVirtualizer({
     initialColumns: props.columns,
@@ -100,6 +100,8 @@
     virtualColumnOverScan: props.virtualColumnOverScan,
     virtualRowOverScan: props.virtualRowOverScan,
   });
+
+  console.log(rows, tableState);
 
   defineExpose({ rootRef, tableInstance: table });
 </script>

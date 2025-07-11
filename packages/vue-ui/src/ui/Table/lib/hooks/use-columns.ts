@@ -1,10 +1,12 @@
 import { getByPath } from "@krainovsd/js-helpers";
-import type { BuiltInSortingFn } from "@tanstack/vue-table";
-import type { SortingFn } from "@tanstack/vue-table";
-import type { FilterFnOption } from "@tanstack/vue-table";
-import type { GroupingState } from "@tanstack/vue-table";
-import type { ColumnPinningState } from "@tanstack/vue-table";
-import { effect, shallowRef } from "vue";
+import type {
+  BuiltInSortingFn,
+  ColumnPinningState,
+  FilterFnOption,
+  GroupingState,
+  SortingFn,
+} from "@tanstack/vue-table";
+import { shallowRef, watchEffect } from "vue";
 import {
   DateFilterRender,
   DateRangeFilterRender,
@@ -160,7 +162,7 @@ export function useColumns<
   const initialColumnPinning = shallowRef<ColumnPinningState>();
   const initialGrouping = shallowRef<GroupingState>([]);
 
-  effect(() => {
+  watchEffect(() => {
     const newGrouped: GroupingState = [];
     const newPinned: ColumnPinningState = { left: [], right: [] };
 

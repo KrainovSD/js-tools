@@ -125,30 +125,27 @@ export type TableProps<
   HeaderClass,
   FilterType,
   SortType
-> &
-  Pick<
-    TableOptions<RowData>,
-    | "getSubRows"
-    | "onExpandedChange"
-    | "columnResizeMode"
-    | "onGroupingChange"
-    | "onColumnOrderChange"
-    | "manualFiltering"
-    | "manualExpanding"
-    | "manualGrouping"
-    | "manualPagination"
-    | "manualSorting"
-    | "onColumnFiltersChange"
-    | "onColumnPinningChange"
-    | "onColumnSizingChange"
-    | "onColumnSizingInfoChange"
-    | "onColumnVisibilityChange"
-    | "onPaginationChange"
-    | "onSortingChange"
-    | "onRowSelectionChange"
-    | "getRowId"
-  > &
-  Pick<
+> & {
+  getSubRows: TableOptions<RowData>["getSubRows"];
+  onExpandedChange: TableOptions<RowData>["onExpandedChange"];
+  columnResizeMode: TableOptions<RowData>["columnResizeMode"];
+  onGroupingChange: TableOptions<RowData>["onGroupingChange"];
+  onColumnOrderChange: TableOptions<RowData>["onColumnOrderChange"];
+  manualFiltering: TableOptions<RowData>["manualFiltering"];
+  manualExpanding: TableOptions<RowData>["manualExpanding"];
+  manualGrouping: TableOptions<RowData>["manualGrouping"];
+  manualPagination: TableOptions<RowData>["manualPagination"];
+  manualSorting: TableOptions<RowData>["manualSorting"];
+  onColumnFiltersChange: TableOptions<RowData>["onColumnFiltersChange"];
+  onColumnPinningChange: TableOptions<RowData>["onColumnPinningChange"];
+  onColumnSizingChange: TableOptions<RowData>["onColumnSizingChange"];
+  onColumnSizingInfoChange: TableOptions<RowData>["onColumnSizingInfoChange"];
+  onColumnVisibilityChange: TableOptions<RowData>["onColumnVisibilityChange"];
+  onPaginationChange: TableOptions<RowData>["onPaginationChange"];
+  onSortingChange: TableOptions<RowData>["onSortingChange"];
+  onRowSelectionChange: TableOptions<RowData>["onRowSelectionChange"];
+  getRowId: TableOptions<RowData>["getRowId"];
+} & Pick<
     Partial<TableState>,
     | "sorting"
     | "columnFilters"
