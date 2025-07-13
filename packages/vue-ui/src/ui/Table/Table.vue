@@ -15,7 +15,6 @@
   "
 >
   import { computed, useTemplateRef } from "vue";
-  import { useWatchDebug } from "../../hooks";
   import { Gantt, TableCommon, TableFilter, TableFooter, TableLoading } from "./components";
   import { useColumns, useTableOptions, useVirtualizer } from "./lib";
   import type {
@@ -57,16 +56,26 @@
         SortType
       >
     >();
-  const sorting = defineModel<SortingState>("sorting");
-  const columnFilters = defineModel<ColumnFiltersState>("columnFilters");
-  const columnOrder = defineModel<ColumnOrderState>("columnOrder");
-  const columnPinning = defineModel<ColumnPinningState>("columnPinning");
-  const columnSizing = defineModel<ColumnSizingState>("columnSizing");
-  const columnVisibility = defineModel<ColumnsVisibleState>("columnVisibility");
-  const expanded = defineModel<ExpandedState>("expanded");
-  const grouping = defineModel<GroupingState>("grouping");
-  const pagination = defineModel<PaginationState>("pagination");
-  const rowSelection = defineModel<RowSelectionState>("rowSelection");
+  const sorting = defineModel<SortingState | undefined>("sorting", { required: false });
+  const columnFilters = defineModel<ColumnFiltersState | undefined>("columnFilters", {
+    required: false,
+  });
+  const columnOrder = defineModel<ColumnOrderState | undefined>("columnOrder", { required: false });
+  const columnPinning = defineModel<ColumnPinningState | undefined>("columnPinning", {
+    required: false,
+  });
+  const columnSizing = defineModel<ColumnSizingState | undefined>("columnSizing", {
+    required: false,
+  });
+  const columnVisibility = defineModel<ColumnsVisibleState | undefined>("columnVisibility", {
+    required: false,
+  });
+  const expanded = defineModel<ExpandedState | undefined>("expanded", { required: false });
+  const grouping = defineModel<GroupingState | undefined>("grouping", { required: false });
+  const pagination = defineModel<PaginationState | undefined>("pagination", { required: false });
+  const rowSelection = defineModel<RowSelectionState | undefined>("rowSelection", {
+    required: false,
+  });
 
   const rootRef = useTemplateRef("root");
   const ganttComponentRef = useTemplateRef("gantt");
@@ -97,46 +106,41 @@
     },
   );
   const tableState = computed(() => table.getState());
-  useWatchDebug(() => table.getRowModel().rows, "ROWS");
-  useWatchDebug(() => table.getLeftVisibleLeafColumns(), "COLUMNS");
-  useWatchDebug(() => table.options.meta, "META");
-  useWatchDebug(() => table.getState().columnFilters, "STATE FILTERS");
-  useWatchDebug(() => table.getState().columnOrder, "STATE ORDER");
+  // useWatchDebug(() => table.getRowModel().rows, "ROWS");
+  // useWatchDebug(() => table.getLeftVisibleLeafColumns(), "COLUMNS");
+  // useWatchDebug(() => table.options.meta, "META");
+  // useWatchDebug(() => tableState.value, "state");
+  // useWatchDebug(() => tableState.value.columnFilters, "filters");
+  // useWatchDebug(() => tableState.value.sorting, "sorting");
+  // setTimeout(() => {
+  //   table.getColumn("test")?.setFilterValue?.("filterMe!");
+  // }, 3000);
 
   const {
-    // columnVirtualEnabled,
-    // columnVirtualizer,
-    // columnsVirtual,
-    // rowVirtual,
-    // rowVirtualEnabled,
-    // rowVirtualizer,
+    columnVirtualEnabled,
+    columnVirtualizer,
+    columnsVirtual,
+    rowVirtual,
+    rowVirtualEnabled,
+    rowVirtualizer,
     rows,
-  } = useVirtualizer({
-    initialColumns: props.columns,
-    rows: props.rows,
+  } = useVirtualizer(props, {
     table,
     tableContainerRef: containerRef,
-    virtualColumn: props.virtualColumn,
-    virtualRows: props.virtualRows,
-    virtualRowSize: props.virtualRowSize,
-    gantt: props.withGantt,
-    ganttMini: props.ganttRowMini,
-    virtualColumnOverScan: props.virtualColumnOverScan,
-    virtualRowOverScan: props.virtualRowOverScan,
   });
 
   defineExpose({ rootRef, tableInstance: table });
 </script>
 
 <template>
-  <div ref="root" v-bind="$attrs" class="ksd-table-wrapper" :class="{ full: $props.fullSize }">
+  <div ref="root" v-bind="$attrs" class="ksd-table__wrapper" :class="{ full: $props.fullSize }">
     <TableLoading v-if="!$props.Loader && $props.loading" />
     <component :is="$props.Loader" v-if="$props.Loader && $props.loading" />
     <TableFilter />
     <div
       v-if="!$props.withGantt"
       ref="table-container"
-      class="ksd-table-container"
+      class="ksd-table__container"
       :class="{ full: $props.fullSize }"
     >
       <TableCommon />
@@ -146,4 +150,32 @@
   </div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+  .ksd-table {
+    &__wrapper {
+      width: 100%;
+      height: fit-content;
+      max-height: 100%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+
+      &.full {
+        height: 100%;
+      }
+    }
+    &__container {
+      overflow: auto;
+      position: relative;
+      width: 100%;
+      border: 1px solid var(--ksd-table-border);
+      background-color: var(--ksd-table-container-color);
+      height: fit-content;
+      scrollbar-gutter: stable;
+
+      &.full {
+        height: 100%;
+      }
+    }
+  }
+</style>

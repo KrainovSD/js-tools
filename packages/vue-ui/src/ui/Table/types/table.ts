@@ -158,16 +158,16 @@ export type TableProps<
   onRowSelectionChange?: TableOptions<RowData>["onRowSelectionChange"];
   getRowId?: TableOptions<RowData>["getRowId"];
 } & {
-  initialSorting: SortingState;
-  initialColumnFilters: ColumnFiltersState;
-  initialColumnOrder: ColumnOrderState;
-  initialColumnPinning: ColumnPinningState;
-  initialColumnSizing: ColumnSizingState;
-  initialColumnVisibility: ColumnsVisibleState;
-  initialExpanded: ExpandedState;
-  initialGrouping: GroupingState;
-  initialPagination: PaginationState;
-  initialRowSelection: RowSelectionState;
+  initialSorting?: SortingState;
+  initialColumnFilters?: ColumnFiltersState;
+  initialColumnOrder?: ColumnOrderState;
+  initialColumnPinning?: ColumnPinningState;
+  initialColumnSizing?: ColumnSizingState;
+  initialColumnVisibility?: ColumnsVisibleState;
+  initialExpanded?: ExpandedState;
+  initialGrouping?: GroupingState;
+  initialPagination?: PaginationState;
+  initialRowSelection?: RowSelectionState;
 } & {
   rows: RowData[];
   frozenHeader?: boolean;

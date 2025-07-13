@@ -263,6 +263,8 @@ export function useColumns<
         headerRenderProps: column.headerRender.props,
         filterRenderProps: column.filterRender.props,
         sortRenderProps: column.sortRender.props,
+        cellClassProps: column.cellClassProps,
+        headerClassProps: column.headerClassProps,
         props: column.props,
         tooltip:
           column.tooltip ?? props.defaultColumnOptions?.tooltip ?? DEFAULT_COLUMNS_SETTINGS.tooltip,

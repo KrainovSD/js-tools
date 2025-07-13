@@ -15,12 +15,10 @@
     setTimeout(() => {
       column.value = COLUMNS;
       rows.value = [{ test: "filterMe" }];
-      pageSizes.value = [20];
+      // pageSizes.value = [20];
       console.log("CHANGED");
     }, 2000);
   });
-
-  useWatchDebug(filter, "FILTER");
 </script>
 
 <template>

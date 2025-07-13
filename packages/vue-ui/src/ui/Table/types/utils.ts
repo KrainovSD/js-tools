@@ -10,6 +10,7 @@ import type {
   ColumnSort as ColumnSortLib,
   ExpandedState as ExpandedStateLib,
   GroupingState as GroupingStateLib,
+  Header,
   HeaderContext as HeaderContextLib,
   HeaderGroup,
   PaginationState as PaginationStateLib,
@@ -103,7 +104,8 @@ export type ColumnsExpandState = Record<string, boolean>;
 export type ColumnsOrderState = string[];
 export type TableInterface<TData extends RowData> = Table<TData>;
 export type RowInterface<TData extends RowData> = Row<TData>;
-export type HeaderInterface<TData extends RowData> = HeaderGroup<TData>;
+export type HeaderGroupInterface<TData extends RowData> = HeaderGroup<TData>;
+export type HeaderInterface<TData extends RowData> = Header<TData, unknown>;
 
 export type SortingState = SortingStateLib;
 export type ColumnFiltersState = ColumnFiltersStateLib;

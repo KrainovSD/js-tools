@@ -8,6 +8,7 @@ import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../constants";
 import type {
   CellClassInterface,
   CellRenderComponent,
+  DefaultGanttData,
   DefaultRow,
   FilterFn,
   FilterRenderComponent,
@@ -15,46 +16,18 @@ import type {
   HeaderRenderComponent,
   SortFn,
   SortRenderComponent,
-  TableColumn,
   TableInterface,
+  TableProps,
 } from "../../types";
 
-type UseVirtualizerProps<
-  RowData extends DefaultRow,
-  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
-  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
-  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
-  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
-  CellClass extends Record<string, CellClassInterface<RowData>> = {},
-  HeaderClass extends Record<string, HeaderClassInterface<RowData>> = {},
-  FilterType extends Record<string, FilterFn<RowData>> = {},
-  SortType extends Record<string, SortFn<RowData>> = {},
-> = {
-  rows: RowData[];
-  initialColumns: TableColumn<
-    RowData,
-    CellRender,
-    HeaderRender,
-    FilterRender,
-    SortRender,
-    CellClass,
-    HeaderClass,
-    FilterType,
-    SortType
-  >[];
+type UseVirtualizerProps<RowData extends DefaultRow> = {
   table: TableInterface<RowData>;
   tableContainerRef: ComputedRef<HTMLDivElement | null | undefined>;
-  virtualColumn: boolean | undefined;
-  virtualColumnOverScan: number | undefined;
-  virtualRows: boolean | undefined;
-  virtualRowSize: number | undefined;
-  virtualRowOverScan: number | undefined;
-  gantt: boolean | undefined;
-  ganttMini: boolean | undefined;
 };
 
 export function useVirtualizer<
   RowData extends DefaultRow,
+  GanttData extends DefaultGanttData,
   CellRender extends Record<string, CellRenderComponent<RowData>> = {},
   HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
   FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
@@ -64,8 +37,9 @@ export function useVirtualizer<
   FilterType extends Record<string, FilterFn<RowData>> = {},
   SortType extends Record<string, SortFn<RowData>> = {},
 >(
-  props: UseVirtualizerProps<
+  props: TableProps<
     RowData,
+    GanttData,
     CellRender,
     HeaderRender,
     FilterRender,
@@ -75,13 +49,14 @@ export function useVirtualizer<
     FilterType,
     SortType
   >,
+  extra: UseVirtualizerProps<RowData>,
 ) {
   /** COLUMNS */
-  const columnVirtualEnabled = computed(() => Boolean(props.virtualColumn && !props.gantt));
+  const columnVirtualEnabled = computed(() => Boolean(props.virtualColumn && !props.withGantt));
   const leftOffset = computed(() => {
     if (!columnVirtualEnabled.value) return 0;
 
-    return props.table.getLeftVisibleLeafColumns().reduce((acc, column) => {
+    return extra.table.getLeftVisibleLeafColumns().reduce((acc, column) => {
       acc += column.getSize();
 
       return acc;
@@ -90,7 +65,7 @@ export function useVirtualizer<
   const rightOffset = computed(() => {
     if (!columnVirtualEnabled.value) return 0;
 
-    return props.table.getRightVisibleLeafColumns().reduce((acc, column) => {
+    return extra.table.getRightVisibleLeafColumns().reduce((acc, column) => {
       acc += column.getSize();
 
       return acc;
@@ -102,12 +77,12 @@ export function useVirtualizer<
       "observeElementRect" | "observeElementOffset" | "scrollToFn"
     >
   >(() => {
-    const visibleColumns = props.table.getCenterVisibleLeafColumns();
+    const visibleColumns = extra.table.getCenterVisibleLeafColumns();
 
     return {
       count: visibleColumns.length,
       estimateSize: (index) => visibleColumns[index].getSize(),
-      getScrollElement: () => props.tableContainerRef.value ?? null,
+      getScrollElement: () => extra.tableContainerRef.value ?? null,
       horizontal: true,
       overscan: props.virtualColumnOverScan ?? 2,
       enabled: columnVirtualEnabled.value,
@@ -121,7 +96,7 @@ export function useVirtualizer<
   const columnsVirtual = computed(() => columnVirtualizer.value.getVirtualItems());
 
   /** ROWS */
-  const rows = computed(() => props.table.getRowModel().rows);
+  const rows = computed(() => extra.table.getRowModel().rows);
   const rowVirtualEnabled = computed(() => props.virtualRows);
   const rowVirtualizerOptions = computed<
     PartialKeys<
@@ -132,12 +107,12 @@ export function useVirtualizer<
     return {
       count: rows.value.length,
       estimateSize: () =>
-        props.gantt
-          ? props.ganttMini
+        props.withGantt
+          ? props.ganttRowMini
             ? GANTT_ROW_HEIGHT_MINI
             : GANTT_ROW_HEIGHT
           : (props.virtualRowSize ?? 35),
-      getScrollElement: () => props.tableContainerRef.value ?? null,
+      getScrollElement: () => extra.tableContainerRef.value ?? null,
       measureElement:
         typeof window !== "undefined" && navigator.userAgent.includes("Firefox")
           ? (element) => {
@@ -153,7 +128,7 @@ export function useVirtualizer<
   const rowVirtual = computed(() => rowVirtualizer.value.getVirtualItems());
 
   watch(
-    () => [props.table.getTotalSize(), props.table.getState().columnOrder],
+    () => [extra.table.getTotalSize(), extra.table.getState().columnOrder],
     () => {
       columnVirtualizer.value.measure();
     },

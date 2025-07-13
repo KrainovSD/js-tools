@@ -35,6 +35,8 @@ declare module "@tanstack/vue-table" {
     enableDraggable?: boolean;
     tooltip?: ColumnTooltipSettings<TData> | boolean;
     className?: ((context: CellContext<TData, unknown>) => string | undefined) | string;
+    headerClassProps?: unknown;
+    cellClassProps?: unknown;
   }
 
   interface TableMeta<TData extends RowData> {

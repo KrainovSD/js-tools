@@ -1,7 +1,6 @@
 import type { ColumnDef, TableMeta } from "@tanstack/vue-table";
 import {
   type GroupingState,
-  type TableOptions,
   type TableState as TableOptionsState,
   getCoreRowModel,
   getExpandedRowModel,
@@ -11,16 +10,7 @@ import {
   getSortedRowModel,
   useVueTable,
 } from "@tanstack/vue-table";
-import {
-  type ComputedRef,
-  type ModelRef,
-  type ShallowRef,
-  computed,
-  toRaw,
-  watch,
-  watchEffect,
-} from "vue";
-import { useWatchDebug } from "../../../../hooks";
+import { type ComputedRef, type ModelRef, computed, watchEffect } from "vue";
 import { ExpanderRenderer } from "../../components";
 import type {
   CellClassInterface,
@@ -207,7 +197,7 @@ export function useTableOptions<
   // eslint-disable-next-line no-lone-blocks
   {
     if (props.initialColumnPinning != undefined) {
-      Object.defineProperty(tableState, "columnPinning", {
+      Object.defineProperty(tableInitialState, "columnPinning", {
         get() {
           return props.initialColumnPinning;
         },
@@ -215,7 +205,7 @@ export function useTableOptions<
       });
     }
     if (props.initialGrouping != undefined) {
-      Object.defineProperty(tableState, "grouping", {
+      Object.defineProperty(tableInitialState, "grouping", {
         get() {
           return props.initialGrouping;
         },
@@ -223,7 +213,7 @@ export function useTableOptions<
       });
     }
     if (props.initialSorting != undefined) {
-      Object.defineProperty(tableState, "sorting", {
+      Object.defineProperty(tableInitialState, "sorting", {
         get() {
           return props.initialSorting;
         },
@@ -231,7 +221,7 @@ export function useTableOptions<
       });
     }
     if (props.initialColumnFilters != undefined) {
-      Object.defineProperty(tableState, "columnFilters", {
+      Object.defineProperty(tableInitialState, "columnFilters", {
         get() {
           return props.initialColumnFilters;
         },
@@ -239,7 +229,7 @@ export function useTableOptions<
       });
     }
     if (props.initialColumnOrder != undefined) {
-      Object.defineProperty(tableState, "columnOrder", {
+      Object.defineProperty(tableInitialState, "columnOrder", {
         get() {
           return props.initialColumnOrder;
         },
@@ -247,7 +237,7 @@ export function useTableOptions<
       });
     }
     if (props.initialColumnSizing != undefined) {
-      Object.defineProperty(tableState, "columnSizing", {
+      Object.defineProperty(tableInitialState, "columnSizing", {
         get() {
           return props.initialColumnSizing;
         },
@@ -255,7 +245,7 @@ export function useTableOptions<
       });
     }
     if (props.initialColumnVisibility != undefined) {
-      Object.defineProperty(tableState, "columnVisibility", {
+      Object.defineProperty(tableInitialState, "columnVisibility", {
         get() {
           return props.initialColumnVisibility;
         },
@@ -263,7 +253,7 @@ export function useTableOptions<
       });
     }
     if (props.initialExpanded != undefined) {
-      Object.defineProperty(tableState, "expanded", {
+      Object.defineProperty(tableInitialState, "expanded", {
         get() {
           return props.initialExpanded;
         },
@@ -271,7 +261,7 @@ export function useTableOptions<
       });
     }
     if (props.initialPagination != undefined) {
-      Object.defineProperty(tableState, "pagination", {
+      Object.defineProperty(tableInitialState, "pagination", {
         get() {
           return props.initialPagination;
         },
@@ -279,7 +269,7 @@ export function useTableOptions<
       });
     }
     if (props.initialRowSelection != undefined) {
-      Object.defineProperty(tableState, "rowSelection", {
+      Object.defineProperty(tableInitialState, "rowSelection", {
         get() {
           return props.initialRowSelection;
         },
@@ -407,12 +397,13 @@ export function useTableOptions<
       getRowId: props.getRowId,
       columnResizeMode: props.columnResizeMode ?? "onChange",
       groupedColumnMode: "reorder" as const,
+      manualExpanding: props.manualExpanding,
+      manualFiltering: props.manualFiltering,
+      manualGrouping: props.manualGrouping,
+      manualPagination: props.manualPagination,
+      manualSorting: props.manualSorting,
     }));
   });
-
-  setTimeout(() => {
-    table.getColumn("test")?.setFilterValue?.("filterMe!");
-  }, 3000);
 
   return table;
 }
