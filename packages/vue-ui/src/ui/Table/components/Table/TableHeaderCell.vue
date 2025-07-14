@@ -146,7 +146,7 @@
     <div
       v-if="$props.header.column.getCanResize()"
       class="ksd-table__header-cell-resize"
-      :style="{ width: RESIZE_HANDLE_WIDTH }"
+      :style="{ width: `${RESIZE_HANDLE_WIDTH}px` }"
       @mousedown="$props.header.getResizeHandler()"
       @touchstart="$props.header.getResizeHandler()"
     ></div>
@@ -180,6 +180,63 @@
       &.frozen-right-first {
         box-shadow: var(--ksd-table-box-shadow-left);
         border-left: 1px solid var(--ksd-table-border);
+      }
+
+      &:where(.common) {
+        border-block-end: 1px solid var(--ksd-table-border);
+        border-inline-end: 1px solid var(--ksd-table-border);
+        border-spacing: 0px;
+        overflow: hidden;
+        white-space: pre-wrap;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        color: var(--ksd-table-text-color);
+        line-height: 22px;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: var(--ksd-table-font-family);
+        min-height: 35px;
+        background: inherit;
+        padding: 0 8px;
+
+        & > div:first-child {
+          height: fit-content;
+          display: flex;
+          align-items: center;
+          max-width: 100%;
+          overflow: hidden;
+          justify-content: space-between;
+          width: 100%;
+        }
+      }
+      &:where(.empty) {
+        border-inline-end: none;
+      }
+      &:where(.hCenter) {
+        & > div:first-child {
+          height: 100%;
+          align-items: center;
+        }
+      }
+      &:where(.wCenter) {
+        & > div:first-child {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+      &:where(.lineClamp) {
+        & span {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          align-self: stretch;
+        }
+      }
+      &:where(.nowrap) {
+        white-space: nowrap;
       }
     }
     &__header-cell-resize {

@@ -82,20 +82,20 @@ const SORT_RENDERS: TableSortRenders<DefaultRow> = {
   "single-arrow": SingleSortRender,
 };
 const CELL_CLASSES: TableCellClasses<DefaultRow> = {
-  common: "ksd-table-cell__common",
-  empty: "ksd-table-cell__empty",
-  hCenter: "ksd-table-cell__hCenter",
-  lineClamp: "ksd-table-cell__lineClamp",
-  nowrap: "ksd-table-cell__nowrap",
-  wCenter: "ksd-table-cell__wCenter",
+  common: "common",
+  empty: "empty",
+  hCenter: "hCenter",
+  lineClamp: "lineClamp",
+  nowrap: "nowrap",
+  wCenter: "wCenter",
 };
 const HEADER_CLASSES: TableHeaderClasses<DefaultRow> = {
-  common: "ksd-table-header-cell__common",
-  empty: "ksd-table-header-cell__empty",
-  hCenter: "ksd-table-header-cell__hCenter",
-  lineClamp: "ksd-table-header-cell__lineClamp",
-  nowrap: "ksd-table-header-cell__nowrap",
-  wCenter: "ksd-table-header-cell__wCenter",
+  common: "common",
+  empty: "empty",
+  hCenter: "hCenter",
+  lineClamp: "lineClamp",
+  nowrap: "nowrap",
+  wCenter: "wCenter",
 };
 const SORTS: Record<SortingKey, SortingFn<DefaultRow> | BuiltInSortingFn> = {
   "string-with-number": "alphanumeric",

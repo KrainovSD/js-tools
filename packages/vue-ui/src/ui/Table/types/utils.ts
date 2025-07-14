@@ -42,13 +42,13 @@ export type TableTypesGetter<RowData extends DefaultRow> = {
 
 export type CellRenderProps<RowData extends DefaultRow, Settings = any> = {
   context: CellContext<RowData>;
-  settings: Settings;
+  settings?: Settings;
 };
 export type CellRenderComponent<RowData extends DefaultRow> = Component<CellRenderProps<RowData>>;
 
 export type HeaderRenderProps<RowData extends DefaultRow, Settings = any> = {
   context: HeaderContext<RowData>;
-  settings: Settings;
+  settings?: Settings;
 };
 export type HeaderRenderComponent<RowData extends DefaultRow> = Component<
   HeaderRenderProps<RowData>
@@ -56,7 +56,7 @@ export type HeaderRenderComponent<RowData extends DefaultRow> = Component<
 
 export type FilterRenderProps<RowData extends DefaultRow, Settings = any> = {
   context: HeaderContext<RowData>;
-  settings: Settings;
+  settings?: Settings;
 };
 export type FilterRenderComponent<RowData extends DefaultRow> = Component<
   FilterRenderProps<RowData>
@@ -64,19 +64,19 @@ export type FilterRenderComponent<RowData extends DefaultRow> = Component<
 
 export type SortRenderProps<RowData extends DefaultRow, Settings = any> = {
   context: HeaderContext<RowData>;
-  settings: Settings;
+  settings?: Settings;
 };
 export type SortRenderComponent<RowData extends DefaultRow> = Component<SortRenderProps<RowData>>;
 
 export type CellClassInterface<RowData extends DefaultRow> = string | CellClassFn<RowData>;
 export type CellClassFn<RowData extends DefaultRow, Settings = any> = (
   context: CellContext<RowData>,
-  settings: Settings,
+  settings?: Settings,
 ) => string | undefined;
 export type HeaderClassInterface<RowData extends DefaultRow> = string | HeaderClassFn<RowData>;
 export type HeaderClassFn<RowData extends DefaultRow, Settings = any> = (
   context: HeaderContext<RowData>,
-  settings: Settings,
+  settings?: Settings,
 ) => string | undefined;
 
 export type HeaderContext<RowData extends DefaultRow> = HeaderContextLib<RowData, unknown>;

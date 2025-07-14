@@ -29,12 +29,12 @@ export const SORT_RENDERS = {
 } as const;
 
 const redCellClass: CellClassFn<RowData, { active?: boolean }> = (context, settings) => {
-  if (settings.active) {
+  if (settings?.active) {
     return styles["cell-red"];
   }
 };
 const blackCellClass: CellClassFn<RowData, { black?: boolean }> = (context, settings) => {
-  if (settings.black) {
+  if (settings?.black) {
     return styles["cell-black"];
   }
 };
@@ -46,12 +46,12 @@ export const CELL_CLASSES = {
 } as const;
 
 const blueHeaderClass: HeaderClassFn<RowData, { active: boolean }> = (context, settings) => {
-  if (settings.active) {
+  if (settings?.active) {
     return styles["header-blue"];
   }
 };
 const whiteHeaderClass: HeaderClassFn<RowData, { white: boolean }> = (context, settings) => {
-  if (settings.white) {
+  if (settings?.white) {
     return styles["header-white"];
   }
 };

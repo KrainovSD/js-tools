@@ -76,7 +76,9 @@
   }));
 
   /** TODO: Rubber column logic */
-  onMounted(() => {});
+  onMounted(() => {
+    console.log(props.frozenHeader);
+  });
 </script>
 
 <template>

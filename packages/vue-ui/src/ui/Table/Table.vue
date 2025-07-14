@@ -54,7 +54,7 @@
     dblclick: [row: RowInterface<RowData>, event: MouseEvent];
   };
 
-  const props =
+  const props = withDefaults(
     defineProps<
       TableProps<
         RowData,
@@ -68,7 +68,13 @@
         FilterType,
         SortType
       >
-    >();
+    >(),
+    {
+      frozenHeader: true,
+      rubberColumn: false,
+      virtualRows: true,
+    },
+  );
   defineEmits<Emits>();
 
   const sorting = defineModel<SortingState | undefined>("sorting", { required: false });
@@ -159,7 +165,7 @@
     >
       <TableCommon
         :column-virtual-enabled="columnVirtualEnabled"
-        :row-virtual-enabled="rowVirtualEnabled ?? false"
+        :row-virtual-enabled="rowVirtualEnabled"
         :columns-virtual="columnsVirtual"
         :frozen-header="$props.frozenHeader ?? true"
         :rubber-column="$props.rubberColumn ?? false"

@@ -5,3 +5,4 @@ export * from "./is-dayjs-date";
 export * from "./sorting";
 export * from "./dnd-handlers";
 export * from "./dnd-event-bus";
+export * from "./check-cell-visible";

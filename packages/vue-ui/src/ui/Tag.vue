@@ -4,25 +4,26 @@
   import IconWrapper from "./IconWrapper.vue";
 
   export type TagSize = "default" | "large" | "extra-large";
+  export type TagColor =
+    | "magenta"
+    | "red"
+    | "volcano"
+    | "orange"
+    | "gold"
+    | "lime"
+    | "green"
+    | "cyan"
+    | "blue"
+    | "geekblue"
+    | "purple"
+    | "success"
+    | "processing"
+    | "warning"
+    | "error"
+    | "default";
 
   export type TagProps = {
-    color?:
-      | "magenta"
-      | "red"
-      | "volcano"
-      | "orange"
-      | "gold"
-      | "lime"
-      | "green"
-      | "cyan"
-      | "blue"
-      | "geekblue"
-      | "purple"
-      | "success"
-      | "processing"
-      | "warning"
-      | "error"
-      | "default";
+    color?: TagColor;
     closable?: boolean;
     size?: TagSize;
     borderless?: boolean;
@@ -52,7 +53,7 @@
 </script>
 
 <template>
-  <span ref="tag" class="ksd-tag" :class="classes">
+  <span ref="tag" class="ksd-tag" :class="classes" v-bind="$attrs">
     <slot v-if="$slots.icon" name="icon"></slot>
     <slot></slot>
     <IconWrapper v-if="$props.closable" class="ksd-tag__close" @click="$emit('close')"

@@ -18,6 +18,13 @@
   const isGroupCell = computed(
     () => props.cell.row.getIsGrouped() && props.cell.row.groupingColumnId === props.cell.column.id,
   );
+  const level = computed(() =>
+    cellContext.value.row.getParentRows().reduce((acc: number, row) => {
+      if (row.getIsExpanded() && !row.getIsGrouped()) acc++;
+
+      return acc;
+    }, 0),
+  );
   const frozenPosition = computed(() => props.cell.column.getIsPinned());
   const prevFrozen = computed(() =>
     getPrevFrozenWidthCell({
@@ -48,6 +55,10 @@
     left: frozenPosition.value === "left" ? prevFrozen.value : undefined,
     right: frozenPosition.value === "right" ? prevFrozen.value : undefined,
     gridColumnStart: props.columnPosition,
+    "--table-cell-shift":
+      level.value > 0 && cellContext.value.cell.column.columnDef.expandedShift != undefined
+        ? `${cellContext.value.cell.column.columnDef.expandedShift * level.value}px`
+        : undefined,
   }));
 </script>
 
@@ -93,6 +104,67 @@
       &.frozen-right-first {
         box-shadow: var(--ksd-table-box-shadow-left);
         border-left: 1px solid var(--ksd-table-border);
+      }
+
+      &:where(.common) {
+        border-block-end: 1px solid var(--ksd-table-border);
+        border-inline-end: 1px solid var(--ksd-table-border);
+        border-spacing: 0px;
+        border-collapse: collapse;
+        overflow: hidden;
+        white-space: pre-wrap;
+        display: flex;
+        color: var(--ksd-table-text-color);
+        line-height: var(--ksd-line-height);
+        font-size: 14px;
+        font-weight: var(--ksd-font-weight);
+        font-family: var(--ksd-table-font-family);
+        background-color: inherit;
+
+        & > div {
+          padding: 6px 8px;
+          padding-left: calc(8px + var(--table-cell-shift, 0px));
+          width: 100%;
+          height: 100%;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          gap: 10px;
+          display: flex;
+        }
+      }
+      &:where(.empty) {
+        border-inline-end: none;
+      }
+      &:where(.hCenter) {
+        height: 100%;
+        align-items: center;
+
+        & > div {
+          height: 100%;
+          align-items: center;
+        }
+      }
+      &:where(.wCenter) {
+        width: 100%;
+        justify-content: center;
+
+        & > div {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+      &:where(.lineClamp) {
+        & span {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          line-clamp: 2;
+          align-self: stretch;
+        }
+      }
+      &:where(.nowrap) {
+        white-space: nowrap;
       }
     }
   }

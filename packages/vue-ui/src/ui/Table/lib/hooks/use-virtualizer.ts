@@ -97,7 +97,7 @@ export function useVirtualizer<
 
   /** ROWS */
   const rows = computed(() => extra.table.getRowModel().rows);
-  const rowVirtualEnabled = computed(() => props.virtualRows);
+  const rowVirtualEnabled = computed(() => Boolean(props.virtualRows));
   const rowVirtualizerOptions = computed<
     PartialKeys<
       VirtualizerOptions<HTMLDivElement, HTMLElement>,

@@ -87,7 +87,7 @@ export type ColumnTooltipSettings<RowData extends DefaultRow> = {
   auto?: boolean;
   zIndex?: number;
   pathToContent?: KeyofDeep<RowData>;
-  customContent?: string;
+  customContent?: (row: RowData) => string;
   arraySeparator?: string;
 };
 

@@ -1,4 +1,5 @@
 import { randomNumber } from "@krainovsd/js-helpers";
+import type { TagColor } from "../../ui";
 import type { RowData, RowWork } from "./types";
 
 const NAMES: string[] = [
@@ -34,7 +35,19 @@ const COLORS = [
   "Purple",
   "Pink",
   "Brown",
-];
+] as const;
+export const COLORS_MAPPED: Record<(typeof COLORS)[number], TagColor> = {
+  Black: "default",
+  Blue: "blue",
+  Brown: "default",
+  Green: "green",
+  Orange: "orange",
+  Pink: "magenta",
+  Purple: "purple",
+  Red: "red",
+  White: "default",
+  Yellow: "gold",
+};
 const SPORTS = [
   "Soccer",
   "Basketball",

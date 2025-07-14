@@ -77,8 +77,8 @@
     const target = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement | null;
 
     const isDragHandle =
-      target?.classList?.contains?.("ksd-table-drag-handle") ||
-      target?.closest?.(".ksd-table-drag-handle");
+      target?.classList?.contains?.("ksd-table-row-drag-handle") ||
+      target?.closest?.(".ksd-table-row-drag-handle");
     if (!target || !isDragHandle) {
       event.stopPropagation();
       event.preventDefault();

@@ -92,7 +92,7 @@ export type {
 } from "./Notification.vue";
 export type { ModalProps } from "./Modal.vue";
 export type { TextAreaProps, TextAreaResize } from "./TextArea.vue";
-export type { TagProps, TagSize } from "./Tag.vue";
+export type { TagProps, TagSize, TagColor } from "./Tag.vue";
 export type { CheckableProps, TagCheckableValue } from "./TagCheckable.vue";
 export type { SkeletonProps, SkeletonType, SkeletonShape, SkeletonSize } from "./Skeleton.vue";
 

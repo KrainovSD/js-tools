@@ -103,8 +103,8 @@
       overflow: initial;
       display: grid;
       position: relative;
-      width: calc(var(--ksd-table-total-width) * 1px);
-      grid-template-columns: var(--ksd-table-template-columns);
+      width: calc(var(--table-total-width) * 1px);
+      grid-template-columns: var(--table-template-columns);
     }
   }
 </style>
