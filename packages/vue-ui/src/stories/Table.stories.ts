@@ -25,9 +25,18 @@ export const Common: Story = {
       return { args };
     },
     render() {
-      return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-        h(TableCommon),
-      ]);
+      return h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            width: "calc(100vw - 50px)",
+            height: "calc(100vh - 50px)",
+            overflow: "hidden",
+          },
+        },
+        [h(TableCommon)],
+      );
     },
   }),
   args: {

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type {
+  Cell,
   CellContext as CellContextLib,
   ColumnDef as ColumnDefLib,
   ColumnFilter as ColumnFilterLib,
@@ -102,10 +103,11 @@ export type ColumnsFilterState = ColumnFilter[];
 export type ColumnsSizingState = Record<string, number>;
 export type ColumnsExpandState = Record<string, boolean>;
 export type ColumnsOrderState = string[];
-export type TableInterface<TData extends RowData> = Table<TData>;
-export type RowInterface<TData extends RowData> = Row<TData>;
-export type HeaderGroupInterface<TData extends RowData> = HeaderGroup<TData>;
-export type HeaderInterface<TData extends RowData> = Header<TData, unknown>;
+export type TableInterface<TData extends DefaultRow> = Table<TData>;
+export type RowInterface<TData extends DefaultRow> = Row<TData>;
+export type HeaderGroupInterface<TData extends DefaultRow> = HeaderGroup<TData>;
+export type HeaderInterface<TData extends DefaultRow> = Header<TData, unknown>;
+export type CellInterface<TData extends DefaultRow> = Cell<TData, unknown>;
 
 export type SortingState = SortingStateLib;
 export type ColumnFiltersState = ColumnFiltersStateLib;

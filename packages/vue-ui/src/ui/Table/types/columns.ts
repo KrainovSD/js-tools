@@ -66,10 +66,10 @@ export type TableColumn<
   filterType?: keyof FilterType | FilterKey;
   props?: unknown;
 
-  cellRender: TableCellRendersProps<RowData, CellRender>;
-  headerRender: TableHeaderRendersProps<RowData, HeaderRender>;
-  filterRender: TableFilterRendersProps<RowData, FilterRender>;
-  sortRender: TableSortRendersProps<RowData, SortRender>;
+  cellRender?: TableCellRendersProps<RowData, CellRender>;
+  headerRender?: TableHeaderRendersProps<RowData, HeaderRender>;
+  filterRender?: TableFilterRendersProps<RowData, FilterRender>;
+  sortRender?: TableSortRendersProps<RowData, SortRender>;
   headerClass?: (keyof HeaderClass | TableHeaderClassKey)[];
   additionalHeaderClass?: (keyof HeaderClass | TableHeaderClassKey)[];
   cellClass?: (keyof CellClass | TableCellClassKey)[];

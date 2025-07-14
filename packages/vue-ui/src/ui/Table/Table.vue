@@ -15,6 +15,7 @@
   "
 >
   import { computed, useTemplateRef } from "vue";
+  import { useWatchDebug } from "../../hooks";
   import { Gantt, TableCommon, TableFilter, TableFooter, TableLoading } from "./components";
   import { useColumns, useTableOptions, useVirtualizer } from "./lib";
   import type {
@@ -34,12 +35,24 @@
     HeaderClassInterface,
     HeaderRenderComponent,
     PaginationState,
+    RowInterface,
     RowSelectionState,
     SortFn,
     SortRenderComponent,
     SortingState,
     TableProps,
   } from "./types";
+
+  type Emits = {
+    dragRow: [
+      sourceIndex: number,
+      targetIndex: number,
+      sourceId: number | string,
+      targetId: number | string,
+    ];
+    click: [row: RowInterface<RowData>, event: MouseEvent];
+    dblclick: [row: RowInterface<RowData>, event: MouseEvent];
+  };
 
   const props =
     defineProps<
@@ -56,6 +69,8 @@
         SortType
       >
     >();
+  defineEmits<Emits>();
+
   const sorting = defineModel<SortingState | undefined>("sorting", { required: false });
   const columnFilters = defineModel<ColumnFiltersState | undefined>("columnFilters", {
     required: false,
@@ -77,10 +92,10 @@
     required: false,
   });
 
-  const rootRef = useTemplateRef("root");
-  const ganttComponentRef = useTemplateRef("gantt");
+  const rootRef = useTemplateRef<HTMLDivElement>("root");
+  const ganttComponentRef = useTemplateRef<InstanceType<typeof Gantt>>("gantt");
   const ganttContainerRef = computed(() => ganttComponentRef.value?.ganttContainerRef);
-  const tableContainerRef = useTemplateRef("table-container");
+  const tableContainerRef = useTemplateRef<HTMLDivElement>("table-container");
   const containerRef = computed(() =>
     props.withGantt ? ganttContainerRef.value : tableContainerRef.value,
   );
@@ -106,7 +121,7 @@
     },
   );
   const tableState = computed(() => table.getState());
-  // useWatchDebug(() => table.getRowModel().rows, "ROWS");
+  useWatchDebug(() => table.getRowModel().rows, "ROWS");
   // useWatchDebug(() => table.getLeftVisibleLeafColumns(), "COLUMNS");
   // useWatchDebug(() => table.options.meta, "META");
   // useWatchDebug(() => tableState.value, "state");
@@ -118,7 +133,6 @@
 
   const {
     columnVirtualEnabled,
-    columnVirtualizer,
     columnsVirtual,
     rowVirtual,
     rowVirtualEnabled,
@@ -143,7 +157,22 @@
       class="ksd-table__container"
       :class="{ full: $props.fullSize }"
     >
-      <TableCommon />
+      <TableCommon
+        :column-virtual-enabled="columnVirtualEnabled"
+        :row-virtual-enabled="rowVirtualEnabled ?? false"
+        :columns-virtual="columnsVirtual"
+        :frozen-header="$props.frozenHeader ?? true"
+        :rubber-column="$props.rubberColumn ?? false"
+        :row-virtualizer="rowVirtualizer"
+        :rows="rows"
+        :table="table"
+        :row-class-name="$props.rowClassName"
+        :-empty="$props.Empty"
+        :-row="$props.Row"
+        :draggable-row="$props.draggableRow ?? false"
+        :header-row-class-name="$props.headerRowClassName"
+        :rows-virtual="rowVirtual"
+      />
     </div>
     <Gantt v-if="$props.withGantt" ref="gantt" />
     <TableFooter />

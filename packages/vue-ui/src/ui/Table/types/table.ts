@@ -25,7 +25,7 @@ import type {
   FilterRenderComponent,
   HeaderClassInterface,
   HeaderContext,
-  HeaderInterface,
+  HeaderGroupInterface,
   HeaderRenderComponent,
   RowInterface,
   RowModel,
@@ -79,7 +79,7 @@ export type TableHeaderClasses<RowData extends DefaultRow> = Record<
 >;
 
 export type TableRenderers<RowData extends DefaultRow> = {
-  expander?: Component<CellRenderProps<RowData, never>>;
+  expander?: Component<Omit<CellRenderProps<RowData, never>, "settings">>;
 };
 
 export type SortingKey = "number" | "string" | "boolean" | "date" | "array" | "string-with-number";
@@ -139,23 +139,12 @@ export type TableProps<
   SortType
 > & {
   getSubRows?: TableOptions<RowData>["getSubRows"];
-  onExpandedChange?: TableOptions<RowData>["onExpandedChange"];
   columnResizeMode?: TableOptions<RowData>["columnResizeMode"];
-  onGroupingChange?: TableOptions<RowData>["onGroupingChange"];
-  onColumnOrderChange?: TableOptions<RowData>["onColumnOrderChange"];
   manualFiltering?: TableOptions<RowData>["manualFiltering"];
   manualExpanding?: TableOptions<RowData>["manualExpanding"];
   manualGrouping?: TableOptions<RowData>["manualGrouping"];
   manualPagination?: TableOptions<RowData>["manualPagination"];
   manualSorting?: TableOptions<RowData>["manualSorting"];
-  onColumnFiltersChange?: TableOptions<RowData>["onColumnFiltersChange"];
-  onColumnPinningChange?: TableOptions<RowData>["onColumnPinningChange"];
-  onColumnSizingChange?: TableOptions<RowData>["onColumnSizingChange"];
-  onColumnSizingInfoChange?: TableOptions<RowData>["onColumnSizingInfoChange"];
-  onColumnVisibilityChange?: TableOptions<RowData>["onColumnVisibilityChange"];
-  onPaginationChange?: TableOptions<RowData>["onPaginationChange"];
-  onSortingChange?: TableOptions<RowData>["onSortingChange"];
-  onRowSelectionChange?: TableOptions<RowData>["onRowSelectionChange"];
   getRowId?: TableOptions<RowData>["getRowId"];
 } & {
   initialSorting?: SortingState;
@@ -188,17 +177,14 @@ export type TableProps<
   virtualRowSize?: number;
   virtualRowOverScan?: number;
   locale?: string;
-  onClickRow?: (row: RowInterface<RowData>, event: MouseEvent) => void;
-  onDoubleClickRow?: (row: RowInterface<RowData>, event: MouseEvent) => void;
   Filter?: Component<TableFilterProps<RowData>>;
   Pagination?: Component<TablePaginationProps<RowData>>;
   Empty?: Component<TableEmptyProps>;
   Loader?: Component<TableLoaderProps>;
   loading?: boolean;
-  headerRowClassName?: ((header: HeaderInterface<RowData>) => string | undefined) | string;
+  headerRowClassName?: ((header: HeaderGroupInterface<RowData>) => string | undefined) | string;
   rowClassName?: ((row: RowInterface<RowData>) => string | undefined) | string;
-  rowRender?: (row: RowInterface<RowData>) => React.JSX.Element | null | undefined;
+  Row?: (row: RowInterface<RowData>) => Component | undefined;
   getExpandedRowModel?: () => (table: TableInterface<RowData>) => () => RowModel<RowData>;
   draggableRow?: boolean;
-  onDraggableRow?: DragRowHandler;
 } & GanttProps<RowData, GanttData>;

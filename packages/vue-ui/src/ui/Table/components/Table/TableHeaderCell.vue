@@ -38,10 +38,10 @@
     "frozen-right": frozenPosition.value === "right",
     "frozen-left-last":
       frozenPosition.value === "left" && props.header.column.getIsLastColumn("left"),
-    "frozen-right-last":
+    "frozen-right-first":
       frozenPosition.value === "right" && props.header.column.getIsFirstColumn("right"),
-    dragging,
-    "drag-over": dragOver,
+    dragging: dragging.value,
+    "drag-over": dragOver.value,
   }));
   const headerConfigClasses = computed(() =>
     props.header.column.columnDef.headerClass.map((className) =>
@@ -158,6 +158,13 @@
     &__header-cell {
       position: relative;
       display: block;
+
+      &.dragging {
+        opacity: var(--ksd-table-header-drag-opacity);
+      }
+      &.drag-over {
+        background-color: var(--ksd-table-header-drag-bg);
+      }
 
       &.frozen-left {
         position: sticky;

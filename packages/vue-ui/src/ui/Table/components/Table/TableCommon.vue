@@ -3,12 +3,13 @@
   import { type CSSProperties, type Component, computed, onMounted, useTemplateRef } from "vue";
   import type {
     DefaultRow,
-    DragRowHandler,
     HeaderGroupInterface,
     RowInterface,
     TableEmptyProps,
     TableInterface,
   } from "../../types";
+  import TableHeaderRow from "./TableHeaderRow.vue";
+  import TableRow from "./TableRow.vue";
 
   type Props = {
     rubberColumn: boolean;
@@ -20,27 +21,28 @@
     rowsVirtual: VirtualItem[];
     rows: RowInterface<RowData>[];
     rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
-    onClickRow:
-      | ((row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void)
-      | undefined;
-    onDoubleClickRow:
-      | ((row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void)
-      | undefined;
     rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
     headerRowClassName:
       | ((header: HeaderGroupInterface<RowData>) => string | undefined)
       | string
       | undefined;
-    Row:
-      | ((row: RowInterface<RowData>) => Component<{ row: RowInterface<RowData> }> | undefined)
-      | undefined;
+    Row: ((row: RowInterface<RowData>) => Component | undefined) | undefined;
     Empty: Component<TableEmptyProps> | undefined;
     draggableRow: boolean;
-    onDraggableRow: DragRowHandler | undefined;
   };
-  type Emits = {};
+  type Emits = {
+    dragRow: [
+      sourceIndex: number,
+      targetIndex: number,
+      sourceId: number | string,
+      targetId: number | string,
+    ];
+    click: [row: RowInterface<RowData>, event: MouseEvent];
+    dblclick: [row: RowInterface<RowData>, event: MouseEvent];
+  };
 
   const props = defineProps<Props>();
+  defineEmits<Emits>();
   const tableRef = useTemplateRef("table");
 
   const tableState = computed(() => props.table.getState());
@@ -79,19 +81,99 @@
 
 <template>
   <div ref="table" role="table" class="ksd-table" :style="tableStyles">
-    <div role="rowgroup" class="ksd-table__header" :class="{ frozen: props.frozenHeader }"></div>
-    <div role="rowgroup" class="ksd-table__body" :style="tableBodyStyles"></div>
+    <div role="rowgroup" class="ksd-table__header" :class="{ frozen: $props.frozenHeader }">
+      <TableHeaderRow
+        v-for="(headerGroup, index) in visibleHeadersGroup"
+        :key="headerGroup.id"
+        :column-virtual-enabled="$props.columnVirtualEnabled"
+        :columns-virtual="virtualColumns"
+        :header-group="headerGroup"
+        :left-headers="leftHeadersGroup[index].headers"
+        :center-headers="centerHeadersGroup[index].headers"
+        :right-headers="rightHeadersGroup[index].headers"
+        :header-row-class-name="$props.headerRowClassName"
+        :selected-page="$props.table.getIsAllPageRowsSelected()"
+        :page="tableState.pagination.pageIndex"
+        :filter-state="tableState.columnFilters"
+        :sort-state="tableState.sorting"
+        :height="undefined"
+      />
+    </div>
+    <div role="rowgroup" class="ksd-table__body" :style="tableBodyStyles">
+      <template v-if="$props.rowVirtualEnabled">
+        <TableRow
+          v-for="virtualRow in $props.rowsVirtual"
+          :key="virtualRow.index"
+          :column-virtual-enabled="$props.columnVirtualEnabled"
+          :columns-virtual="virtualColumns"
+          :rows="$props.rows"
+          :row-virtualizer="$props.rowVirtualizer"
+          :row="$props.rows[virtualRow.index]"
+          :selected="$props.rows[virtualRow.index]?.getIsSelected?.()"
+          :expanded="$props.rows[virtualRow.index]?.getIsExpanded()"
+          :-row="$props.Row"
+          :visible-cells="$props.rows[virtualRow.index]?.getVisibleCells?.() ?? []"
+          :height="undefined"
+          :draggable-row="$props.draggableRow"
+          :row-class-name="$props.rowClassName"
+          :virtual-row="virtualRow"
+          @click="(row, event) => $emit('click', row, event)"
+          @dblclick="(row, event) => $emit('dblclick', row, event)"
+          @drag-row="(sidx, tidx, sid, tid) => $emit('dragRow', sidx, tidx, sid, tid)"
+        />
+      </template>
+      <template v-if="!$props.rowVirtualEnabled">
+        <TableRow
+          v-for="row in $props.rows"
+          :key="row.id"
+          :column-virtual-enabled="$props.columnVirtualEnabled"
+          :columns-virtual="virtualColumns"
+          :rows="$props.rows"
+          :row-virtualizer="$props.rowVirtualizer"
+          :row="row"
+          :selected="row?.getIsSelected?.()"
+          :expanded="row?.getIsExpanded()"
+          :-row="$props.Row"
+          :visible-cells="row?.getVisibleCells?.() ?? []"
+          :height="undefined"
+          :draggable-row="$props.draggableRow"
+          :row-class-name="$props.rowClassName"
+          :virtual-row="null"
+          @click="(row, event) => $emit('click', row, event)"
+          @dblclick="(row, event) => $emit('dblclick', row, event)"
+          @drag-row="(sidx, tidx, sid, tid) => $emit('dragRow', sidx, tidx, sid, tid)"
+        />
+      </template>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
   .ksd-table {
+    border-spacing: 0px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
     &__header {
+      display: grid;
+      display: flex;
+      flex-direction: column;
       &.frozen {
+        position: sticky;
+        top: 0;
+        z-index: 2;
       }
     }
 
     &__body {
+      position: relative;
+      background-color: var(--ksd-table-body-bg);
+      display: flex;
+      flex-direction: column;
     }
   }
 </style>

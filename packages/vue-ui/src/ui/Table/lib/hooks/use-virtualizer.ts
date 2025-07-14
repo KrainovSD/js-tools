@@ -73,7 +73,7 @@ export function useVirtualizer<
   });
   const columnVirtualizerOptions = computed<
     PartialKeys<
-      VirtualizerOptions<HTMLDivElement, Element>,
+      VirtualizerOptions<HTMLDivElement, HTMLElement>,
       "observeElementRect" | "observeElementOffset" | "scrollToFn"
     >
   >(() => {
@@ -90,7 +90,7 @@ export function useVirtualizer<
       paddingEnd: rightOffset.value,
     };
   });
-  const columnVirtualizer = useVirtualizerLibrary<HTMLDivElement, Element>(
+  const columnVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLElement>(
     columnVirtualizerOptions,
   );
   const columnsVirtual = computed(() => columnVirtualizer.value.getVirtualItems());
@@ -100,7 +100,7 @@ export function useVirtualizer<
   const rowVirtualEnabled = computed(() => props.virtualRows);
   const rowVirtualizerOptions = computed<
     PartialKeys<
-      VirtualizerOptions<HTMLDivElement, Element>,
+      VirtualizerOptions<HTMLDivElement, HTMLElement>,
       "observeElementRect" | "observeElementOffset" | "scrollToFn"
     >
   >(() => {
@@ -124,7 +124,7 @@ export function useVirtualizer<
     };
   });
 
-  const rowVirtualizer = useVirtualizerLibrary<HTMLDivElement, Element>(rowVirtualizerOptions);
+  const rowVirtualizer = useVirtualizerLibrary<HTMLDivElement, HTMLElement>(rowVirtualizerOptions);
   const rowVirtual = computed(() => rowVirtualizer.value.getVirtualItems());
 
   watch(

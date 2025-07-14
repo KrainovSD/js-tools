@@ -189,6 +189,7 @@ export type ThemeTableVariable =
   | "ksd-table-header-drag-bg"
   | "ksd-table-header-drag-opacity"
   | "ksd-table-row-bg"
+  | "ksd-table-row-drag-opacity"
   | "ksd-table-row-drag-bg"
   | "ksd-table-row-hover-bg"
   | "ksd-table-selected-row-bg"

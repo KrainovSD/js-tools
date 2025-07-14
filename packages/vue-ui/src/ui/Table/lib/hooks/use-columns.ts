@@ -167,19 +167,19 @@ export function useColumns<
       const columnId = column.id ?? (column.key as string);
 
       const cellRenderKey =
-        column.cellRender.component ??
+        column.cellRender?.component ??
         props.defaultColumnOptions?.cellRender ??
         DEFAULT_COLUMNS_SETTINGS.cellRender;
       const headerRenderKey =
-        column.headerRender.component ??
+        column.headerRender?.component ??
         props.defaultColumnOptions?.headerRender ??
         DEFAULT_COLUMNS_SETTINGS.headerRender;
       const filterRenderKey =
-        column.filterRender.component ??
+        column.filterRender?.component ??
         props.defaultColumnOptions?.filterRender ??
         DEFAULT_COLUMNS_SETTINGS.filterRender;
       const sortRenderKey =
-        column.sortRender.component ??
+        column.sortRender?.component ??
         props.defaultColumnOptions?.sortRender ??
         DEFAULT_COLUMNS_SETTINGS.sortRender;
       const cellClassKey =
@@ -259,10 +259,10 @@ export function useColumns<
           },
           [],
         ),
-        cellRenderProps: column.cellRender.props,
-        headerRenderProps: column.headerRender.props,
-        filterRenderProps: column.filterRender.props,
-        sortRenderProps: column.sortRender.props,
+        cellRenderProps: column.cellRender?.props,
+        headerRenderProps: column.headerRender?.props,
+        filterRenderProps: column.filterRender?.props,
+        sortRenderProps: column.sortRender?.props,
         cellClassProps: column.cellClassProps,
         headerClassProps: column.headerClassProps,
         props: column.props,

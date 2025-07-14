@@ -10,7 +10,24 @@ import {
   type SORT_TYPES,
 } from "./constants";
 
-export type RowData = { test: string };
+export type RowData = {
+  id: number;
+  firstName: string;
+  birth: number;
+  age: number;
+  sport: string;
+  colors: string[];
+  approved: boolean | undefined;
+  works: RowWork[];
+  lastWork: RowWork;
+  children?: RowData[];
+};
+
+export type RowWork = {
+  address: string;
+  duration: number;
+};
+
 export type Column = TableColumn<
   RowData,
   typeof CELL_RENDERS,

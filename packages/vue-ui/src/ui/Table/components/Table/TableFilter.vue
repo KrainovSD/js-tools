@@ -7,7 +7,7 @@
 </script>
 
 <template>
-  <div>component</div>
+  <div>filter</div>
 </template>
 
 <style lang="scss" module></style>
