@@ -44,6 +44,7 @@
     [K in keyof FilterComponentProps]: {
       props?: FilterComponentProps[K];
       field: string;
+      operators?: SelectItem[];
       label: string;
       component: K;
       icon?: Component;
@@ -67,6 +68,7 @@
     icon: undefined,
   });
   const form = defineModel<Record<string, unknown>>({ default: {} });
+  const operators = defineModel<Record<string, unknown>>("operators", { default: {} });
   const openedFields = shallowRef<string[]>([]);
 
   function openFilter(field: string) {
@@ -132,6 +134,17 @@
 
   onMounted(() => {
     openedFields.value = Object.keys(form.value);
+
+    for (let i = 0; i < props.filters.length; i++) {
+      const filter = props.filters[i];
+      if (
+        filter.operators &&
+        filter.operators.length > 0 &&
+        operators.value[filter.field] == undefined
+      ) {
+        operators.value[filter.field] = filter.operators[0].value;
+      }
+    }
   });
 </script>
 
@@ -147,8 +160,30 @@
       </Button>
     </DropDown>
     <div v-for="filter in openedFilters" :key="filter.field" class="ksd-filter__field">
+      <DropDown
+        v-if="filter.operators && filter.operators.length > 0"
+        :menu="
+          filter.operators.map((operator) => ({
+            key: String(operator.value),
+            label: operator.label,
+            onClick: () => {
+              operators[filter.field] = operator.value;
+            },
+          }))
+        "
+      >
+        <Button :size="$props.buttonSize" class="ksd-filter__field-button-operator">{{
+          filter.operators?.find?.((operator) => operator.value === operators[filter.field])
+            ?.label ?? operators[filter.field]
+        }}</Button>
+      </DropDown>
+
       <Popover :size="$props.controlSize">
-        <Button :size="$props.buttonSize">
+        <Button
+          :size="$props.buttonSize"
+          class="ksd-filter__field-button-content"
+          :class="{ operator: filter.operators && filter.operators.length > 0 }"
+        >
           <component :is="filter.icon" v-if="filter.icon" class="ksd-filter__field-icon" />
           <div class="ksd-filter__field-content">
             <span class="ksd-filter__field-label">
@@ -253,7 +288,11 @@
           />
         </template>
       </Popover>
-      <Button :size="$props.buttonSize" @click="closeFilter(filter.field)">
+      <Button
+        :size="$props.buttonSize"
+        class="ksd-filter__field-button-close"
+        @click="closeFilter(filter.field)"
+      >
         <template #icon>
           <VCloseCircleFilled />
         </template>
@@ -269,9 +308,6 @@
     align-items: center;
     flex-wrap: wrap;
 
-    &__icon {
-    }
-
     &__field {
       display: flex;
       align-items: center;
@@ -281,17 +317,27 @@
           z-index: 1;
         }
       }
+    }
 
-      & > button:not(:last-child) {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        border-right-color: transparent;
-      }
-      & > button:last-child {
+    button.ksd-filter__field-button-operator {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right-color: transparent;
+    }
+    button.ksd-filter__field-button-content {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right-color: transparent;
+
+      &.operator {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
-        color: var(--ksd-icon-color);
       }
+    }
+    button.ksd-filter__field-button-close {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      color: var(--ksd-icon-color);
     }
 
     &__field-content {
@@ -329,9 +375,6 @@
         gap: var(--ksd-margin-xs);
         align-items: center;
       }
-    }
-
-    &__field-icon {
     }
   }
 </style>

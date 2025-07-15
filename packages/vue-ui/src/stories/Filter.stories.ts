@@ -76,6 +76,10 @@ const FILTERS: FilterItem[] = [
       placeholder: "Выберите тип",
       search: true,
     },
+    operators: [
+      { label: "==", value: "equal" },
+      { label: "!=", value: "not_equal" },
+    ],
   },
   { field: "date", label: "Дата создания", icon: VClockCircleOutlined, component: "date" },
   { field: "date-range", label: "Дата изменения", icon: VEditOutlined, component: "date-range" },
@@ -93,17 +97,22 @@ const Template: StoryFn<typeof VFilter> = (args) => ({
       // eslint-disable-next-line camelcase
       select_single: 1,
     });
+    // eslint-disable-next-line camelcase
+    const operators = ref<Record<string, unknown>>({ select_single: "equal" });
 
-    return { args, filter };
+    return { args, filter, operators };
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "100px" } }, [
       h(VFilter, {
         ...args,
         modelValue: this.filter,
-        "onUpdate:modelValue": (value) => (this.filter.value = value),
+        "onUpdate:modelValue": (value) => (this.filter = value),
+        operators: this.operators,
+        "onUpdate:operators": (value) => (this.operators = value),
       }),
       h("div", {}, [JSON.stringify(this.filter)]),
+      h("div", {}, [JSON.stringify(this.operators)]),
     ]);
   },
 });
