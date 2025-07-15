@@ -68,6 +68,12 @@ export type ThemeDropDownVariable =
   | "ksd-dropdown-inner-min-width-lg"
   | "ksd-dropdown-bg-item-color"
   | "ksd-dropdown-z-index";
+export type ThemePopoverVariable =
+  | "ksd-popover-inner-padding"
+  | "ksd-popover-inner-padding-sm"
+  | "ksd-popover-inner-padding-lg"
+  | "ksd-popover-z-index"
+  | "ksd-popover-gap";
 
 export type ThemeSelectVariable =
   | "ksd-select-internal_fixed_item_margin"
@@ -207,3 +213,5 @@ export type ThemeTableVariable =
   | "ksd-table-loader-bg-color"
   | "ksd-table-loader-opacity"
   | "ksd-table-spin-max-height";
+
+export type ThemeFilterVariable = "ksd-filter-gap" | "ksd-filter-field-gap";

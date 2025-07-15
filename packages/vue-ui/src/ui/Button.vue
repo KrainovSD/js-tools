@@ -104,6 +104,7 @@
         opacity: 0;
         transition: all 0.5s;
         box-shadow: 0 0 2.5px 10px var(--wave-color);
+        z-index: -1;
       }
 
       &:active:after {

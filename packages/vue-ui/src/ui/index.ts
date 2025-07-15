@@ -4,6 +4,7 @@ import VCollapse from "./Collapse.vue";
 import VDivider from "./Divider.vue";
 import VDrawer from "./Drawer.vue";
 import VDropDown from "./DropDown.vue";
+import VFilter from "./Filter.vue";
 import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
@@ -13,6 +14,7 @@ import VModal from "./Modal.vue";
 import VNotification from "./Notification.vue";
 import VPassword from "./Password.vue";
 import VPopConfirm from "./PopConfirm.vue";
+import VPopover from "./Popover.vue";
 import VPopper from "./Popper.vue";
 import VPositioner from "./Positioner.vue";
 import VRadio from "./Radio.vue";
@@ -95,6 +97,8 @@ export type { TextAreaProps, TextAreaResize } from "./TextArea.vue";
 export type { TagProps, TagSize, TagColor } from "./Tag.vue";
 export type { CheckableProps, TagCheckableValue } from "./TagCheckable.vue";
 export type { SkeletonProps, SkeletonType, SkeletonShape, SkeletonSize } from "./Skeleton.vue";
+export type { PopoverProps, PopoverSize } from "./Popover.vue";
+export type { FilterComponent, FilterItem, FilterProps } from "./Filter.vue";
 
 export {
   VButton,
@@ -127,5 +131,7 @@ export {
   VTag,
   VTagCheckable,
   VSkeleton,
+  VPopover,
+  VFilter,
 };
 export * from "./Table";

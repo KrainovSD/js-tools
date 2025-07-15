@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { isNumber } from "@krainovsd/js-helpers";
   import { VDownOutlined, VUpOutlined } from "@krainovsd/vue-icons";
-  import { computed, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
+  import { computed, onMounted, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
   import Flex from "./Flex.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -147,6 +147,10 @@
     },
     { flush: "pre" },
   );
+
+  onMounted(() => {
+    model.value ??= min.value ?? 0;
+  });
 
   defineExpose({ inputRef });
 </script>

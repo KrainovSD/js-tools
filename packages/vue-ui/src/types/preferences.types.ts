@@ -14,11 +14,13 @@ import type {
   ThemeCollapseVariable,
   ThemeDividerVariable,
   ThemeDropDownVariable,
+  ThemeFilterVariable,
   ThemeInputVariable,
   ThemeMessageVariable,
   ThemeModalVariable,
   ThemeNotificationVariable,
   ThemePopConfirmVariable,
+  ThemePopoverVariable,
   ThemePopperVariable,
   ThemeRadioVariable,
   ThemeSelectVariable,
@@ -44,6 +46,7 @@ export type ThemeVariableConfig = {
     other: Record<ThemeOther, string>;
   };
   components: {
+    popover: Record<ThemePopoverVariable, string>;
     collapse: Record<ThemeCollapseVariable, string>;
     button: Record<ThemeButtonVariable, string>;
     divider: Record<ThemeDividerVariable, string>;
@@ -61,5 +64,6 @@ export type ThemeVariableConfig = {
     tag: Record<ThemeTagVariable, string>;
     skeleton: Record<ThemeSkeletonVariable, string>;
     table: Record<ThemeTableVariable, string>;
+    filter: Record<ThemeFilterVariable, string>;
   };
 };

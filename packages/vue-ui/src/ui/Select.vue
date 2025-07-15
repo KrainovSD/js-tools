@@ -324,7 +324,6 @@
   <Popper
     ref="popper"
     v-model="open"
-    v-bind="$attrs"
     role="listbox"
     :animation-appear="$props.animationAppear"
     :animation-disappear="$props.animationDisappear"
@@ -341,11 +340,12 @@
     :placement="$props.placement"
     :z-index="$props.zIndex"
     :class-name-positioner-content="`ksd-select__popper ${$props.classNamePositionerContent ?? ''}`"
-    :class="`ksd-select__positioner ${$attrs.class ?? ''}`"
+    :class="`ksd-select__positioner`"
   >
     <div
       class="ksd-select"
       :class="commonClasses"
+      v-bind="$attrs"
       @click="
         () => {
           if (!props.disabled) {
@@ -408,7 +408,7 @@
                   :disabled="$props.disabled"
                   class="ksd-select__overflow-item-remove"
                   @mousedown="
-                    (event) => {
+                    (event: KeyboardEvent) => {
                       event.preventDefault();
                       event.stopPropagation();
                       selectValue(optionsMap[item.value.toString()]?.value);
