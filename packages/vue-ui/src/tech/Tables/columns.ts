@@ -66,26 +66,40 @@ export const DEFAULT_COLUMN: DefaultColumn = {
 
 export const COLUMNS: Column[] = [
   {
+    id: "drag",
     key: "id",
+    sortable: false,
     name: "",
     width: 50,
     additionalCellClass: ["hCenter", "wCenter"],
     cellRender: { component: "drag" },
+    leftFrozen: true,
   },
   {
+    id: "select",
     key: "id",
-    name: "id",
+    name: "",
+    sortable: false,
     width: 100,
     additionalCellClass: ["hCenter", "wCenter"],
     cellRender: {
-      component: "default",
+      component: "select",
+      props: { hover: true },
+    },
+    additionalHeaderClass: ["hCenter", "wCenter"],
+    headerRender: {
+      component: "select",
     },
     expandable: true,
     expandedShift: 10,
+    leftFrozen: true,
   },
   {
     key: "firstName",
     name: "firstName",
+    sortRender: {
+      component: "single-arrow",
+    },
     cellRender: {
       component: "default",
       props: {

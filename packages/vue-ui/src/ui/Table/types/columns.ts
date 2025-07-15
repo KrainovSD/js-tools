@@ -6,7 +6,6 @@ import type {
   DragCellRenderProps,
   SelectCellRenderProps,
   SelectFilterRenderProps,
-  SelectHeaderRenderProps,
   TagCellRenderProps,
 } from "../components";
 import type {
@@ -103,13 +102,10 @@ export type DefaultTableCellRenderProps<RowData extends DefaultRow> =
       component?: Exclude<TableCellRenderKey, "default" | "tag" | "select" | "drag">;
       props?: never;
     };
-export type DefaultHeaderRenderProps =
-  | { component?: "select"; props?: SelectHeaderRenderProps }
-  | { component?: "default"; props?: unknown }
-  | {
-      component?: Exclude<TableHeaderRenderKey, "select" | "default">;
-      props?: never;
-    };
+export type DefaultHeaderRenderProps = {
+  component?: TableHeaderRenderKey;
+  props?: never;
+};
 export type DefaultFilterRenderProps =
   | {
       component?: "select";

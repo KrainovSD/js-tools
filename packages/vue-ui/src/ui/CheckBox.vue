@@ -41,7 +41,7 @@
       />
       <span class="ksd-checkbox__inner" :class="[inputClasses]"></span>
     </span>
-    <span class="ksd-checkbox__text">
+    <span v-if="$slots.default" class="ksd-checkbox__text">
       <slot></slot>
     </span>
   </label>
