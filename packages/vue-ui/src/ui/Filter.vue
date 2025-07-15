@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { isArray, isId, isNumber, isString } from "@krainovsd/js-helpers";
+  import { dateFormat, isArray, isId, isNumber, isString } from "@krainovsd/js-helpers";
   import { VCloseCircleFilled, VFilterOutlined } from "@krainovsd/vue-icons";
   import { type Component, computed, markRaw, onMounted, shallowRef } from "vue";
   import Button, { type ButtonSize } from "./Button.vue";
@@ -58,6 +58,7 @@
     buttonSize?: ButtonSize;
     controlSize?: ButtonSize;
     controlVariant?: InputVariant;
+    displayedDateFormat?: string;
   };
 
   const props = withDefaults(defineProps<FilterProps>(), {
@@ -65,6 +66,7 @@
     buttonSize: "default",
     controlSize: "default",
     controlVariant: "outlined",
+    displayedDateFormat: "DD-MM-YYYY",
     icon: undefined,
   });
   const form = defineModel<Record<string, unknown>>({ default: {} });
@@ -121,6 +123,17 @@
             ).toString()
           : "";
       }
+    } else if (filter.component === "date") {
+      displayValue = isId(filterValue) ? dateFormat(filterValue, props.displayedDateFormat) : "";
+    } else if (filter.component === "date-range") {
+      const tempValue = isArray(filterValue) ? filterValue : [];
+      const tempFirst = isId(tempValue[0])
+        ? dateFormat(tempValue[0], props.displayedDateFormat)
+        : "";
+      const tempSecond = isId(tempValue[1])
+        ? dateFormat(tempValue[1], props.displayedDateFormat)
+        : "";
+      displayValue = `${tempFirst} ${tempFirst ? " - " : ""} ${tempSecond}`;
     } else {
       displayValue = isId(filterValue)
         ? filterValue.toString()
@@ -286,6 +299,63 @@
             "
             @update:model-value="(value) => (form[filter.field] = value)"
           />
+          <input
+            v-if="filter.component === 'date'"
+            type="date"
+            class="ksd-filter__field-control date"
+            :value="isString(form[filter.field]) ? form[filter.field] : ''"
+            @input="
+              (event: Event) => {
+                const target = event.target as HTMLInputElement;
+                form[filter.field] = target.value;
+              }
+            "
+          />
+          <template v-if="filter.component === 'date-range'">
+            <div class="ksd-filter__field-control date-container">
+              <input
+                type="date"
+                class="ksd-filter__field-control date"
+                :value="
+                  isArray(form[filter.field])
+                    ? isString((form[filter.field] as unknown[])[0])
+                      ? (form[filter.field] as unknown[])[0]
+                      : ''
+                    : ''
+                "
+                @input="
+                  (event: Event) => {
+                    const target = event.target as HTMLInputElement;
+                    if (!isArray(form[filter.field])) {
+                      form[filter.field] = [];
+                    }
+                    (form[filter.field] as unknown[])[0] = target.value;
+                  }
+                "
+              />
+              <span> - </span>
+              <input
+                type="date"
+                class="ksd-filter__field-control date"
+                :value="
+                  isArray(form[filter.field])
+                    ? isString((form[filter.field] as unknown[])[1])
+                      ? (form[filter.field] as unknown[])[1]
+                      : ''
+                    : ''
+                "
+                @input="
+                  (event: Event) => {
+                    const target = event.target as HTMLInputElement;
+                    if (!isArray(form[filter.field])) {
+                      form[filter.field] = [];
+                    }
+                    (form[filter.field] as unknown[])[1] = target.value;
+                  }
+                "
+              />
+            </div>
+          </template>
         </template>
       </Popover>
       <Button
@@ -352,7 +422,7 @@
     }
 
     &__field-value {
-      max-width: 150px;
+      max-width: 200px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;

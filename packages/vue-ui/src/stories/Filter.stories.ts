@@ -1,3 +1,4 @@
+import { dateFormat, getDateByRules } from "@krainovsd/js-helpers";
 import {
   VCarOutlined,
   VClockCircleOutlined,
@@ -96,6 +97,11 @@ const Template: StoryFn<typeof VFilter> = (args) => ({
       select: [1],
       // eslint-disable-next-line camelcase
       select_single: 1,
+      date: dateFormat(getDateByRules([{ increment: -1, type: "years" }]), "YYYY-MM-DD"),
+      "date-range": [
+        dateFormat(getDateByRules([{ increment: -1, type: "years" }]), "YYYY-MM-DD"),
+        dateFormat(getDateByRules([{ increment: 0, type: "years" }]), "YYYY-MM-DD"),
+      ],
     });
     // eslint-disable-next-line camelcase
     const operators = ref<Record<string, unknown>>({ select_single: "equal" });
