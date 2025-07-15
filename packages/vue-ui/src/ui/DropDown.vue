@@ -3,6 +3,7 @@
   import { VPopConfirm } from ".";
   import ArrowMenu, { type ArrowMenuProps } from "./ArrowMenu.vue";
   import Divider from "./Divider.vue";
+  import Empty from "./Empty.vue";
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
   import Text from "./Text.vue";
 
@@ -480,6 +481,7 @@
           </div>
         </DropDown>
       </template>
+      <Empty v-if="$props.menu.length === 0" class="ksd-dropdown__empty" />
     </template>
   </Popper>
 </template>
@@ -583,6 +585,10 @@
 
     &__positioner-content {
       padding: var(--ksd-padding-xxs);
+    }
+
+    &__empty {
+      padding: var(--ksd-padding);
     }
   }
 </style>

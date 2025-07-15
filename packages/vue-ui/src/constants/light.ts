@@ -154,6 +154,11 @@ export const LIGHT_THEME: ThemeVariableConfig = {
     },
   },
   components: {
+    empty: {
+      "ksd-empty-border-color": "#d9d9d9",
+      "ksd-empty-front-color": "#fafafa",
+      "ksd-empty-under-color": "#f5f5f5",
+    },
     filter: {
       "ksd-filter-gap": "var(--ksd-margin-xs)",
       "ksd-filter-field-gap": "var(--ksd-margin-xxs)",

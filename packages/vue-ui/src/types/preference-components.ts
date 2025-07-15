@@ -215,3 +215,8 @@ export type ThemeTableVariable =
   | "ksd-table-spin-max-height";
 
 export type ThemeFilterVariable = "ksd-filter-gap" | "ksd-filter-field-gap";
+
+export type ThemeEmptyVariable =
+  | "ksd-empty-front-color"
+  | "ksd-empty-border-color"
+  | "ksd-empty-under-color";

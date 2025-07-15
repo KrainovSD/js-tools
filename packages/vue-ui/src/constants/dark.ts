@@ -154,6 +154,11 @@ export const DARK_THEME: ThemeVariableConfig = {
     },
   },
   components: {
+    empty: {
+      "ksd-empty-border-color": "#3e3e3e",
+      "ksd-empty-front-color": "#1d1d1d",
+      "ksd-empty-under-color": "#272727",
+    },
     filter: {
       "ksd-filter-gap": "var(--ksd-margin-xs)",
       "ksd-filter-field-gap": "var(--ksd-margin-xxs)",

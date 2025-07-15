@@ -14,6 +14,7 @@ import type {
   ThemeCollapseVariable,
   ThemeDividerVariable,
   ThemeDropDownVariable,
+  ThemeEmptyVariable,
   ThemeFilterVariable,
   ThemeInputVariable,
   ThemeMessageVariable,
@@ -65,5 +66,6 @@ export type ThemeVariableConfig = {
     skeleton: Record<ThemeSkeletonVariable, string>;
     table: Record<ThemeTableVariable, string>;
     filter: Record<ThemeFilterVariable, string>;
+    empty: Record<ThemeEmptyVariable, string>;
   };
 };

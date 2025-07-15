@@ -4,6 +4,7 @@ import VCollapse from "./Collapse.vue";
 import VDivider from "./Divider.vue";
 import VDrawer from "./Drawer.vue";
 import VDropDown from "./DropDown.vue";
+import VEmpty from "./Empty.vue";
 import VFilter from "./Filter.vue";
 import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
@@ -99,6 +100,7 @@ export type { CheckableProps, TagCheckableValue } from "./TagCheckable.vue";
 export type { SkeletonProps, SkeletonType, SkeletonShape, SkeletonSize } from "./Skeleton.vue";
 export type { PopoverProps, PopoverSize } from "./Popover.vue";
 export type { FilterComponent, FilterItem, FilterProps } from "./Filter.vue";
+export type { EmptyProps } from "./Empty.vue";
 
 export {
   VButton,
@@ -133,5 +135,6 @@ export {
   VSkeleton,
   VPopover,
   VFilter,
+  VEmpty,
 };
 export * from "./Table";

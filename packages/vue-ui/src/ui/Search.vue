@@ -2,6 +2,7 @@
   import { speedTest } from "@krainovsd/js-helpers";
   import fuzzysort from "fuzzysort";
   import { computed, ref, useTemplateRef, watch } from "vue";
+  import Empty from "./Empty.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
   import type { PopperProps } from "./Popper.vue";
@@ -320,6 +321,7 @@
           </template>
         </span>
       </div>
+      <Empty v-if="filteredOptions.length === 0" class="ksd-search__empty" />
     </template>
   </Popper>
 </template>
@@ -365,6 +367,10 @@
     &__positioner-content {
       padding: var(--ksd-padding-xxs);
       max-width: none;
+    }
+
+    &__empty {
+      padding: var(--ksd-padding-xs);
     }
   }
 </style>

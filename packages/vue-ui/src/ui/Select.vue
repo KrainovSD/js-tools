@@ -9,6 +9,7 @@
     VSearchOutlined,
   } from "@krainovsd/vue-icons";
   import { type Component, computed, ref, useTemplateRef, watch } from "vue";
+  import Empty from "./Empty.vue";
   import IconWrapper from "./IconWrapper.vue";
   import Popper, { type PopperProps } from "./Popper.vue";
 
@@ -508,6 +509,7 @@
           class="ksd-select__popper-item-check"
         />
       </div>
+      <Empty v-if="filteredOptions.length === 0" class="ksd-select__empty" />
     </template>
   </Popper>
 </template>
@@ -1133,6 +1135,10 @@
 
     &__popper {
       padding: var(--ksd-padding-xxs);
+    }
+
+    &__empty {
+      padding: var(--ksd-padding);
     }
   }
 </style>
