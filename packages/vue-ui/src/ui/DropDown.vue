@@ -24,6 +24,7 @@
     divider?: boolean;
     disabled?: boolean;
     link?: boolean;
+    ellipsis?: boolean;
     noInteractive?: boolean;
     popConfirm?: DropDownItemPopConfirmOptions;
     label?: string | Component;
@@ -400,7 +401,7 @@
         >
           <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
           <component :is="item.label" v-if="isComponent(item.label)" />
-          <Text v-else>{{ item.label }}</Text>
+          <Text v-else :ellipsis="item.ellipsis">{{ item.label }}</Text>
         </div>
         <VPopConfirm
           v-if="!item.divider && !item.disabled && item.popConfirm"
@@ -432,7 +433,7 @@
           >
             <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
             <component :is="item.label" v-if="isComponent(item.label)" />
-            <Text v-else>{{ item.label }}</Text>
+            <Text v-else :ellipsis="item.ellipsis">{{ item.label }}</Text>
           </div>
         </VPopConfirm>
         <DropDown
@@ -469,7 +470,7 @@
             />
             <component :is="item.icon" v-if="isComponent(item.icon)" :size="14" />
             <component :is="item.label" v-if="isComponent(item.label)" />
-            <Text v-else>{{ item.label }}</Text>
+            <Text v-else :ellipsis="item.ellipsis">{{ item.label }}</Text>
             <ArrowMenu
               v-if="
                 item.innerOptions.innerArrow &&

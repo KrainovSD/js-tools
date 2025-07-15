@@ -122,6 +122,29 @@ const Template: StoryFn<typeof VFilter> = (args) => ({
     ]);
   },
 });
+const EmptyTemplate: StoryFn<typeof VFilter> = (args) => ({
+  components: { VFilter },
+  setup() {
+    const filter = ref<Record<string, unknown>>({});
+    // eslint-disable-next-line camelcase
+    const operators = ref<Record<string, unknown>>({ select_single: "equal" });
+
+    return { args, filter, operators };
+  },
+  render() {
+    return h("div", { style: { display: "flex", flexDirection: "column", gap: "100px" } }, [
+      h(VFilter, {
+        ...args,
+        modelValue: this.filter,
+        "onUpdate:modelValue": (value) => (this.filter = value),
+        operators: this.operators,
+        "onUpdate:operators": (value) => (this.operators = value),
+      }),
+      h("div", {}, [JSON.stringify(this.filter)]),
+      h("div", {}, [JSON.stringify(this.operators)]),
+    ]);
+  },
+});
 
 export const Primary = Template.bind({});
 Primary.args = {
@@ -139,4 +162,8 @@ Large.args = {
   buttonSize: "large",
   controlSize: "large",
   controlVariant: "filled",
+};
+export const Empty = EmptyTemplate.bind({});
+Empty.args = {
+  filters: FILTERS,
 };

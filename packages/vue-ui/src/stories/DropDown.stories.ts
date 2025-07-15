@@ -64,7 +64,35 @@ export const AllInOne: Story = {
           ),
           h(
             VDropDown,
-            { ...args, triggers: ["click"] },
+            {
+              ...args,
+              triggers: ["click"],
+              menu: [
+                { key: "0", label: "Name", noInteractive: true },
+                { key: "1", link: true, label: h("a", { href: "#test" }, ["Пункт 1"]) },
+                { key: "2", label: "Пункт 2 (disabled)", disabled: true },
+                {
+                  key: "3",
+                  label: "Пункт 3 (pop)",
+                  popConfirm: { text: "Спасибо за внимание!", title: "Внимание" },
+                },
+                { key: "10", label: "Очень длинное название пункта меню, которое не помещается" },
+                {
+                  key: "11",
+                  label: "Очень длинное название пункта меню, которое не помещается",
+                  ellipsis: true,
+                },
+                { key: "5", label: "Опасный пункт", danger: true },
+                { key: "0", divider: true },
+                {
+                  key: "4",
+                  // eslint-disable-next-line no-console
+                  onClick: (event) => console.log(event),
+                  label: h(VText, {}, () => "Компонент"),
+                  icon: h(VSettingFilled, { size: 16 }),
+                },
+              ],
+            },
             {
               default: () => h(VButton, {}, () => "Dropdown Click"),
             },

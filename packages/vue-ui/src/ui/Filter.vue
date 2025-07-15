@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { dateFormat, isArray, isId, isNumber, isString } from "@krainovsd/js-helpers";
-  import { VCloseCircleFilled, VFilterOutlined } from "@krainovsd/vue-icons";
+  import { VCloseCircleFilled, VDeleteOutlined, VFilterOutlined } from "@krainovsd/vue-icons";
   import { type Component, computed, markRaw, onMounted, shallowRef } from "vue";
   import Button, { type ButtonSize } from "./Button.vue";
   import DropDown, { type DropDownMenuItem } from "./DropDown.vue";
@@ -91,6 +91,7 @@
           icon: filter.icon ? markRaw(filter.icon) : undefined,
           label: filter.label,
           onClick: () => openFilter(filter.field),
+          ellipsis: true,
         });
       }
 
@@ -163,15 +164,35 @@
 
 <template>
   <div class="ksd-filter" :class="filterClasses">
-    <DropDown :menu="dropMenu">
-      <Button :size="$props.buttonSize">
-        <template #icon>
-          <component :is="$props.icon" v-if="$props.icon" class="ksd-filter__icon" />
-          <VFilterOutlined v-if="!$props.icon" class="ksd-filter__icon" />
-        </template>
-        {{ $props.label }}
-      </Button>
-    </DropDown>
+    <div class="ksd-filter__button-wrapper">
+      <DropDown :menu="dropMenu">
+        <Button
+          :size="$props.buttonSize"
+          class="ksd-filter__button-filter"
+          :class="{ clear: openedFields.length > 0 }"
+        >
+          <template #icon>
+            <component :is="$props.icon" v-if="$props.icon" class="ksd-filter__icon" />
+            <VFilterOutlined v-if="!$props.icon" class="ksd-filter__icon" />
+          </template>
+          {{ $props.label }}
+        </Button>
+        <Button
+          v-if="openedFields.length > 0"
+          class="ksd-filter__button-clear"
+          @click="
+            () => {
+              form = {};
+              openedFields = [];
+            }
+          "
+        >
+          <template #icon>
+            <VDeleteOutlined />
+          </template>
+        </Button>
+      </DropDown>
+    </div>
     <div v-for="filter in openedFilters" :key="filter.field" class="ksd-filter__field">
       <DropDown
         v-if="filter.operators && filter.operators.length > 0"
@@ -405,6 +426,18 @@
       }
     }
     button.ksd-filter__field-button-close {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      color: var(--ksd-icon-color);
+    }
+    button.ksd-filter__button-filter {
+      &.clear {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right-color: transparent;
+      }
+    }
+    button.ksd-filter__button-clear {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       color: var(--ksd-icon-color);

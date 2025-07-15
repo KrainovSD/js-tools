@@ -74,7 +74,10 @@
     gap: var(--ksd-padding-xs);
     align-items: center;
     justify-self: center;
-    transition: all 0.2s ease-out;
+    transition:
+      color var(--ksd-transition-mid) ease-out,
+      border-color var(--ksd-transition-mid) ease-out,
+      background-color var(--ksd-transition-mid) ease-out;
     border: var(--ksd-line-width) var(--ksd-line-type) transparent;
     touch-action: manipulation;
     white-space: nowrap;
