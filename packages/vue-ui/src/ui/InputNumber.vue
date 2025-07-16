@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { isNumber } from "@krainovsd/js-helpers";
   import { VDownOutlined, VUpOutlined } from "@krainovsd/vue-icons";
-  import { computed, onMounted, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
+  import { computed, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
   import Flex from "./Flex.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -76,6 +76,8 @@
       } else {
         model.value -= step.value;
       }
+    } else {
+      model.value = min.value ?? 0;
     }
 
     timeoutId.value = setTimeout(() => {
@@ -86,6 +88,8 @@
           } else {
             model.value -= step.value;
           }
+        } else {
+          model.value = min.value ?? 0;
         }
       }, opts.intervalDelay);
     }, opts.timerDelay);
@@ -128,6 +132,8 @@
         } else {
           model.value -= step.value;
         }
+      } else {
+        model.value = min.value ?? 0;
       }
     }
 
@@ -147,10 +153,6 @@
     },
     { flush: "pre" },
   );
-
-  onMounted(() => {
-    model.value ??= min.value ?? 0;
-  });
 
   defineExpose({ inputRef });
 </script>

@@ -7,6 +7,7 @@ import type {
   SortingFn,
 } from "@tanstack/vue-table";
 import { computed } from "vue";
+import type { SelectItem } from "../../../Select.vue";
 import {
   DateFilterRender,
   DateRangeFilterRender,
@@ -262,6 +263,7 @@ export function useColumns<
         cellRenderProps: column.cellRender?.props,
         headerRenderProps: column.headerRender?.props,
         filterRenderProps: column.filterRender?.props,
+        filterOperators: (column.filterRender?.operators as SelectItem[]) ?? [],
         sortRenderProps: column.sortRender?.props,
         cellClassProps: column.cellClassProps,
         headerClassProps: column.headerClassProps,

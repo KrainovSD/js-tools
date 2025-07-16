@@ -15,6 +15,8 @@ export type RowData = {
   firstName: string;
   birth: number;
   age: number;
+  startWork: number;
+  countWork: number;
   sport: string;
   colors: string[];
   approved: boolean | undefined;

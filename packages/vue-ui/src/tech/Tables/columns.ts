@@ -1,7 +1,7 @@
 import { h } from "vue";
 import { VButton } from "../../ui";
 import Link from "./components/Link.vue";
-import { COLORS_MAPPED } from "./rows";
+import { COLORS_MAPPED, SPORTS } from "./rows";
 import type { Column, DefaultColumn } from "./types";
 
 export const EXAMPLE_DEFAULT_COLUMN: DefaultColumn = {
@@ -97,6 +97,16 @@ export const COLUMNS: Column[] = [
   {
     key: "firstName",
     name: "firstName",
+    filterable: true,
+    filterType: "includes-string",
+    filterRender: {
+      component: "string",
+      props: { placeholder: "Введите имя", allowClear: true },
+      operators: [
+        { label: "==", value: "includes-string" },
+        { label: "!=", value: "includes-string" },
+      ],
+    },
     sortRender: {
       component: "single-arrow",
     },
@@ -114,6 +124,55 @@ export const COLUMNS: Column[] = [
   {
     key: "birth",
     name: "birth",
+    filterable: true,
+    filterType: "date-in-range",
+    filterRender: {
+      component: "date-range",
+      props: { format: "DD/MM/YYYY" },
+      operators: [
+        { label: "==", value: "date-in-range" },
+        { label: "!=", value: "date-in-range" },
+      ],
+    },
+    cellRender: {
+      component: "default",
+      props: { dateFormat: "DD/MM/YYYY" },
+    },
+    width: 150,
+  },
+
+  {
+    key: "age",
+    name: "age",
+    filterable: true,
+    filterType: "number-in-range",
+    filterRender: {
+      component: "number-range",
+      props: { min: 18, max: 100 },
+      operators: [
+        { label: "==", value: "number-in-range" },
+        { label: "!=", value: "number-in-range" },
+      ],
+    },
+    cellRender: {
+      component: "default",
+      props: { floatFixed: 2 },
+    },
+    width: 150,
+  },
+  {
+    key: "startWork",
+    name: "startWork",
+    filterable: true,
+    filterType: "date",
+    filterRender: {
+      component: "date",
+      props: { format: "DD/MM/YYYY" },
+      operators: [
+        { label: "==", value: "date" },
+        { label: "!=", value: "date" },
+      ],
+    },
     cellRender: {
       component: "default",
       props: { dateFormat: "DD/MM/YYYY" },
@@ -121,8 +180,18 @@ export const COLUMNS: Column[] = [
     width: 150,
   },
   {
-    key: "age",
-    name: "age",
+    key: "countWork",
+    name: "countWork",
+    filterable: true,
+    filterType: "equals",
+    filterRender: {
+      component: "number",
+      props: { min: 0, max: 5 },
+      operators: [
+        { label: "==", value: "equals" },
+        { label: "!=", value: "equals" },
+      ],
+    },
     cellRender: {
       component: "default",
       props: { floatFixed: 2 },
@@ -132,6 +201,16 @@ export const COLUMNS: Column[] = [
   {
     key: "sport",
     name: "sport",
+    filterable: true,
+    filterType: "equals",
+    filterRender: {
+      component: "select",
+      props: { options: SPORTS.map((sport) => ({ label: sport, value: sport })) },
+      operators: [
+        { label: "==", value: "equals" },
+        { label: "!=", value: "equals" },
+      ],
+    },
     cellRender: {
       component: "default",
     },
@@ -140,6 +219,16 @@ export const COLUMNS: Column[] = [
   {
     key: "colors",
     name: "colors",
+    filterable: true,
+    filterType: "array-some-in-array",
+    filterRender: {
+      component: "select",
+      props: { options: SPORTS.map((sport) => ({ label: sport, value: sport })), multiple: true },
+      operators: [
+        { label: "==", value: "array-some-in-array" },
+        { label: "!=", value: "array-some-in-array" },
+      ],
+    },
     additionalCellClass: ["nowrap"],
     cellRender: {
       component: "default",
@@ -156,12 +245,6 @@ export const COLUMNS: Column[] = [
     id: "tags",
     key: "colors",
     name: "tags",
-    filterable: true,
-    filterType: "includes-string",
-    filterRender: {
-      component: "select",
-      props: { multiple: false, options: [] },
-    },
     additionalCellClass: ["nowrap", "wCenter", "hCenter"],
     cellRender: {
       component: "tag",

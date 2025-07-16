@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { onMounted, shallowRef } from "vue";
+  import { shallowRef } from "vue";
   import { VTable } from "../../ui";
   import { COLUMNS } from "./columns";
   import { createRows } from "./rows";
@@ -18,7 +18,7 @@
 </script>
 
 <template>
-  <VTable :columns="column" :rows="rows" :virtual-rows="false" />
+  <VTable :columns="column" :rows="rows" :virtual-rows="false" :with-filters="true" />
 </template>
 
 <style lang="scss" module></style>

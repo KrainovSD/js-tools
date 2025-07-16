@@ -8,6 +8,9 @@ import StringFilterRender from "./StringFilterRender.vue";
 export type { DateFilterRenderProps } from "./DateFilterRender.vue";
 export type { DateRangeFilterRenderProps } from "./DateRangeFilterRender.vue";
 export type { SelectFilterRenderProps } from "./SelectFilterRender.vue";
+export type { NumberFilterRenderProps } from "./NumberFilterRender.vue";
+export type { StringFilterRenderProps } from "./StringFilterRender.vue";
+export type { NumberRangeFilterRenderProps } from "./NumberRangeFilterRender.vue";
 
 export {
   DateFilterRender,

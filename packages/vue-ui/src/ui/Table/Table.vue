@@ -73,6 +73,10 @@
       frozenHeader: true,
       rubberColumn: false,
       virtualRows: true,
+      withFilters: false,
+      withGantt: false,
+      withPagination: false,
+      withTotal: true,
     },
   );
   defineEmits<Emits>();
@@ -156,7 +160,7 @@
   <div ref="root" v-bind="$attrs" class="ksd-table__wrapper" :class="{ full: $props.fullSize }">
     <TableLoading v-if="!$props.Loader && $props.loading" />
     <component :is="$props.Loader" v-if="$props.Loader && $props.loading" />
-    <TableFilter />
+    <TableFilter :with-filters="$props.withFilters ?? false" :table="table" />
     <div
       v-if="!$props.withGantt"
       ref="table-container"

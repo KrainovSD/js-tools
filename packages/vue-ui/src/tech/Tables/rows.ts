@@ -24,7 +24,7 @@ const NAMES: string[] = [
   "Harper",
   "Evelyn",
 ];
-const COLORS = [
+export const COLORS = [
   "Red",
   "Blue",
   "Green",
@@ -48,7 +48,7 @@ export const COLORS_MAPPED: Record<(typeof COLORS)[number], TagColor> = {
   White: "default",
   Yellow: "gold",
 };
-const SPORTS = [
+export const SPORTS = [
   "Soccer",
   "Basketball",
   "Tennis",
@@ -88,6 +88,9 @@ export function createRows(
     const age = randomNumber(18, 70);
     const birth = new Date();
     birth.setFullYear(birth.getFullYear() - age);
+    const startWork = new Date();
+    startWork.setFullYear(startWork.getFullYear() - randomNumber(1, 10));
+    const countWork = randomNumber(0, 4);
 
     return {
       id,
@@ -104,10 +107,12 @@ export function createRows(
         duration: randomNumber(0, 356 * 10),
       },
       sport: SPORTS[randomNumber(0, SPORTS.length - 1)],
-      works: Array.from<unknown, RowWork>({ length: randomNumber(0, 4) }, () => ({
+      works: Array.from<unknown, RowWork>({ length: countWork }, () => ({
         address: ADDRESSES[randomNumber(0, ADDRESSES.length - 1)],
         duration: randomNumber(0, 356 * 10),
       })),
+      countWork,
+      startWork: startWork.getTime(),
       children:
         children && depth <= maxDepth && id % 10 === 0
           ? createRows(5, true, maxDepth, depth + 1)

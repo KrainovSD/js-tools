@@ -41,7 +41,7 @@ const FILTERS: FilterItem[] = [
     component: "number",
     props: { min: -5, max: 5 },
   },
-  { field: "range", label: "Количество", icon: VSkinOutlined, component: "range" },
+  { field: "range", label: "Количество", icon: VSkinOutlined, component: "number-range" },
   {
     field: "select",
     label: "Тип (Несколько)",

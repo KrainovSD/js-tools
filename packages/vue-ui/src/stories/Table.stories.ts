@@ -33,6 +33,7 @@ export const Common: Story = {
             width: "calc(100vw - 50px)",
             height: "calc(100vh - 50px)",
             overflow: "hidden",
+            padding: "10px",
           },
         },
         [h(TableCommon)],

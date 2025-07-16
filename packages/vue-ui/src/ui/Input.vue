@@ -25,6 +25,7 @@
     status: "default",
     variant: "outlined",
   });
+
   const slots = useSlots();
   const model = defineModel<string>();
   const hasSlots = computed(() => Object.keys(slots).length != 0);

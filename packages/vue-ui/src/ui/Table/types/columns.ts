@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactNode } from "react";
+import type { Component } from "vue";
 import type {
   DateFilterRenderProps,
   DefaultCellRenderProps,
   DragCellRenderProps,
+  NumberFilterRenderProps,
+  NumberRangeFilterRenderProps,
   SelectCellRenderProps,
   SelectFilterRenderProps,
+  StringFilterRenderProps,
   TagCellRenderProps,
 } from "../components";
 import type {
@@ -67,7 +71,7 @@ export type TableColumn<
 
   cellRender?: TableCellRendersProps<RowData, CellRender>;
   headerRender?: TableHeaderRendersProps<RowData, HeaderRender>;
-  filterRender?: TableFilterRendersProps<RowData, FilterRender>;
+  filterRender?: TableFilterRendersProps<RowData, FilterRender, FilterType>;
   sortRender?: TableSortRendersProps<RowData, SortRender>;
   headerClass?: (keyof HeaderClass | TableHeaderClassKey)[];
   additionalHeaderClass?: (keyof HeaderClass | TableHeaderClassKey)[];
@@ -106,23 +110,51 @@ export type DefaultHeaderRenderProps = {
   component?: TableHeaderRenderKey;
   props?: never;
 };
-export type DefaultFilterRenderProps =
+
+export type FilterOperator<
+  RowData extends DefaultRow,
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+> = {
+  value: keyof FilterType | FilterKey;
+  label: string;
+  desc?: Component;
+};
+
+export type DefaultFilterRenderProps<
+  RowData extends DefaultRow,
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+> =
+  | {
+      component?: "string";
+      props?: StringFilterRenderProps;
+      operators?: FilterOperator<RowData, FilterType>[];
+    }
+  | {
+      component?: "number";
+      props?: NumberFilterRenderProps;
+      operators?: FilterOperator<RowData, FilterType>[];
+    }
+  | {
+      component?: "number-range";
+      props?: NumberRangeFilterRenderProps;
+      operators?: FilterOperator<RowData, FilterType>[];
+    }
   | {
       component?: "select";
       props?: SelectFilterRenderProps;
+      operators?: FilterOperator<RowData, FilterType>[];
     }
   | {
       component?: "date";
       props?: DateFilterRenderProps;
+      operators?: FilterOperator<RowData, FilterType>[];
     }
   | {
       component?: "date-range";
       props?: DateFilterRenderProps;
-    }
-  | {
-      component?: Exclude<TableFilterRenderKey, "select" | "date" | "date-range">;
-      props?: never;
+      operators?: FilterOperator<RowData, FilterType>[];
     };
+
 export type DefaultSortRenderProps = { component?: TableSortRenderKey; props?: never };
 
 export type CellRenderMap<
@@ -158,17 +190,22 @@ export type TableHeaderRendersProps<
 export type FilterRenderMap<
   RowData extends DefaultRow,
   FilterRender extends Record<string, FilterRenderComponent<RowData>>,
+  FilterType extends Record<string, FilterFn<RowData>> = {},
 > = {
   [K in keyof FilterRender]: {
     component?: K;
     props?: ComponentProps<FilterRender[K]>;
+    operators?: FilterOperator<RowData, FilterType>[];
   };
 }[keyof FilterRender];
 
 export type TableFilterRendersProps<
   RowData extends DefaultRow,
   FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
-> = FilterRenderMap<RowData, FilterRender> | DefaultFilterRenderProps;
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+> =
+  | FilterRenderMap<RowData, FilterRender, FilterType>
+  | DefaultFilterRenderProps<RowData, FilterType>;
 
 type ComponentProps<T> = T extends (args: infer P extends Record<string, any>) => any
   ? P["settings"]

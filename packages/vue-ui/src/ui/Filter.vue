@@ -15,7 +15,7 @@
     select: FilterSelectComponentProps;
     text: FilterTextComponentProps;
     number: FilterNumberComponentProps;
-    range: FilterNumberComponentProps;
+    "number-range": FilterNumberComponentProps;
     date: FilterDateComponentProps;
     "date-range": FilterDateComponentProps;
   };
@@ -40,16 +40,24 @@
   };
   export type FilterDateComponentProps = {};
 
-  export type FilterItem = {
-    [K in keyof FilterComponentProps]: {
-      props?: FilterComponentProps[K];
-      field: string;
-      operators?: SelectItem[];
-      label: string;
-      component: K;
-      icon?: Component;
-    };
-  }[keyof FilterComponentProps];
+  export type FilterItem =
+    | {
+        [K in keyof FilterComponentProps]: {
+          props?: FilterComponentProps[K];
+          field: string;
+          operators?: SelectItem[];
+          label: string;
+          component: K;
+          icon?: Component;
+        };
+      }[keyof FilterComponentProps]
+    | {
+        field: string;
+        operators?: SelectItem[];
+        label: string;
+        component: Component;
+        icon?: Component;
+      };
 
   export type FilterProps = {
     filters: FilterItem[];
@@ -230,152 +238,168 @@
           </div>
         </Button>
         <template #content>
-          <Input
-            v-if="filter.component === 'text'"
-            :model-value="isString(form[filter.field]) ? (form[filter.field] as string) : undefined"
-            :size="$props.controlSize"
-            :variant="$props.controlVariant"
-            :allow-clear="filter.props?.allowClear"
-            :placeholder="filter.props?.placeholder"
-            class="ksd-filter__field-control text"
-            @update:model-value="(value) => (form[filter.field] = value)"
-          />
-          <InputNumber
-            v-if="filter.component === 'number'"
-            :model-value="isNumber(form[filter.field]) ? (form[filter.field] as number) : undefined"
-            :size="$props.controlSize"
-            :variant="$props.controlVariant"
-            :placeholder="filter.props?.placeholder"
-            :min="filter.props?.min"
-            :max="filter.props?.max"
-            :step="filter.props?.step"
-            class="ksd-filter__field-control number"
-            @update:model-value="(value) => (form[filter.field] = value)"
-          />
-          <template v-if="filter.component === 'range'">
-            <div class="ksd-filter__field-control number-container">
-              <InputNumber
-                :model-value="
-                  isArray(form[filter.field]) && isNumber((form[filter.field] as unknown[])?.[0])
-                    ? ((form[filter.field] as unknown[])[0] as number)
-                    : undefined
-                "
-                :size="$props.controlSize"
-                :variant="$props.controlVariant"
-                :placeholder="filter.props?.placeholder"
-                :min="filter.props?.min"
-                :max="filter.props?.max"
-                :step="filter.props?.step"
-                class="ksd-filter__field-control number"
-                @update:model-value="
-                  (value) => {
-                    if (!isArray(form[filter.field])) {
-                      form[filter.field] = [];
-                    }
-                    (form[filter.field] as unknown[])[0] = value;
-                  }
-                "
-              />
-              <span> - </span>
-              <InputNumber
-                :model-value="
-                  isArray(form[filter.field]) && isNumber((form[filter.field] as unknown[])?.[1])
-                    ? ((form[filter.field] as unknown[])[1] as number)
-                    : undefined
-                "
-                :size="$props.controlSize"
-                :variant="$props.controlVariant"
-                :placeholder="filter.props?.placeholder"
-                :min="filter.props?.min"
-                :max="filter.props?.max"
-                :step="filter.props?.step"
-                class="ksd-filter__field-control number"
-                @update:model-value="
-                  (value) => {
-                    if (!isArray(form[filter.field])) {
-                      form[filter.field] = [];
-                    }
-                    (form[filter.field] as unknown[])[1] = value;
-                  }
-                "
-              />
-            </div>
-          </template>
-          <Select
-            v-if="filter.component === 'select'"
-            :options="filter.props?.options ?? []"
-            :size="$props.controlSize"
-            :variant="$props.controlVariant"
-            :multiple="filter.props?.multiple"
-            :search="filter.props?.search"
-            :clear="filter.props?.clear"
-            :placeholder="filter.props?.placeholder"
-            class="ksd-filter__field-control select"
-            :model-value="
-              filter.props?.multiple
-                ? isArray(form[filter.field])
-                  ? (form[filter.field] as SelectValue[])
-                  : undefined
-                : (form[filter.field] as SelectValue)
-            "
-            @update:model-value="(value) => (form[filter.field] = value)"
-          />
-          <input
-            v-if="filter.component === 'date'"
-            type="date"
-            class="ksd-filter__field-control date"
-            :value="isString(form[filter.field]) ? form[filter.field] : ''"
-            @input="
-              (event: Event) => {
-                const target = event.target as HTMLInputElement;
-                form[filter.field] = target.value;
+          <component
+            :is="filter.component"
+            v-if="!isString(filter.component)"
+            :model-value="form[filter.field]"
+            @update:model-value="
+              (value: unknown) => {
+                form[filter.field] = value;
               }
             "
           />
-          <template v-if="filter.component === 'date-range'">
-            <div class="ksd-filter__field-control date-container">
-              <input
-                type="date"
-                class="ksd-filter__field-control date"
-                :value="
-                  isArray(form[filter.field])
-                    ? isString((form[filter.field] as unknown[])[0])
-                      ? (form[filter.field] as unknown[])[0]
-                      : ''
-                    : ''
-                "
-                @input="
-                  (event: Event) => {
-                    const target = event.target as HTMLInputElement;
-                    if (!isArray(form[filter.field])) {
-                      form[filter.field] = [];
+          <template v-if="isString(filter.component)">
+            <Input
+              v-if="filter.component === 'text'"
+              :model-value="
+                isString(form[filter.field]) ? (form[filter.field] as string) : undefined
+              "
+              :size="$props.controlSize"
+              :variant="$props.controlVariant"
+              :allow-clear="filter.props?.allowClear"
+              :placeholder="filter.props?.placeholder"
+              class="ksd-filter__field-control text"
+              @update:model-value="(value) => (form[filter.field] = value)"
+            />
+            <InputNumber
+              v-if="filter.component === 'number'"
+              :model-value="
+                isNumber(form[filter.field]) ? (form[filter.field] as number) : undefined
+              "
+              :size="$props.controlSize"
+              :variant="$props.controlVariant"
+              :placeholder="filter.props?.placeholder"
+              :min="filter.props?.min"
+              :max="filter.props?.max"
+              :step="filter.props?.step"
+              class="ksd-filter__field-control number"
+              @update:model-value="(value) => (form[filter.field] = value)"
+            />
+            <template v-if="filter.component === 'number-range'">
+              <div class="ksd-filter__field-control number-container">
+                <InputNumber
+                  :model-value="
+                    isArray(form[filter.field]) && isNumber((form[filter.field] as unknown[])?.[0])
+                      ? ((form[filter.field] as unknown[])[0] as number)
+                      : undefined
+                  "
+                  :size="$props.controlSize"
+                  :variant="$props.controlVariant"
+                  :placeholder="filter.props?.placeholder"
+                  :min="filter.props?.min"
+                  :max="filter.props?.max"
+                  :step="filter.props?.step"
+                  class="ksd-filter__field-control number"
+                  @update:model-value="
+                    (value) => {
+                      if (!isArray(form[filter.field])) {
+                        form[filter.field] = [];
+                      }
+                      (form[filter.field] as unknown[])[0] = value;
                     }
-                    (form[filter.field] as unknown[])[0] = target.value;
-                  }
-                "
-              />
-              <span> - </span>
-              <input
-                type="date"
-                class="ksd-filter__field-control date"
-                :value="
-                  isArray(form[filter.field])
-                    ? isString((form[filter.field] as unknown[])[1])
-                      ? (form[filter.field] as unknown[])[1]
-                      : ''
-                    : ''
-                "
-                @input="
-                  (event: Event) => {
-                    const target = event.target as HTMLInputElement;
-                    if (!isArray(form[filter.field])) {
-                      form[filter.field] = [];
+                  "
+                />
+                <span> - </span>
+                <InputNumber
+                  :model-value="
+                    isArray(form[filter.field]) && isNumber((form[filter.field] as unknown[])?.[1])
+                      ? ((form[filter.field] as unknown[])[1] as number)
+                      : undefined
+                  "
+                  :size="$props.controlSize"
+                  :variant="$props.controlVariant"
+                  :placeholder="filter.props?.placeholder"
+                  :min="filter.props?.min"
+                  :max="filter.props?.max"
+                  :step="filter.props?.step"
+                  class="ksd-filter__field-control number"
+                  @update:model-value="
+                    (value) => {
+                      if (!isArray(form[filter.field])) {
+                        form[filter.field] = [];
+                      }
+                      (form[filter.field] as unknown[])[1] = value;
                     }
-                    (form[filter.field] as unknown[])[1] = target.value;
-                  }
-                "
-              />
-            </div>
+                  "
+                />
+              </div>
+            </template>
+            <Select
+              v-if="filter.component === 'select'"
+              :options="filter.props?.options ?? []"
+              :size="$props.controlSize"
+              :variant="$props.controlVariant"
+              :multiple="filter.props?.multiple"
+              :search="filter.props?.search"
+              :clear="filter.props?.clear"
+              :placeholder="filter.props?.placeholder"
+              class="ksd-filter__field-control select"
+              :model-value="
+                filter.props?.multiple
+                  ? isArray(form[filter.field])
+                    ? (form[filter.field] as SelectValue[])
+                    : undefined
+                  : (form[filter.field] as SelectValue)
+              "
+              @update:model-value="(value) => (form[filter.field] = value)"
+            />
+            <input
+              v-if="filter.component === 'date'"
+              type="date"
+              class="ksd-filter__field-control date"
+              :value="isString(form[filter.field]) ? form[filter.field] : ''"
+              @input="
+                (event: Event) => {
+                  const target = event.target as HTMLInputElement;
+                  form[filter.field] = target.value;
+                }
+              "
+            />
+            <template v-if="filter.component === 'date-range'">
+              <div class="ksd-filter__field-control date-container">
+                <input
+                  type="date"
+                  class="ksd-filter__field-control date"
+                  :value="
+                    isArray(form[filter.field])
+                      ? isString((form[filter.field] as unknown[])[0])
+                        ? (form[filter.field] as unknown[])[0]
+                        : ''
+                      : ''
+                  "
+                  @input="
+                    (event: Event) => {
+                      const target = event.target as HTMLInputElement;
+                      if (!isArray(form[filter.field])) {
+                        form[filter.field] = [];
+                      }
+                      (form[filter.field] as unknown[])[0] = target.value;
+                    }
+                  "
+                />
+                <span> - </span>
+                <input
+                  type="date"
+                  class="ksd-filter__field-control date"
+                  :value="
+                    isArray(form[filter.field])
+                      ? isString((form[filter.field] as unknown[])[1])
+                        ? (form[filter.field] as unknown[])[1]
+                        : ''
+                      : ''
+                  "
+                  @input="
+                    (event: Event) => {
+                      const target = event.target as HTMLInputElement;
+                      if (!isArray(form[filter.field])) {
+                        form[filter.field] = [];
+                      }
+                      (form[filter.field] as unknown[])[1] = target.value;
+                    }
+                  "
+                />
+              </div>
+            </template>
           </template>
         </template>
       </Popover>
@@ -399,15 +423,15 @@
     align-items: center;
     flex-wrap: wrap;
 
+    & button {
+      &:focus-visible {
+        z-index: 1;
+      }
+    }
+
     &__field {
       display: flex;
       align-items: center;
-
-      & > button {
-        &:focus-visible {
-          z-index: 1;
-        }
-      }
     }
 
     button.ksd-filter__field-button-operator {

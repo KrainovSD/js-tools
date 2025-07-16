@@ -1,4 +1,6 @@
 import type { CellContext, RowData } from "@tanstack/vue-table";
+import type { Component } from "vue";
+import type { SelectItem } from "../Select.vue";
 import VTable from "./Table.vue";
 import type {
   CellClassInterface,
@@ -23,11 +25,12 @@ declare module "@tanstack/vue-table" {
     headerClass: HeaderClassInterface<TData>[];
     cellClass: CellClassInterface<TData>[];
     name: string;
-    icon?: React.ReactNode;
+    icon?: Component;
     accessorKey: string;
     cellRenderProps?: unknown;
     headerRenderProps?: unknown;
     filterRenderProps?: unknown;
+    filterOperators: SelectItem[];
     sortRenderProps?: unknown;
     props?: unknown;
     expandable?: boolean;
