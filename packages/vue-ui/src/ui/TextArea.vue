@@ -42,7 +42,7 @@
       inputRef.value.style.height = "0px";
       inputRef.value.style.height = `${inputRef.value.scrollHeight}px`;
     },
-    { immediate: false },
+    { immediate: false, flush: "post" },
   );
 
   watch(

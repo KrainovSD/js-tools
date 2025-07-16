@@ -20,9 +20,10 @@
         (event: Event) => {
           const target = event.target as HTMLInputElement;
           if (!isArray(filterValue)) {
-            filterValue = [];
+            filterValue = [target.value, undefined];
+          } else {
+            filterValue[0] = target.value;
           }
-          (filterValue as unknown[])[0] = target.value;
         }
       "
     />
@@ -35,9 +36,10 @@
         (event: Event) => {
           const target = event.target as HTMLInputElement;
           if (!isArray(filterValue)) {
-            filterValue = [];
+            filterValue = [undefined, target.value];
+          } else {
+            filterValue[1] = target.value;
           }
-          (filterValue as unknown[])[1] = target.value;
         }
       "
     />

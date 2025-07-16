@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { dateFormat, isArray, isId, isNumber, isString } from "@krainovsd/js-helpers";
+  import { dateFormat, isArray, isId, isNumber, isObject, isString } from "@krainovsd/js-helpers";
   import { VCloseCircleFilled, VDeleteOutlined, VFilterOutlined } from "@krainovsd/vue-icons";
   import { type Component, computed, markRaw, onMounted, shallowRef } from "vue";
   import Button, { type ButtonSize } from "./Button.vue";
@@ -38,7 +38,9 @@
     step?: number;
     placeholder?: string;
   };
-  export type FilterDateComponentProps = {};
+  export type FilterDateComponentProps = {
+    format?: string;
+  };
 
   export type FilterItem =
     | {
@@ -57,6 +59,8 @@
         label: string;
         component: Component;
         icon?: Component;
+        displayValue?: FilterComponent;
+        props?: unknown;
       };
 
   export type FilterProps = {
@@ -114,34 +118,61 @@
   function extractFilterDisplayValue(filter: FilterItem) {
     let displayValue: string = "";
     const filterValue = form.value[filter.field];
+    const displayType: FilterComponent =
+      "displayValue" in filter
+        ? (filter.displayValue ?? "text")
+        : isString(filter.component)
+          ? filter.component
+          : "text";
+    const filterProps = isObject(filter.props) ? filter.props : {};
 
-    if (filter.component === "select") {
-      if (filter.props?.multiple) {
+    if (displayType === "select" && isArray(filterProps.options)) {
+      if (filterProps?.multiple) {
         const tempValue = isArray(filterValue)
           ? filterValue.map(
               (value) =>
-                filter.props?.options?.find?.((option) => option.value === value)?.label ?? value,
+                (filterProps?.options as SelectItem[])?.find?.((option) => option?.value === value)
+                  ?.label ?? value,
             )
           : [];
         displayValue = tempValue.join(", ");
       } else {
         displayValue = isId(filterValue)
           ? (
-              filter.props?.options?.find?.((option) => option.value === filterValue)?.label ??
-              filterValue
+              (filterProps?.options as SelectItem[])?.find?.(
+                (option) => option?.value === filterValue,
+              )?.label ?? filterValue
             ).toString()
           : "";
       }
-    } else if (filter.component === "date") {
-      displayValue = isId(filterValue) ? dateFormat(filterValue, props.displayedDateFormat) : "";
-    } else if (filter.component === "date-range") {
+    } else if (displayType === "date") {
+      displayValue = isId(filterValue)
+        ? dateFormat(
+            filterValue,
+            isString(filterProps.format)
+              ? filterProps.format
+              : (props.displayedDateFormat ?? "DD-MM-YYYY"),
+          )
+        : "";
+    } else if (displayType === "date-range") {
       const tempValue = isArray(filterValue) ? filterValue : [];
       const tempFirst = isId(tempValue[0])
-        ? dateFormat(tempValue[0], props.displayedDateFormat)
+        ? dateFormat(
+            tempValue[0],
+            isString(filterProps.format)
+              ? filterProps.format
+              : (props.displayedDateFormat ?? "DD-MM-YYYY"),
+          )
         : "";
       const tempSecond = isId(tempValue[1])
-        ? dateFormat(tempValue[1], props.displayedDateFormat)
+        ? dateFormat(
+            tempValue[1],
+            isString(filterProps.format)
+              ? filterProps.format
+              : (props.displayedDateFormat ?? "DD-MM-YYYY"),
+          )
         : "";
+
       displayValue = `${tempFirst} ${tempFirst ? " - " : ""} ${tempSecond}`;
     } else {
       displayValue = isId(filterValue)

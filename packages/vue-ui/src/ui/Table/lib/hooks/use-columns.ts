@@ -264,6 +264,7 @@ export function useColumns<
         headerRenderProps: column.headerRender?.props,
         filterRenderProps: column.filterRender?.props,
         filterOperators: (column.filterRender?.operators as SelectItem[]) ?? [],
+        filterDisplayValue: column.filterRender?.displayValue,
         sortRenderProps: column.sortRender?.props,
         cellClassProps: column.cellClassProps,
         headerClassProps: column.headerClassProps,

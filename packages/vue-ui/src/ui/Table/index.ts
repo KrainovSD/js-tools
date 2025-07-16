@@ -1,5 +1,6 @@
 import type { CellContext, RowData } from "@tanstack/vue-table";
 import type { Component } from "vue";
+import type { FilterComponent } from "../Filter.vue";
 import type { SelectItem } from "../Select.vue";
 import VTable from "./Table.vue";
 import type {
@@ -31,6 +32,7 @@ declare module "@tanstack/vue-table" {
     headerRenderProps?: unknown;
     filterRenderProps?: unknown;
     filterOperators: SelectItem[];
+    filterDisplayValue?: FilterComponent;
     sortRenderProps?: unknown;
     props?: unknown;
     expandable?: boolean;

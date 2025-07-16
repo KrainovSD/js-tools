@@ -106,6 +106,7 @@ export const COLUMNS: Column[] = [
         { label: "==", value: "includes-string" },
         { label: "!=", value: "includes-string" },
       ],
+      displayValue: "text",
     },
     sortRender: {
       component: "single-arrow",
@@ -133,6 +134,7 @@ export const COLUMNS: Column[] = [
         { label: "==", value: "date-in-range" },
         { label: "!=", value: "date-in-range" },
       ],
+      displayValue: "date-range",
     },
     cellRender: {
       component: "default",
@@ -153,6 +155,7 @@ export const COLUMNS: Column[] = [
         { label: "==", value: "number-in-range" },
         { label: "!=", value: "number-in-range" },
       ],
+      displayValue: "number-range",
     },
     cellRender: {
       component: "default",
@@ -172,6 +175,7 @@ export const COLUMNS: Column[] = [
         { label: "==", value: "date" },
         { label: "!=", value: "date" },
       ],
+      displayValue: "date",
     },
     cellRender: {
       component: "default",
@@ -191,6 +195,7 @@ export const COLUMNS: Column[] = [
         { label: "==", value: "equals" },
         { label: "!=", value: "equals" },
       ],
+      displayValue: "number",
     },
     cellRender: {
       component: "default",
@@ -205,6 +210,7 @@ export const COLUMNS: Column[] = [
     filterType: "equals",
     filterRender: {
       component: "select",
+      displayValue: "select",
       props: { options: SPORTS.map((sport) => ({ label: sport, value: sport })) },
       operators: [
         { label: "==", value: "equals" },
@@ -223,6 +229,7 @@ export const COLUMNS: Column[] = [
     filterType: "array-some-in-array",
     filterRender: {
       component: "select",
+      displayValue: "select",
       props: { options: SPORTS.map((sport) => ({ label: sport, value: sport })), multiple: true },
       operators: [
         { label: "==", value: "array-some-in-array" },

@@ -20,9 +20,11 @@
           component: markRaw(
             h(column.filterRender, { context, settings: column.filterRenderProps }),
           ),
+          props: column.filterRenderProps,
           field: column.accessorKey as string,
           label: column.name,
           icon: column.icon,
+          displayValue: column.filterDisplayValue,
           operators: column.filterOperators,
         });
       }

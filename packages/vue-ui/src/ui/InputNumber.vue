@@ -100,7 +100,6 @@
 
   function onMouseDown(event: Event, direction: "up" | "down") {
     event.preventDefault();
-    if (model.value == undefined) return;
 
     changeByTimer(direction, { timerDelay: 400, intervalDelay: 150 });
   }
