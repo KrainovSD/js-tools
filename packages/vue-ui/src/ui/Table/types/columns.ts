@@ -133,6 +133,7 @@ export type DefaultFilterRenderProps<
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
       displayValue?: FilterComponentKey;
+      clearTag?: string;
     }
   | {
       component?: "number";
@@ -140,6 +141,7 @@ export type DefaultFilterRenderProps<
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
       displayValue?: FilterComponentKey;
+      clearTag?: string;
     }
   | {
       component?: "number-range";
@@ -147,6 +149,7 @@ export type DefaultFilterRenderProps<
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
       displayValue?: FilterComponentKey;
+      clearTag?: string;
     }
   | {
       component?: "select";
@@ -154,6 +157,7 @@ export type DefaultFilterRenderProps<
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
       displayValue?: FilterComponentKey;
+      clearTag?: string;
     }
   | {
       component?: "date";
@@ -161,6 +165,7 @@ export type DefaultFilterRenderProps<
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
       displayValue?: FilterComponentKey;
+      clearTag?: string;
     }
   | {
       component?: "date-range";
@@ -168,6 +173,7 @@ export type DefaultFilterRenderProps<
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
       displayValue?: FilterComponentKey;
+      clearTag?: string;
     };
 
 export type DefaultSortRenderProps = { component?: TableSortRenderKey; props?: never };
@@ -213,6 +219,7 @@ export type FilterRenderMap<
     operatorValue?: keyof FilterType | FilterKey;
     operatorLabel?: string;
     displayValue?: FilterComponentKey;
+    clearTag?: string;
   };
 }[keyof FilterRender];
 

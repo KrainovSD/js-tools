@@ -226,6 +226,7 @@ export function useColumns<
                 operatorLabel: filter.operatorLabel,
                 operatorValue: filter.operatorValue as string,
                 props: filter.props,
+                clearTag: filter.clearTag,
               };
             })
           : [

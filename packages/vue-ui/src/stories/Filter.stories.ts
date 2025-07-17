@@ -96,13 +96,32 @@ const FILTERS: FilterItem[] = [
     components: [
       { component: "date", operatorLabel: "Дата", operatorValue: "date" },
       { component: "date-range", operatorLabel: "Между датами", operatorValue: "date-range" },
+      {
+        component: "date-range",
+        operatorLabel: "Не между датами",
+        operatorValue: "not-date-range",
+      },
     ],
   },
   {
     field: "date-range",
     label: "Дата изменения",
     icon: VEditOutlined,
-    components: [{ component: "date-range" }],
+    components: [
+      {
+        component: "date-range",
+        operatorLabel: "Между датами",
+        operatorValue: "date-range",
+        clearTag: "date-range",
+      },
+      {
+        component: "date-range",
+        operatorLabel: "Не между датами",
+        operatorValue: "not-date-range",
+        clearTag: "date-range",
+      },
+      { component: "date", operatorLabel: "Дата", operatorValue: "date" },
+    ],
   },
 ];
 

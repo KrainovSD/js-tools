@@ -29,6 +29,7 @@ declare module "@tanstack/vue-table" {
           operatorValue?: string | number;
           operatorLabel?: string;
           displayValue?: FilterComponentKey;
+          clearTag?: string;
         }[]
       | undefined;
     headerClass: HeaderClassInterface<TData>[];

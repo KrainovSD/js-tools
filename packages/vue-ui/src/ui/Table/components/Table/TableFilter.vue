@@ -28,6 +28,7 @@
             operatorLabel: filterRender.operatorLabel,
             operatorValue: filterRender.operatorValue,
             props: filterRender.props,
+            clearTag: filterRender.clearTag,
           })),
         });
       }

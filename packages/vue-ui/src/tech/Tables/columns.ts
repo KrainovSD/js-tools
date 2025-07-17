@@ -171,6 +171,7 @@ export const COLUMNS: Column[] = [
         operatorLabel: "Между датами",
         operatorValue: "date-in-range",
         displayValue: "date-range",
+        clearTag: "date-range",
       },
       {
         component: "date-range",
@@ -178,6 +179,7 @@ export const COLUMNS: Column[] = [
         operatorLabel: "Не между датами",
         operatorValue: "not-date-in-range",
         displayValue: "date-range",
+        clearTag: "date-range",
       },
     ],
     cellRender: {

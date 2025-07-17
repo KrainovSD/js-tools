@@ -49,6 +49,8 @@
           component: K;
           operatorValue?: string | number;
           operatorLabel?: string;
+          /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
+          clearTag?: string;
         };
       }[keyof FilterComponentProps]
     | {
@@ -57,6 +59,8 @@
         component: Component;
         displayValue?: FilterComponentKey;
         props?: unknown;
+        /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
+        clearTag?: string;
       };
 
   export type FilterItem = {
@@ -76,6 +80,8 @@
           operatorValue?: string | number;
           operatorLabel?: string;
           operators: SelectItem[];
+          /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
+          clearTag?: string;
         };
       }[keyof FilterComponentProps]
     | {
@@ -88,6 +94,8 @@
         displayValue?: FilterComponentKey;
         props?: unknown;
         operators: SelectItem[];
+        /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
+        clearTag?: string;
       };
 
   export type FilterProps = {
@@ -309,7 +317,15 @@
             label: operator.label,
             onClick: () => {
               operators[filter.field] = operator.value;
-              form[filter.field] = undefined;
+
+              const nextClearTag = $props.filters
+                .find((propsFilter) => propsFilter.field === filter.field)
+                ?.components?.find?.(
+                  (component) => component.operatorValue === operator.value,
+                )?.clearTag;
+              if (!nextClearTag || !filter.clearTag || nextClearTag !== filter.clearTag) {
+                form[filter.field] = undefined;
+              }
             },
           }))
         "
