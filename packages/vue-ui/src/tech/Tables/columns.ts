@@ -102,10 +102,7 @@ export const COLUMNS: Column[] = [
     filterRender: {
       component: "string",
       props: { placeholder: "Введите имя", allowClear: true },
-      operators: [
-        { label: "==", value: "includes-string" },
-        { label: "!=", value: "not-includes-string" },
-      ],
+
       displayValue: "text",
     },
     sortRender: {
@@ -130,10 +127,6 @@ export const COLUMNS: Column[] = [
     filterRender: {
       component: "date-range",
       props: { format: "DD/MM/YYYY" },
-      operators: [
-        { label: "==", value: "date-in-range" },
-        { label: "!=", value: "not-date-in-range" },
-      ],
       displayValue: "date-range",
     },
     cellRender: {
@@ -151,10 +144,6 @@ export const COLUMNS: Column[] = [
     filterRender: {
       component: "number-range",
       props: { min: 18, max: 100 },
-      operators: [
-        { label: "==", value: "number-in-range" },
-        { label: "!=", value: "not-number-in-range" },
-      ],
       displayValue: "number-range",
     },
     cellRender: {
@@ -168,15 +157,29 @@ export const COLUMNS: Column[] = [
     name: "startWork",
     filterable: true,
     filterType: "date",
-    filterRender: {
-      component: "date",
-      props: { format: "DD/MM/YYYY" },
-      operators: [
-        { label: "==", value: "date" },
-        { label: "!=", value: "not-date" },
-      ],
-      displayValue: "date",
-    },
+    filterRender: [
+      {
+        component: "date",
+        props: { format: "DD/MM/YYYY" },
+        operatorLabel: "Равно Дате",
+        operatorValue: "date",
+        displayValue: "date",
+      },
+      {
+        component: "date-range",
+        props: { format: "DD/MM/YYYY" },
+        operatorLabel: "Между датами",
+        operatorValue: "date-in-range",
+        displayValue: "date-range",
+      },
+      {
+        component: "date-range",
+        props: { format: "DD/MM/YYYY" },
+        operatorLabel: "Не между датами",
+        operatorValue: "not-date-in-range",
+        displayValue: "date-range",
+      },
+    ],
     cellRender: {
       component: "default",
       props: { dateFormat: "DD/MM/YYYY" },
@@ -191,10 +194,6 @@ export const COLUMNS: Column[] = [
     filterRender: {
       component: "number",
       props: { min: 0, max: 5 },
-      operators: [
-        { label: "==", value: "equals" },
-        { label: "!=", value: "not-equals" },
-      ],
       displayValue: "number",
     },
     cellRender: {
@@ -212,10 +211,6 @@ export const COLUMNS: Column[] = [
       component: "select",
       displayValue: "select",
       props: { options: SPORTS.map((sport) => ({ label: sport, value: sport })) },
-      operators: [
-        { label: "==", value: "equals" },
-        { label: "!=", value: "not-equals" },
-      ],
     },
     cellRender: {
       component: "default",
@@ -244,15 +239,15 @@ export const COLUMNS: Column[] = [
     additionalCellClass: ["nowrap", "wCenter", "hCenter"],
     filterable: true,
     filterType: "includes-array-some",
-    filterRender: {
-      component: "select",
-      displayValue: "select",
-      props: { options: COLORS.map((color) => ({ label: color, value: color })), multiple: true },
-      operators: [
-        { label: "==", value: "includes-array-some" },
-        { label: "!=", value: "not-includes-array-some" },
-      ],
-    },
+    filterRender: [
+      {
+        component: "select",
+        displayValue: "select",
+        props: { options: COLORS.map((color) => ({ label: color, value: color })), multiple: true },
+        operatorLabel: "==",
+        operatorValue: "includes-array-some",
+      },
+    ],
     cellRender: {
       component: "tag",
       props: {

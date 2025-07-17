@@ -1,7 +1,6 @@
 import type { CellContext, RowData } from "@tanstack/vue-table";
 import type { Component } from "vue";
-import type { FilterComponent } from "../Filter.vue";
-import type { SelectItem } from "../Select.vue";
+import type { FilterComponentKey } from "../Filter.vue";
 import VTable from "./Table.vue";
 import type {
   CellClassInterface,
@@ -21,8 +20,17 @@ declare module "@tanstack/vue-table" {
   interface ColumnDefBase<TData extends RowData, TValue = unknown> {
     cellRender: CellRenderComponent<TData> | undefined;
     headerRender: HeaderRenderComponent<TData> | undefined;
-    filterRender: FilterRenderComponent<TData> | undefined;
     sortRender: SortRenderComponent<TData> | undefined;
+    filterRenders:
+      | {
+          component: FilterRenderComponent<TData>;
+          props?: unknown;
+          key: string;
+          operatorValue?: string | number;
+          operatorLabel?: string;
+          displayValue?: FilterComponentKey;
+        }[]
+      | undefined;
     headerClass: HeaderClassInterface<TData>[];
     cellClass: CellClassInterface<TData>[];
     name: string;
@@ -30,9 +38,6 @@ declare module "@tanstack/vue-table" {
     accessorKey: string;
     cellRenderProps?: unknown;
     headerRenderProps?: unknown;
-    filterRenderProps?: unknown;
-    filterOperators: SelectItem[];
-    filterDisplayValue?: FilterComponent;
     sortRenderProps?: unknown;
     props?: unknown;
     expandable?: boolean;

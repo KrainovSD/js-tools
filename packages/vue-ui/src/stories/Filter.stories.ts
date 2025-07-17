@@ -25,65 +25,85 @@ const FILTERS: FilterItem[] = [
     field: "string",
     label: "Имя файла",
     icon: VFileOutlined,
-    component: "text",
-    props: { placeholder: "Имя файла", allowClear: true },
+    components: [{ component: "text", props: { placeholder: "Имя файла", allowClear: true } }],
   },
   {
     field: "long",
     label: "Очень длинное название поля для компонента фильтра",
     icon: VFileOutlined,
-    component: "text",
+    components: [{ component: "text" }],
   },
   {
     field: "number",
     label: "Сумма",
     icon: VDollarOutlined,
-    component: "number",
-    props: { min: -5, max: 5 },
+    components: [{ component: "number", props: { min: -5, max: 5 } }],
   },
-  { field: "range", label: "Количество", icon: VSkinOutlined, component: "number-range" },
+  {
+    field: "range",
+    label: "Количество",
+    icon: VSkinOutlined,
+    components: [{ component: "number-range" }],
+  },
   {
     field: "select",
     label: "Тип (Несколько)",
     icon: VCarOutlined,
-    component: "select",
-    props: {
-      options: [
-        { label: "Тип 1", value: 1 },
-        { label: "Тип 2", value: 2 },
-        { label: "Тип 3", value: 3 },
-        { label: "Тип 4", value: 4 },
-      ],
-      clear: true,
-      multiple: true,
-      placeholder: "Выберите тип",
-      search: true,
-    },
+    components: [
+      {
+        component: "select",
+        props: {
+          options: [
+            { label: "Тип 1", value: 1 },
+            { label: "Тип 2", value: 2 },
+            { label: "Тип 3", value: 3 },
+            { label: "Тип 4", value: 4 },
+          ],
+          clear: true,
+          multiple: true,
+          placeholder: "Выберите тип",
+          search: true,
+        },
+      },
+    ],
   },
   {
     field: "select_single",
     label: "Тип (Один)",
     icon: VCarOutlined,
-    component: "select",
-    props: {
-      options: [
-        { label: "Тип 1", value: 1 },
-        { label: "Тип 2", value: 2 },
-        { label: "Тип 3", value: 3 },
-        { label: "Тип 4", value: 4 },
-      ],
-      clear: true,
-      multiple: false,
-      placeholder: "Выберите тип",
-      search: true,
-    },
-    operators: [
-      { label: "==", value: "equal" },
-      { label: "!=", value: "not_equal" },
+    components: [
+      {
+        component: "select",
+        props: {
+          options: [
+            { label: "Тип 1", value: 1 },
+            { label: "Тип 2", value: 2 },
+            { label: "Тип 3", value: 3 },
+            { label: "Тип 4", value: 4 },
+          ],
+          clear: true,
+          multiple: false,
+          placeholder: "Выберите тип",
+          search: true,
+        },
+      },
     ],
   },
-  { field: "date", label: "Дата создания", icon: VClockCircleOutlined, component: "date" },
-  { field: "date-range", label: "Дата изменения", icon: VEditOutlined, component: "date-range" },
+  {
+    field: "date",
+    label: "Дата создания",
+    icon: VClockCircleOutlined,
+    components: [
+      { component: "date", operatorLabel: "Дата", operatorValue: "date" },
+      { component: "date-range", operatorLabel: "Между датами", operatorValue: "date-range" },
+    ],
+  },
+  {
+    field: "date-range",
+    label: "Дата изменения",
+    icon: VEditOutlined,
+    components: [{ component: "date-range" }],
+  },
 ];
 
 const Template: StoryFn<typeof VFilter> = (args) => ({
@@ -103,8 +123,7 @@ const Template: StoryFn<typeof VFilter> = (args) => ({
         dateFormat(getDateByRules([{ increment: 0, type: "years" }]), "YYYY-MM-DD"),
       ],
     });
-    // eslint-disable-next-line camelcase
-    const operators = ref<Record<string, unknown>>({ select_single: "equal" });
+    const operators = ref<Record<string, unknown>>({});
 
     return { args, filter, operators };
   },
@@ -126,8 +145,7 @@ const EmptyTemplate: StoryFn<typeof VFilter> = (args) => ({
   components: { VFilter },
   setup() {
     const filter = ref<Record<string, unknown>>({});
-    // eslint-disable-next-line camelcase
-    const operators = ref<Record<string, unknown>>({ select_single: "equal" });
+    const operators = ref<Record<string, unknown>>({});
 
     return { args, filter, operators };
   },

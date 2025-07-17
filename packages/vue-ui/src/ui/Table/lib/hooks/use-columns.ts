@@ -1,4 +1,4 @@
-import { getByPath } from "@krainovsd/js-helpers";
+import { getByPath, isArray } from "@krainovsd/js-helpers";
 import type {
   BuiltInSortingFn,
   ColumnPinningState,
@@ -6,7 +6,6 @@ import type {
   SortingFn,
 } from "@tanstack/vue-table";
 import { computed } from "vue";
-import type { SelectItem } from "../../../Select.vue";
 import {
   DateFilterRender,
   DateRangeFilterRender,
@@ -103,10 +102,6 @@ const SORTS: Record<SortingKey, SortingFn<DefaultRow> | BuiltInSortingFn> = {
   boolean: booleanSort,
   date: dateSort,
 };
-// const FILTERS: Record<FilterKey, FilterFnOption<DefaultRow>> = {
-//   equals: equalsFilter,
-//   "number-in-range": numberInRangeFilter,
-// };
 
 const DEFAULT_COLUMNS_SETTINGS: TableDefaultColumnOptions = {
   cellRender: "default",
@@ -166,9 +161,7 @@ export function useColumns<
         props.defaultColumnOptions?.headerRender ??
         DEFAULT_COLUMNS_SETTINGS.headerRender;
       const filterRenderKey =
-        column.filterRender?.component ??
-        props.defaultColumnOptions?.filterRender ??
-        DEFAULT_COLUMNS_SETTINGS.filterRender;
+        props.defaultColumnOptions?.filterRender ?? DEFAULT_COLUMNS_SETTINGS.filterRender;
       const sortRenderKey =
         column.sortRender?.component ??
         props.defaultColumnOptions?.sortRender ??
@@ -192,6 +185,12 @@ export function useColumns<
         props.defaultColumnOptions?.filterType ??
         DEFAULT_COLUMNS_SETTINGS.filterType;
 
+      const filterRenders = column.filterRender
+        ? isArray(column.filterRender)
+          ? column.filterRender
+          : [column.filterRender]
+        : null;
+
       const columnDef: ColumnDef<RowData> = {
         accessorKey: column.key as string,
         accessorFn: (row: RowData) => getByPath(row, column.key),
@@ -214,11 +213,31 @@ export function useColumns<
           (HEADER_RENDERS[
             headerRenderKey as TableHeaderRenderKey
           ] as HeaderRenderComponent<RowData>),
-        filterRender:
-          (filterRenderKey ? props.filterRenders?.[filterRenderKey] : undefined) ??
-          (FILTER_RENDERS[
-            filterRenderKey as TableFilterRenderKey
-          ] as FilterRenderComponent<RowData>),
+        filterRenders: filterRenders
+          ? filterRenders.map((filter) => {
+              const key = filter.component ?? filterRenderKey;
+
+              return {
+                component:
+                  (key ? props.filterRenders?.[key] : undefined) ??
+                  (FILTER_RENDERS[key as TableFilterRenderKey] as FilterRenderComponent<RowData>),
+                key: key as string,
+                displayValue: filter.displayValue,
+                operatorLabel: filter.operatorLabel,
+                operatorValue: filter.operatorValue as string,
+                props: filter.props,
+              };
+            })
+          : [
+              {
+                component:
+                  (filterRenderKey ? props.filterRenders?.[filterRenderKey] : undefined) ??
+                  (FILTER_RENDERS[
+                    filterRenderKey as TableFilterRenderKey
+                  ] as FilterRenderComponent<RowData>),
+                key: filterRenderKey as string,
+              },
+            ],
         sortRender:
           (sortRenderKey ? props.sortRenders?.[sortRenderKey] : undefined) ??
           (SORT_RENDERS[sortRenderKey as TableSortRenderKey] as SortRenderComponent<RowData>),
@@ -252,9 +271,6 @@ export function useColumns<
         ),
         cellRenderProps: column.cellRender?.props,
         headerRenderProps: column.headerRender?.props,
-        filterRenderProps: column.filterRender?.props,
-        filterOperators: (column.filterRender?.operators as SelectItem[]) ?? [],
-        filterDisplayValue: column.filterRender?.displayValue,
         sortRenderProps: column.sortRender?.props,
         cellClassProps: column.cellClassProps,
         headerClassProps: column.headerClassProps,

@@ -15,17 +15,20 @@
       const column = header.column.columnDef;
       const context = header.getContext();
 
-      if (column.enableColumnFilter && column.filterRender) {
+      if (column.enableColumnFilter && column.filterRenders) {
         acc.push({
-          component: markRaw(
-            h(column.filterRender, { context, settings: column.filterRenderProps }),
-          ),
-          props: column.filterRenderProps,
           field: column.id ?? (column.accessorKey as string),
           label: column.name,
           icon: column.icon,
-          displayValue: column.filterDisplayValue,
-          operators: column.filterOperators,
+          components: column.filterRenders.map((filterRender) => ({
+            component: markRaw(
+              h(filterRender.component, { context, settings: filterRender.props }),
+            ),
+            displayValue: filterRender.displayValue,
+            operatorLabel: filterRender.operatorLabel,
+            operatorValue: filterRender.operatorValue,
+            props: filterRender.props,
+          })),
         });
       }
 

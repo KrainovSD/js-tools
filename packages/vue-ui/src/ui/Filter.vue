@@ -19,7 +19,7 @@
     date: FilterDateComponentProps;
     "date-range": FilterDateComponentProps;
   };
-  export type FilterComponent = keyof FilterComponentProps;
+  export type FilterComponentKey = keyof FilterComponentProps;
 
   export type FilterSelectComponentProps = {
     options: SelectItem[];
@@ -42,25 +42,52 @@
     format?: string;
   };
 
-  export type FilterItem =
+  export type FilterComponent =
     | {
         [K in keyof FilterComponentProps]: {
           props?: FilterComponentProps[K];
-          field: string;
-          operators?: SelectItem[];
-          label: string;
           component: K;
+          operatorValue?: string | number;
+          operatorLabel?: string;
+        };
+      }[keyof FilterComponentProps]
+    | {
+        operatorValue?: string | number;
+        operatorLabel?: string;
+        component: Component;
+        displayValue?: FilterComponentKey;
+        props?: unknown;
+      };
+
+  export type FilterItem = {
+    field: string;
+    label: string;
+    icon?: Component;
+    components: FilterComponent[];
+  };
+  export type FilterItemFlat =
+    | {
+        [K in keyof FilterComponentProps]: {
+          field: string;
+          label: string;
           icon?: Component;
+          props?: FilterComponentProps[K];
+          component: K;
+          operatorValue?: string | number;
+          operatorLabel?: string;
+          operators: SelectItem[];
         };
       }[keyof FilterComponentProps]
     | {
         field: string;
-        operators?: SelectItem[];
         label: string;
-        component: Component;
         icon?: Component;
-        displayValue?: FilterComponent;
+        operatorValue?: string | number;
+        operatorLabel?: string;
+        component: Component;
+        displayValue?: FilterComponentKey;
         props?: unknown;
+        operators: SelectItem[];
       };
 
   export type FilterProps = {
@@ -110,15 +137,44 @@
       return acc;
     }, []),
   );
-  const openedFilters = computed(() =>
-    props.filters.filter((filter) => openedFields.value.includes(filter.field)),
-  );
+  const openedFilters = computed(() => {
+    return openedFields.value.reduce((acc: FilterItemFlat[], field) => {
+      const filterItem = props.filters.find((filter) => filter.field === field);
+      if (!filterItem) {
+        return acc;
+      }
+
+      const filterComponent =
+        operators.value[field] != undefined
+          ? (filterItem.components.find(
+              (component) => component.operatorValue === operators.value[field],
+            ) ?? filterItem.components[0])
+          : filterItem.components[0];
+      if (!filterComponent) {
+        return acc;
+      }
+
+      acc.push({
+        ...filterItem,
+        ...filterComponent,
+        operators: filterItem.components.reduce((acc: SelectItem[], component) => {
+          if (component.operatorLabel && component.operatorValue != undefined) {
+            acc.push({ value: component.operatorValue, label: component.operatorLabel });
+          }
+
+          return acc;
+        }, []),
+      });
+
+      return acc;
+    }, []);
+  });
   const filterClasses = computed(() => ({ [`control-size-${props.controlSize}`]: true }));
 
-  function extractFilterDisplayValue(filter: FilterItem) {
+  function extractFilterDisplayValue(filter: FilterItemFlat) {
     let displayValue: string = "";
     const filterValue = form.value[filter.field];
-    const displayType: FilterComponent =
+    const displayType: FilterComponentKey =
       "displayValue" in filter
         ? (filter.displayValue ?? "text")
         : isString(filter.component)
@@ -203,11 +259,11 @@
     for (let i = 0; i < props.filters.length; i++) {
       const filter = props.filters[i];
       if (
-        filter.operators &&
-        filter.operators.length > 0 &&
+        filter.components.length > 0 &&
+        filter.components[0].operatorValue != undefined &&
         operators.value[filter.field] == undefined
       ) {
-        operators.value[filter.field] = filter.operators[0].value;
+        operators.value[filter.field] = filter.components[0].operatorValue;
       }
     }
   });
@@ -253,6 +309,7 @@
             label: operator.label,
             onClick: () => {
               operators[filter.field] = operator.value;
+              form[filter.field] = undefined;
             },
           }))
         "

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactNode } from "react";
 import type { Component } from "vue";
-import type { FilterComponent } from "../../Filter.vue";
+import type { FilterComponentKey } from "../../Filter.vue";
 import type {
   DateFilterRenderProps,
   DefaultCellRenderProps,
@@ -72,7 +72,9 @@ export type TableColumn<
 
   cellRender?: TableCellRendersProps<RowData, CellRender>;
   headerRender?: TableHeaderRendersProps<RowData, HeaderRender>;
-  filterRender?: TableFilterRendersProps<RowData, FilterRender, FilterType>;
+  filterRender?:
+    | TableFilterRendersProps<RowData, FilterRender, FilterType>[]
+    | TableFilterRendersProps<RowData, FilterRender, FilterType>;
   sortRender?: TableSortRendersProps<RowData, SortRender>;
   headerClass?: (keyof HeaderClass | TableHeaderClassKey)[];
   additionalHeaderClass?: (keyof HeaderClass | TableHeaderClassKey)[];
@@ -128,38 +130,44 @@ export type DefaultFilterRenderProps<
   | {
       component?: "string";
       props?: StringFilterRenderProps;
-      operators?: FilterOperator<RowData, FilterType>[];
-      displayValue?: FilterComponent;
+      operatorValue?: keyof FilterType | FilterKey;
+      operatorLabel?: string;
+      displayValue?: FilterComponentKey;
     }
   | {
       component?: "number";
       props?: NumberFilterRenderProps;
-      operators?: FilterOperator<RowData, FilterType>[];
-      displayValue?: FilterComponent;
+      operatorValue?: keyof FilterType | FilterKey;
+      operatorLabel?: string;
+      displayValue?: FilterComponentKey;
     }
   | {
       component?: "number-range";
       props?: NumberRangeFilterRenderProps;
-      operators?: FilterOperator<RowData, FilterType>[];
-      displayValue?: FilterComponent;
+      operatorValue?: keyof FilterType | FilterKey;
+      operatorLabel?: string;
+      displayValue?: FilterComponentKey;
     }
   | {
       component?: "select";
       props?: SelectFilterRenderProps;
-      operators?: FilterOperator<RowData, FilterType>[];
-      displayValue?: FilterComponent;
+      operatorValue?: keyof FilterType | FilterKey;
+      operatorLabel?: string;
+      displayValue?: FilterComponentKey;
     }
   | {
       component?: "date";
       props?: DateFilterRenderProps;
-      operators?: FilterOperator<RowData, FilterType>[];
-      displayValue?: FilterComponent;
+      operatorValue?: keyof FilterType | FilterKey;
+      operatorLabel?: string;
+      displayValue?: FilterComponentKey;
     }
   | {
       component?: "date-range";
       props?: DateFilterRenderProps;
-      operators?: FilterOperator<RowData, FilterType>[];
-      displayValue?: FilterComponent;
+      operatorValue?: keyof FilterType | FilterKey;
+      operatorLabel?: string;
+      displayValue?: FilterComponentKey;
     };
 
 export type DefaultSortRenderProps = { component?: TableSortRenderKey; props?: never };
@@ -202,8 +210,9 @@ export type FilterRenderMap<
   [K in keyof FilterRender]: {
     component?: K;
     props?: ComponentProps<FilterRender[K]>;
-    operators?: FilterOperator<RowData, FilterType>[];
-    displayValue?: FilterComponent;
+    operatorValue?: keyof FilterType | FilterKey;
+    operatorLabel?: string;
+    displayValue?: FilterComponentKey;
   };
 }[keyof FilterRender];
 
