@@ -98,10 +98,14 @@ export function createRows(
       age,
       approved: BOOLEAN[randomNumber(-1, 1).toString() as keyof typeof BOOLEAN],
       birth: birth.getTime(),
-      colors: Array.from(
-        { length: randomNumber(0, 4) },
-        () => COLORS[randomNumber(0, COLORS.length - 1)],
-      ),
+      colors: [
+        ...new Set(
+          Array.from(
+            { length: randomNumber(0, 4) },
+            () => COLORS[randomNumber(0, COLORS.length - 1)],
+          ),
+        ),
+      ],
       lastWork: {
         address: ADDRESSES[randomNumber(0, ADDRESSES.length - 1)],
         duration: randomNumber(0, 356 * 10),

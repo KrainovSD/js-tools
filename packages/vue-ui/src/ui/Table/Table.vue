@@ -131,7 +131,7 @@
     },
   );
   const tableState = computed(() => table.getState());
-  useWatchDebug(() => table.getRowModel().rows, "ROWS");
+
   // useWatchDebug(() => table.getLeftVisibleLeafColumns(), "COLUMNS");
   // useWatchDebug(() => table.options.meta, "META");
   // useWatchDebug(() => tableState.value, "state");

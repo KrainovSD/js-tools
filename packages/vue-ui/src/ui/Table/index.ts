@@ -42,6 +42,7 @@ declare module "@tanstack/vue-table" {
     className?: ((context: CellContext<TData, unknown>) => string | undefined) | string;
     headerClassProps?: unknown;
     cellClassProps?: unknown;
+    filterFn: string;
   }
 
   interface TableMeta<TData extends RowData> {

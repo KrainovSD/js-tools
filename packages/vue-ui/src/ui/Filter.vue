@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { dateFormat, isArray, isId, isNumber, isObject, isString } from "@krainovsd/js-helpers";
   import { VCloseCircleFilled, VDeleteOutlined, VFilterOutlined } from "@krainovsd/vue-icons";
-  import { type Component, computed, markRaw, onMounted, shallowRef } from "vue";
+  import { type Component, computed, markRaw, onMounted, shallowRef, watch } from "vue";
   import Button, { type ButtonSize } from "./Button.vue";
   import DropDown, { type DropDownMenuItem } from "./DropDown.vue";
   import Input, { type InputVariant } from "./Input.vue";
@@ -184,6 +184,18 @@
 
     return displayValue;
   }
+
+  watch(
+    form,
+    (form) => {
+      const formKeys = Object.keys(form);
+      if (formKeys.length !== openedFields.value.length) {
+        const actualOpenedFields = new Set([...openedFields.value, ...formKeys]);
+        openedFields.value = Array.from(actualOpenedFields);
+      }
+    },
+    { deep: true },
+  );
 
   onMounted(() => {
     openedFields.value = Object.keys(form.value);

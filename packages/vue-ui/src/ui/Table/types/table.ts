@@ -85,14 +85,21 @@ export type TableRenderers<RowData extends DefaultRow> = {
 export type SortingKey = "number" | "string" | "boolean" | "date" | "array" | "string-with-number";
 export type FilterKey =
   | "equals"
-  | "array-some-in-array"
-  | "array-every-in-array"
-  | "array-equals"
-  | "array-some-in-primitive"
-  | "date-in-range"
-  | "date"
+  | "not-equals"
+  | "includes-string"
+  | "not-includes-string"
   | "number-in-range"
-  | "includes-string";
+  | "not-number-in-range"
+  | "includes-array-some"
+  | "not-includes-array-some"
+  | "includes-array-every"
+  | "not-includes-array-every"
+  | "array-equals"
+  | "not-array-equals"
+  | "date"
+  | "not-date"
+  | "date-in-range"
+  | "not-date-in-range";
 
 export type TablePaginationProps<RowData extends DefaultRow> = {
   table: TableInterface<RowData>;

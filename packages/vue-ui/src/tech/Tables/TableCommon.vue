@@ -10,15 +10,33 @@
 
   // onMounted(() => {
   //   setTimeout(() => {
-  //     column.value = COLUMNS;
-  //     rows.value = createRows(100, false);
-  //     console.log("CHANGED");
+  //     column.value = COLUMNS.map((column) => {
+  //       if (column.key === "age") {
+  //         return {
+  //           ...column,
+  //           filterType: "number-in-range",
+  //         };
+  //       }
+
+  //       return column;
+  //     });
   //   }, 2000);
   // });
 </script>
 
 <template>
-  <VTable :columns="column" :rows="rows" :virtual-rows="false" :with-filters="true" />
+  <VTable
+    :columns="column"
+    :rows="rows"
+    :virtual-rows="true"
+    :with-filters="true"
+    :initial-column-filters="[
+      {
+        id: 'age',
+        value: [18, 19],
+      },
+    ]"
+  />
 </template>
 
 <style lang="scss" module></style>

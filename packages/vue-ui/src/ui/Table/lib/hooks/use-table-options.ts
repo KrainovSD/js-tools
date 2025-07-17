@@ -24,6 +24,7 @@ import type {
   DefaultRow,
   ExpandedState,
   FilterFn,
+  FilterKey,
   FilterRenderComponent,
   HeaderClassInterface,
   HeaderRenderComponent,
@@ -35,6 +36,24 @@ import type {
   TableProps,
   TableRenderers,
 } from "../../types";
+import {
+  arrayEqualsFilter,
+  dateFilter,
+  dateInRangeFilter,
+  equalsFilter,
+  includesArrayEveryFilter,
+  includesArraySomeFilter,
+  includesStringFilter,
+  notArrayEqualsFilter,
+  notDateFilter,
+  notDateInRangeFilter,
+  notEqualsFilter,
+  notIncludesArrayEveryFilter,
+  notIncludesArraySomeFilter,
+  notIncludesStringFilter,
+  notNumberInRangeFilter,
+  numberInRangeFilter,
+} from "../filtering";
 
 type ExtraProps<Row extends DefaultRow> = {
   columnsDef: ComputedRef<ColumnDef<Row>[]>;
@@ -61,6 +80,24 @@ type TableState = {
 
 const RENDERERS: Required<TableRenderers<DefaultRow>> = {
   expander: ExpanderRenderer,
+};
+const FILTERS: Record<FilterKey, FilterFn<DefaultRow>> = {
+  equals: equalsFilter,
+  "not-equals": notEqualsFilter,
+  "includes-string": includesStringFilter as FilterFn<DefaultRow>,
+  "not-includes-string": notIncludesStringFilter as FilterFn<DefaultRow>,
+  "number-in-range": numberInRangeFilter as FilterFn<DefaultRow>,
+  "not-number-in-range": notNumberInRangeFilter as FilterFn<DefaultRow>,
+  date: dateFilter as FilterFn<DefaultRow>,
+  "not-date": notDateFilter as FilterFn<DefaultRow>,
+  "date-in-range": dateInRangeFilter as FilterFn<DefaultRow>,
+  "not-date-in-range": notDateInRangeFilter as FilterFn<DefaultRow>,
+  "array-equals": arrayEqualsFilter as FilterFn<DefaultRow>,
+  "not-array-equals": notArrayEqualsFilter as FilterFn<DefaultRow>,
+  "includes-array-some": includesArraySomeFilter as FilterFn<DefaultRow>,
+  "not-includes-array-some": notIncludesArraySomeFilter as FilterFn<DefaultRow>,
+  "includes-array-every": includesArrayEveryFilter as FilterFn<DefaultRow>,
+  "not-includes-array-every": notIncludesArrayEveryFilter as FilterFn<DefaultRow>,
 };
 
 export function useTableOptions<
@@ -392,6 +429,10 @@ export function useTableOptions<
       },
       get meta() {
         return meta.value;
+      },
+      filterFns: {
+        ...FILTERS,
+        ...props.filterTypes,
       },
       getSubRows: props.getSubRows,
       getRowId: props.getRowId,

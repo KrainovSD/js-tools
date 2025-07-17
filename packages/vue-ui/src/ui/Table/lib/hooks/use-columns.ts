@@ -2,7 +2,6 @@ import { getByPath } from "@krainovsd/js-helpers";
 import type {
   BuiltInSortingFn,
   ColumnPinningState,
-  FilterFnOption,
   GroupingState,
   SortingFn,
 } from "@tanstack/vue-table";
@@ -33,7 +32,6 @@ import type {
   DefaultGanttData,
   DefaultRow,
   FilterFn,
-  FilterKey,
   FilterRenderComponent,
   HeaderClassInterface,
   HeaderRenderComponent,
@@ -55,7 +53,6 @@ import type {
   TableSortRenderKey,
   TableSortRenders,
 } from "../../types";
-import { arrayAllFilter, dateFilter, dateRangeFilter, stringByArrayFilter } from "../filtering";
 import { arraySort, booleanSort, dateSort, numberSort, stringSort } from "../sorting";
 
 const CELL_RENDERS: TableCellRenders<DefaultRow> = {
@@ -106,17 +103,10 @@ const SORTS: Record<SortingKey, SortingFn<DefaultRow> | BuiltInSortingFn> = {
   boolean: booleanSort,
   date: dateSort,
 };
-const FILTERS: Record<FilterKey, FilterFnOption<DefaultRow>> = {
-  "date-in-range": dateRangeFilter,
-  "array-every-in-array": "arrIncludesAll",
-  "array-some-in-array": "arrIncludesSome",
-  "array-equals": arrayAllFilter,
-  "includes-string": "includesString",
-  "array-some-in-primitive": stringByArrayFilter,
-  date: dateFilter,
-  equals: "equals",
-  "number-in-range": "inNumberRange",
-};
+// const FILTERS: Record<FilterKey, FilterFnOption<DefaultRow>> = {
+//   equals: equalsFilter,
+//   "number-in-range": numberInRangeFilter,
+// };
 
 const DEFAULT_COLUMNS_SETTINGS: TableDefaultColumnOptions = {
   cellRender: "default",
@@ -312,9 +302,7 @@ export function useColumns<
         sortingFn:
           (sortTypeKey ? props.sortTypes?.[sortTypeKey] : undefined) ??
           (SORTS[sortTypeKey as SortingKey] as SortingFn<RowData> | BuiltInSortingFn),
-        filterFn:
-          (filterTypeKey ? props.filterTypes?.[filterTypeKey] : undefined) ??
-          (FILTERS[filterTypeKey as FilterKey] as FilterFnOption<RowData>),
+        filterFn: filterTypeKey as string,
       };
 
       if (column.width == undefined && props.rubberColumn) {
