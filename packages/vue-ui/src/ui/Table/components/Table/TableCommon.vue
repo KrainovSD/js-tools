@@ -8,6 +8,7 @@
     TableEmptyProps,
     TableInterface,
   } from "../../types";
+  import TableEmpty from "./TableEmpty.vue";
   import TableHeaderRow from "./TableHeaderRow.vue";
   import TableRow from "./TableRow.vue";
 
@@ -146,6 +147,8 @@
           @drag-row="(sidx, tidx, sid, tid) => $emit('dragRow', sidx, tidx, sid, tid)"
         />
       </template>
+      <TableEmpty v-if="$props.rows.length === 0 && !$props.Empty" />
+      <component :is="$props.Empty" v-if="$props.rows.length === 0 && $props.Empty" />
     </div>
   </div>
 </template>

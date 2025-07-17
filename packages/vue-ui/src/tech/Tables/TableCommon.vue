@@ -7,21 +7,6 @@
 
   const rows = shallowRef<RowData[]>(createRows(100, false));
   const column = shallowRef<typeof COLUMNS>(COLUMNS);
-
-  // onMounted(() => {
-  //   setTimeout(() => {
-  //     column.value = COLUMNS.map((column) => {
-  //       if (column.key === "age") {
-  //         return {
-  //           ...column,
-  //           filterType: "number-in-range",
-  //         };
-  //       }
-
-  //       return column;
-  //     });
-  //   }, 2000);
-  // });
 </script>
 
 <template>
@@ -30,13 +15,8 @@
     :rows="rows"
     :virtual-rows="true"
     :with-filters="true"
-    :initial-column-filters="[
-      {
-        id: 'age',
-        value: [18, 19],
-      },
-    ]"
+    :with-pagination="true"
   />
 </template>
 
-<style lang="scss" module></style>
+<style lang="scss"></style>

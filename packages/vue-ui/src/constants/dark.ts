@@ -154,6 +154,12 @@ export const DARK_THEME: ThemeVariableConfig = {
     },
   },
   components: {
+    pagination: {
+      "ksd-pagination-item-bg": "transparent",
+      "ksd-pagination-item-size": "32px",
+      "ksd-pagination-item-size-sm": "24px",
+      "ksd-pagination-item-active-bg": "transparent",
+    },
     empty: {
       "ksd-empty-border-color": "#3e3e3e",
       "ksd-empty-front-color": "#1d1d1d",

@@ -154,6 +154,12 @@ export const LIGHT_THEME: ThemeVariableConfig = {
     },
   },
   components: {
+    pagination: {
+      "ksd-pagination-item-bg": "transparent",
+      "ksd-pagination-item-size": "32px",
+      "ksd-pagination-item-size-sm": "24px",
+      "ksd-pagination-item-active-bg": "transparent",
+    },
     empty: {
       "ksd-empty-border-color": "#d9d9d9",
       "ksd-empty-front-color": "#fafafa",

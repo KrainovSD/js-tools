@@ -4,7 +4,6 @@
   import type { ColumnFilter, DefaultRow, TableInterface } from "../../types";
 
   type Props = {
-    withFilters: boolean;
     table: TableInterface<RowData>;
   };
 
@@ -101,7 +100,6 @@
 
 <template>
   <Filter
-    v-if="$props.withFilters"
     v-model:operators="operators"
     v-model="form"
     :filters="filters"

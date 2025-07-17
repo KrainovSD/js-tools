@@ -15,7 +15,6 @@
   "
 >
   import { computed, useTemplateRef } from "vue";
-  import { useWatchDebug } from "../../hooks";
   import { Gantt, TableCommon, TableFilter, TableFooter, TableLoading } from "./components";
   import { useColumns, useTableOptions, useVirtualizer } from "./lib";
   import type {
@@ -130,17 +129,7 @@
       sorting,
     },
   );
-  const tableState = computed(() => table.getState());
-
-  // useWatchDebug(() => table.getLeftVisibleLeafColumns(), "COLUMNS");
-  // useWatchDebug(() => table.options.meta, "META");
-  // useWatchDebug(() => tableState.value, "state");
-  // useWatchDebug(() => tableState.value.columnFilters, "filters");
-  // useWatchDebug(() => tableState.value.sorting, "sorting");
-  // setTimeout(() => {
-  //   table.getColumn("test")?.setFilterValue?.("filterMe!");
-  // }, 3000);
-
+  const totalRows = computed(() => props.totalRows ?? table.getFilteredRowModel().rows.length);
   const {
     columnVirtualEnabled,
     columnsVirtual,
@@ -158,9 +147,15 @@
 
 <template>
   <div ref="root" v-bind="$attrs" class="ksd-table__wrapper" :class="{ full: $props.fullSize }">
-    <TableLoading v-if="!$props.Loader && $props.loading" />
-    <component :is="$props.Loader" v-if="$props.Loader && $props.loading" />
-    <TableFilter :with-filters="$props.withFilters ?? false" :table="table" />
+    <TableLoading v-if="$props.loading && !$props.Loader" />
+    <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
+    <TableFilter
+      v-if="$props.withFilters && !$props.Filter"
+      :with-filters="$props.withFilters ?? false"
+      :table="table"
+    />
+    <component :is="$props.Filter" v-if="$props.withFilters && $props.Filter" :table="table" />
+
     <div
       v-if="!$props.withGantt"
       ref="table-container"
@@ -185,7 +180,14 @@
       />
     </div>
     <Gantt v-if="$props.withGantt" ref="gantt" />
-    <TableFooter />
+    <TableFooter
+      :-pagination="$props.Pagination"
+      :table="table"
+      :with-pagination="$props.withPagination && !$props.withGantt"
+      :with-total="$props.withTotal"
+      :page-sizes="$props.pageSizes"
+      :total-rows="totalRows"
+    />
   </div>
 </template>
 

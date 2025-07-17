@@ -13,6 +13,7 @@ import VInputNumber from "./InputNumber.vue";
 import VMessage from "./Message.vue";
 import VModal from "./Modal.vue";
 import VNotification from "./Notification.vue";
+import VPagination from "./Pagination.vue";
 import VPassword from "./Password.vue";
 import VPopConfirm from "./PopConfirm.vue";
 import VPopover from "./Popover.vue";
@@ -99,8 +100,20 @@ export type { TagProps, TagSize, TagColor } from "./Tag.vue";
 export type { CheckableProps, TagCheckableValue } from "./TagCheckable.vue";
 export type { SkeletonProps, SkeletonType, SkeletonShape, SkeletonSize } from "./Skeleton.vue";
 export type { PopoverProps, PopoverSize } from "./Popover.vue";
-export type { FilterComponent, FilterItem, FilterProps } from "./Filter.vue";
+export type {
+  FilterComponent,
+  FilterItem,
+  FilterProps,
+  FilterComponentKey,
+  FilterComponentProps,
+  FilterDateComponentProps,
+  FilterItemFlat,
+  FilterNumberComponentProps,
+  FilterSelectComponentProps,
+  FilterTextComponentProps,
+} from "./Filter.vue";
 export type { EmptyProps } from "./Empty.vue";
+export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pagination.vue";
 
 export {
   VButton,
@@ -136,5 +149,6 @@ export {
   VPopover,
   VFilter,
   VEmpty,
+  VPagination,
 };
 export * from "./Table";

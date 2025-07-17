@@ -20,6 +20,7 @@ import type {
   ThemeMessageVariable,
   ThemeModalVariable,
   ThemeNotificationVariable,
+  ThemePaginationVariable,
   ThemePopConfirmVariable,
   ThemePopoverVariable,
   ThemePopperVariable,
@@ -67,5 +68,6 @@ export type ThemeVariableConfig = {
     table: Record<ThemeTableVariable, string>;
     filter: Record<ThemeFilterVariable, string>;
     empty: Record<ThemeEmptyVariable, string>;
+    pagination: Record<ThemePaginationVariable, string>;
   };
 };

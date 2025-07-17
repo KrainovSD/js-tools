@@ -110,8 +110,6 @@ export type TablePaginationProps<RowData extends DefaultRow> = {
 };
 export type TableFilterProps<RowData extends DefaultRow> = {
   table: TableInterface<RowData>;
-  filters: Record<string, unknown>;
-  filterOptions: unknown[];
 };
 export type TableEmptyProps = {};
 export type TableLoaderProps = {};

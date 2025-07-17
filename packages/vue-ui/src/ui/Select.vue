@@ -330,7 +330,7 @@
     :animation-disappear="$props.animationDisappear"
     :arrow="$props.arrow"
     :close-by-scroll="$props.closeByScroll"
-    :fit="$props.fit"
+    :fit="filteredOptions.length === 0 ? true : $props.fit"
     :close-delay="$props.closeDelay"
     :ignore-elements="$props.ignoreElements"
     :modal-root="$props.modalRoot"
@@ -531,6 +531,7 @@
     position: relative;
     border-radius: var(--ksd-border-radius);
     transition: all var(--ksd-transition-mid) ease-in-out;
+    min-width: 50px;
 
     display: inline-flex;
     cursor: pointer;

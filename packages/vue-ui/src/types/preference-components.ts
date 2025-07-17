@@ -220,3 +220,9 @@ export type ThemeEmptyVariable =
   | "ksd-empty-front-color"
   | "ksd-empty-border-color"
   | "ksd-empty-under-color";
+
+export type ThemePaginationVariable =
+  | "ksd-pagination-item-bg"
+  | "ksd-pagination-item-size"
+  | "ksd-pagination-item-size-sm"
+  | "ksd-pagination-item-active-bg";
