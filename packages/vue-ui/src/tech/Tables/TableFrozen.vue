@@ -6,7 +6,13 @@
   import type { RowData } from "./types";
 
   const rows = shallowRef<RowData[]>(createRows(100, false));
-  const column = shallowRef<typeof COLUMNS>(COLUMNS);
+  const column = shallowRef<typeof COLUMNS>(
+    COLUMNS.map((column) => ({
+      ...column,
+      leftFrozen: column.id === "select" || column.key === "firstName",
+      rightFrozen: column.key === "age" || column.key === "birth",
+    })),
+  );
 </script>
 
 <template>

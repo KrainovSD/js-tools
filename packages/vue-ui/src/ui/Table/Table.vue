@@ -178,6 +178,8 @@
           :draggable-row="$props.draggableRow ?? false"
           :header-row-class-name="$props.headerRowClassName"
           :rows-virtual="rowVirtual"
+          :header-height="$props.headerHeight"
+          :row-height="$props.rowHeight"
           @drag-row="
             (sid, tid) => {
               $emit('dragRow', sid, tid);

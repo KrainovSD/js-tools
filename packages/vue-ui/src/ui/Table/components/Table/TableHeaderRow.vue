@@ -28,8 +28,8 @@
 
   const props = defineProps<Props<RowData>>();
   const headerRowStyles = computed<CSSProperties>(() => ({
-    minHeight: props.height,
-    maxHeight: props.height,
+    minHeight: props.height != undefined ? `${props.height}px` : undefined,
+    maxHeight: props.height != undefined ? `${props.height}px` : undefined,
   }));
   const headerRowClasses = computed(() => {
     return props.headerRowClassName instanceof Function

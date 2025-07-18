@@ -6,7 +6,19 @@
   import type { RowData } from "./types";
 
   const rows = shallowRef<RowData[]>(createRows(100, false));
-  const column = shallowRef<typeof COLUMNS>(COLUMNS);
+  const column = shallowRef<typeof COLUMNS>([
+    {
+      id: "drag",
+      key: "id",
+      sortable: false,
+      name: "",
+      width: 50,
+      additionalCellClass: ["hCenter", "wCenter"],
+      cellRender: { component: "drag" },
+      leftFrozen: true,
+    },
+    ...COLUMNS,
+  ]);
 
   function dragRow(sourceId: string, targetId: string) {
     const sourceIndex = rows.value.findIndex((row) => row.id === +sourceId);

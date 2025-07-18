@@ -164,8 +164,9 @@ export type TableProps<
   initialRowSelection?: RowSelectionState;
 } & {
   rows: RowData[];
+  rowHeight?: number;
+  headerHeight?: number;
   frozenHeader?: boolean;
-  showPerf?: boolean;
   className?: string;
   renderers?: TableRenderers<RowData>;
   withPagination?: boolean;

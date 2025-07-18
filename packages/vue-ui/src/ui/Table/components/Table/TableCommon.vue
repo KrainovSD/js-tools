@@ -12,6 +12,8 @@
   import TableRow from "./TableRow.vue";
 
   type Props = {
+    rowHeight: number | undefined;
+    headerHeight: number | undefined;
     rubberColumn: boolean;
     columnVirtualEnabled: boolean;
     rowVirtualEnabled: boolean;
@@ -97,7 +99,7 @@
         :page="tableState.pagination.pageIndex"
         :filter-state="tableState.columnFilters"
         :sort-state="tableState.sorting"
-        :height="undefined"
+        :height="$props.headerHeight"
       />
     </div>
     <div role="rowgroup" class="ksd-table__body" :style="tableBodyStyles">
@@ -114,7 +116,7 @@
           :expanded="$props.rows[virtualRow.index]?.getIsExpanded()"
           :-row="$props.Row"
           :visible-cells="$props.rows[virtualRow.index]?.getVisibleCells?.() ?? []"
-          :height="undefined"
+          :height="$props.rowHeight"
           :draggable-row="$props.draggableRow"
           :row-class-name="$props.rowClassName"
           :virtual-row="virtualRow"
@@ -140,7 +142,7 @@
           :expanded="row?.getIsExpanded()"
           :-row="$props.Row"
           :visible-cells="row?.getVisibleCells?.() ?? []"
-          :height="undefined"
+          :height="$props.rowHeight"
           :draggable-row="$props.draggableRow"
           :row-class-name="$props.rowClassName"
           :virtual-row="null"

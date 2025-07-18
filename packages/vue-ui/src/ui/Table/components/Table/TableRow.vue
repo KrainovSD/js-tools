@@ -59,9 +59,10 @@
   );
   const rowStyles = computed<CSSProperties>(() => ({
     transform: props.virtualRow ? `translateY(${props.virtualRow.start}px)` : undefined,
-    minHeight: props.height,
-    maxHeight: props.height,
+    minHeight: props.height != undefined ? `${props.height}px` : undefined,
+    maxHeight: props.height != undefined ? `${props.height}px` : undefined,
   }));
+
   const rowRef = computed(() => {
     return props.virtualRow
       ? (node: Element | ComponentPublicInstance | null) =>

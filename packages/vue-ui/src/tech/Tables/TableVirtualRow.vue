@@ -5,7 +5,7 @@
   import { createRows } from "./rows";
   import type { RowData } from "./types";
 
-  const rows = shallowRef<RowData[]>(createRows(100, false));
+  const rows = shallowRef<RowData[]>(createRows(5000, false));
   const column = shallowRef<typeof COLUMNS>(COLUMNS);
 </script>
 
@@ -13,12 +13,11 @@
   <VTable
     :columns="column"
     :rows="rows"
-    :virtual-rows="false"
+    :virtual-rows="true"
     :with-filters="true"
-    :with-pagination="true"
+    :with-pagination="false"
     :full-size="false"
-    :page-sizes="[5, 10, 25, 50, 100]"
-    :initial-pagination="{ pageIndex: 0, pageSize: 100 }"
+    :virtual-row-size="54"
   />
 </template>
 
