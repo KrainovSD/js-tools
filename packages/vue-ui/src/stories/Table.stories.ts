@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
-import { type DefineComponent, h } from "vue";
+import { type Component, type DefineComponent, h } from "vue";
 import TableCommon from "../tech/Tables/TableCommon.vue";
+import TableEmpty from "../tech/Tables/TableEmpty.vue";
+import TableLoading from "../tech/Tables/TableLoading.vue";
 import { VTable } from "../ui";
 import type { TableProps } from "../ui/Table/types";
 
@@ -18,30 +20,36 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Common: Story = {
-  render: (args) => ({
-    components: { TableCommon },
-    setup() {
-      return { args };
-    },
-    render() {
-      return h(
-        "div",
-        {
-          style: {
-            display: "flex",
-            width: "calc(100vw - 50px)",
-            height: "calc(100vh - 50px)",
-            overflow: "hidden",
-            padding: "10px",
+function createTableStory(component: Component): Story {
+  return {
+    render: (args) => ({
+      components: { component },
+      setup() {
+        return { args };
+      },
+      render() {
+        return h(
+          "div",
+          {
+            style: {
+              display: "flex",
+              width: "calc(100vw - 50px)",
+              height: "calc(100vh - 50px)",
+              overflow: "hidden",
+              padding: "10px",
+            },
           },
-        },
-        [h(TableCommon)],
-      );
+          [h(component)],
+        );
+      },
+    }),
+    args: {
+      columns: [],
+      rows: [],
     },
-  }),
-  args: {
-    columns: [],
-    rows: [],
-  },
-};
+  };
+}
+
+export const Common = createTableStory(TableCommon);
+export const Empty = createTableStory(TableEmpty);
+export const Loading = createTableStory(TableLoading);

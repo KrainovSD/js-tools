@@ -15,7 +15,15 @@
   "
 >
   import { computed, useTemplateRef } from "vue";
-  import { Gantt, TableCommon, TableFilter, TableFooter, TableLoading } from "./components";
+  import {
+    Gantt,
+    TableCommon,
+    TableFilter,
+    TableLoading,
+    TablePagination,
+    TableTotal,
+  } from "./components";
+  import TableEmpty from "./components/Table/TableEmpty.vue";
   import { useColumns, useTableOptions, useVirtualizer } from "./lib";
   import type {
     CellClassInterface,
@@ -147,8 +155,6 @@
 
 <template>
   <div ref="root" v-bind="$attrs" class="ksd-table__wrapper" :class="{ full: $props.fullSize }">
-    <TableLoading v-if="$props.loading && !$props.Loader" />
-    <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
     <TableFilter
       v-if="$props.withFilters && !$props.Filter"
       :with-filters="$props.withFilters ?? false"
@@ -156,37 +162,38 @@
     />
     <component :is="$props.Filter" v-if="$props.withFilters && $props.Filter" :table="table" />
 
-    <div
-      v-if="!$props.withGantt"
-      ref="table-container"
-      class="ksd-table__container"
-      :class="{ full: $props.fullSize }"
-    >
-      <TableCommon
-        :column-virtual-enabled="columnVirtualEnabled"
-        :row-virtual-enabled="rowVirtualEnabled"
-        :columns-virtual="columnsVirtual"
-        :frozen-header="$props.frozenHeader ?? true"
-        :rubber-column="$props.rubberColumn ?? false"
-        :row-virtualizer="rowVirtualizer"
-        :rows="rows"
-        :table="table"
-        :row-class-name="$props.rowClassName"
-        :-empty="$props.Empty"
-        :-row="$props.Row"
-        :draggable-row="$props.draggableRow ?? false"
-        :header-row-class-name="$props.headerRowClassName"
-        :rows-virtual="rowVirtual"
-      />
+    <div v-if="!$props.withGantt" class="ksd-table__overlay">
+      <TableEmpty v-if="rows.length === 0 && !$props.Empty" />
+      <component :is="$props.Empty" v-if="rows.length === 0 && $props.Empty" />
+      <TableLoading v-if="$props.loading && !$props.Loader" />
+      <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
+      <div ref="table-container" class="ksd-table__container" :class="{ full: $props.fullSize }">
+        <TableCommon
+          :column-virtual-enabled="columnVirtualEnabled"
+          :row-virtual-enabled="rowVirtualEnabled"
+          :columns-virtual="columnsVirtual"
+          :frozen-header="$props.frozenHeader ?? true"
+          :rubber-column="$props.rubberColumn ?? false"
+          :row-virtualizer="rowVirtualizer"
+          :rows="rows"
+          :table="table"
+          :row-class-name="$props.rowClassName"
+          :-empty="$props.Empty"
+          :-row="$props.Row"
+          :draggable-row="$props.draggableRow ?? false"
+          :header-row-class-name="$props.headerRowClassName"
+          :rows-virtual="rowVirtual"
+        />
+      </div>
+      <TableTotal v-if="$props.withTotal" :total-rows="totalRows" />
     </div>
     <Gantt v-if="$props.withGantt" ref="gantt" />
-    <TableFooter
+    <TablePagination
+      v-if="$props.withPagination && !$props.withGantt"
       :-pagination="$props.Pagination"
       :table="table"
-      :with-pagination="$props.withPagination && !$props.withGantt"
-      :with-total="$props.withTotal"
-      :page-sizes="$props.pageSizes"
       :total-rows="totalRows"
+      :page-sizes="$props.pageSizes"
     />
   </div>
 </template>
@@ -204,6 +211,14 @@
       &.full {
         height: 100%;
       }
+    }
+    &__overlay {
+      display: flex;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: fit-content;
+      flex-direction: column;
     }
     &__container {
       overflow: auto;

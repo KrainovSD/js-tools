@@ -1,12 +1,9 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import { type Component, computed } from "vue";
   import PaginationComponent from "../../../Pagination.vue";
-  import Text from "../../../Text.vue";
   import type { DefaultRow, TableInterface, TablePaginationProps } from "../../types";
 
   type Props = {
-    withTotal: boolean | undefined;
-    withPagination: boolean | undefined;
     table: TableInterface<RowData>;
     totalRows: number;
     pageSizes: number[] | undefined;
@@ -19,11 +16,8 @@
 </script>
 
 <template>
-  <div v-if="$props.withTotal" class="ksd-table__total">
-    <Text>Всего: {{ $props.totalRows }}</Text>
-  </div>
   <PaginationComponent
-    v-if="$props.withPagination && !$props.Pagination"
+    v-if="!$props.Pagination"
     :total-rows="$props.totalRows"
     :page-sizes="pageSizes"
     :model-value="paginationState.pageIndex"
@@ -42,7 +36,7 @@
     "
   />
   <component
-    :is="$props.withPagination && $props.Pagination"
+    :is="$props.Pagination"
     v-if="$props.Pagination"
     :table="$props.table"
     :page-index="paginationState.pageIndex"
@@ -54,14 +48,6 @@
 
 <style lang="scss">
   .ksd-table {
-    &__total {
-      display: flex;
-      padding: 8px;
-      border-bottom: 1px solid var(--ksd-table-border);
-      border-left: 1px solid var(--ksd-table-border);
-      border-right: 1px solid var(--ksd-table-border);
-      background: var(--ksd-table-footer-bg);
-    }
     &__pagination {
       margin-top: var(--ksd-margin);
     }

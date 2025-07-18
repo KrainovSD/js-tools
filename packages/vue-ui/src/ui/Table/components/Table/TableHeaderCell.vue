@@ -51,8 +51,8 @@
     ),
   );
   const headerStyles = computed<CSSProperties>(() => ({
-    left: frozenPosition.value === "left" ? prevFrozen.value : undefined,
-    right: frozenPosition.value === "right" ? prevFrozen.value : undefined,
+    left: frozenPosition.value === "left" ? `${prevFrozen.value}px` : undefined,
+    right: frozenPosition.value === "right" ? `${prevFrozen.value}px` : undefined,
     cursor: draggable.value ? "move" : "inherit",
     gridColumnStart: props.columnPosition,
   }));

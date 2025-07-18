@@ -8,7 +8,6 @@
     TableEmptyProps,
     TableInterface,
   } from "../../types";
-  import TableEmpty from "./TableEmpty.vue";
   import TableHeaderRow from "./TableHeaderRow.vue";
   import TableRow from "./TableRow.vue";
 
@@ -71,6 +70,10 @@
   }));
   const tableBodyStyles = computed<CSSProperties>(() => ({
     height:
+      props.rowVirtualEnabled && props.rowsVirtual.length > 0
+        ? `${props.rowVirtualizer.getTotalSize()}px`
+        : undefined,
+    "--table-body-height":
       props.rowVirtualEnabled && props.rowsVirtual.length > 0
         ? `${props.rowVirtualizer.getTotalSize()}px`
         : undefined,
@@ -147,8 +150,6 @@
           @drag-row="(sidx, tidx, sid, tid) => $emit('dragRow', sidx, tidx, sid, tid)"
         />
       </template>
-      <TableEmpty v-if="$props.rows.length === 0 && !$props.Empty" />
-      <component :is="$props.Empty" v-if="$props.rows.length === 0 && $props.Empty" />
     </div>
   </div>
 </template>
@@ -179,6 +180,8 @@
       background-color: var(--ksd-table-body-bg);
       display: flex;
       flex-direction: column;
+      min-height: var(--table-body-height, 120px);
+      flex: 1;
     }
   }
 </style>

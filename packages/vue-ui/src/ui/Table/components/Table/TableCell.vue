@@ -33,6 +33,7 @@
       frozenPosition: frozenPosition.value,
     }),
   );
+
   const Expander = computed(() => cellContext.value.table.options.meta?.renderers?.expander);
   const CellRender = computed(() => props.cell.column.columnDef.cellRender);
 
@@ -52,8 +53,8 @@
       frozenPosition.value === "right" && props.cell.column.getIsFirstColumn("right"),
   }));
   const cellStyles = computed<CSSProperties>(() => ({
-    left: frozenPosition.value === "left" ? prevFrozen.value : undefined,
-    right: frozenPosition.value === "right" ? prevFrozen.value : undefined,
+    left: frozenPosition.value === "left" ? `${prevFrozen.value}px` : undefined,
+    right: frozenPosition.value === "right" ? `${prevFrozen.value}px` : undefined,
     gridColumnStart: props.columnPosition,
     "--table-cell-shift":
       level.value > 0 && cellContext.value.cell.column.columnDef.expandedShift != undefined

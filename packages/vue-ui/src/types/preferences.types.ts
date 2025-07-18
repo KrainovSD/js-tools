@@ -17,6 +17,7 @@ import type {
   ThemeEmptyVariable,
   ThemeFilterVariable,
   ThemeInputVariable,
+  ThemeLoaderVariable,
   ThemeMessageVariable,
   ThemeModalVariable,
   ThemeNotificationVariable,
@@ -69,5 +70,6 @@ export type ThemeVariableConfig = {
     filter: Record<ThemeFilterVariable, string>;
     empty: Record<ThemeEmptyVariable, string>;
     pagination: Record<ThemePaginationVariable, string>;
+    loader: Record<ThemeLoaderVariable, string>;
   };
 };

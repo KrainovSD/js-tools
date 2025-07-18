@@ -1,13 +1,25 @@
 <script setup lang="ts">
-  type Props = {};
-  type Emits = {};
-
-  const props = defineProps<Props>();
-  const emit = defineEmits<Emits>();
+  import Loader from "../../../Loader.vue";
 </script>
 
 <template>
-  <div>component</div>
+  <div class="ksd-table__loading">
+    <div class="ksd-table__loading-blur"></div>
+    <Loader type="tertiary" />
+  </div>
 </template>
 
-<style lang="scss" module></style>
+<style lang="scss">
+  .ksd-table__loading {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+  }
+
+  .ksd-table__loading-blur {
+    position: absolute;
+    inset: 0;
+    opacity: var(--ksd-table-loader-opacity);
+    background: var(--ksd-table-loader-bg-color);
+  }
+</style>

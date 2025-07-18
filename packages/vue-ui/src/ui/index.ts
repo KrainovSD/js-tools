@@ -10,6 +10,7 @@ import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
+import VLoader from "./Loader.vue";
 import VMessage from "./Message.vue";
 import VModal from "./Modal.vue";
 import VNotification from "./Notification.vue";
@@ -114,6 +115,7 @@ export type {
 } from "./Filter.vue";
 export type { EmptyProps } from "./Empty.vue";
 export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pagination.vue";
+export type { LoaderProps, LoaderType } from "./Loader.vue";
 
 export {
   VButton,
@@ -150,5 +152,6 @@ export {
   VFilter,
   VEmpty,
   VPagination,
+  VLoader,
 };
 export * from "./Table";

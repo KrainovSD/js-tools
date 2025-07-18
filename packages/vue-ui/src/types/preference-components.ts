@@ -226,3 +226,17 @@ export type ThemePaginationVariable =
   | "ksd-pagination-item-size"
   | "ksd-pagination-item-size-sm"
   | "ksd-pagination-item-active-bg";
+
+export type ThemeLoaderVariable =
+  | "ksd-loader-primary-size"
+  | "ksd-loader-primary-color"
+  | "ksd-loader-secondary-size"
+  | "ksd-loader-secondary-color"
+  | "ksd-loader-tertiary-size"
+  | "ksd-loader-tertiary-color"
+  | "ksd-loader-quaternary-size"
+  | "ksd-loader-quaternary-color"
+  | "ksd-loader-quinary-size"
+  | "ksd-loader-quinary-color"
+  | "ksd-loader-senary-size"
+  | "ksd-loader-senary-color";

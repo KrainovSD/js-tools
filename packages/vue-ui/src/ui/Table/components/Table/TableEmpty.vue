@@ -1,13 +1,20 @@
 <script setup lang="ts">
-  type Props = {};
-  type Emits = {};
-
-  const props = defineProps<Props>();
-  const emit = defineEmits<Emits>();
+  import Empty from "../../../Empty.vue";
 </script>
 
 <template>
-  <div>component</div>
+  <Empty class="ksd-table__empty" />
 </template>
 
-<style lang="scss" module></style>
+<style lang="scss">
+  .ksd-table__empty {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+    padding: var(--ksd-padding);
+    z-index: 10;
+    pointer-events: none;
+  }
+</style>

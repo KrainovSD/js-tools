@@ -16,8 +16,8 @@
     :virtual-rows="true"
     :with-filters="true"
     :with-pagination="true"
-    :full-size="false"
-    :page-sizes="[5, 10, 25, 50, 100]"
+    :full-size="true"
+    :loading="true"
   />
 </template>
 
