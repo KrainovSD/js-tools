@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import { type CSSProperties, computed, onMounted, onUnmounted, ref } from "vue";
+  import { HEADER_CELL_DND_PREFIX } from "../../constants";
   import { DND_EVENT_BUS, HEADER_CELL_DND_HANDLERS, getPrevFrozenWidthHeader } from "../../lib";
   import type { ColumnFiltersState, DefaultRow, HeaderInterface, SortingState } from "../../types";
 
@@ -16,7 +17,7 @@
   const THRESHOLD = 2;
   const props = defineProps<Props>();
   const headerContext = computed(() => props.header.getContext());
-  const id = computed(() => `header-column-${headerContext.value.column.id}`);
+  const id = computed(() => `${HEADER_CELL_DND_PREFIX}${headerContext.value.column.id}`);
   const draggable = computed(() =>
     frozenPosition.value ? false : props.header.column.columnDef.enableDraggable,
   );
@@ -76,15 +77,22 @@
       return;
     }
 
-    const columnOrderState = headerContext.value.table.getState().columnOrder;
+    const sourceId = source.replace(HEADER_CELL_DND_PREFIX, "");
+    const targetId = target.replace(HEADER_CELL_DND_PREFIX, "");
+
+    let columnOrderState = [...headerContext.value.table.getState().columnOrder];
+    if (columnOrderState.length === 0) {
+      columnOrderState = headerContext.value.table.getAllColumns().map((column) => column.id);
+    }
+
     let sourceIndex: number = -1;
     let targetIndex: number = -1;
-    for (let i = 0; i <= columnOrderState.length; i++) {
+    for (let i = 0; i <= columnOrderState.length - 1; i++) {
       const id = columnOrderState[i];
-      if (source === id) {
+      if (sourceId === id) {
         sourceIndex = i;
       }
-      if (target === id) {
+      if (targetId === id) {
         targetIndex = i;
       }
 
@@ -93,10 +101,12 @@
 
     if (!~sourceIndex || !~targetIndex) return;
 
-    const order = [...columnOrderState];
-    [order[+sourceIndex], order[+targetIndex]] = [order[+targetIndex], order[+sourceIndex]];
-    /** TODO: Проверить реактивность без мутации */
-    headerContext.value.table.setColumnOrder(order);
+    [columnOrderState[+sourceIndex], columnOrderState[+targetIndex]] = [
+      columnOrderState[+targetIndex],
+      columnOrderState[+sourceIndex],
+    ];
+
+    headerContext.value.table.setColumnOrder(columnOrderState);
   }
 
   onMounted(() => {

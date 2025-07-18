@@ -51,12 +51,7 @@
   } from "./types";
 
   type Emits = {
-    dragRow: [
-      sourceIndex: number,
-      targetIndex: number,
-      sourceId: number | string,
-      targetId: number | string,
-    ];
+    dragRow: [sourceId: string, targetId: string];
     click: [row: RowInterface<RowData>, event: MouseEvent];
     dblclick: [row: RowInterface<RowData>, event: MouseEvent];
   };
@@ -183,6 +178,13 @@
           :draggable-row="$props.draggableRow ?? false"
           :header-row-class-name="$props.headerRowClassName"
           :rows-virtual="rowVirtual"
+          @drag-row="
+            (sid, tid) => {
+              $emit('dragRow', sid, tid);
+            }
+          "
+          @click="(row, event) => $emit('click', row, event)"
+          @dblclick="(row, event) => $emit('dblclick', row, event)"
         />
       </div>
       <TableTotal v-if="$props.withTotal" :total-rows="totalRows" />

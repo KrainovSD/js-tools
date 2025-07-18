@@ -32,7 +32,8 @@
   const pageIndex = defineModel<number>({ default: 0 });
   const pageSize = defineModel<number>("page-size", { default: 100 });
 
-  const totalPages = computed(() => Math.ceil(props.totalRows / pageSize.value));
+  const totalPages = computed(() => Math.max(Math.ceil(props.totalRows / pageSize.value), 1));
+
   const componentClasses = computed(() => ({ [`size-${props.size}`]: true }));
   const rootClasses = computed(() => ({ [`placement-${props.placement}`]: true }));
   const pages = computed(() => {

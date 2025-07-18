@@ -172,7 +172,6 @@ export type TableProps<
   withFilters?: boolean;
   withTotal?: boolean;
   totalRows?: number;
-  initialPageSize?: number;
   pageSizes?: number[];
   fullSize?: boolean;
   virtualColumn?: boolean;

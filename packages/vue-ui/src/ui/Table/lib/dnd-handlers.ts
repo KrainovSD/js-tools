@@ -1,14 +1,17 @@
 import { DND_EVENT_BUS, DND_EVENT_BUS_MESSAGE_TYPES } from "./dnd-event-bus";
 
 function createDnDHandlers(idAttribute: string) {
+  let dragging = false;
+
   function handleDragStart(event: DragEvent) {
     if (event.dataTransfer) {
       const id = (event.currentTarget as HTMLElement).getAttribute(idAttribute);
       if (!id) return;
 
       event.dataTransfer.effectAllowed = "move";
-      event.dataTransfer.setData("text", id);
+      event.dataTransfer.setData("text/plain", id);
       DND_EVENT_BUS.sendMessage(id, DND_EVENT_BUS_MESSAGE_TYPES.StartDrag);
+      dragging = true;
     }
   }
 
@@ -17,6 +20,7 @@ function createDnDHandlers(idAttribute: string) {
     const id = (event.currentTarget as HTMLElement).getAttribute(idAttribute);
     if (!id) return;
     DND_EVENT_BUS.sendMessage(id, DND_EVENT_BUS_MESSAGE_TYPES.StopDrag);
+    dragging = false;
   }
 
   function handleDragOver(event: DragEvent) {
@@ -24,12 +28,17 @@ function createDnDHandlers(idAttribute: string) {
   }
 
   function handleDragEnter(event: DragEvent) {
+    if (!dragging) return;
+
     const id = (event.currentTarget as HTMLElement).getAttribute(idAttribute);
+
     if (!id) return;
     DND_EVENT_BUS.sendMessage(id, DND_EVENT_BUS_MESSAGE_TYPES.EnterDrag);
   }
 
   function handleDragLeave(event: DragEvent) {
+    if (!dragging) return;
+
     if (
       event.relatedTarget &&
       !(event.currentTarget as HTMLElement).contains(event.relatedTarget as Node)
@@ -42,7 +51,8 @@ function createDnDHandlers(idAttribute: string) {
 
   function handleDrop(event: DragEvent) {
     event.preventDefault();
-    (event.currentTarget as HTMLElement).style.background = "";
+    if (!dragging) return { source: undefined, target: undefined };
+
     const source = event.dataTransfer?.getData?.("text");
     const target = (event.currentTarget as HTMLElement).getAttribute(idAttribute);
 

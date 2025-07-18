@@ -31,12 +31,7 @@
     draggableRow: boolean;
   };
   type Emits = {
-    dragRow: [
-      sourceIndex: number,
-      targetIndex: number,
-      sourceId: number | string,
-      targetId: number | string,
-    ];
+    dragRow: [sourceId: string, targetId: string];
     click: [row: RowInterface<RowData>, event: MouseEvent];
     dblclick: [row: RowInterface<RowData>, event: MouseEvent];
   };
@@ -125,7 +120,11 @@
           :virtual-row="virtualRow"
           @click="(row, event) => $emit('click', row, event)"
           @dblclick="(row, event) => $emit('dblclick', row, event)"
-          @drag-row="(sidx, tidx, sid, tid) => $emit('dragRow', sidx, tidx, sid, tid)"
+          @drag-row="
+            (sid, tid) => {
+              $emit('dragRow', sid, tid);
+            }
+          "
         />
       </template>
       <template v-if="!$props.rowVirtualEnabled">
@@ -147,7 +146,7 @@
           :virtual-row="null"
           @click="(row, event) => $emit('click', row, event)"
           @dblclick="(row, event) => $emit('dblclick', row, event)"
-          @drag-row="(sidx, tidx, sid, tid) => $emit('dragRow', sidx, tidx, sid, tid)"
+          @drag-row="(sid, tid) => $emit('dragRow', sid, tid)"
         />
       </template>
     </div>

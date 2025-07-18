@@ -66,7 +66,11 @@
 
     event.stopPropagation();
 
-    const filterRenderProps = props.context.column.columnDef.filterRenderProps;
+    const filterRenderProps = (
+      props.context.column.columnDef.filterRenders?.find?.(
+        (filter) => filter.operatorValue === props.context.column.columnDef.filterFn,
+      ) ?? props.context.column.columnDef.filterRenders?.[0]
+    )?.props;
     const multiple =
       isObject(filterRenderProps) && "multiple" in filterRenderProps
         ? filterRenderProps.multiple

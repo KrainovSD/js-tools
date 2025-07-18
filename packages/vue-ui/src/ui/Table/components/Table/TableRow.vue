@@ -9,6 +9,7 @@
     onUnmounted,
     ref,
   } from "vue";
+  import { ROW_DND_PREFIX } from "../../constants";
   import { DND_EVENT_BUS, ROW_DND_HANDLERS } from "../../lib";
   import type { CellInterface, DefaultRow, RowInterface } from "../../types";
   import TableCell from "./TableCell.vue";
@@ -29,12 +30,7 @@
     draggableRow: boolean;
   };
   type Emits = {
-    dragRow: [
-      sourceIndex: number,
-      targetIndex: number,
-      sourceId: number | string,
-      targetId: number | string,
-    ];
+    dragRow: [sourceId: string, targetId: string];
     click: [row: RowInterface<RowData>, event: MouseEvent];
     dblclick: [row: RowInterface<RowData>, event: MouseEvent];
   };
@@ -43,7 +39,7 @@
   const emit = defineEmits<Emits>();
 
   const rowIndex = computed(() => (props.virtualRow ? props.virtualRow.index : props.row.index));
-  const id = computed(() => `row-${rowIndex.value}`);
+  const id = computed(() => `${ROW_DND_PREFIX}${props.row.id}`);
   const dragging = ref(false);
   const dragOver = ref(false);
   // eslint-disable-next-line new-cap
@@ -93,17 +89,10 @@
     const { source, target } = ROW_DND_HANDLERS.handleDrop(event);
     if (source == undefined || target == undefined || source === target) return;
 
-    const sourceIndex = +source.replace("row-", "");
-    const targetIndex = +target.replace("row-", "");
+    const sourceId = source.replace(ROW_DND_PREFIX, "");
+    const targetId = target.replace(ROW_DND_PREFIX, "");
 
-    if (Number.isNaN(sourceIndex) || Number.isNaN(targetIndex)) {
-      return;
-    }
-
-    const sourceId = props.rows[sourceIndex].id;
-    const targetId = props.rows[targetIndex].id;
-
-    emit("dragRow", sourceIndex, targetIndex, sourceId, targetId);
+    emit("dragRow", sourceId, targetId);
   }
 
   function onKeyDown(event: KeyboardEvent) {

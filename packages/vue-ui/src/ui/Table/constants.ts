@@ -1,3 +1,6 @@
+export const HEADER_CELL_DND_PREFIX = "header:";
+export const ROW_DND_PREFIX = "row:";
+
 export const GANTT_HEADER_HEIGHT = 30;
 
 export const GANTT_HEADER_ID = "ksd-table-gantt-header";
