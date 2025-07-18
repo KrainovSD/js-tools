@@ -396,6 +396,9 @@ export const LIGHT_THEME: ThemeVariableConfig = {
       "ksd-table-loader-bg-color": "#ffffff",
       "ksd-table-loader-opacity": "0.4",
       "ksd-table-spin-max-height": "400px",
+      "ksd-table-expander-hover-color": "var(--ksd-accent-color)",
+      "ksd-table-expander-inner-size": "7px",
+      "ksd-table-expander-outer-size": "17px",
     },
     loader: {
       "ksd-loader-primary-color": "var(--ksd-accent-color)",

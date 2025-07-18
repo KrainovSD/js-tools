@@ -6,7 +6,22 @@
   import type { RowData } from "./types";
 
   const rows = shallowRef<RowData[]>(createRows(100, false));
-  const column = shallowRef<typeof COLUMNS>(COLUMNS);
+  const column = shallowRef<typeof COLUMNS>([
+    ...COLUMNS.map((column) => ({
+      ...column,
+      grouping: column.key === "age" ? true : undefined,
+    })).toSpliced(1, 0, {
+      id: "expand",
+      name: "",
+      key: "id",
+      sortable: false,
+      width: 50,
+      additionalCellClass: ["wCenter", "hCenter"],
+      leftFrozen: true,
+      cellRender: { component: "expand" },
+      grouping: undefined,
+    }),
+  ]);
 </script>
 
 <template>

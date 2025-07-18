@@ -34,7 +34,7 @@ import type {
   TableInterface,
 } from "./utils";
 
-export type TableCellRenderKey = "default" | "select" | "tag" | "empty" | "drag";
+export type TableCellRenderKey = "default" | "select" | "tag" | "empty" | "drag" | "expand";
 export type TableHeaderRenderKey = "default" | "select" | "empty";
 export type TableFilterRenderKey =
   | "number"

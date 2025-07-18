@@ -212,7 +212,10 @@ export type ThemeTableVariable =
   | "ksd-table-splitter-overflow-color"
   | "ksd-table-loader-bg-color"
   | "ksd-table-loader-opacity"
-  | "ksd-table-spin-max-height";
+  | "ksd-table-spin-max-height"
+  | "ksd-table-expander-outer-size"
+  | "ksd-table-expander-inner-size"
+  | "ksd-table-expander-hover-color";
 
 export type ThemeFilterVariable = "ksd-filter-gap" | "ksd-filter-field-gap";
 

@@ -15,6 +15,7 @@ import {
   DragCellRender,
   EmptyCellRender,
   EmptyHeaderRender,
+  ExpandCellRender,
   NumberFilterRender,
   NumberRangeFilterRender,
   SelectCellRender,
@@ -60,6 +61,7 @@ const CELL_RENDERS: TableCellRenders<DefaultRow> = {
   default: DefaultCellRender,
   empty: EmptyCellRender,
   drag: DragCellRender,
+  expand: ExpandCellRender,
 };
 const HEADER_RENDERS: TableHeaderRenders<DefaultRow> = {
   default: DefaultHeaderRender,
@@ -350,7 +352,7 @@ export function useColumns<
     }
 
     if (grouping.length > 0) {
-      columnPinning.left?.unshift?.(...grouping);
+      columnPinning.left?.push?.(...grouping);
     }
 
     return {

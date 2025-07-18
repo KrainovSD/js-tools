@@ -15,9 +15,7 @@
 
   const props = defineProps<Props>();
   const cellContext = computed(() => props.cell.getContext());
-  const isGroupCell = computed(
-    () => props.cell.row.getIsGrouped() && props.cell.row.groupingColumnId === props.cell.column.id,
-  );
+
   const level = computed(() =>
     cellContext.value.row.getParentRows().reduce((acc: number, row) => {
       if (row.getIsExpanded() && !row.getIsGrouped()) acc++;
@@ -34,7 +32,6 @@
     }),
   );
 
-  const Expander = computed(() => cellContext.value.table.options.meta?.renderers?.expander);
   const CellRender = computed(() => props.cell.column.columnDef.cellRender);
 
   const cellConfigClasses = computed(() => {
@@ -71,7 +68,6 @@
     :class="[cellClasses, cellConfigClasses]"
     :style="cellStyles"
   >
-    <component :is="Expander" v-if="Expander && isGroupCell" :context="cellContext" />
     <component
       :is="CellRender"
       v-if="CellRender"
