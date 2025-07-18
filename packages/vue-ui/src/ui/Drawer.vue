@@ -14,6 +14,7 @@
     zIndex?: number;
     placement?: DrawerPlacement;
     mask?: boolean;
+    block?: boolean;
     width?: number;
     height?: number;
     classNameRoot?: string;
@@ -32,6 +33,7 @@
     width: 378,
     height: 378,
     classNameRoot: undefined,
+    block: false,
   });
   const emit = defineEmits<Emits>();
   const open = defineModel<boolean>();
@@ -42,14 +44,15 @@
   const commonStyles = computed(() => ({ zIndex: props.zIndex }));
   const commonClasses = computed(() => ({
     [props.placement]: true,
+    block: props.block,
   }));
   const drawerStyles = computed(() => ({
-    width:
+    "--drawer-width":
       props.placement === "right" || props.placement === "left" ? `${props.width}px` : undefined,
-    height:
+    "--drawer-height":
       props.placement === "top" || props.placement === "bottom" ? `${props.height}px` : undefined,
   }));
-  const modalMode = computed(() => props.mask || props.mask == undefined);
+  const modalMode = computed(() => (props.mask || props.mask == undefined) && !props.block);
   const prevActiveElement = ref<HTMLElement | null>(null);
 
   function onClose() {
@@ -151,8 +154,8 @@
 </script>
 
 <template>
-  <Teleport v-if="open" :to="$props.target ?? 'body'">
-    <Flex class="ksd-drawer" :class="$props.classNameRoot" :style="commonStyles">
+  <Teleport v-if="open && !props.block" :to="$props.target ?? 'body'">
+    <Flex class="ksd-drawer" :class="[$props.classNameRoot]" :style="commonStyles">
       <Flex v-if="modalMode" ref="mask" class="ksd-drawer__mask" :style="commonStyles"></Flex>
       <Flex
         ref="drawer"
@@ -178,6 +181,34 @@
           <slot></slot>
         </Flex>
       </Flex>
+    </Flex>
+  </Teleport>
+  <Teleport v-if="open && props.block" :to="$props.target ?? 'body'">
+    <Flex
+      ref="drawer"
+      class="ksd-drawer__block-wrapper"
+      :style="[commonStyles, drawerStyles]"
+      :class="[commonClasses, $attrs.class, $attrs.style]"
+      role="dialog"
+      aria-modal="true"
+      vertical
+    >
+      <div class="ksd-drawer__block">
+        <slot v-if="$slots['custom-header']" name="custom-header"></slot>
+        <Flex v-if="!$slots['custom-header']" flex-align="center" class="ksd-drawer__header">
+          <Button type="text" size="small" class="ksd-drawer__header-close" @click="onClose"
+            ><template #icon> <VCloseOutlined :size="16" /> </template>
+          </Button>
+          <Text v-if="$props.header" size="lg" class="ksd-drawer__header-text">{{
+            $props.header
+          }}</Text>
+          <slot v-if="$slots.header" name="header"></slot>
+        </Flex>
+        <slot v-if="$slots.body" name="body"></slot>
+        <Flex v-if="!$slots.body" class="ksd-drawer__body">
+          <slot></slot>
+        </Flex>
+      </div>
     </Flex>
   </Teleport>
 </template>
@@ -206,6 +237,8 @@
       position: absolute;
       background: var(--ksd-bg-modal-color);
       pointer-events: auto;
+      width: var(--drawer-width);
+      height: var(--drawer-height);
 
       &.left {
         top: 0;
@@ -239,22 +272,203 @@
       }
       &.top {
         animation: ksd-drawer-top-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+
         &.out {
           animation: ksd-drawer-top-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
         }
       }
       &.left {
         animation: ksd-drawer-left-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+
         &.out {
           animation: ksd-drawer-left-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
         }
       }
       &.bottom {
         animation: ksd-drawer-bottom-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+
         &.out {
           animation: ksd-drawer-bottom-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
         }
       }
+
+      @keyframes ksd-drawer-right-in {
+        from {
+          transform: translateX(100%);
+        }
+        to {
+          transform: translateX(0%);
+        }
+      }
+      @keyframes ksd-drawer-right-out {
+        from {
+          transform: translateX(0%);
+        }
+        to {
+          transform: translateX(100%);
+        }
+      }
+      @keyframes ksd-drawer-left-in {
+        from {
+          transform: translateX(-100%);
+        }
+        to {
+          transform: translateX(0%);
+        }
+      }
+      @keyframes ksd-drawer-left-out {
+        from {
+          transform: translateX(0%);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+      @keyframes ksd-drawer-top-in {
+        from {
+          transform: translateY(-100%);
+        }
+        to {
+          transform: translateY(0%);
+        }
+      }
+      @keyframes ksd-drawer-top-out {
+        from {
+          transform: translateY(0%);
+        }
+        to {
+          transform: translateY(-100%);
+        }
+      }
+      @keyframes ksd-drawer-bottom-in {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0%);
+        }
+      }
+      @keyframes ksd-drawer-bottom-out {
+        from {
+          transform: translateY(0%);
+        }
+        to {
+          transform: translateY(100%);
+        }
+      }
+    }
+
+    &__block-wrapper {
+      background: var(--ksd-bg-modal-color);
+      width: var(--drawer-width);
+      height: var(--drawer-height);
+      overflow: hidden;
+
+      &.left {
+        box-shadow: var(--ksd-shadow-left);
+      }
+      &.right {
+        box-shadow: var(--ksd-shadow-right);
+      }
+      &.top {
+        box-shadow: var(--ksd-shadow-top);
+      }
+      &.bottom {
+        box-shadow: var(--ksd-shadow-bottom);
+      }
+
+      &.right {
+        transform-origin: right;
+        animation: ksd-drawer-right-in-block var(--ksd-transition-slow)
+          cubic-bezier(0.7, 0.3, 0.1, 1);
+
+        &.out {
+          transform-origin: right;
+          animation: ksd-drawer-right-out-block var(--ksd-transition-slow)
+            cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
+      }
+      &.top {
+        transform-origin: bottom;
+        animation: ksd-drawer-bottom-in-block var(--ksd-transition-slow)
+          cubic-bezier(0.7, 0.3, 0.1, 1);
+
+        &.out {
+          transform-origin: bottom;
+          animation: ksd-drawer-bottom-out-block var(--ksd-transition-slow)
+            cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
+      }
+      &.left {
+        transform-origin: right;
+        animation: ksd-drawer-right-in-block var(--ksd-transition-slow)
+          cubic-bezier(0.7, 0.3, 0.1, 1);
+
+        &.out {
+          transform-origin: right;
+          animation: ksd-drawer-right-out-block var(--ksd-transition-slow)
+            cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
+      }
+      &.bottom {
+        transform-origin: bottom;
+        animation: ksd-drawer-bottom-in-block var(--ksd-transition-slow)
+          cubic-bezier(0.7, 0.3, 0.1, 1);
+
+        &.out {
+          transform-origin: bottom;
+          animation: ksd-drawer-bottom-out-block var(--ksd-transition-slow)
+            cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
+      }
+
+      @keyframes ksd-drawer-right-in-block {
+        0% {
+          width: 0px;
+          transform: scaleX(0);
+        }
+        30% {
+          width: var(--drawer-width);
+        }
+        100% {
+          transform: scaleX(1);
+        }
+      }
+      @keyframes ksd-drawer-right-out-block {
+        from {
+          width: var(--drawer-width);
+        }
+        to {
+          width: 0;
+        }
+      }
+      @keyframes ksd-drawer-bottom-in-block {
+        0% {
+          height: 0px;
+          transform: scaleY(0);
+        }
+        30% {
+          height: var(--drawer-height);
+        }
+        100% {
+          transform: scaleY(1);
+        }
+      }
+      @keyframes ksd-drawer-bottom-out-block {
+        from {
+          height: var(--drawer-height);
+        }
+        to {
+          height: 0;
+        }
+      }
+    }
+    &__block {
+      display: flex;
+      flex-direction: column;
+      width: var(--drawer-width);
+      height: var(--drawer-height);
+      overflow: visible;
     }
 
     &__header {
@@ -291,71 +505,6 @@
     }
     to {
       opacity: 0;
-    }
-  }
-
-  @keyframes ksd-drawer-right-in {
-    from {
-      transform: translateX(100%);
-    }
-    to {
-      transform: translateX(0%);
-    }
-  }
-  @keyframes ksd-drawer-right-out {
-    from {
-      transform: translateX(0%);
-    }
-    to {
-      transform: translateX(100%);
-    }
-  }
-  @keyframes ksd-drawer-left-in {
-    from {
-      transform: translateX(-100%);
-    }
-    to {
-      transform: translateX(0%);
-    }
-  }
-  @keyframes ksd-drawer-left-out {
-    from {
-      transform: translateX(0%);
-    }
-    to {
-      transform: translateX(-100%);
-    }
-  }
-  @keyframes ksd-drawer-top-in {
-    from {
-      transform: translateY(-100%);
-    }
-    to {
-      transform: translateY(0%);
-    }
-  }
-  @keyframes ksd-drawer-top-out {
-    from {
-      transform: translateY(0%);
-    }
-    to {
-      transform: translateY(-100%);
-    }
-  }
-  @keyframes ksd-drawer-bottom-in {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0%);
-    }
-  }
-  @keyframes ksd-drawer-bottom-out {
-    from {
-      transform: translateY(0%);
-    }
-    to {
-      transform: translateY(100%);
     }
   }
 </style>

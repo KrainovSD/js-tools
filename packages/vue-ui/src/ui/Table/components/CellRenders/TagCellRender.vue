@@ -122,7 +122,23 @@
             :size="$props.settings?.size ?? 'default'"
             class="ksd-table__cell-tag"
             :style="{ cursor: filterable ? 'pointer' : 'inherit' }"
-            @click="(event: MouseEvent) => setFilter(event, tag.value)"
+            :tabindex="$props.settings?.filterable ? 0 : undefined"
+            @click="
+              (event: MouseEvent) => {
+                event.stopPropagation();
+                setFilter(event, tag.value);
+              }
+            "
+            @dblclick="(event: MouseEvent) => event.stopPropagation()"
+            @keydown="
+              (event: KeyboardEvent) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  (event.currentTarget as HTMLElement).click();
+                }
+              }
+            "
           >
             {{ tag.label }}
           </Tag>

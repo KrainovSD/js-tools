@@ -236,15 +236,17 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
     }
 
     const contentType = response.headers.get("content-type");
-    let result: Incoming | IncomingApi;
+    let result: Incoming | IncomingApi = undefined as Incoming | IncomingApi;
 
-    if (contentType?.includes?.("text")) {
-      result = (await response.text()) as Incoming | IncomingApi;
-    } else if (contentType?.includes?.("json")) {
-      result = (await response.json()) as Incoming | IncomingApi;
-    } else {
-      result = (await response.blob()) as Incoming | IncomingApi;
-    }
+    try {
+      if (contentType?.includes?.("text")) {
+        result = (await response.text()) as Incoming | IncomingApi;
+      } else if (contentType?.includes?.("json")) {
+        result = (await response.json()) as Incoming | IncomingApi;
+      } else {
+        result = (await response.blob()) as Incoming | IncomingApi;
+      }
+    } catch {}
 
     const transformedResult = request.transformIncomingData
       ? request.transformIncomingData(result as IncomingApi)
