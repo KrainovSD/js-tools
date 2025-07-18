@@ -81,7 +81,6 @@ export const COLUMNS: Column[] = [
       component: "select",
     },
     expandable: true,
-    expandedShift: 10,
     leftFrozen: true,
   },
   {
@@ -108,6 +107,7 @@ export const COLUMNS: Column[] = [
     tooltip: {
       auto: true,
     },
+    expandedShift: 10,
   },
   {
     key: "birth",

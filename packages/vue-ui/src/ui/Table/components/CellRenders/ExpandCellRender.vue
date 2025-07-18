@@ -3,7 +3,9 @@
   import type { CellRenderProps, DefaultRow } from "../../types";
 
   const props = defineProps<CellRenderProps<RowData>>();
-  const isGroupCell = computed(() => props.context.cell.row.getIsGrouped());
+  const isExpandable = computed(
+    () => props.context.cell.row.getIsGrouped() || props.context.cell.row.getCanExpand(),
+  );
   const Expander = computed(() => props.context.table.options.meta?.renderers?.expander);
   const isExpanded = computed(() => props.context.row.getIsExpanded());
 </script>
@@ -22,7 +24,7 @@
       }
     "
   >
-    <component :is="Expander" v-if="Expander && isGroupCell" :context="$props.context" />
+    <component :is="Expander" v-if="Expander && isExpandable" :context="$props.context" />
   </div>
 </template>
 
