@@ -17,7 +17,7 @@
     outline: none;
     cursor: pointer;
     transition: all var(--ksd-transition-slow);
-    border: var(--ksd-line-width) var(--ksd-line-type) #303030;
+    border: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-table-border);
     padding: 0;
     background: var(--ksd-bg-container-color);
     position: relative;

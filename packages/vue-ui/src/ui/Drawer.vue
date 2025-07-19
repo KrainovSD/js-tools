@@ -37,6 +37,10 @@
   });
   const emit = defineEmits<Emits>();
   const open = defineModel<boolean>();
+  const drawerGhostRef = useTemplateRef("drawer-ghost");
+  const targetNode = computed(
+    () => drawerGhostRef.value?.nextElementSibling as HTMLElement | undefined,
+  );
   const drawerComponentRef = useTemplateRef("drawer");
   const maskComponentRef = useTemplateRef("mask");
   const drawerRef = computed(() => drawerComponentRef.value?.element);
@@ -87,6 +91,7 @@
 
         if (
           drawerRef?.contains?.(node) ||
+          targetNode.value?.contains?.(node) ||
           props.ignoreCloseByClick?.some?.((element) => element?.contains?.(node))
         )
           return;
@@ -150,10 +155,34 @@
     { immediate: true },
   );
 
+  watch(
+    targetNode,
+    (targetNode, _, clean) => {
+      if (!targetNode) return;
+
+      function toggleDrawer() {
+        if (!open.value) {
+          open.value = true;
+        } else {
+          onClose();
+        }
+      }
+
+      targetNode.addEventListener("click", toggleDrawer);
+
+      clean(() => {
+        targetNode.removeEventListener("click", toggleDrawer);
+      });
+    },
+    { immediate: true },
+  );
+
   defineExpose({ drawerRef, maskRef });
 </script>
 
 <template>
+  <span ref="drawer-ghost" class="ksd-drawer__ghost" aria-hidden="true" tabindex="-1"></span>
+  <slot></slot>
   <Teleport v-if="open && !props.block" :to="$props.target ?? 'body'">
     <Flex class="ksd-drawer" :class="[$props.classNameRoot]" :style="commonStyles">
       <Flex v-if="modalMode" ref="mask" class="ksd-drawer__mask" :style="commonStyles"></Flex>
@@ -178,7 +207,7 @@
         </Flex>
         <slot v-if="$slots.body" name="body"></slot>
         <Flex v-if="!$slots.body" class="ksd-drawer__body">
-          <slot></slot>
+          <slot name="content"></slot>
         </Flex>
       </Flex>
     </Flex>
@@ -206,7 +235,7 @@
         </Flex>
         <slot v-if="$slots.body" name="body"></slot>
         <Flex v-if="!$slots.body" class="ksd-drawer__body">
-          <slot></slot>
+          <slot name="content"></slot>
         </Flex>
       </div>
     </Flex>
@@ -221,6 +250,15 @@
     inset: 0;
     pointer-events: none;
     z-index: var(--ksd-modal-z-index);
+
+    &__ghost {
+      width: 1px;
+      height: 1px;
+      clip-path: inset(50%);
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
+    }
 
     &__mask {
       position: absolute;

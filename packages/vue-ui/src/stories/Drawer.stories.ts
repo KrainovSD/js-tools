@@ -1,5 +1,5 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
-import { computed, h, ref, useTemplateRef } from "vue";
+import { h, ref, useTemplateRef } from "vue";
 import { VButton, VDrawer, VText } from "../ui";
 
 const meta = {
@@ -34,8 +34,8 @@ const Template: StoryFn<typeof VDrawer> = (args) => ({
       ),
       h(VDrawer, {
         ...args,
-        onClose: this.toggleDrawer,
         modelValue: this.open,
+        "onUpdate:modelValue": (value) => (this.open = value),
       }),
     ]);
   },
@@ -50,47 +50,6 @@ export const AllInOne: Story = {
   render: () => ({
     components: { VButton, VDrawer, VText },
     setup() {
-      const openFirst = ref(false);
-      function toggleFirst() {
-        openFirst.value = !openFirst.value;
-      }
-      const openSecond = ref(false);
-      function toggleSecond() {
-        openSecond.value = !openSecond.value;
-      }
-      const openThird = ref(false);
-      function toggleThird() {
-        openThird.value = !openThird.value;
-      }
-      const openFourth = ref(false);
-      function toggleFourth() {
-        openFourth.value = !openFourth.value;
-      }
-      const openFifth = ref(false);
-      function toggleFifth() {
-        openFifth.value = !openFifth.value;
-      }
-      const openSixth = ref(false);
-      function toggleSixth() {
-        openSixth.value = !openSixth.value;
-      }
-      const openBlockFirst = ref(false);
-      function toggleBlockFirst() {
-        openBlockFirst.value = !openBlockFirst.value;
-      }
-      const openBlockSecond = ref(false);
-      function toggleBlockSecond() {
-        openBlockSecond.value = !openBlockSecond.value;
-      }
-
-      const fifthButtonRef = useTemplateRef("button");
-      const seventhButtonRef = useTemplateRef("button-seventh");
-
-      const ignore = computed(() => [
-        (fifthButtonRef.value as { buttonRef: HTMLElement })?.buttonRef,
-        (seventhButtonRef.value as { buttonRef: HTMLElement })?.buttonRef,
-      ]);
-
       const content = h(
         "div",
         { style: { display: "flex", flexDirection: "column", gap: "20px" } },
@@ -103,27 +62,13 @@ export const AllInOne: Story = {
           ],
         },
       );
+      const modalRoot = useTemplateRef("modal-root");
+      const modalRoot2 = useTemplateRef("modal-root-2");
 
       return {
-        openFirst,
-        toggleFirst,
-        openSecond,
-        toggleSecond,
-        openThird,
-        toggleThird,
-        openFourth,
-        toggleFourth,
-        openFifth,
-        toggleFifth,
-        openSixth,
-        toggleSixth,
-        openBlockFirst,
-        openBlockSecond,
-        toggleBlockFirst,
-        toggleBlockSecond,
-
-        ignore,
         content,
+        modalRoot,
+        modalRoot2,
       };
     },
     render() {
@@ -131,6 +76,7 @@ export const AllInOne: Story = {
         "div",
         {
           id: "modal-root",
+          ref: "modal-root",
           style: {
             display: "flex",
             justifyContent: "space-between",
@@ -142,125 +88,102 @@ export const AllInOne: Story = {
           h(
             "div",
             {
-              id: "modal-root-2",
+              ref: "modal-root-2",
               style: { display: "flex", flexDirection: "column", gap: "20px", flex: 1 },
             },
             [
-              h(VButton, { onClick: this.toggleFirst }, () => "Right Modal"),
               h(
                 VDrawer,
                 {
-                  modelValue: this.openFirst,
-                  "onUpdate:modelValue": (value) => (this.openFirst = value),
                   header: "Right Modal",
                 },
                 {
-                  default: () => this.content,
+                  content: () => this.content,
+                  default: () => h(VButton, {}, () => "Right Modal"),
                 },
               ),
-
-              h(VButton, { onClick: this.toggleSecond }, () => "Bottom Modal"),
               h(
                 VDrawer,
                 {
-                  "onUpdate:modelValue": (value) => (this.openSecond = value),
-                  modelValue: this.openSecond,
                   header: "Bottom Modal",
                   placement: "bottom",
                 },
                 {
-                  default: () => this.content,
+                  content: () => this.content,
+                  default: () => h(VButton, {}, () => "Bottom Modal"),
                 },
               ),
 
-              h(VButton, { onClick: this.toggleThird }, () => "Left Modal"),
               h(
                 VDrawer,
                 {
-                  "onUpdate:modelValue": (value) => (this.openThird = value),
-                  modelValue: this.openThird,
                   header: "Left Modal",
                   placement: "left",
                 },
                 {
-                  default: () => this.content,
+                  content: () => this.content,
+                  default: () => h(VButton, {}, () => "Left Modal"),
                 },
               ),
 
-              h(VButton, { onClick: this.toggleFourth }, () => "Top Modal"),
               h(
                 VDrawer,
                 {
-                  "onUpdate:modelValue": (value) => (this.openFourth = value),
-                  modelValue: this.openFourth,
                   header: "Top Modal",
                   placement: "top",
                 },
                 {
-                  default: () => this.content,
+                  content: () => this.content,
+                  default: () => h(VButton, {}, () => "Top Modal"),
                 },
               ),
 
-              h(VButton, { onClick: this.toggleFifth, ref: "button" }, () => "Without Mask"),
               h(
                 VDrawer,
                 {
-                  "onUpdate:modelValue": (value) => (this.openFifth = value),
-                  modelValue: this.openFifth,
                   header: "Without Mask",
                   mask: false,
-                  ignoreCloseByClick: this.ignore,
                 },
                 {
-                  default: () => this.content,
+                  content: () => this.content,
+                  default: () => h(VButton, {}, () => "Without Mask"),
                 },
               ),
 
-              h(VButton, { onClick: this.toggleSixth }, () => "Custom Header"),
               h(
                 VDrawer,
+                {},
                 {
-                  "onUpdate:modelValue": (value) => (this.openSixth = value),
-                  modelValue: this.openSixth,
-                },
-                {
-                  default: () => this.content,
+                  content: () => this.content,
+                  default: () => h(VButton, {}, () => "Custom Header"),
+
                   "custom-header": () => "Custom Header",
                 },
               ),
-              h(
-                VButton,
-                { onClick: this.toggleBlockFirst, ref: "button-seventh" },
-                () => "Block right",
-              ),
+
               h(
                 VDrawer,
                 {
-                  "onUpdate:modelValue": (value) => (this.openBlockFirst = value),
-                  modelValue: this.openBlockFirst,
                   header: "Block right",
                   block: true,
-                  ignoreCloseByClick: this.ignore,
-                  target: document.querySelector("#modal-root") as HTMLElement | undefined,
+                  target: this.modalRoot as HTMLElement | undefined,
                 },
                 {
-                  default: () => this.content,
+                  content: () => this.content,
+                  default: () => h(VButton, {}, () => "Block right"),
                 },
               ),
-              h(VButton, { onClick: this.toggleBlockSecond }, () => "Block bottom"),
               h(
                 VDrawer,
                 {
-                  "onUpdate:modelValue": (value) => (this.openBlockSecond = value),
-                  modelValue: this.openBlockSecond,
                   header: "Block bottom",
                   block: true,
-                  ignoreCloseByClick: this.ignore,
-                  target: document.querySelector("#modal-root-2") as HTMLElement | undefined,
+                  target: this.modalRoot2 as HTMLElement | undefined,
                   placement: "bottom",
                 },
                 {
-                  default: () => this.content,
+                  content: () => this.content,
+                  default: () => h(VButton, {}, () => "Block bottom"),
                 },
               ),
               h("div", { style: { display: "flex", flex: 1 } }),

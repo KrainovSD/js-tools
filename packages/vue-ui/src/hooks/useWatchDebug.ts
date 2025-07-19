@@ -6,9 +6,10 @@ export function useWatchDebug(value: unknown, caption?: string) {
     (value) => {
       let clonedValue = value;
 
-      try {
-        clonedValue = JSON.parse(JSON.stringify(clonedValue));
-      } catch {}
+      if (!(value instanceof HTMLElement))
+        try {
+          clonedValue = JSON.parse(JSON.stringify(clonedValue));
+        } catch {}
       // eslint-disable-next-line no-console
       console.log(clonedValue, caption);
     },
