@@ -1,16 +1,8 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
-  import {
-    type CSSProperties,
-    type Component,
-    type ComponentPublicInstance,
-    computed,
-    onMounted,
-    onUnmounted,
-    ref,
-  } from "vue";
+  import { type CSSProperties, type Component, type ComponentPublicInstance, computed } from "vue";
+  import { useDrag, useDrop } from "../../../../hooks";
   import { ROW_DND_PREFIX } from "../../constants";
-  import { DND_EVENT_BUS, ROW_DND_HANDLERS } from "../../lib";
   import type { CellInterface, DefaultRow, RowInterface } from "../../types";
   import TableCell from "./TableCell.vue";
 
@@ -39,14 +31,37 @@
   const emit = defineEmits<Emits>();
 
   const rowIndex = computed(() => (props.virtualRow ? props.virtualRow.index : props.row.index));
-  const id = computed(() => `${ROW_DND_PREFIX}${props.row.id}`);
-  const dragging = ref(false);
-  const dragOver = ref(false);
+  const id = computed(() => props.row.id);
+
   // eslint-disable-next-line new-cap
   const CustomRow = computed(() => props.Row?.(props.row));
   const leftVisibleCells = computed(() => props.row.getLeftVisibleCells());
   const centerVisibleCells = computed(() => props.row.getCenterVisibleCells());
   const rightVisibleCells = computed(() => props.row.getRightVisibleCells());
+
+  function onDrop(dragId: string, dropId: string) {
+    emit("dragRow", dragId, dropId);
+  }
+  const { cursorPosition, dragRef, dragging } = useDrag({
+    group: ROW_DND_PREFIX,
+    id,
+    dragSelector: ".ksd-table-row-drag-handle",
+    onDrop,
+  });
+  const { dropRef, dragOver } = useDrop({ group: ROW_DND_PREFIX, id });
+  const extractRef = computed(() => {
+    return (node: Element | ComponentPublicInstance | null) => {
+      dragRef(node);
+      dropRef(node);
+      if (props.virtualRow && node instanceof HTMLElement) {
+        props.rowVirtualizer.measureElement(node);
+      }
+    };
+  });
+  const rowGhostStyle = computed<CSSProperties>(() => ({
+    left: `${cursorPosition.value.x}px`,
+    top: `${cursorPosition.value.y}px`,
+  }));
 
   const rowClasses = computed(() => ({
     selected: props.selected,
@@ -62,39 +77,6 @@
     minHeight: props.height != undefined ? `${props.height}px` : undefined,
     maxHeight: props.height != undefined ? `${props.height}px` : undefined,
   }));
-
-  const rowRef = computed(() => {
-    return props.virtualRow
-      ? (node: Element | ComponentPublicInstance | null) =>
-          node instanceof HTMLElement && props.rowVirtualizer.measureElement(node)
-      : undefined;
-  });
-
-  function handleDragStart(event: DragEvent) {
-    const target = document.elementFromPoint(event.clientX, event.clientY) as HTMLElement | null;
-
-    const isDragHandle =
-      target?.classList?.contains?.("ksd-table-row-drag-handle") ||
-      target?.closest?.(".ksd-table-row-drag-handle");
-    if (!target || !isDragHandle) {
-      event.stopPropagation();
-      event.preventDefault();
-
-      return;
-    }
-
-    ROW_DND_HANDLERS.handleDragStart(event);
-  }
-
-  function handleDrop(event: DragEvent) {
-    const { source, target } = ROW_DND_HANDLERS.handleDrop(event);
-    if (source == undefined || target == undefined || source === target) return;
-
-    const sourceId = source.replace(ROW_DND_PREFIX, "");
-    const targetId = target.replace(ROW_DND_PREFIX, "");
-
-    emit("dragRow", sourceId, targetId);
-  }
 
   function onKeyDown(event: KeyboardEvent) {
     const target = event.target as HTMLDivElement;
@@ -113,32 +95,11 @@
       event.preventDefault();
     }
   }
-
-  onMounted(() => {
-    DND_EVENT_BUS.subscribe(id.value, {
-      enterDrag: function enterDrag() {
-        dragOver.value = true;
-      },
-      leaveDrag: function leaveDrag() {
-        dragOver.value = false;
-      },
-      startDrag: function startDrag() {
-        dragging.value = true;
-      },
-      stopDrag: function stopDrag() {
-        dragging.value = false;
-      },
-    });
-  });
-
-  onUnmounted(() => {
-    DND_EVENT_BUS.unsubscribe(id.value);
-  });
 </script>
 
 <template>
   <div
-    :ref="rowRef"
+    :ref="extractRef"
     role="row"
     tabindex="0"
     class="ksd-table__row"
@@ -146,16 +107,9 @@
     :style="rowStyles"
     :data-index="rowIndex"
     :data-row-id="id"
-    :draggable="$props.draggableRow"
     @click="(event) => $emit('click', $props.row, event)"
     @dblclick="(event) => $emit('dblclick', $props.row, event)"
     @keydown="onKeyDown"
-    @dragstart="handleDragStart"
-    @drop="handleDrop"
-    @dragend="ROW_DND_HANDLERS.handleDragEnd"
-    @dragover="ROW_DND_HANDLERS.handleDragOver"
-    @dragenter="ROW_DND_HANDLERS.handleDragEnter"
-    @dragleave="ROW_DND_HANDLERS.handleDragLeave"
   >
     <template v-if="props.columnVirtualEnabled && !CustomRow">
       <TableCell
@@ -203,6 +157,11 @@
     </template>
     <component :is="CustomRow" v-if="CustomRow" />
   </div>
+  <Teleport v-if="dragging" to="body">
+    <div :style="[rowGhostStyle, { position: 'absolute', zIndex: 200, pointerEvents: 'none' }]">
+      row
+    </div>
+  </Teleport>
 </template>
 
 <style lang="scss">

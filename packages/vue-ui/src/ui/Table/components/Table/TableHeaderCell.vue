@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
-  import { type CSSProperties, computed, onMounted, onUnmounted, ref } from "vue";
+  import { type CSSProperties, type ComponentPublicInstance, computed } from "vue";
+  import { useDrag, useDrop } from "../../../../hooks";
+  import { extractDnDPosition } from "../../../../lib";
   import { HEADER_CELL_DND_PREFIX } from "../../constants";
-  import { DND_EVENT_BUS, HEADER_CELL_DND_HANDLERS, getPrevFrozenWidthHeader } from "../../lib";
+  import { getPrevFrozenWidthHeader } from "../../lib";
   import type { ColumnFiltersState, DefaultRow, HeaderInterface, SortingState } from "../../types";
 
   type Props = {
@@ -12,17 +14,16 @@
     selectedPage: boolean;
     filterState?: ColumnFiltersState;
     sortState?: SortingState;
+    dragGhost?: boolean;
   };
   const RESIZE_HANDLE_WIDTH = 10;
   const THRESHOLD = 2;
   const props = defineProps<Props>();
   const headerContext = computed(() => props.header.getContext());
-  const id = computed(() => `${HEADER_CELL_DND_PREFIX}${headerContext.value.column.id}`);
+  const id = computed(() => headerContext.value.column.id);
   const draggable = computed(() =>
     frozenPosition.value ? false : props.header.column.columnDef.enableDraggable,
   );
-  const dragging = ref(false);
-  const dragOver = ref(false);
 
   const frozenPosition = computed(() => props.header.column.getIsPinned());
   const prevFrozen = computed(() =>
@@ -51,6 +52,10 @@
         : className,
     ),
   );
+  const headerCommonClasses = computed(() =>
+    props.dragGhost ? [headerConfigClasses, "ghost"] : [headerConfigClasses, headerClasses],
+  );
+
   const headerStyles = computed<CSSProperties>(() => ({
     left: frozenPosition.value === "left" ? `${prevFrozen.value}px` : undefined,
     right: frozenPosition.value === "right" ? `${prevFrozen.value}px` : undefined,
@@ -58,28 +63,21 @@
     gridColumnStart: props.columnPosition,
   }));
 
-  function handleDragStart(event: DragEvent) {
+  function canDrag(event: TouchEvent | MouseEvent) {
     const { left, width } = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    const isOverResize = event.clientX >= left + width - RESIZE_HANDLE_WIDTH - THRESHOLD;
+    const { clientX } = extractDnDPosition(event);
+    const isOverResize = clientX >= left + width - RESIZE_HANDLE_WIDTH - THRESHOLD;
 
     if (isOverResize) {
       event.preventDefault();
 
-      return;
+      return false;
     }
 
-    HEADER_CELL_DND_HANDLERS.handleDragStart(event);
+    return true;
   }
-  function handleDrop(event: DragEvent) {
-    const { source, target } = HEADER_CELL_DND_HANDLERS.handleDrop(event) ?? {};
 
-    if (source == undefined || target == undefined || source === target) {
-      return;
-    }
-
-    const sourceId = source.replace(HEADER_CELL_DND_PREFIX, "");
-    const targetId = target.replace(HEADER_CELL_DND_PREFIX, "");
-
+  function onDrop(dragId: string, dropId: string) {
     let columnOrderState = [...headerContext.value.table.getState().columnOrder];
     if (columnOrderState.length === 0) {
       columnOrderState = headerContext.value.table.getAllColumns().map((column) => column.id);
@@ -89,10 +87,10 @@
     let targetIndex: number = -1;
     for (let i = 0; i <= columnOrderState.length - 1; i++) {
       const id = columnOrderState[i];
-      if (sourceId === id) {
+      if (dragId === id) {
         sourceIndex = i;
       }
-      if (targetId === id) {
+      if (dropId === id) {
         targetIndex = i;
       }
 
@@ -109,43 +107,35 @@
     headerContext.value.table.setColumnOrder(columnOrderState);
   }
 
-  onMounted(() => {
-    DND_EVENT_BUS.subscribe(id.value, {
-      enterDrag: function enterDrag() {
-        dragOver.value = true;
-      },
-      leaveDrag: function leaveDrag() {
-        dragOver.value = false;
-      },
-      startDrag: function startDrag() {
-        dragging.value = true;
-      },
-      stopDrag: function stopDrag() {
-        dragging.value = false;
-      },
-    });
+  const { cursorPosition, dragRef, dragging } = useDrag({
+    group: HEADER_CELL_DND_PREFIX,
+    id,
+    canDrag,
+    onDrop,
+  });
+  const { dropRef, dragOver } = useDrop({ group: HEADER_CELL_DND_PREFIX, id });
+  const extractRef = computed(() => {
+    return (node: Element | ComponentPublicInstance | null) => {
+      dragRef(node);
+      dropRef(node);
+    };
   });
 
-  onUnmounted(() => {
-    DND_EVENT_BUS.unsubscribe(id.value);
-  });
+  const headerGhostStyle = computed<CSSProperties>(() => ({
+    left: `${cursorPosition.value.x}px`,
+    top: `${cursorPosition.value.y}px`,
+  }));
 </script>
 
 <template>
   <div
+    :ref="draggable ? extractRef : undefined"
     role="columnheader"
     tabindex="0"
     :data-column-id="id"
     class="ksd-table__header-cell"
-    :class="[headerClasses, headerConfigClasses]"
+    :class="headerCommonClasses"
     :style="headerStyles"
-    :draggable="draggable"
-    @dragover="HEADER_CELL_DND_HANDLERS.handleDragOver"
-    @dragstart="handleDragStart"
-    @drop="handleDrop"
-    @dragend="HEADER_CELL_DND_HANDLERS.handleDragEnd"
-    @dragenter="HEADER_CELL_DND_HANDLERS.handleDragEnter"
-    @dragleave="HEADER_CELL_DND_HANDLERS.handleDragLeave"
   >
     <component
       :is="HeaderRender"
@@ -161,6 +151,29 @@
       @touchstart="$props.header.getResizeHandler()"
     ></div>
   </div>
+
+  <Teleport to="body">
+    <div
+      v-if="dragging"
+      class="ksd-table__header-cell ghost"
+      :style="headerGhostStyle"
+      :class="[headerConfigClasses]"
+    >
+      <component
+        :is="HeaderRender"
+        v-if="HeaderRender"
+        :context="headerContext"
+        :settings="headerContext.column.columnDef.headerRenderProps"
+      />
+      <div
+        v-if="$props.header.column.getCanResize()"
+        class="ksd-table__header-cell-resize"
+        :style="{ width: `${RESIZE_HANDLE_WIDTH}px` }"
+        @mousedown="$props.header.getResizeHandler()"
+        @touchstart="$props.header.getResizeHandler()"
+      ></div>
+    </div>
+  </Teleport>
 </template>
 
 <style lang="scss">
@@ -169,8 +182,16 @@
       position: relative;
       display: block;
 
+      &.ghost {
+        position: fixed;
+        z-index: 20;
+        pointer-events: none;
+        background-color: var(--ksd-table-header-bg);
+      }
+
       &.dragging {
         opacity: var(--ksd-table-header-drag-opacity);
+        pointer-events: none;
       }
       &.drag-over {
         background-color: var(--ksd-table-header-drag-bg);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useMessage } from "../hooks/useMessage";
+  import { useMessage } from "../hooks/use-message";
   import Button from "../ui/Button.vue";
   import type { MessageType } from "../ui/Message.vue";
 

@@ -5,7 +5,7 @@ import { THEME_CONFIG } from "../src/constants";
 import { injectThemeStyle } from "../src/lib/inject-theme-style";
 import ThemeProvider from "../src/providers/ThemeProvider.vue";
 import type { ThemeName } from "../src/types";
-import "./global.css";
+import "./global.scss";
 
 setup(() => {});
 

@@ -27,3 +27,11 @@ body {
   background-clip: padding-box;
   background-color: var(--ksd-icon-color);
 }
+
+body.dragging {
+  user-select: none;
+
+  & * {
+    cursor: grabbing !important;
+  }
+}

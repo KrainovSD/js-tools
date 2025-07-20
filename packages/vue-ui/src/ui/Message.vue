@@ -7,7 +7,7 @@
     VLoadingOutlined,
   } from "@krainovsd/vue-icons";
   import { computed, provide, ref, shallowReactive, useTemplateRef } from "vue";
-  import { SET_MESSAGE_INJECT_TOKEN } from "../hooks/useMessage";
+  import { SET_MESSAGE_INJECT_TOKEN } from "../hooks/use-message";
 
   export type MessageType = "success" | "warning" | "error" | "info" | "loading";
   export type Message = {
