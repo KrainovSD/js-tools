@@ -15,15 +15,15 @@
   const checkedContent = computed(() =>
     !isArray(content.value) || content.value.length === 0
       ? null
-      : isObject(content.value[0]) && props.settings.pathToObject
+      : isObject(content.value[0]) && props.settings?.pathToObject
         ? content.value
             .map((obj) => {
-              const innerValue = getByPath(obj, props.settings.pathToObject);
+              const innerValue = getByPath(obj, props.settings?.pathToObject);
 
               return innerValue;
             })
-            .join(props.settings.separator ?? ", ")
-        : content.value.join(props.settings.separator ?? ", "),
+            .join(props.settings?.separator ?? ", ")
+        : content.value.join(props.settings?.separator ?? ", "),
   );
 </script>
 

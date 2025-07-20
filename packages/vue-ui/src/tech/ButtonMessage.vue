@@ -32,9 +32,9 @@
 </script>
 
 <template>
-  <Button @click="create" icon-position="left" size="large" shape="default" :loading="true"
-    ><slot></slot
-  ></Button>
+  <Button icon-position="left" size="large" shape="default" :loading="true" @click="create">
+    <slot></slot>
+  </Button>
 </template>
 
 <style lang="scss"></style>

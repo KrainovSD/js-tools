@@ -10,7 +10,7 @@
 
 <template>
   <div>{{ $props.context.column.columnDef.name }}</div>
-  <span v-if="$props.settings.withFilter">filter</span>
+  <span v-if="$props.settings?.withFilter">filter</span>
 </template>
 
 <style lang="scss" module></style>

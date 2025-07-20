@@ -16,7 +16,7 @@
 
 <template>
   <div v-if="checkedContent != undefined && !Number.isNaN(checkedContent)">
-    {{ checkedContent.toFixed(props.settings.fixed) }}
+    {{ checkedContent.toFixed(props.settings?.fixed) }}
   </div>
 </template>
 

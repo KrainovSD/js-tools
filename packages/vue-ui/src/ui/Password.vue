@@ -30,17 +30,22 @@
     :type="type"
     class="ksd-password"
   >
-    <template v-for="(_, name) in $slots" #[name]="slotData">
-      <slot :name="name" v-bind="slotData"></slot>
+    <template v-if="$slots.default" #default>
+      <slot name="default"></slot>
     </template>
-
-    <template v-if="!$slots.suffix" #suffix>
-      <IconWrapper v-if="!visible" @click="visible = true">
-        <VEyeInvisibleOutlined class="ksd-password__icon" />
-      </IconWrapper>
-      <IconWrapper v-if="visible" @click="visible = false">
-        <VEyeOutlined v-if="visible" class="ksd-password__icon" />
-      </IconWrapper>
+    <template v-if="$slots.prefix" #prefix>
+      <slot name="prefix"></slot>
+    </template>
+    <template #suffix>
+      <slot v-if="$slots.suffix" name="suffix"></slot>
+      <template v-if="!$slots.suffix">
+        <IconWrapper v-if="!visible" @click="visible = true">
+          <VEyeInvisibleOutlined class="ksd-password__icon" />
+        </IconWrapper>
+        <IconWrapper v-if="visible" @click="visible = false">
+          <VEyeOutlined v-if="visible" class="ksd-password__icon" />
+        </IconWrapper>
+      </template>
     </template>
   </Input>
 </template>

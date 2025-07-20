@@ -2,12 +2,12 @@ import type {
   ColumnFiltersState,
   ColumnOrderState,
   ColumnPinningState,
+  ColumnResizeMode,
   ColumnSizingState,
   ExpandedState,
   GroupingState,
   RowSelectionState,
   SortingState,
-  TableOptions,
 } from "@tanstack/vue-table";
 import type { PaginationState } from "@tanstack/vue-table";
 import type { Component } from "vue";
@@ -143,14 +143,14 @@ export type TableProps<
   FilterType,
   SortType
 > & {
-  getSubRows?: TableOptions<RowData>["getSubRows"];
-  columnResizeMode?: TableOptions<RowData>["columnResizeMode"];
-  manualFiltering?: TableOptions<RowData>["manualFiltering"];
-  manualExpanding?: TableOptions<RowData>["manualExpanding"];
-  manualGrouping?: TableOptions<RowData>["manualGrouping"];
-  manualPagination?: TableOptions<RowData>["manualPagination"];
-  manualSorting?: TableOptions<RowData>["manualSorting"];
-  getRowId?: TableOptions<RowData>["getRowId"];
+  getSubRows?: (originalRow: RowData, index: number) => RowData[] | undefined;
+  columnResizeMode?: ColumnResizeMode;
+  manualFiltering?: boolean;
+  manualExpanding?: boolean;
+  manualGrouping?: boolean;
+  manualPagination?: boolean;
+  manualSorting?: boolean;
+  getRowId?: (originalRow: RowData, index: number, parent?: RowInterface<RowData>) => string;
 } & {
   initialSorting?: SortingState;
   initialColumnFilters?: ColumnFiltersState;
