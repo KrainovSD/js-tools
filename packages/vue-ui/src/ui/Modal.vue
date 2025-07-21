@@ -40,9 +40,6 @@
       prevActiveElement.value.focus();
     }
 
-    open.value = false;
-    emit("close");
-
     void Promise.all([
       execAnimation(modalRef.value, "ksd-modal_out"),
       execAnimation(modalMaskRef.value, "ksd-modal__mask_out"),
@@ -54,17 +51,22 @@
   }
   function onConfirm() {
     emit("confirm");
-    onClose();
+    open.value = false;
   }
   function onCancel() {
     emit("cancel");
-    onClose();
+    open.value = false;
   }
 
   watch(
     open,
     (value) => {
-      if (!value) return;
+      if (!value) {
+        onClose();
+        emit("close");
+
+        return;
+      }
 
       document.addEventListener(
         "mouseover",
@@ -108,14 +110,14 @@
           return;
         }
 
-        onClose();
+        open.value = false;
       }
 
       let focusableIndex = 0;
       function actionKeyBoard(event: KeyboardEvent) {
         if (event.key === "Escape") {
           event.stopPropagation();
-          onClose();
+          open.value = false;
         }
         if (focusableElements.length > 0 && event.key === "Tab") {
           event.preventDefault();
@@ -148,7 +150,7 @@
     { immediate: true },
   );
 
-  defineExpose({ modalRef });
+  defineExpose({ modalRef, close: onClose });
 </script>
 
 <template>
@@ -165,7 +167,7 @@
         <div class="ksd-modal__header">
           <slot v-if="$slots.header" name="header"></slot>
           <span v-else class="ksd-modal__title">{{ $props.header }}</span>
-          <Button type="text" class="ksd-modal__close" @click="onClose">
+          <Button type="text" class="ksd-modal__close" @click="open = false">
             <template #icon>
               <VCloseOutlined />
             </template>

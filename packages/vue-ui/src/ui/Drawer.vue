@@ -69,9 +69,6 @@
       prevActiveElement.value.focus();
     }
 
-    open.value = false;
-    emit("close");
-
     const animationPromises = [execAnimation(drawerRef.value, "out")];
     if (modalMode.value) {
       animationPromises.push(execAnimation(maskRef.value, "out"));
@@ -105,12 +102,12 @@
         )
           return;
 
-        onClose();
+        open.value = false;
       }
 
       function closeByEscape(event: KeyboardEvent) {
         if (event.key === "Escape") {
-          onClose();
+          open.value = false;
         }
       }
 
@@ -179,7 +176,7 @@
         if (!open.value) {
           open.value = true;
         } else {
-          onClose();
+          open.value = false;
         }
       }
 
@@ -197,12 +194,15 @@
     (open) => {
       if (open) {
         localOpen.value = true;
+      } else {
+        onClose();
+        emit("close");
       }
     },
     { immediate: true },
   );
 
-  defineExpose({ drawerRef, maskRef });
+  defineExpose({ drawerRef, maskRef, close: onClose });
 </script>
 
 <template>
@@ -222,7 +222,7 @@
       >
         <slot v-if="$slots['custom-header']" name="custom-header"></slot>
         <Flex v-if="!$slots['custom-header']" flex-align="center" class="ksd-drawer__header">
-          <Button type="text" size="small" class="ksd-drawer__header-close" @click="onClose"
+          <Button type="text" size="small" class="ksd-drawer__header-close" @click="open = false"
             ><template #icon> <VCloseOutlined :size="16" /> </template>
           </Button>
           <Text v-if="$props.header" size="lg" class="ksd-drawer__header-text">{{
@@ -250,7 +250,7 @@
       <div class="ksd-drawer__block">
         <slot v-if="$slots['custom-header']" name="custom-header"></slot>
         <Flex v-if="!$slots['custom-header']" flex-align="center" class="ksd-drawer__header">
-          <Button type="text" size="small" class="ksd-drawer__header-close" @click="onClose"
+          <Button type="text" size="small" class="ksd-drawer__header-close" @click="open = false"
             ><template #icon> <VCloseOutlined :size="16" /> </template>
           </Button>
           <Text v-if="$props.header" size="lg" class="ksd-drawer__header-text">{{
