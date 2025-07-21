@@ -40,16 +40,23 @@
         : props.min
       : (props.min ?? 0),
   );
-  const step = computed(() =>
-    Math.max(Math.max(1, min.value), Math.min(props.step ?? 1, max.value)),
-  );
+  const step = computed(() => Math.max(0, props.step ?? 1));
+  const stepRound = computed(() => {
+    const stepString = step.value.toString();
+    const decimalIndex = stepString.indexOf(".");
+
+    return decimalIndex === -1 ? 0 : stepString.length - decimalIndex - 1;
+  });
+
   const difference = computed(() => max.value - min.value);
   const minValue = computed(() => (isArray(model.value) ? model.value[0] : 0));
   const maxValue = computed(() =>
     isArray(model.value) ? model.value[1] : isNumber(model.value) ? model.value : 0,
   );
-  const minHandle = computed(() => (!props.range ? 0 : (minValue.value * 100) / difference.value));
-  const maxHandle = computed(() => (maxValue.value * 100) / difference.value);
+  const minHandle = computed(() =>
+    !props.range ? 0 : ((minValue.value - min.value) / difference.value) * 100,
+  );
+  const maxHandle = computed(() => ((maxValue.value - min.value) / difference.value) * 100);
 
   const trackStyles = computed(() => ({
     left: !props.vertical ? `${minHandle.value}%` : undefined,
@@ -79,6 +86,8 @@
   );
 
   function updateValue(value: number, keyboard: boolean) {
+    value = +value.toFixed(stepRound.value);
+
     if (props.range && isArray(model.value)) {
       const closestIndex = findClosestNumber(model.value, value);
       if (closestIndex < model.value.length) {
@@ -140,7 +149,7 @@
     const value =
       Math.round((min.value + shiftPercent * difference.value) / step.value) * step.value;
 
-    updateValue(value, false);
+    updateValue(Math.max(min.value, Math.min(value, max.value)), false);
   }
 
   function processingDrag(event: MouseEvent | PointerEvent) {
@@ -342,7 +351,7 @@
   .ksd-slider {
     box-sizing: border-box;
     padding: 0;
-    color: var(--ksd-main-text-color);
+    color: var(--ksd-text-main-color);
     font-size: var(--ksd-font-size);
     line-height: var(--ksd-line-height);
     list-style: none;

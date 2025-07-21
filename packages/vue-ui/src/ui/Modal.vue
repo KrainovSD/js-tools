@@ -29,6 +29,7 @@
   });
   const emit = defineEmits<Emit>();
   const open = defineModel<boolean>();
+  const localOpen = ref(false);
   const maskStyles = computed(() => ({ zIndex: props.zIndex }));
   const modalRef = useTemplateRef("modal");
   const modalMaskRef = useTemplateRef("mask");
@@ -39,12 +40,16 @@
       prevActiveElement.value.focus();
     }
 
+    open.value = false;
+    emit("close");
+
     void Promise.all([
       execAnimation(modalRef.value, "ksd-modal_out"),
       execAnimation(modalMaskRef.value, "ksd-modal__mask_out"),
     ]).then(() => {
-      open.value = false;
-      emit("close");
+      if (!open.value) {
+        localOpen.value = false;
+      }
     });
   }
   function onConfirm() {
@@ -70,6 +75,7 @@
         },
         { once: true },
       );
+      localOpen.value = true;
     },
     { immediate: true, flush: "pre" },
   );
@@ -146,7 +152,7 @@
 </script>
 
 <template>
-  <Teleport v-if="open" :to="$props.target ?? '#storybook-root'">
+  <Teleport v-if="localOpen" :to="$props.target ?? '#storybook-root'">
     <div ref="mask" class="ksd-modal__mask" :class="$props.className" :style="maskStyles">
       <div
         ref="modal"

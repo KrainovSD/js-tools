@@ -57,7 +57,13 @@ export const AllInOne: Story = {
         },
         [
           h(VSlider, { min: 0, max: 100, modelValue: 12, step: 1 }),
+          h(VSlider, { min: 0, max: 10, modelValue: 1, step: 6 }),
+
           h(VSlider, { min: 0, max: 100, modelValue: 16, step: 10 }),
+          h(VSlider, { min: 0, max: 100, modelValue: 10, step: 0.001 }),
+          h(VSlider, { min: -300, max: 0, modelValue: -20, step: 0.1 }),
+          h(VSlider, { min: -300, max: 0, modelValue: [-200, -20], step: 0.1, range: true }),
+
           h(VSlider, { min: 0, max: 100, modelValue: 24, step: 1, disabled: true }),
           h(VSlider, { min: 0, max: 100, modelValue: [10, 30], step: 1, range: true }),
           h(VSlider, { min: 0, max: 100, modelValue: [24, 65], step: 1, range: true }),

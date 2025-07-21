@@ -18,6 +18,8 @@
     width?: number;
     height?: number;
     classNameRoot?: string;
+    closeByClickOutside?: boolean;
+    closeByEscape?: boolean;
   };
   type Emits = {
     close: [];
@@ -34,9 +36,12 @@
     height: 378,
     classNameRoot: undefined,
     block: false,
+    closeByClickOutside: true,
+    closeByEscape: true,
   });
   const emit = defineEmits<Emits>();
   const open = defineModel<boolean>();
+  const localOpen = ref(false);
   const drawerGhostRef = useTemplateRef("drawer-ghost");
   const targetNode = computed(
     () => drawerGhostRef.value?.nextElementSibling as HTMLElement | undefined,
@@ -64,14 +69,18 @@
       prevActiveElement.value.focus();
     }
 
+    open.value = false;
+    emit("close");
+
     const animationPromises = [execAnimation(drawerRef.value, "out")];
     if (modalMode.value) {
       animationPromises.push(execAnimation(maskRef.value, "out"));
     }
 
     void Promise.all(animationPromises).then(() => {
-      open.value = false;
-      emit("close");
+      if (!open.value) {
+        localOpen.value = false;
+      }
     });
   }
 
@@ -143,10 +152,16 @@
         }
       }
 
-      document.addEventListener("mousedown", closeByClickOutside, { signal: controller.signal });
-      document.addEventListener("touchstart", closeByClickOutside, { signal: controller.signal });
-      document.addEventListener("pointerdown", closeByClickOutside, { signal: controller.signal });
-      document.addEventListener("keydown", closeByEscape, { signal: controller.signal });
+      if (props.closeByClickOutside) {
+        document.addEventListener("mousedown", closeByClickOutside, { signal: controller.signal });
+        document.addEventListener("touchstart", closeByClickOutside, { signal: controller.signal });
+        document.addEventListener("pointerdown", closeByClickOutside, {
+          signal: controller.signal,
+        });
+      }
+      if (props.closeByEscape) {
+        document.addEventListener("keydown", closeByEscape, { signal: controller.signal });
+      }
 
       clean(() => {
         controller.abort();
@@ -177,13 +192,23 @@
     { immediate: true },
   );
 
+  watch(
+    open,
+    (open) => {
+      if (open) {
+        localOpen.value = true;
+      }
+    },
+    { immediate: true },
+  );
+
   defineExpose({ drawerRef, maskRef });
 </script>
 
 <template>
   <span ref="drawer-ghost" class="ksd-drawer__ghost" aria-hidden="true" tabindex="-1"></span>
   <slot></slot>
-  <Teleport v-if="open && !props.block" :to="$props.target ?? 'body'">
+  <Teleport v-if="localOpen && !props.block" :to="$props.target ?? 'body'">
     <Flex class="ksd-drawer" :class="[$props.classNameRoot]" :style="commonStyles">
       <Flex v-if="modalMode" ref="mask" class="ksd-drawer__mask" :style="commonStyles"></Flex>
       <Flex
@@ -212,7 +237,7 @@
       </Flex>
     </Flex>
   </Teleport>
-  <Teleport v-if="open && props.block" :to="$props.target ?? 'body'">
+  <Teleport v-if="localOpen && props.block" :to="$props.target ?? 'body'">
     <Flex
       ref="drawer"
       class="ksd-drawer__block-wrapper"

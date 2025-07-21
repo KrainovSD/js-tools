@@ -231,7 +231,7 @@
       background-color: var(--ksd-pagination-item-bg);
       border: var(--ksd-line-width) var(--ksd-line-type) transparent;
       border-radius: var(--ksd-border-radius);
-      color: var(--ksd-main-text-color);
+      color: var(--ksd-text-main-color);
       outline: 0;
       cursor: pointer;
       user-select: none;
