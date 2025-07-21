@@ -42,7 +42,7 @@
     :get-row-id="getRowId"
     :columns="column"
     :rows="rows"
-    :virtual-rows="false"
+    :virtual-rows="true"
     :with-filters="true"
     :with-pagination="true"
     :full-size="false"

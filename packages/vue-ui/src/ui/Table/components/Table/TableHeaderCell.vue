@@ -1,10 +1,11 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
-  import { type CSSProperties, type ComponentPublicInstance, computed } from "vue";
+  import { type CSSProperties, type ComponentPublicInstance, computed, h, shallowRef } from "vue";
   import { useDrag, useDrop } from "../../../../hooks";
   import { extractDnDPosition } from "../../../../lib";
   import { HEADER_CELL_DND_PREFIX } from "../../constants";
   import { getPrevFrozenWidthHeader } from "../../lib";
   import type { ColumnFiltersState, DefaultRow, HeaderInterface, SortingState } from "../../types";
+  import TableHeaderCellGhost from "./TableHeaderCellGhost.vue";
 
   type Props = {
     header: HeaderInterface<RowData>;
@@ -51,9 +52,6 @@
         ? className(headerContext.value, props.header.column.columnDef.headerClassProps)
         : className,
     ),
-  );
-  const headerCommonClasses = computed(() =>
-    props.dragGhost ? [headerConfigClasses, "ghost"] : [headerConfigClasses, headerClasses],
   );
 
   const headerStyles = computed<CSSProperties>(() => ({
@@ -107,24 +105,34 @@
     headerContext.value.table.setColumnOrder(columnOrderState);
   }
 
-  const { cursorPosition, dragRef, dragging } = useDrag({
+  const DragGhost = computed(() =>
+    h(TableHeaderCellGhost<RowData>, {
+      header: props.header,
+    }),
+  );
+  const headerCellRef = shallowRef<HTMLElement | null>(null);
+  const scrollContainer = computed(() =>
+    headerCellRef.value?.closest?.<HTMLElement>(".ksd-table__container"),
+  );
+
+  const { dragRef, dragging } = useDrag({
     group: HEADER_CELL_DND_PREFIX,
     id,
     canDrag,
     onDrop,
+    dragGhost: DragGhost,
+    scrollContainer,
   });
   const { dropRef, dragOver } = useDrop({ group: HEADER_CELL_DND_PREFIX, id });
   const extractRef = computed(() => {
     return (node: Element | ComponentPublicInstance | null) => {
       dragRef(node);
       dropRef(node);
+      if (node instanceof HTMLElement) {
+        headerCellRef.value = node;
+      }
     };
   });
-
-  const headerGhostStyle = computed<CSSProperties>(() => ({
-    left: `${cursorPosition.value.x}px`,
-    top: `${cursorPosition.value.y}px`,
-  }));
 </script>
 
 <template>
@@ -134,7 +142,7 @@
     tabindex="0"
     :data-column-id="id"
     class="ksd-table__header-cell"
-    :class="headerCommonClasses"
+    :class="[headerClasses, headerConfigClasses]"
     :style="headerStyles"
   >
     <component
@@ -151,29 +159,6 @@
       @touchstart="$props.header.getResizeHandler()"
     ></div>
   </div>
-
-  <Teleport to="body">
-    <div
-      v-if="dragging"
-      class="ksd-table__header-cell ghost"
-      :style="headerGhostStyle"
-      :class="[headerConfigClasses]"
-    >
-      <component
-        :is="HeaderRender"
-        v-if="HeaderRender"
-        :context="headerContext"
-        :settings="headerContext.column.columnDef.headerRenderProps"
-      />
-      <div
-        v-if="$props.header.column.getCanResize()"
-        class="ksd-table__header-cell-resize"
-        :style="{ width: `${RESIZE_HANDLE_WIDTH}px` }"
-        @mousedown="$props.header.getResizeHandler()"
-        @touchstart="$props.header.getResizeHandler()"
-      ></div>
-    </div>
-  </Teleport>
 </template>
 
 <style lang="scss">
@@ -181,13 +166,6 @@
     &__header-cell {
       position: relative;
       display: block;
-
-      &.ghost {
-        position: fixed;
-        z-index: 20;
-        pointer-events: none;
-        background-color: var(--ksd-table-header-bg);
-      }
 
       &.dragging {
         opacity: var(--ksd-table-header-drag-opacity);

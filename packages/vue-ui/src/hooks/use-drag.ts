@@ -3,7 +3,9 @@ import {
   type ComponentPublicInstance,
   type ComputedRef,
   type Ref,
+  type VNode,
   ref,
+  render,
   shallowRef,
   watch,
 } from "vue";
@@ -13,6 +15,8 @@ import {
   type DragInfo,
   extractDnDPosition,
 } from "../lib";
+import { createDndScrollContainerController } from "../lib/dnd-scroll-container-controller";
+import { DROP_GROUP_ATTRIBUTE, DROP_ID_ATTRIBUTE, DROP_UNIQUE_ID_ATTRIBUTE } from "./use-drop";
 
 const DRAG_ID_ATTRIBUTE = "data-drag-id";
 const DRAG_UNIQUE_ID_ATTRIBUTE = "data-drag-unique-id";
@@ -25,7 +29,13 @@ export type UseDragOptions = {
   dragSelector?: string;
   canDrag?: (event: TouchEvent | MouseEvent) => boolean | undefined;
   onDrop?: (sourceId: string, targetId: string) => void;
+  dragGhost?: Ref<VNode | HTMLElement> | ComputedRef<VNode | HTMLElement>;
+  scrollContainer?:
+    | Ref<HTMLElement | null | undefined>
+    | ComputedRef<HTMLElement | null | undefined>;
 };
+
+type CursorPosition = { x: number; y: number };
 
 export function useDrag(props: UseDragOptions) {
   const dragging = ref(false);
@@ -33,7 +43,7 @@ export function useDrag(props: UseDragOptions) {
   function collectDragRef(node: Element | ComponentPublicInstance | null) {
     dragRef.value = node;
   }
-  const cursorPosition = shallowRef({ x: 0, y: 0 });
+  const cursorPosition = shallowRef<CursorPosition>({ x: 0, y: 0 });
 
   watch<[Element | ComponentPublicInstance | null, string], true>(
     () => [dragRef.value, props.id.value],
@@ -59,6 +69,13 @@ export function useDrag(props: UseDragOptions) {
         }
 
         handleDragStart(event);
+        if (dragScrollController) {
+          dragScrollController.stopScrollElement();
+        }
+        if (props.scrollContainer?.value) {
+          dragScrollController = createDndScrollContainerController(props.scrollContainer.value);
+        }
+        dragGhost = props.dragGhost?.value;
         dragController = new AbortController();
         if (event instanceof TouchEvent) {
           document.addEventListener("touchmove", handleDragMove, {
@@ -117,62 +134,9 @@ export function useDrag(props: UseDragOptions) {
   return { dragging, cursorPosition, dragRef: collectDragRef };
 }
 
-export type UseDropOptions = {
-  group: string;
-  id: Ref<string> | ComputedRef<string>;
-  canDrop?: (dragInfo: DragInfo) => boolean | undefined;
-};
-
-const DROP_ID_ATTRIBUTE = "data-drop-id";
-const DROP_UNIQUE_ID_ATTRIBUTE = "data-drop-unique-id";
-const DROP_GROUP_ATTRIBUTE = "data-drop-group";
-const DROP_PREFIX_ID = "drop:";
-
-export function useDrop(props: UseDropOptions) {
-  const dragOver = ref(false);
-  const canDrop = ref(false);
-  const dropRef = shallowRef<Element | ComponentPublicInstance | null>(null);
-  function collectDropRef(node: Element | ComponentPublicInstance | null) {
-    dropRef.value = node;
-  }
-
-  watch<[Element | ComponentPublicInstance | null, string], true>(
-    () => [dropRef.value, props.id.value],
-    ([dropRef, id], _, clean) => {
-      if (!(dropRef instanceof HTMLElement)) return;
-
-      const dropId = `${DROP_PREFIX_ID}${props.group}${id}`;
-      dropRef.setAttribute(DROP_UNIQUE_ID_ATTRIBUTE, dropId);
-      dropRef.setAttribute(DROP_ID_ATTRIBUTE, id);
-      dropRef.setAttribute(DROP_GROUP_ATTRIBUTE, props.group);
-
-      DND_EVENT_BUS.subscribe(dropId, props.group, {
-        enterDrag: function enterDrag() {
-          dragOver.value = true;
-        },
-        leaveDrag: function leaveDrag() {
-          dragOver.value = false;
-        },
-        startDrag: function startDrag(dragInfo) {
-          if (props.canDrop == undefined || props.canDrop(dragInfo)) {
-            canDrop.value = true;
-          }
-        },
-        stopDrag: function stopDrag() {
-          canDrop.value = false;
-        },
-      });
-
-      clean(() => {
-        DND_EVENT_BUS.unsubscribe(dropId, props.group);
-      });
-    },
-    { immediate: true },
-  );
-
-  return { dragOver, canDrop, dropRef: collectDropRef };
-}
-
+let dragScrollController: ReturnType<typeof createDndScrollContainerController> | undefined;
+let dragGhost: VNode | HTMLElement | undefined;
+let dragGhostContainer: HTMLDivElement | undefined;
 let dragInfoStart: DragInfo | undefined;
 let dragInfo: DragInfo | undefined;
 let dragOver: string | undefined;
@@ -209,17 +173,36 @@ function handleDragStart(event: TouchEvent | MouseEvent) {
 
 function handleDragMove(event: TouchEvent | MouseEvent) {
   if (dragInfoStart) {
+    /** Start Drag logic */
     dragInfo = dragInfoStart;
     DND_EVENT_BUS.sendMessage(DND_EVENT_BUS_MESSAGE_TYPES.StartDrag, dragInfo, dragInfo.group);
     dragInfoStart = undefined;
     document.body.classList.add("dragging");
+
+    if (dragGhost) {
+      /** Render drag ghost element */
+      const ghostContainerElement = document.createElement("div");
+      ghostContainerElement.style.position = "absolute";
+      ghostContainerElement.style.pointerEvents = "none";
+      ghostContainerElement.style.zIndex = "1000";
+
+      document.body.appendChild(ghostContainerElement);
+      if (dragGhost instanceof HTMLElement) {
+        dragGhostContainer?.appendChild(dragGhost);
+      } else {
+        render(dragGhost, ghostContainerElement);
+      }
+      dragGhostContainer = ghostContainerElement;
+    }
   }
-  if (event instanceof TouchEvent) {
-    event.preventDefault();
+
+  if (dragScrollController) {
+    dragScrollController.stopScrollElement();
   }
 
   if (!dragInfo) return;
 
+  /** Send Cursor Position */
   const { clientX, clientY } = extractDnDPosition(event);
   DND_EVENT_BUS.sendMessage(
     DND_EVENT_BUS_MESSAGE_TYPES.Position,
@@ -231,6 +214,23 @@ function handleDragMove(event: TouchEvent | MouseEvent) {
     dragInfo.uniqueId,
   );
 
+  /** Change position drag ghost */
+  if (dragGhostContainer) {
+    dragGhostContainer.style.left = `${clientX}px`;
+    dragGhostContainer.style.top = `${clientY}px`;
+  }
+
+  /** Custom Scroll  */
+  if (dragScrollController) {
+    dragScrollController.startScrollElement(clientX, clientY);
+  }
+
+  /** Prevent Scroll on Touch */
+  if (event instanceof TouchEvent) {
+    event.preventDefault();
+  }
+
+  /** Check drag over node */
   const overNode = document.elementFromPoint(clientX, clientY);
   const dropNode = overNode?.closest?.<HTMLElement>(`[${DROP_GROUP_ATTRIBUTE}]`);
   const dropUniqueId = dropNode?.getAttribute?.(DROP_UNIQUE_ID_ATTRIBUTE);
@@ -265,6 +265,23 @@ function handleDragMove(event: TouchEvent | MouseEvent) {
 function handleDragEnd(event: TouchEvent | MouseEvent) {
   document.body.classList.remove("dragging");
   dragInfoStart = undefined;
+  if (dragScrollController) {
+    dragScrollController.stopScrollElement();
+    dragScrollController = undefined;
+  }
+
+  if (dragGhostContainer) {
+    if (dragGhost instanceof HTMLElement) {
+      dragGhost.remove();
+    } else {
+      render(null, dragGhostContainer);
+    }
+    dragGhostContainer.remove();
+    dragGhostContainer = undefined;
+  }
+  if (dragGhost) {
+    dragGhost = undefined;
+  }
 
   if (!dragInfo) return {};
   event.preventDefault();

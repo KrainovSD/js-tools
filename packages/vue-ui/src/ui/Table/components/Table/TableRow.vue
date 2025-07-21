@@ -1,10 +1,18 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
-  import { type CSSProperties, type Component, type ComponentPublicInstance, computed } from "vue";
+  import {
+    type CSSProperties,
+    type Component,
+    type ComponentPublicInstance,
+    computed,
+    h,
+    shallowRef,
+  } from "vue";
   import { useDrag, useDrop } from "../../../../hooks";
   import { ROW_DND_PREFIX } from "../../constants";
   import type { CellInterface, DefaultRow, RowInterface } from "../../types";
   import TableCell from "./TableCell.vue";
+  import TableRowGhost from "./TableRowGhost.vue";
 
   type Props = {
     rows: RowInterface<RowData>[];
@@ -42,19 +50,39 @@
   function onDrop(dragId: string, dropId: string) {
     emit("dragRow", dragId, dropId);
   }
+  const DragGhost = computed(() =>
+    h(TableRowGhost<RowData>, {
+      selected: props.selected,
+      row: props.row,
+      rowClassName: props.rowClassName,
+      visibleCells: props.visibleCells,
+      height: props.height,
+      expanded: props.expanded,
+    }),
+  );
+  const rowRef = shallowRef<HTMLElement | null>(null);
+  const scrollContainer = computed(() =>
+    rowRef.value?.closest?.<HTMLElement>(".ksd-table__container"),
+  );
   const { cursorPosition, dragRef, dragging } = useDrag({
     group: ROW_DND_PREFIX,
     id,
     dragSelector: ".ksd-table-row-drag-handle",
     onDrop,
+    scrollContainer,
+    dragGhost: DragGhost,
   });
   const { dropRef, dragOver } = useDrop({ group: ROW_DND_PREFIX, id });
   const extractRef = computed(() => {
     return (node: Element | ComponentPublicInstance | null) => {
       dragRef(node);
       dropRef(node);
-      if (props.virtualRow && node instanceof HTMLElement) {
-        props.rowVirtualizer.measureElement(node);
+
+      if (node instanceof HTMLElement) {
+        if (props.virtualRow) {
+          props.rowVirtualizer.measureElement(node);
+        }
+        rowRef.value = node;
       }
     };
   });
