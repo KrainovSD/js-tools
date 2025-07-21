@@ -54,6 +54,7 @@
   .ksd-table {
     &__row {
       &.ghost {
+        max-width: max(50vw, 400px);
       }
     }
   }

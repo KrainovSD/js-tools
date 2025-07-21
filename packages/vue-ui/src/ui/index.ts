@@ -76,6 +76,7 @@ export type {
   HTMLDropDownItem,
   DropDownInteractiveMode,
   DropDownSize,
+  DropDownItemPopConfirmOptions,
 } from "./DropDown.vue";
 export type {
   SelectProps,
@@ -85,8 +86,9 @@ export type {
   SelectSize,
   SelectStatus,
   SelectVariant,
+  SelectGroupItem,
 } from "./Select.vue";
-export type { SearchProps, SearchOption } from "./Search.vue";
+export type { SearchProps, SearchGroupeItem, SearchItem, SearchItemFlat } from "./Search.vue";
 export type { PopConfirmProps } from "./PopConfirm.vue";
 export type { MessageProps, Message, MessageType } from "./Message.vue";
 export type {

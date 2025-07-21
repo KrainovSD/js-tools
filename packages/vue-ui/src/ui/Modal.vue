@@ -13,7 +13,7 @@
     okButton?: string;
     cancelButton?: string;
   };
-  export type Emit = {
+  type Emit = {
     close: [];
     cancel: [];
     confirm: [];

@@ -1,12 +1,15 @@
 <script setup lang="ts">
-  import { speedTest } from "@krainovsd/js-helpers";
+  import { isString, speedTest } from "@krainovsd/js-helpers";
   import fuzzysort from "fuzzysort";
-  import { computed, ref, useTemplateRef, watch } from "vue";
+  import debounceFn from "lodash/debounce";
+  import { type Component, computed, ref, useTemplateRef, watch } from "vue";
+  import { type HighlightText, createHighlight } from "../lib";
   import Empty from "./Empty.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
   import type { PopperProps } from "./Popper.vue";
   import Popper from "./Popper.vue";
+  import type { SelectGroupItem, SelectItem, SelectValue } from "./Select.vue";
 
   interface SearchHTMLElement extends HTMLElement {
     next: SearchHTMLElement;
@@ -15,15 +18,29 @@
     removeActiveMark: (this: SearchHTMLElement) => void;
   }
 
-  export type SearchOption = {
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+  export type SearchItemFlat = SelectItem & {
+    title?: string | Component;
+  };
+
+  export type SearchItem = {
+    value: SelectValue;
     label: string;
-    key: number | string;
+    labels: HighlightText[];
+    desc?: string | Component;
+    title: string | Component;
+  };
+  export type SearchGroupeItem = {
+    title: string | Component;
+    options: SearchItem[];
   };
 
   export type SearchProps = {
-    options: SearchOption[];
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+    options: (SelectItem | SelectGroupItem)[];
     threshold?: number;
     limit?: number;
+    debounce?: number;
   } & Pick<InputProps, "allowClear" | "autofocus" | "disabled" | "size" | "status" | "variant"> &
     Pick<
       PopperProps,
@@ -48,6 +65,8 @@
     click: [key: string | number];
   };
 
+  const GROUP_ROOT = "__root__";
+
   const props = withDefaults(defineProps<SearchProps>(), {
     allowClear: false,
     disabled: false,
@@ -61,82 +80,88 @@
     placement: "bottom-left",
     openDelay: 0,
     threshold: 0.3,
+    debounce: 0,
     limit: 50,
   });
   const emit = defineEmits<Emits>();
   const model = defineModel<string>();
+  const search = ref(model.value);
   const popperRef = useTemplateRef("popper");
   const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
   const open = ref(false);
   const focusable = ref(false);
 
   const activeItem = ref<SearchHTMLElement | null>(null);
-  const filteredOptions = computed(() => {
+  const filteredGroupedOptions = computed(() => {
     return speedTest(
       () => {
-        const filteredOptions = fuzzysort.go(model.value ?? "", props.options, {
-          threshold: props.threshold,
-          limit: props.limit,
-          key: "label",
-          all: true,
-        });
+        const filteredGroupedOptions: SearchGroupeItem[] = [{ title: "", options: [] }];
+        const groupsPositionMap = new Map<string | Component, number>();
+        groupsPositionMap.set(GROUP_ROOT, 0);
+        const flatOptions: SearchItemFlat[] = [];
 
-        type HighlightText = {
-          text: string;
-          highlight: boolean;
-        };
+        for (let i = 0; i < props.options.length; i++) {
+          const option = props.options[i];
+          if ("title" in option) {
+            filteredGroupedOptions.push({ options: [], title: option.title });
+            groupsPositionMap.set(option.title, filteredGroupedOptions.length - 1);
 
-        function createHighlight(text: string, highlights: readonly number[]): HighlightText[] {
-          if (highlights.length === 0) return [{ text, highlight: false }];
-
-          const highlightedText: HighlightText[] = [];
-          let lastProcessedIndex = 0;
-
-          for (let i = 0; i < highlights.length; i++) {
-            const currentIndex = highlights[i];
-
-            if (currentIndex > lastProcessedIndex) {
-              highlightedText.push({
-                text: text.slice(lastProcessedIndex, currentIndex),
-                highlight: false,
+            for (let j = 0; j < option.options.length; j++) {
+              const singleOption = option.options[j];
+              flatOptions.push({
+                label: singleOption.label,
+                value: singleOption.value,
+                desc: singleOption.desc,
+                title: option.title,
               });
             }
-
-            let endIndex = currentIndex;
-            while (i + 1 < highlights.length && highlights[i + 1] === endIndex + 1) {
-              endIndex++;
-              i++;
-            }
-
-            highlightedText.push({
-              text: text.slice(currentIndex, endIndex + 1),
-              highlight: true,
-            });
-
-            lastProcessedIndex = endIndex + 1;
-          }
-
-          if (lastProcessedIndex < text.length) {
-            highlightedText.push({
-              text: text.slice(lastProcessedIndex),
-              highlight: false,
+          } else {
+            flatOptions.push({
+              label: option.label,
+              value: option.value,
+              desc: option.desc,
+              title: GROUP_ROOT,
             });
           }
-
-          return highlightedText;
         }
 
-        return filteredOptions.map((option) => {
-          return {
-            key: option.obj.key,
-            labels: createHighlight(option.obj.label, option.indexes),
-            label: option.obj.label,
-          };
-        });
+        const filteredOptions = fuzzysort
+          .go(model.value ?? "", flatOptions, {
+            threshold: props.threshold,
+            limit: props.limit,
+            key: "label",
+            all: true,
+          })
+          .map((option) => {
+            return {
+              value: option.obj.value,
+              labels: createHighlight(option.obj.label, option.indexes),
+              label: option.obj.label,
+              desc: option.obj.desc,
+              title: option.obj.title ?? GROUP_ROOT,
+            };
+          });
+
+        for (let i = 0; i < filteredOptions.length; i++) {
+          const option = filteredOptions[i];
+          const index = groupsPositionMap.get(option.title);
+
+          if (index != undefined) {
+            filteredGroupedOptions[index]?.options?.push?.(option);
+          }
+        }
+
+        return filteredGroupedOptions;
       },
-      { name: "fuzzy-search", iterations: 1 },
+      { iterations: 1, name: "Fuzzy Search" },
     );
   });
+  const empty = computed(
+    () => !filteredGroupedOptions.value.some((group) => group.options.length > 0),
+  );
+  const setModel = debounceFn((search: string | undefined) => {
+    model.value = search;
+  }, props.debounce);
 
   function actionInputKeyboard(event: KeyboardEvent) {
     if (event.key === "Enter") {
@@ -178,7 +203,7 @@
 
   /** Collect interactive items */
   watch(
-    () => [positionerContentRef.value, filteredOptions.value],
+    () => [positionerContentRef.value, filteredGroupedOptions.value],
     (_, __, clean) => {
       if (!positionerContentRef.value || !open.value) return;
 
@@ -277,7 +302,7 @@
     :class="`ksd-search__positioner ${$attrs.class ?? ''}`"
   >
     <Input
-      v-model="model"
+      :model-value="search"
       v-bind="$attrs"
       :status="$props.status"
       :variant="$props.variant"
@@ -286,6 +311,12 @@
       :allow-clear="$props.allowClear"
       :disabled="$props.disabled"
       :area-expanded="open"
+      @update:model-value="
+        (value) => {
+          search = value;
+          setModel(value);
+        }
+      "
       @keydown="actionInputKeyboard"
       @blur="
         () => {
@@ -301,27 +332,42 @@
     />
 
     <template #content>
-      <div
-        v-for="item of filteredOptions"
-        :key="item.key"
-        class="ksd-search__popper-item"
-        :aria-label="item.label"
-        role="option"
-        @click="
-          () => {
-            emit('click', item.key);
-            open = false;
-          }
-        "
+      <template
+        v-for="(group, groupIndex) of filteredGroupedOptions"
+        :key="isString(group) ? group : groupIndex"
       >
-        <span class="ksd-search__popper-item-content">
-          <template v-for="(label, index) of item.labels" :key="index">
-            <b v-if="label.highlight">{{ label.text }}</b>
-            <template v-else>{{ label.text }}</template>
-          </template>
-        </span>
-      </div>
-      <Empty v-if="filteredOptions.length === 0" class="ksd-search__empty" />
+        <template v-if="group.options.length > 0">
+          <component :is="group.title" v-if="!isString(group.title)" />
+          <div
+            v-if="isString(group.title) && group.title.length > 0"
+            class="ksd-search__popper-item-header"
+          >
+            {{ group.title }}
+          </div>
+          <div
+            v-for="item of group.options"
+            :key="item.value"
+            class="ksd-search__popper-item"
+            :aria-label="item.label"
+            role="option"
+            @click="
+              () => {
+                emit('click', item.value);
+                open = false;
+              }
+            "
+          >
+            <span class="ksd-search__popper-item-content">
+              <template v-for="(label, index) of item.labels" :key="index">
+                <b v-if="label.highlight">{{ label.text }}</b>
+                <template v-else>{{ label.text }}</template>
+              </template>
+            </span>
+          </div>
+        </template>
+      </template>
+
+      <Empty v-if="empty" class="ksd-search__empty" />
     </template>
   </Popper>
 </template>
@@ -351,6 +397,22 @@
       &.active {
         background-color: var(--ksd-select-option-active-bg);
       }
+    }
+
+    &__popper-item-header {
+      position: relative;
+      display: flex;
+      min-height: var(--ksd-select-option-height);
+      padding: var(--ksd-select-option-padding);
+      color: var(--ksd-text-tertiary-color);
+      font-weight: normal;
+      font-size: var(--ksd-font-size-sm);
+      line-height: var(--ksd-select-option-line-height);
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: background var(--ksd-transition-slow) ease;
+      border-radius: var(--ksd-border-radius-sm);
+      align-items: safe center;
     }
 
     &__popper-item-content {

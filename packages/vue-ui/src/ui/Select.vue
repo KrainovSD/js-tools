@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { arrayToMapByKey, isArray, randomString } from "@krainovsd/js-helpers";
+  import { isArray, isString, randomString } from "@krainovsd/js-helpers";
   import {
     VCheckOutlined,
     VCloseCircleFilled,
@@ -19,6 +19,10 @@
     label: string;
     value: SelectValue;
     desc?: string | Component;
+  };
+  export type SelectGroupItem = {
+    title: string | Component;
+    options: SelectItem[];
   };
 
   export interface SelectHTMLElement extends HTMLElement {
@@ -43,7 +47,7 @@
     loading?: boolean;
     multiple?: boolean;
     placeholder?: string;
-    options: SelectItem[];
+    options: (SelectItem | SelectGroupItem)[];
     searchFn?: (item: SelectItem, search: string) => boolean;
   } & Pick<
     PopperProps,
@@ -111,17 +115,53 @@
   const cancelIcon = computed(() => props.clear && filledModel.value && !props.disabled);
   const loadingIcon = computed(() => props.loading);
   const inputRef = useTemplateRef("input");
-  const filteredOptions = computed(() =>
-    props.options.filter((option) => {
-      if (props.searchFn) {
-        return props.searchFn(option, searchValue.value);
-      }
+  const filteredGroupedOptions = computed<SelectGroupItem[]>(() => {
+    const filteredGroupedOptions: SelectGroupItem[] = [{ title: "", options: [] }];
 
-      return option.label.toLowerCase().includes(searchValue.value.toLowerCase());
-    }),
-  );
+    for (let i = 0; i < props.options.length; i++) {
+      const option = props.options[i];
+      if ("title" in option) {
+        filteredGroupedOptions.push({
+          title: option.title,
+          options: option.options.filter((option) => {
+            if (props.searchFn) {
+              return props.searchFn(option, searchValue.value);
+            }
+
+            return option.label.toLowerCase().includes(searchValue.value.toLowerCase());
+          }),
+        });
+      } else {
+        const isMatched = props.searchFn
+          ? props.searchFn(option, searchValue.value)
+          : option.label.toLowerCase().includes(searchValue.value.toLowerCase());
+        if (isMatched) {
+          filteredGroupedOptions[0].options.push(option);
+        }
+      }
+    }
+
+    return filteredGroupedOptions;
+  });
   const activeItem = ref<SelectHTMLElement | null>(null);
-  const optionsMap = computed(() => arrayToMapByKey(props.options, "value"));
+  const optionsMap = computed(() => {
+    const optionsMap: Record<string, SelectItem> = {};
+
+    function extractValueRecursively(options: (SelectItem | SelectGroupItem)[]) {
+      for (let i = 0; i < options.length; i++) {
+        const option = options[i];
+        if ("title" in option) {
+          extractValueRecursively(option.options);
+        } else {
+          optionsMap[option.value] = option;
+        }
+      }
+    }
+
+    extractValueRecursively(props.options);
+
+    return optionsMap;
+  });
   const selectedItems = computed(() => {
     if (model.value == undefined) {
       return [];
@@ -138,6 +178,9 @@
 
     return [{ label: label ?? model.value, value: model.value }];
   });
+  const empty = computed(
+    () => !filteredGroupedOptions.value.some((options) => options.options.length > 0),
+  );
 
   function isComponent(component: string | undefined | Component) {
     if (component != undefined && typeof component !== "string") return true;
@@ -197,7 +240,7 @@
 
   /** Collect interactive items */
   watch(
-    () => [positionerContentRef.value, filteredOptions.value],
+    () => [positionerContentRef.value, filteredGroupedOptions.value],
     (_, __, clean) => {
       if (!positionerContentRef.value || !open.value) return;
 
@@ -330,7 +373,7 @@
     :animation-disappear="$props.animationDisappear"
     :arrow="$props.arrow"
     :close-by-scroll="$props.closeByScroll"
-    :fit="filteredOptions.length === 0 ? true : $props.fit"
+    :fit="$props.fit"
     :close-delay="$props.closeDelay"
     :ignore-elements="$props.ignoreElements"
     :modal-root="$props.modalRoot"
@@ -486,30 +529,45 @@
     </div>
 
     <template #content>
-      <div
-        v-for="(item, index) of filteredOptions"
-        :key="item.value.toString()"
-        class="ksd-select__popper-item"
-        :class="{ selected: isArray(model) ? model.includes(item.value) : model === item.value }"
-        :area-selected="isArray(model) ? model.includes(item.value) : model === item.value"
-        :aria-label="item.label"
-        role="option"
-        :data-index="index"
-        :data-value="item.value"
-      >
-        <component :is="item.desc" v-if="isComponent(item.desc)" />
-        <span v-else class="ksd-select__popper-item-content">{{ item.desc ?? item.label }}</span>
-        <VCheckOutlined
-          v-if="
-            (isArray(model) ? model.includes(item.value) : model === item.value) &&
-            !isComponent(item.desc) &&
-            props.multiple
-          "
-          :size="14"
-          class="ksd-select__popper-item-check"
-        />
-      </div>
-      <Empty v-if="filteredOptions.length === 0" class="ksd-select__empty" />
+      <template v-for="group of filteredGroupedOptions" :key="group">
+        <template v-if="group.options.length > 0">
+          <component :is="group.title" v-if="!isString(group.title)" />
+          <div
+            v-if="isString(group.title) && group.title.length > 0"
+            class="ksd-select__popper-item-header"
+          >
+            {{ group.title }}
+          </div>
+          <div
+            v-for="(item, index) of group.options"
+            :key="item.value.toString()"
+            class="ksd-select__popper-item"
+            :class="{
+              selected: isArray(model) ? model.includes(item.value) : model === item.value,
+            }"
+            :area-selected="isArray(model) ? model.includes(item.value) : model === item.value"
+            :aria-label="item.label"
+            role="option"
+            :data-index="index"
+            :data-value="item.value"
+          >
+            <component :is="item.desc" v-if="isComponent(item.desc)" />
+            <span v-else class="ksd-select__popper-item-content">{{
+              item.desc ?? item.label
+            }}</span>
+            <VCheckOutlined
+              v-if="
+                (isArray(model) ? model.includes(item.value) : model === item.value) &&
+                !isComponent(item.desc) &&
+                props.multiple
+              "
+              :size="14"
+              class="ksd-select__popper-item-check"
+            /></div
+        ></template>
+      </template>
+
+      <Empty v-if="empty" class="ksd-select__empty" />
     </template>
   </Popper>
 </template>
@@ -1120,6 +1178,23 @@
           }
         }
       }
+    }
+
+    &__popper-item-header {
+      position: relative;
+      display: flex;
+      min-height: var(--ksd-select-option-height);
+      padding: var(--ksd-select-option-padding);
+      color: var(--ksd-text-tertiary-color);
+      font-weight: normal;
+      font-size: var(--ksd-font-size-sm);
+      line-height: var(--ksd-select-option-line-height);
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: background var(--ksd-transition-slow) ease;
+      border-radius: var(--ksd-border-radius-sm);
+      align-items: safe center;
+      gap: var(--ksd-padding);
     }
 
     &__popper-item-content {

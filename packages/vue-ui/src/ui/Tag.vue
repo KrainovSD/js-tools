@@ -29,7 +29,7 @@
     borderless?: boolean;
   };
 
-  export type Emits = {
+  type Emits = {
     close: [];
   };
 

@@ -261,6 +261,82 @@ export const AllInOne: Story = {
             }),
           ],
         ),
+        h(
+          "div",
+          { style: { display: "flex", flexDirection: "column", gap: "20px", width: "400px" } },
+          [
+            h(VSelect, {
+              ...args,
+              modelValue: ["1"],
+              placeholder: "Grouped Multiple",
+              variant: "outlined",
+              multiple: true,
+              options: [
+                {
+                  title: "firstGroup",
+                  options: [
+                    { value: "1", label: "Значение 1" },
+                    { value: 2, label: "Значение 2" },
+                    { value: 3, label: "Значение 3" },
+                  ],
+                },
+                {
+                  title: "secondGroup",
+                  options: [
+                    {
+                      value: "4",
+                      label: "Очень Длинное значение для проверки размеров у селектов 4",
+                    },
+                    {
+                      value: 5,
+                      label: "Значение 5",
+                      desc: h(
+                        "div",
+                        { style: { display: "flex", gap: "10px", alignItems: "center" } },
+                        [h(VSettingFilled, { size: 14 }), h(VText, {}, () => "Особое значение 5")],
+                      ),
+                    },
+                  ],
+                },
+              ],
+            }),
+            h(VSelect, {
+              ...args,
+              modelValue: "1",
+              placeholder: "Grouped single",
+              variant: "outlined",
+              multiple: false,
+              options: [
+                {
+                  title: "firstGroup",
+                  options: [
+                    { value: "1", label: "Значение 1" },
+                    { value: 2, label: "Значение 2" },
+                    { value: 3, label: "Значение 3" },
+                  ],
+                },
+                {
+                  title: "secondGroup",
+                  options: [
+                    {
+                      value: "4",
+                      label: "Очень Длинное значение для проверки размеров у селектов 4",
+                    },
+                    {
+                      value: 5,
+                      label: "Значение 5",
+                      desc: h(
+                        "div",
+                        { style: { display: "flex", gap: "10px", alignItems: "center" } },
+                        [h(VSettingFilled, { size: 14 }), h(VText, {}, () => "Особое значение 5")],
+                      ),
+                    },
+                  ],
+                },
+              ],
+            }),
+          ],
+        ),
       ]);
     },
   }),
