@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  import { useTemplateRef } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, useTemplateRef } from "vue";
+
+  export type IconWrapperProps = {} & /*@vue-ignore*/ HTMLAttributes;
 
   const element = useTemplateRef("button");
-  defineEmits<GlobalEmits>();
-
+  defineProps<IconWrapperProps>();
   defineExpose({
     element,
   });

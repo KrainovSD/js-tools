@@ -1,8 +1,7 @@
 <script setup lang="ts">
   import { isNumber } from "@krainovsd/js-helpers";
   import { VDownOutlined, VUpOutlined } from "@krainovsd/vue-icons";
-  import { computed, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
   import Flex from "./Flex.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -10,9 +9,9 @@
   export type InputNumberProps = Pick<
     InputProps,
     "allowClear" | "autofocus" | "disabled" | "size" | "status" | "variant" | "classNameRoot"
-  >;
+  > &
+    /*@vue-ignore*/ HTMLAttributes;
   const props = defineProps<InputNumberProps>();
-  defineEmits<GlobalEmits>();
   const attrs = useAttrs();
   const model = defineModel<number>();
 

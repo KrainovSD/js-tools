@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { computed, useTemplateRef, watch } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed, useTemplateRef, watch } from "vue";
   import type { InputProps } from "./Input.vue";
 
   export type TextAreaResize = "vertical" | "horizontal" | "both";
@@ -10,7 +9,8 @@
     maxLength?: number;
     resize?: TextAreaResize;
     autoSize?: boolean;
-  } & Omit<InputProps, "allowClear" | "className">;
+  } & Omit<InputProps, "allowClear" | "className"> &
+    /*@vue-ignore*/ HTMLAttributes;
 
   const props = withDefaults(defineProps<TextAreaProps>(), {
     autofocus: false,
@@ -23,7 +23,6 @@
     resize: undefined,
     autoSize: false,
   });
-  defineEmits<GlobalEmits>();
   const value = defineModel<string>();
   const inputRef = useTemplateRef("input");
   const inputClasses = computed(() => ({

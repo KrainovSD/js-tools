@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { VCloseCircleFilled } from "@krainovsd/vue-icons";
-  import { computed, onMounted, useSlots, useTemplateRef } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed, onMounted, useSlots, useTemplateRef } from "vue";
 
   export type InputVariant = "filled" | "borderless" | "underline" | "outlined";
   export type InputSize = "default" | "large" | "small";
@@ -15,7 +14,7 @@
     autofocus?: boolean;
     allowClear?: boolean;
     disabled?: boolean;
-  };
+  } & /*@vue-ignore*/ HTMLAttributes;
 
   const props = withDefaults(defineProps<InputProps>(), {
     allowClear: false,
@@ -26,7 +25,6 @@
     status: "default",
     variant: "outlined",
   });
-  defineEmits<GlobalEmits>();
 
   const slots = useSlots();
   const model = defineModel<string>();
@@ -54,7 +52,7 @@
     model.value = "";
   }
 
-  function onFocus() {
+  function focusByClick() {
     if (document.activeElement !== inputRef.value) inputRef.value?.focus?.();
   }
 
@@ -84,7 +82,7 @@
     v-if="hasSlots || $props.allowClear"
     class="ksd-input"
     :class="[inputClasses, $props.classNameRoot]"
-    @click="onFocus"
+    @click="focusByClick"
   >
     <slot name="default"></slot>
     <span

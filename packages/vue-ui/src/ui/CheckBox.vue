@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { computed, onMounted, useTemplateRef } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed, onMounted, useTemplateRef } from "vue";
 
   export type CheckBoxProps = {
     classNameRoot?: string;
@@ -8,10 +7,9 @@
     disabled?: boolean;
     autofocus?: boolean;
     block?: boolean;
-  };
+  } & /*@vue-ignore*/ HTMLAttributes;
 
   const props = defineProps<CheckBoxProps>();
-  defineEmits<GlobalEmits>();
   const inputRef = useTemplateRef("input");
   const checked = defineModel<boolean>();
   const inputClasses = computed(() => ({

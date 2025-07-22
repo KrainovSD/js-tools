@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { VLoadingOutlined } from "@krainovsd/vue-icons";
-  import { computed, useTemplateRef } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed, useTemplateRef } from "vue";
 
   export type SwitchSize = "small" | "default";
 
@@ -10,10 +9,9 @@
     loading?: boolean;
     size?: SwitchSize;
     block?: boolean;
-  };
+  } & /*@vue-ignore*/ HTMLAttributes;
 
   const props = defineProps<SwitchProps>();
-  defineEmits<GlobalEmits>();
   const model = defineModel<boolean>();
   const elementRef = useTemplateRef("switch");
   const commonClasses = computed(() => ({

@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { VCloseOutlined } from "@krainovsd/vue-icons";
-  import { computed, useTemplateRef } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed, useTemplateRef } from "vue";
   import IconWrapper from "./IconWrapper.vue";
 
   export type TagSize = "default" | "large" | "extra-large";
@@ -28,7 +27,7 @@
     closable?: boolean;
     size?: TagSize;
     borderless?: boolean;
-  };
+  } & /*@vue-ignore*/ HTMLAttributes;
 
   type Emits = {
     closeTag: [];
@@ -41,7 +40,7 @@
     value: undefined,
     size: "default",
   });
-  defineEmits<Emits & Pick<GlobalEmits, "click" | "dblclick" | "contextmenu">>();
+  defineEmits<Emits>();
 
   const classes = computed(() => ({
     [`color-${props.color}`]: true,

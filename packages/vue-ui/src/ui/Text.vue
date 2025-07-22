@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { computed } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed } from "vue";
 
   export type TextSize = "sm" | "lg" | "xl" | "default";
   export type TextType = "secondary" | "success" | "warning" | "error" | "default";
@@ -18,7 +17,7 @@
     underline?: boolean;
     disabled?: boolean;
     type?: TextType;
-  };
+  } & /*@vue-ignore*/ HTMLAttributes;
 
   const props = withDefaults(defineProps<TextProps>(), {
     delete: false,
@@ -34,7 +33,6 @@
     ellipsis: false,
     fit: false,
   });
-  defineEmits<GlobalEmits>();
   const componentClasses = computed(() => ({
     ellipsis: props.ellipsis,
     nowrap: props.nowrap,

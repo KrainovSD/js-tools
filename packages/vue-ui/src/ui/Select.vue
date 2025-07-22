@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { isArray, isString, randomString } from "@krainovsd/js-helpers";
+  import { createGlobalId, isArray, isString } from "@krainovsd/js-helpers";
   import {
     VCheckOutlined,
     VCloseCircleFilled,
@@ -8,8 +8,7 @@
     VLoadingOutlined,
     VSearchOutlined,
   } from "@krainovsd/vue-icons";
-  import { type Component, computed, ref, useTemplateRef, watch } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type Component, type HTMLAttributes, computed, ref, useTemplateRef, watch } from "vue";
   import Empty from "./Empty.vue";
   import IconWrapper from "./IconWrapper.vue";
   import Popper, { type PopperProps } from "./Popper.vue";
@@ -69,7 +68,8 @@
     | "zIndex"
     | "closeByClickOutsideEvent"
     | "nested"
-  >;
+  > &
+    /*@vue-ignore*/ HTMLAttributes;
 
   const props = withDefaults(defineProps<SelectProps>(), {
     clear: true,
@@ -88,7 +88,6 @@
     openDelay: 0,
     searchFn: undefined,
   });
-  defineEmits<GlobalEmits>();
   const model = defineModel<SelectValue | SelectValue[] | null | undefined>(undefined);
   const popperRef = useTemplateRef("popper");
   const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
@@ -97,7 +96,7 @@
   const focusable = ref(false);
   const searchValue = ref("");
   const emptySearch = computed(() => searchValue.value.length === 0);
-  const id = randomString(10);
+  const componentId = createGlobalId();
   const filledModel = computed(() =>
     isArray(model.value) ? model.value.length > 0 : model.value != undefined,
   );
@@ -408,7 +407,7 @@
           <template v-if="!$props.multiple">
             <span class="ksd-select__selection-search" :class="commonClasses">
               <input
-                :id="`ksd-select-${id}`"
+                :id="`ksd-select-${componentId}`"
                 ref="input"
                 v-model="searchValue"
                 autocomplete="off"
@@ -479,7 +478,7 @@
               :style="{ width: `${searchWidth}px` }"
             >
               <input
-                :id="`ksd-select-${id}`"
+                :id="`ksd-select-${componentId}`"
                 ref="input"
                 v-model="searchValue"
                 autocomplete="off"

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-  import { computed } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed } from "vue";
 
   export type RadioValue = string | number | boolean;
 
@@ -10,10 +9,9 @@
     value: string | number | boolean;
     block?: boolean;
     disabled?: boolean;
-  };
+  } & /*@vue-ignore*/ HTMLAttributes;
 
   const model = defineModel<RadioValue>();
-  defineEmits<GlobalEmits>();
   const props = defineProps<RadioProps>();
   const rootClasses = computed(() => ({
     disabled: props.disabled,

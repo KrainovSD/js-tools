@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { VLoadingOutlined } from "@krainovsd/vue-icons";
-  import { computed, useSlots, useTemplateRef } from "vue";
-  import type { GlobalEmits } from "../types";
+  import { type HTMLAttributes, computed, useSlots, useTemplateRef } from "vue";
 
   export type ButtonType = "primary" | "dashed" | "link" | "text" | "default";
   export type ButtonSize = "large" | "default" | "small";
@@ -18,7 +17,7 @@
     ghost?: boolean;
     iconPosition?: ButtonIconPosition;
     block?: boolean;
-  };
+  } & /*@vue-ignore*/ HTMLAttributes;
   const props = withDefaults(defineProps<ButtonProps>(), {
     block: false,
     danger: false,
@@ -30,7 +29,6 @@
     size: "default",
     type: "default",
   });
-  defineEmits<GlobalEmits>();
   const slots = useSlots();
   const buttonRef = useTemplateRef("button");
 
