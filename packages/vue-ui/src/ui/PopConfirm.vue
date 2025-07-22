@@ -74,10 +74,10 @@
         if (event.key === "Escape") {
           open.value = false;
         }
-        if (event.key === "Tab") {
+        if (event.key === "Tab" || event.key === "ArrowRight" || event.key === "ArrowLeft") {
           event.preventDefault();
 
-          if (event.shiftKey) {
+          if ((event.key === "Tab" && event.shiftKey) || event.key === "ArrowLeft") {
             focusableIndex--;
           } else {
             focusableIndex++;
