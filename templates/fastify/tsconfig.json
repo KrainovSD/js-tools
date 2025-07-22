@@ -7,6 +7,12 @@
     },
     "baseUrl": "./"
   },
-  "include": ["src/**/*", "eslint.config.js", "rollup.config.ts", ".prettierrc.mjs"],
+  "include": [
+    "src/**/*",
+    "eslint.config.mjs",
+    "rollup.config.ts",
+    ".prettierrc.mjs",
+    "jest.config.js"
+  ],
   "exclude": ["node_modules"]
 }

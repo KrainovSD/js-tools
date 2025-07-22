@@ -1,7 +1,7 @@
-const plugin = require("@krainovsd/presets/eslint");
+import eslint from "@krainovsd/presets/eslint";
 
-module.exports = [
-  ...plugin.presets.typescript,
+export default [
+  ...eslint.presets.typescript,
   {
     ignores: ["tmp/", "node_modules/", "lib/", ".turbo/", "stats/", "coverage/", "dist/"],
   },
