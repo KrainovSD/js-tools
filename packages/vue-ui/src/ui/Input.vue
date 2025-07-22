@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { VCloseCircleFilled } from "@krainovsd/vue-icons";
   import { computed, onMounted, useSlots, useTemplateRef } from "vue";
+  import type { GlobalEmits } from "../types";
 
   export type InputVariant = "filled" | "borderless" | "underline" | "outlined";
   export type InputSize = "default" | "large" | "small";
@@ -25,6 +26,7 @@
     status: "default",
     variant: "outlined",
   });
+  defineEmits<GlobalEmits>();
 
   const slots = useSlots();
   const model = defineModel<string>();

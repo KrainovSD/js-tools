@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { VEyeInvisibleOutlined, VEyeOutlined } from "@krainovsd/vue-icons";
   import { computed, ref } from "vue";
+  import type { GlobalEmits } from "../types";
   import IconWrapper from "./IconWrapper.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -14,6 +15,7 @@
   const type = computed(() => (visible.value ? "text" : "password"));
 
   defineProps<PasswordProps>();
+  defineEmits<GlobalEmits>();
 </script>
 
 <template>

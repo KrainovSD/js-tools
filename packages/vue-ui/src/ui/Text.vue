@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { computed } from "vue";
+  import type { GlobalEmits } from "../types";
 
   export type TextSize = "sm" | "lg" | "xl" | "default";
   export type TextType = "secondary" | "success" | "warning" | "error" | "default";
@@ -33,6 +34,7 @@
     ellipsis: false,
     fit: false,
   });
+  defineEmits<GlobalEmits>();
   const componentClasses = computed(() => ({
     ellipsis: props.ellipsis,
     nowrap: props.nowrap,

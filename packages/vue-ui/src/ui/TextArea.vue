@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { computed, useTemplateRef, watch } from "vue";
+  import type { GlobalEmits } from "../types";
   import type { InputProps } from "./Input.vue";
 
   export type TextAreaResize = "vertical" | "horizontal" | "both";
@@ -22,6 +23,7 @@
     resize: undefined,
     autoSize: false,
   });
+  defineEmits<GlobalEmits>();
   const value = defineModel<string>();
   const inputRef = useTemplateRef("input");
   const inputClasses = computed(() => ({

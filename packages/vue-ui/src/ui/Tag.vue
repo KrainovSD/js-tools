@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, useTemplateRef } from "vue";
+  import type { GlobalEmits } from "../types";
   import IconWrapper from "./IconWrapper.vue";
 
   export type TagSize = "default" | "large" | "extra-large";
@@ -30,7 +31,7 @@
   };
 
   type Emits = {
-    close: [];
+    closeTag: [];
   };
 
   const props = withDefaults(defineProps<TagProps>(), {
@@ -40,7 +41,7 @@
     value: undefined,
     size: "default",
   });
-  defineEmits<Emits>();
+  defineEmits<Emits & Pick<GlobalEmits, "click" | "dblclick" | "contextmenu">>();
 
   const classes = computed(() => ({
     [`color-${props.color}`]: true,
@@ -56,7 +57,7 @@
   <span ref="tag" class="ksd-tag" :class="classes" v-bind="$attrs">
     <slot v-if="$slots.icon" name="icon"></slot>
     <slot></slot>
-    <IconWrapper v-if="$props.closable" class="ksd-tag__close" @click="$emit('close')"
+    <IconWrapper v-if="$props.closable" class="ksd-tag__close" @click="$emit('closeTag')"
       ><VCloseOutlined
     /></IconWrapper>
   </span>

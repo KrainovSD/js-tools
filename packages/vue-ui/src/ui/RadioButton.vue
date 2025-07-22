@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { computed } from "vue";
+  import type { GlobalEmits } from "../types";
   import type { RadioProps, RadioValue } from "./Radio.vue";
 
   export type RadioButtonSize = "large" | "default" | "small";
@@ -14,6 +15,7 @@
     buttonStyle: "outline",
     size: "default",
   });
+  defineEmits<GlobalEmits>();
   const model = defineModel<RadioValue>();
   const checked = computed(() => model.value === props.value);
   const rootClasses = computed(() => ({

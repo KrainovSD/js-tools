@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { isArray, isBoolean } from "@krainovsd/js-helpers";
   import { computed, useTemplateRef, watchEffect } from "vue";
+  import type { GlobalEmits } from "../types";
   import Tag from "./Tag.vue";
 
   export type TagCheckableValue = string | number | boolean;
@@ -9,6 +10,7 @@
   };
 
   const props = defineProps<CheckableProps>();
+  defineEmits<GlobalEmits>();
   const tagComponentRef = useTemplateRef("tag");
   const tagRef = computed(() => tagComponentRef.value?.tagRef);
   const checkedModel = defineModel<boolean | TagCheckableValue[]>();

@@ -9,6 +9,7 @@
     VSearchOutlined,
   } from "@krainovsd/vue-icons";
   import { type Component, computed, ref, useTemplateRef, watch } from "vue";
+  import type { GlobalEmits } from "../types";
   import Empty from "./Empty.vue";
   import IconWrapper from "./IconWrapper.vue";
   import Popper, { type PopperProps } from "./Popper.vue";
@@ -87,6 +88,7 @@
     openDelay: 0,
     searchFn: undefined,
   });
+  defineEmits<GlobalEmits>();
   const model = defineModel<SelectValue | SelectValue[] | null | undefined>(undefined);
   const popperRef = useTemplateRef("popper");
   const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
@@ -454,7 +456,7 @@
                   :disabled="$props.disabled"
                   class="ksd-select__overflow-item-remove"
                   @mousedown="
-                    (event: KeyboardEvent) => {
+                    (event) => {
                       event.preventDefault();
                       event.stopPropagation();
                       selectValue(optionsMap[item.value.toString()]?.value);

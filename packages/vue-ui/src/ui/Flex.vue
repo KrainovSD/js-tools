@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { computed, useTemplateRef } from "vue";
+  import type { GlobalEmits } from "../types";
 
   export type FlexAlign = "center" | "end" | "start" | "flex-start" | "flex-end";
   export type FlexJustify =
@@ -39,6 +40,7 @@
     overflow: undefined,
     vertical: false,
   });
+  defineEmits<GlobalEmits>();
 
   const element = useTemplateRef("base");
   const componentClasses = computed(() => ({

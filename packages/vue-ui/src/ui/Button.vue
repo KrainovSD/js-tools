@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { VLoadingOutlined } from "@krainovsd/vue-icons";
   import { computed, useSlots, useTemplateRef } from "vue";
+  import type { GlobalEmits } from "../types";
 
   export type ButtonType = "primary" | "dashed" | "link" | "text" | "default";
   export type ButtonSize = "large" | "default" | "small";
@@ -29,6 +30,7 @@
     size: "default",
     type: "default",
   });
+  defineEmits<GlobalEmits>();
   const slots = useSlots();
   const buttonRef = useTemplateRef("button");
 

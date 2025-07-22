@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import { useTemplateRef } from "vue";
+  import type { GlobalEmits } from "../types";
 
   const element = useTemplateRef("button");
+  defineEmits<GlobalEmits>();
 
   defineExpose({
     element,

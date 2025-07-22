@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { computed, onMounted, useTemplateRef } from "vue";
+  import type { GlobalEmits } from "../types";
 
   export type CheckBoxProps = {
     classNameRoot?: string;
@@ -10,6 +11,7 @@
   };
 
   const props = defineProps<CheckBoxProps>();
+  defineEmits<GlobalEmits>();
   const inputRef = useTemplateRef("input");
   const checked = defineModel<boolean>();
   const inputClasses = computed(() => ({

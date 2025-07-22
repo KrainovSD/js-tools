@@ -2,6 +2,7 @@
   import { isNumber } from "@krainovsd/js-helpers";
   import { VDownOutlined, VUpOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
+  import type { GlobalEmits } from "../types";
   import Flex from "./Flex.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -11,6 +12,7 @@
     "allowClear" | "autofocus" | "disabled" | "size" | "status" | "variant" | "classNameRoot"
   >;
   const props = defineProps<InputNumberProps>();
+  defineEmits<GlobalEmits>();
   const attrs = useAttrs();
   const model = defineModel<number>();
 
