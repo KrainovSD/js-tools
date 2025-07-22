@@ -2,7 +2,8 @@
   import { execAnimation } from "@krainovsd/js-helpers";
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
-  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, IGNORE_POPPER_SELECTORS } from "../constants/tech";
+  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
+  import { getWatchedNode } from "../lib";
   import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
   import Flex from "./Flex.vue";
@@ -47,9 +48,7 @@
   const open = defineModel<boolean>();
   const localOpen = ref(false);
   const drawerGhostRef = useTemplateRef("drawer-ghost");
-  const targetNode = computed(
-    () => drawerGhostRef.value?.nextElementSibling as HTMLElement | undefined,
-  );
+  const targetNode = computed(() => getWatchedNode(drawerGhostRef.value));
   const drawerComponentRef = useTemplateRef("drawer");
   const maskComponentRef = useTemplateRef("mask");
   const drawerRef = computed(() => drawerComponentRef.value?.element);
@@ -95,7 +94,7 @@
 
       function closeByClickOutside(event: MouseEvent | TouchEvent) {
         const node = event.target as HTMLElement;
-        if (node.closest(IGNORE_POPPER_SELECTORS)) {
+        if (node.closest(POPPER_SELECTOR)) {
           return;
         }
 
@@ -208,7 +207,13 @@
 </script>
 
 <template>
-  <span ref="drawer-ghost" class="ksd-drawer__ghost" aria-hidden="true" tabindex="-1"></span>
+  <span
+    ref="drawer-ghost"
+    class="ksd-drawer__ghost"
+    aria-hidden="true"
+    tabindex="-1"
+    ksd-watcher="true"
+  ></span>
   <slot></slot>
   <Teleport v-if="localOpen && !props.block" :to="$props.target ?? 'body'">
     <Flex class="ksd-drawer" :class="[$props.classNameRoot]" :style="commonStyles">

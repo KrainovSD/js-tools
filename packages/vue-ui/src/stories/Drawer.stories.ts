@@ -1,6 +1,6 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h, ref, useTemplateRef } from "vue";
-import { VButton, VDrawer, VText } from "../ui";
+import { VButton, VDrawer, VText, VTooltip } from "../ui";
 
 const meta = {
   title: "Components/Drawer",
@@ -147,6 +147,19 @@ export const AllInOne: Story = {
                 {
                   content: () => this.content,
                   default: () => h(VButton, {}, () => "Without Mask"),
+                },
+              ),
+
+              h(
+                VDrawer,
+                {
+                  header: "Tooltip",
+                  mask: false,
+                },
+                {
+                  content: () => this.content,
+                  default: () =>
+                    h(VTooltip, { text: "Drawer" }, () => h(VButton, {}, () => "Tooltip")),
                 },
               ),
 

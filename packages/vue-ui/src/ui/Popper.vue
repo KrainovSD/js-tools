@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { type PositionPlacements, isString } from "@krainovsd/js-helpers";
   import { computed, ref, useTemplateRef, watchEffect } from "vue";
-  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, IGNORE_POPPER_SELECTORS } from "../constants/tech";
+  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
+  import { getWatchedNode } from "../lib";
   import type { CloseByClickOutsideEvent } from "../types";
   import Positioner, { type PositionerAnimations } from "./Positioner.vue";
 
@@ -62,13 +63,13 @@
       ? ([] as PopperTrigger[])
       : (triggersKey.value.split(";") as PopperTrigger[]);
   });
-  const targetNode = computed(() => popperRef.value?.nextElementSibling as HTMLElement | undefined);
+  const targetNode = computed(() => getWatchedNode(popperRef.value));
   const targetNodeWidth = ref(0);
   const firstPlacement = computed(() => props.placement.split("-")[0]);
   const lastActive = ref<HTMLElement | null>();
   const checkedModalRoot = computed(() =>
     props.nested && props.modalRoot == undefined
-      ? popperRef.value?.closest?.<HTMLElement>(IGNORE_POPPER_SELECTORS)
+      ? popperRef.value?.closest?.<HTMLElement>(POPPER_SELECTOR)
       : props.modalRoot,
   );
 
@@ -342,7 +343,7 @@
 </script>
 
 <template>
-  <span ref="popper" class="ksd-popper" aria-hidden="true" tabindex="-1"></span>
+  <span ref="popper" class="ksd-popper" aria-hidden="true" tabindex="-1" ksd-watcher="true"></span>
   <slot></slot>
   <Positioner
     ref="positioner"

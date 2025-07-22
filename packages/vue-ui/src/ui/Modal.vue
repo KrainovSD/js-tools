@@ -2,7 +2,7 @@
   import { execAnimation } from "@krainovsd/js-helpers";
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
-  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, IGNORE_POPPER_SELECTORS } from "../constants/tech";
+  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
   import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
 
@@ -103,7 +103,7 @@
 
       function actionClick(event: MouseEvent | TouchEvent) {
         const node = event.target as HTMLElement;
-        if (node.closest(IGNORE_POPPER_SELECTORS)) {
+        if (node.closest(POPPER_SELECTOR)) {
           return;
         }
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { startWith } from "@krainovsd/js-helpers";
   import { computed, ref, shallowRef, useTemplateRef, watchEffect } from "vue";
+  import { getWatchedNode } from "../lib";
   import Positioner, {
     type PositionerProps,
     type PositionerTargetNodePosition,
@@ -46,7 +47,7 @@
   });
   const elementRef = useTemplateRef("tooltip");
   const positionerRef = useTemplateRef("positioner");
-  const content = computed(() => elementRef.value?.nextElementSibling as HTMLElement | undefined);
+  const content = computed(() => getWatchedNode(elementRef.value));
   const shiftY = computed(() =>
     props.placement
       ? startWith(props.placement, "top")
@@ -161,7 +162,13 @@
 </script>
 
 <template>
-  <span ref="tooltip" class="ksd-tooltip" aria-hidden="true" tabindex="-1"></span>
+  <span
+    ref="tooltip"
+    class="ksd-tooltip"
+    aria-hidden="true"
+    tabindex="-1"
+    ksd-watcher="true"
+  ></span>
   <slot ref="slot"></slot>
   <Positioner
     ref="positioner"
