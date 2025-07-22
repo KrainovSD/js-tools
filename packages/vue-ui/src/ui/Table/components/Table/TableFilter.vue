@@ -10,7 +10,7 @@
   const props = defineProps<Props>();
   const headers = computed(() => props.table.getHeaderGroups()?.[0]?.headers ?? []);
   const filters = computed(() =>
-    headers.value.reduce<FilterItem[]>((acc, header) => {
+    headers.value.reduce<FilterItem<string, string | number>[]>((acc, header) => {
       const column = header.column.columnDef;
       const context = header.getContext();
 

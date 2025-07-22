@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="F extends string, O extends string | number">
   import { dateFormat, isArray, isId, isNumber, isObject, isString } from "@krainovsd/js-helpers";
   import { VCloseCircleFilled, VDeleteOutlined, VFilterOutlined } from "@krainovsd/vue-icons";
   import { type Component, computed, markRaw, onMounted, shallowRef, watch } from "vue";
@@ -42,19 +42,19 @@
     format?: string;
   };
 
-  export type FilterComponent =
+  export type FilterComponent<O extends string | number> =
     | {
         [K in keyof FilterComponentProps]: {
           props?: FilterComponentProps[K];
           component: K;
-          operatorValue?: string | number;
+          operatorValue?: O;
           operatorLabel?: string;
           /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
           clearTag?: string;
         };
       }[keyof FilterComponentProps]
     | {
-        operatorValue?: string | number;
+        operatorValue?: O;
         operatorLabel?: string;
         component: Component;
         displayValue?: FilterComponentKey;
@@ -63,21 +63,21 @@
         clearTag?: string;
       };
 
-  export type FilterItem = {
-    field: string;
+  export type FilterItem<F extends string, O extends string | number> = {
+    field: F;
     label: string;
     icon?: Component;
-    components: FilterComponent[];
+    components: FilterComponent<O>[];
   };
-  export type FilterItemFlat =
+  export type FilterItemFlat<F extends string, O extends string | number> =
     | {
         [K in keyof FilterComponentProps]: {
-          field: string;
+          field: F;
           label: string;
           icon?: Component;
           props?: FilterComponentProps[K];
           component: K;
-          operatorValue?: string | number;
+          operatorValue?: O;
           operatorLabel?: string;
           operators: SelectItem[];
           /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
@@ -85,10 +85,10 @@
         };
       }[keyof FilterComponentProps]
     | {
-        field: string;
+        field: F;
         label: string;
         icon?: Component;
-        operatorValue?: string | number;
+        operatorValue?: O;
         operatorLabel?: string;
         component: Component;
         displayValue?: FilterComponentKey;
@@ -98,8 +98,11 @@
         clearTag?: string;
       };
 
-  export type FilterProps = {
-    filters: FilterItem[];
+  export type FilterProps<
+    F extends string = string,
+    O extends string | number = string | number,
+  > = {
+    filters: FilterItem<F, O>[];
     label?: string;
     icon?: Component;
     buttonSize?: ButtonSize;
@@ -108,7 +111,7 @@
     displayedDateFormat?: string;
   };
 
-  const props = withDefaults(defineProps<FilterProps>(), {
+  const props = withDefaults(defineProps<FilterProps<F, O>>(), {
     label: "Фильтр",
     buttonSize: "default",
     controlSize: "default",
@@ -116,14 +119,14 @@
     displayedDateFormat: "DD-MM-YYYY",
     icon: undefined,
   });
-  const form = defineModel<Record<string, unknown>>({ default: {} });
-  const operators = defineModel<Record<string, unknown>>("operators", { default: {} });
-  const openedFields = shallowRef<string[]>([]);
+  const form = defineModel<Partial<Record<F, unknown>>>({ default: {} });
+  const operators = defineModel<Partial<Record<F, O>>>("operators", { default: {} });
+  const openedFields = shallowRef<F[]>([]);
 
-  function openFilter(field: string) {
+  function openFilter(field: F) {
     openedFields.value = [...openedFields.value, field];
   }
-  function closeFilter(field: string) {
+  function closeFilter(field: F) {
     openedFields.value = openedFields.value.filter((filter) => filter !== field);
     if (form.value[field] != undefined) {
       delete form.value[field];
@@ -146,7 +149,7 @@
     }, []),
   );
   const openedFilters = computed(() => {
-    return openedFields.value.reduce((acc: FilterItemFlat[], field) => {
+    return openedFields.value.reduce((acc: FilterItemFlat<F, O>[], field) => {
       const filterItem = props.filters.find((filter) => filter.field === field);
       if (!filterItem) {
         return acc;
@@ -179,7 +182,7 @@
   });
   const filterClasses = computed(() => ({ [`control-size-${props.controlSize}`]: true }));
 
-  function extractFilterDisplayValue(filter: FilterItemFlat) {
+  function extractFilterDisplayValue(filter: FilterItemFlat<F, O>) {
     let displayValue: string = "";
     const filterValue = form.value[filter.field];
     const displayType: FilterComponentKey =
@@ -252,7 +255,7 @@
   watch(
     form,
     (form) => {
-      const formKeys = Object.keys(form);
+      const formKeys = Object.keys(form) as F[];
       if (formKeys.length !== openedFields.value.length) {
         const actualOpenedFields = new Set([...openedFields.value, ...formKeys]);
         openedFields.value = Array.from(actualOpenedFields);
@@ -262,7 +265,7 @@
   );
 
   onMounted(() => {
-    openedFields.value = Object.keys(form.value);
+    openedFields.value = Object.keys(form.value) as F[];
 
     for (let i = 0; i < props.filters.length; i++) {
       const filter = props.filters[i];
@@ -297,7 +300,7 @@
           class="ksd-filter__button-clear"
           @click="
             () => {
-              form = {};
+              form = {} as Partial<Record<F, unknown>>;
               openedFields = [];
             }
           "
@@ -316,7 +319,7 @@
             key: String(operator.value),
             label: operator.label,
             onClick: () => {
-              operators[filter.field] = operator.value;
+              operators[filter.field] = operator.value as O;
 
               const nextClearTag = $props.filters
                 .find((propsFilter) => propsFilter.field === filter.field)
