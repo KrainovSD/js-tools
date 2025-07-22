@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { VExclamationCircleFilled } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
+  import { createInteractiveChildrenController } from "../lib";
   import Button from "./Button.vue";
   import type { PopperProps } from "./Popper.vue";
   import Popper from "./Popper.vue";
@@ -64,11 +65,10 @@
 
       lastActive.value = document.activeElement as HTMLElement | null;
       positionerContent.focus();
-      const focusableElements = positionerContent.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      );
-      focusableElements[0]?.focus?.();
-      let focusableIndex = 0;
+
+      const interactiveChildrenController = createInteractiveChildrenController(positionerContent, {
+        autofocus: true,
+      });
 
       function actionKeyboard(event: KeyboardEvent) {
         if (event.key === "Escape") {
@@ -78,19 +78,10 @@
           event.preventDefault();
 
           if ((event.key === "Tab" && event.shiftKey) || event.key === "ArrowLeft") {
-            focusableIndex--;
+            interactiveChildrenController.focusPrev();
           } else {
-            focusableIndex++;
+            interactiveChildrenController.focusNext();
           }
-
-          if (focusableIndex < 0) {
-            focusableIndex = focusableElements.length - 1;
-          } else if (focusableIndex >= focusableElements.length) {
-            focusableIndex = 0;
-          }
-
-          const element = focusableElements.item(focusableIndex) as HTMLElement;
-          element.focus();
         }
       }
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { computed, ref, useTemplateRef, watch, watchEffect } from "vue";
+  import { createInteractiveChildrenController } from "../lib";
   import type { PopperProps, PopperTrigger } from "./Popper.vue";
   import Popper from "./Popper.vue";
 
@@ -62,18 +63,15 @@
       const eventController = new AbortController();
       lastActive.value = document.activeElement as HTMLElement | null;
 
-      const interactiveElements = Array.from(
-        positionerContentRef.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        ),
+      const interactiveChildrenController = createInteractiveChildrenController(
+        positionerContentRef,
+        {
+          autofocus: true,
+        },
       );
-      const firstInteractive = interactiveElements[0];
-      if (firstInteractive) {
-        firstInteractive.focus();
-      }
       positionerContentRef.tabIndex = 0;
 
-      interactiveElements.forEach((element) => {
+      interactiveChildrenController.interactiveElements.forEach((element) => {
         element.addEventListener("blur", escapeHandler, { signal: eventController.signal });
       });
 
@@ -88,26 +86,12 @@
       }
 
       function actionKeyboard(event: KeyboardEvent) {
-        const focusedIndex = interactiveElements.findIndex(
-          (element) => element === document.activeElement,
-        );
-
         if (event.key === "Tab" && !event.shiftKey) {
-          /** Down */
           event.preventDefault();
-          if (focusedIndex < interactiveElements.length - 1) {
-            interactiveElements[focusedIndex + 1]?.focus?.();
-          } else {
-            interactiveElements[0]?.focus?.();
-          }
+          interactiveChildrenController.focusNext();
         } else if (event.key === "Tab" && event.shiftKey) {
-          /** Up */
           event.preventDefault();
-          if (focusedIndex > 0) {
-            interactiveElements[focusedIndex - 1]?.focus?.();
-          } else {
-            interactiveElements[interactiveElements.length - 1]?.focus?.();
-          }
+          interactiveChildrenController.focusPrev();
         }
       }
 

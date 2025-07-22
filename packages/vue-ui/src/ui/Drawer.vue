@@ -3,7 +3,7 @@
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
   import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
-  import { getWatchedNode } from "../lib";
+  import { createInteractiveChildrenController, getWatchedNode } from "../lib";
   import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
   import Flex from "./Flex.vue";
@@ -114,42 +114,24 @@
         }
       }
 
-      const focusableElements = drawerRef.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      );
-      const firstFocusable = focusableElements.item(0) as HTMLElement | null;
-
-      if (firstFocusable) {
-        firstFocusable.focus();
-      }
+      const interactiveChildrenController = createInteractiveChildrenController(drawerRef, {
+        autofocus: true,
+      });
 
       if (modalMode.value) {
-        let focusableIndex = 0;
+        function focusTrap(event: KeyboardEvent) {
+          if (event.key !== "Tab") return;
 
-        if (focusableElements.length !== 0) {
-          function focusTrap(event: KeyboardEvent) {
-            if (event.key !== "Tab") return;
+          event.preventDefault();
 
-            event.preventDefault();
-
-            if (event.shiftKey) {
-              focusableIndex--;
-            } else {
-              focusableIndex++;
-            }
-
-            if (focusableIndex < 0) {
-              focusableIndex = focusableElements.length - 1;
-            } else if (focusableIndex >= focusableElements.length) {
-              focusableIndex = 0;
-            }
-
-            const element = focusableElements.item(focusableIndex) as HTMLElement;
-            element.focus();
+          if (event.shiftKey) {
+            interactiveChildrenController.focusPrev();
+          } else {
+            interactiveChildrenController.focusNext();
           }
-
-          drawerRef.addEventListener("keydown", focusTrap, { signal: controller.signal });
         }
+
+        drawerRef.addEventListener("keydown", focusTrap, { signal: controller.signal });
       }
 
       if (props.closeByClickOutside) {

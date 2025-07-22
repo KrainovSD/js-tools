@@ -3,6 +3,7 @@
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
   import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
+  import { createInteractiveChildrenController } from "../lib";
   import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
 
@@ -93,13 +94,10 @@
 
       const eventController = new AbortController();
       prevActiveElement.value = document.activeElement as HTMLElement | null;
-      const focusableElements = modalRef.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      );
-      const firstFocusable = focusableElements.item(0) as HTMLElement | null;
-      if (firstFocusable) {
-        firstFocusable.focus();
-      }
+
+      const interactiveChildrenController = createInteractiveChildrenController(modalRef, {
+        autofocus: true,
+      });
 
       function actionClick(event: MouseEvent | TouchEvent) {
         const node = event.target as HTMLElement;
@@ -117,28 +115,18 @@
         open.value = false;
       }
 
-      let focusableIndex = 0;
       function actionKeyBoard(event: KeyboardEvent) {
         if (event.key === "Escape") {
           event.stopPropagation();
           open.value = false;
         }
-        if (focusableElements.length > 0 && event.key === "Tab") {
+        if (event.key === "Tab") {
           event.preventDefault();
           if (event.shiftKey) {
-            focusableIndex--;
+            interactiveChildrenController.focusPrev();
           } else {
-            focusableIndex++;
+            interactiveChildrenController.focusNext();
           }
-
-          if (focusableIndex < 0) {
-            focusableIndex = focusableElements.length - 1;
-          } else if (focusableIndex >= focusableElements.length) {
-            focusableIndex = 0;
-          }
-
-          const element = focusableElements.item(focusableIndex) as HTMLElement;
-          element.focus();
         }
       }
 

@@ -6,7 +6,8 @@
     VLeftOutlined,
     VRightOutlined,
   } from "@krainovsd/vue-icons";
-  import { computed, watch } from "vue";
+  import { computed, useTemplateRef, watch } from "vue";
+  import { createInteractiveChildrenController } from "../lib";
   import Select, { type SelectItem } from "./Select.vue";
 
   export type PaginationSize = "default" | "small";
@@ -31,6 +32,7 @@
   });
   const pageIndex = defineModel<number>({ default: 0 });
   const pageSize = defineModel<number>("page-size", { default: 100 });
+  const paginationRef = useTemplateRef("pagination");
 
   const totalPages = computed(() => Math.max(Math.ceil(props.totalRows / pageSize.value), 1));
 
@@ -92,13 +94,38 @@
     props.pageSizes.map<SelectItem>((size) => ({ label: size.toString(), value: size })),
   );
 
+  watch<[HTMLDivElement | null, number[]], true>(
+    () => [paginationRef.value, pages.value],
+    ([paginationRef], _, clean) => {
+      if (!paginationRef) return;
+
+      const interactiveChildrenController = createInteractiveChildrenController(paginationRef);
+
+      function keyBoardInteractive(event: KeyboardEvent) {
+        if (event.key === "ArrowLeft") {
+          interactiveChildrenController.focusPrev();
+        }
+        if (event.key === "ArrowRight") {
+          interactiveChildrenController.focusNext();
+        }
+      }
+
+      paginationRef.addEventListener("keydown", keyBoardInteractive);
+
+      clean(() => {
+        paginationRef?.removeEventListener?.("keydown", keyBoardInteractive);
+      });
+    },
+    { immediate: true, flush: "post" },
+  );
+
   watch(pageSize, () => {
     pageIndex.value = 0;
   });
 </script>
 
 <template>
-  <div class="ksd-pagination" :class="[componentClasses, rootClasses]">
+  <div ref="pagination" class="ksd-pagination" :class="[componentClasses, rootClasses]">
     <div class="ksd-pagination__buttons">
       <button
         class="ksd-pagination__button"
@@ -147,13 +174,6 @@
         :class="[componentClasses]"
         @click="
           () => {
-            const pagePosition = pages.findIndex((page) => page === pageIndex);
-            console.log(
-              pageIndex + (pages.length - pagePosition),
-              pageIndex + Math.round((totalPages - 1 - pageIndex) / 2),
-              pageIndex + Math.floor((totalPages - 1 - pageIndex) / 2),
-              pageIndex + Math.ceil((totalPages - 1 - pageIndex) / 2),
-            );
             pageIndex += Math.floor((totalPages - 1 - pageIndex) / 2);
           }
         "
@@ -236,6 +256,14 @@
       cursor: pointer;
       user-select: none;
 
+      &:focus-visible {
+        outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
+        outline-offset: 1px;
+        transition:
+          outline-offset 0s,
+          outline 0s;
+      }
+
       &.size-small {
         min-width: var(--ksd-pagination-item-size-sm);
         height: var(--ksd-pagination-item-size-sm);
@@ -274,7 +302,9 @@
       }
 
       &.quick {
-        transition: all var(--ksd-transition-mid) ease;
+        transition:
+          color var(--ksd-transition-mid) ease,
+          background-color var(--ksd-transition-mid) ease;
         color: var(--ksd-icon-color);
 
         & > svg:last-child {
