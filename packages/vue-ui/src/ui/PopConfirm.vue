@@ -29,6 +29,7 @@
     | "placement"
     | "zIndex"
     | "nested"
+    | "closeByClickOutsideEvent"
   >;
   type Emits = {
     click: [];
@@ -136,6 +137,7 @@
     :ignore-elements="$props.ignoreElements"
     :modal-root="$props.modalRoot"
     :observe="$props.observe"
+    :close-by-click-outside-event="$props.closeByClickOutsideEvent"
     :open-delay="$props.openDelay"
     :shift-x="$props.shiftX"
     :shift-y="$props.shiftY"

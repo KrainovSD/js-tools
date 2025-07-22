@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import { type PositionPlacements, isString } from "@krainovsd/js-helpers";
   import { computed, ref, useTemplateRef, watchEffect } from "vue";
+  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, IGNORE_POPPER_SELECTORS } from "../constants/tech";
+  import type { CloseByClickOutsideEvent } from "../types";
   import Positioner, { type PositionerAnimations } from "./Positioner.vue";
 
   export type PopperTrigger = "click" | "hover" | "contextMenu";
@@ -25,6 +27,7 @@
     ignoreElements?: (string | HTMLElement | null | undefined)[];
     fit?: boolean;
     nested?: boolean;
+    closeByClickOutsideEvent?: CloseByClickOutsideEvent;
   };
 
   const props = withDefaults(defineProps<PopperProps>(), {
@@ -47,6 +50,7 @@
     ignoreElements: undefined,
     fit: true,
     nested: false,
+    closeByClickOutsideEvent: DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT,
   });
   const open = defineModel<boolean>();
   const popperRef = useTemplateRef("popper");
@@ -62,6 +66,11 @@
   const targetNodeWidth = ref(0);
   const firstPlacement = computed(() => props.placement.split("-")[0]);
   const lastActive = ref<HTMLElement | null>();
+  const checkedModalRoot = computed(() =>
+    props.nested && props.modalRoot == undefined
+      ? popperRef.value?.closest?.<HTMLElement>(IGNORE_POPPER_SELECTORS)
+      : props.modalRoot,
+  );
 
   const shiftY = computed(
     () =>
@@ -200,7 +209,7 @@
     lastActive.value = document.activeElement as HTMLElement;
 
     /** Close by click outside */
-    document.addEventListener("mousedown", checkDisappear, {
+    document.addEventListener(props.closeByClickOutsideEvent, checkDisappear, {
       signal: eventController.signal,
     });
     /** Close by focus outside */
@@ -345,7 +354,7 @@
     :class="['ksd-popper__positioner']"
     v-bind="$attrs"
     :z-index="$props.zIndex"
-    :modal-root="$props.modalRoot"
+    :modal-root="checkedModalRoot"
     :placement="$props.placement"
     :shift-x="shiftX"
     :shift-y="shiftY"

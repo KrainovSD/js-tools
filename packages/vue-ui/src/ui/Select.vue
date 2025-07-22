@@ -66,6 +66,8 @@
     | "shiftY"
     | "placement"
     | "zIndex"
+    | "closeByClickOutsideEvent"
+    | "nested"
   >;
 
   const props = withDefaults(defineProps<SelectProps>(), {
@@ -296,8 +298,6 @@
       }
 
       function actionClick(event: MouseEvent) {
-        event.preventDefault();
-        event.stopPropagation();
         const currentTarget = event.currentTarget as SelectHTMLElement;
         if (currentTarget.valueKey) {
           selectValue(optionsMap.value[currentTarget.valueKey]?.value);
@@ -375,6 +375,8 @@
     :close-by-scroll="$props.closeByScroll"
     :fit="$props.fit"
     :close-delay="$props.closeDelay"
+    :close-by-click-outside-event="$props.closeByClickOutsideEvent"
+    :nested="$props.nested"
     :ignore-elements="$props.ignoreElements"
     :modal-root="$props.modalRoot"
     :observe="$props.observe || $props.multiple"

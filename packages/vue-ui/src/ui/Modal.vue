@@ -2,6 +2,8 @@
   import { execAnimation } from "@krainovsd/js-helpers";
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
+  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, IGNORE_POPPER_SELECTORS } from "../constants/tech";
+  import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
 
   export type ModalProps = {
@@ -12,6 +14,7 @@
     className?: string;
     okButton?: string;
     cancelButton?: string;
+    closeByClickOutsideEvent?: CloseByClickOutsideEvent;
   };
   type Emit = {
     close: [];
@@ -26,6 +29,7 @@
     className: undefined,
     target: undefined,
     zIndex: undefined,
+    closeByClickOutsideEvent: DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT,
   });
   const emit = defineEmits<Emit>();
   const open = defineModel<boolean>();
@@ -99,7 +103,7 @@
 
       function actionClick(event: MouseEvent | TouchEvent) {
         const node = event.target as HTMLElement;
-        if (node.closest("[ksd-popper]")) {
+        if (node.closest(IGNORE_POPPER_SELECTORS)) {
           return;
         }
 
@@ -138,9 +142,9 @@
         }
       }
 
-      document.addEventListener("mousedown", actionClick, { signal: eventController.signal });
-      document.addEventListener("touchstart", actionClick, { signal: eventController.signal });
-      document.addEventListener("pointerdown", actionClick, { signal: eventController.signal });
+      document.addEventListener(props.closeByClickOutsideEvent, actionClick, {
+        signal: eventController.signal,
+      });
       document.addEventListener("keydown", actionKeyBoard, { signal: eventController.signal });
 
       clean(() => {

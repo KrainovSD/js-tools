@@ -59,6 +59,8 @@
       | "shiftY"
       | "placement"
       | "zIndex"
+      | "nested"
+      | "closeByClickOutsideEvent"
     >;
 
   type Emits = {
@@ -292,6 +294,8 @@
     :close-delay="$props.closeDelay"
     :ignore-elements="$props.ignoreElements"
     :modal-root="$props.modalRoot"
+    :nested="$props.nested"
+    :close-by-click-outside-event="$props.closeByClickOutsideEvent"
     :observe="$props.observe"
     :open-delay="$props.openDelay"
     :shift-x="$props.shiftX"

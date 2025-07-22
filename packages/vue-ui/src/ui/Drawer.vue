@@ -2,6 +2,8 @@
   import { execAnimation } from "@krainovsd/js-helpers";
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useTemplateRef, watch } from "vue";
+  import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, IGNORE_POPPER_SELECTORS } from "../constants/tech";
+  import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
   import Flex from "./Flex.vue";
   import Text from "./Text.vue";
@@ -18,6 +20,7 @@
     width?: number;
     height?: number;
     classNameRoot?: string;
+    closeByClickOutsideEvent?: CloseByClickOutsideEvent;
     closeByClickOutside?: boolean;
     closeByEscape?: boolean;
   };
@@ -38,6 +41,7 @@
     block: false,
     closeByClickOutside: true,
     closeByEscape: true,
+    closeByClickOutsideEvent: DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT,
   });
   const emit = defineEmits<Emits>();
   const open = defineModel<boolean>();
@@ -91,7 +95,7 @@
 
       function closeByClickOutside(event: MouseEvent | TouchEvent) {
         const node = event.target as HTMLElement;
-        if (node.closest("[ksd-popper]")) {
+        if (node.closest(IGNORE_POPPER_SELECTORS)) {
           return;
         }
 
@@ -150,9 +154,7 @@
       }
 
       if (props.closeByClickOutside) {
-        document.addEventListener("mousedown", closeByClickOutside, { signal: controller.signal });
-        document.addEventListener("touchstart", closeByClickOutside, { signal: controller.signal });
-        document.addEventListener("pointerdown", closeByClickOutside, {
+        document.addEventListener(props.closeByClickOutsideEvent, closeByClickOutside, {
           signal: controller.signal,
         });
       }

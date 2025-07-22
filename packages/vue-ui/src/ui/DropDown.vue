@@ -66,6 +66,7 @@
     | "zIndex"
     | "triggers"
     | "nested"
+    | "closeByClickOutsideEvent"
   >;
 
   const props = withDefaults(defineProps<DropDownProps>(), {
@@ -371,6 +372,7 @@
     :ignore-elements="$props.ignoreElements"
     :modal-root="$props.modalRoot"
     :open-delay="$props.openDelay"
+    :close-by-click-outside-event="$props.closeByClickOutsideEvent"
     :shift-x="$props.shiftX"
     :shift-y="$props.shiftY"
     :placement="$props.placement"
@@ -439,7 +441,6 @@
         <DropDown
           v-if="!item.divider && !item.disabled && item.innerOptions"
           v-bind="item.innerOptions"
-          :modal-root="positionerRef"
           :placement="item.innerOptions.placement ?? 'right-top'"
           :size="item.innerOptions.size ?? $props.size"
           :nested="true"

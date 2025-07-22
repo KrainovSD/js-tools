@@ -26,6 +26,7 @@
     | "zIndex"
     | "triggers"
     | "nested"
+    | "closeByClickOutsideEvent"
   >;
 
   const props = withDefaults(defineProps<PopoverProps>(), {
@@ -136,6 +137,7 @@
     :ignore-elements="$props.ignoreElements"
     :modal-root="$props.modalRoot"
     :open-delay="$props.openDelay"
+    :close-by-click-outside-event="$props.closeByClickOutsideEvent"
     :shift-x="$props.shiftX"
     :shift-y="$props.shiftY"
     :placement="$props.placement"

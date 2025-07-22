@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 import { h } from "vue";
-import { VButton, VInput, VPopover, VSelect } from "../ui";
+import { VButton, VInput, VPopConfirm, VPopover, VSelect } from "../ui";
 
 const meta = {
   title: "Components/Popover",
@@ -28,13 +28,18 @@ export const Primary: Story = {
             content: () => [
               h(VInput),
               h(VSelect, {
+                nested: true,
                 options: [
                   { label: "first", value: "first" },
                   { label: "second", value: "second" },
                   { label: "third", value: "third" },
                 ],
               }),
-              h(VButton, {}, () => "Применить"),
+              h(
+                VPopConfirm,
+                { text: "Большое спасибо за внимание?", title: "Внимание", nested: true },
+                () => h(VButton, {}, () => "Применить"),
+              ),
             ],
           },
         ),
