@@ -11,3 +11,4 @@ export * from "./get-particle-position";
 export * from "./link-by-pointer-getter";
 export * from "./node-highlight";
 export * from "./link-highlight";
+export * from "./extract-link-point-ids";
