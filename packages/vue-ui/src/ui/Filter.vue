@@ -1,7 +1,18 @@
 <script setup lang="ts" generic="F extends string, O extends string | number">
   import { dateFormat, isArray, isId, isNumber, isObject, isString } from "@krainovsd/js-helpers";
-  import { VCloseCircleFilled, VDeleteOutlined, VFilterOutlined } from "@krainovsd/vue-icons";
-  import { type Component, computed, markRaw, onMounted, shallowRef, watch } from "vue";
+  import { VCloseCircleFilled, VDeleteOutlined, VPlusOutlined } from "@krainovsd/vue-icons";
+  import {
+    type Component,
+    computed,
+    h,
+    nextTick,
+    onMounted,
+    ref,
+    shallowRef,
+    toRaw,
+    useTemplateRef,
+    watch,
+  } from "vue";
   import Button, { type ButtonSize } from "./Button.vue";
   import DropDown, { type DropDownMenuItem } from "./DropDown.vue";
   import Input, { type InputVariant } from "./Input.vue";
@@ -9,6 +20,7 @@
   import Popover from "./Popover.vue";
   import type { SelectItem, SelectValue } from "./Select.vue";
   import Select from "./Select.vue";
+  import Text from "./Text.vue";
   import Tooltip from "./Tooltip.vue";
 
   export type FilterComponentProps = {
@@ -20,6 +32,7 @@
     "date-range": FilterDateComponentProps;
   };
   export type FilterComponentKey = keyof FilterComponentProps;
+  export type FilterDirection = "left" | "right";
 
   export type FilterSelectComponentProps = {
     options: SelectItem[];
@@ -49,6 +62,7 @@
           component: K;
           operatorValue?: O;
           operatorLabel?: string;
+          operatorShortLabel?: string;
           /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
           clearTag?: string;
         };
@@ -56,6 +70,7 @@
     | {
         operatorValue?: O;
         operatorLabel?: string;
+        operatorShortLabel?: string;
         component: Component;
         displayValue?: FilterComponentKey;
         props?: unknown;
@@ -79,6 +94,7 @@
           component: K;
           operatorValue?: O;
           operatorLabel?: string;
+          operatorShortLabel?: string;
           operators: SelectItem[];
           /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
           clearTag?: string;
@@ -90,6 +106,7 @@
         icon?: Component;
         operatorValue?: O;
         operatorLabel?: string;
+        operatorShortLabel?: string;
         component: Component;
         displayValue?: FilterComponentKey;
         props?: unknown;
@@ -108,6 +125,7 @@
     buttonSize?: ButtonSize;
     controlSize?: ButtonSize;
     controlVariant?: InputVariant;
+    direction?: FilterDirection;
     displayedDateFormat?: string;
   };
 
@@ -118,36 +136,81 @@
     controlVariant: "outlined",
     displayedDateFormat: "DD-MM-YYYY",
     icon: undefined,
+    direction: "right",
   });
   const form = defineModel<Partial<Record<F, unknown>>>({ default: {} });
   const operators = defineModel<Partial<Record<F, O>>>("operators", { default: {} });
   const openedFields = shallowRef<F[]>([]);
+  const filterRef = useTemplateRef("filter");
+  const dropRef = useTemplateRef("drop");
+  const hoverDrop = ref(false);
+  const focusDrop = ref(false);
+  const activeDrop = computed(() => hoverDrop.value || focusDrop.value);
 
-  function openFilter(field: F) {
-    openedFields.value = [...openedFields.value, field];
+  function openFilterField() {
+    const field = availableFilters.value[0]?.field;
+
+    if (field) {
+      if (props.direction === "right") {
+        openedFields.value = [...openedFields.value, field];
+      } else {
+        openedFields.value = [field, ...openedFields.value];
+      }
+
+      void nextTick(() => {
+        filterRef.value
+          ?.querySelector?.<HTMLElement>(`button.ksd-filter__field-button-info[data-id='${field}']`)
+          ?.focus?.();
+      });
+    }
+  }
+
+  function changeFilterField(field: F, index: number) {
+    openedFields.value = openedFields.value.map((openField, openIndex) => {
+      if (openIndex === index) {
+        if (form.value[openField] != undefined) {
+          delete form.value[openField];
+        }
+
+        return field;
+      }
+
+      return openField;
+    });
+    void nextTick(() => {
+      filterRef.value
+        ?.querySelector?.<HTMLElement>(`button.ksd-filter__field-button-info[data-id='${field}']`)
+        ?.focus?.();
+    });
   }
   function closeFilter(field: F) {
     openedFields.value = openedFields.value.filter((filter) => filter !== field);
     if (form.value[field] != undefined) {
       delete form.value[field];
     }
+
+    filterRef.value?.querySelector?.<HTMLElement>(`button.ksd-filter__button-filter`)?.focus?.();
+  }
+  function dropFilters() {
+    form.value = {} as Partial<Record<F, unknown>>;
+    openedFields.value = [];
+    filterRef.value?.querySelector?.<HTMLElement>(`button.ksd-filter__button-filter`)?.focus?.();
   }
 
-  const dropMenu = computed(() =>
-    props.filters.reduce<DropDownMenuItem[]>((acc, filter) => {
-      if (!openedFields.value.includes(filter.field)) {
-        acc.push({
-          key: filter.field,
-          icon: filter.icon ? markRaw(filter.icon) : undefined,
-          label: filter.label,
-          onClick: () => openFilter(filter.field),
-          ellipsis: true,
-        });
-      }
-
-      return acc;
-    }, []),
+  const availableFilters = computed(() =>
+    props.filters.filter((filter) => !openedFields.value.includes(filter.field)),
   );
+  const dropMenu = computed(
+    () => (index: number) =>
+      availableFilters.value.map<DropDownMenuItem>((filter) => ({
+        key: filter.field,
+        icon: filter.icon ? toRaw(filter.icon) : undefined,
+        label: filter.label,
+        onClick: () => changeFilterField(filter.field, index),
+        ellipsis: true,
+      })),
+  );
+
   const openedFilters = computed(() => {
     return openedFields.value.reduce((acc: FilterItemFlat<F, O>[], field) => {
       const filterItem = props.filters.find((filter) => filter.field === field);
@@ -168,9 +231,20 @@
       acc.push({
         ...filterItem,
         ...filterComponent,
+        icon: isObject(filterItem.icon) ? toRaw(filterItem.icon) : filterItem.icon,
         operators: filterItem.components.reduce((acc: SelectItem[], component) => {
           if (component.operatorLabel && component.operatorValue != undefined) {
-            acc.push({ value: component.operatorValue, label: component.operatorLabel });
+            acc.push({
+              value: component.operatorValue,
+              label: component.operatorLabel,
+              desc:
+                component.operatorLabel && component.operatorShortLabel
+                  ? h("div", { class: "ksd-filter__field-operator-item" }, [
+                      h(Text, {}, () => component.operatorShortLabel),
+                      h(Text, { type: "secondary", size: "sm" }, () => component.operatorLabel),
+                    ])
+                  : (component.operatorShortLabel ?? component.operatorLabel),
+            });
           }
 
           return acc;
@@ -263,6 +337,42 @@
     },
     { deep: true },
   );
+  watch(
+    () => dropRef.value?.buttonRef,
+    (dropRef, _, clean) => {
+      if (!dropRef) {
+        hoverDrop.value = false;
+
+        return;
+      }
+
+      function onHoverDrop() {
+        hoverDrop.value = true;
+      }
+      function onLeaveDrop() {
+        hoverDrop.value = false;
+      }
+      function onFocusDrop() {
+        focusDrop.value = true;
+      }
+      function onBlurDrop() {
+        focusDrop.value = false;
+      }
+
+      dropRef.addEventListener("mouseenter", onHoverDrop);
+      dropRef.addEventListener("mouseleave", onLeaveDrop);
+      dropRef.addEventListener("focus", onFocusDrop);
+      dropRef.addEventListener("blur", onBlurDrop);
+
+      clean(() => {
+        dropRef.removeEventListener("focus", onHoverDrop);
+        dropRef.removeEventListener("blur", onLeaveDrop);
+        dropRef.removeEventListener("focus", onFocusDrop);
+        dropRef.removeEventListener("blur", onBlurDrop);
+      });
+    },
+    { immediate: true },
+  );
 
   onMounted(() => {
     openedFields.value = Object.keys(form.value) as F[];
@@ -281,43 +391,57 @@
 </script>
 
 <template>
-  <div class="ksd-filter" :class="filterClasses">
-    <div class="ksd-filter__button-wrapper">
-      <DropDown :menu="dropMenu">
+  <div ref="filter" class="ksd-filter" :class="filterClasses">
+    <div v-if="$props.direction === 'left'" class="ksd-filter__button-wrapper">
+      <Button
+        :size="$props.buttonSize"
+        class="ksd-filter__button-filter"
+        :class="{ clear: openedFields.length > 0 }"
+        @click="openFilterField"
+      >
+        <template #icon>
+          <component :is="$props.icon" v-if="$props.icon" class="ksd-filter__icon" />
+          <VPlusOutlined v-if="!$props.icon" class="ksd-filter__icon" />
+        </template>
+        {{ $props.label }}
+      </Button>
+      <Button
+        v-if="openedFields.length > 0"
+        ref="drop"
+        class="ksd-filter__button-clear"
+        :size="$props.buttonSize"
+        @click="dropFilters"
+      >
+        <template #icon>
+          <VDeleteOutlined />
+        </template>
+      </Button>
+    </div>
+    <div
+      v-for="(filter, index) in openedFilters"
+      :key="filter.field"
+      class="ksd-filter__field"
+      :class="{ drop: activeDrop }"
+    >
+      <DropDown :menu="dropMenu(index)">
         <Button
+          :data-id="filter.field"
           :size="$props.buttonSize"
-          class="ksd-filter__button-filter"
-          :class="{ clear: openedFields.length > 0 }"
+          class="ksd-filter__field-button-info"
+          :class="{ operator: filter.operators && filter.operators.length > 0 }"
         >
-          <template #icon>
-            <component :is="$props.icon" v-if="$props.icon" class="ksd-filter__icon" />
-            <VFilterOutlined v-if="!$props.icon" class="ksd-filter__icon" />
-          </template>
-          {{ $props.label }}
-        </Button>
-        <Button
-          v-if="openedFields.length > 0"
-          class="ksd-filter__button-clear"
-          @click="
-            () => {
-              form = {} as Partial<Record<F, unknown>>;
-              openedFields = [];
-            }
-          "
-        >
-          <template #icon>
-            <VDeleteOutlined />
-          </template>
+          <component :is="filter.icon" v-if="filter.icon" class="ksd-filter__field-icon" />
+          <span class="ksd-filter__field-label">
+            {{ filter.label }}
+          </span>
         </Button>
       </DropDown>
-    </div>
-    <div v-for="filter in openedFilters" :key="filter.field" class="ksd-filter__field">
       <DropDown
         v-if="filter.operators && filter.operators.length > 0"
         :menu="
           filter.operators.map((operator) => ({
             key: String(operator.value),
-            label: operator.label,
+            label: operator.desc,
             onClick: () => {
               operators[filter.field] = operator.value as O;
 
@@ -333,28 +457,31 @@
           }))
         "
       >
-        <Button :size="$props.buttonSize" class="ksd-filter__field-button-operator">{{
-          filter.operators?.find?.((operator) => operator.value === operators[filter.field])
-            ?.label ?? operators[filter.field]
-        }}</Button>
+        <Button
+          :data-id="filter.field"
+          :size="$props.buttonSize"
+          class="ksd-filter__field-button-operator"
+          >{{
+            filter.operatorShortLabel ?? filter.operatorLabel ?? operators[filter.field]
+          }}</Button
+        >
       </DropDown>
-
       <Popover :size="$props.controlSize">
         <Button
+          :data-id="filter.field"
           :size="$props.buttonSize"
-          class="ksd-filter__field-button-content"
+          class="ksd-filter__field-button-value"
           :class="{ operator: filter.operators && filter.operators.length > 0 }"
         >
-          <component :is="filter.icon" v-if="filter.icon" class="ksd-filter__field-icon" />
-          <div class="ksd-filter__field-content">
-            <span class="ksd-filter__field-label">
-              {{ filter.label }}
+          <Tooltip :text="extractFilterDisplayValue(filter)" :open-not-visible="true">
+            <span class="ksd-filter__field-value">
+              {{
+                form[filter.field] != undefined
+                  ? extractFilterDisplayValue(filter)
+                  : "Выберите значение"
+              }}
             </span>
-            {{ ":" }}
-            <Tooltip :text="extractFilterDisplayValue(filter)" :open-not-visible="true">
-              <span class="ksd-filter__field-value"> {{ extractFilterDisplayValue(filter) }} </span>
-            </Tooltip>
-          </div>
+          </Tooltip>
         </Button>
         <template #content>
           <component
@@ -452,6 +579,7 @@
               :search="filter.props?.search"
               :clear="filter.props?.clear"
               :placeholder="filter.props?.placeholder"
+              :nested="true"
               class="ksd-filter__field-control select"
               :model-value="
                 filter.props?.multiple
@@ -532,6 +660,31 @@
         </template>
       </Button>
     </div>
+    <div v-if="$props.direction === 'right'" class="ksd-filter__button-wrapper">
+      <Button
+        :size="$props.buttonSize"
+        class="ksd-filter__button-filter"
+        :class="{ clear: openedFields.length > 0 }"
+        @click="openFilterField"
+      >
+        <template #icon>
+          <component :is="$props.icon" v-if="$props.icon" class="ksd-filter__icon" />
+          <VPlusOutlined v-if="!$props.icon" class="ksd-filter__icon" />
+        </template>
+        {{ $props.label }}
+      </Button>
+      <Button
+        v-if="openedFields.length > 0"
+        ref="drop"
+        class="ksd-filter__button-clear"
+        :size="$props.buttonSize"
+        @click="dropFilters"
+      >
+        <template #icon>
+          <VDeleteOutlined />
+        </template>
+      </Button>
+    </div>
   </div>
 </template>
 
@@ -551,23 +704,44 @@
     &__field {
       display: flex;
       align-items: center;
-    }
 
-    button.ksd-filter__field-button-operator {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-      border-right-color: transparent;
-    }
-    button.ksd-filter__field-button-content {
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-      border-right-color: transparent;
+      &.drop {
+        animation: ksd-filter__field-shake var(--ksd-transition-slow) infinite;
+      }
 
-      &.operator {
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
+      @keyframes ksd-filter__field-shake {
+        0% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(0.5deg);
+        }
+        50% {
+          transform: rotate(0eg);
+        }
+        75% {
+          transform: rotate(-0.5deg);
+        }
+        100% {
+          transform: rotate(0deg);
+        }
       }
     }
+
+    button.ksd-filter__field-button-info {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right-color: transparent;
+    }
+    button.ksd-filter__field-button-operator {
+      border-radius: 0;
+      border-right-color: transparent;
+    }
+    button.ksd-filter__field-button-value {
+      border-radius: 0;
+      border-right-color: transparent;
+    }
+
     button.ksd-filter__field-button-close {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
@@ -586,7 +760,13 @@
       color: var(--ksd-icon-color);
     }
 
-    &__field-content {
+    &__field-operator-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--ksd-padding-xss);
+    }
+
+    &__field-info {
       display: flex;
       align-items: center;
     }
@@ -595,6 +775,7 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      font-weight: var(--ksd-font-weight-strong);
     }
 
     &__field-value {

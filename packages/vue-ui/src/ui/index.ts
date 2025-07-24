@@ -114,6 +114,7 @@ export type {
   FilterNumberComponentProps,
   FilterSelectComponentProps,
   FilterTextComponentProps,
+  FilterDirection,
 } from "./Filter.vue";
 export type { EmptyProps } from "./Empty.vue";
 export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pagination.vue";

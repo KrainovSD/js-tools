@@ -8,24 +8,46 @@ import {
   VSkinOutlined,
 } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn } from "@storybook/vue3";
-import { h, ref } from "vue";
+import { type DefineComponent, h, ref } from "vue";
 import { type FilterItem, VFilter } from "../ui";
+import type { TableProps } from "../ui/Table/types";
+
+const Filter = VFilter as unknown as DefineComponent<
+  TableProps<unknown, {}, {}, {}, {}, {}, {}, {}, {}, {}>
+>;
 
 const meta = {
   title: "Components/Filter",
-  component: VFilter,
+  component: Filter,
   tags: ["autodocs"],
   argTypes: {},
-} satisfies Meta<typeof VFilter>;
+} satisfies Meta<typeof Filter>;
 
 export default meta;
 
-const FILTERS: FilterItem[] = [
+const FILTERS: FilterItem<string, string | number>[] = [
   {
     field: "string",
     label: "Имя файла",
     icon: VFileOutlined,
-    components: [{ component: "text", props: { placeholder: "Имя файла", allowClear: true } }],
+    components: [
+      {
+        component: "text",
+        props: { placeholder: "Имя файла", allowClear: true },
+        operatorValue: "equal",
+        operatorLabel: "Равен",
+        operatorShortLabel: "==",
+        clearTag: "text",
+      },
+      {
+        component: "text",
+        props: { placeholder: "Имя файла", allowClear: true },
+        operatorValue: "!equal",
+        operatorLabel: "Не равен",
+        operatorShortLabel: "!=",
+        clearTag: "text",
+      },
+    ],
   },
   {
     field: "long",
@@ -64,6 +86,67 @@ const FILTERS: FilterItem[] = [
           placeholder: "Выберите тип",
           search: true,
         },
+        clearTag: "select",
+        operatorValue: "array_some",
+        operatorLabel: "Вхождение хотя бы одного из элементов массива",
+        operatorShortLabel: "∩",
+      },
+      {
+        component: "select",
+        props: {
+          options: [
+            { label: "Тип 1", value: 1 },
+            { label: "Тип 2", value: 2 },
+            { label: "Тип 3", value: 3 },
+            { label: "Тип 4", value: 4 },
+          ],
+          clear: true,
+          multiple: true,
+          placeholder: "Выберите тип",
+          search: true,
+        },
+        clearTag: "select",
+        operatorValue: "!array_some",
+        operatorLabel: "Отсутствие вхождения хотя бы одним из элементов массива",
+        operatorShortLabel: "!∩",
+      },
+      {
+        component: "select",
+        props: {
+          options: [
+            { label: "Тип 1", value: 1 },
+            { label: "Тип 2", value: 2 },
+            { label: "Тип 3", value: 3 },
+            { label: "Тип 4", value: 4 },
+          ],
+          clear: true,
+          multiple: true,
+          placeholder: "Выберите тип",
+          search: true,
+        },
+        clearTag: "select",
+        operatorValue: "array_every",
+        operatorLabel: "Вхождение всех элементов массива",
+        operatorShortLabel: "⊂",
+      },
+      {
+        component: "select",
+        props: {
+          options: [
+            { label: "Тип 1", value: 1 },
+            { label: "Тип 2", value: 2 },
+            { label: "Тип 3", value: 3 },
+            { label: "Тип 4", value: 4 },
+          ],
+          clear: true,
+          multiple: true,
+          placeholder: "Выберите тип",
+          search: true,
+        },
+        clearTag: "select",
+        operatorValue: "!array_every",
+        operatorLabel: "Отсутствие полного вхождения элементов массива",
+        operatorShortLabel: "!⊂",
       },
     ],
   },
@@ -203,4 +286,9 @@ Large.args = {
 export const Empty = EmptyTemplate.bind({});
 Empty.args = {
   filters: FILTERS,
+};
+export const Left = EmptyTemplate.bind({});
+Left.args = {
+  filters: FILTERS,
+  direction: "left",
 };

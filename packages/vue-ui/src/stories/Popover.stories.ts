@@ -26,6 +26,16 @@ export const Primary: Story = {
           {
             default: () => h(VButton, {}, () => "Click"),
             content: () => [
+              h(VSelect, {
+                multiple: true,
+                nested: true,
+                modelValue: ["first"],
+                options: [
+                  { label: "first", value: "first" },
+                  { label: "second", value: "second" },
+                  { label: "third", value: "third" },
+                ],
+              }),
               h(VInput),
               h(VSelect, {
                 nested: true,
