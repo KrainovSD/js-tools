@@ -247,6 +247,10 @@
       activeItem.value = activeItem.value.prev;
     }
   }
+  function onClearValue() {
+    model.value = undefined;
+    inputRef.value?.focus?.();
+  }
 
   /** Collect interactive items */
   watch(
@@ -482,34 +486,10 @@
             >
           </template>
           <template v-if="$props.multiple">
-            <div v-for="item of selectedItems" :key="item.value" class="ksd-select__overflow-item">
-              <span class="ksd-select__overflow-item-wrap" :class="commonClasses">
-                <span class="ksd-select__overflow-item-content">{{ item.label }}</span>
-                <IconWrapper
-                  :disabled="$props.disabled"
-                  class="ksd-select__overflow-item-remove"
-                  @mousedown="
-                    (event) => {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      selectValue(optionsMap[item.value.toString()]?.value);
-                    }
-                  "
-                >
-                  <VCloseOutlined :size="10" />
-                </IconWrapper>
-              </span>
-            </div>
-            <span
-              v-if="!filledModel && emptySearch"
-              class="ksd-select__selection-placeholder"
-              :class="commonClasses"
-              >{{ $props.placeholder }}</span
-            >
             <span
               class="ksd-select__overflow-search"
               :class="commonClasses"
-              :style="{ width: `${searchWidth}px` }"
+              :style="{ width: `${searchWidth}px`, order: selectedItems.length }"
             >
               <input
                 :id="`ksd-select-${componentId}`"
@@ -539,6 +519,31 @@
                 "
               />
             </span>
+            <div v-for="item of selectedItems" :key="item.value" class="ksd-select__overflow-item">
+              <span class="ksd-select__overflow-item-wrap" :class="commonClasses">
+                <span class="ksd-select__overflow-item-content">{{ item.label }}</span>
+                <IconWrapper
+                  :disabled="$props.disabled"
+                  class="ksd-select__overflow-item-remove"
+                  @click="
+                    (event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      selectValue(optionsMap[item.value.toString()]?.value);
+                      inputRef?.focus?.();
+                    }
+                  "
+                >
+                  <VCloseOutlined :size="10" />
+                </IconWrapper>
+              </span>
+            </div>
+            <span
+              v-if="!filledModel && emptySearch"
+              class="ksd-select__selection-placeholder"
+              :class="commonClasses"
+              >{{ $props.placeholder }}</span
+            >
           </template>
         </span>
       </div>
@@ -557,7 +562,7 @@
           v-if="cancelIcon && !loadingIcon"
           class="ksd-select__selection-clear"
           aria-label="clear"
-          @click.prevent.stop="model = undefined"
+          @click.prevent.stop="onClearValue"
         >
           <VCloseCircleFilled :size="12" />
         </IconWrapper>
@@ -866,6 +871,7 @@
             ),
             0px
           );
+          padding-inline-end: calc(12px + var(--ksd-select-show-arrow-padding-inline-end));
         }
 
         &.size-large {
@@ -878,6 +884,7 @@
             ),
             0px
           );
+          padding-inline-end: calc(12px + var(--ksd-select-show-arrow-padding-inline-end));
         }
       }
     }
