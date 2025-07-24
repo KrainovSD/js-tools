@@ -22,7 +22,7 @@ const Template: StoryFn<typeof VDropDown> = (args) => ({
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
       h(
         VDropDown,
-        { ...args, triggers: ["click"] },
+        { ...args },
         {
           default: () => h(VButton, {}, () => "Dropdown Click"),
         },
@@ -208,7 +208,7 @@ export const AllInOne: Story = {
                   innerOptions: {
                     innerArrow: true,
                     placement: "right-top",
-                    triggers: ["hover", "click"],
+                    triggers: ["hover"],
                     menu: [
                       { key: "1", label: "Пункт 4" },
                       { key: "2", label: "Пункт 5 (И длинное описание этого пункта)" },
@@ -217,7 +217,7 @@ export const AllInOne: Story = {
                         key: "4",
                         label: "Пункт 6",
                         innerOptions: {
-                          triggers: ["hover", "click"],
+                          triggers: ["hover"],
                           innerArrow: true,
                           placement: "right-top",
                           menu: [
@@ -228,7 +228,7 @@ export const AllInOne: Story = {
                               key: "4",
                               label: "Пункт 9",
                               innerOptions: {
-                                triggers: ["hover", "click"],
+                                triggers: ["hover"],
                                 innerArrow: true,
                                 placement: "left-top",
                                 menu: [

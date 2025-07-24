@@ -126,8 +126,6 @@
   function updatePosition() {
     if (!positionerRef.value) return;
 
-    const isFirstRender = position.value.placement === "flex";
-
     position.value = getVisiblePosition({
       node: positionerRef.value,
       initialPosition: {
@@ -217,9 +215,6 @@
     }
 
     positionerRef.value.setAttribute("placement", position.value.placement);
-    if (isFirstRender && props.animationAppear != undefined) {
-      void execAnimation(positionerRef.value, `ksd-positioner_${props.animationAppear}-in`);
-    }
   }
 
   /** Animation by close */
@@ -227,7 +222,6 @@
     () => props.open,
     (value) => {
       if (value) {
-        position.value = { ...position.value, placement: "flex" };
         localOpen.value = true;
       } else if (props.animationDisappear != undefined) {
         void execAnimation(
@@ -236,6 +230,8 @@
         ).then(() => {
           if (!props.open) {
             localOpen.value = false;
+          } else {
+            updatePosition();
           }
         });
       } else {
@@ -267,7 +263,7 @@
       v-bind="$attrs"
       :role="undefined"
       :style="{ ...positionerStyles, ...($attrs.style ?? {}) }"
-      :class="[$attrs.class, componentClasses]"
+      :class="[$attrs.class, componentClasses, `ksd-positioner_${props.animationAppear}-in`]"
     >
       <VCaretUpFilled
         v-if="$props.arrow"

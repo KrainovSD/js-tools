@@ -7,7 +7,7 @@
   import Empty from "./Empty.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
-  import type { PopperProps } from "./Popper.vue";
+  import type { PopperProps, PopperTrigger } from "./Popper.vue";
   import Popper from "./Popper.vue";
   import type { SelectGroupItem, SelectItem, SelectValue } from "./Select.vue";
 
@@ -67,7 +67,10 @@
     click: [key: string | number];
   };
 
+  const TRIGGERS: PopperTrigger[] = [];
   const GROUP_ROOT = "__root__";
+  const SCROLL_SHIFT_TOP = 4;
+  const SCROLL_SHIFT_BOTTOM = -4;
 
   const props = withDefaults(defineProps<SearchProps>(), {
     allowClear: false,
@@ -91,7 +94,6 @@
   const popperRef = useTemplateRef("popper");
   const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
   const open = ref(false);
-  const focusable = ref(false);
 
   const activeItem = ref<SearchHTMLElement | null>(null);
   const filteredGroupedOptions = computed(() => {
@@ -166,13 +168,13 @@
   }, props.debounce);
 
   function actionInputKeyboard(event: KeyboardEvent) {
+    if (!open.value) {
+      onOpen();
+
+      return;
+    }
+
     if (event.key === "Enter") {
-      if (!open.value) {
-        open.value = true;
-
-        return;
-      }
-
       if (activeItem.value) {
         activeItem.value.click();
       }
@@ -191,6 +193,16 @@
       activeItem.value = activeItem.value.prev;
     }
   }
+  function onClose() {
+    open.value = false;
+  }
+  function onOpen() {
+    open.value = true;
+  }
+  function onClick(value: SelectValue) {
+    emit("click", value);
+    onClose();
+  }
 
   /** Clear search after close positioner content */
   watch(
@@ -207,9 +219,10 @@
   watch(
     () => [positionerContentRef.value, filteredGroupedOptions.value],
     (_, __, clean) => {
-      if (!positionerContentRef.value || !open.value) return;
+      if (!positionerContentRef.value) return;
 
       const eventController = new AbortController();
+      positionerContentRef.value.setAttribute("tabindex", "-1");
       const contentItems = Array.from(
         positionerContentRef.value.querySelectorAll<SearchHTMLElement>(".ksd-search__popper-item"),
       );
@@ -251,27 +264,48 @@
     { immediate: true, flush: "post" },
   );
 
-  /** Switch classes after change active item */
   watch(
-    activeItem,
-    (value, oldValue) => {
-      if (value) {
-        value.addActiveMark();
-        value.scrollIntoView({ block: "nearest" });
-      }
-      if (oldValue) {
-        oldValue.removeActiveMark();
+    positionerContentRef,
+    (positionerContentRef) => {
+      if (!positionerContentRef) {
+        search.value = "";
+        model.value = "";
       }
     },
     { immediate: true },
   );
 
-  /** Close expand if not focusable */
+  /** Switch classes after change active item */
   watch(
-    open,
-    (value) => {
-      if (value && !focusable.value) {
-        open.value = false;
+    activeItem,
+    (activeItem, oldValue) => {
+      if (activeItem && positionerContentRef.value) {
+        activeItem.addActiveMark();
+        let headerTop;
+        const sibling = activeItem.previousElementSibling;
+        if (
+          sibling instanceof HTMLElement &&
+          sibling.classList.contains("ksd-search__popper-item-header")
+        ) {
+          headerTop = sibling.offsetTop;
+        }
+
+        const itemTop = headerTop ?? activeItem.offsetTop;
+        const itemBottom = activeItem.offsetTop + activeItem.offsetHeight;
+        const containerTop: number = positionerContentRef.value.scrollTop;
+        const containerBottom: number =
+          (containerTop as number) + (positionerContentRef.value.clientHeight as number);
+
+        if (itemTop < containerTop) {
+          positionerContentRef.value.scrollTop =
+            containerTop - (containerTop - itemTop) - SCROLL_SHIFT_TOP;
+        } else if (itemBottom > containerBottom) {
+          positionerContentRef.value.scrollTop =
+            containerTop + (itemBottom - containerBottom) + SCROLL_SHIFT_BOTTOM;
+        }
+      }
+      if (oldValue) {
+        oldValue.removeActiveMark();
       }
     },
     { immediate: true },
@@ -284,7 +318,6 @@
   <Popper
     ref="popper"
     v-model="open"
-    v-bind="$attrs"
     role="listbox"
     :animation-appear="$props.animationAppear"
     :animation-disappear="$props.animationDisappear"
@@ -302,8 +335,9 @@
     :shift-y="$props.shiftY"
     :placement="$props.placement"
     :z-index="$props.zIndex"
+    :triggers="TRIGGERS"
     :class-name-positioner-content="`ksd-search__positioner-content ${$props.classNamePositionerContent ?? ''}`"
-    :class="`ksd-search__positioner ${$attrs.class ?? ''}`"
+    :class="`ksd-search__positioner`"
   >
     <Input
       :model-value="search"
@@ -322,17 +356,8 @@
         }
       "
       @keydown="actionInputKeyboard"
-      @blur="
-        () => {
-          open = false;
-          focusable = false;
-        }
-      "
-      @focus="
-        () => {
-          focusable = true;
-        }
-      "
+      @blur="onClose"
+      @focus="onOpen"
     />
 
     <template #content>
@@ -354,12 +379,7 @@
             class="ksd-search__popper-item"
             :aria-label="item.label"
             role="option"
-            @click="
-              () => {
-                emit('click', item.value);
-                open = false;
-              }
-            "
+            @click="onClick(item.value)"
           >
             <span class="ksd-search__popper-item-content">
               <template v-for="(label, index) of item.labels" :key="index">

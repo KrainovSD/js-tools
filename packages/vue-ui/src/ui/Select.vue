@@ -11,7 +11,7 @@
   import { type Component, type HTMLAttributes, computed, ref, useTemplateRef, watch } from "vue";
   import Empty from "./Empty.vue";
   import IconWrapper from "./IconWrapper.vue";
-  import Popper, { type PopperProps } from "./Popper.vue";
+  import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
 
   export type SelectValue = string | number;
 
@@ -70,6 +70,10 @@
     | "nested"
   > &
     /*@vue-ignore*/ HTMLAttributes;
+
+  const TRIGGERS: PopperTrigger[] = [];
+  const SCROLL_SHIFT_TOP = 4;
+  const SCROLL_SHIFT_BOTTOM = -4;
 
   const props = withDefaults(defineProps<SelectProps>(), {
     clear: true,
@@ -209,6 +213,9 @@
   }
 
   function actionInputKeyboard(event: KeyboardEvent) {
+    if (event.key === "ArrowDown") {
+      open.value = true;
+    }
     if (event.key === "Enter") {
       if (!open.value) {
         open.value = true;
@@ -299,6 +306,10 @@
       }
 
       function actionClick(event: MouseEvent) {
+        if (props.multiple) {
+          event.preventDefault();
+        }
+
         const currentTarget = event.currentTarget as SelectHTMLElement;
         if (currentTarget.valueKey) {
           selectValue(optionsMap.value[currentTarget.valueKey]?.value);
@@ -315,10 +326,31 @@
   /** Switch classes after change active item */
   watch(
     activeItem,
-    (value, oldValue) => {
-      if (value) {
-        value.addActiveMark();
-        value.scrollIntoView({ block: "nearest" });
+    (activeItem, oldValue) => {
+      if (activeItem && positionerContentRef.value) {
+        activeItem.addActiveMark();
+        let headerTop;
+        const sibling = activeItem.previousElementSibling;
+        if (
+          sibling instanceof HTMLElement &&
+          sibling.classList.contains("ksd-select__popper-item-header")
+        ) {
+          headerTop = sibling.offsetTop;
+        }
+
+        const itemTop = headerTop ?? activeItem.offsetTop;
+        const itemBottom = activeItem.offsetTop + activeItem.offsetHeight;
+        const containerTop: number = positionerContentRef.value.scrollTop;
+        const containerBottom: number =
+          (containerTop as number) + (positionerContentRef.value.clientHeight as number);
+
+        if (itemTop < containerTop) {
+          positionerContentRef.value.scrollTop =
+            containerTop - (containerTop - itemTop) - SCROLL_SHIFT_TOP;
+        } else if (itemBottom > containerBottom) {
+          positionerContentRef.value.scrollTop =
+            containerTop + (itemBottom - containerBottom) + SCROLL_SHIFT_BOTTOM;
+        }
       }
       if (oldValue) {
         oldValue.removeActiveMark();
@@ -374,6 +406,7 @@
     :animation-disappear="$props.animationDisappear"
     :arrow="$props.arrow"
     :close-by-scroll="$props.closeByScroll"
+    :triggers="TRIGGERS"
     :fit="$props.fit"
     :close-delay="$props.closeDelay"
     :close-by-click-outside-event="$props.closeByClickOutsideEvent"
@@ -397,6 +430,7 @@
         () => {
           if (!props.disabled) {
             inputRef?.focus?.();
+            open = true;
           }
         }
       "

@@ -34,7 +34,7 @@
     animationAppear: "scaleY",
     animationDisappear: "scaleY",
     placement: "bottom-left",
-    triggers: (props) => props.triggers ?? ["click"],
+    triggers: (props) => props.triggers ?? ["click", "arrowDown"],
     fit: true,
     interactiveMode: "keyboard",
     size: "default",

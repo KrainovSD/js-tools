@@ -58,6 +58,14 @@
   const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
   const lastActive = ref<HTMLElement | null>(null);
 
+  function onClose() {
+    if (lastActive.value) {
+      lastActive.value.focus();
+      lastActive.value = null;
+    }
+    open.value = false;
+  }
+
   watch(
     positionerContentRef,
     (positionerContent, _, clean) => {
@@ -97,10 +105,6 @@
   watch(
     open,
     (value) => {
-      if (!value && lastActive.value) {
-        lastActive.value.focus();
-        lastActive.value = null;
-      }
       if (value && !props.active) {
         emit("click");
         open.value = false;
@@ -152,13 +156,13 @@
           </div>
         </div>
         <div class="ksd-popconfirm__content-footer">
-          <Button size="small" @click="open = false">{{ props.cancelButton }}</Button>
+          <Button size="small" @click="onClose">{{ props.cancelButton }}</Button>
           <Button
             size="small"
             type="primary"
             @click="
               () => {
-                open = false;
+                onClose();
                 emit('click');
               }
             "

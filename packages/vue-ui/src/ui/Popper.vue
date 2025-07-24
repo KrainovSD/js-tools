@@ -6,7 +6,7 @@
   import type { CloseByClickOutsideEvent } from "../types";
   import Positioner, { type PositionerAnimations } from "./Positioner.vue";
 
-  export type PopperTrigger = "click" | "hover" | "contextMenu";
+  export type PopperTrigger = "click" | "hover" | "contextMenu" | "arrowDown";
 
   export type PopperProps = {
     arrow?: boolean;
@@ -290,6 +290,16 @@
         onAppear();
       }
     }
+    function appearByKeyboard(event: KeyboardEvent) {
+      if ((event.key === "Enter" || event.key === " ") && !open.value) {
+        onAppear();
+      }
+    }
+    function appearByArrowDown(event: KeyboardEvent) {
+      if (event.key === "ArrowDown" && !open.value) {
+        onAppear();
+      }
+    }
 
     const resizeObserver = new ResizeObserver((entries) => {
       targetNodeWidth.value = entries[0]?.target?.clientWidth ?? 0;
@@ -299,6 +309,20 @@
       resizeObserver.observe(targetNode.value);
     }
 
+    if (triggers.value.includes("arrowDown")) {
+      targetNode.value.addEventListener("keydown", appearByArrowDown, {
+        signal: eventController.signal,
+      });
+    }
+    if (
+      (triggers.value.includes("click") && !(targetNode.value instanceof HTMLButtonElement)) ||
+      triggers.value.includes("hover") ||
+      triggers.value.includes("contextMenu")
+    ) {
+      targetNode.value.addEventListener("keydown", appearByKeyboard, {
+        signal: eventController.signal,
+      });
+    }
     if (triggers.value.includes("hover")) {
       targetNode.value.addEventListener("mouseenter", onAppear, { signal: eventController.signal });
     }
@@ -479,7 +503,7 @@
       padding: var(--ksd-popper-inner-padding);
       min-width: calc(var(--ksd-border-radius) * 2 + 32px);
       min-height: var(--ksd-control-height);
-      max-height: 400px;
+      max-height: min(50dvh, 400px);
       overflow: auto;
       max-width: 400px;
       display: flex;

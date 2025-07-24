@@ -73,7 +73,7 @@
     animationAppear: "scaleY",
     animationDisappear: "scaleY",
     placement: "bottom-left",
-    triggers: (props) => props.triggers ?? ["click"],
+    triggers: (props) => props.triggers ?? ["click", "arrowDown"],
     fit: true,
     interactiveMode: "keyboard",
     level: 0,
@@ -159,7 +159,7 @@
       const firstInteractive =
         interactiveElements[0]?.innerInteractive ??
         (interactiveElements[0] as HTMLDropDownItem | undefined);
-      if (firstInteractive && !triggersArray.value.includes("hover")) {
+      if (firstInteractive) {
         firstInteractive.focus();
       }
 
@@ -303,15 +303,8 @@
             | undefined;
 
           if (nestedPlacement != undefined && nestedPlacement !== "left") {
-            const mouseEvent = new MouseEvent("click", {
-              ctrlKey: event.ctrlKey,
-              shiftKey: event.shiftKey,
-              altKey: event.altKey,
-              metaKey: event.metaKey,
-              bubbles: true,
-              cancelable: true,
-            });
-            currentFocus.dispatchEvent(mouseEvent);
+            const keyboardEvent = new KeyboardEvent("keydown", { key: "Enter", bubbles: true });
+            currentFocus.dispatchEvent(keyboardEvent);
             event.preventDefault();
           } else if (props.nested && getFirstPlacementFromInner(props.placement) === "left") {
             open.value = false;
@@ -325,15 +318,8 @@
             | undefined;
 
           if (nestedPlacement != undefined && nestedPlacement === "left") {
-            const mouseEvent = new MouseEvent("click", {
-              ctrlKey: event.ctrlKey,
-              shiftKey: event.shiftKey,
-              altKey: event.altKey,
-              metaKey: event.metaKey,
-              bubbles: true,
-              cancelable: true,
-            });
-            currentFocus.dispatchEvent(mouseEvent);
+            const keyboardEvent = new KeyboardEvent("keydown", { key: "Enter", bubbles: true });
+            currentFocus.dispatchEvent(keyboardEvent);
             event.preventDefault();
           } else if (props.nested && getFirstPlacementFromInner(props.placement) === "right") {
             open.value = false;
