@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import { type CSSProperties, type ComponentPublicInstance, computed, h, shallowRef } from "vue";
   import { useDrag, useDrop } from "../../../../hooks";
-  import { extractDnDPosition } from "../../../../lib";
   import { HEADER_CELL_DND_PREFIX } from "../../constants";
   import { getPrevFrozenWidthHeader } from "../../lib";
   import type { ColumnFiltersState, DefaultRow, HeaderInterface, SortingState } from "../../types";
@@ -18,7 +17,6 @@
     dragGhost?: boolean;
   };
   const RESIZE_HANDLE_WIDTH = 10;
-  const THRESHOLD = 2;
   const props = defineProps<Props>();
   const headerContext = computed(() => props.header.getContext());
   const id = computed(() => headerContext.value.column.id);
@@ -60,20 +58,6 @@
     cursor: draggable.value ? "move" : "inherit",
     gridColumnStart: props.columnPosition,
   }));
-
-  function canDrag(event: TouchEvent | MouseEvent) {
-    const { left, width } = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    const { clientX } = extractDnDPosition(event);
-    const isOverResize = clientX >= left + width - RESIZE_HANDLE_WIDTH - THRESHOLD;
-
-    if (isOverResize) {
-      event.preventDefault();
-
-      return false;
-    }
-
-    return true;
-  }
 
   function onDrop(dragId: string, dropId: string) {
     let columnOrderState = [...headerContext.value.table.getState().columnOrder];
@@ -118,9 +102,9 @@
   const { dragRef, dragging } = useDrag({
     group: HEADER_CELL_DND_PREFIX,
     id,
-    canDrag,
     onDrop,
     dragGhost: DragGhost,
+    forbiddenSelector: ".ksd-table__header-cell-resize",
     scrollContainer,
   });
   const { dropRef, dragOver } = useDrop({ group: HEADER_CELL_DND_PREFIX, id });

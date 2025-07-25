@@ -27,6 +27,7 @@ export type UseDragOptions<Meta extends Record<string, unknown>> = {
   group: string;
   id: Ref<string> | ComputedRef<string>;
   dragSelector?: string;
+  forbiddenSelector?: string;
   canDrag?: (event: TouchEvent | MouseEvent) => boolean | undefined;
   onDrop?: (sourceId: string, targetId: string) => void;
   dragGhost?: Ref<VNode | HTMLElement> | ComputedRef<VNode | HTMLElement>;
@@ -62,11 +63,14 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
         if (props.canDrag && !props.canDrag(event)) {
           return;
         }
-        if (props.dragSelector) {
-          const target = event.target as HTMLElement;
-          if (!target.closest(props.dragSelector)) {
-            return;
-          }
+        const target = event.target as HTMLElement;
+
+        if (props.forbiddenSelector && target.closest(props.forbiddenSelector)) {
+          return;
+        }
+
+        if (props.dragSelector && !target.closest(props.dragSelector)) {
+          return;
         }
 
         handleDragStart(event, {
@@ -100,7 +104,7 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
       function onDragEnd(event: TouchEvent | MouseEvent) {
         const { dragId, dropId } = handleDragEnd(event);
 
-        if (dragId != undefined && dropId != undefined && dragId !== dropId) {
+        if (dragId != undefined && dropId != undefined) {
           props.onDrop?.(dragId, dropId);
         }
 
