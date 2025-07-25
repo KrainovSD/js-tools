@@ -65,6 +65,14 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
         }
         const target = event.target as HTMLElement;
 
+        /** Cancel if start drag other group */
+        const targetGroup = target
+          .closest(`[${DRAG_GROUP_ATTRIBUTE}]`)
+          ?.getAttribute?.(DRAG_GROUP_ATTRIBUTE);
+        if (targetGroup == undefined || targetGroup !== props.group) {
+          return;
+        }
+
         if (props.forbiddenSelector && target.closest(props.forbiddenSelector)) {
           return;
         }
@@ -247,10 +255,21 @@ function handleDragMove(event: TouchEvent | MouseEvent) {
   }
 
   /** Check drag over node */
-  const overNode = document.elementFromPoint(clientX, clientY);
-  const dropNode = overNode?.closest?.<HTMLElement>(`[${DROP_GROUP_ATTRIBUTE}]`);
+  let dropNode: HTMLElement | undefined | null = document.elementFromPoint(
+    clientX,
+    clientY,
+  ) as HTMLElement | null;
+  let dropGroup: string | undefined;
+  while (dropNode != undefined && dropGroup == undefined) {
+    dropNode = dropNode?.closest?.<HTMLElement>(`[${DROP_GROUP_ATTRIBUTE}]`);
+    const group = dropNode?.getAttribute?.(DROP_GROUP_ATTRIBUTE);
+    if (group === dragInfo.group) {
+      dropGroup = group;
+    } else {
+      dropNode = dropNode?.parentElement;
+    }
+  }
   const dropUniqueId = dropNode?.getAttribute?.(DROP_UNIQUE_ID_ATTRIBUTE);
-  const dropGroup = dropNode?.getAttribute?.(DROP_GROUP_ATTRIBUTE);
 
   if (
     (dropUniqueId == undefined ||
