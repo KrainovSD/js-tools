@@ -23,7 +23,7 @@ const DRAG_UNIQUE_ID_ATTRIBUTE = "data-drag-unique-id";
 const DRAG_GROUP_ATTRIBUTE = "data-drag-group";
 const DRAG_PREFIX_ID = "drag:";
 
-export type UseDragOptions = {
+export type UseDragOptions<Meta extends Record<string, unknown>> = {
   group: string;
   id: Ref<string> | ComputedRef<string>;
   dragSelector?: string;
@@ -33,11 +33,12 @@ export type UseDragOptions = {
   scrollContainer?:
     | Ref<HTMLElement | null | undefined>
     | ComputedRef<HTMLElement | null | undefined>;
+  meta?: Ref<Meta> | ComputedRef<Meta>;
 };
 
 type CursorPosition = { x: number; y: number };
 
-export function useDrag(props: UseDragOptions) {
+export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOptions<Meta>) {
   const dragging = ref(false);
   const dragRef = shallowRef<Element | ComponentPublicInstance | null>(null);
   function collectDragRef(node: Element | ComponentPublicInstance | null) {
@@ -45,9 +46,9 @@ export function useDrag(props: UseDragOptions) {
   }
   const cursorPosition = shallowRef<CursorPosition>({ x: 0, y: 0 });
 
-  watch<[Element | ComponentPublicInstance | null, string], true>(
-    () => [dragRef.value, props.id.value],
-    ([dragRef, id], _, clean) => {
+  watch<[Element | ComponentPublicInstance | null, string, Meta | undefined], true>(
+    () => [dragRef.value, props.id.value, props.meta?.value],
+    ([dragRef, id, meta], _, clean) => {
       if (!(dragRef instanceof HTMLElement)) return;
 
       const dragId = `${DRAG_PREFIX_ID}${props.group}${id}`;
@@ -68,7 +69,12 @@ export function useDrag(props: UseDragOptions) {
           }
         }
 
-        handleDragStart(event);
+        handleDragStart(event, {
+          group: props.group,
+          id,
+          meta,
+          uniqueId: dragId,
+        });
         if (dragScrollController) {
           dragScrollController.stopScrollElement();
         }
@@ -141,16 +147,26 @@ let dragInfoStart: DragInfo | undefined;
 let dragInfo: DragInfo | undefined;
 let dragOver: string | undefined;
 
-function handleDragStart(event: TouchEvent | MouseEvent) {
-  const id = (event.currentTarget as HTMLElement).getAttribute(DRAG_ID_ATTRIBUTE);
-  const uniqueId = (event.currentTarget as HTMLElement).getAttribute(DRAG_UNIQUE_ID_ATTRIBUTE);
-  const group = (event.currentTarget as HTMLElement).getAttribute(DRAG_GROUP_ATTRIBUTE);
+type HandleDragStartOptions<Meta extends Record<string, unknown>> = {
+  id: string;
+  uniqueId: string;
+  group: string;
+  meta: Meta | undefined;
+};
+
+function handleDragStart<Meta extends Record<string, unknown>>(
+  event: TouchEvent | MouseEvent,
+  opts: HandleDragStartOptions<Meta>,
+) {
+  // const id = (event.currentTarget as HTMLElement).getAttribute(DRAG_ID_ATTRIBUTE);
+  // const uniqueId = (event.currentTarget as HTMLElement).getAttribute(DRAG_UNIQUE_ID_ATTRIBUTE);
+  // const group = (event.currentTarget as HTMLElement).getAttribute(DRAG_GROUP_ATTRIBUTE);
 
   if (
     ("touches" in event && event.touches.length > 1) ||
-    id == undefined ||
-    uniqueId == undefined ||
-    group == undefined
+    opts.id == undefined ||
+    opts.uniqueId == undefined ||
+    opts.group == undefined
   )
     return;
 
@@ -161,14 +177,10 @@ function handleDragStart(event: TouchEvent | MouseEvent) {
       x: clientX,
       y: clientY,
     },
-    group,
-    uniqueId,
+    opts.group,
+    opts.uniqueId,
   );
-  dragInfoStart = {
-    id,
-    uniqueId,
-    group,
-  };
+  dragInfoStart = opts;
 }
 
 function handleDragMove(event: TouchEvent | MouseEvent) {

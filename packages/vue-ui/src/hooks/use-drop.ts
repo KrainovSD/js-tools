@@ -8,10 +8,10 @@ import {
 } from "vue";
 import { DND_EVENT_BUS, type DragInfo } from "../lib";
 
-export type UseDropOptions = {
+export type UseDropOptions<Meta extends Record<string, unknown>> = {
   group: string;
   id: Ref<string> | ComputedRef<string>;
-  canDrop?: (dragInfo: DragInfo) => boolean | undefined;
+  canDrop?: (dragInfo: DragInfo<Meta>) => boolean | undefined;
 };
 
 export const DROP_ID_ATTRIBUTE = "data-drop-id";
@@ -19,7 +19,7 @@ export const DROP_UNIQUE_ID_ATTRIBUTE = "data-drop-unique-id";
 export const DROP_GROUP_ATTRIBUTE = "data-drop-group";
 export const DROP_PREFIX_ID = "drop:";
 
-export function useDrop(props: UseDropOptions) {
+export function useDrop<Meta extends Record<string, unknown>>(props: UseDropOptions<Meta>) {
   const dragOver = ref(false);
   const canDrop = ref(false);
   const dropRef = shallowRef<Element | ComponentPublicInstance | null>(null);
@@ -45,7 +45,7 @@ export function useDrop(props: UseDropOptions) {
           dragOver.value = false;
         },
         startDrag: function startDrag(dragInfo) {
-          if (props.canDrop == undefined || props.canDrop(dragInfo)) {
+          if (props.canDrop == undefined || props.canDrop(dragInfo as DragInfo<Meta>)) {
             canDrop.value = true;
           }
         },

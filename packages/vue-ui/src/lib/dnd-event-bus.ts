@@ -8,10 +8,11 @@ export const DND_EVENT_BUS_MESSAGE_TYPES = {
   Position: "position",
 } as const;
 
-export type DragInfo = {
+export type DragInfo<Meta extends Record<string, unknown> = Record<string, unknown>> = {
   id: string;
   uniqueId: string;
   group: string;
+  meta?: Meta;
 };
 
 type DnDMessageType = ValueOf<typeof DND_EVENT_BUS_MESSAGE_TYPES>;
