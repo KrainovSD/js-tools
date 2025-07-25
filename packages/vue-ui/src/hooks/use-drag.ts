@@ -30,6 +30,7 @@ export type UseDragOptions<Meta extends Record<string, unknown>> = {
   forbiddenSelector?: string;
   canDrag?: (event: TouchEvent | MouseEvent) => boolean | undefined;
   onDrop?: (sourceId: string, targetId: string) => void;
+  canDrop?: (dropId: string) => boolean | undefined;
   dragGhost?: Ref<VNode | HTMLElement> | ComputedRef<VNode | HTMLElement>;
   scrollContainer?:
     | Ref<HTMLElement | null | undefined>
@@ -95,14 +96,19 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
         }
         dragGhost = props.dragGhost?.value;
         dragController = new AbortController();
+
+        function onDragMove(event: TouchEvent | MouseEvent) {
+          handleDragMove(event, props.canDrop);
+        }
+
         if (event instanceof TouchEvent) {
-          document.addEventListener("touchmove", handleDragMove, {
+          document.addEventListener("touchmove", onDragMove, {
             passive: false,
             signal: dragController.signal,
           });
           document.addEventListener("touchend", onDragEnd, { signal: dragController.signal });
         } else {
-          document.addEventListener("mousemove", handleDragMove, {
+          document.addEventListener("mousemove", onDragMove, {
             passive: false,
             signal: dragController.signal,
           });
@@ -195,7 +201,10 @@ function handleDragStart<Meta extends Record<string, unknown>>(
   dragInfoStart = opts;
 }
 
-function handleDragMove(event: TouchEvent | MouseEvent) {
+function handleDragMove(
+  event: TouchEvent | MouseEvent,
+  canDrop?: (dropId: string) => boolean | undefined,
+) {
   if (dragInfoStart) {
     /** Start Drag logic */
     dragInfo = dragInfoStart;
@@ -270,6 +279,7 @@ function handleDragMove(event: TouchEvent | MouseEvent) {
     }
   }
   const dropUniqueId = dropNode?.getAttribute?.(DROP_UNIQUE_ID_ATTRIBUTE);
+  const dropId = dropNode?.getAttribute?.(DROP_ID_ATTRIBUTE);
 
   if (
     (dropUniqueId == undefined ||
@@ -286,7 +296,12 @@ function handleDragMove(event: TouchEvent | MouseEvent) {
     dragOver = undefined;
   }
 
-  if (dropUniqueId != undefined && dropGroup === dragInfo.group) {
+  if (
+    dropUniqueId != undefined &&
+    dropId != undefined &&
+    dropGroup === dragInfo.group &&
+    (canDrop == undefined || canDrop(dropId))
+  ) {
     DND_EVENT_BUS.sendMessage(
       DND_EVENT_BUS_MESSAGE_TYPES.EnterDrag,
       dragInfo,
