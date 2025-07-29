@@ -14,6 +14,8 @@ import type {
 } from "./types";
 
 export { VTable };
+export * from "./types";
+export { checkCellVisible } from "./lib";
 
 declare module "@tanstack/vue-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
