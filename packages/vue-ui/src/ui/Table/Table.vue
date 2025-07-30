@@ -180,6 +180,7 @@
           :rows-virtual="rowVirtual"
           :header-height="$props.headerHeight"
           :row-height="$props.rowHeight"
+          :can-drop-to-row="$props.canDropToRow"
           @drag-row="
             (sid, tid) => {
               $emit('dragRow', sid, tid);

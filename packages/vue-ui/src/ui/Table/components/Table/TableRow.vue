@@ -28,6 +28,7 @@
     visibleCells: CellInterface<RowData>[];
     height: number | undefined;
     draggableRow: boolean;
+    canDropToRow: ((dropId: string) => boolean | undefined) | undefined;
   };
   type Emits = {
     dragRow: [sourceId: string, targetId: string];
@@ -67,11 +68,13 @@
   const { cursorPosition, dragRef, dragging } = useDrag({
     group: ROW_DND_PREFIX,
     id,
-    dragSelector: ".ksd-table-row-drag-handle",
+    dragSelector: ".ksd-table__row-drag-handle",
     onDrop,
     scrollContainer,
     dragGhost: DragGhost,
+    canDrop: props.canDropToRow,
   });
+
   const { dropRef, dragOver } = useDrop({ group: ROW_DND_PREFIX, id });
   const extractRef = computed(() => {
     return (node: Element | ComponentPublicInstance | null) => {

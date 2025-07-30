@@ -14,7 +14,7 @@
       name: "",
       width: 50,
       additionalCellClass: ["hCenter", "wCenter"],
-      cellRender: { component: "drag" },
+      cellRender: { component: "drag", props: { dragCondition: (row) => row.id % 2 === 0 } },
       leftFrozen: true,
     },
     ...COLUMNS,
@@ -35,6 +35,10 @@
   function getRowId(row: RowData) {
     return row.id.toString();
   }
+
+  function canDrop(dropId: string) {
+    return +dropId % 2 === 0;
+  }
 </script>
 
 <template>
@@ -49,6 +53,7 @@
     :page-sizes="[5, 10, 25, 50, 100]"
     :initial-pagination="{ pageIndex: 0, pageSize: 100 }"
     :draggable-row="true"
+    :can-drop-to-row="canDrop"
     @drag-row="dragRow"
   />
 </template>

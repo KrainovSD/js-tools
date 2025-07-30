@@ -33,6 +33,7 @@
     Row: ((row: RowInterface<RowData>) => Component | undefined) | undefined;
     Empty: Component<TableEmptyProps> | undefined;
     draggableRow: boolean;
+    canDropToRow: ((dropId: string) => boolean | undefined) | undefined;
   };
   type Emits = {
     dragRow: [sourceId: string, targetId: string];
@@ -205,6 +206,7 @@
           :draggable-row="$props.draggableRow"
           :row-class-name="$props.rowClassName"
           :virtual-row="virtualRow"
+          :can-drop-to-row="$props.canDropToRow"
           @click="(row, event) => $emit('click', row, event)"
           @dblclick="(row, event) => $emit('dblclick', row, event)"
           @drag-row="
@@ -231,6 +233,7 @@
           :draggable-row="$props.draggableRow"
           :row-class-name="$props.rowClassName"
           :virtual-row="null"
+          :can-drop-to-row="$props.canDropToRow"
           @click="(row, event) => $emit('click', row, event)"
           @dblclick="(row, event) => $emit('dblclick', row, event)"
           @drag-row="(sid, tid) => $emit('dragRow', sid, tid)"

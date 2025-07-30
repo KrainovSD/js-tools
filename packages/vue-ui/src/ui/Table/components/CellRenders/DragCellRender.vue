@@ -28,8 +28,8 @@
     <Button
       type="text"
       size="small"
-      class="ksd-table-row-drag-handle"
-      :class="{ drag: draggable, forbidden: !draggable }"
+      class="ksd-table__row-drag"
+      :class="{ drag: draggable, forbidden: !draggable, 'ksd-table__row-drag-handle': draggable }"
     >
       <VHolderOutlined />
     </Button>
@@ -43,7 +43,7 @@
     }
   }
 
-  button.ksd-table-row-drag-handle {
+  button.ksd-table__row-drag {
     &.drag {
       cursor: move;
     }

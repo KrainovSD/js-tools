@@ -192,4 +192,5 @@ export type TableProps<
   Row?: (row: RowInterface<RowData>) => Component | undefined;
   getExpandedRowModel?: () => (table: TableInterface<RowData>) => () => RowModel<RowData>;
   draggableRow?: boolean;
+  canDropToRow?: (dropId: string) => boolean | undefined;
 } & GanttProps<RowData, GanttData>;
