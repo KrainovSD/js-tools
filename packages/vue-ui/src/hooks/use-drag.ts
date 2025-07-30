@@ -1,9 +1,10 @@
-import { isObject } from "@krainovsd/js-helpers";
+import { isObject, randomString } from "@krainovsd/js-helpers";
 import {
   type ComponentPublicInstance,
   type ComputedRef,
   type Ref,
   type VNode,
+  computed,
   ref,
   render,
   shallowRef,
@@ -46,18 +47,25 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
   function collectDragRef(node: Element | ComponentPublicInstance | null) {
     dragRef.value = node;
   }
+  const uniqueId = computed(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    dragRef.value;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    props.meta?.value;
+
+    return `${DRAG_PREFIX_ID}${randomString(5)}:${props.group}${props.id.value}`;
+  });
   const cursorPosition = shallowRef<CursorPosition>({ x: 0, y: 0 });
 
-  watch<[Element | ComponentPublicInstance | null, string, Meta | undefined], true>(
-    () => [dragRef.value, props.id.value, props.meta?.value],
-    ([dragRef, id, meta], _, clean) => {
-      if (!(dragRef instanceof HTMLElement)) return;
+  watch(
+    uniqueId,
+    (uniqueId, _, clean) => {
+      const dragNode = dragRef.value;
+      if (!(dragNode instanceof HTMLElement)) return;
 
-      const dragId = `${DRAG_PREFIX_ID}${props.group}${id}`;
-
-      dragRef.setAttribute(DRAG_UNIQUE_ID_ATTRIBUTE, dragId);
-      dragRef.setAttribute(DRAG_ID_ATTRIBUTE, id);
-      dragRef.setAttribute(DRAG_GROUP_ATTRIBUTE, props.group);
+      dragNode.setAttribute(DRAG_UNIQUE_ID_ATTRIBUTE, uniqueId);
+      dragNode.setAttribute(DRAG_ID_ATTRIBUTE, props.id.value);
+      dragNode.setAttribute(DRAG_GROUP_ATTRIBUTE, props.group);
 
       let dragController: AbortController | undefined;
       function onDragStart(event: TouchEvent | MouseEvent) {
@@ -84,9 +92,9 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
 
         handleDragStart(event, {
           group: props.group,
-          id,
-          meta,
-          uniqueId: dragId,
+          id: props.id.value,
+          meta: props.meta?.value,
+          uniqueId,
         });
         if (dragScrollController) {
           dragScrollController.stopScrollElement();
@@ -125,17 +133,17 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
         dragController?.abort?.();
       }
 
-      dragRef.addEventListener("mousedown", onDragStart);
-      dragRef.addEventListener("touchstart", onDragStart, { passive: false });
+      dragNode.addEventListener("mousedown", onDragStart);
+      dragNode.addEventListener("touchstart", onDragStart, { passive: false });
 
-      DND_EVENT_BUS.subscribe(dragId, props.group, {
+      DND_EVENT_BUS.subscribe(uniqueId, props.group, {
         startDrag: function startDrag(dragInfo) {
-          if (dragInfo.uniqueId === dragId) {
+          if (dragInfo.uniqueId === uniqueId) {
             dragging.value = true;
           }
         },
         stopDrag: function stopDrag(dragInfo) {
-          if (dragInfo.uniqueId === dragId) {
+          if (dragInfo.uniqueId === uniqueId) {
             dragging.value = false;
           }
         },
@@ -147,9 +155,9 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
       });
 
       clean(() => {
-        DND_EVENT_BUS.unsubscribe(dragId, props.group);
-        dragRef.removeEventListener("mousedown", onDragStart);
-        dragRef.removeEventListener("touchstart", onDragStart);
+        DND_EVENT_BUS.unsubscribe(uniqueId, props.group);
+        dragNode.removeEventListener("mousedown", onDragStart);
+        dragNode.removeEventListener("touchstart", onDragStart);
       });
     },
     { immediate: true },

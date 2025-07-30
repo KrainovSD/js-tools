@@ -1,7 +1,9 @@
+import { randomString } from "@krainovsd/js-helpers";
 import {
   type ComponentPublicInstance,
   type ComputedRef,
   type Ref,
+  computed,
   ref,
   shallowRef,
   watch,
@@ -23,21 +25,29 @@ export function useDrop<Meta extends Record<string, unknown>>(props: UseDropOpti
   const dragOver = ref(false);
   const canDrop = ref(false);
   const dropRef = shallowRef<Element | ComponentPublicInstance | null>(null);
+
+  const uniqueId = computed(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    dropRef.value;
+
+    return `${DROP_PREFIX_ID}${randomString(5)}:${props.group}${props.id.value}`;
+  });
+
   function collectDropRef(node: Element | ComponentPublicInstance | null) {
     dropRef.value = node;
   }
 
-  watch<[Element | ComponentPublicInstance | null, string], true>(
-    () => [dropRef.value, props.id.value],
-    ([dropRef, id], _, clean) => {
-      if (!(dropRef instanceof HTMLElement)) return;
+  watch(
+    uniqueId,
+    (uniqueId, _, clean) => {
+      const dropNode = dropRef.value;
+      if (!(dropNode instanceof HTMLElement)) return;
 
-      const dropId = `${DROP_PREFIX_ID}${props.group}${id}`;
-      dropRef.setAttribute(DROP_UNIQUE_ID_ATTRIBUTE, dropId);
-      dropRef.setAttribute(DROP_ID_ATTRIBUTE, id);
-      dropRef.setAttribute(DROP_GROUP_ATTRIBUTE, props.group);
+      dropNode.setAttribute(DROP_UNIQUE_ID_ATTRIBUTE, uniqueId);
+      dropNode.setAttribute(DROP_ID_ATTRIBUTE, props.id.value);
+      dropNode.setAttribute(DROP_GROUP_ATTRIBUTE, props.group);
 
-      DND_EVENT_BUS.subscribe(dropId, props.group, {
+      DND_EVENT_BUS.subscribe(uniqueId, props.group, {
         enterDrag: function enterDrag() {
           dragOver.value = true;
         },
@@ -55,7 +65,7 @@ export function useDrop<Meta extends Record<string, unknown>>(props: UseDropOpti
       });
 
       clean(() => {
-        DND_EVENT_BUS.unsubscribe(dropId, props.group);
+        DND_EVENT_BUS.unsubscribe(uniqueId, props.group);
       });
     },
     { immediate: true },
