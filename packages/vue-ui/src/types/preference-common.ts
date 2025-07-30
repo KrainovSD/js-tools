@@ -93,6 +93,7 @@ export type ThemeColorVariable =
   | "ksd-border-color"
   | "ksd-border-disabled-color"
   | "ksd-border-hover-color"
+  | "ksd-border-popup-color"
   | "ksd-icon-color"
   | "ksd-icon-hover-color"
   | "ksd-outline-color"

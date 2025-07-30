@@ -108,6 +108,7 @@ export const LIGHT_THEME: ThemeVariableConfig = {
       "ksd-border-color": "#d9d9d9",
       "ksd-border-disabled-color": "#d9d9d9",
       "ksd-border-hover-color": "",
+      "ksd-border-popup-color": "transparent",
       "ksd-divider-color": "rgba(5,5,5,0.06)",
       "ksd-icon-color": "rgba(0, 0, 0, 0.45)",
       "ksd-icon-hover-color": "#262626",

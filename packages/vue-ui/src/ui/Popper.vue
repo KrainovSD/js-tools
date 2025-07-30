@@ -496,6 +496,7 @@
 
     &__positioner-content {
       border-radius: var(--ksd-border-radius-lg);
+      border: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-popup-color);
       color: var(--ksd-text-main-color);
       font-size: var(--ksd-font-size);
       line-height: var(--ksd-line-height);

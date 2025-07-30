@@ -108,6 +108,7 @@ export const DARK_THEME: ThemeVariableConfig = {
       "ksd-border-color": "#424242",
       "ksd-border-disabled-color": "#424242",
       "ksd-border-hover-color": "",
+      "ksd-border-popup-color": "#424242",
       "ksd-divider-color": "rgba(253,253,253,0.12)",
       "ksd-icon-color": "rgba(255,255,255,0.45)",
       "ksd-icon-hover-color": "rgba(255,255,255,0.85)",
