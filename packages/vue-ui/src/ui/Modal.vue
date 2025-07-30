@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { execAnimation } from "@krainovsd/js-helpers";
   import { VCloseOutlined } from "@krainovsd/vue-icons";
-  import { computed, ref, useTemplateRef, watch } from "vue";
+  import { computed, ref, useSlots, useTemplateRef, watch } from "vue";
   import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
-  import { createInteractiveChildrenController } from "../lib";
+  import { createInteractiveChildrenController, getWatchedNode } from "../lib";
   import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
 
@@ -39,6 +39,9 @@
   const modalRef = useTemplateRef("modal");
   const modalMaskRef = useTemplateRef("mask");
   const prevActiveElement = ref<HTMLElement | null>(null);
+  const modalGhostRef = useTemplateRef("modal-ghost");
+  const targetNode = computed(() => getWatchedNode(modalGhostRef.value));
+  const slots = useSlots();
 
   function onClose() {
     if (prevActiveElement.value) {
@@ -63,6 +66,7 @@
     open.value = false;
   }
 
+  /** Open state */
   watch(
     open,
     (value) => {
@@ -87,6 +91,7 @@
     { immediate: true, flush: "pre" },
   );
 
+  /** Register listeners after open */
   watch(
     modalRef,
     (modalRef, _, clean) => {
@@ -106,6 +111,7 @@
         }
 
         if (
+          targetNode.value?.contains?.(node) ||
           modalRef?.contains?.(node) ||
           props.ignoreCloseByClick?.some?.((element) => element?.contains?.(node))
         ) {
@@ -142,10 +148,44 @@
     { immediate: true },
   );
 
+  /** Target Node Observe */
+  watch(
+    targetNode,
+    (targetNode, _, clean) => {
+      if (!targetNode || !slots.default) return;
+
+      function toggleDrawer() {
+        if (!open.value) {
+          open.value = true;
+        } else {
+          open.value = false;
+        }
+      }
+
+      targetNode.addEventListener("click", toggleDrawer);
+
+      clean(() => {
+        targetNode.removeEventListener("click", toggleDrawer);
+      });
+    },
+    { immediate: true },
+  );
+
   defineExpose({ modalRef, close: onClose });
+  defineOptions({
+    inheritAttrs: false,
+  });
 </script>
 
 <template>
+  <span
+    ref="modal-ghost"
+    class="ksd-modal__ghost"
+    aria-hidden="true"
+    tabindex="-1"
+    ksd-watcher="true"
+  ></span>
+  <slot></slot>
   <Teleport v-if="localOpen" :to="$props.target ?? '#storybook-root'">
     <div ref="mask" class="ksd-modal__mask" :class="$props.className" :style="maskStyles">
       <div
@@ -166,7 +206,7 @@
           </Button>
         </div>
         <div class="ksd-modal__body">
-          <slot></slot>
+          <slot name="content"></slot>
         </div>
         <div class="ksd-modal__footer">
           <slot v-if="$slots.footer" name="footer"></slot>
@@ -208,6 +248,15 @@
 
     &_out {
       animation: ksd-modal-out var(--ksd-transition-mid) cubic-bezier(0.22, 1, 0.28, 0.8);
+    }
+
+    &__ghost {
+      width: 1px;
+      height: 1px;
+      clip-path: inset(50%);
+      overflow: hidden;
+      position: absolute;
+      white-space: nowrap;
     }
 
     &__mask {

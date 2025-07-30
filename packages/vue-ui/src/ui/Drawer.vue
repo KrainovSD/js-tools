@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { execAnimation } from "@krainovsd/js-helpers";
   import { VCloseOutlined } from "@krainovsd/vue-icons";
-  import { computed, ref, useTemplateRef, watch } from "vue";
+  import { computed, ref, useSlots, useTemplateRef, watch } from "vue";
   import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
   import { createInteractiveChildrenController, getWatchedNode } from "../lib";
   import type { CloseByClickOutsideEvent } from "../types";
@@ -21,6 +21,8 @@
     width?: number;
     height?: number;
     classNameRoot?: string;
+    classNameBody?: string;
+    classNameHeader?: string;
     closeByClickOutsideEvent?: CloseByClickOutsideEvent;
     closeByClickOutside?: boolean;
     closeByEscape?: boolean;
@@ -43,12 +45,15 @@
     closeByClickOutside: true,
     closeByEscape: true,
     closeByClickOutsideEvent: DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT,
+    classNameBody: undefined,
+    classNameHeader: undefined,
   });
   const emit = defineEmits<Emits>();
   const open = defineModel<boolean>();
   const localOpen = ref(false);
   const drawerGhostRef = useTemplateRef("drawer-ghost");
   const targetNode = computed(() => getWatchedNode(drawerGhostRef.value));
+  const slots = useSlots();
   const drawerComponentRef = useTemplateRef("drawer");
   const maskComponentRef = useTemplateRef("mask");
   const drawerRef = computed(() => drawerComponentRef.value?.element);
@@ -84,6 +89,7 @@
     });
   }
 
+  /** Register listeners after open */
   watch(
     drawerRef,
     (drawerRef, _, clean) => {
@@ -150,10 +156,11 @@
     { immediate: true },
   );
 
+  /** Target Node Observe */
   watch(
     targetNode,
     (targetNode, _, clean) => {
-      if (!targetNode) return;
+      if (!targetNode || !slots.default) return;
 
       function toggleDrawer() {
         if (!open.value) {
@@ -172,6 +179,7 @@
     { immediate: true },
   );
 
+  /** Open state */
   watch(
     open,
     (open) => {
@@ -210,7 +218,12 @@
         vertical
       >
         <slot v-if="$slots['custom-header']" name="custom-header"></slot>
-        <Flex v-if="!$slots['custom-header']" flex-align="center" class="ksd-drawer__header">
+        <Flex
+          v-if="!$slots['custom-header']"
+          flex-align="center"
+          class="ksd-drawer__header"
+          :class="$props.classNameHeader"
+        >
           <Button type="text" size="small" class="ksd-drawer__header-close" @click="open = false"
             ><template #icon> <VCloseOutlined :size="16" /> </template>
           </Button>
@@ -220,7 +233,7 @@
           <slot v-if="$slots.header" name="header"></slot>
         </Flex>
         <slot v-if="$slots.body" name="body"></slot>
-        <Flex v-if="!$slots.body" class="ksd-drawer__body">
+        <Flex v-if="!$slots.body" class="ksd-drawer__body" :class="$props.classNameBody">
           <slot name="content"></slot>
         </Flex>
       </Flex>
@@ -238,7 +251,12 @@
     >
       <div class="ksd-drawer__block">
         <slot v-if="$slots['custom-header']" name="custom-header"></slot>
-        <Flex v-if="!$slots['custom-header']" flex-align="center" class="ksd-drawer__header">
+        <Flex
+          v-if="!$slots['custom-header']"
+          flex-align="center"
+          class="ksd-drawer__header"
+          :class="$props.classNameHeader"
+        >
           <Button type="text" size="small" class="ksd-drawer__header-close" @click="open = false"
             ><template #icon> <VCloseOutlined :size="16" /> </template>
           </Button>
@@ -248,7 +266,7 @@
           <slot v-if="$slots.header" name="header"></slot>
         </Flex>
         <slot v-if="$slots.body" name="body"></slot>
-        <Flex v-if="!$slots.body" class="ksd-drawer__body">
+        <Flex v-if="!$slots.body" class="ksd-drawer__body" :class="$props.classNameBody">
           <slot name="content"></slot>
         </Flex>
       </div>
@@ -533,6 +551,10 @@
 
     &__header-close {
       margin-inline-end: var(--ksd-margin-xs);
+    }
+
+    &__header-text {
+      flex: 1;
     }
 
     &__body {

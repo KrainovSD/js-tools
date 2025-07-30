@@ -4,12 +4,13 @@ import type { Meta, StoryFn } from "@storybook/vue3";
 import { h, ref } from "vue";
 import Empty from "../../tech/Empty.vue";
 import {
-  type SearchOption,
+  type SelectItem,
   VButton,
   VDrawer,
   VDropDown,
   VModal,
   VPopConfirm,
+  VPopover,
   VSearch,
   VSelect,
   VText,
@@ -101,8 +102,8 @@ const Template: StoryFn<typeof Empty> = () => ({
             ),
             h(VSearch, {
               placeholder: "Поиск",
-              options: Array.from<unknown, SearchOption>({ length: 300 }, (_, i) => ({
-                key: i,
+              options: Array.from<unknown, SelectItem>({ length: 300 }, (_, i) => ({
+                value: i,
                 label: randomString(50),
               })),
             }),
@@ -164,11 +165,30 @@ const Template: StoryFn<typeof Empty> = () => ({
               ),
               h(VSearch, {
                 placeholder: "Поиск",
-                options: Array.from<unknown, SearchOption>({ length: 300 }, (_, i) => ({
-                  key: i,
+                options: Array.from<unknown, SelectItem>({ length: 300 }, (_, i) => ({
+                  value: i,
                   label: randomString(50),
                 })),
               }),
+              h(
+                VPopover,
+                {},
+                {
+                  default: () => h(VButton, {}, () => "Click"),
+                  content: () =>
+                    h(VSelect, {
+                      nested: true,
+                      placeholder: "Поиск",
+                      options: Array.from<unknown, SelectItem>({ length: 300 }, (_, i) => ({
+                        value: i,
+                        label: randomString(50),
+                      })),
+                      style: {
+                        width: "200px",
+                      },
+                    }),
+                },
+              ),
               h(VTooltip, { text: "Tooltip" }, () =>
                 h(
                   VText,

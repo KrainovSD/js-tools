@@ -5,27 +5,28 @@
   import type { ColumnTooltipSettings, DefaultRow } from "../../types";
 
   export type CellRenderTooltipProps<RowData extends DefaultRow> = {
-    tooltip?: ColumnTooltipSettings<RowData> | boolean;
+    settings?: ColumnTooltipSettings<RowData>;
+    tooltip?: boolean;
     row: RowData;
     content: string | number | boolean;
   };
 
   const props = defineProps<CellRenderTooltipProps<RowData>>();
-  const zIndex = computed(() => (isObject(props.tooltip) ? props.tooltip.zIndex : undefined));
-  const autoDetect = computed(() => (isObject(props.tooltip) ? props.tooltip.auto : false));
+  const zIndex = computed(() => (isObject(props.settings) ? props.settings.zIndex : undefined));
+  const autoDetect = computed(() => (isObject(props.settings) ? props.settings.auto : false));
   const content = computed(() => {
     let content = props.content;
-    if (isObject(props.tooltip)) {
-      if (props.tooltip.customContent) {
-        content = props.tooltip.customContent(props.row);
+    if (isObject(props.settings)) {
+      if (props.settings.customContent) {
+        content = props.settings.customContent(props.row);
       }
-      if (props.tooltip.pathToContent) {
-        const tooltipContent = getByPath(props.row, props.tooltip.pathToContent);
+      if (props.settings.pathToContent) {
+        const tooltipContent = getByPath(props.row, props.settings.pathToContent);
         if (isId(tooltipContent) || isBoolean(tooltipContent)) {
           content = tooltipContent;
         }
         if (isArray(tooltipContent)) {
-          content = tooltipContent.join(props.tooltip.arraySeparator ?? ", ");
+          content = tooltipContent.join(props.settings.arraySeparator ?? ", ");
         }
       }
     }

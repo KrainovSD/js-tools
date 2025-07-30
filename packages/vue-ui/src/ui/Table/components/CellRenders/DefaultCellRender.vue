@@ -90,7 +90,8 @@
         <TooltipCellRenderWrapper
           :content="content"
           :row="$props.context.row.original"
-          :tooltip="column.tooltip"
+          :tooltip="!!column.tooltip"
+          :settings="isObject(column.tooltip) ? column.tooltip : undefined"
         >
           <span class="ksd-table__cell-default-text"> {{ content }}</span>
         </TooltipCellRenderWrapper>
@@ -99,7 +100,8 @@
         v-if="!Link"
         :content="content"
         :row="props.context.row.original"
-        :tooltip="column.tooltip"
+        :tooltip="!!column.tooltip"
+        :settings="isObject(column.tooltip) ? column.tooltip : undefined"
       >
         <span class="ksd-table__cell-default-text"> {{ content }}</span>
       </TooltipCellRenderWrapper>

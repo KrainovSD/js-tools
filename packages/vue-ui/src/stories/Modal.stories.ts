@@ -16,21 +16,10 @@ type Story = StoryObj<typeof meta>;
 const Template: StoryFn<typeof VModal> = (args) => ({
   components: { VModal },
   setup() {
-    const open = ref(false);
-
-    return { args, open };
+    return { args };
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-      h(
-        VButton,
-        {
-          onClick: () => {
-            this.open = true;
-          },
-        },
-        () => "Default",
-      ),
       h(
         VModal,
         {
@@ -38,12 +27,11 @@ const Template: StoryFn<typeof VModal> = (args) => ({
           style: {
             minWidth: "50%",
           },
-          modelValue: this.open,
-          "onUpdate:modelValue": (value) => {
-            this.open = value;
-          },
         },
-        () => "Контент",
+        {
+          content: () => "Контент",
+          default: () => h(VButton, {}, () => "Default"),
+        },
       ),
     ]);
   },
@@ -58,12 +46,9 @@ export const AllInOne: Story = {
   render: (args) => ({
     components: { VModal },
     setup() {
-      const open1 = ref(false);
-      const open2 = ref(false);
-      const open3 = ref(false);
       const open4 = ref(false);
 
-      return { args, open1, open2, open3, open4 };
+      return { args, open4 };
     },
     render() {
       return h(
@@ -80,14 +65,19 @@ export const AllInOne: Story = {
         },
         [
           h(
-            VButton,
+            VModal,
             {
-              onClick: () => {
-                this.open1 = true;
+              ...args,
+              style: {
+                minWidth: "80%",
               },
             },
-            () => "Default",
+            {
+              content: () => "Контент",
+              default: () => h(VButton, {}, () => "Default"),
+            },
           ),
+
           h(
             VModal,
             {
@@ -95,36 +85,10 @@ export const AllInOne: Story = {
               style: {
                 minWidth: "50%",
               },
-              modelValue: this.open1,
-              "onUpdate:modelValue": (value) => {
-                this.open1 = value;
-              },
-            },
-            () => "Контент",
-          ),
-          h(
-            VButton,
-            {
-              onClick: () => {
-                this.open2 = true;
-              },
-            },
-            () => "Custom",
-          ),
-          h(
-            VModal,
-            {
-              ...args,
-              style: {
-                minWidth: "50%",
-              },
-              modelValue: this.open2,
-              "onUpdate:modelValue": (value) => {
-                this.open2 = value;
-              },
             },
             {
-              default: () => "Контент",
+              default: () => h(VButton, {}, () => "Custom"),
+              content: () => "Контент",
               header: () =>
                 h("div", { style: { display: "flex", gap: "10px", alignItems: "center" } }, [
                   h(VSettingOutlined, { size: 14 }),
@@ -143,15 +107,7 @@ export const AllInOne: Story = {
                 ),
             },
           ),
-          h(
-            VButton,
-            {
-              onClick: () => {
-                this.open3 = true;
-              },
-            },
-            () => "Big",
-          ),
+
           h(
             VModal,
             {
@@ -160,14 +116,14 @@ export const AllInOne: Story = {
                 "Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title Big Title",
               style: {
                 minWidth: "50%",
-              },
-              modelValue: this.open3,
-              "onUpdate:modelValue": (value) => {
-                this.open3 = value;
+                maxWidth: "50%",
               },
             },
-            () =>
-              "Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big ContentBig Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big ContentBig Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big ContentBig Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big ContentBig Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content ",
+            {
+              content: () =>
+                "Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big ContentBig Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big ContentBig Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big ContentBig Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big ContentBig Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content Big Content ",
+              default: () => h(VButton, {}, () => "Big"),
+            },
           ),
           h(
             VButton,
@@ -194,7 +150,7 @@ export const AllInOne: Story = {
                 this.open4 = value;
               },
             },
-            () => "Контент",
+            { content: () => "Контент" },
           ),
         ],
       );

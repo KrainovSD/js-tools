@@ -9,12 +9,9 @@ import {
 } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn } from "@storybook/vue3";
 import { type DefineComponent, h, ref } from "vue";
-import { type FilterItem, VFilter } from "../ui";
-import type { TableProps } from "../ui/Table/types";
+import { type FilterItem, type FilterProps, VFilter } from "../ui";
 
-const Filter = VFilter as unknown as DefineComponent<
-  TableProps<unknown, {}, {}, {}, {}, {}, {}, {}, {}, {}>
->;
+const Filter = VFilter as unknown as DefineComponent<FilterProps<string, string>>;
 
 const meta = {
   title: "Components/Filter",

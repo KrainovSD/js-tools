@@ -111,7 +111,8 @@
             .join(isObject(column.tooltip) ? (column.tooltip.arraySeparator ?? ', ') : ', ')
         "
         :row="$props.context.row.original"
-        :tooltip="column.tooltip"
+        :tooltip="!!column.tooltip"
+        :settings="isObject(column.tooltip) ? column.tooltip : undefined"
       >
         <div class="ksd-table__cell-tag-wrapper">
           <Tag

@@ -19,7 +19,12 @@
 </script>
 
 <template>
-  <div v-if="visible" class="ksd-table__cell-drag">
+  <div
+    v-if="visible"
+    class="ksd-table__cell-drag"
+    @click="(event) => event.stopPropagation()"
+    @dblclick="(event) => event.stopPropagation()"
+  >
     <Button
       type="text"
       size="small"
