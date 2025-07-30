@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="Multiple extends true | false = false">
   import { createGlobalId, isArray, isString } from "@krainovsd/js-helpers";
   import {
     VCheckOutlined,
@@ -37,7 +37,7 @@
   export type SelectSize = "default" | "large" | "small";
   export type SelectStatus = "error" | "warning" | "success" | "default";
 
-  export type SelectProps = {
+  export type SelectProps<Multiple extends true | false> = {
     variant?: SelectVariant;
     size?: SelectSize;
     status?: SelectStatus;
@@ -45,7 +45,7 @@
     clear?: boolean;
     disabled?: boolean;
     loading?: boolean;
-    multiple?: boolean;
+    multiple?: Multiple;
     placeholder?: string;
     options: (SelectItem | SelectGroupItem)[];
     searchFn?: (item: SelectItem, search: string) => boolean;
@@ -71,16 +71,19 @@
   > &
     /*@vue-ignore*/ HTMLAttributes;
 
+  type Value = Multiple extends false
+    ? SelectValue | null | undefined
+    : SelectValue[] | null | undefined;
+
   const TRIGGERS: PopperTrigger[] = [];
   const SCROLL_SHIFT_TOP = 4;
   const SCROLL_SHIFT_BOTTOM = -4;
 
-  const props = withDefaults(defineProps<SelectProps>(), {
+  const props = withDefaults(defineProps<SelectProps<Multiple>>(), {
     clear: true,
     search: true,
     disabled: false,
     loading: false,
-    multiple: false,
     placeholder: undefined,
     size: "default",
     status: "default",
@@ -92,7 +95,7 @@
     openDelay: 0,
     searchFn: undefined,
   });
-  const model = defineModel<SelectValue | SelectValue[] | null | undefined>(undefined);
+  const model = defineModel<Value>({ default: undefined });
   const popperRef = useTemplateRef("popper");
   const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
 
@@ -169,7 +172,7 @@
 
     return optionsMap;
   });
-  const selectedItems = computed(() => {
+  const selectedItems = computed<SelectItem[]>(() => {
     if (model.value == undefined) {
       return [];
     }
@@ -197,10 +200,12 @@
 
   function selectValue(selectedValue: SelectValue | undefined | null) {
     if (!props.multiple && selectedValue != undefined) {
-      model.value = selectedValue;
+      model.value = selectedValue as Value;
       open.value = false;
     } else if (selectedValue != undefined) {
-      const nextValue = isArray(model.value) ? [...model.value] : [];
+      const nextValue: SelectValue[] = isArray(model.value)
+        ? ([...model.value] as SelectValue[])
+        : [];
       const indexValue = nextValue.findIndex((val) => val === selectedValue);
       if (~indexValue != 0) {
         nextValue.splice(indexValue, 1);
@@ -208,7 +213,7 @@
         nextValue.push(selectedValue);
       }
 
-      model.value = nextValue;
+      model.value = nextValue as Value;
     }
   }
 
@@ -248,7 +253,7 @@
     }
   }
   function onClearValue() {
-    model.value = undefined;
+    model.value = undefined as Value;
     inputRef.value?.focus?.();
   }
 

@@ -1,11 +1,11 @@
 import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
-import { h } from "vue";
-import { VSelect, VText } from "../ui";
+import { type DefineComponent, h } from "vue";
+import { type SelectProps, VSelect, VText } from "../ui";
 
 const meta = {
   title: "Components/Select",
-  component: VSelect,
+  component: VSelect as unknown as DefineComponent<SelectProps<false>>,
   tags: ["autodocs"],
   argTypes: {},
 } satisfies Meta<typeof VSelect>;
@@ -43,7 +43,12 @@ export const AllInOne: Story = {
           { style: { display: "flex", flexDirection: "column", gap: "20px", width: "200px" } },
           [
             h(VSelect, { ...args, modelValue: undefined, placeholder: "Обычный" }),
-            h(VSelect, { ...args, modelValue: "Test", placeholder: "Без очистки", clear: false }),
+            h(VSelect, {
+              ...args,
+              modelValue: "Test",
+              placeholder: "Без очистки",
+              clear: false,
+            }),
             h(VSelect, { ...args, modelValue: "Test", placeholder: "С выбранным значением" }),
             h(VSelect, {
               ...args,
