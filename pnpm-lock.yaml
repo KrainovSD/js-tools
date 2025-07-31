@@ -1270,8 +1270,8 @@ importers:
         specifier: ^0.14.6
         version: 0.14.6
       '@krainovsd/vue-icons':
-        specifier: ^0.1.3
-        version: 0.1.3(vue@3.5.14(typescript@5.8.3))
+        specifier: ^0.1.4
+        version: 0.1.4(vue@3.5.14(typescript@5.8.3))
       '@tanstack/vue-table':
         specifier: ^8.21.3
         version: 8.21.3(vue@3.5.14(typescript@5.8.3))
@@ -2798,8 +2798,8 @@ packages:
   '@krainovsd/utils@0.1.1':
     resolution: {integrity: sha512-kVZ2uu3hOuUyUrOAAz8EM35Dv2EABVIHZwgYJKsEWHGoqJN8LAa/ARGg7WA9ymVyjQ35NxOtB2wqMwNe2UNOpA==}
 
-  '@krainovsd/vue-icons@0.1.3':
-    resolution: {integrity: sha512-HImYGTpmaNAM6fsBtZPfecZLR2nBR7EBrflOaEIH7jtClzvmlFpJAHgEBVxRCs8BsVhQ8g/UD2VmR3CZ1vUcYw==}
+  '@krainovsd/vue-icons@0.1.4':
+    resolution: {integrity: sha512-ACag6mutDHeWKltnQe5h2pJ+HX4a/Oi5KKTjEXR4EcF8yl6f6xceM42u02DZYMMyBBYJUW2pmHN1Nn3+j214KQ==}
     peerDependencies:
       vue: ^3.4.0
 
@@ -12401,7 +12401,7 @@ snapshots:
       lodash: 4.17.21
       nanoid: 4.0.2
 
-  '@krainovsd/vue-icons@0.1.3(vue@3.5.14(typescript@5.8.3))':
+  '@krainovsd/vue-icons@0.1.4(vue@3.5.14(typescript@5.8.3))':
     dependencies:
       vue: 3.5.14(typescript@5.8.3)
 

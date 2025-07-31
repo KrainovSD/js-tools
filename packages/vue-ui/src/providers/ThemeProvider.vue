@@ -1,5 +1,4 @@
 <script setup lang="ts" generic="T extends string">
-  import "@krainovsd/vue-icons/styles";
   import { watch } from "vue";
   import { injectThemeStyle } from "../lib";
   import type { ThemeVariableConfig } from "../types";
