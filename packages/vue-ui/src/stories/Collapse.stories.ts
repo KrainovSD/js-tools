@@ -39,7 +39,7 @@ export const AllInOne: Story = {
       h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
         h(
           VCollapse,
-          { initialOpen: true, size: "small", header: "small" },
+          { initialOpen: false, size: "small", header: "small" },
           {
             default: () => [
               h(VButton, {}, () => "Кнопка"),

@@ -51,6 +51,11 @@
     if (props.initialOpen) {
       open.value = true;
       bodyRef.value?.classList?.add?.("open");
+    } else if (!props.destroySlot && bodyRef.value) {
+      const interactiveElementsController = createInteractiveChildrenController(bodyRef.value);
+      interactiveElementsController.interactiveElements.forEach((element) =>
+        element.setAttribute("tabindex", "-1"),
+      );
     }
   });
 
