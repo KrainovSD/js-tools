@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { VRightOutlined } from "@krainovsd/vue-icons";
-  import { computed, onMounted, ref, useTemplateRef } from "vue";
+  import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from "vue";
+  import { createInteractiveChildrenController } from "../lib";
   import Flex from "./Flex.vue";
 
   export type CollapseSize = "default" | "small" | "large";
@@ -14,6 +15,7 @@
     classNameBody?: string;
     classNameHeader?: string;
     classNameRoot?: string;
+    destroySlot?: boolean;
   };
 
   type Emits = {
@@ -32,45 +34,93 @@
     ghost: false,
     initialOpen: false,
     noArrow: false,
+    destroySlot: false,
     size: "default",
   });
-  const open = ref(props.initialOpen ?? false);
+  const open = defineModel<boolean>({ default: false });
+  const localOpen = ref(props.initialOpen);
 
   const commonClasses = computed(() => ({
     [props.size]: true,
     borderless: props.borderless,
     ghost: props.ghost,
-    open: open.value,
+    open: localOpen.value,
   }));
 
   onMounted(() => {
-    if (props.initialOpen) bodyRef.value?.classList?.add?.("open");
+    if (props.initialOpen) {
+      open.value = true;
+      bodyRef.value?.classList?.add?.("open");
+    }
   });
 
-  function onToggle() {
+  function onClose() {
     const body = bodyRef.value;
     if (!body) return;
-    open.value = !open.value;
-    emit("toggle", open.value);
+    emit("toggle", false);
 
-    const keyframesOpen: Keyframe[] = [
-      { maxHeight: `${body.clientHeight}px`, offset: 0 },
-      { maxHeight: `${body.scrollHeight}px`, offset: 1 },
-    ];
     const keyframesClose: Keyframe[] = [
       { maxHeight: `${body.clientHeight}px`, offset: 0 },
       { maxHeight: "0", offset: 1 },
     ];
-
-    const animate = body.animate(open.value ? keyframesOpen : keyframesClose, {
+    const animate = body.animate(keyframesClose, {
       duration: 200,
       fill: "forwards",
     });
     animate.onfinish = function onfinish() {
       animate.cancel();
+      if (!open.value) {
+        localOpen.value = false;
+
+        if (!props.destroySlot) {
+          const interactiveElementsController = createInteractiveChildrenController(body);
+          interactiveElementsController.interactiveElements.forEach((element) =>
+            element.setAttribute("tabindex", "-1"),
+          );
+        }
+      }
     };
   }
+  function onOpen() {
+    localOpen.value = true;
+    if (
+      bodyRef.value?.classList?.contains?.("open") &&
+      bodyRef.value?.clientHeight === bodyRef.value?.scrollHeight
+    )
+      return;
 
+    void nextTick(() => {
+      const body = bodyRef.value;
+      if (!body) return;
+      emit("toggle", true);
+
+      if (!props.destroySlot) {
+        const interactiveElementsController = createInteractiveChildrenController(body);
+        interactiveElementsController.interactiveElements.forEach((element) =>
+          element.setAttribute("tabindex", "0"),
+        );
+      }
+
+      const keyframesOpen: Keyframe[] = [
+        {
+          maxHeight: `${body.clientHeight === body.scrollHeight ? 0 : body.clientHeight}px`,
+          offset: 0,
+        },
+        { maxHeight: `${body.scrollHeight}px`, offset: 1 },
+      ];
+      const animate = body.animate(keyframesOpen, {
+        duration: 200,
+        fill: "forwards",
+      });
+      animate.onfinish = function onfinish() {
+        animate.cancel();
+      };
+    });
+  }
+
+  function onToggle() {
+    open.value = !open.value;
+  }
   function onClickHeader() {
     onToggle();
   }
@@ -79,6 +129,19 @@
       onToggle();
     }
   }
+
+  /** Open state */
+  watch(
+    open,
+    (open) => {
+      if (open) {
+        onOpen();
+      } else {
+        onClose();
+      }
+    },
+    { immediate: true },
+  );
 
   defineExpose({ collapseRef, bodyRef });
 </script>
@@ -113,8 +176,18 @@
       </div>
       <slot name="header"></slot>
     </Flex>
-    <div ref="body" vertical class="ksd-collapse__body" :class="commonClasses">
-      <div :class="[$props.classNameBody, commonClasses]" class="ksd-collapse__body-box">
+    <div
+      ref="body"
+      vertical
+      class="ksd-collapse__body"
+      :class="commonClasses"
+      :aria-hidden="!localOpen"
+    >
+      <div
+        v-if="localOpen || !$props.destroySlot"
+        :class="[$props.classNameBody, commonClasses]"
+        class="ksd-collapse__body-box"
+      >
         <slot></slot>
       </div>
     </div>
@@ -202,11 +275,12 @@
       color: var(--ksd-text-main-color);
       line-height: var(--ksd-line-height);
       font-family: var(--ksd-font-family);
-      border-top: var(--ksd-line-width) var(--ksd-line-type) var(--ksd-border-color);
+      border-top: var(--ksd-line-width) var(--ksd-line-type) transparent;
       background: var(--ksd-collapse-body-bg);
       border-radius: 0 0 var(--ksd-border-radius-lg) var(--ksd-border-radius-lg);
 
       &.open {
+        border-color: var(--ksd-border-color);
         max-height: none;
         opacity: 1;
         transition:

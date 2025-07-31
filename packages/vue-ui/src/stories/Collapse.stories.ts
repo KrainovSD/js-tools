@@ -1,6 +1,6 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h } from "vue";
-import { VCollapse } from "../ui";
+import { VButton, VCollapse } from "../ui";
 
 const meta = {
   title: "Components/Collapse",
@@ -40,7 +40,13 @@ export const AllInOne: Story = {
         h(
           VCollapse,
           { initialOpen: true, size: "small", header: "small" },
-          { default: () => "Содержимое" },
+          {
+            default: () => [
+              h(VButton, {}, () => "Кнопка"),
+              h(VButton, {}, () => "Кнопка"),
+              h(VButton, {}, () => "Кнопка"),
+            ],
+          },
         ),
         h(
           VCollapse,
