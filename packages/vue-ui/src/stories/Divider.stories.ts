@@ -46,19 +46,13 @@ export const AllInOne: Story = {
           h(VDivider, { type: "vertical", variant: "dotted" }),
           h("span", {}, "Text"),
         ]),
-        h(
-          VDivider,
-          { orientation: "center" },
+        h(VDivider, { orientation: "center" }, () =>
           h("span", { style: { whiteSpace: "nowrap", padding: "0px 10px" } }, "Center"),
         ),
-        h(
-          VDivider,
-          { orientation: "left" },
+        h(VDivider, { orientation: "left" }, () =>
           h("span", { style: { whiteSpace: "nowrap", padding: "0px 10px" } }, "Left"),
         ),
-        h(
-          VDivider,
-          { orientation: "right" },
+        h(VDivider, { orientation: "right" }, () =>
           h("span", { style: { whiteSpace: "nowrap", padding: "0px 10px" } }, "Right"),
         ),
       ]),

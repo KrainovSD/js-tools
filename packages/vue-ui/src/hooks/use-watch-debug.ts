@@ -13,6 +13,6 @@ export function useWatchDebug(value: unknown, caption?: string) {
       // eslint-disable-next-line no-console
       console.log(clonedValue, caption);
     },
-    { immediate: true },
+    { immediate: true, deep: true },
   );
 }

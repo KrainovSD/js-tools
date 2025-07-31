@@ -194,6 +194,9 @@
   );
 
   defineExpose({ drawerRef, maskRef, close: onClose });
+  defineOptions({
+    inheritAttrs: false,
+  });
 </script>
 
 <template>
@@ -210,6 +213,7 @@
       <Flex v-if="modalMode" ref="mask" class="ksd-drawer__mask" :style="commonStyles"></Flex>
       <Flex
         ref="drawer"
+        v-bind="$attrs"
         class="ksd-drawer__base"
         :style="[commonStyles, drawerStyles]"
         :class="[commonClasses, $attrs.class, $attrs.style]"
@@ -242,6 +246,7 @@
   <Teleport v-if="localOpen && props.block" :to="$props.target ?? 'body'">
     <Flex
       ref="drawer"
+      v-bind="$attrs"
       class="ksd-drawer__block-wrapper"
       :style="[commonStyles, drawerStyles]"
       :class="[commonClasses, $attrs.class, $attrs.style]"

@@ -12,7 +12,7 @@
     focusable="false"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    class="ksd-icon loading"
+    class="ksd-icon spin"
     :style="{ fontSize: size != undefined ? `${size}px` : size }"
   >
     <path
@@ -22,17 +22,4 @@
   </svg>
 </template>
 
-<style lang="scss" scoped>
-  .loading {
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
-</style>
+<style lang="scss"></style>
