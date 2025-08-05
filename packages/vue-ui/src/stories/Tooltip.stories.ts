@@ -327,3 +327,94 @@ export const PositionCheckInVisibleAreaWithScroll: Story = {
     text: "Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа",
   },
 };
+
+export const PositionCheckWithScroll: Story = {
+  render: (args) => ({
+    components: { VTooltip },
+    setup() {
+      return { args };
+    },
+    render() {
+      return h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            flexDirection: "column",
+            gap: "10px",
+            width: "100%",
+            height: "100%",
+          },
+        },
+        [
+          h(
+            "div",
+            {
+              ref: "div",
+              style: {
+                border: "1px solid black",
+                height: "300px",
+                width: "500px",
+                margin: "300px 300px 300px 300px",
+                class: "test-tooltip-position",
+                overflow: "auto",
+              },
+            },
+            [
+              h(
+                "div",
+                {
+                  style: {
+                    height: "600px",
+                    paddingTop: "200px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "50px",
+                    position: "relative",
+                  },
+                },
+                [
+                  h(
+                    VTooltip,
+                    {
+                      ...args,
+                      placement: "top-center",
+                    },
+                    () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip top-center"),
+                  ),
+                  h(
+                    VTooltip,
+                    {
+                      ...args,
+                      placement: "left-center",
+                    },
+                    () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip left-center"),
+                  ),
+                  h(
+                    VTooltip,
+                    {
+                      ...args,
+                      placement: "right-top",
+                    },
+                    () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip right-top"),
+                  ),
+                  h(
+                    VTooltip,
+                    {
+                      ...args,
+                      placement: "bottom-right",
+                    },
+                    () => h(VText, { ellipsis: true, fit: true }, () => "Tooltip bottom-right"),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  }),
+  args: {
+    text: "Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа, Большой текст для тестов тултипа",
+  },
+};
