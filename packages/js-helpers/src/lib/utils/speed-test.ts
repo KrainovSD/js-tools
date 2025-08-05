@@ -6,12 +6,17 @@ type SpeedTestOptions = {
 
 export function speedTest<T>(cb: () => T, opts: SpeedTestOptions): T {
   const { name, iterations = 10000, type = "time" } = opts;
+  let result: T | undefined;
 
   if (type === "performance") {
     const start = performance.now();
 
-    for (let i = 0; i < iterations; i++) {
-      cb();
+    if (iterations <= 1) {
+      result = cb();
+    } else {
+      for (let i = 0; i < iterations; i++) {
+        result = cb();
+      }
     }
 
     const end = performance.now();
@@ -21,15 +26,17 @@ export function speedTest<T>(cb: () => T, opts: SpeedTestOptions): T {
     // eslint-disable-next-line no-console
     console.time(name);
 
-    for (let i = 0; i < iterations; i++) {
-      cb();
+    if (iterations <= 1) {
+      result = cb();
+    } else {
+      for (let i = 0; i < iterations; i++) {
+        result = cb();
+      }
     }
 
     // eslint-disable-next-line no-console
     console.timeEnd(name);
   }
 
-  const result = cb();
-
-  return result;
+  return result as T;
 }
