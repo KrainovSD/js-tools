@@ -1217,6 +1217,10 @@
         font-weight: var(--ksd-select-option-selected-font-weight);
         background-color: var(--ksd-select-option-selected-bg);
 
+        &.active {
+          background-color: var(--ksd-select-options-selected-active-bg);
+        }
+
         &:has(+ .selected) {
           border-end-end-radius: 0;
           border-end-start-radius: 0;

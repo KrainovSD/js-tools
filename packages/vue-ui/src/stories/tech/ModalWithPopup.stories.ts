@@ -3,6 +3,7 @@ import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn } from "@storybook/vue3";
 import { h, ref } from "vue";
 import Empty from "../../tech/Empty.vue";
+import SelectTech from "../../tech/SelectTech.vue";
 import {
   type SelectItem,
   VButton,
@@ -68,16 +69,7 @@ const Template: StoryFn<typeof Empty> = () => ({
         {
           content: () => [
             h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-              h(
-                VSelect,
-                {
-                  options: Array.from({ length: 20 }, (_, i) => ({
-                    label: `Значение ${i}`,
-                    value: i,
-                  })),
-                },
-                () => "Выбрать значение",
-              ),
+              h(SelectTech, {}),
               h(VPopConfirm, { title: "title", text: "text" }, () =>
                 h(VButton, {}, () => "Активен"),
               ),

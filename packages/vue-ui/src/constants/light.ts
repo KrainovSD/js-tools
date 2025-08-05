@@ -262,6 +262,7 @@ export const LIGHT_THEME: ThemeVariableConfig = {
       "ksd-select-option-selected-color": "var(--ksd-text-main-color)",
       "ksd-select-option-selected-font-weight": "var(--ksd-font-weight-strong)",
       "ksd-select-option-selected-bg": "var(--ksd-accent-bg-color)",
+      "ksd-select-options-selected-active-bg": "var(--ksd-accent-bg-hover-color)",
       "ksd-select-option-active-bg": "var(--ksd-bg-hover-color)",
       "ksd-select-option-padding": "5px 12px",
       "ksd-select-option-font-size": "var(--ksd-font-size)",

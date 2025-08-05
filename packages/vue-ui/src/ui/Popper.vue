@@ -12,6 +12,7 @@
     arrow?: boolean;
     openDelay?: number;
     hoverDelay?: number;
+    classNamePositioner?: string;
     classNamePositionerContent?: string;
     classNamePositionerArrow?: string;
     closeDelay?: number;
@@ -38,6 +39,7 @@
     observe: false,
     classNamePositionerContent: undefined,
     classNamePositionerArrow: undefined,
+    classNamePositioner: undefined,
     closeDelay: 0,
     openDelay: 100,
     hoverDelay: 0,
@@ -376,7 +378,7 @@
     :target="targetNode"
     :class-name-content="`ksd-popper__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class-name-arrow="`ksd-popper__positioner-arrow ${props.classNamePositionerArrow ?? ''}`"
-    :class="['ksd-popper__positioner']"
+    :class="['ksd-popper__positioner', props.classNamePositioner]"
     v-bind="$attrs"
     :z-index="$props.zIndex"
     :modal-root="checkedModalRoot"
@@ -410,8 +412,6 @@
     &__positioner {
       border-radius: var(--ksd-border-radius-lg);
       color: var(--ksd-bg-popper-color);
-      max-width: 400px;
-      max-height: 400px;
       z-index: var(--ksd-popper-z-index);
 
       &[placement="bottom-left"],
@@ -504,9 +504,9 @@
       padding: var(--ksd-popper-inner-padding);
       min-width: calc(var(--ksd-border-radius) * 2 + 32px);
       min-height: var(--ksd-control-height);
-      max-height: min(50dvh, 400px);
       overflow: auto;
       max-width: 400px;
+      max-height: min(30dvh, 200px);
       display: flex;
       flex-direction: column;
       width: max-content;

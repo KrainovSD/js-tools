@@ -80,6 +80,7 @@ export type ThemeSelectVariable =
   | "ksd-select-z-index"
   | "ksd-select-option-selected-color"
   | "ksd-select-option-selected-font-weight"
+  | "ksd-select-options-selected-active-bg"
   | "ksd-select-option-selected-bg"
   | "ksd-select-option-active-bg"
   | "ksd-select-option-padding"

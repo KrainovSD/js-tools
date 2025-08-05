@@ -8,6 +8,7 @@ import VEmpty from "./Empty.vue";
 import VFilter from "./Filter.vue";
 import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
+import VImport from "./Import.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
 import VLoader from "./Loader.vue";
@@ -119,8 +120,10 @@ export type {
 export type { EmptyProps } from "./Empty.vue";
 export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pagination.vue";
 export type { LoaderProps, LoaderType } from "./Loader.vue";
+export type { ImportProps } from "./Import.vue";
 
 export {
+  VImport,
   VButton,
   VCollapse,
   VFlex,
