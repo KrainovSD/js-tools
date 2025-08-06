@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { type HTMLAttributes, computed } from "vue";
+  import { type HTMLAttributes, computed, useTemplateRef } from "vue";
 
   export type TextSize = "sm" | "lg" | "xl" | "default";
   export type TextType = "secondary" | "success" | "warning" | "error" | "default";
@@ -52,10 +52,15 @@
     fontWeight: props.weight,
     fontSize: typeof props.size === "number" ? `${props.size}px` : undefined,
   }));
+  const elementRef = useTemplateRef("element");
+
+  defineExpose({ element: elementRef });
 </script>
 
 <template>
-  <span class="ksd-text" :class="[componentClasses]" :style="componentStyles"><slot></slot></span>
+  <span ref="element" class="ksd-text" :class="[componentClasses]" :style="componentStyles">
+    <slot></slot>
+  </span>
 </template>
 
 <style lang="scss">

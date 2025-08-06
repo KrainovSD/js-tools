@@ -48,7 +48,7 @@
   }));
 
   const inputComponentRef = useTemplateRef("input");
-  const inputRef = computed(() => inputComponentRef.value?.inputRef);
+  const inputRef = computed(() => inputComponentRef.value?.element);
   const intervalId = ref<NodeJS.Timeout | null>(null);
   const timeoutId = ref<NodeJS.Timeout | null>(null);
   const controller = ref<AbortController | null>(null);
@@ -154,7 +154,7 @@
     { flush: "pre" },
   );
 
-  defineExpose({ inputRef });
+  defineExpose({ element: inputRef });
 </script>
 
 <template>

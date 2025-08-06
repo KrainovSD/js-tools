@@ -338,7 +338,7 @@
     { deep: true },
   );
   watch(
-    () => dropRef.value?.buttonRef,
+    () => dropRef.value?.element,
     (dropRef, _, clean) => {
       if (!dropRef) {
         hoverDrop.value = false;

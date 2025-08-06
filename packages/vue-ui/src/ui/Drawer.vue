@@ -193,7 +193,7 @@
     { immediate: true },
   );
 
-  defineExpose({ drawerRef, maskRef, close: onClose });
+  defineExpose({ element: drawerRef, maskElement: maskRef, close: onClose });
   defineOptions({
     inheritAttrs: false,
   });
@@ -249,7 +249,7 @@
       v-bind="$attrs"
       class="ksd-drawer__block-wrapper"
       :style="[commonStyles, drawerStyles]"
-      :class="[commonClasses, $attrs.class, $attrs.style]"
+      :class="[commonClasses, $props.classNameRoot]"
       role="dialog"
       aria-modal="true"
       vertical

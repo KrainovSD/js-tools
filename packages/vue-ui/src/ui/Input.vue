@@ -63,7 +63,7 @@
   });
 
   defineExpose({
-    inputRef,
+    element: inputRef,
   });
 </script>
 

@@ -45,7 +45,7 @@
     "icon-only": !slots.default,
   }));
 
-  defineExpose({ buttonRef });
+  defineExpose({ element: buttonRef });
 </script>
 
 <template>

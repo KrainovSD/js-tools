@@ -97,7 +97,7 @@
   });
   const model = defineModel<Value>({ default: undefined });
   const popperRef = useTemplateRef("popper");
-  const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
+  const positionerContentRef = computed(() => popperRef.value?.positioner?.contentElement);
 
   const open = ref(false);
   const focusable = ref(false);

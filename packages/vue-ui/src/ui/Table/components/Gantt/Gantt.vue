@@ -3,7 +3,7 @@
 
   const ganttContainerRef = useTemplateRef("gantt");
 
-  defineExpose({ ganttContainerRef });
+  defineExpose({ element: ganttContainerRef });
 </script>
 
 <template>

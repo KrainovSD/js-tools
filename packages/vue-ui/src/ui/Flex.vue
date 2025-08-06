@@ -40,16 +40,14 @@
     vertical: false,
   });
 
-  const element = useTemplateRef("base");
+  const elementRef = useTemplateRef("base");
   const componentClasses = computed(() => ({
     vertical: props.vertical,
     wFull: props.wFull,
     hFull: props.hFull,
   }));
 
-  defineExpose({
-    element,
-  });
+  defineExpose({ element: elementRef });
 </script>
 
 <template>

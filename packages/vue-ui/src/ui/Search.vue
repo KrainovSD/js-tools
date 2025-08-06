@@ -92,7 +92,7 @@
   const model = defineModel<string>();
   const search = ref(model.value);
   const popperRef = useTemplateRef("popper");
-  const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
+  const positionerContentRef = computed(() => popperRef.value?.positioner?.contentElement);
   const open = ref(false);
 
   const activeItem = ref<SearchHTMLElement | null>(null);

@@ -49,7 +49,7 @@
   }));
   const tagRef = useTemplateRef("tag");
 
-  defineExpose({ tagRef });
+  defineExpose({ element: tagRef });
 </script>
 
 <template>

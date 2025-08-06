@@ -106,7 +106,7 @@
 
   const rootRef = useTemplateRef<HTMLDivElement>("root");
   const ganttComponentRef = useTemplateRef<InstanceType<typeof Gantt>>("gantt");
-  const ganttContainerRef = computed(() => ganttComponentRef.value?.ganttContainerRef);
+  const ganttContainerRef = computed(() => ganttComponentRef.value?.element);
   const tableContainerRef = useTemplateRef<HTMLDivElement>("table-container");
   const containerRef = computed(() =>
     props.withGantt ? ganttContainerRef.value : tableContainerRef.value,
@@ -145,7 +145,7 @@
     tableContainerRef: containerRef,
   });
 
-  defineExpose({ rootRef, tableInstance: table });
+  defineExpose({ element: rootRef, tableInstance: table });
 </script>
 
 <template>

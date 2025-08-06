@@ -252,7 +252,7 @@
     { immediate: true },
   );
 
-  defineExpose({ positionerRef, positionerContentRef, updatePosition });
+  defineExpose({ element: positionerRef, contentElement: positionerContentRef, updatePosition });
 </script>
 
 <template>

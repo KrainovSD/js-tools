@@ -151,7 +151,7 @@
             return false;
           })
         : false;
-      const popper = positionerComponentRef.value?.positionerRef?.contains?.(target);
+      const popper = positionerComponentRef.value?.element?.contains?.(target);
       const element = targetNode.value?.contains?.(target);
 
       if (ignored || popper || element) {
@@ -175,7 +175,7 @@
   /** Effect by appear positioner  */
 
   watchEffect((clean) => {
-    const positioner = positionerComponentRef.value?.positionerRef;
+    const positioner = positionerComponentRef.value?.element;
     if (!positioner) return;
 
     const eventController = new AbortController();
@@ -365,7 +365,7 @@
     });
   });
 
-  defineExpose({ positioner: positionerComponentRef, targetNode });
+  defineExpose({ positioner: positionerComponentRef, observedElement: targetNode });
 </script>
 
 <template>

@@ -171,7 +171,7 @@
     { immediate: true },
   );
 
-  defineExpose({ modalRef, close: onClose });
+  defineExpose({ element: modalRef, close: onClose });
   defineOptions({
     inheritAttrs: false,
   });

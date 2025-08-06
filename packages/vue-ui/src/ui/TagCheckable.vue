@@ -10,7 +10,7 @@
 
   const props = defineProps<CheckableProps>();
   const tagComponentRef = useTemplateRef("tag");
-  const tagRef = computed(() => tagComponentRef.value?.tagRef);
+  const tagRef = computed(() => tagComponentRef.value?.element);
   const checkedModel = defineModel<boolean | TagCheckableValue[]>();
   const checked = computed(() =>
     isBoolean(checkedModel.value)

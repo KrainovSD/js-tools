@@ -55,7 +55,7 @@
   const emit = defineEmits<Emits>();
   const open = ref(false);
   const popperRef = useTemplateRef("popper");
-  const positionerContentRef = computed(() => popperRef.value?.positioner?.positionerContentRef);
+  const positionerContentRef = computed(() => popperRef.value?.positioner?.contentElement);
   const lastActive = ref<HTMLElement | null>(null);
 
   function onClose() {

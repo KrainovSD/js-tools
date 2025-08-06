@@ -58,7 +58,7 @@
     { immediate: true },
   );
 
-  defineExpose({ inputRef });
+  defineExpose({ element: inputRef });
 </script>
 
 <template>

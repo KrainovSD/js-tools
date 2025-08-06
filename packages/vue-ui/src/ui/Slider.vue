@@ -282,7 +282,7 @@
     });
   });
 
-  defineExpose({ sliderRef });
+  defineExpose({ element: sliderRef });
 </script>
 
 <template>

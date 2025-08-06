@@ -148,7 +148,7 @@
     { immediate: true },
   );
 
-  defineExpose({ collapseRef, bodyRef });
+  defineExpose({ element: collapseRef, bodyElement: bodyRef });
 </script>
 
 <template>
