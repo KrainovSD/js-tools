@@ -7,9 +7,22 @@
   font-family: Nunito;
 }
 
+body,
+html {
+  width: 100%;
+  height: 100%;
+}
+
 body {
-  min-width: 100vw;
-  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+#storybook-root {
+  display: flex;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
 }
 
 *::-webkit-scrollbar-corner {

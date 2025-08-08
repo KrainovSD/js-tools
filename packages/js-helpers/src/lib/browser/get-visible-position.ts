@@ -74,11 +74,11 @@ export function getVisiblePosition({
   nested,
 }: GetVisiblePositionOptions): VisiblePosition {
   /** Viewport Variables */
-  const totalHeight = document.documentElement.scrollHeight;
-  const totalWidth = document.documentElement.scrollWidth;
-  const viewport = visibleArea ?? document.documentElement;
-  const scrollTop = document.documentElement.scrollTop;
-  const scrollLeft = document.documentElement.scrollLeft;
+  const totalHeight = document.body.scrollHeight;
+  const totalWidth = document.body.scrollWidth;
+  const viewport = visibleArea ?? document.body;
+  const scrollTop = document.body.scrollTop;
+  const scrollLeft = document.body.scrollLeft;
   const rect = viewport.getBoundingClientRect();
   const viewportWidth = viewport.clientWidth;
   const viewportHeight = viewport.clientHeight;

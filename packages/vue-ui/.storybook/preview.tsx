@@ -3,6 +3,7 @@ import { type Decorator, setup } from "@storybook/vue3";
 import { THEME_CONFIG } from "../src/constants";
 import { injectThemeStyle } from "../src/lib/inject-theme-style";
 import ThemeProvider from "../src/providers/ThemeProvider.vue";
+import CheckBodyHeight from "../src/tech/CheckBodyHeight.vue";
 import type { ThemeName } from "../src/types";
 import "./global.scss";
 
@@ -28,16 +29,18 @@ const themeDecorator = <T extends Record<string, string>>({
     const selected = themeOverride || selectedTheme || defaultTheme;
 
     injectThemeStyle({ fontSize: 14, theme: selected as ThemeName, themeConfig: THEME_CONFIG });
-    document.documentElement.style.cssText += `--theme:${selected.toString()}; background: var(--ksd-bg-color); color: var(--ksd-text-main-color); position: relative; min-width: 100vw; min-height: 100vh;`;
+    document.documentElement.style.cssText += `--theme:${selected.toString()}; background: var(--ksd-bg-color); color: var(--ksd-text-main-color);`;
 
     return {
-      components: { story, ThemeProvider },
+      components: { story, ThemeProvider, CheckBodyHeight },
       setup() {
         return {};
       },
-      template: `<ThemeProvider>
+      template: `<CheckBodyHeight>
+                  <ThemeProvider>
                       <story />
-                </ThemeProvider>`,
+                  </ThemeProvider>
+                </CheckBodyHeight>`,
     };
   };
 };

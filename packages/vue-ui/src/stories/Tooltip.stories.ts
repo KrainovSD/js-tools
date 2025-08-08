@@ -173,8 +173,8 @@ export const PositionCheckInVisibleArea: Story = {
               ref: "div",
               style: {
                 border: "1px solid black",
-                height: "300px",
-                width: "500px",
+                minHeight: "300px",
+                minWidth: "500px",
                 margin: "300px 300px 300px 300px",
                 class: "test-tooltip-position",
                 display: "flex",
@@ -258,8 +258,8 @@ export const PositionCheckInVisibleAreaWithScroll: Story = {
               ref: "div",
               style: {
                 border: "1px solid black",
-                height: "300px",
-                width: "500px",
+                minHeight: "300px",
+                minWidth: "500px",
                 margin: "300px 300px 300px 300px",
                 class: "test-tooltip-position",
                 overflow: "auto",
@@ -353,8 +353,8 @@ export const PositionCheckWithScroll: Story = {
               ref: "div",
               style: {
                 border: "1px solid black",
-                height: "300px",
-                width: "500px",
+                minHeight: "300px",
+                minWidth: "500px",
                 margin: "300px 300px 300px 300px",
                 class: "test-tooltip-position",
                 overflow: "auto",
@@ -365,7 +365,7 @@ export const PositionCheckWithScroll: Story = {
                 "div",
                 {
                   style: {
-                    height: "600px",
+                    minHeight: "600px",
                     paddingTop: "200px",
                     display: "flex",
                     flexDirection: "column",
