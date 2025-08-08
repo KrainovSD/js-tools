@@ -1270,8 +1270,8 @@ importers:
         specifier: ^0.14.6
         version: 0.14.6
       '@krainovsd/markdown-editor':
-        specifier: ^0.4.7
-        version: 0.4.7(@codemirror/search@6.5.10)
+        specifier: ^0.4.8
+        version: 0.4.8(@codemirror/search@6.5.10)
       '@krainovsd/vue-icons':
         specifier: ^0.1.4
         version: 0.1.4(vue@3.5.14(typescript@5.8.3))
@@ -1360,6 +1360,12 @@ importers:
       vue-tsc:
         specifier: 2.2.10
         version: 2.2.10(typescript@5.8.3)
+      y-websocket:
+        specifier: 2.1.0
+        version: 2.1.0(yjs@13.6.24)
+      yjs:
+        specifier: 13.6.24
+        version: 13.6.24
 
   templates/fastify:
     dependencies:
@@ -2775,8 +2781,8 @@ packages:
   '@krainovsd/js-helpers@0.14.7':
     resolution: {integrity: sha512-2bLH7/apaD7YYR2AIDXkll9FgNbdnDrNjvOfyUnFxxgPgQdbTDyIauXc8mOSowLSlGI8ud4c7gMs1JtYkm5mHw==}
 
-  '@krainovsd/markdown-editor@0.4.7':
-    resolution: {integrity: sha512-fGFDj4IfwqC8HXWqwWqTPTqDFvmB//Af2icll2dmiHTvW4346W8l4twh1lA45dMVDqf/ZNQamJKOJbedq7vrkA==}
+  '@krainovsd/markdown-editor@0.4.8':
+    resolution: {integrity: sha512-SbAakaloHDx07xQR1k58QBQlCwsd8Y4VfeZwmEREwHBDxUGBzbiYPf+gSw7Dtk95qM0zaOQ6w4Y3Tct5KhW8yg==}
 
   '@krainovsd/nest-logger-service@0.2.1':
     resolution: {integrity: sha512-O+8IgLgg0uxb24S32A56t+cSgoIVw5eDMSzxxq7hwB8vqJlNcxeHGCVrJgNboVqlLtaUdvBN+9YdwLfiCSCE+Q==}
@@ -12116,7 +12122,7 @@ snapshots:
       dayjs: 1.11.13
       lodash: 4.17.21
 
-  '@krainovsd/markdown-editor@0.4.7(@codemirror/search@6.5.10)':
+  '@krainovsd/markdown-editor@0.4.8(@codemirror/search@6.5.10)':
     dependencies:
       '@codemirror/autocomplete': 6.18.6
       '@codemirror/commands': 6.8.0
@@ -21138,7 +21144,7 @@ snapshots:
 
   yjs@13.6.24:
     dependencies:
-      lib0: 0.2.101
+      lib0: 0.2.104
 
   yn@3.1.1: {}
 

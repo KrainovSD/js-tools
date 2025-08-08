@@ -1,6 +1,14 @@
+import type { EditorState as EditorStateLib } from "@codemirror/state";
+import type { EditorView as EditorViewLib, ViewUpdate } from "@codemirror/view";
 import type { WebsocketProvider } from "y-websocket";
 import type { Text } from "yjs";
 import { type ExtensionsOptions } from "@/extensions";
+
+export type YWebsocketProvider = WebsocketProvider;
+export type YText = Text;
+export type EditorView = EditorViewLib;
+export type EditorViewUpdate = ViewUpdate;
+export type EditorState = EditorStateLib;
 
 export type EditorArguments = {
   root: HTMLElement;
@@ -16,10 +24,10 @@ export type MultiCursorOptions = {
   autoInsert?: boolean;
   onChangeStatusProvider?: (
     event: ProviderStatusEvent,
-    provider: WebsocketProvider,
-    doc: Text,
+    provider: YWebsocketProvider,
+    doc: YText,
   ) => void;
-  onSyncProvider?: (synced: boolean, provider: WebsocketProvider, doc: Text) => void;
+  onSyncProvider?: (synced: boolean, provider: YWebsocketProvider, doc: YText) => void;
 };
 
 export type ProviderStatusEvent = {

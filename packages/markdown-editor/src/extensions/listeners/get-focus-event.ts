@@ -1,5 +1,5 @@
-import { type EditorState } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
+import type { EditorState } from "@/module";
 
 export type GetFocusEventOptions = {
   onFocus?: HandleFocusEditorFunction;

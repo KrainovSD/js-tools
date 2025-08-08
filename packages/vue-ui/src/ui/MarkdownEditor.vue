@@ -1,18 +1,21 @@
 <script setup lang="ts">
+  import type { EditorState } from "@codemirror/state";
+  import type { ViewUpdate } from "@codemirror/view";
   import { getByPath, waitUntil } from "@krainovsd/js-helpers";
   import type {
     Editor,
+    EditorAutoCompleteConfig,
+    EditorLanguages,
     EditorTheme,
-    HandleBlurEditorFunction,
-    HandleChangeEditorFunction,
     HandleEnterKeyMapEditorFunction,
     HandleEscapeKeyMapEditorFunction,
-    HandleFocusEditorFunction,
-    InitMarkdownOptions,
     MultiCursorOptions,
+    ProviderStatusEvent,
     ThemeOptions,
   } from "@krainovsd/markdown-editor";
   import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
+  import type { WebsocketProvider } from "y-websocket";
+  import type { Text } from "yjs";
   import { VText } from ".";
   import type { InputVariant } from "./Input.vue";
 
@@ -20,7 +23,7 @@
     variant?: Exclude<InputVariant, "borderless" | "underline">;
     readonly?: boolean;
     vimMode?: boolean;
-    languages?: InitMarkdownOptions["languages"];
+    languages?: EditorLanguages[];
     placeholder?: string;
     dark?: ThemeOptions;
     light?: ThemeOptions;
@@ -28,27 +31,19 @@
     collabSettings?: Omit<MultiCursorOptions, "onChangeStatusProvider" | "onSyncProvider">;
     imageSrcGetter?: (src: string) => string;
     autoCompleteTagOptions?: string[];
-    autoCompleteConfig?: InstanceType<typeof Editor>["arguments"]["autoCompleteConfig"];
+    autoCompleteConfig?: EditorAutoCompleteConfig;
     handleEnter?: HandleEnterKeyMapEditorFunction;
     handleEscape?: HandleEscapeKeyMapEditorFunction;
   };
   type Emits = {
-    blur: [state: Parameters<HandleBlurEditorFunction>[0]];
-    focus: [state: Parameters<HandleFocusEditorFunction>[0]];
-    change: [view: Parameters<HandleChangeEditorFunction>[0]];
+    blur: [state: EditorState];
+    focus: [state: EditorState];
+    change: [view: ViewUpdate];
     connectError: [first: boolean];
     disconnect: [];
     connect: [first: boolean];
-    changeProviderStatus: [
-      event: Parameters<Required<MultiCursorOptions>["onChangeStatusProvider"]>[0],
-      provider: Parameters<Required<MultiCursorOptions>["onChangeStatusProvider"]>[1],
-      doc: Parameters<Required<MultiCursorOptions>["onChangeStatusProvider"]>[2],
-    ];
-    syncProvider: [
-      synced: boolean,
-      provider: Parameters<Required<MultiCursorOptions>["onSyncProvider"]>[1],
-      doc: Parameters<Required<MultiCursorOptions>["onSyncProvider"]>[2],
-    ];
+    changeProviderStatus: [event: ProviderStatusEvent, provider: WebsocketProvider, doc: Text];
+    syncProvider: [synced: boolean, provider: WebsocketProvider, doc: Text];
     mounted: [];
     unmounted: [];
   };

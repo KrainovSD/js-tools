@@ -1,4 +1,4 @@
-import type { EditorState } from "@codemirror/state";
+import type { EditorState } from "@/module";
 
 type OverlapMarkOptions = {
   state: EditorState;

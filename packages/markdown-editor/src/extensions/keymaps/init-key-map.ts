@@ -1,7 +1,8 @@
 import { historyKeymap, indentWithTab, standardKeymap } from "@codemirror/commands";
 import type { Extension } from "@codemirror/state";
-import { type EditorView, type KeyBinding, drawSelection, keymap } from "@codemirror/view";
+import { type KeyBinding, drawSelection, keymap } from "@codemirror/view";
 import { saveDispatch } from "@/lib/utils";
+import type { EditorView } from "@/module";
 import { ThemeCompartment, VimModeCompartment } from "../compartments";
 import { type EditorTheme, type ThemeOptions, getDarkTheme, getLightTheme } from "../theme";
 import { boldKeymap, italicKeymap, linkKeymap } from "./custom";

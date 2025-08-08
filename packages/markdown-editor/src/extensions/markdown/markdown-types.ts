@@ -3,8 +3,10 @@ import type { Range } from "@codemirror/state";
 import type { Decoration, EditorView } from "@codemirror/view";
 import type { SyntaxNodeRef } from "@lezer/common";
 
+export type EditorLanguages = LanguageDescription;
+
 export type InitMarkdownOptions = {
-  languages?: LanguageDescription[];
+  languages?: EditorLanguages[];
   imageSrcGetter?: (src: string) => string;
 };
 

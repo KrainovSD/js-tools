@@ -23,6 +23,7 @@ export type {
   GetSelectionDecorationFunction,
   GetSelectionDecorationOptions,
   InitMarkdownOptions,
+  EditorLanguages,
 } from "./markdown";
 export type { InitSettingsOptions } from "./settings";
 export type {
@@ -32,3 +33,4 @@ export type {
   ThemeOptions,
   EditorTheme,
 } from "./theme";
+export type { EditorAutoCompleteConfig, InitAutoCompleteOptions } from "./auto-completes";
