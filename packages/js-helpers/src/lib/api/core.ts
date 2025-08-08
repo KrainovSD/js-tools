@@ -1,4 +1,5 @@
 import type {
+  HeadersInit,
   BodyInit as NodeBodyInit,
   RequestInfo as NodeRequestInfo,
   RequestInit as NodeRequestInit,
@@ -15,7 +16,7 @@ import type {
   RequestInterface,
 } from "../../types";
 import { downloadFile } from "../browser";
-import { isArray, isObject } from "../typings";
+import { isString } from "../typings";
 import { createURLWithParams, wait } from "../utils";
 import { RESPONSE_DATA_SYMBOL } from "./constants";
 import { generateMiddlewares, generatePostMiddlewares } from "./middlewares";
@@ -127,29 +128,39 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
 
     await executeMiddlewares(request);
 
-    const { method, body, path, params, headers } = request;
+    const { method, body, path, params, headers = {} } = request;
 
     const url = createURLWithParams({ baseURL: path, params });
-    let preparedBody: OutcomingApi | undefined = body as OutcomingApi;
+    const [, requestContentType] =
+      Object.entries(headers).find(([header]) => header.toLowerCase() === "content-type") ?? [];
 
-    if (body && !(preparedBody instanceof FormData)) {
-      if (request.transformOutcomingData) {
-        preparedBody = request.transformOutcomingData(body);
-      }
+    let preparedBody: OutcomingApi = body as OutcomingApi;
+    if (request.transformOutcomingData) {
+      preparedBody = request.transformOutcomingData(body as Outcoming);
+    }
 
-      if (isObject(body) || isArray(body))
-        preparedBody = JSON.stringify(preparedBody) as OutcomingApi;
+    if (
+      requestContentType == undefined &&
+      !(preparedBody instanceof FormData) &&
+      preparedBody != undefined &&
+      !isString(preparedBody)
+    ) {
+      headers["content-type"] = "application/json; charset=UTF-8";
+    }
+
+    if (
+      (requestContentType == undefined || requestContentType.toLowerCase().includes("json")) &&
+      preparedBody != undefined &&
+      !(preparedBody instanceof FormData) &&
+      !isString(preparedBody)
+    ) {
+      preparedBody = JSON.stringify(preparedBody) as OutcomingApi;
     }
 
     const response: Response | NodeResponse | undefined = await options.client(url, {
       method,
       body: preparedBody as ((BodyInit | null) & NodeBodyInit) | undefined,
-      headers: {
-        ...(body instanceof FormData || !body
-          ? {}
-          : { "Content-Type": "application/json; charset=UTF-8" }),
-        ...headers,
-      },
+      headers: headers as globalThis.HeadersInit & HeadersInit,
       signal: request.signal as (AbortSignal & NodeRequestInit["signal"]) | null | undefined,
     });
 
