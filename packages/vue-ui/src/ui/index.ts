@@ -12,6 +12,7 @@ import VImport from "./Import.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
 import VLoader from "./Loader.vue";
+import VMarkdownEditor from "./MarkdownEditor.vue";
 import VMessage from "./Message.vue";
 import VModal from "./Modal.vue";
 import VNotification from "./Notification.vue";
@@ -121,6 +122,7 @@ export type { EmptyProps } from "./Empty.vue";
 export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pagination.vue";
 export type { LoaderProps, LoaderType } from "./Loader.vue";
 export type { ImportProps } from "./Import.vue";
+export type { MarkdownEditorProps } from "./MarkdownEditor.vue";
 
 export {
   VImport,
@@ -159,5 +161,6 @@ export {
   VEmpty,
   VPagination,
   VLoader,
+  VMarkdownEditor,
 };
 export * from "./Table";

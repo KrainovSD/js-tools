@@ -124,6 +124,7 @@
     /** Size */
     &.size-default {
       height: var(--ksd-control-height);
+      min-height: var(--ksd-control-height);
       font-size: var(--ksd-font-size);
       padding: 0px var(--ksd-button-padding);
       border-radius: var(--ksd-border-radius);
@@ -139,6 +140,7 @@
     }
     &.size-small {
       height: var(--ksd-control-height-sm);
+      min-height: var(--ksd-control-height-sm);
       font-size: var(--ksd-font-size-sm);
       padding: 0px var(--ksd-button-padding-sm);
       border-radius: var(--ksd-border-radius-sm);
@@ -154,6 +156,7 @@
 
     &.size-large {
       height: var(--ksd-control-height-lg);
+      min-height: var(--ksd-control-height-lg);
       font-size: var(--ksd-font-size-lg);
       padding: 0px var(--ksd-button-padding-lg);
       border-radius: var(--ksd-border-radius-lg);
