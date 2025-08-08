@@ -93,7 +93,9 @@ export function getVisiblePosition({
   let targetTopPosition = 0;
   let targetLeftPosition = 0;
 
-  const { height: nodeHeight, width: nodeWidth } = node.getBoundingClientRect();
+  /** Not bounding because not need scale  */
+  const nodeHeight = node.clientHeight;
+  const nodeWidth = node.clientWidth;
 
   if (initialPosition?.targetNode) {
     const { top, left, height, width } = initialPosition.targetNode.getBoundingClientRect();

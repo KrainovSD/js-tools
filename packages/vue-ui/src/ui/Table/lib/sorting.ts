@@ -10,8 +10,11 @@ export function stringSort<Row extends DefaultRow>(
   const dataB = getByPath<string>(rowB.original, columnId);
 
   if (dataA === dataB) return 0;
+  if (dataA == undefined && dataB != undefined) return 1;
+  if (dataA != undefined && dataB == undefined) return 0;
 
-  return dataA > dataB ? 1 : -1;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return dataA! > dataB! ? 1 : -1;
 }
 
 export function numberSort<Row extends DefaultRow>(

@@ -68,48 +68,58 @@ const Template: StoryFn<typeof Empty> = () => ({
         },
         {
           content: () => [
-            h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-              h(SelectTech, {}),
-              h(VPopConfirm, { title: "title", text: "text" }, () =>
-                h(VButton, {}, () => "Активен"),
-              ),
-              h(
-                VDropDown,
-                {
-                  triggers: ["click"],
-                  menu: [
-                    { key: "1", link: true, label: h("a", { href: "#test" }, ["Пункт 1"]) },
-                    { key: "2", label: "Пункт 2" },
-                    { key: "3", label: "Пункт 3" },
-                    { key: "0", divider: true },
-                    {
-                      key: "4",
-                      // eslint-disable-next-line no-console
-                      onClick: (event) => console.log(event),
-                      label: h(VText, {}, () => "Компонент"),
-                      icon: h(VSettingFilled, { size: 16 }),
-                    },
-                  ],
+            h(
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
                 },
-                {
-                  default: () => h(VButton, {}, () => "Dropdown Click"),
-                },
-              ),
-              h(VSearch, {
-                placeholder: "Поиск",
-                options: Array.from<unknown, SelectItem>({ length: 300 }, (_, i) => ({
-                  value: i,
-                  label: randomString(50),
-                })),
-              }),
-              h(VTooltip, { text: "Tooltip" }, () =>
-                h(
-                  VText,
-                  { ellipsis: true, fit: true, style: { maxWidth: "100px" } },
-                  () => "Hover",
+              },
+              [
+                h(SelectTech, {}),
+                h(VPopConfirm, { title: "title", text: "text" }, () =>
+                  h(VButton, {}, () => "Активен"),
                 ),
-              ),
-            ]),
+                h(
+                  VDropDown,
+                  {
+                    triggers: ["click"],
+                    menu: [
+                      { key: "1", link: true, label: h("a", { href: "#test" }, ["Пункт 1"]) },
+                      { key: "2", label: "Пункт 2" },
+                      { key: "3", label: "Пункт 3" },
+                      { key: "0", divider: true },
+                      {
+                        key: "4",
+                        // eslint-disable-next-line no-console
+                        onClick: (event) => console.log(event),
+                        label: h(VText, {}, () => "Компонент"),
+                        icon: h(VSettingFilled, { size: 16 }),
+                      },
+                    ],
+                  },
+                  {
+                    default: () => h(VButton, {}, () => "Dropdown Click"),
+                  },
+                ),
+                h(VSearch, {
+                  placeholder: "Поиск",
+                  options: Array.from<unknown, SelectItem>({ length: 300 }, (_, i) => ({
+                    value: i,
+                    label: randomString(50),
+                  })),
+                }),
+                h(VTooltip, { text: "Tooltip" }, () =>
+                  h(
+                    VText,
+                    { ellipsis: true, fit: true, style: { maxWidth: "100px" } },
+                    () => "Hover",
+                  ),
+                ),
+              ],
+            ),
           ],
         },
       ),
@@ -127,76 +137,101 @@ const Template: StoryFn<typeof Empty> = () => ({
         },
         {
           content: () => [
-            h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-              h(
-                VSelect,
-                {
-                  options: Array.from({ length: 20 }, (_, i) => ({
-                    label: `Значение ${i}`,
-                    value: i,
-                  })),
+            h(
+              "div",
+              {
+                style: {
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "20px",
+                  overflow: "auto",
                 },
-                () => "Выбрать значение",
-              ),
-              h(VPopConfirm, { title: "title", text: "text" }, () =>
-                h(VButton, {}, () => "Активен"),
-              ),
-              h(
-                VDropDown,
-                {
-                  triggers: ["click"],
-                  menu: [
-                    { key: "1", link: true, label: h("a", { href: "#test" }, ["Пункт 1"]) },
-                    { key: "2", label: "Пункт 2" },
-                    { key: "3", label: "Пункт 3" },
-                    { key: "0", divider: true },
-                    {
-                      key: "4",
-                      // eslint-disable-next-line no-console
-                      onClick: (event) => console.log(event),
-                      label: h(VText, {}, () => "Компонент"),
-                      icon: h(VSettingFilled, { size: 16 }),
+              },
+              [
+                h(
+                  "div",
+                  {
+                    style: {
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "20px",
+                      minHeight: "2000px",
+                      marginTop: "300px",
                     },
-                  ],
-                },
-                {
-                  default: () => h(VButton, {}, () => "Dropdown Click"),
-                },
-              ),
-              h(VSearch, {
-                placeholder: "Поиск",
-                options: Array.from<unknown, SelectItem>({ length: 300 }, (_, i) => ({
-                  value: i,
-                  label: randomString(50),
-                })),
-              }),
-              h(
-                VPopover,
-                {},
-                {
-                  default: () => h(VButton, {}, () => "Click"),
-                  content: () =>
-                    h(VSelect, {
-                      nested: true,
+                  },
+                  [
+                    h(
+                      VSelect,
+                      {
+                        options: Array.from({ length: 20 }, (_, i) => ({
+                          label: `Значение ${i}`,
+                          value: i,
+                        })),
+                      },
+                      () => "Выбрать значение",
+                    ),
+                    h(VPopConfirm, { title: "title", text: "text" }, () =>
+                      h(VButton, {}, () => "Активен"),
+                    ),
+                    h(
+                      VDropDown,
+                      {
+                        triggers: ["click"],
+                        menu: [
+                          { key: "1", link: true, label: h("a", { href: "#test" }, ["Пункт 1"]) },
+                          { key: "2", label: "Пункт 2" },
+                          { key: "3", label: "Пункт 3" },
+                          { key: "0", divider: true },
+                          {
+                            key: "4",
+                            // eslint-disable-next-line no-console
+                            onClick: (event) => console.log(event),
+                            label: h(VText, {}, () => "Компонент"),
+                            icon: h(VSettingFilled, { size: 16 }),
+                          },
+                        ],
+                      },
+                      {
+                        default: () => h(VButton, {}, () => "Dropdown Click"),
+                      },
+                    ),
+                    h(VSearch, {
                       placeholder: "Поиск",
                       options: Array.from<unknown, SelectItem>({ length: 300 }, (_, i) => ({
                         value: i,
                         label: randomString(50),
                       })),
-                      style: {
-                        width: "200px",
-                      },
                     }),
-                },
-              ),
-              h(VTooltip, { text: "Tooltip" }, () =>
-                h(
-                  VText,
-                  { ellipsis: true, fit: true, style: { maxWidth: "100px" } },
-                  () => "Hover",
+                    h(
+                      VPopover,
+                      {},
+                      {
+                        default: () => h(VButton, {}, () => "Click"),
+                        content: () =>
+                          h(VSelect, {
+                            nested: true,
+                            placeholder: "Поиск",
+                            options: Array.from<unknown, SelectItem>({ length: 300 }, (_, i) => ({
+                              value: i,
+                              label: randomString(50),
+                            })),
+                            style: {
+                              width: "200px",
+                            },
+                          }),
+                      },
+                    ),
+                    h(VTooltip, { text: "Tooltip" }, () =>
+                      h(
+                        VText,
+                        { ellipsis: true, fit: true, style: { maxWidth: "100px" } },
+                        () => "Hover",
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ]),
+              ],
+            ),
           ],
         },
       ),
