@@ -4,12 +4,12 @@ import { getAuthToken } from "./token";
 
 describe("token-request", () => {
   const options: AuthMiddleWareOptions = {
-    authUrl: () => "https://jestjs.io/api/auth/callback",
+    oauthUrl: () => "https://jestjs.io/api/auth/callback",
     authTokenUrl: "https://jestjs.io/api/auth/token",
     pathToTokenExpires: "expires",
     pathToToken: "token",
-    storageTokenExpiresName: "expires",
-    storageTokenName: "token",
+    expiresTokenStorageName: "expires",
+    tokenStorageName: "token",
     errorUrl: "/error",
   };
   const data = {
@@ -17,8 +17,8 @@ describe("token-request", () => {
     token: "TOKEN",
   };
   const localStorageInstance: Record<string, unknown> = {
-    [options.storageTokenExpiresName]: undefined,
-    [options.storageTokenName]: undefined,
+    [options.expiresTokenStorageName]: undefined,
+    [options.tokenStorageName]: undefined,
   };
   const spyReplace = jest.fn();
 
@@ -122,7 +122,7 @@ describe("token-request", () => {
     await expect(getAuthToken(options)).resolves.toBe(data.token);
     expect(spyReplace).not.toHaveBeenCalled();
     expect(spySetItem).toHaveBeenCalledTimes(2);
-    expect(localStorageInstance[options.storageTokenExpiresName]).toBe(String(data.expires));
-    expect(localStorageInstance[options.storageTokenName]).toBe(data.token);
+    expect(localStorageInstance[options.expiresTokenStorageName]).toBe(String(data.expires));
+    expect(localStorageInstance[options.tokenStorageName]).toBe(data.token);
   });
 });

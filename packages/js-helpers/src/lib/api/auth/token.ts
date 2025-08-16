@@ -9,16 +9,20 @@ import { isArray, isNull, isNumber, isObject, isString, isUndefined } from "../.
 import { getByPath, waitUntil } from "../../utils";
 
 export async function updateAuthToken(options: AuthMiddleWareOptions) {
-  let token: string | null | undefined = localStorage.getItem(options.storageTokenName);
-  const expires: string | null | undefined = localStorage.getItem(options.storageTokenExpiresName);
+  let token: string | null | undefined = localStorage.getItem(options.tokenStorageName);
+  const expires: string | null | undefined = localStorage.getItem(options.expiresTokenStorageName);
 
   if (!token || !expires || Date.now() > +expires) {
     token = await (options.tokenRequest ? options.tokenRequest() : getAuthToken(options));
     if (isNull(token)) {
-      return void window.location.replace(options.authUrl());
+      return void window.location.replace(
+        typeof options.oauthUrl === "function" ? options.oauthUrl() : options.oauthUrl,
+      );
     }
     if (isUndefined(token)) {
-      return void window.location.replace(options.errorUrl);
+      return void window.location.replace(
+        typeof options.errorUrl === "function" ? options.errorUrl() : options.errorUrl,
+      );
     }
   }
 
@@ -45,8 +49,8 @@ export async function getAuthToken(options: AuthTokenRequestOptions) {
         options.pathToTokenExpires,
       );
 
-      localStorage.setItem(options.storageTokenExpiresName, expires);
-      localStorage.setItem(options.storageTokenName, token);
+      localStorage.setItem(options.expiresTokenStorageName, expires);
+      localStorage.setItem(options.tokenStorageName, token);
 
       return token;
     } catch {
@@ -76,8 +80,12 @@ function transformData(data: unknown, pathToToken: string, pathToTokenExpires: s
 
 export async function getAuthTokenNoRefresh(options: AuthTokenNoRefreshRequestOptions) {
   let waiting = true;
-  const url = new URL(window.origin);
-  url.searchParams.append(options.queryIsRefreshTokenName, "true");
+  const url = new URL(
+    typeof options.refreshTokenWindowUrl === "function"
+      ? options.refreshTokenWindowUrl()
+      : (options.refreshTokenWindowUrl ?? window.origin),
+  );
+  url.searchParams.append(options.onlyRefreshTokenWindowQueryName, "true");
   let windowInstance = window.open(
     url.toString(),
     "_blank",
@@ -92,7 +100,7 @@ export async function getAuthTokenNoRefresh(options: AuthTokenNoRefreshRequestOp
     return;
   }
 
-  const channel = new BroadcastChannel(options.queryIsRefreshTokenName);
+  const channel = new BroadcastChannel(options.onlyRefreshTokenWindowQueryName);
   channel.onmessage = () => {
     if (waiting) {
       waiting = false;
@@ -113,47 +121,58 @@ export async function getAuthTokenNoRefresh(options: AuthTokenNoRefreshRequestOp
 }
 
 export function updateAuthTokenNoRefresh(options: AuthNoRefreshMiddleWareOptions) {
-  let expires: string | null | undefined = localStorage.getItem(options.storageTokenExpiresName);
+  let expires: string | null | undefined = localStorage.getItem(options.expiresTokenStorageName);
   if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
 
-  const queries = getQueryValues([options.queryTokenExpiresName, options.queryIsRefreshTokenName]);
-  const refreshQuery = queries?.[options.queryIsRefreshTokenName];
-  const expiresQuery = queries?.[options.queryTokenExpiresName];
+  const queries = getQueryValues([
+    options.expiresTokenQueryName,
+    options.onlyRefreshTokenWindowQueryName,
+  ]);
+  const refreshQuery = queries?.[options.onlyRefreshTokenWindowQueryName];
+  const expiresQuery = queries?.[options.expiresTokenQueryName];
 
+  /** Is OnlyRefresh window */
   const isRefresh = isString(refreshQuery)
     ? refreshQuery === "true"
     : isArray(refreshQuery)
       ? refreshQuery[refreshQuery.length - 1] === "true"
       : false;
+  /** Expires token */
   const expiresFromQuery = isString(expiresQuery)
     ? expiresQuery
     : isArray(expiresQuery)
       ? expiresQuery[expiresQuery.length - 1]
       : false;
 
+  /** Extract expires from query */
   if (!expires && expiresFromQuery) {
     expires = expiresFromQuery;
     if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
   }
 
+  /** OAuth flow if not expires */
   if (!expires) {
-    window.location.replace(options.authUrl());
+    window.location.replace(
+      typeof options.oauthUrl === "function" ? options.oauthUrl() : options.oauthUrl,
+    );
 
     return null;
   }
 
-  localStorage.setItem(options.storageTokenExpiresName, expires);
+  localStorage.setItem(options.expiresTokenStorageName, expires);
 
+  /** Close if OnlyRefresh window  */
   if (isRefresh) {
-    const channel = new BroadcastChannel(options.queryIsRefreshTokenName);
+    const channel = new BroadcastChannel(options.onlyRefreshTokenWindowQueryName);
     channel.postMessage(true);
     channel.close();
     window.close();
   }
 
+  /** Delete expires query */
   if (expiresFromQuery) {
     const url = new URL(window.location.href);
-    url.searchParams.delete(options.queryTokenExpiresName);
+    url.searchParams.delete(options.expiresTokenQueryName);
     window.location.replace(url.toString());
 
     return null;

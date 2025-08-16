@@ -10,9 +10,9 @@ export const generateAuthMiddleWare =
   async (request) => {
     if (
       !options.authTokenUrl ||
-      !options.authUrl ||
-      !options.storageTokenExpiresName ||
-      !options.storageTokenName ||
+      !options.oauthUrl ||
+      !options.expiresTokenStorageName ||
+      !options.tokenStorageName ||
       !options.pathToTokenExpires ||
       !options.pathToToken ||
       !options.errorUrl
@@ -34,8 +34,8 @@ export const generateAuthMiddleWare =
 
     if (isFetchingAccessToken) await waitUntil(() => isFetchingAccessToken);
 
-    const expires = localStorage.getItem(options.storageTokenExpiresName);
-    let token: string | null | undefined = localStorage.getItem(options.storageTokenName);
+    const expires = localStorage.getItem(options.expiresTokenStorageName);
+    let token: string | null | undefined = localStorage.getItem(options.tokenStorageName);
 
     if (!expires || Date.now() > +expires || !token) {
       isFetchingAccessToken = true;
@@ -43,10 +43,14 @@ export const generateAuthMiddleWare =
       isFetchingAccessToken = false;
 
       if (isNull(token)) {
-        return void window.location.replace(options.authUrl());
+        return void window.location.replace(
+          typeof options.oauthUrl === "function" ? options.oauthUrl() : options.oauthUrl,
+        );
       }
       if (isUndefined(token)) {
-        return void window.location.replace(options.errorUrl);
+        return void window.location.replace(
+          typeof options.errorUrl === "function" ? options.errorUrl() : options.errorUrl,
+        );
       }
     }
 

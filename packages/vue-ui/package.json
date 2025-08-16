@@ -69,6 +69,7 @@
     "@storybook/vue3": "9.0.16",
     "@types/lodash": "4.17.14",
     "@types/node": "22.13.8",
+    "@types/react": "18.3.12",
     "sass-embedded": "1.81.0",
     "vite": "6.2.1",
     "vue-tsc": "2.2.10",

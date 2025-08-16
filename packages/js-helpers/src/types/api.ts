@@ -64,11 +64,12 @@ export type MiddlewareType = ValueOf<typeof API_MIDDLEWARES>;
 export type ActiveMiddleware = MiddlewareType[];
 
 export type AuthMiddleWareOptions = {
-  errorUrl: string;
-  authUrl: () => string;
+  errorUrl: (() => string) | string;
+  oauthUrl: (() => string) | string;
+  refreshTokenWindowUrl?: (() => string) | string;
   authTokenUrl: string;
-  storageTokenExpiresName: string;
-  storageTokenName: string;
+  expiresTokenStorageName: string;
+  tokenStorageName: string;
   pathToToken: string;
   pathToTokenExpires: string;
   tokenRequest?: () => Promise<string | null | undefined>;
@@ -91,7 +92,7 @@ export type MiddlewaresOptions = {
 export type AuthUserUpdateRequestOptions<User extends Record<string, unknown>> =
   AuthUserRequestOptions & {
     userRequest?: () => Promise<User | null | undefined>;
-    authUrl: () => string;
+    oauthUrl: () => string;
     errorUrl: string;
   };
 
@@ -101,25 +102,27 @@ export type AuthUserRequestOptions = {
 
 export type AuthTokenRequestOptions = {
   authTokenUrl: string;
-  storageTokenExpiresName: string;
-  storageTokenName: string;
+  expiresTokenStorageName: string;
+  tokenStorageName: string;
   pathToToken: string;
   pathToTokenExpires: string;
 };
 
 export type AuthTokenNoRefreshRequestOptions = {
-  storageTokenExpiresName: string;
-  queryIsRefreshTokenName: string;
+  refreshTokenWindowUrl?: (() => string) | string;
+  expiresTokenStorageName: string;
+  onlyRefreshTokenWindowQueryName: string;
   onWindowOpenError?: () => void;
 };
 
 export type AuthNoRefreshMiddleWareOptions = {
-  errorUrl: string;
-  authUrl: () => string;
-  storageTokenName?: string;
-  storageTokenExpiresName: string;
-  queryTokenExpiresName: string;
-  queryIsRefreshTokenName: string;
+  errorUrl: (() => string) | string;
+  oauthUrl: (() => string) | string;
+  refreshTokenWindowUrl?: (() => string) | string;
+  tokenStorageName?: string;
+  expiresTokenStorageName: string;
+  expiresTokenQueryName: string;
+  onlyRefreshTokenWindowQueryName: string;
   tokenRequest?: () => Promise<string | null | undefined>;
   onWindowOpenError?: () => void;
 };

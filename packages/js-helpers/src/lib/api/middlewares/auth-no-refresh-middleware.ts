@@ -7,7 +7,7 @@ let isFetchingAccessToken = false;
 export const generateAuthNoRefreshMiddleWare =
   (options: AuthNoRefreshMiddleWareOptions): Middleware =>
   async (request) => {
-    if (!options.authUrl || !options.storageTokenExpiresName || !options.errorUrl) {
+    if (!options.oauthUrl || !options.expiresTokenStorageName || !options.errorUrl) {
       throw new Error("Auth middleware hasn't required options");
     }
 
@@ -25,13 +25,13 @@ export const generateAuthNoRefreshMiddleWare =
 
     if (isFetchingAccessToken) await waitUntil(() => isFetchingAccessToken);
 
-    const expires = localStorage.getItem(options.storageTokenExpiresName);
+    const expires = localStorage.getItem(options.expiresTokenStorageName);
     if (!expires || Number.isNaN(+expires) || Date.now() > +expires) {
       isFetchingAccessToken = true;
       await (options.tokenRequest ? options.tokenRequest() : getAuthTokenNoRefresh(options));
       isFetchingAccessToken = false;
     }
-    const token = options.storageTokenName ? localStorage.getItem(options.storageTokenName) : null;
+    const token = options.tokenStorageName ? localStorage.getItem(options.tokenStorageName) : null;
 
     if (!isSameOrigin && token)
       request.headers = {

@@ -4,12 +4,12 @@ import { generateAuthMiddleWare } from "./auth-middleware";
 
 describe("auth-middleware", () => {
   const options: AuthMiddleWareOptions = {
-    authUrl: () => "https://jestjs.io/api/auth/callback",
+    oauthUrl: () => "https://jestjs.io/api/auth/callback",
     authTokenUrl: "https://jestjs.io/api/auth/token",
     pathToTokenExpires: "expires",
     pathToToken: "token",
-    storageTokenExpiresName: "expires",
-    storageTokenName: "token",
+    expiresTokenStorageName: "expires",
+    tokenStorageName: "token",
     errorUrl: "/error",
   };
   const data = {
@@ -19,8 +19,8 @@ describe("auth-middleware", () => {
   Object.defineProperty(global, "localStorage", {
     value: {
       getItem: (path: string) => {
-        if (path === options.storageTokenExpiresName) return data.expires;
-        if (path === options.storageTokenName) return data.token;
+        if (path === options.expiresTokenStorageName) return data.expires;
+        if (path === options.tokenStorageName) return data.token;
 
         return null;
       },
