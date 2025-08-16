@@ -9,10 +9,9 @@ import type {
   PostMiddlewareOptions,
   RequestInterface,
 } from "../../../types";
-import { generateAuthMiddleWare } from "./auth-middleware";
-import { generateAuthNoRefreshMiddleWare } from "./auth-no-refresh-middleware";
 import { generateConsoleMiddleware } from "./console-middleware";
 import { generateConsolePostMiddleware } from "./console-post-middleware";
+import { generateOauthMiddleware } from "./oauth-middleware";
 
 export function generateMiddlewares(
   activeMiddlewares: ActiveMiddleware,
@@ -23,16 +22,9 @@ export function generateMiddlewares(
 
   for (const key of activeMiddlewares) {
     switch (key) {
-      case API_MIDDLEWARES.Auth: {
-        if (middlewareOptions.auth && (IS_BROWSER || IS_JEST))
-          selectedMiddlewares.push(generateAuthMiddleWare(middlewareOptions.auth));
-        continue;
-      }
-      case API_MIDDLEWARES.AuthNoRefresh: {
-        if (middlewareOptions.authNoRefresh && (IS_BROWSER || IS_JEST))
-          selectedMiddlewares.push(
-            generateAuthNoRefreshMiddleWare(middlewareOptions.authNoRefresh),
-          );
+      case API_MIDDLEWARES.Oauth: {
+        if (middlewareOptions.oauth && (IS_BROWSER || IS_JEST))
+          selectedMiddlewares.push(generateOauthMiddleware(middlewareOptions.oauth));
         continue;
       }
       case API_MIDDLEWARES.Logger: {

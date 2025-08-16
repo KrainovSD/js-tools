@@ -1,6 +1,6 @@
+import { getByPath } from "../lodash/get-by-path";
+import { setByPath } from "../lodash/set-by-path";
 import { isUndefined } from "../typings";
-import { getByPath } from "./get-by-path";
-import { setByPath } from "./set-by-path";
 
 export function syncObjectValues(
   oldObj: Record<string, unknown>,

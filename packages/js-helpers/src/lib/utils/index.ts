@@ -1,7 +1,5 @@
 export * from "./wait-until";
-export * from "./get-by-path";
 export * from "./field-view-format";
-export * from "./set-by-path";
 export * from "./json-parse";
 export * from "./random-string";
 export * from "./wait";
@@ -21,3 +19,4 @@ export * from "./join-paths";
 export * from "./speed-test";
 export * from "./create-global-id";
 export * from "./create-local-id-generator";
+export * from "./declination";

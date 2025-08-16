@@ -63,18 +63,6 @@ export type PostMiddlewareOptions = {
 export type MiddlewareType = ValueOf<typeof API_MIDDLEWARES>;
 export type ActiveMiddleware = MiddlewareType[];
 
-export type AuthMiddleWareOptions = {
-  errorUrl: (() => string) | string;
-  oauthUrl: (() => string) | string;
-  refreshTokenWindowUrl?: (() => string) | string;
-  authTokenUrl: string;
-  expiresTokenStorageName: string;
-  tokenStorageName: string;
-  pathToToken: string;
-  pathToTokenExpires: string;
-  tokenRequest?: () => Promise<string | null | undefined>;
-};
-
 export type LoggerMiddlewareOptions = {
   filter?: (request: RequestInterface<unknown, unknown, unknown, unknown>) => boolean;
   filterPath?: (path: string) => boolean;
@@ -84,8 +72,7 @@ export type LoggerMiddlewareOptions = {
 };
 
 export type MiddlewaresOptions = {
-  auth?: AuthMiddleWareOptions;
-  authNoRefresh?: AuthNoRefreshMiddleWareOptions;
+  oauth?: OauthMiddleWareOptions;
   logger?: LoggerMiddlewareOptions;
 };
 
@@ -115,7 +102,7 @@ export type AuthTokenNoRefreshRequestOptions = {
   onWindowOpenError?: () => void;
 };
 
-export type AuthNoRefreshMiddleWareOptions = {
+export type OauthMiddleWareOptions = {
   errorUrl: (() => string) | string;
   oauthUrl: (() => string) | string;
   refreshTokenWindowUrl?: (() => string) | string;

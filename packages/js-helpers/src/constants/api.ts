@@ -1,6 +1,5 @@
 export const API_MIDDLEWARES = {
-  Auth: "auth",
-  AuthNoRefresh: "authNoRefresh",
+  Oauth: "oauth",
   Logger: "logger",
 } as const;
 

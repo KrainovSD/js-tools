@@ -9,3 +9,4 @@ export * from "./is-object";
 export * from "./is-string";
 export * from "./is-undefined";
 export * from "./is-date";
+export * from "./is-primitive";
