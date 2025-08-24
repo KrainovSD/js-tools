@@ -87,29 +87,31 @@ export type AuthUserRequestOptions = {
   authUserUrl: string;
 };
 
-export type AuthTokenRequestOptions = {
-  authTokenUrl: string;
-  expiresTokenStorageName: string;
-  tokenStorageName: string;
-  pathToToken: string;
-  pathToTokenExpires: string;
-};
-
-export type AuthTokenNoRefreshRequestOptions = {
-  refreshTokenWindowUrl?: (() => string) | string;
-  expiresTokenStorageName: string;
-  onlyRefreshTokenWindowQueryName: string;
-  onWindowOpenError?: () => void;
-};
-
 export type OauthMiddleWareOptions = {
   errorUrl: (() => string) | string;
   oauthUrl: (() => string) | string;
-  refreshTokenWindowUrl?: (() => string) | string;
   tokenStorageName?: string;
+  expiresTokenStorageName: string;
+  tokenRequest?: () => Promise<string | null | undefined>;
+  refreshTokenWindowUrl?: (() => string) | string;
+  onlyRefreshTokenWindowQueryName: string;
+  onWindowOpenError?: () => void;
+  wait?: number;
+  closeObserveInterval?: number;
+};
+
+export type GetOauthTokenOptions = {
+  oauthUrl: (() => string) | string;
   expiresTokenStorageName: string;
   expiresTokenQueryName: string;
   onlyRefreshTokenWindowQueryName: string;
-  tokenRequest?: () => Promise<string | null | undefined>;
+};
+
+export type GetOauthTokenFromOtherWindowOptions = {
+  refreshTokenWindowUrl?: (() => string) | string;
+  onlyRefreshTokenWindowQueryName: string;
+  expiresTokenStorageName: string;
   onWindowOpenError?: () => void;
+  wait?: number;
+  closeObserveInterval?: number;
 };

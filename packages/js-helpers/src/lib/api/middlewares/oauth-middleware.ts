@@ -29,7 +29,14 @@ export const generateOauthMiddleware =
     let token: string | undefined | null;
     if (!expires || Number.isNaN(+expires) || Date.now() > +expires) {
       isFetchingAccessToken = true;
-      await getOauthTokenFromOtherWindow(options);
+      await getOauthTokenFromOtherWindow({
+        onlyRefreshTokenWindowQueryName: options.onlyRefreshTokenWindowQueryName,
+        onWindowOpenError: options.onWindowOpenError,
+        refreshTokenWindowUrl: options.refreshTokenWindowUrl,
+        wait: options.wait,
+        expiresTokenStorageName: options.expiresTokenStorageName,
+        closeObserveInterval: options.closeObserveInterval,
+      });
       if (options.tokenRequest) {
         token = await options.tokenRequest();
         if (token != undefined && options.tokenStorageName) {

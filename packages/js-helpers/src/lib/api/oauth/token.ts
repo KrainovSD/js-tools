@@ -1,51 +1,69 @@
-import type { AuthTokenNoRefreshRequestOptions, OauthMiddleWareOptions } from "../../../types";
+import type { GetOauthTokenFromOtherWindowOptions, GetOauthTokenOptions } from "../../../types";
 import { getQueryValues } from "../../browser";
 import { isArray, isString } from "../../typings";
 import { waitUntil } from "../../utils";
 
-export async function getOauthTokenFromOtherWindow(options: AuthTokenNoRefreshRequestOptions) {
-  let waiting = true;
+let waiting = false;
+
+export async function getOauthTokenFromOtherWindow(options: GetOauthTokenFromOtherWindowOptions) {
+  await waitUntil(() => waiting);
+  const expires: string | null | undefined = localStorage.getItem(options.expiresTokenStorageName);
+  if (expires != undefined && !Number.isNaN(+expires) && Date.now() < +expires) return;
+
+  waiting = true;
   const url = new URL(
     typeof options.refreshTokenWindowUrl === "function"
       ? options.refreshTokenWindowUrl()
       : (options.refreshTokenWindowUrl ?? window.origin),
   );
   url.searchParams.append(options.onlyRefreshTokenWindowQueryName, "true");
+
   let windowInstance = window.open(
     url.toString(),
     "_blank",
     "width=800,height=600,left=100,top=100",
   );
+  windowInstance ??= window.open(url.toString(), "_blank");
 
-  windowInstance ??= window.open(url.toString());
-
-  if (!windowInstance) {
+  if (windowInstance) {
+    const channel = new BroadcastChannel(options.onlyRefreshTokenWindowQueryName);
+    const windowCloseObserver = setInterval(() => {
+      if (windowInstance.closed) {
+        if (waiting) {
+          waiting = false;
+          channel.close();
+          clearInterval(windowCloseObserver);
+        }
+      }
+    }, options.closeObserveInterval ?? 500);
+    channel.onmessage = () => {
+      if (waiting) {
+        waiting = false;
+        channel.close();
+        clearInterval(windowCloseObserver);
+      }
+    };
+    setTimeout(() => {
+      if (waiting) {
+        waiting = false;
+        channel.close();
+        clearInterval(windowCloseObserver);
+      }
+      if (windowInstance && !windowInstance.closed) {
+        windowInstance.close();
+      }
+    }, options.wait ?? 15000);
+  } else {
     if (options.onWindowOpenError) options.onWindowOpenError();
+    waiting = false;
 
     return;
   }
 
-  const channel = new BroadcastChannel(options.onlyRefreshTokenWindowQueryName);
-  channel.onmessage = () => {
-    if (waiting) {
-      waiting = false;
-      channel.close();
-    }
-  };
-  setTimeout(() => {
-    if (waiting) {
-      waiting = false;
-      channel.close();
-    }
-    if (windowInstance && !windowInstance.closed) {
-      windowInstance.close();
-    }
-  }, 15000);
-
   await waitUntil(() => waiting);
 }
 
-export function getOauthToken(options: OauthMiddleWareOptions) {
+export function getOauthToken(options: GetOauthTokenOptions) {
   let expires: string | null | undefined = localStorage.getItem(options.expiresTokenStorageName);
   if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
 
