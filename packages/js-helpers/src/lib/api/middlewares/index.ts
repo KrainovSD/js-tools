@@ -5,6 +5,7 @@ import type {
   ActivePostMiddleware,
   Middleware,
   MiddlewaresOptions,
+  OauthOptions,
   PostMiddleware,
   PostMiddlewareOptions,
   RequestInterface,
@@ -13,9 +14,11 @@ import { generateConsoleMiddleware } from "./console-middleware";
 import { generateConsolePostMiddleware } from "./console-post-middleware";
 import { generateOauthMiddleware } from "./oauth-middleware";
 
+// eslint-disable-next-line max-params
 export function generateMiddlewares(
   activeMiddlewares: ActiveMiddleware,
   middlewareOptions: MiddlewaresOptions,
+  oauthOptions: OauthOptions | undefined,
   customMiddlewares: Middleware[],
 ) {
   const selectedMiddlewares: Middleware[] = customMiddlewares;
@@ -23,8 +26,8 @@ export function generateMiddlewares(
   for (const key of activeMiddlewares) {
     switch (key) {
       case API_MIDDLEWARES.Oauth: {
-        if (middlewareOptions.oauth && (IS_BROWSER || IS_JEST))
-          selectedMiddlewares.push(generateOauthMiddleware(middlewareOptions.oauth));
+        if (oauthOptions && (IS_BROWSER || IS_JEST))
+          selectedMiddlewares.push(generateOauthMiddleware(oauthOptions));
         continue;
       }
       case API_MIDDLEWARES.Logger: {
@@ -76,12 +79,20 @@ export function generatePostMiddlewares(
     }
   }
 
-  return function executeMiddlewares(response: Response | NodeResponse | undefined) {
+  return function executeMiddlewares<
+    IncomingApi,
+    Incoming = IncomingApi,
+    Outcoming = unknown,
+    OutcomingApi = Outcoming,
+  >(
+    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+    response: Response | NodeResponse | undefined,
+  ) {
     return new Promise((resolve) => {
       void (async () => {
         for (const middleware of selectedMiddlewares) {
           // eslint-disable-next-line no-await-in-loop
-          await middleware(response);
+          await middleware(request, response);
         }
 
         resolve(1);

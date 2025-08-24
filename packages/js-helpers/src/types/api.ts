@@ -23,6 +23,7 @@ export type RequestInterface<
   downloadFile?: boolean;
   signal?: AbortSignal;
   token?: string;
+  refetchNoAuth?: boolean;
 } & RequestTransformIncoming<IncomingApi, Incoming> &
   RequestTransformOutcoming<Outcoming, OutcomingApi>;
 export type RequestTransformOutcoming<Outcoming, OutcomingApi> =
@@ -45,7 +46,16 @@ export type Middleware = <
   request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
 ) => Promise<unknown>;
 
-export type PostMiddleware = (response: Response | NodeResponse | undefined) => Promise<unknown>;
+export type PostMiddleware = <
+  IncomingApi,
+  Incoming = IncomingApi,
+  Outcoming = unknown,
+  OutcomingApi = Outcoming,
+>(
+  request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+  response: Response | NodeResponse | undefined,
+) => Promise<unknown>;
+
 export type PostMiddlewareType = ValueOf<typeof POST_API_MIDDLEWARES>;
 export type ActivePostMiddleware = PostMiddlewareType[];
 
@@ -72,7 +82,6 @@ export type LoggerMiddlewareOptions = {
 };
 
 export type MiddlewaresOptions = {
-  oauth?: OauthMiddleWareOptions;
   logger?: LoggerMiddlewareOptions;
 };
 
@@ -87,15 +96,13 @@ export type AuthUserRequestOptions = {
   authUserUrl: string;
 };
 
-export type OauthMiddleWareOptions = {
-  errorUrl: (() => string) | string;
-  oauthUrl: (() => string) | string;
-  tokenStorageName?: string;
+export type OauthOptions = {
   expiresTokenStorageName: string;
-  tokenRequest?: () => Promise<string | null | undefined>;
-  refreshTokenWindowUrl?: (() => string) | string;
   onlyRefreshTokenWindowQueryName: string;
+  refreshTokenWindowUrl?: (() => string) | string;
   onWindowOpenError?: () => void;
+  tokenStorageName?: string;
+  tokenRequest?: () => Promise<string | null | undefined>;
   wait?: number;
   closeObserveInterval?: number;
 };

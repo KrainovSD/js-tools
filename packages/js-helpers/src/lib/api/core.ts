@@ -11,6 +11,7 @@ import type {
   ActivePostMiddleware,
   Middleware,
   MiddlewaresOptions,
+  OauthOptions,
   PostMiddleware,
   PostMiddlewareOptions,
   RequestInterface,
@@ -20,6 +21,7 @@ import { isString } from "../typings";
 import { createURLWithParams, wait } from "../utils";
 import { RESPONSE_DATA_SYMBOL } from "./constants";
 import { generateMiddlewares, generatePostMiddlewares } from "./middlewares";
+import { refetchAfterOauth } from "./middlewares/oauth-middleware";
 
 type ResponseErrorOptions = {
   message: string;
@@ -51,6 +53,7 @@ type CreateRequestClientInstance = {
   client:
     | ((url: URL | NodeRequestInfo, init?: NodeRequestInit) => Promise<NodeResponse>)
     | typeof fetch;
+  oauthOptions?: OauthOptions;
   activeMiddlewares?: ActiveMiddleware;
   middlewareOptions?: MiddlewaresOptions;
   customMiddlewares?: Middleware[];
@@ -76,7 +79,15 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
     request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
   ) => Promise<unknown>;
 
-  let executePostMiddlewares: (response: Response | NodeResponse | undefined) => Promise<unknown>;
+  let executePostMiddlewares: <
+    IncomingApi,
+    Incoming = IncomingApi,
+    Outcoming = unknown,
+    OutcomingApi = Outcoming,
+  >(
+    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+    response: Response | NodeResponse | undefined,
+  ) => Promise<unknown>;
 
   function setMiddlewares({
     activeMiddlewares = [],
@@ -85,10 +96,12 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
     activePostMiddlewares = [],
     postMiddlewaresOptions = {},
     customPostMiddlewares = [],
+    oauthOptions = undefined,
   }: Omit<CreateRequestClientInstance, "client"> = {}) {
     executeMiddlewares = generateMiddlewares(
       activeMiddlewares,
       middlewareOptions,
+      oauthOptions,
       customMiddlewares,
     );
 
@@ -128,7 +141,7 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
 
     await executeMiddlewares(request);
 
-    const { method, body, path, params, headers = {} } = request;
+    const { method, body, path, params, headers = {}, refetchNoAuth = true } = request;
 
     const url = createURLWithParams({ baseURL: path, params });
     const [, requestContentType] =
@@ -164,7 +177,7 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
       signal: request.signal as (AbortSignal & NodeRequestInit["signal"]) | null | undefined,
     });
 
-    await executePostMiddlewares(response);
+    await executePostMiddlewares(request, response);
 
     if (!response) {
       throw new Error("hasn't response");
@@ -179,6 +192,11 @@ export function createRequestClientInstance(options: CreateRequestClientInstance
               headers: Object.fromEntries(response.headers.entries()),
             }
           : (undefined as Incoming);
+      }
+      if (response.status === 401 && refetchNoAuth && options.oauthOptions) {
+        return refetchAfterOauth(options.oauthOptions, () =>
+          handleRequest({ ...request, refetchNoAuth: false }, responseWithStatus),
+        );
       }
 
       if (request.defaultResponse) {

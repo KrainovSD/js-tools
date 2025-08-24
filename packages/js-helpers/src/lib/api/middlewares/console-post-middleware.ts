@@ -5,7 +5,7 @@ import { RESPONSE_DATA_SYMBOL } from "../constants";
 export function generateConsolePostMiddleware(
   options: LoggerPostMiddlewareOptions = {},
 ): PostMiddleware {
-  return (response) => {
+  return (request, response) => {
     return new Promise((resolve) => {
       void (async function logger() {
         try {

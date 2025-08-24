@@ -1,13 +1,13 @@
-import type { Middleware, OauthMiddleWareOptions } from "../../../types";
+import type { Middleware, OauthOptions } from "../../../types";
 import { startWith, waitUntil } from "../../utils";
 import { getOauthTokenFromOtherWindow } from "../oauth";
 
 let isFetchingAccessToken = false;
 
 export const generateOauthMiddleware =
-  (options: OauthMiddleWareOptions): Middleware =>
+  (options: OauthOptions): Middleware =>
   async (request) => {
-    if (!options.oauthUrl || !options.expiresTokenStorageName || !options.errorUrl) {
+    if (!options.expiresTokenStorageName) {
       throw new Error("Auth middleware hasn't required options");
     }
 
@@ -52,3 +52,24 @@ export const generateOauthMiddleware =
         Authorization: `Bearer ${token}`,
       };
   };
+
+export async function refetchAfterOauth<T>(options: OauthOptions, refetch: () => Promise<T>) {
+  isFetchingAccessToken = true;
+  await getOauthTokenFromOtherWindow({
+    onlyRefreshTokenWindowQueryName: options.onlyRefreshTokenWindowQueryName,
+    onWindowOpenError: options.onWindowOpenError,
+    refreshTokenWindowUrl: options.refreshTokenWindowUrl,
+    wait: options.wait,
+    expiresTokenStorageName: options.expiresTokenStorageName,
+    closeObserveInterval: options.closeObserveInterval,
+  });
+  if (options.tokenRequest) {
+    const token = await options.tokenRequest();
+    if (token != undefined && options.tokenStorageName) {
+      localStorage.setItem(options.tokenStorageName, token);
+    }
+  }
+  isFetchingAccessToken = false;
+
+  return await refetch();
+}

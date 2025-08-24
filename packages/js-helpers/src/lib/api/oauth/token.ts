@@ -3,14 +3,8 @@ import { getQueryValues } from "../../browser";
 import { isArray, isString } from "../../typings";
 import { waitUntil } from "../../utils";
 
-let waiting = false;
-
 export async function getOauthTokenFromOtherWindow(options: GetOauthTokenFromOtherWindowOptions) {
-  await waitUntil(() => waiting);
-  const expires: string | null | undefined = localStorage.getItem(options.expiresTokenStorageName);
-  if (expires != undefined && !Number.isNaN(+expires) && Date.now() < +expires) return;
-
-  waiting = true;
+  let waiting = true;
   const url = new URL(
     typeof options.refreshTokenWindowUrl === "function"
       ? options.refreshTokenWindowUrl()
@@ -64,9 +58,6 @@ export async function getOauthTokenFromOtherWindow(options: GetOauthTokenFromOth
 }
 
 export function getOauthToken(options: GetOauthTokenOptions) {
-  let expires: string | null | undefined = localStorage.getItem(options.expiresTokenStorageName);
-  if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
-
   const queries = getQueryValues([
     options.expiresTokenQueryName,
     options.onlyRefreshTokenWindowQueryName,
@@ -81,17 +72,11 @@ export function getOauthToken(options: GetOauthTokenOptions) {
       ? refreshQuery[refreshQuery.length - 1] === "true"
       : false;
   /** Expires token */
-  const expiresFromQuery = isString(expiresQuery)
+  const expires = isString(expiresQuery)
     ? expiresQuery
     : isArray(expiresQuery)
       ? expiresQuery[expiresQuery.length - 1]
       : false;
-
-  /** Extract expires from query */
-  if (!expires && expiresFromQuery) {
-    expires = expiresFromQuery;
-    if (!expires || Number.isNaN(+expires) || Date.now() > +expires) expires = null;
-  }
 
   /** OAuth flow if not expires */
   if (!expires) {
@@ -113,7 +98,7 @@ export function getOauthToken(options: GetOauthTokenOptions) {
   }
 
   /** Delete expires query */
-  if (expiresFromQuery) {
+  if (expires) {
     const url = new URL(window.location.href);
     url.searchParams.delete(options.expiresTokenQueryName);
     window.location.replace(url.toString());
