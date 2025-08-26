@@ -13,6 +13,7 @@
   export type DrawerProps = {
     ignoreCloseByClick?: HTMLElement[];
     target?: HTMLElement;
+    autofocus?: boolean;
     header?: string;
     zIndex?: number;
     placement?: DrawerPlacement;
@@ -47,6 +48,7 @@
     closeByClickOutsideEvent: DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT,
     classNameBody: undefined,
     classNameHeader: undefined,
+    autofocus: true,
   });
   const emit = defineEmits<Emits>();
   const open = defineModel<boolean>();
@@ -121,7 +123,7 @@
       }
 
       const interactiveChildrenController = createInteractiveChildrenController(drawerRef, {
-        autofocus: true,
+        autofocus: props.autofocus,
       });
 
       if (modalMode.value) {

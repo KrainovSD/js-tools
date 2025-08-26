@@ -9,6 +9,7 @@
 
   export type ModalProps = {
     header: string;
+    autofocus?: boolean;
     ignoreCloseByClick?: HTMLElement[];
     target?: HTMLElement;
     zIndex?: number;
@@ -16,6 +17,9 @@
     okButton?: string;
     cancelButton?: string;
     closeByClickOutsideEvent?: CloseByClickOutsideEvent;
+    classNameBody?: string;
+    classNameFooter?: string;
+    classNameHeader?: string;
   };
   type Emit = {
     close: [];
@@ -31,6 +35,10 @@
     target: undefined,
     zIndex: undefined,
     closeByClickOutsideEvent: DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT,
+    classNameBody: undefined,
+    classNameFooter: undefined,
+    classNameHeader: undefined,
+    autofocus: true,
   });
   const emit = defineEmits<Emit>();
   const open = defineModel<boolean>();
@@ -101,7 +109,7 @@
       prevActiveElement.value = document.activeElement as HTMLElement | null;
 
       const interactiveChildrenController = createInteractiveChildrenController(modalRef, {
-        autofocus: true,
+        autofocus: props.autofocus,
       });
 
       function actionClick(event: MouseEvent | TouchEvent) {
@@ -186,7 +194,7 @@
     ksd-watcher="true"
   ></span>
   <slot></slot>
-  <Teleport v-if="localOpen" :to="$props.target ?? '#storybook-root'">
+  <Teleport v-if="localOpen" :to="$props.target ?? 'body'">
     <div ref="mask" class="ksd-modal__mask" :class="$props.className" :style="maskStyles">
       <div
         ref="modal"
@@ -196,7 +204,7 @@
         class="ksd-modal"
         :class="[$attrs.class, $props.className]"
       >
-        <div class="ksd-modal__header">
+        <div class="ksd-modal__header" :class="$props.classNameHeader">
           <slot v-if="$slots.header" name="header"></slot>
           <span v-else class="ksd-modal__title">{{ $props.header }}</span>
           <Button type="text" class="ksd-modal__close" @click="open = false">
@@ -205,10 +213,10 @@
             </template>
           </Button>
         </div>
-        <div class="ksd-modal__body">
+        <div class="ksd-modal__body" :class="$props.classNameBody">
           <slot name="content"></slot>
         </div>
-        <div class="ksd-modal__footer">
+        <div class="ksd-modal__footer" :class="$props.classNameFooter">
           <slot v-if="$slots.footer" name="footer"></slot>
           <template v-else>
             <Button @click="onConfirm">{{ $props.cancelButton }}</Button>
@@ -280,6 +288,7 @@
       margin-bottom: var(--ksd-modal-header-margin-bottom);
       padding: var(--ksd-modal-header-padding);
       border-bottom: var(--ksd-modal-header-border-bottom);
+      gap: var(--ksd-padding-sm);
       display: flex;
     }
     &__title {
