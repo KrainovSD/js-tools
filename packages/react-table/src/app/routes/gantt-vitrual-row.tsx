@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 /* eslint-disable no-console */
 import type { ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";

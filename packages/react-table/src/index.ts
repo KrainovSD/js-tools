@@ -48,3 +48,4 @@ export * from "./table";
 export * from "./types";
 export { useVisibleCell } from "./lib/hooks";
 export * from "./components/cell-renders/wrappers";
+export * from "./components/header-renders/wrappers";

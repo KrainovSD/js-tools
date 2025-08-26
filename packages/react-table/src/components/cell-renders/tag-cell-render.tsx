@@ -10,7 +10,7 @@ import { CellRenderWrapper } from "./wrappers/cell-render-wrapper";
 export type TagColor = keyof PresetColorType | "default";
 
 export type TagCellRenderProps = {
-  color?: TagColor | ((content: unknown) => TagColor);
+  color?: TagColor | ((content: unknown) => TagColor | undefined);
   mappings?: Record<string, string>;
   bordered?: boolean;
   filterable?: boolean;
@@ -47,7 +47,7 @@ export function TagCellRender<RowData extends DefaultRow>(props: CellRenderProps
 
       if (cellRenderProps.color) {
         if (typeof cellRenderProps.color === "function") {
-          color = cellRenderProps.color(content);
+          color = cellRenderProps.color(content) ?? "default";
         } else {
           color = cellRenderProps.color;
         }

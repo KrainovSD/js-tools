@@ -109,6 +109,7 @@ export const COMMON_COLUMNS: Column[] = [
     sortType: "string-with-number",
     draggable: false,
     additionalCellClass: ["hCenter"],
+    additionalHeaderClass: ["hCenter"],
     leftFrozen: true,
   },
   {
@@ -124,8 +125,8 @@ export const COMMON_COLUMNS: Column[] = [
     },
     filterable: true,
     filterType: "includes-string",
-    headerClass: ["common"],
     additionalCellClass: ["lineClamp", "hCenter"],
+    additionalHeaderClass: ["hCenter", "nowrap"],
     tooltip: {
       auto: true,
     },

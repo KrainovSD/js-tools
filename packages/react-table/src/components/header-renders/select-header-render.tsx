@@ -1,5 +1,6 @@
 import { CheckBox } from "@krainovsd/react-ui";
 import type { DefaultRow, HeaderRenderProps } from "../../types";
+import { HeaderRenderWrapper } from "./wrappers";
 
 type CheckProps = (props: {
   checked: boolean;
@@ -16,13 +17,13 @@ export function SelectHeaderRender<RowData extends DefaultRow>(props: HeaderRend
   const checked = props.context.table.getIsAllPageRowsSelected();
 
   return (
-    <div className="ksd-table-header-cell-container">
+    <HeaderRenderWrapper>
       <Check
         checked={checked}
         onChange={() => {
           props.context.table.toggleAllPageRowsSelected();
         }}
       />
-    </div>
+    </HeaderRenderWrapper>
   );
 }
