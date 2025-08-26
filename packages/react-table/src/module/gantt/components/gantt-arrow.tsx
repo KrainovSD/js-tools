@@ -1,10 +1,18 @@
+import React from "react";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
-import type { GanttRowInfo } from "../../../types";
+import type {
+  DefaultGanttData,
+  GanttArrowStyleGetter,
+  GanttInfo,
+  GanttRowInfo,
+} from "../../../types";
 import { GanttArrowDown } from "./gantt-arrow-down";
 import { GanttArrowUp } from "./gantt-arrow-up";
 import styles from "./gantt-arrow.module.scss";
 
-type Props = {
+type Props<GanttData extends DefaultGanttData> = {
+  ganttArrowStyleGetter: GanttArrowStyleGetter<GanttData> | undefined;
+  info: GanttInfo<GanttData>;
   currentRowId: string | number;
   dependencies: (string | number)[];
   rowsMap: Record<string | number, GanttRowInfo | undefined>;
@@ -27,8 +35,14 @@ const LEFT_TO_RIGHT_SECOND_DEFAULT = 22;
 const END_ARROW_SHIFT = -8;
 const TOP_ARROW_SHIFT = 1;
 
-export function GanttArrow(props: Props) {
+export function GanttArrow<GanttData extends DefaultGanttData>(props: Props<GanttData>) {
   const rowInfo = props.rowsMap[props.currentRowId];
+
+  const { color, size = DEFAULT_LINK_SIZE } = React.useMemo(
+    () => props.ganttArrowStyleGetter?.(props.info) ?? {},
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [props.ganttArrowStyleGetter, props.info],
+  );
   if (!rowInfo) return;
 
   const TOP_SHIFT = props.mini ? TOP_SHIFT_MINI : TOP_SHIFT_MAX;
@@ -72,6 +86,7 @@ export function GanttArrow(props: Props) {
         if (indexDiff > 0) {
           return (
             <GanttArrowDown
+              color={color}
               key={`${props.currentRowId}${depend}${index}`}
               arrowIndex={index}
               dependId={depend}
@@ -79,7 +94,7 @@ export function GanttArrow(props: Props) {
               arrowSize={DEFAULT_ARROW_SIZE}
               cornerSize={DEFAULT_CORNER_SIZE}
               requireExtraCorner={requireExtraCorner}
-              linkSize={DEFAULT_LINK_SIZE}
+              linkSize={size}
               leftToRightFirst={LEFT_TO_RIGHT_FIRST}
               leftToRightSecond={LEFT_TO_RIGHT_SECOND}
               rightToLeft={RIGHT_TO_LEFT}
@@ -91,6 +106,7 @@ export function GanttArrow(props: Props) {
         } else if (indexDiff < 0) {
           return (
             <GanttArrowUp
+              color={color}
               key={`${props.currentRowId}${depend}${index}`}
               arrowIndex={index}
               dependId={depend}
@@ -98,7 +114,7 @@ export function GanttArrow(props: Props) {
               arrowSize={DEFAULT_ARROW_SIZE}
               cornerSize={DEFAULT_CORNER_SIZE}
               requireExtraCorner={requireExtraCorner}
-              linkSize={DEFAULT_LINK_SIZE}
+              linkSize={size}
               leftToRightFirst={LEFT_TO_RIGHT_FIRST}
               leftToRightSecond={LEFT_TO_RIGHT_SECOND}
               rightToLeft={RIGHT_TO_LEFT}

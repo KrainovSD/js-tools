@@ -7,6 +7,7 @@ import { GanttArrow } from ".";
 import type {
   DefaultGanttData,
   DefaultRow,
+  GanttArrowStyleGetter,
   GanttInfo,
   GanttRowInfo,
   GanttTaskProps,
@@ -17,6 +18,7 @@ import { GANTT_TOP_SHIFT } from "../gantt.constants";
 import styles from "./table-gantt-cell.module.scss";
 
 type GetCellOptions<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
+  ganttArrowStyleGetter: GanttArrowStyleGetter<GanttData> | undefined;
   ganttInfoGetter: ((row: RowInterface<RowData>) => GanttInfo<GanttData>) | undefined;
   GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
   GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
@@ -30,7 +32,11 @@ type GetCellOptions<RowData extends DefaultRow, GanttData extends DefaultGanttDa
 export function TableGanttCell<RowData extends DefaultRow, GanttData extends DefaultGanttData>(
   opts: GetCellOptions<RowData, GanttData>,
 ) {
-  const ganttInfo = opts.ganttInfoGetter?.(opts.row);
+  const ganttInfo = React.useMemo(() => {
+    return opts.ganttInfoGetter?.(opts.row);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [opts.ganttInfoGetter, opts.row]);
+
   if (!ganttInfo) return null;
 
   const startDate = new Date(ganttInfo.start);
@@ -153,11 +159,13 @@ export function TableGanttCell<RowData extends DefaultRow, GanttData extends Def
         opts.arrowContainer &&
         createPortal(
           <GanttArrow
+            ganttArrowStyleGetter={opts.ganttArrowStyleGetter}
             dependencies={ganttInfo.dependents}
             rowsMap={opts.rowsMap}
             currentRowId={ganttInfo.id}
             mini={opts.mini}
             key={ganttInfo.id}
+            info={ganttInfo}
           />,
           opts.arrowContainer,
         )}

@@ -4,6 +4,7 @@ import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constant
 import type {
   DefaultGanttData,
   DefaultRow,
+  GanttArrowStyleGetter,
   GanttInfo,
   GanttRowInfo,
   GanttTaskProps,
@@ -14,6 +15,7 @@ import { TableGanttCell } from "./table-gantt-cell";
 import styles from "./table-gantt-row.module.scss";
 
 type Props<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
+  ganttArrowStyleGetter: GanttArrowStyleGetter<GanttData> | undefined;
   GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
   GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
   rowsMap: Record<string | number, GanttRowInfo | undefined>;
@@ -32,6 +34,7 @@ export const TableGanttRow = React.memo(function TableGanttRow<
   return (
     <>
       <TableGanttCell
+        ganttArrowStyleGetter={props.ganttArrowStyleGetter}
         GanttTask={props.GanttTask}
         GanttTooltip={props.GanttTooltip}
         arrowContainer={props.arrowContainer}

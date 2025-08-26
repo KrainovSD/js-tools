@@ -4,6 +4,7 @@ import React from "react";
 import styles from "./gantt-arrow-up.module.scss";
 
 type Props = {
+  color: string | undefined;
   rowId: number | string;
   dependId: number | string;
   arrowIndex: number;
@@ -24,11 +25,21 @@ export function GanttArrowUp(props: Props) {
     <React.Fragment key={`${props.rowId}${props.dependId}${props.arrowIndex}`}>
       <div
         className={clsx(styles.link, styles.one__leftToRight)}
-        style={{ width: props.leftToRightFirst, height: props.linkSize, left: 0, top: 0 }}
+        style={{
+          width: props.leftToRightFirst,
+          height: props.linkSize,
+          left: 0,
+          top: 0,
+          ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
+        }}
       ></div>
       <div
         className={clsx(styles.corner, styles.one__radius)}
-        style={{ left: props.leftToRightFirst, top: -props.cornerSize }}
+        style={{
+          left: props.leftToRightFirst,
+          top: -props.cornerSize,
+          ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
+        }}
       ></div>
       {props.requireExtraCorner && (
         <div
@@ -38,6 +49,7 @@ export function GanttArrowUp(props: Props) {
             height: props.topToBottomExtra,
             left: props.leftToRightFirst + props.cornerSize,
             top: -props.cornerSize - props.topToBottomExtra,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -47,6 +59,7 @@ export function GanttArrowUp(props: Props) {
           style={{
             left: props.leftToRightFirst,
             top: -(props.cornerSize * 2) - props.topToBottomExtra,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -58,6 +71,7 @@ export function GanttArrowUp(props: Props) {
             height: props.linkSize,
             left: props.leftToRightFirst - props.rightToLeft,
             top: -(props.cornerSize * 2) - props.topToBottomExtra,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -67,6 +81,7 @@ export function GanttArrowUp(props: Props) {
           style={{
             left: props.leftToRightFirst - props.rightToLeft - props.cornerSize,
             top: -(props.cornerSize * 3) - props.topToBottomExtra,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -78,6 +93,7 @@ export function GanttArrowUp(props: Props) {
             height: props.topToBottom,
             left: props.leftToRightFirst - props.rightToLeft - props.cornerSize,
             top: -(props.cornerSize * 3) - props.topToBottomExtra - props.topToBottom,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -89,6 +105,7 @@ export function GanttArrowUp(props: Props) {
             height: props.topToBottom,
             left: props.leftToRightFirst + props.cornerSize,
             top: -props.cornerSize - props.topToBottom,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -98,6 +115,7 @@ export function GanttArrowUp(props: Props) {
           style={{
             left: props.leftToRightFirst - props.rightToLeft - props.cornerSize,
             top: -(props.cornerSize * 4) - props.topToBottomExtra - props.topToBottom,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -107,6 +125,7 @@ export function GanttArrowUp(props: Props) {
           style={{
             left: props.leftToRightFirst + props.cornerSize,
             top: -(props.cornerSize * 2) - props.topToBottom,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -118,6 +137,7 @@ export function GanttArrowUp(props: Props) {
             height: props.linkSize,
             left: props.leftToRightFirst - props.rightToLeft,
             top: -(props.cornerSize * 4) - props.topToBottomExtra - props.topToBottom,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -129,6 +149,7 @@ export function GanttArrowUp(props: Props) {
             height: props.linkSize,
             left: props.leftToRightFirst + props.cornerSize * 2,
             top: -(props.cornerSize * 2) - props.topToBottom,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
@@ -148,6 +169,7 @@ export function GanttArrowUp(props: Props) {
               props.topToBottom -
               props.arrowSize / 2 +
               props.topArrowShift,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
           size={props.arrowSize}
         />
@@ -167,6 +189,7 @@ export function GanttArrowUp(props: Props) {
               props.topToBottom -
               props.arrowSize / 2 +
               props.topArrowShift,
+            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
           size={props.arrowSize}
         />

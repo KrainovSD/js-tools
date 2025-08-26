@@ -3,7 +3,7 @@
 import type { ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";
 import { Table } from "../../table";
-import type { RowInterface } from "../../types";
+import type { GanttArrowStyleGetter, RowInterface } from "../../types";
 import { COLUMNS_GANTT } from "../lib/gantt/columns";
 import { GANTT_ROWS } from "../lib/gantt/rows";
 import type {
@@ -36,6 +36,19 @@ export function GanttVirtualRow() {
   function onDoubleClick(row: RowInterface<RowGantt>) {
     console.log(row, "dbClick");
   }
+
+  const arrowStyleGetter: GanttArrowStyleGetter<GanttMeta> = (info) => {
+    const end = new Date(info.end);
+
+    if (end.getFullYear() > 2026) {
+      return {
+        color: "blue",
+        size: 1,
+      };
+    }
+
+    return { color: "red", size: 2 };
+  };
 
   const { firstDate, lastDate } = React.useMemo(() => {
     let firstDate: Date | undefined;
@@ -92,6 +105,7 @@ export function GanttVirtualRow() {
       onClickRow={onClick}
       onDoubleClickRow={onDoubleClick}
       virtualRows={true}
+      ganttArrowStyleGetter={arrowStyleGetter}
       virtualColumn={false}
       fullSize={true}
       loading={false}

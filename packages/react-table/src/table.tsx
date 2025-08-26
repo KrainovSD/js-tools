@@ -303,6 +303,7 @@ export function Table<
         )}
         {props.withGantt && (
           <Gantt
+            ganttArrowStyleGetter={props.ganttArrowStyleGetter}
             columnVirtualEnabled={columnVirtualEnabled}
             columnsVirtual={columnsVirtual}
             frozenHeader={props.frozenHeader ?? true}

@@ -13,12 +13,21 @@ export type GanttTooltipProps<RowData extends DefaultRow> = {
   row: RowInterface<RowData>;
 };
 
+export type GanttArrowStyleGetter<GanttData extends DefaultGanttData> = (
+  info: GanttInfo<GanttData>,
+) => GanttArrowStyle | undefined;
+export type GanttArrowStyle = {
+  color?: string;
+  size?: number;
+};
+
 export type GanttProps<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
   withGantt?: boolean;
   firstGanttDate?: string;
   lastGanttDate?: string;
   ganttRowMini?: boolean;
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
+  ganttArrowStyleGetter?: GanttArrowStyleGetter<GanttData>;
   instantGanttSplitter?: boolean;
   ganttGrid?: boolean;
   GanttTooltip?: React.FC<GanttTooltipProps<RowData>>;

@@ -9,6 +9,7 @@ import { TableGantt } from "./module/gantt/table-gantt";
 import type {
   DefaultGanttData,
   DefaultRow,
+  GanttArrowStyleGetter,
   GanttInfo,
   GanttTaskProps,
   GanttTooltipProps,
@@ -29,6 +30,7 @@ export type GanttProps<RowData extends DefaultRow, GanttData extends DefaultGant
   rowsVirtual: VirtualItem[];
   rows: RowInterface<RowData>[];
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLElement>;
+  ganttArrowStyleGetter: GanttArrowStyleGetter<GanttData> | undefined;
   onClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   onDoubleClickRow?: (row: RowInterface<RowData>, event: React.MouseEvent<HTMLElement>) => void;
   withGantt: boolean | undefined;
@@ -109,6 +111,7 @@ export function Gantt<RowData extends DefaultRow, GanttData extends DefaultGantt
             </div>
           )}
           <TableGantt
+            ganttArrowStyleGetter={props.ganttArrowStyleGetter}
             width={sizes[1]}
             tableRef={tableGanttRef}
             columnVirtualEnabled={props.columnVirtualEnabled}

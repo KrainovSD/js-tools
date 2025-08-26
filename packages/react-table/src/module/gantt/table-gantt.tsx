@@ -4,6 +4,7 @@ import React from "react";
 import type {
   DefaultGanttData,
   DefaultRow,
+  GanttArrowStyleGetter,
   GanttInfo,
   GanttRowInfo,
   GanttTaskProps,
@@ -26,6 +27,7 @@ type TableContainerProps<RowData extends DefaultRow, GanttData extends DefaultGa
   lastGanttDate?: string;
   ganttRowMini?: boolean;
   ganttGrid?: boolean;
+  ganttArrowStyleGetter: GanttArrowStyleGetter<GanttData> | undefined;
   ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
   locale?: string;
   rows: RowInterface<RowData>[];
@@ -151,6 +153,7 @@ export function TableGantt<RowData extends DefaultRow, GanttData extends Default
 
               return (
                 <TableGanttRow
+                  ganttArrowStyleGetter={props.ganttArrowStyleGetter}
                   GanttTask={props.GanttTask}
                   GanttTooltip={props.GanttTooltip}
                   arrowContainer={arrowContainerRef.current}
@@ -170,6 +173,7 @@ export function TableGantt<RowData extends DefaultRow, GanttData extends Default
             props.rows.map((row) => {
               return (
                 <TableGanttRow
+                  ganttArrowStyleGetter={props.ganttArrowStyleGetter}
                   GanttTask={props.GanttTask}
                   GanttTooltip={props.GanttTooltip}
                   arrowContainer={arrowContainerRef.current}
