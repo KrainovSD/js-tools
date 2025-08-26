@@ -136,7 +136,7 @@ const DEFAULT_COLUMNS_SETTINGS: TableDefaultColumnOptions<DefaultRow> = {
   filterRender: "string",
   sortRender: "double-arrow",
   cellClass: ["common"],
-  headerClass: ["common"],
+  headerClass: ["common", "hCenter"],
   draggable: true,
   filterable: false,
   resizable: true,

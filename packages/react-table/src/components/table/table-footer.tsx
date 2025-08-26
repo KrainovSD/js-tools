@@ -6,8 +6,6 @@ import styles from "./table-footer.module.scss";
 
 type TableFooterProps<RowData extends DefaultRow> = {
   Pagination: React.FC<TablePaginationProps<RowData>> | undefined;
-  withPagination: boolean | undefined;
-  withTotal: boolean | undefined;
   table: TableInterface<RowData>;
   pageIndex: number;
   pageSize: number;
@@ -24,43 +22,34 @@ export const TableFooter = React.memo(function TableFooter<RowData extends Defau
 
   return (
     <>
-      {(props.withPagination || props.withTotal) && (
+      <div className={clsx(styles.paginationContainer, "ksd-table-footer")} data-id="footer">
         <>
-          <div className={clsx(styles.paginationContainer, "ksd-table-footer")} data-id="footer">
-            {props.withTotal && (
-              <div className={styles.paginationTotal}>{`Всего: ${props.totalRows}`}</div>
-            )}
-            {props.withPagination && (
-              <>
-                {!props.Pagination && (
-                  <Pagination
-                    className={styles.pagination}
-                    defaultCurrent={props.pageIndex + 1}
-                    total={props.totalRows}
-                    pageSize={props.pageSize}
-                    onChange={(page, pageSize) => {
-                      props.table.setPageIndex(page - 1);
-                      props.table.setPageSize(pageSize);
-                    }}
-                    defaultPageSize={props.pageSize}
-                    pageSizeOptions={pageSizes}
-                    data-id="pagination"
-                  />
-                )}
-                {props.Pagination && (
-                  <props.Pagination
-                    table={props.table}
-                    pageIndex={props.pageIndex}
-                    pageSize={props.pageSize}
-                    pageSizes={pageSizes}
-                    totalRows={props.totalRows}
-                  />
-                )}
-              </>
-            )}
-          </div>
+          {!props.Pagination && (
+            <Pagination
+              className={styles.pagination}
+              defaultCurrent={props.pageIndex + 1}
+              total={props.totalRows}
+              pageSize={props.pageSize}
+              onChange={(page, pageSize) => {
+                props.table.setPageIndex(page - 1);
+                props.table.setPageSize(pageSize);
+              }}
+              defaultPageSize={props.pageSize}
+              pageSizeOptions={pageSizes}
+              data-id="pagination"
+            />
+          )}
+          {props.Pagination && (
+            <props.Pagination
+              table={props.table}
+              pageIndex={props.pageIndex}
+              pageSize={props.pageSize}
+              pageSizes={pageSizes}
+              totalRows={props.totalRows}
+            />
+          )}
         </>
-      )}
+      </div>
     </>
   );
 }) as <RowData extends DefaultRow>(props: TableFooterProps<RowData>) => React.JSX.Element;

@@ -8,7 +8,6 @@ import type {
   DragRowHandler,
   HeaderInterface,
   RowInterface,
-  TableEmptyProps,
   TableInterface,
 } from "../../types";
 import styles from "./table-common.module.scss";
@@ -37,7 +36,6 @@ type TableContainerProps<RowData extends DefaultRow> = {
     | ((header: HeaderInterface<RowData>) => string | undefined)
     | string
     | undefined;
-  Empty: React.FC<TableEmptyProps> | undefined;
   draggableRow: boolean;
   onDraggableRow: DragRowHandler | undefined;
 };
@@ -241,9 +239,7 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
               />
             );
           })}
-        {props.rowVirtualEnabled && props.rowsVirtual.length === 0 && props.Empty && (
-          <props.Empty />
-        )}
+
         {!props.rowVirtualEnabled &&
           props.rows.map((row) => {
             const selected = row.getIsSelected();
@@ -273,7 +269,6 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
               />
             );
           })}
-        {!props.rowVirtualEnabled && props.rows.length === 0 && props.Empty && <props.Empty />}
       </div>
     </div>
   );

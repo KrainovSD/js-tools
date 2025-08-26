@@ -66,6 +66,15 @@
   //   --table-row-hover-bg: #f3faff; //   --table-transition: all 0.1s ease; // }
 }
 
+.overlay {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: fit-content;
+  flex-direction: column;
+}
+
 .container {
   overflow: auto;
   position: relative;

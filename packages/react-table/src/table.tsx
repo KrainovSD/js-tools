@@ -3,7 +3,14 @@ import type { TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
 import { Gantt } from "./components/gantt";
-import { TableCommon, TableFilter, TableFooter, TableLoading } from "./components/table";
+import {
+  TableCommon,
+  TableEmpty,
+  TableFilter,
+  TableFooter,
+  TableLoading,
+} from "./components/table";
+import { TableTotal } from "./components/table/table-total";
 import { useColumns, useTableOptions, useVirtualizer } from "./lib/hooks";
 import styles from "./table.module.scss";
 import type {
@@ -217,8 +224,6 @@ export function Table<
         style={{ height: props.fullSize ? "100%" : "fit-content" }}
         ref={props.rootRef}
       >
-        {!props.Loader && props.loading && <TableLoading />}
-        {props.Loader && props.loading && <props.Loader />}
         <TableFilter
           filterOptions={filterOptions}
           filters={filters}
@@ -228,33 +233,45 @@ export function Table<
         />
         {!props.withGantt && (
           <div
-            ref={tableContainerRef}
-            className={clsx(
-              styles.container,
-              props.fullSize && styles.container_full,
-              "ksd-table-container",
-            )}
-            data-id={"container"}
+            className={styles.overlay}
+            style={{ height: props.fullSize ? "100%" : "fit-content" }}
           >
-            <TableCommon
-              columnVirtualEnabled={columnVirtualEnabled}
-              rowVirtualEnabled={rowVirtualEnabled}
-              columnsVirtual={columnsVirtual}
-              rowsVirtual={rowVirtual}
-              frozenHeader={props.frozenHeader ?? true}
-              rubberColumn={props.rubberColumn ?? false}
-              rowVirtualizer={rowVirtualizer}
-              rows={rows}
-              table={table}
-              onClickRow={props.onClickRow}
-              onDoubleClickRow={props.onDoubleClickRow}
-              rowClassName={props.rowClassName}
-              headerRowClassName={props.headerRowClassName}
-              Empty={props.Empty}
-              rowRender={props.rowRender}
-              draggableRow={props.draggableRow ?? false}
-              onDraggableRow={props.onDraggableRow}
-            />
+            {!props.Loader && props.loading && <TableLoading />}
+            {props.Loader && props.loading && <props.Loader />}
+            {props.Empty && rows.length === 0 && <props.Empty />}
+            {!props.Empty && rows.length === 0 && <TableEmpty />}
+
+            <div
+              ref={tableContainerRef}
+              className={clsx(
+                styles.container,
+                props.fullSize && styles.container_full,
+                "ksd-table-container",
+              )}
+              data-id={"container"}
+            >
+              <TableCommon
+                columnVirtualEnabled={columnVirtualEnabled}
+                rowVirtualEnabled={rowVirtualEnabled}
+                columnsVirtual={columnsVirtual}
+                rowsVirtual={rowVirtual}
+                frozenHeader={props.frozenHeader ?? true}
+                rubberColumn={props.rubberColumn ?? false}
+                rowVirtualizer={rowVirtualizer}
+                rows={rows}
+                table={table}
+                onClickRow={props.onClickRow}
+                onDoubleClickRow={props.onDoubleClickRow}
+                rowClassName={props.rowClassName}
+                headerRowClassName={props.headerRowClassName}
+                rowRender={props.rowRender}
+                draggableRow={props.draggableRow ?? false}
+                onDraggableRow={props.onDraggableRow}
+              />
+            </div>
+            {props.withTotal && !props.withGantt && (
+              <TableTotal totalRows={props.totalRows ?? table.getFilteredRowModel().rows.length} />
+            )}
           </div>
         )}
         {props.withGantt && (
@@ -288,16 +305,16 @@ export function Table<
           />
         )}
 
-        <TableFooter
-          Pagination={props.Pagination}
-          table={table}
-          withPagination={props.withPagination && !props.withGantt}
-          withTotal={props.withTotal && !props.withGantt}
-          pageIndex={tableState.pagination.pageIndex}
-          pageSize={tableState.pagination.pageSize}
-          pageSizes={props.pageSizes}
-          totalRows={props.totalRows ?? table.getFilteredRowModel().rows.length}
-        />
+        {props.withPagination && !props.withGantt && (
+          <TableFooter
+            Pagination={props.Pagination}
+            table={table}
+            pageIndex={tableState.pagination.pageIndex}
+            pageSize={tableState.pagination.pageSize}
+            pageSizes={props.pageSizes}
+            totalRows={props.totalRows ?? table.getFilteredRowModel().rows.length}
+          />
+        )}
       </div>
     );
   } catch (error) {

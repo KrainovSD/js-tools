@@ -26,6 +26,7 @@
   display: grid;
   position: relative;
   background-color: var(--table-body-bg);
+  min-height: var(--table-body-height, 120px);
 
   display: flex;
   flex-direction: column;

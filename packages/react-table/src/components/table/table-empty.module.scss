@@ -1,0 +1,12 @@
+.base {
+  position: absolute;
+  left: calc(50%);
+  top: calc(50%);
+  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  justify-content: center;
+  padding: 16px;
+  margin: 0;
+  z-index: 10;
+  pointer-events: none;
+}
