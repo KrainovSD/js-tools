@@ -2,9 +2,9 @@ import { type FilterInputValueType } from "@krainovsd/react-ui";
 import type { TableOptions, TableState } from "@tanstack/react-table";
 import clsx from "clsx";
 import React from "react";
-import { Gantt } from "./gantt";
-import { TableCommon, TableFilter, TableFooter, TableLoading } from "./module/table";
-import { useColumns, useTableOptions, useVirtualizer } from "./module/table/hooks";
+import { Gantt } from "./components/gantt";
+import { TableCommon, TableFilter, TableFooter, TableLoading } from "./components/table";
+import { useColumns, useTableOptions, useVirtualizer } from "./lib/hooks";
 import styles from "./table.module.scss";
 import type {
   CellClassInterface,

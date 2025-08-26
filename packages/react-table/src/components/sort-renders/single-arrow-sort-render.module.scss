@@ -1,0 +1,32 @@
+.button {
+  padding: 7px 0px 7px 7px;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  cursor: pointer;
+  height: 100%;
+  align-items: center;
+
+  &_active {
+    color: var(--table-active-sort);
+  }
+}
+
+.icon {
+  transition: all 0.15s ease;
+  transform: rotate(180deg);
+
+  &_asc {
+    transform: rotate(0deg);
+  }
+  &_desc {
+    transform: rotate(180deg);
+  }
+}
+
+.index {
+  min-width: 20px;
+}

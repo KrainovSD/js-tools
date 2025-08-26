@@ -1,0 +1,42 @@
+.button {
+  padding: 0px;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  cursor: pointer;
+  height: 100%;
+  align-items: center;
+}
+
+.iconContainer {
+  position: relative;
+}
+
+.icon {
+  transition: all 0.15s ease;
+  position: relative;
+  fill: var(--table-off-sort);
+
+  &_asc {
+    top: 2px;
+  }
+
+  &_desc {
+    top: -2px;
+  }
+
+  &_active {
+    fill: var(--table-active-sort);
+  }
+}
+
+.index {
+  min-width: 20px;
+
+  &_active {
+    color: var(--table-active-sort);
+  }
+}

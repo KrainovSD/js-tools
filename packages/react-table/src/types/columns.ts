@@ -1,13 +1,16 @@
 import type { ReactNode } from "react";
 import type {
-  DateFilterRenderProps,
   DefaultCellRenderProps,
   DragCellRenderProps,
   SelectCellRenderProps,
-  SelectFilterRenderProps,
-  SelectHeaderRenderProps,
   TagCellRenderProps,
-} from "../module/table/components";
+} from "../components/cell-renders";
+import type {
+  DateFilterRenderProps,
+  DateRangeFilterRenderProps,
+  SelectFilterRenderProps,
+} from "../components/filter-renders";
+import type { SelectHeaderRenderProps } from "../components/header-renders";
 import type {
   FilterKey,
   SortingKey,
@@ -121,7 +124,7 @@ export type DefaultFilterRenderProps =
     }
   | {
       component?: "date-range";
-      props?: DateFilterRenderProps;
+      props?: DateRangeFilterRenderProps;
     }
   | {
       component?: Exclude<TableFilterRenderKey, "select" | "date" | "date-range">;

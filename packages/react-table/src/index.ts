@@ -46,10 +46,5 @@ declare module "@tanstack/react-table" {
 
 export * from "./table";
 export * from "./types";
-export { useVisibleCell } from "./module/table/hooks";
-export { CellRenderLink, CellRenderTooltip, CellRenderWrapper } from "./module/table";
-export type {
-  CellRenderLinkProps,
-  CellRenderTooltipProps,
-  CellRenderWrapperProps,
-} from "./module/table";
+export { useVisibleCell } from "./lib/hooks";
+export * from "./components/cell-renders/wrappers";
