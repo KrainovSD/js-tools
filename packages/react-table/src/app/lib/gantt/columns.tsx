@@ -1,7 +1,6 @@
-import type { TableColumn } from "../../../types";
-import type { RowGantt, RowGanttVirtual } from "../../types/gantt";
+import type { GanttColumn } from "../../types/gantt";
 
-export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
+export const COLUMNS_GANTT: GanttColumn[] = [
   {
     id: "_select",
     key: "id",
@@ -12,12 +11,16 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
     leftFrozen: true,
     sortable: false,
     filterable: false,
-    cellRender: "select",
-    cellRenderProps: {
-      hover: true,
+    cellRender: {
+      component: "select",
+      props: {
+        hover: true,
+      },
+    },
+    headerRender: {
+      component: "select",
     },
     additionalCellClass: ["wCenter", "hCenter"],
-    headerRender: "select",
     additionalHeaderClass: ["wCenter", "hCenter"],
   },
   {
@@ -28,14 +31,12 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
     expandable: true,
     width: 300,
     minWidth: 200,
-    cellRender: "default",
     additionalCellClass: ["common", "empty", "nowrap"],
     tooltip: {
       auto: true,
       pathToContent: "name",
     },
     expandedShift: 8,
-    headerRender: "default",
   },
   {
     key: "start",
@@ -44,11 +45,13 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
     minWidth: 150,
     additionalCellClass: ["common", "empty", "nowrap"],
     resizable: true,
-    cellRender: "default",
-    draggable: false,
-    cellRenderProps: {
-      dateFormat: "DD/MM/YYYY",
+    cellRender: {
+      component: "default",
+      props: {
+        dateFormat: "DD/MM/YYYY",
+      },
     },
+    draggable: false,
   },
   {
     key: "end",
@@ -58,17 +61,20 @@ export const COLUMNS_GANTT: TableColumn<RowGantt, "test">[] = [
     additionalCellClass: ["common", "empty", "nowrap"],
     resizable: true,
     draggable: false,
-    cellRender: "default",
-    cellRenderProps: {
-      dateFormat: "DD/MM/YYYY",
+    cellRender: {
+      component: "default",
+      props: {
+        dateFormat: "DD/MM/YYYY",
+      },
     },
   },
 ];
 
-export const COLUMNS_GANTT_VIRTUAL: TableColumn<RowGanttVirtual, "test">[] = [
-  ...(COLUMNS_GANTT as TableColumn<RowGanttVirtual, "test">[]),
-  ...Array.from<unknown, TableColumn<RowGanttVirtual, "test">>({ length: 30 }, (_, index) => ({
-    key: `wide${index + 1}` as keyof RowGanttVirtual,
+export const COLUMNS_GANTT_VIRTUAL: GanttColumn[] = [
+  ...COLUMNS_GANTT,
+  ...Array.from<unknown, GanttColumn>({ length: 30 }, (_, index) => ({
+    id: `wide-${index}`,
+    key: "id",
     name: `wide${index + 1}`,
     draggable: false,
     resizable: true,

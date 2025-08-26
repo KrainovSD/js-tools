@@ -1,25 +1,33 @@
 import { type DayJS, dateFormat, isArray, isObject, isString } from "@krainovsd/js-helpers";
 import type { FilterFieldType, SelectItemInterface } from "@krainovsd/react-ui";
 import type {
+  BuiltInFilterFn,
   BuiltInSortingFn,
-  CellContext,
   ColumnDef,
   ColumnPinningState,
   FilterFnOption,
   GroupingState,
-  HeaderContext,
   SortingFn,
 } from "@tanstack/react-table";
 import React from "react";
 import {
+  type CellClassInterface,
+  type CellRenderComponent,
   type DefaultRow,
+  type FilterFn,
   type FilterKey,
+  type FilterRenderComponent,
+  type HeaderClassInterface,
+  type HeaderRenderComponent,
+  type SortFn,
+  type SortRenderComponent,
   type SortingKey,
   type TableCellClassKey,
   type TableCellClasses,
   type TableCellRenderKey,
   type TableCellRenders,
   type TableColumnsSettings,
+  type TableDefaultColumnOptions,
   type TableFilterRenderKey,
   type TableFilterRenders,
   type TableHeaderClassKey,
@@ -60,159 +68,110 @@ import {
 } from "../lib";
 import classes from "./classes.module.scss";
 
+const CELL_RENDERS: TableCellRenders<DefaultRow> = {
+  select: SelectCellRender,
+  tag: TagCellRender,
+  default: DefaultCellRender,
+  drag: DragCellRender,
+  empty: () => "",
+};
+const HEADER_RENDERS: TableHeaderRenders<DefaultRow> = {
+  default: DefaultHeaderRender,
+  empty: () => "",
+  select: SelectHeaderRender,
+};
+const FILTER_RENDERS: TableFilterRenders<DefaultRow> = {
+  "date-range": DateRangeFilterRender,
+  "number-range": NumberRangeFilterRender,
+  date: DateFilterRender,
+  number: NumberFilterRender,
+  string: StringFilterRender,
+  select: SelectFilterRender,
+};
+const SORT_RENDERS: TableSortRenders<DefaultRow> = {
+  "double-arrow": DoubleArrowSortRender,
+  "single-arrow": SingleArrowSortRender,
+};
+const CELL_CLASSES: TableCellClasses<DefaultRow> = {
+  common: classes.cell__common,
+  empty: classes.cell__empty,
+  nowrap: classes.cell__nowrap,
+  lineClamp: classes.cell__lineClamp,
+  hCenter: classes.cell__hCenter,
+  wCenter: classes.cell__wCenter,
+};
+const HEADER_CLASSES: TableHeaderClasses<DefaultRow> = {
+  common: classes.header__common,
+  empty: classes.header__empty,
+  nowrap: classes.header__nowrap,
+  lineClamp: classes.header__lineClamp,
+  hCenter: classes.header__hCenter,
+  wCenter: classes.header__wCenter,
+};
+const SORTS: Record<SortingKey, SortingFn<DefaultRow> | BuiltInSortingFn> = {
+  "string-with-number": "alphanumeric",
+  array: arraySort,
+  string: stringSort,
+  number: numberSort,
+  boolean: booleanSort,
+  date: dateSort,
+};
+
+const FILTERS: Record<FilterKey, FilterFnOption<DefaultRow>> = {
+  "date-in-range": dateRangeFilter,
+  "array-every-in-array": "arrIncludesAll",
+  "array-some-in-array": "arrIncludesSome",
+  "array-equals": arrayAllFilter,
+  "includes-string": "includesString",
+  "array-some-in-primitive": stringByArrayFilter,
+  date: dateFilter,
+  equals: "equals",
+  "number-in-range": "inNumberRange",
+};
+
+const DEFAULT_COLUMNS_SETTINGS: TableDefaultColumnOptions<DefaultRow> = {
+  cellRender: "default",
+  headerRender: "default",
+  filterRender: "string",
+  sortRender: "double-arrow",
+  cellClass: ["common"],
+  headerClass: ["common"],
+  draggable: true,
+  filterable: false,
+  resizable: true,
+  sortDirectionFirst: "asc",
+  sortable: true,
+  sortType: "string",
+  filterType: "includes-string",
+  tooltip: false,
+  expandedShift: undefined,
+  minWidth: undefined,
+  maxWidth: undefined,
+};
+
 export function useColumns<
   RowData extends DefaultRow,
-  CellRender extends string | undefined = undefined,
-  CellRenderProps extends Record<CellRender extends string ? CellRender : string, unknown> = Record<
-    CellRender extends string ? CellRender : string,
-    unknown
-  >,
-  HeaderRender extends string | undefined = undefined,
-  HeaderRenderProps extends Record<
-    HeaderRender extends string ? HeaderRender : string,
-    unknown
-  > = Record<HeaderRender extends string ? HeaderRender : string, unknown>,
-  FilterRender extends string | undefined = undefined,
-  FilterRenderProps extends Record<
-    FilterRender extends string ? FilterRender : string,
-    unknown
-  > = Record<FilterRender extends string ? FilterRender : string, unknown>,
-  SortRender extends string | undefined = undefined,
-  SortRenderProps extends Record<SortRender extends string ? SortRender : string, unknown> = Record<
-    SortRender extends string ? SortRender : string,
-    unknown
-  >,
-  CellClass extends string | undefined = undefined,
-  CellClassProps = unknown,
-  HeaderClass extends string | undefined = undefined,
-  HeaderClassProps = unknown,
-  FilterType extends string | undefined = undefined,
-  SortType extends string | undefined = undefined,
-  ColumnProps = unknown,
+  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
+  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
+  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
+  CellClass extends Record<string, CellClassInterface<RowData>> = {},
+  HeaderClass extends Record<string, HeaderClassInterface<RowData>> = {},
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+  SortType extends Record<string, SortFn<RowData>> = {},
 >(
   props: TableColumnsSettings<
     RowData,
     CellRender,
-    CellRenderProps,
     HeaderRender,
-    HeaderRenderProps,
     FilterRender,
-    FilterRenderProps,
     SortRender,
-    SortRenderProps,
     CellClass,
-    CellClassProps,
     HeaderClass,
-    HeaderClassProps,
     FilterType,
-    SortType,
-    ColumnProps
+    SortType
   > & { withGantt: boolean | undefined; withFilters: boolean; rubberColumn: boolean },
 ) {
-  const {
-    cellRender = "default",
-    headerRender = "default",
-    filterRender = "string",
-    sortRender = "double-arrow",
-    cellClass = ["common"],
-    headerClass = ["common"],
-    draggable = true,
-    filterable = false,
-    resizable = true,
-    sortDirectionFirst = "asc",
-    sortable = true,
-    sortType = "string",
-    filterType = "includes-string",
-    tooltip = false,
-    className = undefined,
-    expandable = false,
-    expandedShift = undefined,
-    minWidth = undefined,
-    maxWidth = undefined,
-  } = props.defaultColumnOptions ?? {};
-
-  const cellRenders = React.useMemo<TableCellRenders<RowData>>(
-    () => ({
-      select: SelectCellRender,
-      tag: TagCellRender,
-      default: DefaultCellRender,
-      empty: () => "",
-      drag: DragCellRender,
-    }),
-    [],
-  );
-  const headerRenders = React.useMemo<TableHeaderRenders<RowData>>(
-    () => ({ default: DefaultHeaderRender, select: SelectHeaderRender, empty: () => "" }),
-    [],
-  );
-  const filterRenders = React.useMemo<TableFilterRenders<RowData>>(
-    () => ({
-      string: StringFilterRender,
-      select: SelectFilterRender,
-      "date-range": DateRangeFilterRender,
-      "number-range": NumberRangeFilterRender,
-      date: DateFilterRender,
-      number: NumberFilterRender,
-    }),
-    [],
-  );
-  const sortRenders = React.useMemo<TableSortRenders<RowData>>(
-    () => ({
-      "single-arrow": SingleArrowSortRender,
-      "double-arrow": DoubleArrowSortRender,
-    }),
-    [],
-  );
-
-  const headerClasses = React.useMemo<TableHeaderClasses<RowData>>(
-    () => ({
-      common: classes.header__common,
-      empty: classes.header__empty,
-      nowrap: classes.header__nowrap,
-      lineClamp: classes.header__lineClamp,
-      hCenter: classes.header__hCenter,
-      wCenter: classes.header__wCenter,
-    }),
-    [],
-  );
-  const cellClasses = React.useMemo<TableCellClasses<RowData>>(
-    () => ({
-      common: classes.cell__common,
-      empty: classes.cell__empty,
-      nowrap: classes.cell__nowrap,
-      lineClamp: classes.cell__lineClamp,
-      hCenter: classes.cell__hCenter,
-      wCenter: classes.cell__wCenter,
-    }),
-    [],
-  );
-
-  const sorts = React.useMemo<Record<SortingKey, SortingFn<RowData> | BuiltInSortingFn>>(
-    () => ({
-      "string-with-number": "alphanumeric",
-      array: arraySort,
-      string: stringSort,
-      number: numberSort,
-      boolean: booleanSort,
-      date: dateSort,
-    }),
-    [],
-  );
-  const filters = React.useMemo<Record<FilterKey, FilterFnOption<RowData>>>(
-    () => ({
-      "date-in-range": dateRangeFilter,
-      "array-every-in-array": "arrIncludesAll",
-      "array-some-in-array": "arrIncludesSome",
-      "array-equals": arrayAllFilter,
-      "includes-string": "includesString",
-      "array-some-in-primitive": stringByArrayFilter,
-      date: dateFilter,
-      equals: "equals",
-      "number-in-range": "inNumberRange",
-    }),
-    [],
-  );
-
   const { columns, grouping, columnPinning, filterOptions } = React.useMemo(() => {
     const grouping: GroupingState = [];
     const columnPinning: ColumnPinningState = { left: [], right: [] };
@@ -230,16 +189,38 @@ export function useColumns<
         grouping.push(columnId);
       }
 
-      const cellRenderKey = column.cellRender ?? cellRender;
-      const headerRenderKey = column.headerRender ?? headerRender;
-      const filterRenderKey = column.filterRender ?? filterRender;
-      const sortRenderKey = column.sortRender ?? sortRender;
-      const cellClassKey = column.cellClass ?? cellClass;
+      const cellRenderKey =
+        column.cellRender?.component ??
+        props.defaultColumnOptions?.cellRender ??
+        DEFAULT_COLUMNS_SETTINGS.cellRender;
+      const headerRenderKey =
+        column.headerRender?.component ??
+        props.defaultColumnOptions?.headerRender ??
+        DEFAULT_COLUMNS_SETTINGS.headerRender;
+      const filterRenderKey =
+        props.defaultColumnOptions?.filterRender ?? DEFAULT_COLUMNS_SETTINGS.filterRender;
+      const sortRenderKey =
+        column.sortRender?.component ??
+        props.defaultColumnOptions?.sortRender ??
+        DEFAULT_COLUMNS_SETTINGS.sortRender;
+      const cellClassKey =
+        column.cellClass ??
+        props.defaultColumnOptions?.cellClass ??
+        DEFAULT_COLUMNS_SETTINGS.cellClass;
       const additionalCellClassKey = column.additionalCellClass ?? [];
-      const headerClassKey = column.headerClass ?? headerClass;
+      const headerClassKey =
+        column.headerClass ??
+        props.defaultColumnOptions?.headerClass ??
+        DEFAULT_COLUMNS_SETTINGS.headerClass;
       const additionalHeaderClassKey = column.additionalHeaderClass ?? [];
-      const sortTypeKey = column.sortType ?? sortType;
-      const filterTypeKey = column.filterType ?? filterType;
+      const sortTypeKey =
+        column.sortType ??
+        props.defaultColumnOptions?.sortType ??
+        DEFAULT_COLUMNS_SETTINGS.sortType;
+      const filterTypeKey =
+        column.filterType ??
+        props.defaultColumnOptions?.filterType ??
+        DEFAULT_COLUMNS_SETTINGS.filterType;
 
       const columnDef: ColumnDef<RowData> = {
         accessorKey: column.key as string,
@@ -247,23 +228,37 @@ export function useColumns<
         id: columnId,
         name: column.name,
         size: column.width,
-        minSize: column.minWidth ?? minWidth,
-        maxSize: column.maxWidth ?? maxWidth,
+        minSize:
+          column.minWidth ??
+          props.defaultColumnOptions?.minWidth ??
+          DEFAULT_COLUMNS_SETTINGS.minWidth,
+        maxSize:
+          column.maxWidth ??
+          props.defaultColumnOptions?.maxWidth ??
+          DEFAULT_COLUMNS_SETTINGS.maxWidth,
         cellRender:
-          props.cellRenders?.[cellRenderKey] ?? cellRenders[cellRenderKey as TableCellRenderKey],
+          (cellRenderKey ? props.cellRenders?.[cellRenderKey] : undefined) ??
+          (CELL_RENDERS[cellRenderKey as TableCellRenderKey] as CellRenderComponent<RowData>),
         headerRender:
-          props.headerRenders?.[headerRenderKey] ??
-          headerRenders[headerRenderKey as TableHeaderRenderKey],
+          (headerRenderKey ? props.headerRenders?.[headerRenderKey] : undefined) ??
+          (HEADER_RENDERS[
+            headerRenderKey as TableHeaderRenderKey
+          ] as HeaderRenderComponent<RowData>),
         filterRender:
-          props.filterRenders?.[filterRenderKey] ??
-          filterRenders[filterRenderKey as TableFilterRenderKey],
+          (filterRenderKey ? props.filterRenders?.[filterRenderKey] : undefined) ??
+          (FILTER_RENDERS[
+            filterRenderKey as TableFilterRenderKey
+          ] as FilterRenderComponent<RowData>),
         sortRender:
-          props.sortRenders?.[sortRenderKey] ?? sortRenders[sortRenderKey as TableSortRenderKey],
-        cellClass: [...cellClassKey, ...additionalCellClassKey].reduce(
-          (result: (string | ((props: CellContext<RowData, unknown>) => string))[], key) => {
+          (sortRenderKey ? props.sortRenders?.[sortRenderKey] : undefined) ??
+          (SORT_RENDERS[sortRenderKey as TableSortRenderKey] as SortRenderComponent<RowData>),
+        cellClass: [...(cellClassKey ?? []), ...additionalCellClassKey].reduce(
+          (result: CellClassInterface<RowData>[], key) => {
             if (!key) return result;
 
-            const style = props.cellClasses?.[key] ?? cellClasses[key as TableCellClassKey];
+            const style =
+              props.cellClasses?.[key] ??
+              (CELL_CLASSES[key as TableCellClassKey] as CellClassInterface<RowData>);
 
             if (style) result.push(style);
 
@@ -271,11 +266,13 @@ export function useColumns<
           },
           [],
         ),
-        headerClass: [...headerClassKey, ...additionalHeaderClassKey].reduce(
-          (result: (string | ((props: HeaderContext<RowData, unknown>) => string))[], key) => {
+        headerClass: [...(headerClassKey ?? []), ...additionalHeaderClassKey].reduce(
+          (result: HeaderClassInterface<RowData>[], key) => {
             if (!key) return result;
 
-            const style = props.headerClasses?.[key] ?? headerClasses[key as TableHeaderClassKey];
+            const style =
+              props.headerClasses?.[key] ??
+              (HEADER_CLASSES[key as TableHeaderClassKey] as HeaderClassInterface<RowData>);
 
             if (style) result.push(style);
 
@@ -283,27 +280,42 @@ export function useColumns<
           },
           [],
         ),
-        cellRenderProps: column.cellRenderProps,
-        headerRenderProps: column.headerRenderProps,
-        filterRenderProps: column.filterRenderProps,
-        sortRenderProps: column.sortRenderProps,
+        cellRenderProps: column.cellRender?.props,
+        headerRenderProps: column.headerRender?.props,
+        filterRenderProps: column.filterRender?.props,
+        sortRenderProps: column.sortRender?.props,
+        cellClassProps: column.cellClassProps,
+        headerClassProps: column.headerClassProps,
         props: column.props,
-        tooltip: column.tooltip ?? tooltip,
-        className: column.className ?? className,
-        enableResizing: column.rightFrozen ? false : (column.resizable ?? resizable),
-        enableColumnFilter: props.withGantt ? false : (column.filterable ?? filterable),
-        enableSorting: props.withGantt ? false : (column.sortable ?? sortable),
-        enableMultiSort: props.withGantt ? false : (column.sortable ?? sortable),
-        expandable: column.expandable ?? expandable,
-        expandedShift: column.expandedShift ?? expandedShift,
+        tooltip: column.tooltip ?? DEFAULT_COLUMNS_SETTINGS.tooltip,
+        className: column.className,
+        enableResizing: column.rightFrozen
+          ? false
+          : (column.resizable ?? DEFAULT_COLUMNS_SETTINGS.resizable),
+        enableColumnFilter: props.withGantt
+          ? false
+          : (column.filterable ?? DEFAULT_COLUMNS_SETTINGS.filterable),
+        enableSorting: props.withGantt
+          ? false
+          : (column.sortable ?? DEFAULT_COLUMNS_SETTINGS.sortable),
+        enableMultiSort: props.withGantt
+          ? false
+          : (column.sortable ?? DEFAULT_COLUMNS_SETTINGS.sortable),
+        expandable: column.expandable,
+        expandedShift: column.expandedShift ?? DEFAULT_COLUMNS_SETTINGS.expandedShift,
         enableHiding: true,
         enablePinning: true,
         enableGrouping: true,
-        enableDraggable: column.draggable ?? draggable,
+        enableDraggable: column.draggable ?? DEFAULT_COLUMNS_SETTINGS.draggable,
         sortUndefined: 1,
-        sortDescFirst: (column.sortDirectionFirst ?? sortDirectionFirst) === "desc",
-        sortingFn: props.sortTypes?.[sortTypeKey] ?? sorts[sortTypeKey as SortingKey],
-        filterFn: props.filterTypes?.[filterTypeKey] ?? filters[filterTypeKey as FilterKey],
+        sortDescFirst:
+          (column.sortDirectionFirst ?? DEFAULT_COLUMNS_SETTINGS.sortDirectionFirst) === "desc",
+        sortingFn:
+          (sortTypeKey ? props.sortTypes?.[sortTypeKey] : undefined) ??
+          (SORTS[sortTypeKey as SortingKey] as SortingFn<RowData> | BuiltInSortingFn),
+        filterFn:
+          (filterTypeKey ? props.filterTypes?.[filterTypeKey] : undefined) ??
+          (FILTERS[filterTypeKey as FilterKey] as FilterFn<RowData> | BuiltInFilterFn),
       };
 
       if (column.width == undefined && props.rubberColumn) {
@@ -328,7 +340,7 @@ export function useColumns<
           labelInValue: true,
           popover: true,
           renderDisplayValue: (value) => {
-            const filterRender = props.columns[i].filterRender;
+            const filterRender = props.columns[i].filterRender?.component;
 
             /** datepicker */
             if (isDayjsDate(value)) {
@@ -385,7 +397,10 @@ export function useColumns<
 
             return String(value);
           },
-          inputField: column.filterRender(column) as React.JSX.Element,
+          inputField: column.filterRender({
+            context: column,
+            settings: column.filterRenderProps,
+          }) as React.JSX.Element,
         });
       }
     }

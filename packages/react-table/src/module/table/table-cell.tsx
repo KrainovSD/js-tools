@@ -21,7 +21,9 @@ export const TableCell = React.memo(function TableCell<RowData extends DefaultRo
   const cellContext = props.cell.getContext();
   const cellClass = props.cell.column.columnDef.cellClass;
   const cellClasses = cellClass.map((style) =>
-    typeof style === "function" ? style(cellContext) : style,
+    typeof style === "function"
+      ? style(cellContext, props.cell.column.columnDef.cellClassProps)
+      : style,
   );
   const isGroupCell =
     props.cell.row.getIsGrouped() && props.cell.row.groupingColumnId === props.cell.column.id;
@@ -61,7 +63,9 @@ export const TableCell = React.memo(function TableCell<RowData extends DefaultRo
       }}
     >
       {isGroupCell && Expander && <Expander context={cellContext} />}
-      {CellRender && <CellRender context={cellContext} />}
+      {CellRender && (
+        <CellRender context={cellContext} settings={props.cell.column.columnDef.cellRenderProps} />
+      )}
     </div>
   );
 }) as <RowData extends DefaultRow>(props: Props<RowData>) => React.JSX.Element;

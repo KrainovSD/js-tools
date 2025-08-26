@@ -8,7 +8,12 @@ export function DefaultHeaderRender<RowData extends DefaultRow>(props: HeaderRen
   return (
     <div className="ksd-table-header-cell-container">
       <span className={styles.text}>{props.context.column.columnDef.name}</span>
-      {canSort && SortRender && <SortRender context={props.context} />}
+      {canSort && SortRender && (
+        <SortRender
+          context={props.context}
+          settings={props.context.column.columnDef.sortRenderProps}
+        />
+      )}
     </div>
   );
 }

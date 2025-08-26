@@ -30,7 +30,9 @@ export const TableHeaderCell = React.memo(function TableHeaderCell<RowData exten
   const headerContext = props.header.getContext();
   const headerClass = props.header.column.columnDef.headerClass;
   const headerClasses = headerClass.map((style) =>
-    typeof style === "function" ? style(headerContext) : style,
+    typeof style === "function"
+      ? style(headerContext, props.header.column.columnDef.headerClassProps)
+      : style,
   );
   const frozenPosition = props.header.column.getIsPinned();
   const prevFrozen = getPrevFrozenWidthHeader({
@@ -84,7 +86,10 @@ export const TableHeaderCell = React.memo(function TableHeaderCell<RowData exten
           : undefined
       }
     >
-      <HeaderRender context={headerContext} />
+      <HeaderRender
+        context={headerContext}
+        settings={props.header.column.columnDef.headerRenderProps}
+      />
 
       {props.header.column.getCanResize() && (
         // eslint-disable-next-line jsx-a11y/no-static-element-interactions

@@ -1,18 +1,11 @@
 import { faker } from "@faker-js/faker";
 import { getDateByRules } from "@krainovsd/js-helpers";
-import type { RowGantt, RowGanttVirtual } from "../../types/gantt";
+import type { RowGantt } from "../../types/gantt";
 
-export const GANTT_ROWS: RowGantt[] = createRowsGantt(false);
-export const GANTT_ROWS_VIRTUAL: RowGanttVirtual[] = createRowsGantt(true) as RowGanttVirtual[];
+export const GANTT_ROWS: RowGantt[] = createRowsGantt();
 
-function createRowsGantt(virtual: boolean): (RowGantt | RowGanttVirtual)[] {
-  const virtualRowEntries = Array.from({ length: 30 }, (_, index) => [
-    `wide${index + 1}`,
-    index + 1,
-  ]);
-  const virtualRow = Object.fromEntries(virtualRowEntries) as Omit<RowGanttVirtual, "children">;
-
-  const rows: (RowGantt | RowGanttVirtual)[] = [];
+function createRowsGantt(): RowGantt[] {
+  const rows: RowGantt[] = [];
   const start = faker.date.past({ years: 3 });
   const end = getDateByRules([{ increment: 5, type: "years" }], start);
 
@@ -22,7 +15,6 @@ function createRowsGantt(virtual: boolean): (RowGantt | RowGanttVirtual)[] {
     start: start.toISOString(),
     end: end.toISOString(),
     children: generateInner(1, "0", start),
-    ...(virtual ? virtualRow : {}),
   });
 
   function generateInner(deep: number, parentId: string, start: Date) {
@@ -47,7 +39,6 @@ function createRowsGantt(virtual: boolean): (RowGantt | RowGanttVirtual)[] {
         end: childrenEnd.toISOString(),
         children,
         dependents: [`${parentId}.${deep}.${i + 1}`],
-        ...(virtual ? virtualRow : {}),
       });
 
       start = childrenEnd;
@@ -345,4 +336,4 @@ export const GANTT_EASY_ROWS = [
       },
     ],
   },
-] as RowGanttVirtual[];
+] as RowGantt[];

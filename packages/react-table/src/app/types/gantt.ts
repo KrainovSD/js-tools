@@ -1,20 +1,4 @@
-import type { GanttTypeShapes } from "../../types";
-
-export type GanttCellRenderKeys = "test";
-export type GanttCellRenderProps = { test: unknown };
-export type GanttHeaderRenderKeys = undefined;
-export type GanttHeaderRenderProps = Record<string, unknown>;
-export type GanttFilterRenderKeys = undefined;
-export type GanttFilterRenderProps = Record<string, unknown>;
-export type GanttSortRenderKeys = undefined;
-export type GanttSortRenderProps = Record<string, unknown>;
-export type GanttCellClassKeys = undefined;
-export type GanttCellClassProps = unknown;
-export type GanttHeaderClassKeys = undefined;
-export type GanttHeaderClassProps = unknown;
-export type GanttFilterTypeKeys = undefined;
-export type GanttSortTypeKeys = undefined;
-export type GanttColumnProps = unknown;
+import type { GanttTypeShapes, TableColumn } from "../../types";
 
 export type RowGantt = {
   id: string;
@@ -26,38 +10,6 @@ export type RowGantt = {
   children?: RowGantt[];
 };
 
-export type RowGanttVirtual = Omit<RowGantt, "children"> & {
-  wide1: number;
-  wide2: number;
-  wide3: number;
-  wide4: number;
-  wide5: number;
-  wide6: number;
-  wide7: number;
-  wide8: number;
-  wide9: number;
-  wide10: number;
-  wide11: number;
-  wide12: number;
-  wide13: number;
-  wide14: number;
-  wide15: number;
-  wide16: number;
-  wide17: number;
-  wide18: number;
-  wide19: number;
-  wide20: number;
-  wide21: number;
-  wide22: number;
-  wide23: number;
-  wide24: number;
-  wide25: number;
-  wide26: number;
-  wide27: number;
-  wide28: number;
-  wide29: number;
-  wide30: number;
-  children?: RowGanttVirtual[];
-};
-
 export type GanttMeta = {};
+
+export type GanttColumn = TableColumn<RowGantt>;

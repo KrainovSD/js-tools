@@ -1,3 +1,15 @@
+import type { TableColumn } from "../../types";
+import type {
+  CELL_CLASSES,
+  CELL_RENDERS,
+  FILTER_RENDERS,
+  FILTER_TYPES,
+  HEADER_CLASSES,
+  HEADER_RENDERS,
+  SORT_RENDERS,
+  SORT_TYPES,
+} from "../lib/common/columns";
+
 export type CommonRow = {
   id: string;
   country: string;
@@ -14,52 +26,14 @@ export type CommonRow = {
   _EXPANDED_ROW?: boolean;
 };
 
-export type CommonRowVirtual = Omit<CommonRow, "children"> & {
-  wide1: number;
-  wide2: number;
-  wide3: number;
-  wide4: number;
-  wide5: number;
-  wide6: number;
-  wide7: number;
-  wide8: number;
-  wide9: number;
-  wide10: number;
-  wide11: number;
-  wide12: number;
-  wide13: number;
-  wide14: number;
-  wide15: number;
-  wide16: number;
-  wide17: number;
-  wide18: number;
-  wide19: number;
-  wide20: number;
-  wide21: number;
-  wide22: number;
-  wide23: number;
-  wide24: number;
-  wide25: number;
-  wide26: number;
-  wide27: number;
-  wide28: number;
-  wide29: number;
-  wide30: number;
-  children: CommonRowVirtual[];
-};
-
-export type CellRenderKeys = "test";
-export type CellRenderProps = { test: unknown };
-export type HeaderRenderKeys = undefined;
-export type HeaderRenderProps = Record<string, unknown>;
-export type FilterRenderKeys = undefined;
-export type FilterRenderProps = Record<string, unknown>;
-export type SortRenderKeys = undefined;
-export type SortRenderProps = Record<string, unknown>;
-export type CellClassKeys = undefined;
-export type CellClassProps = unknown;
-export type HeaderClassKeys = undefined;
-export type HeaderClassProps = unknown;
-export type FilterTypeKeys = undefined;
-export type SortTypeKeys = undefined;
-export type ColumnProps = undefined;
+export type Column = TableColumn<
+  CommonRow,
+  typeof CELL_RENDERS,
+  typeof HEADER_RENDERS,
+  typeof FILTER_RENDERS,
+  typeof SORT_RENDERS,
+  typeof CELL_CLASSES,
+  typeof HEADER_CLASSES,
+  typeof FILTER_TYPES,
+  typeof SORT_TYPES
+>;

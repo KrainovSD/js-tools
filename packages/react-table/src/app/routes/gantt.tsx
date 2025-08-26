@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 /* eslint-disable no-console */
 import type { ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";
@@ -6,25 +5,7 @@ import { Table } from "../../table";
 import type { RowInterface } from "../../types";
 import { COLUMNS_GANTT } from "../lib/gantt/columns";
 import { GANTT_ROWS } from "../lib/gantt/rows";
-import type {
-  GanttCellClassKeys,
-  GanttCellClassProps,
-  GanttCellRenderKeys,
-  GanttCellRenderProps,
-  GanttColumnProps,
-  GanttFilterRenderKeys,
-  GanttFilterRenderProps,
-  GanttFilterTypeKeys,
-  GanttHeaderClassKeys,
-  GanttHeaderClassProps,
-  GanttHeaderRenderKeys,
-  GanttHeaderRenderProps,
-  GanttMeta,
-  GanttSortRenderKeys,
-  GanttSortRenderProps,
-  GanttSortTypeKeys,
-  RowGantt,
-} from "../types/gantt";
+import type { GanttMeta, RowGantt } from "../types/gantt";
 
 export function Gantt() {
   const [expanded, setExpanded] = React.useState<ExpandedState>(true);
@@ -65,31 +46,12 @@ export function Gantt() {
   console.log(GANTT_ROWS);
 
   return (
-    <Table<
-      RowGantt,
-      GanttMeta,
-      GanttCellRenderKeys,
-      GanttCellRenderProps,
-      GanttHeaderRenderKeys,
-      GanttHeaderRenderProps,
-      GanttFilterRenderKeys,
-      GanttFilterRenderProps,
-      GanttSortRenderKeys,
-      GanttSortRenderProps,
-      GanttCellClassKeys,
-      GanttCellClassProps,
-      GanttHeaderClassKeys,
-      GanttHeaderClassProps,
-      GanttFilterTypeKeys,
-      GanttSortTypeKeys,
-      GanttColumnProps
-    >
+    <Table<RowGantt, GanttMeta>
       columns={COLUMNS_GANTT}
       rows={GANTT_ROWS}
       // rows={[]}
       // rows={[{ end: "", id: "", name: "", start: "", children: [], dependents: [] }]}
       Empty={() => <span>Empty</span>}
-      cellRenders={{ test: () => "" }}
       getSubRows={(row) => row.children}
       onClickRow={onClick}
       onDoubleClickRow={onDoubleClick}

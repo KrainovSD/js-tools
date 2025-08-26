@@ -6,8 +6,7 @@ import {
   Select,
   type SelectItemInterface,
 } from "@krainovsd/react-ui";
-import type { ColumnDef } from "@tanstack/react-table";
-import type { DefaultRow } from "../../../types";
+import type { DefaultRow, FilterRenderProps } from "../../../types";
 
 export function StringFilterRender() {
   return <Input placeholder={"Введите значение"} variant="outlined" size="middle" />;
@@ -17,16 +16,16 @@ export type SelectFilterRenderProps = {
   options: SelectItemInterface[];
   multiple?: boolean;
 };
-export function SelectFilterRender<Row extends DefaultRow>(props: ColumnDef<Row>) {
-  const filterRenderProps = props.filterRenderProps as SelectFilterRenderProps | undefined;
-
+export function SelectFilterRender<Row extends DefaultRow>(
+  props: FilterRenderProps<Row, SelectFilterRenderProps>,
+) {
   return (
     <Select
-      mode={filterRenderProps?.multiple ? "multiple" : undefined}
+      mode={props.settings?.multiple ? "multiple" : undefined}
       variant="outlined"
       size="middle"
       style={{ width: "fit-content", minWidth: 200, maxWidth: 600 }}
-      options={filterRenderProps?.options}
+      options={props.settings?.options}
       placeholder={"Выберите статус"}
     />
   );
@@ -35,15 +34,15 @@ export function SelectFilterRender<Row extends DefaultRow>(props: ColumnDef<Row>
 export type DateFilterRenderProps = {
   format: string;
 };
-export function DateRangeFilterRender<Row extends DefaultRow>(props: ColumnDef<Row>) {
-  const filterRenderProps = props.filterRenderProps as DateFilterRenderProps | undefined;
-
-  return <DateRangePicker format={filterRenderProps?.format} />;
+export function DateRangeFilterRender<Row extends DefaultRow>(
+  props: FilterRenderProps<Row, DateFilterRenderProps>,
+) {
+  return <DateRangePicker format={props.settings?.format} />;
 }
-export function DateFilterRender<Row extends DefaultRow>(props: ColumnDef<Row>) {
-  const filterRenderProps = props.filterRenderProps as DateFilterRenderProps | undefined;
-
-  return <DatePicker format={filterRenderProps?.format} />;
+export function DateFilterRender<Row extends DefaultRow>(
+  props: FilterRenderProps<Row, DateFilterRenderProps>,
+) {
+  return <DatePicker format={props.settings?.format} />;
 }
 export function NumberRangeFilterRender() {
   return <InputNumber placeholder={"Введите значение"} variant="outlined" size="middle" />;

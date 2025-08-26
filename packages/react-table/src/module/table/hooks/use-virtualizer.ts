@@ -2,56 +2,41 @@ import type { Table } from "@tanstack/react-table";
 import { useVirtualizer as useVirtualizerLibrary } from "@tanstack/react-virtual";
 import React from "react";
 import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../../table.constants";
-import type { DefaultRow, TableColumn } from "../../../types";
+import type {
+  CellClassInterface,
+  CellRenderComponent,
+  DefaultRow,
+  FilterFn,
+  FilterRenderComponent,
+  HeaderClassInterface,
+  HeaderRenderComponent,
+  SortFn,
+  SortRenderComponent,
+  TableColumn,
+} from "../../../types";
 
 type UseVirtualizerProps<
   RowData extends DefaultRow,
-  CellRender extends string | undefined = undefined,
-  CellRenderProps extends Record<CellRender extends string ? CellRender : string, unknown> = Record<
-    CellRender extends string ? CellRender : string,
-    unknown
-  >,
-  HeaderRender extends string | undefined = undefined,
-  HeaderRenderProps extends Record<
-    HeaderRender extends string ? HeaderRender : string,
-    unknown
-  > = Record<HeaderRender extends string ? HeaderRender : string, unknown>,
-  FilterRender extends string | undefined = undefined,
-  FilterRenderProps extends Record<
-    FilterRender extends string ? FilterRender : string,
-    unknown
-  > = Record<FilterRender extends string ? FilterRender : string, unknown>,
-  SortRender extends string | undefined = undefined,
-  SortRenderProps extends Record<SortRender extends string ? SortRender : string, unknown> = Record<
-    SortRender extends string ? SortRender : string,
-    unknown
-  >,
-  CellClass extends string | undefined = undefined,
-  CellClassProps = unknown,
-  HeaderClass extends string | undefined = undefined,
-  HeaderClassProps = unknown,
-  FilterType extends string | undefined = undefined,
-  SortType extends string | undefined = undefined,
-  ColumnProps = unknown,
+  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
+  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
+  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
+  CellClass extends Record<string, CellClassInterface<RowData>> = {},
+  HeaderClass extends Record<string, HeaderClassInterface<RowData>> = {},
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+  SortType extends Record<string, SortFn<RowData>> = {},
 > = {
   rows: RowData[];
   initialColumns: TableColumn<
     RowData,
     CellRender,
-    CellRenderProps,
     HeaderRender,
-    HeaderRenderProps,
     FilterRender,
-    FilterRenderProps,
     SortRender,
-    SortRenderProps,
     CellClass,
-    CellClassProps,
     HeaderClass,
-    HeaderClassProps,
     FilterType,
-    SortType,
-    ColumnProps
+    SortType
   >[];
   table: Table<RowData>;
   tableContainerRef: React.RefObject<HTMLDivElement | null>;
@@ -66,51 +51,25 @@ type UseVirtualizerProps<
 
 export function useVirtualizer<
   RowData extends DefaultRow,
-  CellRender extends string | undefined = undefined,
-  CellRenderProps extends Record<CellRender extends string ? CellRender : string, unknown> = Record<
-    CellRender extends string ? CellRender : string,
-    unknown
-  >,
-  HeaderRender extends string | undefined = undefined,
-  HeaderRenderProps extends Record<
-    HeaderRender extends string ? HeaderRender : string,
-    unknown
-  > = Record<HeaderRender extends string ? HeaderRender : string, unknown>,
-  FilterRender extends string | undefined = undefined,
-  FilterRenderProps extends Record<
-    FilterRender extends string ? FilterRender : string,
-    unknown
-  > = Record<FilterRender extends string ? FilterRender : string, unknown>,
-  SortRender extends string | undefined = undefined,
-  SortRenderProps extends Record<SortRender extends string ? SortRender : string, unknown> = Record<
-    SortRender extends string ? SortRender : string,
-    unknown
-  >,
-  CellClass extends string | undefined = undefined,
-  CellClassProps = unknown,
-  HeaderClass extends string | undefined = undefined,
-  HeaderClassProps = unknown,
-  FilterType extends string | undefined = undefined,
-  SortType extends string | undefined = undefined,
-  ColumnProps = unknown,
+  CellRender extends Record<string, CellRenderComponent<RowData>> = {},
+  HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
+  FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
+  SortRender extends Record<string, SortRenderComponent<RowData>> = {},
+  CellClass extends Record<string, CellClassInterface<RowData>> = {},
+  HeaderClass extends Record<string, HeaderClassInterface<RowData>> = {},
+  FilterType extends Record<string, FilterFn<RowData>> = {},
+  SortType extends Record<string, SortFn<RowData>> = {},
 >(
   props: UseVirtualizerProps<
     RowData,
     CellRender,
-    CellRenderProps,
     HeaderRender,
-    HeaderRenderProps,
     FilterRender,
-    FilterRenderProps,
     SortRender,
-    SortRenderProps,
     CellClass,
-    CellClassProps,
     HeaderClass,
-    HeaderClassProps,
     FilterType,
-    SortType,
-    ColumnProps
+    SortType
   >,
 ) {
   const columnVirtualEnabled = Boolean(props.virtualColumn && !props.gantt);

@@ -11,6 +11,7 @@ import type {
   RowModel as RowModelLib,
   Table,
 } from "@tanstack/react-table";
+import type React from "react";
 
 export type TableTypesGetter<RowData extends DefaultRow> = {
   headerRenderProps: HeaderRenderProps<RowData>;
@@ -24,22 +25,8 @@ export type TableTypesGetter<RowData extends DefaultRow> = {
   sortFn: (rowA: RowInterface<RowData>, rowB: RowInterface<RowData>, columnId: string) => number;
 };
 
-export type CellRenderProps<RowData extends DefaultRow> = { context: CellContext<RowData> };
-export type HeaderRenderProps<RowData extends DefaultRow> = {
-  context: HeaderContext<RowData>;
-};
 export type HeaderContext<RowData extends DefaultRow> = HeaderContextLib<RowData, unknown>;
 export type CellContext<RowData extends DefaultRow> = CellContextLib<RowData, unknown>;
-export type FilterFn<RowData extends DefaultRow> = (
-  row: RowInterface<RowData>,
-  columnId: string,
-  filterValue: unknown,
-) => boolean;
-export type SortFn<RowData extends DefaultRow> = (
-  rowA: RowInterface<RowData>,
-  rowB: RowInterface<RowData>,
-  columnId: string,
-) => number;
 export type RowModel<RowData extends DefaultRow> = RowModelLib<RowData>;
 
 export type DefaultRow = RowData;
@@ -57,3 +44,60 @@ export type PaginationState = PaginationStateLib;
 export type TableInterface<TData extends RowData> = Table<TData>;
 export type RowInterface<TData extends RowData> = Row<TData>;
 export type HeaderInterface<TData extends RowData> = HeaderGroup<TData>;
+
+export type FilterFn<RowData extends DefaultRow> = (
+  row: RowInterface<RowData>,
+  columnId: string,
+  filterValue: unknown,
+) => boolean;
+export type SortFn<RowData extends DefaultRow> = (
+  rowA: RowInterface<RowData>,
+  rowB: RowInterface<RowData>,
+  columnId: string,
+) => number;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CellRenderProps<RowData extends DefaultRow, Settings = any> = {
+  context: CellContext<RowData>;
+  settings?: Settings;
+};
+export type CellRenderComponent<RowData extends DefaultRow> = React.FC<CellRenderProps<RowData>>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type HeaderRenderProps<RowData extends DefaultRow, Settings = any> = {
+  context: HeaderContext<RowData>;
+  settings?: Settings;
+};
+export type HeaderRenderComponent<RowData extends DefaultRow> = React.FC<
+  HeaderRenderProps<RowData>
+>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FilterRenderProps<RowData extends DefaultRow, Settings = any> = {
+  context: ColumnDef<RowData>;
+  settings?: Settings;
+};
+export type FilterRenderComponent<RowData extends DefaultRow> = React.FC<
+  FilterRenderProps<RowData>
+>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SortRenderProps<RowData extends DefaultRow, Settings = any> = {
+  context: HeaderContext<RowData>;
+  settings?: Settings;
+};
+export type SortRenderComponent<RowData extends DefaultRow> = React.FC<SortRenderProps<RowData>>;
+
+export type CellClassInterface<RowData extends DefaultRow> = string | CellClassFn<RowData>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type CellClassFn<RowData extends DefaultRow, Settings = any> = (
+  context: CellContext<RowData>,
+  settings?: Settings,
+) => string | undefined;
+
+export type HeaderClassInterface<RowData extends DefaultRow> = string | HeaderClassFn<RowData>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type HeaderClassFn<RowData extends DefaultRow, Settings = any> = (
+  context: HeaderContext<RowData>,
+  settings?: Settings,
+) => string | undefined;

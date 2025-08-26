@@ -5,23 +5,6 @@ import React from "react";
 import { Link } from "react-router";
 import { Table } from "../../table";
 import type { RowInterface, TableColumn } from "../../types";
-import type {
-  CellClassKeys,
-  CellClassProps,
-  CellRenderKeys,
-  CellRenderProps,
-  ColumnProps,
-  FilterRenderKeys,
-  FilterRenderProps,
-  FilterTypeKeys,
-  HeaderClassKeys,
-  HeaderClassProps,
-  HeaderRenderKeys,
-  HeaderRenderProps,
-  SortRenderKeys,
-  SortRenderProps,
-  SortTypeKeys,
-} from "../types/common";
 import styles from "./common-formatters.module.scss";
 
 type CommonRow = {
@@ -35,24 +18,7 @@ type CommonRow = {
   enums: string[];
 };
 
-const COMMON_COLUMNS: TableColumn<
-  CommonRow,
-  CellRenderKeys,
-  CellRenderProps,
-  HeaderRenderKeys,
-  HeaderRenderProps,
-  FilterRenderKeys,
-  FilterRenderProps,
-  SortRenderKeys,
-  SortRenderProps,
-  CellClassKeys,
-  CellClassProps,
-  HeaderClassKeys,
-  HeaderClassProps,
-  FilterTypeKeys,
-  SortTypeKeys,
-  ColumnProps
->[] = [
+const COMMON_COLUMNS: TableColumn<CommonRow>[] = [
   {
     id: "_select",
     key: "string",
@@ -62,23 +28,29 @@ const COMMON_COLUMNS: TableColumn<
     draggable: false,
     sortable: false,
     filterable: false,
-    cellRender: "select",
-    additionalCellClass: ["hCenter", "wCenter"],
-    cellRenderProps: {
-      hover: true,
+    cellRender: {
+      component: "select",
+      props: {
+        hover: true,
+      },
     },
-    headerRender: "select",
+    additionalCellClass: ["hCenter", "wCenter"],
+    headerRender: {
+      component: "select",
+    },
     additionalHeaderClass: ["wCenter", "hCenter"],
   },
   {
     key: "string",
     name: "String",
     width: 250,
-    cellRender: "default",
-    cellRenderProps: {
-      Link: (props) => {
-        // eslint-disable-next-line react/prop-types
-        return <Link to={"/common-formatters"}>{props.children}</Link>;
+    cellRender: {
+      component: "default",
+      props: {
+        Link: (props) => {
+          // eslint-disable-next-line react/prop-types
+          return <Link to={"/common-formatters"}>{props.children}</Link>;
+        },
       },
     },
     additionalCellClass: ["hCenter", "wCenter", "nowrap"],
@@ -91,9 +63,11 @@ const COMMON_COLUMNS: TableColumn<
     key: "date",
     name: "date",
     width: 150,
-    cellRender: "default",
-    cellRenderProps: {
-      dateFormat: "DD/MM/YYYY",
+    cellRender: {
+      component: "default",
+      props: {
+        dateFormat: "DD/MM/YYYY",
+      },
     },
     tooltip: {
       auto: true,
@@ -103,9 +77,11 @@ const COMMON_COLUMNS: TableColumn<
     key: "number",
     name: "number",
     width: 100,
-    cellRender: "default",
-    cellRenderProps: {
-      floatFixed: 2,
+    cellRender: {
+      component: "default",
+      props: {
+        floatFixed: 2,
+      },
     },
     additionalCellClass: ["hCenter", "wCenter", "nowrap"],
     className: (context) => {
@@ -117,12 +93,14 @@ const COMMON_COLUMNS: TableColumn<
     key: "boolean",
     name: "boolean",
     width: 100,
-    cellRender: "default",
-    cellRenderProps: {
-      mappings: {
-        true: "Yes",
-        false: "No",
-        undefined: "Maybe",
+    cellRender: {
+      component: "default",
+      props: {
+        mappings: {
+          true: "Yes",
+          false: "No",
+          undefined: "Maybe",
+        },
       },
     },
     additionalCellClass: ["hCenter", "wCenter", "nowrap"],
@@ -132,37 +110,41 @@ const COMMON_COLUMNS: TableColumn<
     key: "enums",
     name: "enums",
     width: 250,
-    cellRender: "tag",
-    filterable: true,
-    filterRender: "select",
-    filterType: "array-equals",
-    filterRenderProps: {
-      multiple: true,
-      options: [
-        { label: "Красный", value: "red" },
-        { label: "Синий", value: "blue" },
-        { label: "Зеленый", value: "green" },
-        { label: "Черный", value: "black" },
-      ],
-    },
-    cellRenderProps: {
-      mappings: {
-        red: "Красный",
-        blue: "Синий",
-        green: "Зеленый",
-        black: "Черный",
-      },
-      bordered: true,
-      color: (item) => {
-        if (item === "red") return "red";
-        if (item === "black") return "pink";
-        if (item === "blue") return "blue";
-        if (item === "green") return "green";
+    cellRender: {
+      component: "tag",
+      props: {
+        mappings: {
+          red: "Красный",
+          blue: "Синий",
+          green: "Зеленый",
+          black: "Черный",
+        },
+        bordered: true,
+        color: (item) => {
+          if (item === "red") return "red";
+          if (item === "black") return "pink";
+          if (item === "blue") return "blue";
+          if (item === "green") return "green";
 
-        return "default";
+          return "default";
+        },
+        filterable: true,
       },
-      filterable: true,
     },
+    filterRender: {
+      component: "select",
+      props: {
+        multiple: true,
+        options: [
+          { label: "Красный", value: "red" },
+          { label: "Синий", value: "blue" },
+          { label: "Зеленый", value: "green" },
+          { label: "Черный", value: "black" },
+        ],
+      },
+    },
+    filterable: true,
+    filterType: "array-equals",
     tooltip: {
       auto: true,
     },
@@ -172,22 +154,26 @@ const COMMON_COLUMNS: TableColumn<
     key: "object",
     name: "object",
     width: 250,
-    cellRender: "default",
-    additionalCellClass: ["lineClamp"],
-    cellRenderProps: {
-      objectPath: "string",
+    cellRender: {
+      component: "default",
+      props: {
+        objectPath: "string",
+      },
     },
+    additionalCellClass: ["lineClamp"],
   },
   {
     key: "arrayOfObjects",
     name: "arrayOfObjects",
     width: 250,
-    cellRender: "default",
-    additionalCellClass: ["lineClamp"],
-    cellRenderProps: {
-      objectPath: "string",
-      arraySeparator: " | ",
+    cellRender: {
+      component: "default",
+      props: {
+        objectPath: "string",
+        arraySeparator: " | ",
+      },
     },
+    additionalCellClass: ["lineClamp"],
     tooltip: {
       auto: true,
     },
@@ -236,25 +222,7 @@ export function CommonFormatters() {
   }
 
   return (
-    <Table<
-      CommonRow,
-      Record<string, unknown>,
-      CellRenderKeys,
-      CellRenderProps,
-      HeaderRenderKeys,
-      HeaderRenderProps,
-      FilterRenderKeys,
-      FilterRenderProps,
-      SortRenderKeys,
-      SortRenderProps,
-      CellClassKeys,
-      CellClassProps,
-      HeaderClassKeys,
-      HeaderClassProps,
-      FilterTypeKeys,
-      SortTypeKeys,
-      ColumnProps
-    >
+    <Table<CommonRow, Record<string, unknown>>
       columns={COMMON_COLUMNS}
       rows={COMMON_ROW}
       withTotal

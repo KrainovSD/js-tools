@@ -7,45 +7,21 @@ import type {
 } from "@tanstack/react-table";
 import React from "react";
 import { Table } from "../../table";
-import type { DragRowHandler, RowInterface, TableColumn } from "../../types";
+import type { DragRowHandler, RowInterface } from "../../types";
+import {
+  type CELL_CLASSES,
+  type CELL_RENDERS,
+  type FILTER_RENDERS,
+  type FILTER_TYPES,
+  type HEADER_CLASSES,
+  type HEADER_RENDERS,
+  type SORT_RENDERS,
+  type SORT_TYPES,
+} from "../lib/common/columns";
 import { COMMON_ROW } from "../lib/common/rows";
-import type {
-  CellClassKeys,
-  CellClassProps,
-  CellRenderKeys,
-  CellRenderProps,
-  ColumnProps,
-  CommonRow,
-  FilterRenderKeys,
-  FilterRenderProps,
-  FilterTypeKeys,
-  HeaderClassKeys,
-  HeaderClassProps,
-  HeaderRenderKeys,
-  HeaderRenderProps,
-  SortRenderKeys,
-  SortRenderProps,
-  SortTypeKeys,
-} from "../types/common";
+import type { Column, CommonRow } from "../types/common";
 
-const COMMON_COLUMNS: TableColumn<
-  CommonRow,
-  CellRenderKeys,
-  CellRenderProps,
-  HeaderRenderKeys,
-  HeaderRenderProps,
-  FilterRenderKeys,
-  FilterRenderProps,
-  SortRenderKeys,
-  SortRenderProps,
-  CellClassKeys,
-  CellClassProps,
-  HeaderClassKeys,
-  HeaderClassProps,
-  FilterTypeKeys,
-  SortTypeKeys,
-  ColumnProps
->[] = [
+const COMMON_COLUMNS: Column[] = [
   {
     id: "drag",
     key: "id",
@@ -55,7 +31,9 @@ const COMMON_COLUMNS: TableColumn<
     sortable: false,
     sortType: "string-with-number",
     draggable: false,
-    cellRender: "drag",
+    cellRender: {
+      component: "drag",
+    },
     additionalCellClass: ["wCenter", "hCenter"],
   },
   {
@@ -74,7 +52,7 @@ const COMMON_COLUMNS: TableColumn<
     draggable: true,
     sortable: true,
     expandable: true,
-    filterRender: "string",
+    filterRender: { component: "string" },
     filterable: true,
     filterType: "includes-string",
     headerClass: ["common"],
@@ -89,7 +67,7 @@ const COMMON_COLUMNS: TableColumn<
     name: "Last Name",
     filterable: true,
     width: 200,
-    filterRender: "string",
+    filterRender: { component: "string" },
     filterType: "includes-string",
     additionalCellClass: ["hCenter"],
     resizable: true,
@@ -103,7 +81,7 @@ const COMMON_COLUMNS: TableColumn<
     name: "Last Name 2",
     width: 200,
     filterable: true,
-    filterRender: "string",
+    filterRender: { component: "string" },
     filterType: "includes-string",
     additionalCellClass: ["hCenter"],
     resizable: true,
@@ -116,18 +94,20 @@ const COMMON_COLUMNS: TableColumn<
     name: "Очень длинное название колонки для тестов переноса строк",
     width: 250,
     filterable: true,
-    filterRender: "string",
+    filterRender: { component: "string" },
     filterType: "includes-string",
     resizable: true,
     draggable: true,
     sortable: true,
     additionalCellClass: ["common", "empty", "lineClamp"],
     headerClass: ["common", "lineClamp"],
-    cellRender: "default",
-    cellRenderProps: {
-      Link: (props) => {
-        // eslint-disable-next-line react/prop-types
-        return <a href={props.context.row.original.country}>{props.children}</a>;
+    cellRender: {
+      component: "default",
+      props: {
+        Link: (props) => {
+          // eslint-disable-next-line react/prop-types
+          return <a href={props.context.row.original.country}>{props.children}</a>;
+        },
       },
     },
     // leftFrozen: true,
@@ -162,21 +142,14 @@ export function CommonRowDrag() {
     <Table<
       CommonRow,
       Record<string, unknown>,
-      CellRenderKeys,
-      CellRenderProps,
-      HeaderRenderKeys,
-      HeaderRenderProps,
-      FilterRenderKeys,
-      FilterRenderProps,
-      SortRenderKeys,
-      SortRenderProps,
-      CellClassKeys,
-      CellClassProps,
-      HeaderClassKeys,
-      HeaderClassProps,
-      FilterTypeKeys,
-      SortTypeKeys,
-      ColumnProps
+      typeof CELL_RENDERS,
+      typeof HEADER_RENDERS,
+      typeof FILTER_RENDERS,
+      typeof SORT_RENDERS,
+      typeof CELL_CLASSES,
+      typeof HEADER_CLASSES,
+      typeof FILTER_TYPES,
+      typeof SORT_TYPES
     >
       columns={COMMON_COLUMNS}
       rows={rows}

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import type { CommonRow, CommonRowVirtual } from "../../types/common";
+import type { CommonRow } from "../../types/common";
 
 const sports = [
   "Swimming",
@@ -32,16 +32,10 @@ const sports = [
   "Weightlifting",
 ];
 
-export const COMMON_ROW: CommonRow[] = createRows(false);
-export const COMMON_ROW_VIRTUAL: CommonRowVirtual[] = createRows(true) as CommonRowVirtual[];
+export const COMMON_ROW: CommonRow[] = createRows();
 
-function createRows(virtual: boolean): (CommonRow | CommonRowVirtual)[] {
-  const virtualRowEntries = Array.from({ length: 30 }, (_, index) => [
-    `wide${index + 1}`,
-    index + 1,
-  ]);
-  const virtualRow = Object.fromEntries(virtualRowEntries) as CommonRowVirtual;
-  const rows: (CommonRow | CommonRowVirtual)[] = [];
+function createRows(): CommonRow[] {
+  const rows: CommonRow[] = [];
 
   for (let i = 0; i < 5000; i++) {
     rows.push({
@@ -56,7 +50,6 @@ function createRows(virtual: boolean): (CommonRow | CommonRowVirtual)[] {
       age: faker.number.int({ min: 18, max: 80 }),
       description: "Описание",
       checked: faker.datatype.boolean(),
-      ...(virtual ? virtualRow : {}),
       children:
         i % 10 === 0
           ? Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, childId) => {
@@ -71,7 +64,6 @@ function createRows(virtual: boolean): (CommonRow | CommonRowVirtual)[] {
                 colors: Array.from({ length: 1 + faker.number.int(3) }, () => faker.color.human()),
                 age: faker.number.int({ min: 18, max: 80 }),
                 checked: faker.datatype.boolean(),
-                ...(virtual ? virtualRow : {}),
                 children:
                   i === 0
                     ? Array.from(
@@ -87,7 +79,6 @@ function createRows(virtual: boolean): (CommonRow | CommonRowVirtual)[] {
                             sport: sports[faker.number.int(sports.length - 1)],
                             age: faker.number.int({ min: 18, max: 80 }),
                             checked: faker.datatype.boolean(),
-                            ...(virtual ? virtualRow : {}),
                             colors: Array.from({ length: 1 + faker.number.int(3) }, () =>
                               faker.color.human(),
                             ),

@@ -1,7 +1,15 @@
 import type { FilterFieldType, FilterInputValueType } from "@krainovsd/react-ui";
-import type { ColumnDef } from "@tanstack/react-table";
 import type { ReactNode } from "react";
-import type { CellContext, DefaultRow, HeaderContext, TableInterface } from "./utils";
+import type {
+  CellContext,
+  CellRenderComponent,
+  DefaultRow,
+  FilterRenderComponent,
+  HeaderContext,
+  HeaderRenderComponent,
+  SortRenderComponent,
+  TableInterface,
+} from "./utils";
 
 export type TableCellRenderKey = "default" | "select" | "tag" | "empty" | "drag";
 export type TableHeaderRenderKey = "default" | "select" | "empty";
@@ -24,19 +32,19 @@ export type TableHeaderClassKey =
 
 export type TableCellRenders<RowData extends DefaultRow> = Record<
   TableCellRenderKey,
-  (props: { context: CellContext<RowData> }) => ReactNode
+  CellRenderComponent<RowData>
 >;
 export type TableHeaderRenders<RowData extends DefaultRow> = Record<
   TableHeaderRenderKey,
-  (props: { context: HeaderContext<RowData> }) => ReactNode
+  HeaderRenderComponent<RowData>
 >;
 export type TableFilterRenders<RowData extends DefaultRow> = Record<
   TableFilterRenderKey,
-  (props: ColumnDef<RowData>) => ReactNode
+  FilterRenderComponent<RowData>
 >;
 export type TableSortRenders<RowData extends DefaultRow> = Record<
   TableSortRenderKey,
-  (props: { context: HeaderContext<RowData> }) => ReactNode
+  SortRenderComponent<RowData>
 >;
 export type TableCellClasses<RowData extends DefaultRow> = Record<
   TableCellClassKey,

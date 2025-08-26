@@ -1,42 +1,85 @@
-import type { TableColumn } from "../../../types";
-import type {
-  CellClassKeys,
-  CellClassProps,
-  CellRenderKeys,
-  CellRenderProps,
-  ColumnProps,
-  CommonRow,
-  CommonRowVirtual,
-  FilterRenderKeys,
-  FilterRenderProps,
-  FilterTypeKeys,
-  HeaderClassKeys,
-  HeaderClassProps,
-  HeaderRenderKeys,
-  HeaderRenderProps,
-  SortRenderKeys,
-  SortRenderProps,
-  SortTypeKeys,
-} from "../../types/common";
+import type { CellClassFn, FilterFn, HeaderClassFn, SortFn } from "../../../types";
+import { TestCellRender } from "../../components/test-cell-render";
+import { TestFilterRender } from "../../components/test-filter-render";
+import { TestHeaderRender } from "../../components/test-header-render";
+import { TestSortRender } from "../../components/test-sort-render";
+import type { Column, CommonRow } from "../../types/common";
 
-export const COMMON_COLUMNS: TableColumn<
-  CommonRow,
-  CellRenderKeys,
-  CellRenderProps,
-  HeaderRenderKeys,
-  HeaderRenderProps,
-  FilterRenderKeys,
-  FilterRenderProps,
-  SortRenderKeys,
-  SortRenderProps,
-  CellClassKeys,
-  CellClassProps,
-  HeaderClassKeys,
-  HeaderClassProps,
-  FilterTypeKeys,
-  SortTypeKeys,
-  ColumnProps
->[] = [
+export const CELL_RENDERS = {
+  test: TestCellRender,
+} as const;
+export const HEADER_RENDERS = {
+  test: TestHeaderRender,
+} as const;
+export const FILTER_RENDERS = {
+  test: TestFilterRender,
+} as const;
+export const SORT_RENDERS = {
+  test: TestSortRender,
+} as const;
+
+const redCellClass: CellClassFn<CommonRow, { active?: boolean }> = (context, settings) => {
+  if (settings?.active) {
+    return "cell-red";
+  }
+};
+const blackCellClass: CellClassFn<CommonRow, { black?: boolean }> = (context, settings) => {
+  if (settings?.black) {
+    return "cell-black";
+  }
+};
+export const CELL_CLASSES = {
+  customRed: redCellClass,
+  customBlack: blackCellClass,
+  customYellow: "cell-yellow",
+} as const;
+
+const blueHeaderClass: HeaderClassFn<CommonRow, { active: boolean }> = (context, settings) => {
+  if (settings?.active) {
+    return "header-blue";
+  }
+};
+const whiteHeaderClass: HeaderClassFn<CommonRow, { white: boolean }> = (context, settings) => {
+  if (settings?.white) {
+    return "header-white";
+  }
+};
+export const HEADER_CLASSES = {
+  customGreen: "header-green",
+  customWhite: whiteHeaderClass,
+  customBlue: blueHeaderClass,
+} as const;
+
+const fuzzySearch: FilterFn<CommonRow> = () => true;
+export const FILTER_TYPES = {
+  customFuzzy: fuzzySearch,
+} as const;
+
+const sortArrayByLength: SortFn<CommonRow> = () => 0;
+export const SORT_TYPES = {
+  customArrayByLength: sortArrayByLength,
+} as const;
+
+export const testTypesColumns: Column[] = [
+  {
+    key: "description",
+    name: "test",
+    cellRender: { component: "test", props: {} },
+    headerRender: { component: "test", props: {} },
+    filterRender: { component: "test", props: {} },
+    sortRender: { component: "test", props: {} },
+    cellClass: ["customBlack", "customRed"],
+    additionalCellClass: ["customYellow"],
+    cellClassProps: { active: true },
+    headerClass: ["customBlue", "customGreen"],
+    additionalHeaderClass: ["customWhite"],
+    headerClassProps: { active: false },
+    filterType: "customFuzzy",
+    sortType: "customArrayByLength",
+  },
+];
+
+export const COMMON_COLUMNS: Column[] = [
   //   SelectColumn,
   {
     id: "_select",
@@ -48,12 +91,14 @@ export const COMMON_COLUMNS: TableColumn<
     leftFrozen: true,
     sortable: false,
     filterable: false,
-    cellRender: "select",
-    cellRenderProps: {
-      hover: true,
+    cellRender: {
+      component: "select",
+      props: { hover: true },
+    },
+    headerRender: {
+      component: "select",
     },
     additionalCellClass: ["wCenter", "hCenter"],
-    headerRender: "select",
     additionalHeaderClass: ["hCenter", "wCenter"],
   },
   {
@@ -74,8 +119,9 @@ export const COMMON_COLUMNS: TableColumn<
     sortable: true,
     expandable: true,
     expandedShift: 8,
-    cellRender: "default",
-    filterRender: "string",
+    filterRender: {
+      component: "string",
+    },
     filterable: true,
     filterType: "includes-string",
     headerClass: ["common"],
@@ -89,7 +135,9 @@ export const COMMON_COLUMNS: TableColumn<
     name: "Last Name",
     width: 200,
     filterable: true,
-    filterRender: "string",
+    filterRender: {
+      component: "string",
+    },
     filterType: "includes-string",
     resizable: true,
     draggable: true,
@@ -102,22 +150,26 @@ export const COMMON_COLUMNS: TableColumn<
     name: "Очень длинное название колонки для тестов переноса строк",
     width: 234,
     filterable: true,
-    filterRender: "string",
+    filterRender: {
+      component: "string",
+    },
     filterType: "includes-string",
     resizable: true,
     draggable: true,
     sortable: true,
     additionalCellClass: ["lineClamp"],
     headerClass: ["common", "lineClamp"],
-    cellRender: "default",
     tooltip: {
       auto: true,
       pathToContent: "description",
     },
-    cellRenderProps: {
-      Link: (props) => {
-        // eslint-disable-next-line react/prop-types
-        return <a href={props.context.row.original.country}>{props.children}</a>;
+    cellRender: {
+      component: "default",
+      props: {
+        Link: (props) => {
+          // eslint-disable-next-line react/prop-types
+          return <a href={props.context.row.original.country}>{props.children}</a>;
+        },
       },
     },
     // leftFrozen: true,
@@ -131,20 +183,23 @@ export const COMMON_COLUMNS: TableColumn<
     sortType: "array",
     filterable: true,
     filterType: "array-every-in-array",
-    filterRender: "select",
-    filterRenderProps: {
-      multiple: true,
-      options: [
-        { label: "gold", value: "gold" },
-        { label: "pink", value: "pink" },
-        { label: "white", value: "white" },
-        { label: "teal", value: "teal" },
-      ],
+    filterRender: {
+      component: "select",
+      props: {
+        multiple: true,
+        options: [
+          { label: "gold", value: "gold" },
+          { label: "pink", value: "pink" },
+          { label: "white", value: "white" },
+          { label: "teal", value: "teal" },
+        ],
+      },
     },
+
     additionalCellClass: ["empty", "lineClamp"],
-    cellRender: "tag",
-    cellRenderProps: {
-      filterable: true,
+    cellRender: {
+      component: "tag",
+      props: { filterable: true },
     },
     tooltip: {
       auto: true,
@@ -158,15 +213,17 @@ export const COMMON_COLUMNS: TableColumn<
     filterable: true,
     draggable: false,
     filterType: "array-some-in-primitive",
-    filterRender: "select",
-    filterRenderProps: {
-      multiple: true,
-      options: [
-        { label: "2018", value: 2018 },
-        { label: "2017", value: 2017 },
-        { label: "2016", value: 2016 },
-        { label: "2015", value: 2015 },
-      ],
+    filterRender: {
+      component: "select",
+      props: {
+        multiple: true,
+        options: [
+          { label: "2018", value: 2018 },
+          { label: "2017", value: 2017 },
+          { label: "2016", value: 2016 },
+          { label: "2015", value: 2015 },
+        ],
+      },
     },
     // grouping: true,
   },
@@ -178,7 +235,9 @@ export const COMMON_COLUMNS: TableColumn<
     draggable: false,
     sortType: "number",
     filterable: true,
-    filterRender: "number-range",
+    filterRender: {
+      component: "number-range",
+    },
     filterType: "equals",
     rightFrozen: true,
   },
@@ -213,77 +272,29 @@ export const COMMON_COLUMNS: TableColumn<
     sortType: "date",
     resizable: false,
     draggable: false,
-    cellRender: "default",
-    cellRenderProps: {
-      dateFormat: "DD/MM/YYYY",
+    cellRender: {
+      component: "default",
+      props: {
+        dateFormat: "DD/MM/YYYY",
+      },
     },
+
     filterable: true,
-    filterRender: "date-range",
-    filterType: "date-in-range",
-    filterRenderProps: {
-      format: "DD/MM/YYYY",
+    filterRender: {
+      component: "date-range",
+      props: {
+        format: "DD/MM/YYYY",
+      },
     },
+    filterType: "date-in-range",
   },
 ];
 
-export const COMMON_COLUMNS_VIRTUAL: TableColumn<
-  CommonRowVirtual,
-  CellRenderKeys,
-  CellRenderProps,
-  HeaderRenderKeys,
-  HeaderRenderProps,
-  FilterRenderKeys,
-  FilterRenderProps,
-  SortRenderKeys,
-  SortRenderProps,
-  CellClassKeys,
-  CellClassProps,
-  HeaderClassKeys,
-  HeaderClassProps,
-  FilterTypeKeys,
-  SortTypeKeys,
-  ColumnProps
->[] = [
-  ...(COMMON_COLUMNS as TableColumn<
-    CommonRowVirtual,
-    CellRenderKeys,
-    CellRenderProps,
-    HeaderRenderKeys,
-    HeaderRenderProps,
-    FilterRenderKeys,
-    FilterRenderProps,
-    SortRenderKeys,
-    SortRenderProps,
-    CellClassKeys,
-    CellClassProps,
-    HeaderClassKeys,
-    HeaderClassProps,
-    FilterTypeKeys,
-    SortTypeKeys,
-    ColumnProps
-  >[]),
-  ...Array.from<
-    unknown,
-    TableColumn<
-      CommonRowVirtual,
-      CellRenderKeys,
-      CellRenderProps,
-      HeaderRenderKeys,
-      HeaderRenderProps,
-      FilterRenderKeys,
-      FilterRenderProps,
-      SortRenderKeys,
-      SortRenderProps,
-      CellClassKeys,
-      CellClassProps,
-      HeaderClassKeys,
-      HeaderClassProps,
-      FilterTypeKeys,
-      SortTypeKeys,
-      ColumnProps
-    >
-  >({ length: 30 }, (_, index) => ({
-    key: `wide${index + 1}` as keyof CommonRowVirtual,
+export const COMMON_COLUMNS_VIRTUAL: Column[] = [
+  ...COMMON_COLUMNS,
+  ...Array.from<unknown, Column>({ length: 30 }, (_, index) => ({
+    id: `wide${index + 1}`,
+    key: "id",
     name: `wide${index + 1}`,
     draggable: false,
     resizable: true,

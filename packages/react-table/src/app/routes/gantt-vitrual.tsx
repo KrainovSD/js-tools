@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-arguments */
 /* eslint-disable no-console */
 import type { ExpandedState, RowSelectionState } from "@tanstack/react-table";
 import React from "react";
@@ -6,35 +5,16 @@ import { Table } from "../../table";
 import type { RowInterface } from "../../types";
 import { COLUMNS_GANTT_VIRTUAL } from "../lib/gantt/columns";
 import { GANTT_EASY_ROWS } from "../lib/gantt/rows";
-import type {
-  GanttCellClassKeys,
-  GanttCellClassProps,
-  GanttCellRenderKeys,
-  GanttCellRenderProps,
-  GanttColumnProps,
-  GanttFilterRenderKeys,
-  GanttFilterRenderProps,
-  GanttFilterTypeKeys,
-  GanttHeaderClassKeys,
-  GanttHeaderClassProps,
-  GanttHeaderRenderKeys,
-  GanttHeaderRenderProps,
-  GanttMeta,
-  GanttSortRenderKeys,
-  GanttSortRenderProps,
-  GanttSortTypeKeys,
-  RowGantt,
-  RowGanttVirtual,
-} from "../types/gantt";
+import type { GanttMeta, RowGantt } from "../types/gantt";
 
 export function GanttVirtual() {
   const [expanded, setExpanded] = React.useState<ExpandedState>(true);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
-  function onClick(row: RowInterface<RowGanttVirtual>) {
+  function onClick(row: RowInterface<RowGantt>) {
     console.log(row, "click");
   }
-  function onDoubleClick(row: RowInterface<RowGanttVirtual>) {
+  function onDoubleClick(row: RowInterface<RowGantt>) {
     console.log(row, "dbClick");
   }
 
@@ -64,32 +44,13 @@ export function GanttVirtual() {
   }, []);
 
   return (
-    <Table<
-      RowGanttVirtual,
-      GanttMeta,
-      GanttCellRenderKeys,
-      GanttCellRenderProps,
-      GanttHeaderRenderKeys,
-      GanttHeaderRenderProps,
-      GanttFilterRenderKeys,
-      GanttFilterRenderProps,
-      GanttSortRenderKeys,
-      GanttSortRenderProps,
-      GanttCellClassKeys,
-      GanttCellClassProps,
-      GanttHeaderClassKeys,
-      GanttHeaderClassProps,
-      GanttFilterTypeKeys,
-      GanttSortTypeKeys,
-      GanttColumnProps
-    >
+    <Table<RowGantt, GanttMeta>
       columns={COLUMNS_GANTT_VIRTUAL}
       // rows={GANTT_ROWS_VIRTUAL}
       rows={GANTT_EASY_ROWS}
       // rows={[]}
       // rows={[{ end: "", id: "", name: "", start: "", children: [], dependents: [] }]}
       Empty={() => <span>Empty</span>}
-      cellRenders={{ test: () => "" }}
       getSubRows={(row) => row.children}
       onClickRow={onClick}
       onDoubleClickRow={onDoubleClick}

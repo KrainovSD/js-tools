@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/react-table",
-  "version": "0.6.0-beta.4",
+  "version": "0.7.0-beta.1",
   "description": "Krainov react-table",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -34,7 +34,7 @@
     "build-dev": "npm run clear && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
     "build": "npm run clear && npm run build:types && npm run build:js",
     "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
-    "build:types": "tspc -p tsconfig.build.json",
+    "build:types": "tspc -p tsconfig.build.json --diagnostics",
     "lint": "eslint . -c ./eslint.config.js --color --max-warnings 0",
     "lint-check": "eslint --debug eslint.config.js",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",

@@ -3,26 +3,19 @@ import type { ColumnOrderState, ExpandedState, RowSelectionState } from "@tansta
 import React from "react";
 import { Table } from "../../table";
 import type { RowInterface, RowModel, TableInterface } from "../../types";
-import { COMMON_COLUMNS } from "../lib/common/columns";
+import {
+  type CELL_CLASSES,
+  type CELL_RENDERS,
+  COMMON_COLUMNS,
+  type FILTER_RENDERS,
+  type FILTER_TYPES,
+  type HEADER_CLASSES,
+  type HEADER_RENDERS,
+  type SORT_RENDERS,
+  type SORT_TYPES,
+} from "../lib/common/columns";
 import { COMMON_ROW } from "../lib/common/rows";
-import type {
-  CellClassKeys,
-  CellClassProps,
-  CellRenderKeys,
-  CellRenderProps,
-  ColumnProps,
-  CommonRow,
-  FilterRenderKeys,
-  FilterRenderProps,
-  FilterTypeKeys,
-  HeaderClassKeys,
-  HeaderClassProps,
-  HeaderRenderKeys,
-  HeaderRenderProps,
-  SortRenderKeys,
-  SortRenderProps,
-  SortTypeKeys,
-} from "../types/common";
+import type { CommonRow } from "../types/common";
 import styles from "./styles.module.scss";
 
 export function CommonInnerTable() {
@@ -43,27 +36,19 @@ export function CommonInnerTable() {
     <Table<
       CommonRow,
       Record<string, unknown>,
-      CellRenderKeys,
-      CellRenderProps,
-      HeaderRenderKeys,
-      HeaderRenderProps,
-      FilterRenderKeys,
-      FilterRenderProps,
-      SortRenderKeys,
-      SortRenderProps,
-      CellClassKeys,
-      CellClassProps,
-      HeaderClassKeys,
-      HeaderClassProps,
-      FilterTypeKeys,
-      SortTypeKeys,
-      ColumnProps
+      typeof CELL_RENDERS,
+      typeof HEADER_RENDERS,
+      typeof FILTER_RENDERS,
+      typeof SORT_RENDERS,
+      typeof CELL_CLASSES,
+      typeof HEADER_CLASSES,
+      typeof FILTER_TYPES,
+      typeof SORT_TYPES
     >
       columns={COMMON_COLUMNS}
       rows={COMMON_ROW}
       // rows={[]}
       Empty={() => <span>Empty</span>}
-      cellRenders={{ test: () => "" }}
       getSubRows={(row) => row.children}
       withPagination
       withTotal
