@@ -388,7 +388,7 @@ export const LIGHT_THEME: ThemeVariableConfig = {
       "ksd-table-off-sort": "var(--ksd-icon-color)",
       "ksd-table-active-sort": "var(--ksd-accent-color)",
       "ksd-table-splitter-ghost-color": "var(--ksd-accent-color)",
-      "ksd-table-splitter-overflow-color": "var(--ksd-text-main-color)",
+      "ksd-table-splitter-overlay-color": "var(--ksd-bg-mask-color)",
       "ksd-table-loader-bg-color": "var(--ksd-bg-color)",
       "ksd-table-loader-opacity": "0.4",
       "ksd-table-expander-hover-color": "var(--ksd-accent-color)",

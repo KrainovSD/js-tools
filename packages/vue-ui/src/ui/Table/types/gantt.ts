@@ -51,10 +51,11 @@ export type GanttInfo<RowData extends DefaultRow> = {
   start: string;
   end: string;
   name: string;
-  type: GanttTypeShapes;
+  type?: GanttTypeShapes;
   progress?: number;
   links?: GanttLink[];
-  props?: RowData;
+  data: RowData;
+  children?: GanttInfo<RowData>[];
 };
 
 export type GanttDateInfo = {
@@ -96,7 +97,6 @@ export type GanttProps<
   ganttView?: GanttViewType;
   ganttLinkStyleGetter?: GanttLinkStyleGetter<RowData>;
 
-  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<RowData>;
   GanttTooltip?: React.FC<GanttTooltipProps<RowData>>;
   GanttTask?: React.FC<GanttTaskProps<RowData>> | undefined;
 } & Omit<

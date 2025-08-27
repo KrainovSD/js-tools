@@ -1,6 +1,7 @@
 import type { CellContext, RowData } from "@tanstack/vue-table";
 import type { Component } from "vue";
 import type { FilterComponentKey } from "../Filter.vue";
+import VGantt from "./Gantt.vue";
 import VTable from "./Table.vue";
 import type {
   CellClassInterface,
@@ -13,7 +14,7 @@ import type {
   TableRenderers,
 } from "./types";
 
-export { VTable };
+export { VTable, VGantt };
 export * from "./types";
 export { checkCellVisible } from "./lib";
 

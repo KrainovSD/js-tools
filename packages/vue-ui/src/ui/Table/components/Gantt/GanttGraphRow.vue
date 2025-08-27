@@ -2,6 +2,7 @@
   import { computed } from "vue";
   import type {
     DefaultRow,
+    GanttInfo,
     GanttLinkStyleGetter,
     GanttRowInfo,
     GanttSize,
@@ -14,7 +15,7 @@
     rowsMap: Record<string, GanttRowInfo | undefined>;
     bodyWidth: number | null;
     ganttSize: GanttSize;
-    row: RowInterface<RowData>;
+    row: RowInterface<GanttInfo<RowData>>;
     rowHeight: number;
     virtualStart: number | undefined;
     arrowContainer: HTMLElement | null;

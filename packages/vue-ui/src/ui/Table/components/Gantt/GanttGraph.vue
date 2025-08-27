@@ -11,6 +11,7 @@
   import type {
     DefaultRow,
     GanttDate,
+    GanttInfo,
     GanttLinkStyleGetter,
     GanttSize,
     GanttViewType,
@@ -38,8 +39,8 @@
     rowVirtualEnabled: boolean;
 
     frozenHeader: boolean;
-    rows: RowInterface<RowData>[];
-    table: TableInterface<RowData>;
+    rows: RowInterface<GanttInfo<RowData>>[];
+    table: TableInterface<GanttInfo<RowData>>;
   };
 
   const props = defineProps<Props>();

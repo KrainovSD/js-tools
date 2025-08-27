@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type {
     DefaultRow,
+    GanttInfo,
     GanttLinkStyleGetter,
     GanttRowInfo,
     GanttSize,
@@ -12,7 +13,7 @@
     rowsMap: Record<string, GanttRowInfo | undefined>;
     bodyWidth: number | null;
     ganttSize: GanttSize;
-    row: RowInterface<RowData>;
+    row: RowInterface<GanttInfo<RowData>>;
     rowHeight: number;
     arrowContainer: HTMLElement | null;
   };

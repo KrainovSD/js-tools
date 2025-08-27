@@ -18,3 +18,5 @@ export const GANTT_COLUMN_WIDTH_WEEK = 100;
 export const GANTT_ROW_LG_HEIGHT = 69;
 export const GANTT_ROW_SM_HEIGHT = 45;
 export const DEFAULT_TABLE_COLUMN_SIZE = 150;
+
+export const MIN_GANTT_WIDTH = 10;

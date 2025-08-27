@@ -2,6 +2,7 @@
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
   import { type Component, computed, useTemplateRef } from "vue";
   import { GANTT_HEADER_HEIGHT, GANTT_ROW_LG_HEIGHT, GANTT_ROW_SM_HEIGHT } from "../../constants";
+  import { useGanttSplitter } from "../../lib";
   import type {
     DefaultRow,
     GanttDate,
@@ -35,21 +36,24 @@
     rubberColumn: boolean;
     draggableRow: boolean;
     rows: RowInterface<GanttInfo<RowData>>[];
-    table: TableInterface<RowData>;
-    rowClassName: ((row: RowInterface<RowData>) => string | undefined) | string | undefined;
+    table: TableInterface<GanttInfo<RowData>>;
+    rowClassName:
+      | ((row: RowInterface<GanttInfo<RowData>>) => string | undefined)
+      | string
+      | undefined;
     headerRowClassName:
-      | ((header: HeaderGroupInterface<RowData>) => string | undefined)
+      | ((header: HeaderGroupInterface<GanttInfo<RowData>>) => string | undefined)
       | string
       | undefined;
 
     canDropToRow: ((dropId: string) => boolean | undefined) | undefined;
-    Row: ((row: RowInterface<RowData>) => Component | undefined) | undefined;
+    Row: ((row: RowInterface<GanttInfo<RowData>>) => Component | undefined) | undefined;
     Empty: Component<TableEmptyProps> | undefined;
   };
   type Emits = {
     dragRow: [sourceId: string, targetId: string];
-    click: [row: RowInterface<RowData>, event: MouseEvent];
-    dblclick: [row: RowInterface<RowData>, event: MouseEvent];
+    click: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
+    dblclick: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
   };
 
   const props = defineProps<Props>();
@@ -80,8 +84,19 @@
     }
   });
 
-  const ganttTableRef = useTemplateRef("gantt-table");
+  const ganttTableRef = useTemplateRef<HTMLDivElement>("gantt-table");
   const ganttGraphRef = useTemplateRef("gantt-graph");
+  const splitterRef = useTemplateRef("splitter");
+  const ghostRef = useTemplateRef("ghost");
+  const overlayRef = useTemplateRef("overlay");
+
+  const instantSizing = computed(() => props.ganttSplitterInstant);
+  const { dragging, sizes } = useGanttSplitter({
+    ghost: ghostRef,
+    overlay: overlayRef,
+    splitter: splitterRef,
+    instantSizing,
+  });
 </script>
 
 <template>
@@ -105,7 +120,7 @@
       :header-height="headerHeight"
       :can-drop-to-row="$props.canDropToRow"
       :gantt-size="$props.ganttSize"
-      :width="200"
+      :width="sizes[0]"
       :row-height="rowHeight"
       @drag-row="
         (sid, tid) => {
@@ -115,12 +130,12 @@
       @click="(row, event) => $emit('click', row, event)"
       @dblclick="(row, event) => $emit('dblclick', row, event)"
     />
-    <div class="ksd-gantt__splitter">
+    <div ref="splitter" class="ksd-gantt__splitter">
       <div class="ksd-gantt__splitter-trigger"></div>
-      <div class="ksd-gantt__splitter-ghost"></div>
+      <div ref="ghost" class="ksd-gantt__splitter-ghost"></div>
     </div>
-    <div class="ksd-gantt__splitter-overflow-container" :class="true && 'visible'">
-      <div class="ksd-gantt__splitter-overflow"></div>
+    <div class="ksd-gantt__splitter-overlay-container" :class="{ visible: dragging }">
+      <div ref="overlay" class="ksd-gantt__splitter-overlay"></div>
     </div>
     <GanttGraph
       ref="gantt-graph"
@@ -138,7 +153,7 @@
       :rows="$props.rows"
       :rows-virtual="$props.rowsVirtual"
       :table="$props.table"
-      :width="200"
+      :width="sizes[1]"
       :row-height="rowHeight"
     />
   </div>
@@ -176,7 +191,7 @@
       position: absolute;
       visibility: hidden;
     }
-    &__splitter-overflow-container {
+    &__splitter-overlay-container {
       position: relative;
       top: 0px;
       left: 0px;
@@ -188,11 +203,11 @@
         display: flex;
       }
     }
-    &__splitter-overflow {
+    &__splitter-overlay {
       position: absolute;
       width: 100%;
       height: 100%;
-      background-color: var(--ksd-table-splitter-overflow-color);
+      background-color: var(--ksd-table-splitter-overlay-color);
     }
   }
 </style>

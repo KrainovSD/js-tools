@@ -43,8 +43,8 @@
 
   type Emits = {
     dragRow: [sourceId: string, targetId: string];
-    click: [row: RowInterface<RowData>, event: MouseEvent];
-    dblclick: [row: RowInterface<RowData>, event: MouseEvent];
+    click: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
+    dblclick: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
   };
 
   const props = withDefaults(

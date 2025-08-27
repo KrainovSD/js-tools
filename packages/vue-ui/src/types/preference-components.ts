@@ -204,7 +204,7 @@ export type ThemeTableVariable =
   | "ksd-table-off-sort"
   | "ksd-table-active-sort"
   | "ksd-table-splitter-ghost-color"
-  | "ksd-table-splitter-overflow-color"
+  | "ksd-table-splitter-overlay-color"
   | "ksd-table-loader-bg-color"
   | "ksd-table-loader-opacity"
   | "ksd-table-expander-outer-size"

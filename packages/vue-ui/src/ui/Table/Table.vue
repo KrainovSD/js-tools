@@ -75,11 +75,6 @@
       withPagination: false,
       withTotal: true,
       draggableRow: false,
-      ganttGraphGrid: false,
-      ganttSize: "sm",
-      ganttView: "months",
-      ganttSplitterInstant: true,
-      gantt: false,
     },
   );
   defineEmits<Emits>();
