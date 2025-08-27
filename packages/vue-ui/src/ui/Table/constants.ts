@@ -15,6 +15,6 @@ export const GANTT_COLUMN_WIDTH_YEAR = 230;
 export const GANTT_COLUMN_WIDTH_QUARTER = 54;
 export const GANTT_COLUMN_WIDTH_WEEK = 100;
 
-export const GANTT_ROW_HEIGHT = 69;
-export const GANTT_ROW_HEIGHT_MINI = 45;
+export const GANTT_ROW_LG_HEIGHT = 69;
+export const GANTT_ROW_SM_HEIGHT = 45;
 export const DEFAULT_TABLE_COLUMN_SIZE = 150;

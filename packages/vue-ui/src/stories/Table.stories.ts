@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 import { type Component, type DefineComponent, h } from "vue";
+import GanttVirtualRow from "../tech/Tables/GanttVirtualRow.vue";
 import TableCommon from "../tech/Tables/TableCommon.vue";
 import TableDragRow from "../tech/Tables/TableDragRow.vue";
 import TableEmpty from "../tech/Tables/TableEmpty.vue";
@@ -69,3 +70,4 @@ export const FullVirtual = createTableStory(TableFullVirtual);
 export const RubberColumn = createTableStory(TableRubberColumn);
 export const Expandable = createTableStory(TableExpandable);
 export const Grouped = createTableStory(TableGrouped);
+export const GanttVirtual = createTableStory(GanttVirtualRow);

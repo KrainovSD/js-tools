@@ -95,7 +95,6 @@ export type RowModel<RowData extends DefaultRow> = RowModelLib<RowData>;
 
 export type DefaultRow = RowData;
 export type ColumnDef<RowData extends DefaultRow> = ColumnDefLib<RowData>;
-export type DefaultGanttData = Record<string, unknown>;
 export type ColumnSort = ColumnSortLib;
 export type ColumnFilter = ColumnFilterLib;
 export type ColumnsSortingState = ColumnSort[];

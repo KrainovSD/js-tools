@@ -87,8 +87,6 @@ export function Gantt<RowData extends DefaultRow, GanttData extends DefaultGantt
             rowVirtualizer={props.rowVirtualizer}
             rows={props.rows}
             table={props.table}
-            virtualPaddingLeft={0}
-            virtualPaddingRight={0}
             onClickRow={props.onClickRow}
             onDoubleClickRow={props.onDoubleClickRow}
             ganttRowMini={props.ganttRowMini}

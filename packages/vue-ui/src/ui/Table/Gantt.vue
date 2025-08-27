@@ -3,25 +3,18 @@
   lang="ts"
   generic="
     RowData extends DefaultRow,
-    CellRender extends Record<string, CellRenderComponent<RowData>>,
-    HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
-    FilterRender extends Record<string, FilterRenderComponent<RowData>>,
-    SortRender extends Record<string, SortRenderComponent<RowData>>,
-    CellClass extends Record<string, CellClassInterface<RowData>>,
-    HeaderClass extends Record<string, HeaderClassInterface<RowData>>,
-    FilterType extends Record<string, FilterFn<RowData>>,
-    SortType extends Record<string, SortFn<RowData>>
+    CellRender extends Record<string, CellRenderComponent<GanttInfo<RowData>>>,
+    HeaderRender extends Record<string, HeaderRenderComponent<GanttInfo<RowData>>>,
+    FilterRender extends Record<string, FilterRenderComponent<GanttInfo<RowData>>>,
+    SortRender extends Record<string, SortRenderComponent<GanttInfo<RowData>>>,
+    CellClass extends Record<string, CellClassInterface<GanttInfo<RowData>>>,
+    HeaderClass extends Record<string, HeaderClassInterface<GanttInfo<RowData>>>,
+    FilterType extends Record<string, FilterFn<GanttInfo<RowData>>>,
+    SortType extends Record<string, SortFn<GanttInfo<RowData>>>
   "
 >
   import { computed, useTemplateRef } from "vue";
-  import {
-    TableCommon,
-    TableFilter,
-    TableLoading,
-    TablePagination,
-    TableTotal,
-  } from "./components";
-  import TableEmpty from "./components/Table/TableEmpty.vue";
+  import { GanttContainer, TableFilter, TableLoading, TableTotal } from "./components";
   import { useColumns, useTableOptions, useVirtualizer } from "./lib";
   import type {
     CellClassInterface,
@@ -35,6 +28,8 @@
     ExpandedState,
     FilterFn,
     FilterRenderComponent,
+    GanttInfo,
+    GanttProps,
     GroupingState,
     HeaderClassInterface,
     HeaderRenderComponent,
@@ -44,7 +39,6 @@
     SortFn,
     SortRenderComponent,
     SortingState,
-    TableProps,
   } from "./types";
 
   type Emits = {
@@ -55,7 +49,7 @@
 
   const props = withDefaults(
     defineProps<
-      TableProps<
+      GanttProps<
         RowData,
         CellRender,
         HeaderRender,
@@ -109,7 +103,7 @@
 
   const tableContainerRef = useTemplateRef<HTMLDivElement>("table-container");
 
-  const { columnsDef, initialState } = useColumns(props, { gantt: false });
+  const { columnsDef, initialState } = useColumns(props, { gantt: true });
   const table = useTableOptions(
     props,
     {
@@ -129,6 +123,8 @@
       sorting,
     },
   );
+
+  const ganttSize = computed(() => props.ganttSize);
   const totalRows = computed(() => props.totalRows ?? table.getFilteredRowModel().rows.length);
   const {
     columnVirtualEnabled,
@@ -140,7 +136,7 @@
   } = useVirtualizer(props, {
     table,
     tableContainerRef,
-    ganttSize: undefined,
+    ganttSize,
   });
 
   defineExpose({ element: rootRef, tableInstance: table });
@@ -156,12 +152,15 @@
     <component :is="$props.Filter" v-if="$props.withFilters && $props.Filter" :table="table" />
 
     <div class="ksd-table__overlay" :class="{ full: $props.fullSize }">
-      <TableEmpty v-if="rows.length === 0 && !$props.Empty" />
-      <component :is="$props.Empty" v-if="rows.length === 0 && $props.Empty" />
       <TableLoading v-if="$props.loading && !$props.Loader" />
       <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
-      <div ref="table-container" class="ksd-table__container" :class="{ full: $props.fullSize }">
-        <TableCommon
+      <div
+        ref="table-container"
+        class="ksd-table__container gantt"
+        :class="{ full: $props.fullSize }"
+      >
+        <GanttContainer
+          :locale="$props.locale"
           :column-virtual-enabled="columnVirtualEnabled"
           :row-virtual-enabled="rowVirtualEnabled"
           :columns-virtual="columnsVirtual"
@@ -179,6 +178,12 @@
           :header-height="$props.headerHeight"
           :row-height="$props.rowHeight"
           :can-drop-to-row="$props.canDropToRow"
+          :gantt-interval-date="$props.ganttIntervalDate"
+          :gantt-graph-grid="$props.ganttGraphGrid ?? false"
+          :gantt-size="$props.ganttSize ?? 'sm'"
+          :gantt-splitter-instant="$props.ganttSplitterInstant ?? true"
+          :gantt-view="$props.ganttView ?? 'months'"
+          :gantt-link-style-getter="$props.ganttLinkStyleGetter"
           @drag-row="
             (sid, tid) => {
               $emit('dragRow', sid, tid);
@@ -190,14 +195,6 @@
       </div>
       <TableTotal v-if="$props.withTotal" :total-rows="totalRows" />
     </div>
-
-    <TablePagination
-      v-if="$props.withPagination"
-      :-pagination="$props.Pagination"
-      :table="table"
-      :total-rows="totalRows"
-      :page-sizes="$props.pageSizes"
-    />
   </div>
 </template>
 

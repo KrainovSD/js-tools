@@ -21,8 +21,6 @@ type TableContainerProps<RowData extends DefaultRow> = {
   rowVirtualEnabled: boolean;
   table: TableInterface<RowData>;
   frozenHeader: boolean;
-  virtualPaddingLeft: number | undefined;
-  virtualPaddingRight: number | undefined;
   columnsVirtual: VirtualItem[];
   rowsVirtual: VirtualItem[];
   rows: RowInterface<RowData>[];

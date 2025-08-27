@@ -29,7 +29,6 @@ import type {
   CellClassInterface,
   CellRenderComponent,
   ColumnDef,
-  DefaultGanttData,
   DefaultRow,
   FilterFn,
   FilterRenderComponent,
@@ -125,9 +124,12 @@ const DEFAULT_COLUMNS_SETTINGS: TableDefaultColumnOptions = {
   maxWidth: undefined,
 };
 
+export type UseColumnsOptions = {
+  gantt: boolean;
+};
+
 export function useColumns<
   RowData extends DefaultRow,
-  GanttData extends DefaultGanttData,
   CellRender extends Record<string, CellRenderComponent<RowData>>,
   HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
   FilterRender extends Record<string, FilterRenderComponent<RowData>>,
@@ -139,7 +141,6 @@ export function useColumns<
 >(
   props: TableProps<
     RowData,
-    GanttData,
     CellRender,
     HeaderRender,
     FilterRender,
@@ -149,6 +150,7 @@ export function useColumns<
     FilterType,
     SortType
   >,
+  extra: UseColumnsOptions,
 ) {
   const columnsDef = computed(() => {
     return props.columns.map<ColumnDef<RowData>>((column) => {
@@ -286,17 +288,17 @@ export function useColumns<
           : (column.resizable ??
             props.defaultColumnOptions?.resizable ??
             DEFAULT_COLUMNS_SETTINGS.resizable),
-        enableColumnFilter: props.withGantt
+        enableColumnFilter: extra.gantt
           ? false
           : (column.filterable ??
             props.defaultColumnOptions?.filterable ??
             DEFAULT_COLUMNS_SETTINGS.filterable),
-        enableSorting: props.withGantt
+        enableSorting: extra.gantt
           ? false
           : (column.sortable ??
             props.defaultColumnOptions?.sortable ??
             DEFAULT_COLUMNS_SETTINGS.sortable),
-        enableMultiSort: props.withGantt
+        enableMultiSort: extra.gantt
           ? false
           : (column.sortable ??
             props.defaultColumnOptions?.sortable ??

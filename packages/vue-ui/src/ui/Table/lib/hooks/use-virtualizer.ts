@@ -3,15 +3,15 @@ import {
   type VirtualizerOptions,
   useVirtualizer as useVirtualizerLibrary,
 } from "@tanstack/vue-virtual";
-import { type ComputedRef, computed, watch } from "vue";
-import { GANTT_ROW_HEIGHT, GANTT_ROW_HEIGHT_MINI } from "../../constants";
+import { type ComputedRef, type Ref, computed, watch } from "vue";
+import { GANTT_ROW_LG_HEIGHT, GANTT_ROW_SM_HEIGHT } from "../../constants";
 import type {
   CellClassInterface,
   CellRenderComponent,
-  DefaultGanttData,
   DefaultRow,
   FilterFn,
   FilterRenderComponent,
+  GanttSize,
   HeaderClassInterface,
   HeaderRenderComponent,
   SortFn,
@@ -22,12 +22,12 @@ import type {
 
 type UseVirtualizerProps<RowData extends DefaultRow> = {
   table: TableInterface<RowData>;
-  tableContainerRef: ComputedRef<HTMLDivElement | null | undefined>;
+  tableContainerRef: Ref<HTMLDivElement | null | undefined>;
+  ganttSize: ComputedRef<GanttSize> | undefined;
 };
 
 export function useVirtualizer<
   RowData extends DefaultRow,
-  GanttData extends DefaultGanttData,
   CellRender extends Record<string, CellRenderComponent<RowData>> = {},
   HeaderRender extends Record<string, HeaderRenderComponent<RowData>> = {},
   FilterRender extends Record<string, FilterRenderComponent<RowData>> = {},
@@ -39,7 +39,6 @@ export function useVirtualizer<
 >(
   props: TableProps<
     RowData,
-    GanttData,
     CellRender,
     HeaderRender,
     FilterRender,
@@ -52,7 +51,7 @@ export function useVirtualizer<
   extra: UseVirtualizerProps<RowData>,
 ) {
   /** COLUMNS */
-  const columnVirtualEnabled = computed(() => Boolean(props.virtualColumn && !props.withGantt));
+  const columnVirtualEnabled = computed(() => Boolean(props.virtualColumn));
   const leftOffset = computed(() => {
     if (!columnVirtualEnabled.value) return 0;
 
@@ -106,12 +105,24 @@ export function useVirtualizer<
   >(() => {
     return {
       count: rows.value.length,
-      estimateSize: () =>
-        props.withGantt
-          ? props.ganttRowMini
-            ? GANTT_ROW_HEIGHT_MINI
-            : GANTT_ROW_HEIGHT
-          : (props.virtualRowSize ?? 35),
+      estimateSize: () => {
+        if (extra.ganttSize) {
+          switch (extra.ganttSize.value) {
+            case "lg": {
+              return GANTT_ROW_LG_HEIGHT;
+            }
+            case "sm": {
+              return GANTT_ROW_SM_HEIGHT;
+            }
+            default: {
+              return GANTT_ROW_SM_HEIGHT;
+            }
+          }
+        }
+
+        return props.virtualRowSize ?? 35;
+      },
+
       getScrollElement: () => extra.tableContainerRef.value ?? null,
       measureElement:
         typeof window !== "undefined" && navigator.userAgent.includes("Firefox")

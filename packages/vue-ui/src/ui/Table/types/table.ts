@@ -12,14 +12,12 @@ import type {
 import type { PaginationState } from "@tanstack/vue-table";
 import type { Component } from "vue";
 import type { TableColumnsSettings } from "./columns";
-import type { GanttProps } from "./gantt";
 import type {
   CellClassInterface,
   CellContext,
   CellRenderComponent,
   CellRenderProps,
   ColumnsVisibleState,
-  DefaultGanttData,
   DefaultRow,
   FilterFn,
   FilterRenderComponent,
@@ -123,7 +121,6 @@ export type DragRowHandler = (
 
 export type TableProps<
   RowData extends DefaultRow,
-  GanttData extends DefaultGanttData,
   CellRender extends Record<string, CellRenderComponent<RowData>>,
   HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
   FilterRender extends Record<string, FilterRenderComponent<RowData>>,
@@ -193,4 +190,4 @@ export type TableProps<
   getExpandedRowModel?: () => (table: TableInterface<RowData>) => () => RowModel<RowData>;
   draggableRow?: boolean;
   canDropToRow?: (dropId: string) => boolean | undefined;
-} & GanttProps<RowData, GanttData>;
+};

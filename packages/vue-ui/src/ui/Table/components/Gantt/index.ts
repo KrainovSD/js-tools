@@ -1,3 +1,3 @@
-import Gantt from "./Gantt.vue";
+import GanttContainer from "./GanttContainer.vue";
 
-export { Gantt };
+export { GanttContainer };

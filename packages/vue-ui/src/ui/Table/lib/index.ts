@@ -4,3 +4,4 @@ export * from "./get-prev-frozen-width";
 export * from "./is-dayjs-date";
 export * from "./sorting";
 export * from "./check-cell-visible";
+export * from "./get-gantt-column-width";

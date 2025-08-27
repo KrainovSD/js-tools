@@ -1,8 +1,20 @@
-import type { DefaultGanttData, DefaultRow, RowInterface } from "./utils";
+import type { TableProps } from "./table";
+import type {
+  CellClassInterface,
+  CellRenderComponent,
+  DefaultRow,
+  FilterFn,
+  FilterRenderComponent,
+  HeaderClassInterface,
+  HeaderRenderComponent,
+  RowInterface,
+  SortFn,
+  SortRenderComponent,
+} from "./utils";
 
-export type GanttTaskProps<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
-  row: RowInterface<RowData>;
-  ganttInfo: GanttInfo<GanttData>;
+export type GanttTaskProps<RowData extends DefaultRow> = {
+  row: RowInterface<GanttInfo<RowData>>;
+  ganttInfo: GanttInfo<RowData>;
   rowInfo: GanttRowInfo;
   bodyWidth: number | null;
   rowsMap: Record<string | number, GanttRowInfo | undefined>;
@@ -13,34 +25,39 @@ export type GanttTooltipProps<RowData extends DefaultRow> = {
   row: RowInterface<RowData>;
 };
 
-export type GanttProps<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
-  withGantt?: boolean;
-  firstGanttDate?: string;
-  lastGanttDate?: string;
-  ganttRowMini?: boolean;
-  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<GanttData>;
-  instantGanttSplitter?: boolean;
-  ganttGrid?: boolean;
-  GanttTooltip?: React.FC<GanttTooltipProps<RowData>>;
-  GanttTask?: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
-  ganttView?: GanttViewType;
-};
-
+export type GanttDate = [string | number, string | number];
+export type GanttSize = "sm" | "lg";
 export type GanttTypeShapes = "task" | "group" | "milestone";
 export type GanttViewType = "years" | "months" | "quarters" | "weeks";
 
-export type GanttInfo<GanttData extends DefaultGanttData> = {
+export type GanttLinkStyleGetter<RowData extends DefaultRow> = (
+  info: GanttInfo<RowData>,
+) => GanttLinkStyle | undefined;
+export type GanttLinkStyle = {
+  size?: number;
+  color?: string;
+};
+
+export type GanttLink =
+  | string
+  | number
+  | {
+      dependentId: number | string;
+      type: string;
+    };
+
+export type GanttInfo<RowData extends DefaultRow> = {
   id: number | string;
   start: string;
   end: string;
   name: string;
   type: GanttTypeShapes;
   progress?: number;
-  dependents?: (string | number)[];
-  props?: GanttData;
+  links?: GanttLink[];
+  props?: RowData;
 };
 
-export type GanttDate = {
+export type GanttDateInfo = {
   year: number;
   month: number;
   day: number;
@@ -54,3 +71,45 @@ export type GanttRowInfo = {
   height: number;
   textWidth: number;
 };
+
+export type GanttHeaderInfo = {
+  year: number;
+  months: number[];
+};
+
+export type GanttProps<
+  RowData extends DefaultRow,
+  CellRender extends Record<string, CellRenderComponent<GanttInfo<RowData>>>,
+  HeaderRender extends Record<string, HeaderRenderComponent<GanttInfo<RowData>>>,
+  FilterRender extends Record<string, FilterRenderComponent<GanttInfo<RowData>>>,
+  SortRender extends Record<string, SortRenderComponent<GanttInfo<RowData>>>,
+  CellClass extends Record<string, CellClassInterface<GanttInfo<RowData>>>,
+  HeaderClass extends Record<string, HeaderClassInterface<GanttInfo<RowData>>>,
+  FilterType extends Record<string, FilterFn<GanttInfo<RowData>>>,
+  SortType extends Record<string, SortFn<GanttInfo<RowData>>>,
+> = {
+  gantt?: boolean;
+  ganttIntervalDate?: GanttDate;
+  ganttSize?: GanttSize;
+  ganttGraphGrid?: boolean;
+  ganttSplitterInstant?: boolean;
+  ganttView?: GanttViewType;
+  ganttLinkStyleGetter?: GanttLinkStyleGetter<RowData>;
+
+  ganttInfoGetter?: (row: RowInterface<RowData>) => GanttInfo<RowData>;
+  GanttTooltip?: React.FC<GanttTooltipProps<RowData>>;
+  GanttTask?: React.FC<GanttTaskProps<RowData>> | undefined;
+} & Omit<
+  TableProps<
+    GanttInfo<RowData>,
+    CellRender,
+    HeaderRender,
+    FilterRender,
+    SortRender,
+    CellClass,
+    HeaderClass,
+    FilterType,
+    SortType
+  >,
+  "withPagination"
+>;

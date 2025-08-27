@@ -20,7 +20,6 @@ import type {
   ColumnPinningState,
   ColumnSizingState,
   ColumnsVisibleState,
-  DefaultGanttData,
   DefaultRow,
   ExpandedState,
   FilterFn,
@@ -102,7 +101,6 @@ const FILTERS: Record<FilterKey, FilterFn<DefaultRow>> = {
 
 export function useTableOptions<
   RowData extends DefaultRow,
-  GanttData extends DefaultGanttData,
   CellRender extends Record<string, CellRenderComponent<RowData>>,
   HeaderRender extends Record<string, HeaderRenderComponent<RowData>>,
   FilterRender extends Record<string, FilterRenderComponent<RowData>>,
@@ -114,7 +112,6 @@ export function useTableOptions<
 >(
   props: TableProps<
     RowData,
-    GanttData,
     CellRender,
     HeaderRender,
     FilterRender,
