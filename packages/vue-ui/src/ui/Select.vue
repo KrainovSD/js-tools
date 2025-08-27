@@ -8,7 +8,15 @@
     VLoadingOutlined,
     VSearchOutlined,
   } from "@krainovsd/vue-icons";
-  import { type Component, type HTMLAttributes, computed, ref, useTemplateRef, watch } from "vue";
+  import {
+    type Component,
+    type HTMLAttributes,
+    computed,
+    onMounted,
+    ref,
+    useTemplateRef,
+    watch,
+  } from "vue";
   import Empty from "./Empty.vue";
   import IconWrapper from "./IconWrapper.vue";
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
@@ -45,6 +53,7 @@
     clear?: boolean;
     disabled?: boolean;
     loading?: boolean;
+    autofocus?: boolean;
     multiple?: Multiple;
     placeholder?: string;
     options: (SelectItem | SelectGroupItem)[];
@@ -91,6 +100,7 @@
     animationAppear: "scaleY",
     animationDisappear: "scaleY",
     fit: false,
+    autofocus: false,
     placement: "bottom-left",
     openDelay: 0,
     searchFn: undefined,
@@ -402,6 +412,12 @@
     },
     { immediate: true },
   );
+
+  onMounted(() => {
+    if (props.autofocus && inputRef.value) {
+      inputRef.value.focus();
+    }
+  });
 
   defineExpose({ popper: popperRef });
 </script>
