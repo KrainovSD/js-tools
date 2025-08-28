@@ -24,7 +24,8 @@
     :initial-expanded="true"
     :expanded="true"
     :get-sub-rows="getSubRows"
-    :gantt-splitter-instant="false"
+    :gantt-splitter-instant="true"
+    :gantt-view="'weeks'"
   />
 </template>
 

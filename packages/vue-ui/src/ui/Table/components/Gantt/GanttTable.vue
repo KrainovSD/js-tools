@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
   import { type CSSProperties, type Component, computed, onMounted, useTemplateRef } from "vue";
+  import { GANTT_TABLE_BODY_ID, GANTT_TABLE_HEADER_ID } from "../../constants";
   import type {
     ColumnSizingSettings,
     ColumnSizingState,
@@ -170,11 +171,17 @@
 
     props.table.setColumnSizing(columnSizing);
   });
+
+  defineExpose({ element: tableRef });
 </script>
 
 <template>
   <div ref="table" role="table" class="ksd-gantt-table" :style="tableStyles">
-    <div class="ksd-gantt-table__header-container" :class="{ frozen: $props.frozenHeader }">
+    <div
+      :id="GANTT_TABLE_HEADER_ID"
+      class="ksd-gantt-table__header-container"
+      :class="{ frozen: $props.frozenHeader }"
+    >
       <div role="rowgroup" class="ksd-gantt-table__header">
         <TableHeaderRow
           v-for="(headerGroup, index) in visibleHeadersGroup"
@@ -194,7 +201,7 @@
         />
       </div>
     </div>
-    <div class="ksd-gantt-table__body-container">
+    <div :id="GANTT_TABLE_BODY_ID" class="ksd-gantt-table__body-container">
       <div role="rowgroup" class="ksd-gantt-table__body" :style="tableBodyStyles">
         <template v-if="$props.rowVirtualEnabled">
           <TableRow

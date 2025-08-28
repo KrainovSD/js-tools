@@ -101,7 +101,8 @@
 
   const rootRef = useTemplateRef<HTMLDivElement>("root");
 
-  const tableContainerRef = useTemplateRef<HTMLDivElement>("table-container");
+  const ganttContainerComponent = useTemplateRef<{ element: HTMLDivElement }>("table-container");
+  const tableContainerRef = computed(() => ganttContainerComponent.value?.element);
 
   const { columnsDef, initialState } = useColumns(props, { gantt: true });
   const table = useTableOptions(
@@ -154,93 +155,42 @@
     <div class="ksd-table__overlay" :class="{ full: $props.fullSize }">
       <TableLoading v-if="$props.loading && !$props.Loader" />
       <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
-      <div
+      <GanttContainer
         ref="table-container"
-        class="ksd-table__container gantt"
-        :class="{ full: $props.fullSize }"
-      >
-        <GanttContainer
-          :locale="$props.locale"
-          :column-virtual-enabled="columnVirtualEnabled"
-          :row-virtual-enabled="rowVirtualEnabled"
-          :columns-virtual="columnsVirtual"
-          :frozen-header="$props.frozenHeader ?? true"
-          :rubber-column="$props.rubberColumn ?? false"
-          :row-virtualizer="rowVirtualizer"
-          :rows="rows"
-          :table="table"
-          :row-class-name="$props.rowClassName"
-          :-empty="$props.Empty"
-          :-row="$props.Row"
-          :draggable-row="$props.draggableRow ?? false"
-          :header-row-class-name="$props.headerRowClassName"
-          :rows-virtual="rowVirtual"
-          :header-height="$props.headerHeight"
-          :row-height="$props.rowHeight"
-          :can-drop-to-row="$props.canDropToRow"
-          :gantt-interval-date="$props.ganttIntervalDate"
-          :gantt-graph-grid="$props.ganttGraphGrid ?? false"
-          :gantt-size="$props.ganttSize ?? 'sm'"
-          :gantt-splitter-instant="$props.ganttSplitterInstant ?? true"
-          :gantt-view="$props.ganttView ?? 'months'"
-          :gantt-link-style-getter="$props.ganttLinkStyleGetter"
-          @drag-row="
-            (sid, tid) => {
-              $emit('dragRow', sid, tid);
-            }
-          "
-          @click="(row, event) => $emit('click', row, event)"
-          @dblclick="(row, event) => $emit('dblclick', row, event)"
-        />
-      </div>
+        :full-size="$props.fullSize ?? false"
+        :locale="$props.locale"
+        :column-virtual-enabled="columnVirtualEnabled"
+        :row-virtual-enabled="rowVirtualEnabled"
+        :columns-virtual="columnsVirtual"
+        :frozen-header="$props.frozenHeader ?? true"
+        :rubber-column="$props.rubberColumn ?? false"
+        :row-virtualizer="rowVirtualizer"
+        :rows="rows"
+        :table="table"
+        :row-class-name="$props.rowClassName"
+        :-empty="$props.Empty"
+        :-row="$props.Row"
+        :draggable-row="$props.draggableRow ?? false"
+        :header-row-class-name="$props.headerRowClassName"
+        :rows-virtual="rowVirtual"
+        :header-height="$props.headerHeight"
+        :row-height="$props.rowHeight"
+        :can-drop-to-row="$props.canDropToRow"
+        :gantt-interval-date="$props.ganttIntervalDate"
+        :gantt-graph-grid="$props.ganttGraphGrid ?? false"
+        :gantt-size="$props.ganttSize ?? 'sm'"
+        :gantt-splitter-instant="$props.ganttSplitterInstant ?? true"
+        :gantt-view="$props.ganttView ?? 'months'"
+        :gantt-link-style-getter="$props.ganttLinkStyleGetter"
+        @drag-row="
+          (sid, tid) => {
+            $emit('dragRow', sid, tid);
+          }
+        "
+        @click="(row, event) => $emit('click', row, event)"
+        @dblclick="(row, event) => $emit('dblclick', row, event)"
+      />
       <TableTotal v-if="$props.withTotal" :total-rows="totalRows" />
     </div>
   </div>
 </template>
-
-<style lang="scss">
-  .ksd-table {
-    &__wrapper {
-      width: 100%;
-      height: fit-content;
-      max-height: 100%;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-
-      &.full {
-        height: 100%;
-      }
-    }
-    &__overlay {
-      display: flex;
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      height: fit-content;
-      flex-direction: column;
-
-      &.full {
-        height: 100%;
-      }
-    }
-    &__container {
-      overflow: auto;
-      position: relative;
-      width: 100%;
-      border: 1px solid var(--ksd-table-border);
-      background-color: var(--ksd-table-container-color);
-      height: fit-content;
-      scrollbar-gutter: stable;
-
-      &.full {
-        height: 100%;
-      }
-
-      &.gantt {
-        overflow-y: auto;
-        overflow-x: hidden;
-      }
-    }
-  }
-</style>

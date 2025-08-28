@@ -2,12 +2,12 @@
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
   import { computed, ref, useTemplateRef } from "vue";
   import {
-    GANTT_BODY_ID,
+    GANTT_GRAPH_BODY_ID,
+    GANTT_GRAPH_HEADER_ID,
     GANTT_HEADER_HEIGHT,
-    GANTT_HEADER_ID,
     GANTT_LEFT_SHIFT,
   } from "../../constants";
-  import { getGanttColumnWidth } from "../../lib";
+  import { getGanttColumnWidth, useGanttColumn } from "../../lib";
   import type {
     DefaultRow,
     GanttDate,
@@ -20,7 +20,6 @@
   } from "../../types";
   import GanttGraphHeaderRow from "./GanttGraphHeaderRow.vue";
   import GanttGraphRow from "./GanttGraphRow.vue";
-  import GanttScroll from "./GanttScroll.vue";
 
   type Props = {
     width: number | undefined;
@@ -44,40 +43,46 @@
   };
 
   const props = defineProps<Props>();
-  const ganttGraphElement = useTemplateRef("gantt-graph");
-  const ganttGraphBodyElement = useTemplateRef("gantt-graph-body");
+  const graphElement = useTemplateRef("gantt-graph");
+  const graphBodyElement = useTemplateRef("gantt-graph-body");
 
-  const columnsCount = 1;
+  const ganttIntervalDate = computed(() => props.ganttIntervalDate);
+  const ganttView = computed(() => props.ganttView);
+  const rows = computed(() => props.rows);
+  const { columnsCount, headerInfoItems } = useGanttColumn({ ganttIntervalDate, ganttView, rows });
+
   const bodyWidth = ref<number | null>(null);
   const columnWidth = computed(() => getGanttColumnWidth(props.ganttView));
   const graphStyles = computed(() => ({ width: `${props.width}px` }));
   const headerStyles = { minHeight: `${GANTT_HEADER_HEIGHT * 2}px` };
   const bodyStyles = {
     height: props.rowVirtualizer ? `${props.rowVirtualizer.getTotalSize()}px` : undefined,
-    width: `${columnsCount * columnWidth.value}px`,
+    width: `${columnsCount.value * columnWidth.value}px`,
   };
-  const gridRender = computed(() => Array.from({ length: columnsCount }, (_, index) => index));
+  const gridRender = computed(() =>
+    Array.from({ length: columnsCount.value }, (_, index) => index),
+  );
 
-  defineExpose({ element: ganttGraphElement });
+  defineExpose({ element: graphElement });
 </script>
 
 <template>
   <div ref="gantt-graph" class="ksd-gantt-graph" :style="graphStyles">
     <div
-      :id="GANTT_HEADER_ID"
+      :id="GANTT_GRAPH_HEADER_ID"
       class="ksd-gantt-graph__header-container"
       :class="{ frozen: $props.frozenHeader }"
     >
       <div class="ksd-gantt-graph__header" :style="headerStyles">
         <GanttGraphHeaderRow
-          :header-items="[]"
+          :header-items="headerInfoItems"
           :column-width="columnWidth"
           :gantt-view="$props.ganttView"
           :locale="$props.locale"
         />
       </div>
     </div>
-    <div :id="GANTT_BODY_ID" class="ksd-gantt-graph__body-container">
+    <div :id="GANTT_GRAPH_BODY_ID" class="ksd-gantt-graph__body-container">
       <div ref="gantt-graph-body" class="ksd-gantt-graph__body" :style="bodyStyles">
         <template v-if="$props.rowVirtualEnabled">
           <GanttGraphRow
@@ -90,7 +95,7 @@
             :row-height="rowHeight"
             :rows-map="{}"
             :virtual-start="virtualRow.start"
-            :arrow-container="ganttGraphBodyElement"
+            :arrow-container="graphBodyElement"
           />
         </template>
         <template v-if="!$props.rowVirtualEnabled">
@@ -104,7 +109,7 @@
             :row-height="rowHeight"
             :rows-map="{}"
             :virtual-start="undefined"
-            :arrow-container="ganttGraphBodyElement"
+            :arrow-container="graphBodyElement"
           />
         </template>
       </div>
@@ -115,7 +120,6 @@
       class="ksd-gantt-graph__grid"
       :style="{ left: (index + 1) * columnWidth - GANTT_LEFT_SHIFT }"
     ></div>
-    <GanttScroll />
   </div>
 </template>
 
@@ -136,6 +140,7 @@
       display: flex;
       flex-direction: column;
       width: fit-content;
+      border-right: 1px solid var(--ksd-table-border);
     }
 
     &__body-container {
@@ -149,6 +154,7 @@
       background-color: var(--ksd-table-body-bg);
       display: flex;
       flex-direction: column;
+      border-right: 1px solid var(--ksd-table-border);
     }
 
     &__grid {

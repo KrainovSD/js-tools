@@ -104,7 +104,7 @@ export const COLUMNS: Column[] = [
     tooltip: {
       auto: true,
     },
-    expandedShift: 10,
+    expandedShift: 0,
   },
   {
     key: "data.birth",

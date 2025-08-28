@@ -2,7 +2,7 @@
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
   import { type Component, computed, useTemplateRef } from "vue";
   import { GANTT_HEADER_HEIGHT, GANTT_ROW_LG_HEIGHT, GANTT_ROW_SM_HEIGHT } from "../../constants";
-  import { useGanttSplitter } from "../../lib";
+  import { useGanttScroll, useGanttSplitter } from "../../lib";
   import type {
     DefaultRow,
     GanttDate,
@@ -16,6 +16,7 @@
     TableInterface,
   } from "../../types";
   import GanttGraph from "./GanttGraph.vue";
+  import GanttScroll from "./GanttScroll.vue";
   import GanttTable from "./GanttTable.vue";
 
   type Props = {
@@ -26,6 +27,7 @@
     ganttView: GanttViewType;
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
+    fullSize: boolean;
 
     columnVirtualEnabled: boolean;
     rowVirtualEnabled: boolean;
@@ -84,11 +86,21 @@
     }
   });
 
-  const ganttTableRef = useTemplateRef<HTMLDivElement>("gantt-table");
-  const ganttGraphRef = useTemplateRef("gantt-graph");
+  const tableContainerElement = useTemplateRef("table-container");
+  const tableComponent = useTemplateRef("gantt-table");
+  const graphComponent = useTemplateRef("gantt-graph");
+  const graphScrollElement = computed(() => ganttScrollElement.value?.graphScrollElement);
+  const tableElement = computed(() => tableComponent.value?.element);
+  const graphElement = computed(() => graphComponent.value?.element);
+
+  const ganttScrollElement = useTemplateRef("gantt-scroll");
+  const tableScrollElement = computed(() => ganttScrollElement.value?.tableScrollElement);
+
   const splitterRef = useTemplateRef("splitter");
   const ghostRef = useTemplateRef("ghost");
   const overlayRef = useTemplateRef("overlay");
+
+  useGanttScroll({ graphElement, graphScrollElement, tableElement, tableScrollElement });
 
   const instantSizing = computed(() => props.ganttSplitterInstant);
   const { dragging, sizes } = useGanttSplitter({
@@ -97,66 +109,71 @@
     splitter: splitterRef,
     instantSizing,
   });
+
+  defineExpose({ element: tableContainerElement });
 </script>
 
 <template>
-  <div class="ksd-gantt__container">
-    <GanttTable
-      ref="gantt-table"
-      :column-virtual-enabled="$props.columnVirtualEnabled"
-      :row-virtual-enabled="$props.rowVirtualEnabled"
-      :columns-virtual="$props.columnsVirtual"
-      :frozen-header="$props.frozenHeader"
-      :rubber-column="$props.rubberColumn"
-      :row-virtualizer="$props.rowVirtualizer"
-      :rows="$props.rows"
-      :table="$props.table"
-      :row-class-name="$props.rowClassName"
-      :-empty="$props.Empty"
-      :-row="$props.Row"
-      :draggable-row="$props.draggableRow"
-      :header-row-class-name="$props.headerRowClassName"
-      :rows-virtual="$props.rowsVirtual"
-      :header-height="headerHeight"
-      :can-drop-to-row="$props.canDropToRow"
-      :gantt-size="$props.ganttSize"
-      :width="sizes[0]"
-      :row-height="rowHeight"
-      @drag-row="
-        (sid, tid) => {
-          $emit('dragRow', sid, tid);
-        }
-      "
-      @click="(row, event) => $emit('click', row, event)"
-      @dblclick="(row, event) => $emit('dblclick', row, event)"
-    />
-    <div ref="splitter" class="ksd-gantt__splitter">
-      <div class="ksd-gantt__splitter-trigger"></div>
-      <div ref="ghost" class="ksd-gantt__splitter-ghost"></div>
+  <div ref="table-container" class="ksd-table__container gantt" :class="{ full: $props.fullSize }">
+    <div class="ksd-gantt__container">
+      <GanttTable
+        ref="gantt-table"
+        :column-virtual-enabled="$props.columnVirtualEnabled"
+        :row-virtual-enabled="$props.rowVirtualEnabled"
+        :columns-virtual="$props.columnsVirtual"
+        :frozen-header="$props.frozenHeader"
+        :rubber-column="$props.rubberColumn"
+        :row-virtualizer="$props.rowVirtualizer"
+        :rows="$props.rows"
+        :table="$props.table"
+        :row-class-name="$props.rowClassName"
+        :-empty="$props.Empty"
+        :-row="$props.Row"
+        :draggable-row="$props.draggableRow"
+        :header-row-class-name="$props.headerRowClassName"
+        :rows-virtual="$props.rowsVirtual"
+        :header-height="headerHeight"
+        :can-drop-to-row="$props.canDropToRow"
+        :gantt-size="$props.ganttSize"
+        :width="sizes[0]"
+        :row-height="rowHeight"
+        @drag-row="
+          (sid, tid) => {
+            $emit('dragRow', sid, tid);
+          }
+        "
+        @click="(row, event) => $emit('click', row, event)"
+        @dblclick="(row, event) => $emit('dblclick', row, event)"
+      />
+      <div ref="splitter" class="ksd-gantt__splitter">
+        <div class="ksd-gantt__splitter-trigger"></div>
+        <div ref="ghost" class="ksd-gantt__splitter-ghost"></div>
+      </div>
+      <div class="ksd-gantt__splitter-overlay-container" :class="{ visible: dragging }">
+        <div ref="overlay" class="ksd-gantt__splitter-overlay"></div>
+      </div>
+      <GanttGraph
+        ref="gantt-graph"
+        :column-virtual-enabled="$props.columnVirtualEnabled"
+        :columns-virtual="$props.columnsVirtual"
+        :frozen-header="$props.frozenHeader"
+        :gantt-graph-grid="$props.ganttGraphGrid"
+        :gantt-interval-date="$props.ganttIntervalDate"
+        :gantt-link-style-getter="$props.ganttLinkStyleGetter"
+        :gantt-size="$props.ganttSize"
+        :gantt-view="$props.ganttView"
+        :locale="$props.locale"
+        :row-virtual-enabled="$props.rowVirtualEnabled"
+        :row-virtualizer="$props.rowVirtualizer"
+        :rows="$props.rows"
+        :rows-virtual="$props.rowsVirtual"
+        :table="$props.table"
+        :width="sizes[1]"
+        :row-height="rowHeight"
+      />
     </div>
-    <div class="ksd-gantt__splitter-overlay-container" :class="{ visible: dragging }">
-      <div ref="overlay" class="ksd-gantt__splitter-overlay"></div>
-    </div>
-    <GanttGraph
-      ref="gantt-graph"
-      :column-virtual-enabled="$props.columnVirtualEnabled"
-      :columns-virtual="$props.columnsVirtual"
-      :frozen-header="$props.frozenHeader"
-      :gantt-graph-grid="$props.ganttGraphGrid"
-      :gantt-interval-date="$props.ganttIntervalDate"
-      :gantt-link-style-getter="$props.ganttLinkStyleGetter"
-      :gantt-size="$props.ganttSize"
-      :gantt-view="$props.ganttView"
-      :locale="$props.locale"
-      :row-virtual-enabled="$props.rowVirtualEnabled"
-      :row-virtualizer="$props.rowVirtualizer"
-      :rows="$props.rows"
-      :rows-virtual="$props.rowsVirtual"
-      :table="$props.table"
-      :width="sizes[1]"
-      :row-height="rowHeight"
-    />
   </div>
+  <GanttScroll ref="gantt-scroll" :sizes="sizes" />
 </template>
 
 <style lang="scss">
@@ -169,6 +186,7 @@
       display: flex;
       margin-right: -1px;
       width: 1px;
+      min-width: 1px;
       overflow: visible;
       cursor: col-resize;
       background-color: var(--ksd-table-border);

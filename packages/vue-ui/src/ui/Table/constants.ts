@@ -3,10 +3,10 @@ export const ROW_DND_PREFIX = "row:";
 
 export const GANTT_HEADER_HEIGHT = 30;
 
-export const GANTT_HEADER_ID = "ksd-table-gantt-header";
-export const GANTT_BODY_ID = "ksd-table-gantt-body";
-export const GANTT_COMMON_TABLE_HEADER_ID = "ksd-table-common-gantt-header";
-export const GANTT_COMMON_TABLE_BODY_ID = "ksd-table-common-gantt-body";
+export const GANTT_GRAPH_HEADER_ID = "ksd-gantt-graph-header";
+export const GANTT_GRAPH_BODY_ID = "ksd-gantt-graph-body";
+export const GANTT_TABLE_HEADER_ID = "ksd-gantt-table-header";
+export const GANTT_TABLE_BODY_ID = "ksd-gantt-table-body";
 export const GANTT_LEFT_SHIFT = 1;
 export const GANTT_TOP_SHIFT = 4;
 
@@ -20,3 +20,5 @@ export const GANTT_ROW_SM_HEIGHT = 45;
 export const DEFAULT_TABLE_COLUMN_SIZE = 150;
 
 export const MIN_GANTT_WIDTH = 10;
+export const MAX_SCROLL_WIDTH = 10;
+export const GANTT_WEEK_ARRAY = [0, 1, 2, 3];
