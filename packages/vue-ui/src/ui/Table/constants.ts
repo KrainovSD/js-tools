@@ -18,7 +18,7 @@ export const GANTT_ROW_SM_HEIGHT = 45;
 export const MIN_GANTT_TASK_WIDTH = 10;
 export const MIN_GANTT_PART_WIDTH = 10;
 export const GANTT_LEFT_SHIFT = 1;
-export const GANTT_TOP_SHIFT = 4;
+export const GANTT_TOP_SHIFT = 0;
 export const MAX_SCROLL_WIDTH = 10;
 export const GANTT_MAX_TEXT_WIDTH_SHIFT = 25;
 

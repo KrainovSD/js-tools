@@ -90,6 +90,7 @@
         }
       : undefined,
   );
+
   const cellStyles = computed(() =>
     rowInfo.value
       ? {
@@ -101,8 +102,12 @@
   const textStyles = computed(() => ({
     maxWidth: maxTextWidth.value ? `${maxTextWidth.value}px` : undefined,
     marginInlineStart: arrows.value.up && arrows.value.down ? "30px" : "10px",
-    marginBlockStart: arrows.value.down && !arrows.value.up ? "-8px" : "0px",
-    marginBlockEnd: arrows.value.up && !arrows.value.down ? "-8px" : "0px",
+    marginBlockStart:
+      arrows.value.down && !arrows.value.up
+        ? "-10px"
+        : arrows.value.up && !arrows.value.down
+          ? "10px"
+          : undefined,
   }));
 </script>
 
