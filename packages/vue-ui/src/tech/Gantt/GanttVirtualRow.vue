@@ -6,7 +6,7 @@
   import { createGanttRows } from "./rows";
   import type { RowData } from "./types";
 
-  const rows = shallowRef<GanttInfo<RowData>[]>(createGanttRows(10));
+  const rows = shallowRef<GanttInfo<RowData>[]>(createGanttRows(5));
   const column = shallowRef<typeof COLUMNS>(COLUMNS);
 
   function getSubRows(row: GanttInfo<RowData>) {
@@ -19,13 +19,13 @@
     :columns="column"
     :rows="rows"
     :virtual-rows="true"
-    :full-size="true"
+    :full-size="false"
     :gantt="true"
     :initial-expanded="true"
     :expanded="true"
     :get-sub-rows="getSubRows"
     :gantt-splitter-instant="true"
-    :gantt-view="'weeks'"
+    :gantt-view="'years'"
   />
 </template>
 

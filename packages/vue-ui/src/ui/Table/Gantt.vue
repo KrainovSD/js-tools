@@ -173,8 +173,6 @@
         :draggable-row="$props.draggableRow ?? false"
         :header-row-class-name="$props.headerRowClassName"
         :rows-virtual="rowVirtual"
-        :header-height="$props.headerHeight"
-        :row-height="$props.rowHeight"
         :can-drop-to-row="$props.canDropToRow"
         :gantt-interval-date="$props.ganttIntervalDate"
         :gantt-graph-grid="$props.ganttGraphGrid ?? false"

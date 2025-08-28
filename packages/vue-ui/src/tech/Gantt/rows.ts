@@ -116,8 +116,8 @@ export function createRow(id: string): RowData {
 
 export function createGanttRows(maxDeep: number = 10): GanttInfo<RowData>[] {
   const rows: GanttInfo<RowData>[] = [];
-  const start = getDateByRules([{ increment: -3, type: "years" }]);
-  const end = getDateByRules([{ increment: 5, type: "years" }], start);
+  const start = getDateByRules([{ increment: -1, type: "years" }]);
+  const end = getDateByRules([{ increment: 3, type: "years" }], start);
 
   rows.push({
     id: `id_-1`,
