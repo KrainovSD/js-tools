@@ -105,7 +105,7 @@ export function TableGanttCell<RowData extends DefaultRow, GanttData extends Def
                 <span>{ganttInfo.name}</span>
                 <span className={styles.tooltip__header}>Начало:</span>
                 <span>{dateFormat(startDate, "DD-MM-YYYY")}</span>
-                <span className={styles.tooltip__header}>Оконание:</span>
+                <span className={styles.tooltip__header}>Окончание:</span>
                 <span>{dateFormat(endDate, "DD-MM-YYYY")}</span>
                 <span className={styles.tooltip__header}>Продолжительность:</span>
                 <span>{duration}</span>

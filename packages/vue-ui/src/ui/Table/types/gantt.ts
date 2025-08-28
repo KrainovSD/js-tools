@@ -32,10 +32,13 @@ export type GanttViewType = "years" | "months" | "quarters" | "weeks";
 
 export type GanttLinkStyleGetter<RowData extends DefaultRow> = (
   info: GanttInfo<RowData>,
+  link: GanttLink,
 ) => GanttLinkStyle | undefined;
 export type GanttLinkStyle = {
   size?: number;
   color?: string;
+  arrowSize?: number;
+  cornerSize?: number;
 };
 
 export type GanttLink =
@@ -43,7 +46,7 @@ export type GanttLink =
   | number
   | {
       dependentId: number | string;
-      type: string;
+      type?: string;
     };
 
 export type GanttInfo<RowData extends DefaultRow> = {
@@ -76,6 +79,22 @@ export type GanttRowInfo = {
 export type GanttHeaderInfo = {
   year: number;
   months: number[];
+};
+
+export type GanttLinkDrawInstruction = {
+  id: string;
+  color: string | undefined;
+  size: number;
+  position: "up" | "down";
+  extraCorner: boolean;
+  leftToRightFirst: number;
+  leftToRightSecond: number;
+  rightToLeft: number;
+  topToBottom: number;
+  topToBottomExtra: number;
+  topArrowShift: number;
+  arrowSize: number;
+  cornerSize: number;
 };
 
 export type GanttProps<

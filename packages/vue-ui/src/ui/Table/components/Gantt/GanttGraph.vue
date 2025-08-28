@@ -1,18 +1,19 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
-  import { computed, ref, useTemplateRef } from "vue";
+  import { computed, ref, useTemplateRef, watch } from "vue";
   import {
     GANTT_GRAPH_BODY_ID,
     GANTT_GRAPH_HEADER_ID,
     GANTT_HEADER_HEIGHT,
     GANTT_LEFT_SHIFT,
   } from "../../constants";
-  import { getGanttColumnWidth, useGanttColumn } from "../../lib";
+  import { getGanttColumnWidth, getGanttRowInfo, useGanttColumn } from "../../lib";
   import type {
     DefaultRow,
     GanttDate,
     GanttInfo,
     GanttLinkStyleGetter,
+    GanttRowInfo,
     GanttSize,
     GanttViewType,
     RowInterface,
@@ -63,6 +64,44 @@
     Array.from({ length: columnsCount.value }, (_, index) => index),
   );
 
+  const rowsMap = computed(() => {
+    const rowsMap: Record<string, GanttRowInfo | undefined> = {};
+    const rowsLength = props.rows.length;
+
+    for (let i = 0; i < rowsLength; i++) {
+      const row = props.rows[i];
+      rowsMap[row.original.id] = getGanttRowInfo({
+        ganttSize: props.ganttSize,
+        ganttView: props.ganttView,
+        headerInfoItems: headerInfoItems.value,
+        index: i,
+        row: row.original,
+      });
+    }
+
+    return rowsMap;
+  });
+
+  /** Extract body width */
+  watch(
+    graphBodyElement,
+    (body, _, clean) => {
+      if (!body) return;
+
+      const resizeObserver = new ResizeObserver((entries) => {
+        if (entries[0]?.contentRect?.width) {
+          bodyWidth.value = entries[0].contentRect.width;
+        }
+      });
+      resizeObserver.observe(body);
+
+      clean(() => {
+        resizeObserver.disconnect();
+      });
+    },
+    { immediate: true },
+  );
+
   defineExpose({ element: graphElement });
 </script>
 
@@ -93,7 +132,7 @@
             :gantt-size="$props.ganttSize"
             :row="$props.rows[virtualRow.index]"
             :row-height="rowHeight"
-            :rows-map="{}"
+            :rows-map="rowsMap"
             :virtual-start="virtualRow.start"
             :arrow-container="graphBodyElement"
           />
@@ -107,7 +146,7 @@
             :gantt-size="$props.ganttSize"
             :row="row"
             :row-height="rowHeight"
-            :rows-map="{}"
+            :rows-map="rowsMap"
             :virtual-start="undefined"
             :arrow-container="graphBodyElement"
           />

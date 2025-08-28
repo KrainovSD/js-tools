@@ -394,6 +394,10 @@ export const DARK_THEME: ThemeVariableConfig = {
       "ksd-table-expander-hover-color": "var(--ksd-accent-color)",
       "ksd-table-expander-inner-size": "7px",
       "ksd-table-expander-outer-size": "17px",
+      "ksd-table-gantt-group-color": "var(--ksd-success-color)",
+      "ksd-table-gantt-milestone-color": "var(--ksd-warning-color)",
+      "ksd-table-gantt-task-color": "var(--ksd-info-color)",
+      "ksd-table-gantt-link-color": "#a1a4a6",
     },
     loader: {
       "ksd-loader-primary-color": "var(--ksd-accent-color)",

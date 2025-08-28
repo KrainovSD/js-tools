@@ -1,6 +1,6 @@
 import { type ComputedRef, type ShallowRef, computed, ref, shallowRef, watch } from "vue";
 import { extractDnDPosition } from "../../../../lib";
-import { MIN_GANTT_WIDTH } from "../../constants";
+import { MIN_GANTT_PART_WIDTH } from "../../constants";
 
 type UseGanttSplitterOptions = {
   instantSizing: ComputedRef<boolean>;
@@ -19,8 +19,8 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
     const rect = container.value?.getBoundingClientRect();
     if (!rect) return;
 
-    const maxWidth = rect.width - MIN_GANTT_WIDTH;
-    const minWidth = MIN_GANTT_WIDTH;
+    const maxWidth = rect.width - MIN_GANTT_PART_WIDTH;
+    const minWidth = MIN_GANTT_PART_WIDTH;
     let size: number | undefined;
 
     if (event) {

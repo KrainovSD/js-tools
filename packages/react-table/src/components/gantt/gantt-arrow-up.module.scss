@@ -4,11 +4,11 @@
 }
 
 .link {
-  background-color: #a1a4a6;
+  background-color: var(--color, #a1a4a6);
   position: absolute;
 }
 .corner {
-  border-color: #a1a4a6;
+  border-color: var(--color, #a1a4a6);
   box-sizing: content-box !important;
   position: absolute;
   width: 4px;
@@ -16,7 +16,7 @@
 }
 .arrow {
   position: absolute;
-  fill: #a1a4a6;
+  fill: var(--color, #a1a4a6);
 }
 
 .one {

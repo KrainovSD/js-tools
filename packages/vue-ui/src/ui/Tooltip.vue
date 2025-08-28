@@ -9,7 +9,7 @@
 
   export type TooltipProps = {
     show?: undefined | boolean;
-    text: string | number;
+    text?: string | number;
     openByFocus?: boolean;
     openByHover?: boolean;
     openByClick?: boolean;
@@ -21,6 +21,7 @@
     closeDelay?: number;
     animationAppear?: boolean;
     animationDisappear?: boolean;
+    classNameContent?: string;
   } & Pick<PositionerProps, "placement" | "zIndex" | "modalRoot" | "visibleArea">;
 
   defineOptions({
@@ -44,6 +45,8 @@
     animationAppear: true,
     animationDisappear: true,
     visibleArea: undefined,
+    text: "",
+    classNameContent: undefined,
   });
   const elementRef = useTemplateRef("tooltip");
   const positionerRef = useTemplateRef("positioner");
@@ -175,7 +178,7 @@
     :open="open"
     arrow
     :target="cursorPosition != undefined ? cursorPosition : content"
-    class-name-content="ksd-tooltip__positioner-content"
+    :class-name-content="`ksd-tooltip__positioner-content ${$props.classNameContent ? $props.classNameContent : ''}`"
     :class="'ksd-tooltip__positioner'"
     class-name-arrow="ksd-tooltip__positioner-arrow"
     v-bind="$attrs"
@@ -187,8 +190,12 @@
     :animation-appear="$props.animationAppear ? 'translate' : undefined"
     :animation-disappear="$props.animationDisappear ? 'translate' : undefined"
     :visible-area="$props.visibleArea"
-    >{{ $props.text }}</Positioner
   >
+    <template v-if="!$slots.content">
+      {{ $props.text }}
+    </template>
+    <slot v-if="$slots.content" name="content"></slot>
+  </Positioner>
 </template>
 
 <style lang="scss">

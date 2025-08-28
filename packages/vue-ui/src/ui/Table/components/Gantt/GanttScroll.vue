@@ -42,14 +42,21 @@
 <style lang="scss">
   .ksd-gantt-scroll {
     display: flex;
-    background-color: white;
+    background-color: var(--ksd-table-body-bg);
+    border-right: 1px solid var(--ksd-table-border);
+    border-left: 1px solid var(--ksd-table-border);
 
     &__container {
       width: 100%;
       height: 15px;
-      background: white;
       border-radius: 6px;
-      margin-left: 3px;
+      padding-left: 3px;
+
+      /* &:first-child {
+        .ksd-gantt-scroll__track {
+          border-right: 1px solid var(--ksd-table-border);
+        }
+      } */
     }
     &__track {
       width: 100%;
@@ -72,7 +79,7 @@
       }
     }
     &__body {
-      background: #e2e2e2;
+      background: var(--ksd-icon-color);
       width: 100%;
       height: 4px;
       border-radius: 6px;

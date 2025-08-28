@@ -3,10 +3,10 @@
   import Gantt from "../../ui/Table/Gantt.vue";
   import type { GanttInfo } from "../../ui/Table/types";
   import { COLUMNS } from "./columns";
-  import { createGanttRows } from "./rows";
+  import { GANTT_EASY_ROWS } from "./rows";
   import type { RowData } from "./types";
 
-  const rows = shallowRef<GanttInfo<RowData>[]>(createGanttRows(5));
+  const rows = shallowRef<GanttInfo<RowData>[]>(GANTT_EASY_ROWS);
   const column = shallowRef<typeof COLUMNS>(COLUMNS);
 
   function getSubRows(row: GanttInfo<RowData>) {

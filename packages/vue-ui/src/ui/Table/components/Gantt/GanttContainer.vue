@@ -1,8 +1,8 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
   import { type Component, computed, useTemplateRef } from "vue";
-  import { GANTT_HEADER_HEIGHT, GANTT_ROW_LG_HEIGHT, GANTT_ROW_SM_HEIGHT } from "../../constants";
-  import { useGanttScroll, useGanttSplitter } from "../../lib";
+  import { GANTT_HEADER_HEIGHT } from "../../constants";
+  import { getGanttRowHeight, useGanttScroll, useGanttSplitter } from "../../lib";
   import type {
     DefaultRow,
     GanttDate,
@@ -73,17 +73,7 @@
     }
   });
   const rowHeight = computed(() => {
-    switch (props.ganttSize) {
-      case "lg": {
-        return GANTT_ROW_LG_HEIGHT;
-      }
-      case "sm": {
-        return GANTT_ROW_SM_HEIGHT;
-      }
-      default: {
-        return GANTT_ROW_SM_HEIGHT;
-      }
-    }
+    return getGanttRowHeight(props.ganttSize);
   });
 
   const tableContainerElement = useTemplateRef("table-container");

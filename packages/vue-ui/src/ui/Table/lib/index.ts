@@ -6,3 +6,7 @@ export * from "./sorting";
 export * from "./check-cell-visible";
 export * from "./get-gantt-column-width";
 export * from "./get-month-name";
+export * from "./get-gantt-row-info";
+export * from "./get-gantt-row-height";
+export * from "./get-day-of-year";
+export * from "./extract-gantt-link-id";

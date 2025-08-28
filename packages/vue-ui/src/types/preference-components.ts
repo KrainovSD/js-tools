@@ -209,7 +209,11 @@ export type ThemeTableVariable =
   | "ksd-table-loader-opacity"
   | "ksd-table-expander-outer-size"
   | "ksd-table-expander-inner-size"
-  | "ksd-table-expander-hover-color";
+  | "ksd-table-expander-hover-color"
+  | "ksd-table-gantt-task-color"
+  | "ksd-table-gantt-milestone-color"
+  | "ksd-table-gantt-group-color"
+  | "ksd-table-gantt-link-color";
 
 export type ThemeFilterVariable = "ksd-filter-gap" | "ksd-filter-field-gap";
 

@@ -165,10 +165,12 @@ export const GANTT_EASY_ROWS = [
     name: "Construction plans",
     start: "2025-05-01",
     end: "2027-12-07",
+    type: "group",
     children: [
       {
         id: "1.1",
         name: "Johnson's house",
+        type: "group",
         start: "2025-05-01",
         end: "2025-10-08",
         children: [
@@ -177,6 +179,7 @@ export const GANTT_EASY_ROWS = [
             name: "Contract and very very long text in the end of table for test",
             start: "2027-11-25",
             end: "2025-12-01",
+            type: "task",
             children: [],
           },
           {
@@ -184,7 +187,7 @@ export const GANTT_EASY_ROWS = [
             name: "Contract",
             start: "2025-05-01",
             end: "2025-06-02",
-            children: [],
+            links: ["1.1"],
           },
           {
             id: "1.1.2",
@@ -197,7 +200,7 @@ export const GANTT_EASY_ROWS = [
                 name: "Outline Design",
                 start: "2025-05-30",
                 end: "2025-06-15",
-                dependents: ["1.1.2.2", "1.1.3", "1.2"],
+                links: ["1.1.2.2", "1.1.3", "1.2"],
               },
               {
                 id: "1.1.2.2",
@@ -227,7 +230,7 @@ export const GANTT_EASY_ROWS = [
             name: "Tender",
             start: "2025-4-08",
             end: "2025-5-30",
-            dependents: ["1.2"],
+            links: ["1.2", "1.1.3"],
           },
           {
             id: "1.2.2",
@@ -247,7 +250,7 @@ export const GANTT_EASY_ROWS = [
             name: "Tender",
             start: "2025-10-08",
             end: "2025-10-30",
-            dependents: ["1.2.2", "1.2.1", "1.2.5"],
+            links: ["1.2.2", "1.2.1", "1.2.5"],
           },
           {
             id: "1.2.5",
@@ -267,7 +270,7 @@ export const GANTT_EASY_ROWS = [
             name: "Tender",
             start: "2025-10-08",
             end: "2025-10-30",
-            dependents: ["1.2.8"],
+            links: ["1.2.8"],
           },
           {
             id: "1.2.8",
@@ -287,7 +290,7 @@ export const GANTT_EASY_ROWS = [
             name: "Tender",
             start: "2025-10-08",
             end: "2025-10-30",
-            dependents: ["1.2.11"],
+            links: ["1.2.11"],
           },
           {
             id: "1.2.11",
@@ -336,7 +339,7 @@ export const GANTT_EASY_ROWS = [
                 name: "Outline Design",
                 start: "2025-05-30",
                 end: "2025-06-15",
-                dependents: ["2.1.2.2", "2.1.3", "2.2"],
+                links: ["2.1.2.2", "2.1.3", "2.2"],
               },
               {
                 id: "2.1.2.2",
@@ -366,7 +369,7 @@ export const GANTT_EASY_ROWS = [
             name: "Tender",
             start: "2025-10-08",
             end: "2025-10-30",
-            dependents: ["2.2.2"],
+            links: ["2.2.2"],
           },
           {
             id: "2.2.2",
@@ -386,7 +389,7 @@ export const GANTT_EASY_ROWS = [
             name: "Tender",
             start: "2025-10-08",
             end: "2025-10-30",
-            dependents: ["2.2.5"],
+            links: ["2.2.5"],
           },
           {
             id: "2.2.5",
@@ -406,7 +409,7 @@ export const GANTT_EASY_ROWS = [
             name: "Tender",
             start: "2025-10-08",
             end: "2025-10-30",
-            dependents: ["2.2.8"],
+            links: ["2.2.8"],
           },
           {
             id: "2.2.8",
@@ -426,31 +429,38 @@ export const GANTT_EASY_ROWS = [
             name: "Tender",
             start: "2025-10-08",
             end: "2025-10-30",
-            dependents: ["2.2.11"],
+            links: ["2.2.11"],
           },
           {
             id: "2.2.11",
             name: "Contract",
-            start: "2025-11-31",
-            end: "2025-12-30",
+            start: "2025-12-31",
+            end: "2025-10-01",
           },
           {
             id: "2.2.12",
             name: "Finish",
-            start: "2025-12-07",
-            end: "2025-12-07",
+            start: "2025-12-09",
+            end: "2025-12-09",
             type: "milestone",
           },
         ],
       },
     ],
   },
-].map<GanttInfo<RowData>>((row) => {
+].map<GanttInfo<RowData>>((row) =>
+  recursiveAddData(row as GanttInfo<unknown>),
+) as GanttInfo<RowData>[];
+
+function recursiveAddData(row: GanttInfo<unknown>): GanttInfo<RowData> {
   return {
     id: row.id,
     start: row.start,
     end: row.end,
+    children: row.children?.map?.(recursiveAddData),
     name: row.name,
-    data: createRow(row.id),
+    links: row.links,
+    type: row.type,
+    data: createRow(String(row.id)),
   };
-}) as GanttInfo<RowData>[];
+}
