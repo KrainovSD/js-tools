@@ -68,7 +68,7 @@ export function useGanttColumn<RowData extends DefaultRow>(opts: UseGanttColumnO
     }
 
     const headerInfoItems: GanttHeaderInfo[] = [];
-    for (let i = startDateInfo.year; i < endDateInfo.year; i++) {
+    for (let i = startDateInfo.year; i <= endDateInfo.year; i++) {
       const startMonth = startDateInfo.year === i ? startDateInfo.month : 0;
       const endMonth = endDateInfo.year === i ? endDateInfo.month : 11;
       const diff = endMonth - startMonth;

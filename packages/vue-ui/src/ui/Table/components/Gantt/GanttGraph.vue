@@ -123,6 +123,14 @@
     </div>
     <div :id="GANTT_GRAPH_BODY_ID" class="ksd-gantt-graph__body-container">
       <div ref="gantt-graph-body" class="ksd-gantt-graph__body" :style="bodyStyles">
+        <template v-if="$props.ganttGraphGrid">
+          <div
+            v-for="index in gridRender"
+            :key="index"
+            class="ksd-gantt-graph__grid"
+            :style="{ left: `${(index + 1) * columnWidth - GANTT_LEFT_SHIFT}px` }"
+          ></div>
+        </template>
         <template v-if="$props.rowVirtualEnabled">
           <GanttGraphRow
             v-for="virtualRow in $props.rowsVirtual"
@@ -153,12 +161,6 @@
         </template>
       </div>
     </div>
-    <div
-      v-for="index in gridRender"
-      :key="index"
-      class="ksd-gantt-graph__grid"
-      :style="{ left: (index + 1) * columnWidth - GANTT_LEFT_SHIFT }"
-    ></div>
   </div>
 </template>
 

@@ -26,6 +26,7 @@
     :get-sub-rows="getSubRows"
     :gantt-splitter-instant="true"
     :gantt-view="'years'"
+    :gantt-graph-grid="true"
   />
 </template>
 
