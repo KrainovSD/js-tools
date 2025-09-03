@@ -23,6 +23,8 @@ export type GanttArrowStyle = {
 
 export type GanttProps<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
   withGantt?: boolean;
+  ganttVisibleArrowInRange?: boolean;
+  ganttArrowGetAround?: boolean;
   firstGanttDate?: string;
   lastGanttDate?: string;
   ganttRowMini?: boolean;
@@ -62,4 +64,25 @@ export type GanttRowInfo = {
   width: number;
   height: number;
   textWidth: number;
+};
+
+export type GanttArrowInfo = {
+  startLeft: number;
+  startTop: number;
+  index: number;
+  direction: "up" | "down";
+  leftToRightFirst: number;
+  leftToRightSecond: number;
+  rightToLeft: number;
+  topToBottom: number;
+  topToBottomExtra: number;
+  topArrowShift: number;
+  extraCorner: boolean;
+  arrowSize: number;
+  cornerSize: number;
+  size: number;
+  dependId: number | string;
+  dependIndex: number;
+  rowId: number | string;
+  color: string | undefined;
 };

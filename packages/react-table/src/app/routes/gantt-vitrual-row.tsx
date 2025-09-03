@@ -68,6 +68,8 @@ export function GanttVirtualRow() {
       onDoubleClickRow={onDoubleClick}
       virtualRows={true}
       ganttArrowStyleGetter={arrowStyleGetter}
+      ganttArrowGetAround={true}
+      ganttVisibleArrowInRange={true}
       virtualColumn={false}
       fullSize={true}
       loading={false}

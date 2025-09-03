@@ -49,6 +49,8 @@ export type GanttProps<RowData extends DefaultRow, GanttData extends DefaultGant
     | undefined;
   ganttView: GanttViewType;
   GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
+  ganttVisibleArrowInRange: boolean;
+  ganttArrowGetAround: boolean;
 };
 
 export function Gantt<RowData extends DefaultRow, GanttData extends DefaultGanttData>(
@@ -133,6 +135,8 @@ export function Gantt<RowData extends DefaultRow, GanttData extends DefaultGantt
             locale={props.locale}
             ganttView={props.ganttView ?? "months"}
             GanttTask={props.GanttTask}
+            ganttArrowGetAround={props.ganttArrowGetAround}
+            ganttVisibleArrowInRange={props.ganttVisibleArrowInRange}
           />
         </div>
       </div>

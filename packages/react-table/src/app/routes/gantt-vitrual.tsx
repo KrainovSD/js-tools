@@ -58,6 +58,8 @@ export function GanttVirtual() {
       virtualRowSize={69}
       virtualColumn={true}
       fullSize={true}
+      ganttArrowGetAround={true}
+      ganttVisibleArrowInRange={true}
       loading={false}
       withGantt={true}
       instantGanttSplitter={false}

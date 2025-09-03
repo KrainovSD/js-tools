@@ -302,6 +302,8 @@ export function Table<
             GanttTask={props.GanttTask}
             rowClassName={props.rowClassName}
             headerRowClassName={props.headerRowClassName}
+            ganttArrowGetAround={props.ganttArrowGetAround ?? false}
+            ganttVisibleArrowInRange={props.ganttVisibleArrowInRange ?? false}
           />
         )}
 

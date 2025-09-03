@@ -16,6 +16,7 @@ import type {
   RowInterface,
   TableInterface,
 } from "../../types";
+import { GanttArrows } from "./gantt-arrows";
 import { TableGanttHeaderRow } from "./table-gantt-header-row";
 import { TableGanttRow } from "./table-gantt-row";
 import styles from "./table-gantt.module.scss";
@@ -45,6 +46,8 @@ type TableContainerProps<RowData extends DefaultRow, GanttData extends DefaultGa
   GanttTooltip: React.FC<GanttTooltipProps<RowData>> | undefined;
   GanttTask: React.FC<GanttTaskProps<RowData, GanttData>> | undefined;
   ganttView: GanttViewType;
+  ganttVisibleArrowInRange: boolean;
+  ganttArrowGetAround: boolean;
 };
 
 export function TableGantt<RowData extends DefaultRow, GanttData extends DefaultGanttData>(
@@ -200,6 +203,20 @@ export function TableGantt<RowData extends DefaultRow, GanttData extends Default
                 ></div>
               );
             })}
+          {/** ARROWS */}
+          <GanttArrows<RowData, GanttData>
+            ganttArrowStyleGetter={props.ganttArrowStyleGetter}
+            arrowContainer={arrowContainerRef.current}
+            bodyWidth={bodyWidth}
+            ganttInfoGetter={props.ganttInfoGetter}
+            rows={props.rows}
+            rowsMap={rowsMap}
+            mini={props.ganttRowMini ?? false}
+            rowVirtualEnabled={props.rowVirtualEnabled}
+            rowsVirtual={props.rowsVirtual}
+            ganttArrowGetAround={props.ganttArrowGetAround}
+            ganttVisibleArrowInRange={props.ganttVisibleArrowInRange}
+          />
         </div>
       </div>
     </div>

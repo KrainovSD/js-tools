@@ -2,7 +2,6 @@ import { dateFormat } from "@krainovsd/js-helpers";
 import { Tooltip } from "@krainovsd/react-ui";
 import clsx from "clsx";
 import React from "react";
-import { createPortal } from "react-dom";
 import { GANTT_TOP_SHIFT } from "../../table.constants";
 import type {
   DefaultGanttData,
@@ -14,7 +13,6 @@ import type {
   GanttTooltipProps,
   RowInterface,
 } from "../../types";
-import { GanttArrow } from "./gantt-arrow";
 import styles from "./table-gantt-cell.module.scss";
 
 type GetCellOptions<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
@@ -154,21 +152,6 @@ export function TableGanttCell<RowData extends DefaultRow, GanttData extends Def
           )}
         </Tooltip>
       )}
-      {ganttInfo.dependents &&
-        ganttInfo.dependents.length > 0 &&
-        opts.arrowContainer &&
-        createPortal(
-          <GanttArrow
-            ganttArrowStyleGetter={opts.ganttArrowStyleGetter}
-            dependencies={ganttInfo.dependents}
-            rowsMap={opts.rowsMap}
-            currentRowId={ganttInfo.id}
-            mini={opts.mini}
-            key={ganttInfo.id}
-            info={ganttInfo}
-          />,
-          opts.arrowContainer,
-        )}
     </React.Fragment>
   );
 }

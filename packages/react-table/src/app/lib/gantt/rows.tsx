@@ -50,6 +50,25 @@ function createRowsGantt(): RowGantt[] {
   return rows;
 }
 
+// const ganttLength = 1000;
+// export const GANTT_EASY_ROWS = Array.from<unknown, RowGantt>(
+//   { length: ganttLength },
+//   (_, index) => {
+//     const start = getDateByRules([{ increment: 1, type: "days" }]);
+//     const end = getDateByRules([{ increment: 70, type: "days" }]);
+
+//     return {
+//       id: index.toString(),
+//       end: end.toISOString(),
+//       start: start.toISOString(),
+//       name: index.toString(),
+//       type: "task",
+//       dependents: index < ganttLength - 200 ? ["900"] : undefined,
+//       children: [],
+//     };
+//   },
+// ) as RowGantt[];
+
 export const GANTT_EASY_ROWS = [
   {
     id: "1",
