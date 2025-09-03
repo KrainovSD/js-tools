@@ -117,6 +117,7 @@
       }
     };
   });
+  const resizeHandler = computed(() => props.header.getResizeHandler());
 </script>
 
 <template>
@@ -139,8 +140,8 @@
       v-if="$props.header.column.getCanResize()"
       class="ksd-table__header-cell-resize"
       :style="{ width: `${RESIZE_HANDLE_WIDTH}px` }"
-      @mousedown="$props.header.getResizeHandler()"
-      @touchstart="$props.header.getResizeHandler()"
+      @mousedown="resizeHandler"
+      @touchstart="resizeHandler"
     ></div>
   </div>
 </template>

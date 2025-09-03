@@ -4,7 +4,8 @@ import { resolve } from "path";
 import type { InputPluginOption } from "rollup";
 import { type PluginOption, defineConfig } from "vite";
 import dts from "vite-plugin-dts";
-import vueDevTools from "vite-plugin-vue-devtools";
+
+// import vueDevTools from "vite-plugin-vue-devtools";
 
 const PORT = 3000;
 
@@ -18,7 +19,7 @@ export default defineConfig({
       rollupTypes: true,
       tsconfigPath: "./tsconfig.build.json",
     }),
-    vueDevTools(),
+    // vueDevTools(),
     presets.plugins.visualizer() as PluginOption,
   ],
   publicDir: production ? false : undefined,
