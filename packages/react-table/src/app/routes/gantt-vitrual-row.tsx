@@ -23,12 +23,12 @@ export function GanttVirtualRow() {
 
     if (end.getFullYear() > 2026) {
       return {
-        color: "blue",
-        size: 1,
+        color: "#e8e6e6",
+        size: 2,
       };
     }
 
-    return { color: "red", size: 2 };
+    return { color: "#a29a9a", size: 2 };
   };
 
   const { firstDate, lastDate } = React.useMemo(() => {

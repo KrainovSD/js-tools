@@ -4,7 +4,6 @@ import React from "react";
 import styles from "./gantt-arrow-up.module.scss";
 
 type Props = {
-  color: string | undefined;
   rowId: number | string;
   dependId: number | string;
   arrowIndex: number;
@@ -18,6 +17,7 @@ type Props = {
   linkSize: number;
   cornerSize: number;
   arrowSize: number;
+  linkId: string;
 };
 
 export function GanttArrowUp(props: Props) {
@@ -25,137 +25,138 @@ export function GanttArrowUp(props: Props) {
     <React.Fragment key={`${props.rowId}${props.dependId}${props.arrowIndex}`}>
       <div
         className={clsx(styles.link, styles.one__leftToRight)}
+        data-id={props.linkId}
         style={{
           width: props.leftToRightFirst,
           height: props.linkSize,
           left: 0,
           top: 0,
-          ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
         }}
       ></div>
       <div
         className={clsx(styles.corner, styles.one__radius)}
+        data-id={props.linkId}
         style={{
           left: props.leftToRightFirst,
           top: -props.cornerSize,
-          ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
         }}
       ></div>
       {props.requireExtraCorner && (
         <div
           className={clsx(styles.link, styles.two__topToBottom)}
+          data-id={props.linkId}
           style={{
             width: props.linkSize,
             height: props.topToBottomExtra,
             left: props.leftToRightFirst + props.cornerSize,
             top: -props.cornerSize - props.topToBottomExtra,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {props.requireExtraCorner && (
         <div
           className={clsx(styles.corner, styles.two__radius)}
+          data-id={props.linkId}
           style={{
             left: props.leftToRightFirst,
             top: -(props.cornerSize * 2) - props.topToBottomExtra,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {props.requireExtraCorner && (
         <div
           className={clsx(styles.link, styles.three__rightToLeft)}
+          data-id={props.linkId}
           style={{
             width: props.rightToLeft,
             height: props.linkSize,
             left: props.leftToRightFirst - props.rightToLeft,
             top: -(props.cornerSize * 2) - props.topToBottomExtra,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {props.requireExtraCorner && (
         <div
           className={clsx(styles.corner, styles.three__radius)}
+          data-id={props.linkId}
           style={{
             left: props.leftToRightFirst - props.rightToLeft - props.cornerSize,
             top: -(props.cornerSize * 3) - props.topToBottomExtra,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {props.requireExtraCorner && (
         <div
           className={clsx(styles.link, styles.four__topToBottom)}
+          data-id={props.linkId}
           style={{
             width: props.linkSize,
             height: props.topToBottom,
             left: props.leftToRightFirst - props.rightToLeft - props.cornerSize,
             top: -(props.cornerSize * 3) - props.topToBottomExtra - props.topToBottom,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {!props.requireExtraCorner && (
         <div
           className={clsx(styles.link, styles.four__topToBottom)}
+          data-id={props.linkId}
           style={{
             width: props.linkSize,
             height: props.topToBottom,
             left: props.leftToRightFirst + props.cornerSize,
             top: -props.cornerSize - props.topToBottom,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {props.requireExtraCorner && (
         <div
           className={clsx(styles.corner, styles.four__radius)}
+          data-id={props.linkId}
           style={{
             left: props.leftToRightFirst - props.rightToLeft - props.cornerSize,
             top: -(props.cornerSize * 4) - props.topToBottomExtra - props.topToBottom,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {!props.requireExtraCorner && (
         <div
           className={clsx(styles.corner, styles.four__radius)}
+          data-id={props.linkId}
           style={{
             left: props.leftToRightFirst + props.cornerSize,
             top: -(props.cornerSize * 2) - props.topToBottom,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {props.requireExtraCorner && (
         <div
           className={clsx(styles.link, styles.five__leftToRight)}
+          data-id={props.linkId}
           style={{
             width: props.leftToRightSecond,
             height: props.linkSize,
             left: props.leftToRightFirst - props.rightToLeft,
             top: -(props.cornerSize * 4) - props.topToBottomExtra - props.topToBottom,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {!props.requireExtraCorner && (
         <div
           className={clsx(styles.link, styles.five__leftToRight)}
+          data-id={props.linkId}
           style={{
             width: props.leftToRightSecond,
             height: props.linkSize,
             left: props.leftToRightFirst + props.cornerSize * 2,
             top: -(props.cornerSize * 2) - props.topToBottom,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
         ></div>
       )}
       {props.requireExtraCorner && (
         <CaretRightFilled
           className={styles.arrow}
+          data-id={props.linkId}
           color="inherit"
           style={{
             left:
@@ -169,7 +170,6 @@ export function GanttArrowUp(props: Props) {
               props.topToBottom -
               props.arrowSize / 2 +
               props.topArrowShift,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
           size={props.arrowSize}
         />
@@ -177,6 +177,7 @@ export function GanttArrowUp(props: Props) {
       {!props.requireExtraCorner && (
         <CaretRightFilled
           className={styles.arrow}
+          data-id={props.linkId}
           color="inherit"
           style={{
             left:
@@ -189,7 +190,6 @@ export function GanttArrowUp(props: Props) {
               props.topToBottom -
               props.arrowSize / 2 +
               props.topArrowShift,
-            ...({ "--size": props.linkSize, "--color": props.color } as React.CSSProperties),
           }}
           size={props.arrowSize}
         />

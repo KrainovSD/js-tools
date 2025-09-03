@@ -110,6 +110,7 @@ export function useArrowInfo<RowData extends DefaultRow, GanttData extends Defau
         }
 
         arrowInfo.push({
+          linkId: `${ganttInfo.id}:${dependId}:${j}`,
           index: i,
           dependIndex: dependRowInfo.index,
           color,

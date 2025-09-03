@@ -35,7 +35,8 @@
   --table-loader-bg-color: #ffffff;
   --table-loader-opacity: 0.5;
   --table-spin-max-height: 400px;
-
+  --table-selected-arrow-color: #ff4d4f;
+  --table-selected-arrow-size: 2;
   // @media (prefers-color-scheme: dark) {
   //   --table-box-shadow-left: -2px 0px 5px -2px rgba(136, 136, 136, 0.3);
   //   --table-box-shadow-right: 2px 0 5px -2px rgba(136, 136, 136, 0.3);
@@ -60,10 +61,7 @@
   //   --table-body-bg: #ffffff;
   //   --table-header-bg: #f9f9f9;
   //   --table-border: #ddd;
-  //   --table-text-color: rgba(0, 0, 0, 0.75);
-  //   --table-link-color: #a870e8;
-  //   --table-active-sort: #1e90ff;
-  //   --table-row-hover-bg: #f3faff; //   --table-transition: all 0.1s ease; // }
+  //   --table-text-color: rgba(0, 0, 0, 0.75); //   --table-row-hover-bg: #f3faff; //   --table-transition: all 0.1s ease; // } //   --table-active-sort: #1e90ff; //   --table-link-color: #a870e8;
 }
 
 .overlay {

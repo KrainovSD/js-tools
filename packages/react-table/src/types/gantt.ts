@@ -67,6 +67,7 @@ export type GanttRowInfo = {
 };
 
 export type GanttArrowInfo = {
+  linkId: string;
   startLeft: number;
   startTop: number;
   index: number;
