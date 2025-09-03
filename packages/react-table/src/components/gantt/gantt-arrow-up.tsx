@@ -1,12 +1,8 @@
 import { CaretRightFilled } from "@krainovsd/react-icons";
 import clsx from "clsx";
-import React from "react";
 import styles from "./gantt-arrow-up.module.scss";
 
 type Props = {
-  rowId: number | string;
-  dependId: number | string;
-  arrowIndex: number;
   requireExtraCorner: boolean;
   leftToRightFirst: number;
   leftToRightSecond: number;
@@ -22,7 +18,7 @@ type Props = {
 
 export function GanttArrowUp(props: Props) {
   return (
-    <React.Fragment key={`${props.rowId}${props.dependId}${props.arrowIndex}`}>
+    <>
       <div
         className={clsx(styles.link, styles.one__leftToRight)}
         data-id={props.linkId}
@@ -194,6 +190,6 @@ export function GanttArrowUp(props: Props) {
           size={props.arrowSize}
         />
       )}
-    </React.Fragment>
+    </>
   );
 }

@@ -84,7 +84,7 @@ export function GanttArrows<RowData extends DefaultRow, GanttData extends Defaul
       {arrows.map((arrow) => {
         return (
           <div
-            key={`${arrow.rowId}${arrow.dependId}`}
+            key={arrow.linkId}
             className={clsx(styles.base, "gantt-arrow")}
             style={{
               left: arrow.startLeft,
@@ -102,9 +102,6 @@ export function GanttArrows<RowData extends DefaultRow, GanttData extends Defaul
               <GanttArrowDown
                 linkId={arrow.linkId}
                 linkSize={selectedId === arrow.linkId ? 2 : arrow.size}
-                arrowIndex={arrow.index}
-                dependId={arrow.dependId}
-                rowId={arrow.rowId}
                 arrowSize={arrow.arrowSize}
                 cornerSize={arrow.cornerSize}
                 requireExtraCorner={arrow.extraCorner}
@@ -119,9 +116,6 @@ export function GanttArrows<RowData extends DefaultRow, GanttData extends Defaul
             {arrow.direction === "up" && (
               <GanttArrowUp
                 linkId={arrow.linkId}
-                arrowIndex={arrow.index}
-                dependId={arrow.dependId}
-                rowId={arrow.rowId}
                 arrowSize={arrow.arrowSize}
                 cornerSize={arrow.cornerSize}
                 requireExtraCorner={arrow.extraCorner}
