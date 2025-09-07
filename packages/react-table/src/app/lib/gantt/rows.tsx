@@ -2,9 +2,9 @@ import { faker } from "@faker-js/faker";
 import { getDateByRules } from "@krainovsd/js-helpers";
 import type { RowGantt } from "../../types/gantt";
 
-export const GANTT_ROWS: RowGantt[] = createRowsGantt();
+export const GANTT_ROWS: RowGantt[] = createRowsGantt(14);
 
-function createRowsGantt(): RowGantt[] {
+function createRowsGantt(maxDeep: number): RowGantt[] {
   const rows: RowGantt[] = [];
   const start = faker.date.past({ years: 3 });
   const end = getDateByRules([{ increment: 5, type: "years" }], start);
@@ -19,7 +19,7 @@ function createRowsGantt(): RowGantt[] {
 
   function generateInner(deep: number, parentId: string, start: Date) {
     const result: RowGantt[] = [];
-    if (deep === 10) return result;
+    if (deep === maxDeep) return result;
 
     for (let i = 0; i < faker.number.int({ min: 1, max: 3 }); i++) {
       const id = `${parentId}.${deep}.${i}`;

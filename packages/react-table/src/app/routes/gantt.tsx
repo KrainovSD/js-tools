@@ -54,6 +54,8 @@ export function Gantt() {
       Empty={() => <span>Empty</span>}
       getSubRows={(row) => row.children}
       onClickRow={onClick}
+      ganttArrowGetAround={true}
+      ganttVisibleArrowInRange={true}
       onDoubleClickRow={onDoubleClick}
       virtualRows={false}
       virtualRowSize={69}

@@ -8,3 +8,4 @@ export * from "./get-short-month-name";
 export * from "./get-gantt-column-width";
 export * from "./get-gantt-initial-coordinates";
 export * from "./get-day-of-year";
+export * from "./segment-tree";

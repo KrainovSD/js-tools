@@ -10,6 +10,7 @@ import type {
   GanttRowInfo,
   RowInterface,
 } from "../../types";
+import { SegmentTreeMin } from "../segment-tree";
 
 type UseArrowInfoOptions<RowData extends DefaultRow, GanttData extends DefaultGanttData> = {
   ganttArrowStyleGetter: GanttArrowStyleGetter<GanttData> | undefined;
@@ -52,6 +53,11 @@ export function useArrowInfo<RowData extends DefaultRow, GanttData extends Defau
   const arrowInfo = React.useMemo(() => {
     const arrowInfo: GanttArrowInfo[] = [];
 
+    let segmentTree: SegmentTreeMin | undefined;
+    if (opts.ganttArrowGetAround) {
+      segmentTree = new SegmentTreeMin(opts.rows.map((row) => opts.rowsMap[row.id]?.left ?? 0));
+    }
+
     for (let i = 0; i < opts.rows.length; i++) {
       const row = opts.rows[i];
       const ganttInfo = opts.ganttInfoGetter?.(row);
@@ -71,17 +77,15 @@ export function useArrowInfo<RowData extends DefaultRow, GanttData extends Defau
         if (indexDiff === 0) continue;
 
         let minDependsLeft = dependRowInfo.left;
-        if (opts.ganttArrowGetAround) {
-          for (
-            let m = rowInfo.index;
-            indexDiff > 0 ? m < dependRowInfo.index : m > dependRowInfo.index;
-            indexDiff > 0 ? m++ : m--
-          ) {
-            const info = opts.rowsMap[opts.rows[m]?.id];
 
-            // eslint-disable-next-line max-depth
-            if (info && info.left < minDependsLeft) minDependsLeft = info.left;
-          }
+        if (segmentTree) {
+          minDependsLeft = Math.min(
+            minDependsLeft,
+            segmentTree.query(
+              Math.min(rowInfo.index, dependRowInfo.index),
+              Math.max(rowInfo.index, dependRowInfo.index),
+            ),
+          );
         }
 
         const fullFirstCorner =

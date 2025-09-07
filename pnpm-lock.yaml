@@ -1040,8 +1040,8 @@ importers:
   packages/react-table:
     dependencies:
       '@krainovsd/js-helpers':
-        specifier: ^0.14.6
-        version: 0.14.6
+        specifier: ^0.15.3
+        version: 0.15.3
       '@krainovsd/react-icons':
         specifier: ^0.4.1
         version: 0.4.1(react@18.3.1)
@@ -2786,6 +2786,9 @@ packages:
 
   '@krainovsd/js-helpers@0.14.7':
     resolution: {integrity: sha512-2bLH7/apaD7YYR2AIDXkll9FgNbdnDrNjvOfyUnFxxgPgQdbTDyIauXc8mOSowLSlGI8ud4c7gMs1JtYkm5mHw==}
+
+  '@krainovsd/js-helpers@0.15.3':
+    resolution: {integrity: sha512-XGit1dvm0PHV5xbi3DHInNOrqBPT/B4SZsvRELKdzkG/OgotFOk3SXc6QJCntYTVuoekhGMQq9i6yWJ+1swESA==}
 
   '@krainovsd/markdown-editor@0.4.8':
     resolution: {integrity: sha512-SbAakaloHDx07xQR1k58QBQlCwsd8Y4VfeZwmEREwHBDxUGBzbiYPf+gSw7Dtk95qM0zaOQ6w4Y3Tct5KhW8yg==}
@@ -9815,8 +9818,8 @@ packages:
   vue-component-type-helpers@2.2.10:
     resolution: {integrity: sha512-iDUO7uQK+Sab2tYuiP9D1oLujCWlhHELHMgV/cB13cuGbG4qwkLHvtfWb6FzvxrIOPDnU0oHsz2MlQjhYDeaHA==}
 
-  vue-component-type-helpers@3.0.5:
-    resolution: {integrity: sha512-uoNZaJ+a1/zppa/Vgmi8zIOP2PHXDN2rT8NyF+zQRK6ZG94lNB9prcV0GdLJbY9i9lrD47JOVIH92SaiA7oJ1A==}
+  vue-component-type-helpers@3.0.6:
+    resolution: {integrity: sha512-6CRM8X7EJqWCJOiKPvSLQG+hJPb/Oy2gyJx3pLjUEhY7PuaCthQu3e0zAGI1lqUBobrrk9IT0K8sG2GsCluxoQ==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -12133,6 +12136,11 @@ snapshots:
       dayjs: 1.11.13
       lodash: 4.17.21
 
+  '@krainovsd/js-helpers@0.15.3':
+    dependencies:
+      dayjs: 1.11.13
+      lodash: 4.17.21
+
   '@krainovsd/markdown-editor@0.4.8(@codemirror/search@6.5.10)':
     dependencies:
       '@codemirror/autocomplete': 6.18.6
@@ -12432,7 +12440,7 @@ snapshots:
   '@krainovsd/react-ui@0.8.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)':
     dependencies:
       '@emotion/css': 11.13.5
-      '@krainovsd/js-helpers': 0.14.7
+      '@krainovsd/js-helpers': 0.14.12
       '@krainovsd/react-icons': 0.4.0(react@18.3.1)
       antd: 5.22.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx: 2.1.1
@@ -13996,7 +14004,7 @@ snapshots:
       storybook: 9.0.16(@testing-library/dom@10.4.0)(prettier@3.6.1)
       type-fest: 2.19.0
       vue: 3.5.14(typescript@5.8.3)
-      vue-component-type-helpers: 3.0.5
+      vue-component-type-helpers: 3.0.6
 
   '@sveltejs/acorn-typescript@1.0.5(acorn@8.14.1)':
     dependencies:
@@ -20826,7 +20834,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.10: {}
 
-  vue-component-type-helpers@3.0.5: {}
+  vue-component-type-helpers@3.0.6: {}
 
   vue-docgen-api@4.79.2(vue@3.5.14(typescript@5.8.3)):
     dependencies:
