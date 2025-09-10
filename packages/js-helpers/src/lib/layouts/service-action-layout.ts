@@ -1,4 +1,4 @@
-import { ResponseError } from "../api";
+import { ResponseError } from "../../constants";
 
 export async function serviceActionLayout<T = unknown>(
   action: () => Promise<T>,

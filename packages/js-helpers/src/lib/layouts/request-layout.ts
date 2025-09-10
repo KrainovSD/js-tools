@@ -1,4 +1,4 @@
-import { ResponseError } from "../api";
+import { ResponseError } from "../../constants";
 
 type RequestLayoutOptions<T> = {
   action: () => Promise<T>;

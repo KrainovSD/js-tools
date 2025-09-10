@@ -1,4 +1,3 @@
-export * from "./api";
 export * from "./browser";
 export * from "./colors";
 export * from "./date";

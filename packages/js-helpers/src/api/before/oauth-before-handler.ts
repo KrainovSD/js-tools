@@ -1,11 +1,10 @@
-import type { Middleware, OauthOptions } from "../../../types";
-import { startWith, waitUntil } from "../../utils";
+import { startWith, waitUntil } from "../../lib/utils";
+import { OAUTH_STATE } from "../api.constants";
+import type { BeforeHandler, OauthOptions } from "../api.types";
 import { getOauthTokenFromOtherWindow } from "../oauth";
 
-let isFetchingAccessToken = false;
-
-export const generateOauthMiddleware =
-  (options: OauthOptions): Middleware =>
+export const oauthBeforeHandler =
+  (options: OauthOptions): BeforeHandler =>
   async (request) => {
     if (!options.expiresTokenStorageName) {
       throw new Error("Auth middleware hasn't required options");
@@ -23,12 +22,12 @@ export const generateOauthMiddleware =
       return;
     }
 
-    if (isFetchingAccessToken) await waitUntil(() => isFetchingAccessToken);
+    if (OAUTH_STATE.fetching) await waitUntil(() => OAUTH_STATE.fetching);
 
     const expires = localStorage.getItem(options.expiresTokenStorageName);
     let token: string | undefined | null;
     if (!expires || Number.isNaN(+expires) || Date.now() > +expires) {
-      isFetchingAccessToken = true;
+      OAUTH_STATE.fetching = true;
       await getOauthTokenFromOtherWindow({
         onlyRefreshTokenWindowQueryName: options.onlyRefreshTokenWindowQueryName,
         onWindowOpenError: options.onWindowOpenError,
@@ -43,7 +42,7 @@ export const generateOauthMiddleware =
           localStorage.setItem(options.tokenStorageName, token);
         }
       }
-      isFetchingAccessToken = false;
+      OAUTH_STATE.fetching = false;
     }
 
     if (!isSameOrigin && token)
@@ -52,24 +51,3 @@ export const generateOauthMiddleware =
         Authorization: `Bearer ${token}`,
       };
   };
-
-export async function refetchAfterOauth<T>(options: OauthOptions, refetch: () => Promise<T>) {
-  isFetchingAccessToken = true;
-  await getOauthTokenFromOtherWindow({
-    onlyRefreshTokenWindowQueryName: options.onlyRefreshTokenWindowQueryName,
-    onWindowOpenError: options.onWindowOpenError,
-    refreshTokenWindowUrl: options.refreshTokenWindowUrl,
-    wait: options.wait,
-    expiresTokenStorageName: options.expiresTokenStorageName,
-    closeObserveInterval: options.closeObserveInterval,
-  });
-  if (options.tokenRequest) {
-    const token = await options.tokenRequest();
-    if (token != undefined && options.tokenStorageName) {
-      localStorage.setItem(options.tokenStorageName, token);
-    }
-  }
-  isFetchingAccessToken = false;
-
-  return await refetch();
-}

@@ -1,7 +1,7 @@
-import type { ParamsType } from "../../types";
+import type { RequestQuery } from "../../api";
 import { isArray, isObject } from "../typings";
 
-export function buildQueryString(params: ParamsType): string {
+export function buildQueryString(params: RequestQuery): string {
   const queryString: string[] = [];
 
   for (const [key, value] of Object.entries(params)) {

@@ -1,10 +1,16 @@
 /* eslint-disable no-console */
-import type { LoggerPostMiddlewareOptions, PostMiddleware } from "../../../types";
-import { RESPONSE_DATA_SYMBOL } from "../constants";
+import type { Headers as NodeHeaders, Response as NodeResponse } from "node-fetch";
+import { RESPONSE_DATA_SYMBOL } from "../api.constants";
+import type { AfterHandler } from "../api.types";
 
-export function generateConsolePostMiddleware(
-  options: LoggerPostMiddlewareOptions = {},
-): PostMiddleware {
+export type LoggerAfterHandlerOptions = {
+  filter?: (response: Response | NodeResponse | undefined) => boolean;
+  filterStatus?: (status: number) => boolean;
+  filterUrl?: (url: string) => boolean;
+  filterHeaders?: (headers: Headers | NodeHeaders) => boolean;
+};
+
+export function loggerAfterHandler(options: LoggerAfterHandlerOptions = {}): AfterHandler {
   return (request, response) => {
     return new Promise((resolve) => {
       void (async function logger() {

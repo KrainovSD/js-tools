@@ -1,12 +1,12 @@
-import type { ParamsType } from "../../types";
+import type { RequestQuery } from "../../api";
 import { buildQueryString } from "./build-query-string";
 
 type CreateURLOptionsInterface = {
   baseURL: string;
-  params?: ParamsType;
+  params?: RequestQuery;
 };
 
-export function createURLWithParams(options: CreateURLOptionsInterface): string {
+export function createURLWithQueries(options: CreateURLOptionsInterface): string {
   const url = options.baseURL;
 
   if (!options.params) {

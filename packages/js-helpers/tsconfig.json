@@ -8,7 +8,8 @@
     "eslint.config.js",
     "rollup.config.ts",
     "jest.config.js",
-    ".prettierrc.mjs"
+    ".prettierrc.mjs",
+    "vite.config.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

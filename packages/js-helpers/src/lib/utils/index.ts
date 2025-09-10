@@ -4,7 +4,7 @@ export * from "./json-parse";
 export * from "./random-string";
 export * from "./wait";
 export * from "./transform-to-number";
-export * from "./create-url-with-params";
+export * from "./create-url-with-queries";
 export * from "./trim-url";
 export * from "./array-to-map-by-key";
 export * from "./build-query-string";

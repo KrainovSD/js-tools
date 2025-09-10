@@ -1,4 +1,4 @@
-import type { ParamsType } from "../../types";
+import type { RequestQuery } from "../../api";
 import { buildQueryString } from "./build-query-string";
 
 describe("build-query-string", () => {
@@ -14,6 +14,6 @@ describe("build-query-string", () => {
     };
     const result = "build=success&build=warn&test=test";
 
-    expect(buildQueryString(params as unknown as ParamsType)).toBe(result);
+    expect(buildQueryString(params as unknown as RequestQuery)).toBe(result);
   });
 });

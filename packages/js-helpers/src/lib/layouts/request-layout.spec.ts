@@ -1,4 +1,4 @@
-import { ResponseError } from "../api";
+import { ResponseError } from "../../constants";
 import { wait } from "../utils";
 import { requestLayout } from "./request-layout";
 

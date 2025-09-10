@@ -1,4 +1,4 @@
-import { createURLWithParams } from "./create-url-with-params";
+import { createURLWithQueries } from "./create-url-with-queries";
 
 describe("create-url-with-params", () => {
   const params = {
@@ -9,9 +9,9 @@ describe("create-url-with-params", () => {
   const resultWithParams = `${url}?${paramsResult}`;
 
   it("success with params", () => {
-    expect(createURLWithParams({ baseURL: url, params })).toBe(resultWithParams);
+    expect(createURLWithQueries({ baseURL: url, params })).toBe(resultWithParams);
   });
   it("success without params", () => {
-    expect(createURLWithParams({ baseURL: url })).toBe(url);
+    expect(createURLWithQueries({ baseURL: url })).toBe(url);
   });
 });

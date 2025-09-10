@@ -1,7 +1,10 @@
-import type { GetOauthTokenFromOtherWindowOptions, GetOauthTokenOptions } from "../../../types";
-import { getQueryValues } from "../../browser";
-import { isArray, isString } from "../../typings";
-import { waitUntil } from "../../utils";
+import { getQueryValues, isArray, isString, waitUntil } from "../lib";
+import { OAUTH_STATE } from "./api.constants";
+import type {
+  GetOauthTokenFromOtherWindowOptions,
+  GetOauthTokenOptions,
+  OauthOptions,
+} from "./api.types";
 
 export async function getOauthTokenFromOtherWindow(options: GetOauthTokenFromOtherWindowOptions) {
   let waiting = true;
@@ -55,6 +58,27 @@ export async function getOauthTokenFromOtherWindow(options: GetOauthTokenFromOth
   }
 
   await waitUntil(() => waiting);
+}
+
+export async function refetchAfterOauth<T>(options: OauthOptions, refetch: () => Promise<T>) {
+  OAUTH_STATE.fetching = true;
+  await getOauthTokenFromOtherWindow({
+    onlyRefreshTokenWindowQueryName: options.onlyRefreshTokenWindowQueryName,
+    onWindowOpenError: options.onWindowOpenError,
+    refreshTokenWindowUrl: options.refreshTokenWindowUrl,
+    wait: options.wait,
+    expiresTokenStorageName: options.expiresTokenStorageName,
+    closeObserveInterval: options.closeObserveInterval,
+  });
+  if (options.tokenRequest) {
+    const token = await options.tokenRequest();
+    if (token != undefined && options.tokenStorageName) {
+      localStorage.setItem(options.tokenStorageName, token);
+    }
+  }
+  OAUTH_STATE.fetching = false;
+
+  return await refetch();
 }
 
 export function getOauthToken(options: GetOauthTokenOptions) {

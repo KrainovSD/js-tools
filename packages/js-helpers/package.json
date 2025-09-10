@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/js-helpers",
-  "version": "0.15.3",
+  "version": "0.16.0",
   "description": "Krainov helpers",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -29,6 +29,7 @@
   ],
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
+    "dev": "vite --host --force",
     "clear": "rm -rf ./lib",
     "build-dev": "npm run clear && rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:development,NODE_ENV:development",
     "build": "npm run clear && npm run build:types && npm run build:js",
@@ -63,6 +64,7 @@
     "jest": "29.7.0",
     "node-fetch": "2.7.0",
     "@types/node-fetch": "2.6.12",
-    "ts-jest": "29.2.5"
+    "ts-jest": "29.2.5",
+    "vite": "6.2.1"
   }
 }
