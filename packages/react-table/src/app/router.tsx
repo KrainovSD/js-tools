@@ -9,6 +9,7 @@ import { CommonRowDrag } from "./routes/common-row-drag";
 import { CommonVirtual } from "./routes/common-virtual";
 import { CommonVirtualRow } from "./routes/common-virtual-row";
 import { Gantt } from "./routes/gantt";
+import { GanttTest } from "./routes/gantt-test";
 import { GanttVirtual } from "./routes/gantt-vitrual";
 import { GanttVirtualRow } from "./routes/gantt-vitrual-row";
 
@@ -30,6 +31,7 @@ export const ROUTES: Route[] = [
   { name: "Gantt", path: "gantt", element: Gantt },
   { name: "Gantt Virtual Row", path: "gantt-virtual-row", element: GanttVirtualRow },
   { name: "Gantt Virtual", path: "gantt-virtual", element: GanttVirtual },
+  { name: "Gantt Test", path: "gantt-test", element: GanttTest },
 ];
 
 const router = createBrowserRouter(

@@ -6,3 +6,4 @@ node_modules/
 /lib
 .npmrc
 libraryGrid/
+test-rows.json
