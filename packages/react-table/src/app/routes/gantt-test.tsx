@@ -81,7 +81,7 @@ export function GanttTest() {
 
     checkRows(rows);
 
-    const duplicateIds = Object.entries(ids).filter(([key, value]) => value !== 1);
+    const duplicateIds = Object.entries(ids).filter(([, value]) => value !== 1);
     if (duplicateIds.length > 0) {
       console.warn(
         duplicateIds.map(([key, value]) => `id ${key} is repeated ${value} times`).join(", "),

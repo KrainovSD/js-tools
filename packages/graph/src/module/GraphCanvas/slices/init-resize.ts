@@ -22,9 +22,7 @@ export function initResize<
       return;
     }
 
-    requestAnimationFrame(() => {
-      this.updateSize();
-    });
+    this.updateSize();
   });
 
   document.addEventListener("scroll", this.updateRect.bind(this), {

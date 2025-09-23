@@ -242,7 +242,22 @@ export class GraphCanvas<
   }
 
   updateRect() {
-    if (this.area) this.areaRect = this.area.getBoundingClientRect();
+    if (!this.area) return;
+
+    this.areaRect = this.area.getBoundingClientRect();
+  }
+
+  updateSize() {
+    if (!this.area) return;
+
+    const { width, height } = this.root.getBoundingClientRect();
+    this.width = width;
+    this.height = height;
+    this.area.width = this.dpi * this.width;
+    this.area.height = this.dpi * this.height;
+    this.areaRect = this.area.getBoundingClientRect();
+
+    this.draw();
   }
 
   clearCache(
@@ -367,38 +382,6 @@ export class GraphCanvas<
         .alpha(alpha ?? 0.5)
         .restart();
     }
-  }
-
-  protected updateSize() {
-    this.clearHTMLElements();
-
-    initArea.call<
-      GraphCanvas<NodeData, LinkData>,
-      Parameters<typeof initArea>,
-      ReturnType<typeof initArea>
-    >(this);
-    initDnd.call<
-      GraphCanvas<NodeData, LinkData>,
-      Parameters<typeof initDnd>,
-      ReturnType<typeof initDnd>
-    >(this);
-    initZoom.call<
-      GraphCanvas<NodeData, LinkData>,
-      Parameters<typeof initZoom>,
-      ReturnType<typeof initZoom>
-    >(this);
-    initResize.call<
-      GraphCanvas<NodeData, LinkData>,
-      Parameters<typeof initResize>,
-      ReturnType<typeof initResize>
-    >(this);
-    initPointer.call<
-      GraphCanvas<NodeData, LinkData>,
-      Parameters<typeof initPointer>,
-      ReturnType<typeof initPointer>
-    >(this);
-
-    if (!this.simulationWorking && !this.highlightWorking) this.draw();
   }
 
   protected init() {
