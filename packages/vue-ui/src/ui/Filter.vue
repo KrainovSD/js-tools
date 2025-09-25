@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="F extends string, O extends string | number">
+<script setup lang="ts" generic="F extends string | number, O extends string | number">
   import { dateFormat, isArray, isId, isNumber, isObject, isString } from "@krainovsd/js-helpers";
   import { VCloseCircleFilled, VDeleteOutlined, VPlusOutlined } from "@krainovsd/vue-icons";
   import {
@@ -78,13 +78,13 @@
         clearTag?: string;
       };
 
-  export type FilterItem<F extends string, O extends string | number> = {
+  export type FilterItem<F extends string | number, O extends string | number> = {
     field: F;
     label: string;
     icon?: Component;
     components: FilterComponent<O>[];
   };
-  export type FilterItemFlat<F extends string, O extends string | number> =
+  export type FilterItemFlat<F extends string | number, O extends string | number> =
     | {
         [K in keyof FilterComponentProps]: {
           field: F;
@@ -116,7 +116,7 @@
       };
 
   export type FilterProps<
-    F extends string = string,
+    F extends string | number = string | number,
     O extends string | number = string | number,
   > = {
     filters: FilterItem<F, O>[];
@@ -203,7 +203,7 @@
   const dropMenu = computed(
     () => (index: number) =>
       availableFilters.value.map<DropDownMenuItem>((filter) => ({
-        key: filter.field,
+        key: filter.field.toString(),
         icon: filter.icon ? toRaw(filter.icon) : undefined,
         label: filter.label,
         onClick: () => changeFilterField(filter.field, index),

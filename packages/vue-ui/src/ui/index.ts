@@ -1,6 +1,7 @@
 import VButton from "./Button.vue";
 import VCheckBox from "./CheckBox.vue";
 import VCollapse from "./Collapse.vue";
+import VControl from "./Control.vue";
 import VDivider from "./Divider.vue";
 import VDrawer from "./Drawer.vue";
 import VDropDown from "./DropDown.vue";
@@ -123,6 +124,7 @@ export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pag
 export type { LoaderProps, LoaderType } from "./Loader.vue";
 export type { ImportProps } from "./Import.vue";
 export type { MarkdownEditorProps } from "./MarkdownEditor.vue";
+export type { ControlComponents, ControlProps } from "./Control.vue";
 
 export {
   VImport,
@@ -162,5 +164,7 @@ export {
   VPagination,
   VLoader,
   VMarkdownEditor,
+  VControl,
 };
 export * from "./Table";
+export * from "./QueryBuilder";
