@@ -17,7 +17,6 @@
   // import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "../../mock";
   import {
     FORCE_CONTROLS,
-    GRAPH_CONTROLS,
     HIGHLIGHT_BY_LINK_FOR_ARROW_CONTROLS,
     HIGHLIGHT_BY_LINK_FOR_LABEL_CONTROLS,
     HIGHLIGHT_BY_LINK_FOR_LINK_CONTROLS,
@@ -91,11 +90,7 @@
     allClose();
     openForce = !open;
   }
-  function toggleOpenGraph() {
-    let open = openGraph;
-    allClose();
-    openGraph = !open;
-  }
+
   function toggleOpenNode() {
     let open = openNode;
     allClose();
@@ -115,9 +110,7 @@
   function clearForce() {
     forceSettings = { ...FORCE_SETTINGS };
   }
-  function clearGraph() {
-    graphSettings = { ...GRAPH_SETTINGS };
-  }
+
   function clearNode() {
     nodeOptions = { ...NODE_OPTIONS };
     nodeSettings = { ...NODE_SETTINGS };
@@ -357,29 +350,6 @@
         })}
       </Flex>
       <button class={styles.settings__button} onclick={clearForce}>Сбросить</button>
-    </Flex>
-  {/if}
-
-  <button
-    class={styles.button}
-    onclick={toggleOpenGraph}
-    style="top: 10px; left: calc(10px + 185px + 20px)"
-    >{openGraph ? "Закрыть настройки отображения" : "Открыть настройки отображения"}</button
-  >
-  {#if openGraph}
-    <Flex
-      class={styles.settings}
-      gap={20}
-      vertical
-      style="top: 45px; left: calc(10px + 185px + 20px);"
-    >
-      <h1>Параметры отображения:</h1>
-      <Flex vertical gap={10} class={styles.settings__container}>
-        {@render inputs(GRAPH_CONTROLS, graphSettings, (key, value) => {
-          graphSettings = { ...graphSettings, [key]: value };
-        })}
-      </Flex>
-      <button class={styles.settings__button} onclick={clearGraph}>Сбросить</button>
     </Flex>
   {/if}
 

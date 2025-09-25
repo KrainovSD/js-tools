@@ -11,7 +11,7 @@ export function initDraw<
     this.highlightDrawing = true;
 
     if (!this.highlightWorking && this.highlightProgress > 0) {
-      const highlightDownStep = 1 / this.graphSettings.highlightDownFrames;
+      const highlightDownStep = 1 / this.highlightSettings.highlightDownFrames;
       this.highlightProgress -= highlightDownStep;
 
       if (!this.simulationWorking) {
@@ -21,7 +21,7 @@ export function initDraw<
       if (!this.linkSettings.particles) return;
     }
     if (this.highlightWorking && this.highlightProgress < 1) {
-      const highlightUpStep = 1 / this.graphSettings.highlightUpFrames;
+      const highlightUpStep = 1 / this.highlightSettings.highlightUpFrames;
       this.highlightProgress += highlightUpStep;
 
       if (!this.simulationWorking) {

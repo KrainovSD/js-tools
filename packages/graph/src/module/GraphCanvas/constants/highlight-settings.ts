@@ -3,6 +3,8 @@ import type { HighlightSettingsInterface } from "../types/highlight-settings";
 export const HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
   highlightByHoverNode: true,
   highlightByHoverLink: true,
+  highlightUpFrames: 5,
+  highlightDownFrames: 5,
   linkHoverExtraZone: 2,
   /** Node */
   highlightByNodeOnlyRoot: true,
@@ -10,7 +12,6 @@ export const HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
   highlightByNodeForNodeColor: null,
   highlightByNodeForNodeSizingAdditional: 0.5,
   highlightByNodeForNodeSizingAdditionalCoefficient: 0.35,
-  highlightByNodeForNodeColorFadingMin: 0.15,
   highlightByNodeForNodeFadingMin: 0.21,
   highlightByNodeForNodeBorderColor: null,
   highlightByNodeForNodeBorderSizingAdditional: 0,
@@ -19,7 +20,6 @@ export const HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
   highlightByLinkForNodeColor: null,
   highlightByLinkForNodeSizingAdditional: 0.5,
   highlightByLinkForNodeSizingAdditionalCoefficient: 0.35,
-  highlightByLinkForNodeColorFadingMin: 0.15,
   highlightByLinkForNodeFadingMin: 0.21,
   highlightByLinkForNodeBorderColor: null,
   highlightByLinkForNodeBorderSizingAdditional: 0,

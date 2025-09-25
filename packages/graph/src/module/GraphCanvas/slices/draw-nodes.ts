@@ -85,8 +85,6 @@ export function getDrawNode<
           nodeOptions,
           highlightForLabelFadingMin: this.highlightSettings.highlightByNodeForLabelFadingMin,
           highlightForNodeColorFading: this.highlightSettings.highlightByNodeForNodeColorFading,
-          highlightForNodeColorFadingMin:
-            this.highlightSettings.highlightByNodeForNodeColorFadingMin,
           highlightForNodeFadingMin: this.highlightSettings.highlightByNodeForNodeFadingMin,
           highlightForTextFadingMin: this.highlightSettings.highlightByNodeForTextFadingMin,
         });
@@ -149,8 +147,6 @@ export function getDrawNode<
           nodeOptions,
           highlightForLabelFadingMin: this.highlightSettings.highlightByLinkForLabelFadingMin,
           highlightForNodeColorFading: this.highlightSettings.highlightByLinkForNodeColorFading,
-          highlightForNodeColorFadingMin:
-            this.highlightSettings.highlightByLinkForNodeColorFadingMin,
           highlightForNodeFadingMin: this.highlightSettings.highlightByLinkForNodeFadingMin,
           highlightForTextFadingMin: this.highlightSettings.highlightByLinkForTextFadingMin,
         });

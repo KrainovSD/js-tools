@@ -159,7 +159,6 @@ type NodeFadingOptions<
   highlightForTextFadingMin: number;
   highlightForLabelFadingMin: number;
   highlightForNodeColorFading: boolean;
-  highlightForNodeColorFadingMin: number;
 };
 export function nodeFade<
   NodeData extends Record<string, unknown>,
@@ -195,13 +194,14 @@ export function nodeFade<
     /** Color Fading */
     const colorRgb = extractRgb(colorToRgb(color));
     if (colorRgb) {
-      const colorRgbFade = fadeRgb(colorRgb, opts.highlightForNodeColorFadingMin);
+      const colorRgbFade = fadeRgb(colorRgb, opts.highlightForNodeFadingMin);
       const colorFadeAnimation = rgbAnimationByProgress(
         colorRgb,
         colorRgbFade,
         opts.highlightProgress,
       );
       color = `rgb(${colorFadeAnimation.r}, ${colorFadeAnimation.g}, ${colorFadeAnimation.b})`;
+      alpha = opts.nodeOptions.alpha;
     }
   }
 

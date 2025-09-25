@@ -6,8 +6,6 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   translateExtent: [[], []],
   translateExtentEnable: true,
   translateExtentCoefficient: [3, 3],
-  highlightUpFrames: 5,
-  highlightDownFrames: 5,
   dragPlaceCoefficient: dragPlaceCoefficientGetter,
   zoomInitial: null,
   showDrawTime: true,

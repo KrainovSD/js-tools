@@ -11,6 +11,8 @@ export type HighlightSettingsInterface = HighlighCommonSettingsInterface &
   HighlightByLinkForArrowSettingsInterface;
 
 export type HighlighCommonSettingsInterface = {
+  highlightDownFrames?: number;
+  highlightUpFrames?: number;
   highlightByHoverNode?: boolean;
   highlightByHoverLink?: boolean;
   linkHoverExtraZone?: number;
@@ -20,7 +22,6 @@ export type HighlightByNodeForNodeSettingsInterface = {
   highlightByNodeForNodeColorFading?: boolean;
   highlightByNodeOnlyRoot?: boolean;
   highlightByNodeForNodeFadingMin?: number;
-  highlightByNodeForNodeColorFadingMin?: number;
   highlightByNodeForNodeColor?: string | null;
   highlightByNodeForNodeSizingAdditional?: number;
   highlightByNodeForNodeSizingAdditionalCoefficient?: number;
@@ -42,7 +43,6 @@ export type HighlightByNodeForTextSettingsInterface = {
 export type HighlightByLinkForNodeSettingsInterface = {
   highlightByLinkForNodeColorFading?: boolean;
   highlightByLinkForNodeFadingMin?: number;
-  highlightByLinkForNodeColorFadingMin?: number;
   highlightByLinkForNodeColor?: string | null;
   highlightByLinkForNodeSizingAdditional?: number;
   highlightByLinkForNodeSizingAdditionalCoefficient?: number;

@@ -38,6 +38,24 @@ export const HIGHLIGHT_COMMON_CONTROLS: GraphSettingsInputInterface<
     type: "range",
     label: "Расширение границы связи для курсора",
   },
+  {
+    id: "highlightDownFrames",
+    initialValue: HIGHLIGHT_SETTINGS.highlightDownFrames,
+    max: 60,
+    min: 1,
+    step: 1,
+    type: "range",
+    label: "Скорость отмены анимации в кадрах",
+  },
+  {
+    id: "highlightUpFrames",
+    initialValue: HIGHLIGHT_SETTINGS.highlightUpFrames,
+    max: 60,
+    min: 1,
+    step: 1,
+    type: "range",
+    label: "Скорость применения анимации в кадрах",
+  },
 ];
 
 export const HIGHLIGHT_BY_NODE_FOR_NODE_CONTROLS: GraphSettingsInputInterface<
@@ -69,15 +87,6 @@ export const HIGHLIGHT_BY_NODE_FOR_NODE_CONTROLS: GraphSettingsInputInterface<
     step: 0.01,
     type: "range",
     label: "Граница прозрачности",
-  },
-  {
-    id: "highlightByNodeForNodeColorFadingMin",
-    initialValue: HIGHLIGHT_SETTINGS.highlightByNodeForNodeColorFadingMin,
-    max: 1,
-    min: 0.01,
-    step: 0.01,
-    type: "range",
-    label: "Граница прозрачности без альфа канала",
   },
   {
     id: "highlightByNodeForNodeSizingAdditional",
@@ -292,15 +301,6 @@ export const HIGHLIGHT_BY_LINK_FOR_NODE_CONTROLS: GraphSettingsInputInterface<
     step: 0.01,
     type: "range",
     label: "Граница прозрачности",
-  },
-  {
-    id: "highlightByLinkForNodeColorFadingMin",
-    initialValue: HIGHLIGHT_SETTINGS.highlightByLinkForNodeColorFadingMin,
-    max: 1,
-    min: 0.01,
-    step: 0.01,
-    type: "range",
-    label: "Граница прозрачности без альфа канала",
   },
   {
     id: "highlightByLinkForNodeSizingAdditional",
