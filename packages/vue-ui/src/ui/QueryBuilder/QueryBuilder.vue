@@ -5,7 +5,6 @@
 >
   import { randomNumber } from "@krainovsd/js-helpers";
   import { type Component, computed } from "vue";
-  import { useWatchDebug } from "../../hooks";
   import type { ButtonSize } from "../Button.vue";
   import type { ControlComponents } from "../Control.vue";
   import type { InputSize, InputVariant } from "../Input.vue";
@@ -71,6 +70,21 @@
     O extends string | number,
     C extends string | number,
   > = QueryConditionRule<F, O> | QueryConditionGroup<F, O, C>;
+
+  export type QueryConditionRuleShort<
+    F extends string | number,
+    O extends string | number,
+  > = Record<O, [{ var: F }, unknown]>;
+  export type QueryConditionGroupShort<
+    F extends string | number,
+    O extends string | number,
+    C extends string | number,
+  > = Record<C, QueryConditionShort<F, O, C>[]>;
+  export type QueryConditionShort<
+    F extends string | number,
+    O extends string | number,
+    C extends string | number,
+  > = QueryConditionRuleShort<F, O> | QueryConditionGroupShort<F, O, C>;
 
   export type QueryBuilderProps<
     F extends string | number,
@@ -147,8 +161,6 @@
       firstCombinator.value != undefined &&
       firstOperator.value != undefined,
   );
-
-  useWatchDebug(model);
 </script>
 
 <template>
