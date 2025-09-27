@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from "@storybook/vue3";
 import { type DefineComponent, h } from "vue";
-import { type FilterItem, type QueryBuilderProps, VQueryBuilder } from "../ui";
+import { type QueryBuilderProps, type QueryCondition, type QueryField, VQueryBuilder } from "../ui";
 
 const QueryBuilder = VQueryBuilder as unknown as DefineComponent<
   QueryBuilderProps<string, string | number, string | number>
@@ -15,7 +15,7 @@ const meta = {
 
 export default meta;
 
-const FILTERS: FilterItem<string, string | number>[] = [
+const FILTERS: QueryField<string, string | number>[] = [
   {
     field: "string",
     label: "Имя файла",
@@ -41,17 +41,24 @@ const FILTERS: FilterItem<string, string | number>[] = [
   {
     field: "long",
     label: "Очень длинное название поля для компонента фильтра",
-    components: [{ component: "text" }],
+    components: [{ component: "text", operatorLabel: "равно", operatorValue: "equal" }],
   },
   {
     field: "number",
     label: "Сумма",
-    components: [{ component: "number", props: { min: -5, max: 5 } }],
+    components: [
+      {
+        component: "number",
+        props: { min: -5, max: 5 },
+        operatorLabel: "равно",
+        operatorValue: "equal",
+      },
+    ],
   },
   {
     field: "range",
     label: "Количество",
-    components: [{ component: "number-range" }],
+    components: [{ component: "number-range", operatorLabel: "равно", operatorValue: "equal" }],
   },
   {
     field: "select",
@@ -153,6 +160,8 @@ const FILTERS: FilterItem<string, string | number>[] = [
           placeholder: "Выберите тип",
           search: true,
         },
+        operatorLabel: "равно",
+        operatorValue: "equal",
       },
     ],
   },
@@ -189,6 +198,78 @@ const FILTERS: FilterItem<string, string | number>[] = [
     ],
   },
 ];
+const QUERY: QueryCondition<string, string, string>[] = [
+  {
+    type: "group",
+    combinator: "and",
+    id: 2750221822502621,
+    rules: [
+      {
+        type: "rule",
+        field: "string",
+        id: 2061061316591201,
+        operator: "equal",
+        value: undefined,
+      },
+      {
+        type: "rule",
+        field: "string",
+        operator: "equal",
+        id: 258483429159071,
+        value: undefined,
+      },
+      {
+        type: "group",
+        combinator: "and",
+        id: 7052175195304605,
+        rules: [
+          {
+            type: "rule",
+            field: "string",
+            operator: "equal",
+            id: -7432856563198263,
+            value: undefined,
+          },
+          {
+            type: "rule",
+            field: "string",
+            operator: "equal",
+            id: 482497605006951,
+            value: undefined,
+          },
+          {
+            type: "group",
+            combinator: "and",
+            id: -7973793753418131,
+            rules: [
+              {
+                type: "rule",
+                field: "string",
+                operator: "equal",
+                id: -5382463028788179,
+                value: undefined,
+              },
+              {
+                type: "rule",
+                field: "string",
+                operator: "equal",
+                id: -1186939514375243,
+                value: undefined,
+              },
+            ],
+          },
+          {
+            type: "rule",
+            field: "string",
+            operator: "equal",
+            id: -1450515866772377,
+            value: undefined,
+          },
+        ],
+      },
+    ],
+  },
+];
 
 const Template: StoryFn<typeof QueryBuilder> = (args) => ({
   components: { VQueryBuilder },
@@ -208,12 +289,12 @@ const Template: StoryFn<typeof QueryBuilder> = (args) => ({
           width: "800px",
         },
       },
-      [h(VQueryBuilder, { ...args }, () => "Выбрать значение")],
+      [h(VQueryBuilder, { ...args, modelValue: QUERY }, () => "Выбрать значение")],
     );
   },
 });
 
-export const Primary = Template.bind({});
+export const Primary = Template.bind({ modelValue: QUERY });
 Primary.args = {
   fields: FILTERS,
   combinators: [

@@ -5,24 +5,25 @@
 >
   import { VDeleteOutlined } from "@krainovsd/vue-icons";
   import { computed } from "vue";
-  import Button from "../Button.vue";
+  import Button, { type ButtonSize } from "../Button.vue";
   import DropDown, { type DropDownMenuItem } from "../DropDown.vue";
-  import type { FilterItem } from "../Filter.vue";
   import Tag from "../Tag.vue";
-  import type { QueryCombinator, QueryConditionGroup } from "./QueryBuilder.vue";
+  import type { QueryCombinator, QueryConditionGroup, QueryField } from "./QueryBuilder.vue";
 
   type Props = {
-    fields: FilterItem<F, O>[];
+    fields: QueryField<F, O>[];
     combinators: QueryCombinator<C>[];
     group: QueryConditionGroup<F, O, C>;
+    level: number;
     root?: boolean;
+    buttonSize?: ButtonSize;
   };
 
   type Emits = {
     addRule: [];
     addGroup: [];
     deleteGroup: [];
-    changeGroup: [combinator: C];
+    changeGroupCombinator: [combinator: C];
   };
 
   const props = defineProps<Props>();
@@ -32,7 +33,7 @@
       key: c.value.toString(),
       label: c.label,
       onClick: () => {
-        emit("changeGroup", c.value);
+        emit("changeGroupCombinator", c.value);
       },
     })),
   );
@@ -42,22 +43,33 @@
 </script>
 
 <template>
-  <div v-if="combinator" class="ksd-query-builder__group">
-    <div class="ksd-query-builder__group-header">
+  <div v-if="combinator" class="ksd-query-builder__group" :style="{ '--level': $props.level }">
+    <div class="ksd-query-builder__group-header" :class="{ root: $props.root }">
       <DropDown :menu="menu">
         <Tag :color="combinator.color" :size="'extra-large'" class="ksd-query-builder__combinator">
           {{ combinator.label }}
         </Tag>
       </DropDown>
-      <Button type="text" @click="$emit('addRule')">Добавить правило</Button>
-      <Button type="text" @click="$emit('addGroup')">Добавить группу</Button>
-      <Button v-if="!$props.root" type="text" @click="$emit('deleteGroup')">
+      <Button :size="$props.buttonSize" type="text" @click="$emit('addRule')">
+        Добавить правило
+      </Button>
+      <Button :size="$props.buttonSize" type="text" @click="$emit('addGroup')">
+        Добавить группу</Button
+      >
+      <Button
+        v-if="!$props.root"
+        :size="$props.buttonSize"
+        type="text"
+        @click="$emit('deleteGroup')"
+      >
         <template #icon>
           <VDeleteOutlined />
         </template>
       </Button>
     </div>
-    <div class="ksd-query-builder__group-body"></div>
+    <div class="ksd-query-builder__group-body">
+      <slot></slot>
+    </div>
   </div>
 </template>
 
@@ -73,12 +85,21 @@
       width: 100%;
       align-items: center;
       gap: var(--ksd-padding-sm);
+      padding: var(--ksd-padding) var(--ksd-padding) var(--ksd-padding) var(--ksd-padding-xxs);
+      /* because of full borders */
+      padding-left: calc(calc(48px * var(--level)) + 16px);
+      border-bottom: 0.5px solid var(--ksd-border-color);
+      border-top: 0.5px solid var(--ksd-border-color);
+      &.root {
+        border-top: none;
+      }
     }
-    &__group-body {
-    }
+
     &__combinator {
       cursor: pointer;
       margin-right: auto;
+      min-width: 52px;
+      justify-content: center;
     }
   }
 </style>

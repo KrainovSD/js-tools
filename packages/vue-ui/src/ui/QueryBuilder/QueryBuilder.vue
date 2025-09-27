@@ -4,15 +4,45 @@
   generic="F extends string | number, O extends string | number, C extends string | number"
 >
   import { randomNumber } from "@krainovsd/js-helpers";
-  import { computed } from "vue";
+  import { type Component, computed } from "vue";
+  import { useWatchDebug } from "../../hooks";
   import type { ButtonSize } from "../Button.vue";
-  import type { FilterItem } from "../Filter.vue";
+  import type { ControlComponents } from "../Control.vue";
   import type { InputSize, InputVariant } from "../Input.vue";
   import type { SelectItem } from "../Select.vue";
   import type { TagColor } from "../Tag.vue";
   import QueryBuilderGroup from "./QueryBuilderGroup.vue";
   import QueryBuilderResolver from "./QueryBuilderResolver.vue";
   import { createDefaultGroup } from "./lib";
+
+  export type QueryComponent<O extends string | number> =
+    | {
+        [K in keyof ControlComponents]: {
+          component: K;
+          props?: ControlComponents[K]["props"];
+          operatorValue: O;
+          operatorLabel: string;
+          operatorShortLabel?: string;
+          /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
+          clearTag?: string;
+        };
+      }[keyof ControlComponents]
+    | {
+        component: Component;
+        props?: Record<string, unknown>;
+        operatorValue: O;
+        operatorLabel: string;
+        operatorShortLabel?: string;
+        displayValue?: keyof ControlComponents;
+        /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
+        clearTag?: string;
+      };
+
+  export type QueryField<F extends string | number, O extends string | number> = {
+    field: F;
+    label: string;
+    components: QueryComponent<O>[];
+  };
 
   export type QueryCombinator<C extends string | number> = {
     value: C;
@@ -47,7 +77,7 @@
     O extends string | number,
     C extends string | number,
   > = {
-    fields: FilterItem<F, O>[];
+    fields: QueryField<F, O>[];
     combinators: QueryCombinator<C>[];
     buttonSize?: ButtonSize;
     controlSize?: InputSize;
@@ -65,7 +95,7 @@
   const firstCombinator = computed(() => props.combinators?.[0]?.value);
 
   function addRule() {
-    if (!firstOperator.value) return;
+    if (!firstOperator.value || !firstField.value) return;
 
     model.value = [
       {
@@ -75,10 +105,10 @@
         rules: [
           {
             type: "rule",
-            field: props.fields[0].field,
+            field: firstField.value,
             id: randomNumber(),
             operator: firstOperator.value,
-            value: undefined,
+            value: null,
           },
         ],
       },
@@ -88,10 +118,22 @@
     if (!firstCombinator.value) return;
 
     model.value = [
-      { type: "group", combinator: firstCombinator.value, id: randomNumber(), rules: [] },
+      {
+        type: "group",
+        combinator: firstCombinator.value,
+        id: randomNumber(),
+        rules: [
+          {
+            combinator: firstCombinator.value,
+            type: "group",
+            id: randomNumber(),
+            rules: [],
+          },
+        ],
+      },
     ];
   }
-  function changeGroup(combinator: C) {
+  function changeGroupCombinator(combinator: C) {
     model.value = [{ type: "group", combinator, id: randomNumber(), rules: [] }];
   }
 
@@ -105,6 +147,8 @@
       firstCombinator.value != undefined &&
       firstOperator.value != undefined,
   );
+
+  useWatchDebug(model);
 </script>
 
 <template>
@@ -114,10 +158,11 @@
       :fields="$props.fields"
       :combinators="$props.combinators"
       :group="createDefaultGroup(firstCombinator)"
+      :level="0"
       :root="true"
       @add-group="addGroup"
       @add-rule="addRule"
-      @change-group="(combinator) => changeGroup(combinator)"
+      @change-group-combinator="(combinator) => changeGroupCombinator(combinator)"
     />
     <QueryBuilderResolver
       v-else
