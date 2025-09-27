@@ -3,6 +3,8 @@
 
   type Emits = {
     upload: [files: File[], event: DragEvent];
+    enter: [event: DragEvent];
+    leave: [event: DragEvent];
   };
 
   const emit = defineEmits<Emits>();
@@ -20,6 +22,7 @@
 
   function onDragEnter(event: DragEvent) {
     event.preventDefault();
+    emit("enter", event);
 
     if (event.dataTransfer?.types?.some?.((t) => t === "Files")) {
       over.value = true;
@@ -27,6 +30,8 @@
   }
   function onDragLeave(event: DragEvent) {
     event.preventDefault();
+    emit("leave", event);
+
     over.value = false;
   }
 </script>
