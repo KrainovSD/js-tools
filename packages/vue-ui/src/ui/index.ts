@@ -8,6 +8,7 @@ import VDivider from "./Divider.vue";
 import VDrawer from "./Drawer.vue";
 import VDropDown from "./DropDown.vue";
 import VEmpty from "./Empty.vue";
+import VFileDrop from "./FileDrop.vue";
 import VFilter from "./Filter.vue";
 import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
@@ -181,6 +182,7 @@ export {
   VUserAvatar,
   VUserInfo,
   VUserPicker,
+  VFileDrop,
 };
 export * from "./Table";
 export * from "./QueryBuilder";
