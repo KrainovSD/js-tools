@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactNode } from "react";
 import type { Component } from "vue";
-import type { FilterComponentKey } from "../../Filter.vue";
+import type { ControlComponents } from "../../Control.vue";
 import type {
   DateFilterRenderProps,
   DefaultCellRenderProps,
@@ -132,7 +132,7 @@ export type DefaultFilterRenderProps<
       props?: StringFilterRenderProps;
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
-      displayValue?: FilterComponentKey;
+      displayValue?: keyof ControlComponents;
       clearTag?: string;
     }
   | {
@@ -140,7 +140,7 @@ export type DefaultFilterRenderProps<
       props?: NumberFilterRenderProps;
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
-      displayValue?: FilterComponentKey;
+      displayValue?: keyof ControlComponents;
       clearTag?: string;
     }
   | {
@@ -148,7 +148,7 @@ export type DefaultFilterRenderProps<
       props?: NumberRangeFilterRenderProps;
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
-      displayValue?: FilterComponentKey;
+      displayValue?: keyof ControlComponents;
       clearTag?: string;
     }
   | {
@@ -156,7 +156,7 @@ export type DefaultFilterRenderProps<
       props?: SelectFilterRenderProps;
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
-      displayValue?: FilterComponentKey;
+      displayValue?: keyof ControlComponents;
       clearTag?: string;
     }
   | {
@@ -164,7 +164,7 @@ export type DefaultFilterRenderProps<
       props?: DateFilterRenderProps;
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
-      displayValue?: FilterComponentKey;
+      displayValue?: keyof ControlComponents;
       clearTag?: string;
     }
   | {
@@ -172,7 +172,7 @@ export type DefaultFilterRenderProps<
       props?: DateFilterRenderProps;
       operatorValue?: keyof FilterType | FilterKey;
       operatorLabel?: string;
-      displayValue?: FilterComponentKey;
+      displayValue?: keyof ControlComponents;
       clearTag?: string;
     };
 
@@ -218,7 +218,7 @@ export type FilterRenderMap<
     props?: ComponentProps<FilterRender[K]>;
     operatorValue?: keyof FilterType | FilterKey;
     operatorLabel?: string;
-    displayValue?: FilterComponentKey;
+    displayValue?: keyof ControlComponents;
     clearTag?: string;
   };
 }[keyof FilterRender];

@@ -1,13 +1,6 @@
 import type { Meta, StoryFn } from "@storybook/vue3";
 import { type DefineComponent, h } from "vue";
-import {
-  type QueryBuilderProps,
-  type QueryCondition,
-  type QueryField,
-  VQueryBuilder,
-  transformQueryFromShort,
-  transformQueryToShort,
-} from "../ui";
+import { type QueryBuilderProps, type QueryCondition, type QueryField, VQueryBuilder } from "../ui";
 
 const QueryBuilder = VQueryBuilder as unknown as DefineComponent<
   QueryBuilderProps<string, string | number, string | number>
@@ -277,9 +270,6 @@ const QUERY: QueryCondition<string, string, string>[] = [
     ],
   },
 ];
-const test = transformQueryToShort(QUERY);
-console.log(test);
-console.log(transformQueryFromShort(test));
 
 const Template: StoryFn<typeof QueryBuilder> = (args) => ({
   components: { VQueryBuilder },

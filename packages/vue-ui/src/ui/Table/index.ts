@@ -1,6 +1,6 @@
 import type { CellContext, RowData } from "@tanstack/vue-table";
 import type { Component } from "vue";
-import type { FilterComponentKey } from "../Filter.vue";
+import type { ControlComponents } from "../Control.vue";
 import VGantt from "./Gantt.vue";
 import VTable from "./Table.vue";
 import type {
@@ -27,11 +27,11 @@ declare module "@tanstack/vue-table" {
     filterRenders:
       | {
           component: FilterRenderComponent<TData>;
-          props?: unknown;
+          props?: Record<string, unknown>;
           key: string;
           operatorValue?: string | number;
           operatorLabel?: string;
-          displayValue?: FilterComponentKey;
+          displayValue?: keyof ControlComponents;
           clearTag?: string;
         }[]
       | undefined;
