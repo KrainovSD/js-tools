@@ -3,8 +3,8 @@
   lang="ts"
   generic="F extends string | number, O extends string | number, C extends string | number"
 >
+  import { randomNumber } from "@krainovsd/js-helpers";
   import { computed } from "vue";
-  import { generateId } from "../../lib/generate-id";
   import type { ButtonSize } from "../Button.vue";
   import type { FilterItem } from "../Filter.vue";
   import type { InputSize, InputVariant } from "../Input.vue";
@@ -71,12 +71,12 @@
       {
         type: "group",
         combinator: props.combinators[0].value,
-        id: generateId(),
+        id: randomNumber(),
         rules: [
           {
             type: "rule",
             field: props.fields[0].field,
-            id: generateId(),
+            id: randomNumber(),
             operator: firstOperator.value,
             value: undefined,
           },
@@ -88,11 +88,11 @@
     if (!firstCombinator.value) return;
 
     model.value = [
-      { type: "group", combinator: firstCombinator.value, id: generateId(), rules: [] },
+      { type: "group", combinator: firstCombinator.value, id: randomNumber(), rules: [] },
     ];
   }
   function changeGroup(combinator: C) {
-    model.value = [{ type: "group", combinator, id: generateId(), rules: [] }];
+    model.value = [{ type: "group", combinator, id: randomNumber(), rules: [] }];
   }
 
   const fieldVariants = computed<SelectItem[]>(() =>

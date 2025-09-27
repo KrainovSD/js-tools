@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { isArray, isString } from "@krainovsd/js-helpers";
-  import { isNumber } from "lodash";
+  import { isArray, isNumber, isString } from "@krainovsd/js-helpers";
+  import DatePicker from "./DatePicker.vue";
   import type { InputSize, InputVariant } from "./Input.vue";
   import Input from "./Input.vue";
   import InputNumber from "./InputNumber.vue";
@@ -18,6 +18,7 @@
     date: { props: ControlDateComponentProps; value: string };
     "date-range": { props: ControlDateComponentProps; value: [string, string] };
   };
+
   export type ControlSelectComponentProps = {
     options: SelectItem[];
     multiple?: boolean;
@@ -38,15 +39,10 @@
   export type ControlDateComponentProps = {
     format?: string;
   };
-  export type ControlInfo = {
-    [K in keyof ControlComponents]: {
-      component: K;
-      props: ControlComponents[K]["props"];
-    };
-  }[keyof ControlComponents];
 
   export type ControlProps = {
-    info: ControlInfo;
+    component: keyof ControlComponents;
+    props?: Record<string, unknown>;
     controlSize?: InputSize;
     controlVariant?: InputVariant;
   };
@@ -56,19 +52,14 @@
 </script>
 
 <template>
-  <Control
-    :info="{ component: 'select', props: { options: [] } }"
-    :model-value="2"
-    @update:model-value="(value) => {}"
-  />
   <Input
-    v-if="$props.info.component === 'text'"
+    v-if="$props.component === 'text'"
+    v-bind="$attrs"
     :model-value="isString(model) ? model : ''"
     :size="$props.controlSize"
     :variant="$props.controlVariant"
-    :allow-clear="$props.info.props?.allowClear"
-    :placeholder="$props.info.props?.placeholder"
-    class="ksd-filter__field-control text"
+    :allow-clear="($props.props as ControlTextComponentProps)?.allowClear"
+    :placeholder="($props.props as ControlTextComponentProps)?.placeholder"
     @update:model-value="
       (value) => {
         model = value;
@@ -76,38 +67,38 @@
     "
   />
   <InputNumber
-    v-if="$props.info.component === 'number'"
+    v-if="$props.component === 'number'"
+    v-bind="$attrs"
     :model-value="isNumber(model) ? model : undefined"
     :size="$props.controlSize"
     :variant="$props.controlVariant"
-    :placeholder="$props.info.props?.placeholder"
-    :min="$props.info.props?.min"
-    :max="$props.info.props?.max"
-    :step="$props.info.props?.step"
-    class="ksd-filter__field-control number"
+    :placeholder="($props.props as ControlNumberComponentProps)?.placeholder"
+    :min="($props.props as ControlNumberComponentProps)?.min"
+    :max="($props.props as ControlNumberComponentProps)?.max"
+    :step="($props.props as ControlNumberComponentProps)?.step"
     @update:model-value="
       (value) => {
         model = value;
       }
     "
   />
-  <template v-if="$props.info.component === 'number-range'">
-    <div class="ksd-filter__field-control number-container">
+  <template v-if="$props.component === 'number-range'">
+    <div v-bind="$attrs" class="ksd-control__number-container">
       <InputNumber
         :model-value="isArray(model) && isNumber(model[0]) ? model[0] : undefined"
         :size="$props.controlSize"
         :variant="$props.controlVariant"
-        :placeholder="$props.info.props?.placeholder"
-        :min="$props.info.props?.min"
-        :max="$props.info.props?.max"
-        :step="$props.info.props?.step"
-        class="ksd-filter__field-control number"
+        :placeholder="($props.props as ControlNumberComponentProps)?.placeholder"
+        :min="($props.props as ControlNumberComponentProps)?.min"
+        :max="($props.props as ControlNumberComponentProps)?.max"
+        :step="($props.props as ControlNumberComponentProps)?.step"
         @update:model-value="
           (value) => {
             if (!isArray(model)) {
               model = [];
             }
-            (model as unknown[])[0] = value;
+
+            model = [value, (model as unknown[])[1]];
           }
         "
       />
@@ -116,35 +107,35 @@
         :model-value="isArray(model) && isNumber(model[1]) ? model[1] : undefined"
         :size="$props.controlSize"
         :variant="$props.controlVariant"
-        :placeholder="$props.info.props?.placeholder"
-        :min="$props.info.props?.min"
-        :max="$props.info.props?.max"
-        :step="$props.info.props?.step"
-        class="ksd-filter__field-control number"
+        :placeholder="($props.props as ControlNumberComponentProps)?.placeholder"
+        :min="($props.props as ControlNumberComponentProps)?.min"
+        :max="($props.props as ControlNumberComponentProps)?.max"
+        :step="($props.props as ControlNumberComponentProps)?.step"
         @update:model-value="
           (value) => {
             if (!isArray(model)) {
               model = [];
             }
-            (model as unknown[])[1] = value;
+
+            model = [(model as unknown[])[0], value];
           }
         "
       />
     </div>
   </template>
   <Select
-    v-if="$props.info.component === 'select'"
-    :options="$props.info.props?.options ?? []"
+    v-if="$props.component === 'select'"
+    v-bind="$attrs"
+    :options="($props.props as ControlSelectComponentProps)?.options ?? []"
     :size="$props.controlSize"
     :variant="$props.controlVariant"
-    :multiple="$props.info.props?.multiple"
-    :search="$props.info.props?.search"
-    :clear="$props.info.props?.clear"
-    :placeholder="$props.info.props?.placeholder"
+    :multiple="($props.props as ControlSelectComponentProps)?.multiple"
+    :search="($props.props as ControlSelectComponentProps)?.search"
+    :clear="($props.props as ControlSelectComponentProps)?.clear"
+    :placeholder="($props.props as ControlSelectComponentProps)?.placeholder"
     :nested="true"
-    class="ksd-filter__field-control select"
     :model-value="
-      $props.info.props?.multiple
+      $props.props?.multiple
         ? isArray(model)
           ? (model as SelectValue[])
           : undefined
@@ -156,51 +147,40 @@
       }
     "
   />
-  <input
-    v-if="$props.info.component === 'date'"
-    type="date"
-    class="ksd-filter__field-control date"
-    :value="isString(model) ? model : ''"
-    @input="
-      (event: Event) => {
-        const target = event.target as HTMLInputElement;
-        model = target.value;
+  <DatePicker
+    v-if="$props.component === 'date'"
+    v-bind="$attrs"
+    :input-size="$props.controlSize"
+    :input-variant="$props.controlVariant"
+    :multiple="false"
+    :model-value="isString(model) ? model : ''"
+    @update:model-value="
+      (value) => {
+        model = value;
       }
     "
   />
-  <template v-if="$props.info.component === 'date-range'">
-    <div class="ksd-filter__field-control date-container">
-      <input
-        type="date"
-        class="ksd-filter__field-control date"
-        :value="isArray(model) ? (isString(model[0]) ? model[0] : '') : ''"
-        @input="
-          (event: Event) => {
-            const target = event.target as HTMLInputElement;
-            if (!isArray(model)) {
-              model = [];
-            }
-            (model as unknown[])[0] = target.value;
-          }
-        "
-      />
-      <span> - </span>
-      <input
-        type="date"
-        class="ksd-filter__field-control date"
-        :value="isArray(model) ? (isString(model[1]) ? model[1] : '') : ''"
-        @input="
-          (event: Event) => {
-            const target = event.target as HTMLInputElement;
-            if (!isArray(model)) {
-              model = [];
-            }
-            (model as unknown[])[1] = target.value;
-          }
-        "
-      />
-    </div>
-  </template>
+  <DatePicker
+    v-if="$props.component === 'date-range'"
+    v-bind="$attrs"
+    :input-size="$props.controlSize"
+    :input-variant="$props.controlVariant"
+    :multiple="true"
+    :model-value="isArray(model) ? (model as [string, string]) : undefined"
+    @update:model-value="
+      (value) => {
+        model = value;
+      }
+    "
+  />
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+  .ksd-control {
+    &__number-container {
+      display: flex;
+      gap: var(--ksd-margin-xs);
+      align-items: center;
+    }
+  }
+</style>

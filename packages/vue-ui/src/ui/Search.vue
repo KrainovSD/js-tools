@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import { isString, speedTest } from "@krainovsd/js-helpers";
+  import { debounce as debounceFn, isString, speedTest } from "@krainovsd/js-helpers";
   import fuzzysort from "fuzzysort";
-  import debounceFn from "lodash/debounce";
   import { type Component, computed, ref, useTemplateRef, watch } from "vue";
   import { type HighlightText, createHighlight } from "../lib";
   import Empty from "./Empty.vue";

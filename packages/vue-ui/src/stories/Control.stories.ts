@@ -3,7 +3,7 @@ import { h } from "vue";
 import { VControl } from "../ui";
 
 const meta = {
-  title: "Components/VControl",
+  title: "Components/Control",
   component: VControl,
   tags: ["autodocs"],
   argTypes: {},
@@ -25,7 +25,7 @@ const Template: StoryFn<typeof VControl> = (args) => ({
 });
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = { component: "text" };
 
 export const AllInOne: Story = {
   render: (args) => ({
@@ -35,15 +35,35 @@ export const AllInOne: Story = {
     },
     render() {
       return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-        h(
-          VControl,
-          { ...args, info: { component: "text", props: { allowClear: true } } },
-          () => "Выбрать значение",
-        ),
+        h(VControl, {
+          ...args,
+          component: "text",
+          props: { placeholder: "Имя поля", allowClear: true },
+        }),
+        h(VControl, { ...args, component: "number", props: { min: -5, max: 5 } }),
+        h(VControl, { ...args, component: "number-range", props: {} }),
+        h(VControl, {
+          ...args,
+          component: "select",
+          props: {
+            options: [
+              { label: "Тип 1", value: 1 },
+              { label: "Тип 2", value: 2 },
+              { label: "Тип 3", value: 3 },
+              { label: "Тип 4", value: 4 },
+            ],
+            clear: true,
+            multiple: true,
+            placeholder: "Выберите тип",
+            search: true,
+          },
+        }),
+        h(VControl, { ...args, component: "date", props: {} }),
+        h(VControl, { ...args, component: "date-range", props: {} }),
       ]);
     },
   }),
   args: {
-    info: { component: "select", props: { options: [] } },
+    component: "text",
   },
 };

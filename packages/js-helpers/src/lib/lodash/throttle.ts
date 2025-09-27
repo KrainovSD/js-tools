@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export function throttle<TArgs extends any[]>(
-  { interval }: { interval: number },
-  func: (...args: TArgs) => any,
-) {
+export function throttle<TArgs extends any[]>(func: (...args: TArgs) => any, interval: number) {
   let ready = true;
   let timer: NodeJS.Timeout | undefined;
 

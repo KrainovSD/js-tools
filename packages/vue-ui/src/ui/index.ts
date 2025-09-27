@@ -1,7 +1,9 @@
 import VButton from "./Button.vue";
 import VCheckBox from "./CheckBox.vue";
 import VCollapse from "./Collapse.vue";
+import VColorPicker from "./ColorPicker.vue";
 import VControl from "./Control.vue";
+import VDatePicker from "./DatePicker.vue";
 import VDivider from "./Divider.vue";
 import VDrawer from "./Drawer.vue";
 import VDropDown from "./DropDown.vue";
@@ -36,6 +38,9 @@ import VTagCheckable from "./TagCheckable.vue";
 import VText from "./Text.vue";
 import VTextArea from "./TextArea.vue";
 import VTooltip from "./Tooltip.vue";
+import VUserAvatar from "./UserAvatar.vue";
+import VUserInfo from "./UserInfo.vue";
+import VUserPicker from "./UserPicker.vue";
 
 export type { InputProps, InputSize, InputStatus, InputVariant } from "./Input.vue";
 export type {
@@ -110,13 +115,7 @@ export type {
   FilterComponent,
   FilterItem,
   FilterProps,
-  FilterComponentKey,
-  FilterComponentProps,
-  FilterDateComponentProps,
   FilterItemFlat,
-  FilterNumberComponentProps,
-  FilterSelectComponentProps,
-  FilterTextComponentProps,
   FilterDirection,
 } from "./Filter.vue";
 export type { EmptyProps } from "./Empty.vue";
@@ -124,7 +123,19 @@ export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pag
 export type { LoaderProps, LoaderType } from "./Loader.vue";
 export type { ImportProps } from "./Import.vue";
 export type { MarkdownEditorProps } from "./MarkdownEditor.vue";
-export type { ControlComponents, ControlProps } from "./Control.vue";
+export type {
+  ControlComponents,
+  ControlProps,
+  ControlDateComponentProps,
+  ControlNumberComponentProps,
+  ControlSelectComponentProps,
+  ControlTextComponentProps,
+} from "./Control.vue";
+export type { ColorPickerProps } from "./ColorPicker.vue";
+export type { DatePickerProps } from "./DatePicker.vue";
+export type { UserAvatarProps, UserAvatarSize } from "./UserAvatar.vue";
+export type { UserInfoProps, UserInfoSize } from "./UserInfo.vue";
+export type { User, UserPickerPosition, UserPickerProps, UserPickerSize } from "./UserPicker.vue";
 
 export {
   VImport,
@@ -165,6 +176,11 @@ export {
   VLoader,
   VMarkdownEditor,
   VControl,
+  VColorPicker,
+  VDatePicker,
+  VUserAvatar,
+  VUserInfo,
+  VUserPicker,
 };
 export * from "./Table";
 export * from "./QueryBuilder";

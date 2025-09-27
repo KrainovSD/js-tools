@@ -1,6 +1,5 @@
 const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-export function randomString(length: number = 10, allowCharacters: string = characters) {
+export function randomString(length: number = 16, allowCharacters: string = characters) {
   let result = "";
   let counter = 0;
 

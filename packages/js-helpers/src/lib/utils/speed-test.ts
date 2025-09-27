@@ -5,7 +5,7 @@ type SpeedTestOptions = {
 };
 
 export function speedTest<T>(cb: () => T, opts: SpeedTestOptions): T {
-  const { name, iterations = 10000, type = "time" } = opts;
+  const { name, iterations = 10000, type = "performance" } = opts;
   let result: T | undefined;
 
   if (type === "performance") {

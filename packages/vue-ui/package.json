@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/vue-ui",
-  "version": "0.3.0-beta.23",
+  "version": "0.4.0-beta.1",
   "description": "Krainov vue-ui",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -47,8 +47,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "lodash": "4.17.21",
-    "@krainovsd/js-helpers": "^0.14.12",
+    "@krainovsd/js-helpers": "^0.16.3",
     "@krainovsd/vue-icons": "^0.1.4",
     "@krainovsd/markdown-editor": "^0.4.8",
     "fuzzysort": "^3.1.0",
@@ -67,7 +66,6 @@
     "@storybook/addon-themes": "9.0.16",
     "@storybook/vue3-vite": "9.0.16",
     "@storybook/vue3": "9.0.16",
-    "@types/lodash": "4.17.14",
     "@types/node": "22.13.8",
     "@types/react": "18.3.12",
     "sass-embedded": "1.81.0",

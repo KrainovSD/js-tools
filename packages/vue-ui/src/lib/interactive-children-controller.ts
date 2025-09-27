@@ -15,6 +15,9 @@ export function createInteractiveChildrenController(
     focusFirst();
   }
 
+  function getFocusedIndex() {
+    return interactiveElements.findIndex((element) => document.activeElement === element);
+  }
   function focusFirst() {
     interactiveElements[0]?.focus?.();
   }
@@ -22,9 +25,7 @@ export function createInteractiveChildrenController(
     interactiveElements[interactiveElements.length - 1]?.focus?.();
   }
   function focusNext() {
-    const focusedIndex = interactiveElements.findIndex(
-      (element) => document.activeElement === element,
-    );
+    const focusedIndex = getFocusedIndex();
     if (focusedIndex === -1) {
       focusFirst();
     } else if (focusedIndex < interactiveElements.length - 1) {
@@ -34,9 +35,7 @@ export function createInteractiveChildrenController(
     }
   }
   function focusPrev() {
-    const focusedIndex = interactiveElements.findIndex(
-      (element) => document.activeElement === element,
-    );
+    const focusedIndex = getFocusedIndex();
     if (focusedIndex === -1) {
       focusFirst();
     } else if (focusedIndex > 0) {
@@ -46,5 +45,5 @@ export function createInteractiveChildrenController(
     }
   }
 
-  return { focusNext, focusPrev, interactiveElements };
+  return { focusNext, focusPrev, interactiveElements, getFocusedIndex };
 }

@@ -1,4 +1,4 @@
-import { generateId } from "../../../lib/generate-id";
+import { randomNumber } from "@krainovsd/js-helpers";
 import type { QueryConditionGroup } from "../QueryBuilder.vue";
 
 export function createDefaultGroup<
@@ -6,5 +6,5 @@ export function createDefaultGroup<
   O extends string | number,
   C extends string | number,
 >(combinator: C): QueryConditionGroup<F, O, C> {
-  return { type: "group", rules: [], combinator, id: generateId() };
+  return { type: "group", rules: [], combinator, id: randomNumber() };
 }

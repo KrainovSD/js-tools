@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="F extends string | number, O extends string | number">
-  import { dateFormat, isArray, isId, isNumber, isObject, isString } from "@krainovsd/js-helpers";
+  import { dateFormat, isArray, isId, isObject, isString } from "@krainovsd/js-helpers";
   import { VCloseCircleFilled, VDeleteOutlined, VPlusOutlined } from "@krainovsd/vue-icons";
   import {
     type Component,
@@ -14,51 +14,20 @@
     watch,
   } from "vue";
   import Button, { type ButtonSize } from "./Button.vue";
+  import type { ControlComponents } from "./Control.vue";
+  import Control from "./Control.vue";
   import DropDown, { type DropDownMenuItem } from "./DropDown.vue";
-  import Input, { type InputVariant } from "./Input.vue";
-  import InputNumber from "./InputNumber.vue";
+  import { type InputVariant } from "./Input.vue";
   import Popover from "./Popover.vue";
-  import type { SelectItem, SelectValue } from "./Select.vue";
-  import Select from "./Select.vue";
+  import type { SelectItem } from "./Select.vue";
   import Text from "./Text.vue";
   import Tooltip from "./Tooltip.vue";
 
-  export type FilterComponentProps = {
-    select: FilterSelectComponentProps;
-    text: FilterTextComponentProps;
-    number: FilterNumberComponentProps;
-    "number-range": FilterNumberComponentProps;
-    date: FilterDateComponentProps;
-    "date-range": FilterDateComponentProps;
-  };
-  export type FilterComponentKey = keyof FilterComponentProps;
   export type FilterDirection = "left" | "right";
-
-  export type FilterSelectComponentProps = {
-    options: SelectItem[];
-    multiple?: boolean;
-    placeholder?: string;
-    search?: boolean;
-    clear?: boolean;
-  };
-  export type FilterTextComponentProps = {
-    allowClear?: boolean;
-    placeholder?: string;
-  };
-  export type FilterNumberComponentProps = {
-    min?: number;
-    max?: number;
-    step?: number;
-    placeholder?: string;
-  };
-  export type FilterDateComponentProps = {
-    format?: string;
-  };
-
   export type FilterComponent<O extends string | number> =
     | {
-        [K in keyof FilterComponentProps]: {
-          props?: FilterComponentProps[K];
+        [K in keyof ControlComponents]: {
+          props?: ControlComponents[K]["props"];
           component: K;
           operatorValue?: O;
           operatorLabel?: string;
@@ -66,14 +35,14 @@
           /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
           clearTag?: string;
         };
-      }[keyof FilterComponentProps]
+      }[keyof ControlComponents]
     | {
         operatorValue?: O;
         operatorLabel?: string;
         operatorShortLabel?: string;
         component: Component;
-        displayValue?: FilterComponentKey;
-        props?: unknown;
+        displayValue?: keyof ControlComponents;
+        props?: Record<string, unknown>;
         /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
         clearTag?: string;
       };
@@ -86,11 +55,11 @@
   };
   export type FilterItemFlat<F extends string | number, O extends string | number> =
     | {
-        [K in keyof FilterComponentProps]: {
+        [K in keyof ControlComponents]: {
           field: F;
           label: string;
           icon?: Component;
-          props?: FilterComponentProps[K];
+          props?: ControlComponents[K]["props"];
           component: K;
           operatorValue?: O;
           operatorLabel?: string;
@@ -99,7 +68,7 @@
           /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
           clearTag?: string;
         };
-      }[keyof FilterComponentProps]
+      }[keyof ControlComponents]
     | {
         field: F;
         label: string;
@@ -108,8 +77,8 @@
         operatorLabel?: string;
         operatorShortLabel?: string;
         component: Component;
-        displayValue?: FilterComponentKey;
-        props?: unknown;
+        displayValue?: keyof ControlComponents;
+        props?: Record<string, unknown>;
         operators: SelectItem[];
         /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
         clearTag?: string;
@@ -259,7 +228,7 @@
   function extractFilterDisplayValue(filter: FilterItemFlat<F, O>) {
     let displayValue: string = "";
     const filterValue = form.value[filter.field];
-    const displayType: FilterComponentKey =
+    const displayType: keyof ControlComponents =
       "displayValue" in filter
         ? (filter.displayValue ?? "text")
         : isString(filter.component)
@@ -267,7 +236,7 @@
           : "text";
     const filterProps = isObject(filter.props) ? filter.props : {};
 
-    if (displayType === "select" && isArray(filterProps.options)) {
+    if (displayType === "select" && "options" in filterProps && isArray(filterProps.options)) {
       if (filterProps?.multiple) {
         const tempValue = isArray(filterValue)
           ? filterValue.map(
@@ -290,7 +259,7 @@
       displayValue = isId(filterValue)
         ? dateFormat(
             filterValue,
-            isString(filterProps.format)
+            "format" in filterProps && isString(filterProps.format)
               ? filterProps.format
               : (props.displayedDateFormat ?? "DD-MM-YYYY"),
           )
@@ -300,7 +269,7 @@
       const tempFirst = isId(tempValue[0])
         ? dateFormat(
             tempValue[0],
-            isString(filterProps.format)
+            "format" in filterProps && isString(filterProps.format)
               ? filterProps.format
               : (props.displayedDateFormat ?? "DD-MM-YYYY"),
           )
@@ -308,7 +277,7 @@
       const tempSecond = isId(tempValue[1])
         ? dateFormat(
             tempValue[1],
-            isString(filterProps.format)
+            "format" in filterProps && isString(filterProps.format)
               ? filterProps.format
               : (props.displayedDateFormat ?? "DD-MM-YYYY"),
           )
@@ -495,158 +464,20 @@
             "
           />
           <template v-if="isString(filter.component)">
-            <Input
-              v-if="filter.component === 'text'"
-              :model-value="
-                isString(form[filter.field]) ? (form[filter.field] as string) : undefined
-              "
-              :size="$props.controlSize"
-              :variant="$props.controlVariant"
-              :allow-clear="filter.props?.allowClear"
-              :placeholder="filter.props?.placeholder"
-              class="ksd-filter__field-control text"
-              @update:model-value="(value) => (form[filter.field] = value)"
+            <Control
+              v-model="form[filter.field]"
+              :component="filter.component"
+              :props="filter.props"
+              :control-size="$props.controlSize"
+              :control-variant="$props.controlVariant"
+              :class="{
+                'ksd-filter__field-control': true,
+                text: filter.component === 'text',
+                select: filter.component === 'select',
+                number: filter.component === 'number',
+                'number-range': filter.component === 'number-range',
+              }"
             />
-            <InputNumber
-              v-if="filter.component === 'number'"
-              :model-value="
-                isNumber(form[filter.field]) ? (form[filter.field] as number) : undefined
-              "
-              :size="$props.controlSize"
-              :variant="$props.controlVariant"
-              :placeholder="filter.props?.placeholder"
-              :min="filter.props?.min"
-              :max="filter.props?.max"
-              :step="filter.props?.step"
-              class="ksd-filter__field-control number"
-              @update:model-value="(value) => (form[filter.field] = value)"
-            />
-            <template v-if="filter.component === 'number-range'">
-              <div class="ksd-filter__field-control number-container">
-                <InputNumber
-                  :model-value="
-                    isArray(form[filter.field]) && isNumber((form[filter.field] as unknown[])?.[0])
-                      ? ((form[filter.field] as unknown[])[0] as number)
-                      : undefined
-                  "
-                  :size="$props.controlSize"
-                  :variant="$props.controlVariant"
-                  :placeholder="filter.props?.placeholder"
-                  :min="filter.props?.min"
-                  :max="filter.props?.max"
-                  :step="filter.props?.step"
-                  class="ksd-filter__field-control number"
-                  @update:model-value="
-                    (value) => {
-                      if (!isArray(form[filter.field])) {
-                        form[filter.field] = [];
-                      }
-                      (form[filter.field] as unknown[])[0] = value;
-                    }
-                  "
-                />
-                <span> - </span>
-                <InputNumber
-                  :model-value="
-                    isArray(form[filter.field]) && isNumber((form[filter.field] as unknown[])?.[1])
-                      ? ((form[filter.field] as unknown[])[1] as number)
-                      : undefined
-                  "
-                  :size="$props.controlSize"
-                  :variant="$props.controlVariant"
-                  :placeholder="filter.props?.placeholder"
-                  :min="filter.props?.min"
-                  :max="filter.props?.max"
-                  :step="filter.props?.step"
-                  class="ksd-filter__field-control number"
-                  @update:model-value="
-                    (value) => {
-                      if (!isArray(form[filter.field])) {
-                        form[filter.field] = [];
-                      }
-                      (form[filter.field] as unknown[])[1] = value;
-                    }
-                  "
-                />
-              </div>
-            </template>
-            <Select
-              v-if="filter.component === 'select'"
-              :options="filter.props?.options ?? []"
-              :size="$props.controlSize"
-              :variant="$props.controlVariant"
-              :multiple="filter.props?.multiple"
-              :search="filter.props?.search"
-              :clear="filter.props?.clear"
-              :placeholder="filter.props?.placeholder"
-              :nested="true"
-              class="ksd-filter__field-control select"
-              :model-value="
-                filter.props?.multiple
-                  ? isArray(form[filter.field])
-                    ? (form[filter.field] as SelectValue[])
-                    : undefined
-                  : (form[filter.field] as SelectValue)
-              "
-              @update:model-value="(value) => (form[filter.field] = value)"
-            />
-            <input
-              v-if="filter.component === 'date'"
-              type="date"
-              class="ksd-filter__field-control date"
-              :value="isString(form[filter.field]) ? form[filter.field] : ''"
-              @input="
-                (event: Event) => {
-                  const target = event.target as HTMLInputElement;
-                  form[filter.field] = target.value;
-                }
-              "
-            />
-            <template v-if="filter.component === 'date-range'">
-              <div class="ksd-filter__field-control date-container">
-                <input
-                  type="date"
-                  class="ksd-filter__field-control date"
-                  :value="
-                    isArray(form[filter.field])
-                      ? isString((form[filter.field] as unknown[])[0])
-                        ? (form[filter.field] as unknown[])[0]
-                        : ''
-                      : ''
-                  "
-                  @input="
-                    (event: Event) => {
-                      const target = event.target as HTMLInputElement;
-                      if (!isArray(form[filter.field])) {
-                        form[filter.field] = [];
-                      }
-                      (form[filter.field] as unknown[])[0] = target.value;
-                    }
-                  "
-                />
-                <span> - </span>
-                <input
-                  type="date"
-                  class="ksd-filter__field-control date"
-                  :value="
-                    isArray(form[filter.field])
-                      ? isString((form[filter.field] as unknown[])[1])
-                        ? (form[filter.field] as unknown[])[1]
-                        : ''
-                      : ''
-                  "
-                  @input="
-                    (event: Event) => {
-                      const target = event.target as HTMLInputElement;
-                      if (!isArray(form[filter.field])) {
-                        form[filter.field] = [];
-                      }
-                      (form[filter.field] as unknown[])[1] = target.value;
-                    }
-                  "
-                />
-              </div>
-            </template>
           </template>
         </template>
       </Popover>
@@ -797,10 +628,8 @@
       &.number {
         width: 80px;
       }
-      &.number-container {
-        display: flex;
-        gap: var(--ksd-margin-xs);
-        align-items: center;
+      &.number-range > .ksd-input {
+        width: 80px;
       }
     }
   }

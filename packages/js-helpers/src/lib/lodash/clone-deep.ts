@@ -1,30 +1,16 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { isPrimitive } from "../typings";
 import { type } from "./type";
 
-export function cloneDeep(value: unknown, map?: Map<unknown, unknown>) {
-  map ??= new Map();
-
-  // this avoids the slower switch with a quick if decision removing some milliseconds in each run.
+export function cloneDeep<T>(value: T): T {
   if (isPrimitive(value)) {
     return value;
   }
 
   function copy(copiedValue: object) {
-    // Check for circular and same references on the object graph and return its corresponding clone.
-    const cachedCopy = map!.get(value);
-
-    if (cachedCopy) {
-      return cachedCopy;
-    }
-
-    map!.set(value, copiedValue);
-
     for (const key in value as object) {
       if (Object.hasOwn(value as object, key)) {
         (copiedValue as Record<string, unknown>)[key] = cloneDeep(
           (value as Record<string, unknown>)[key],
-          map,
         );
       }
     }
@@ -34,13 +20,13 @@ export function cloneDeep(value: unknown, map?: Map<unknown, unknown>) {
 
   switch (type(value)) {
     case "Object":
-      return copy(Object.create(Object.getPrototypeOf(value) as object) as object);
+      return copy(Object.create(Object.getPrototypeOf(value) as object) as object) as T;
     case "Array":
-      return copy(Array((value as unknown[]).length));
+      return copy(Array((value as unknown[]).length)) as T;
     case "Date":
-      return new Date((value as Date).valueOf());
+      return new Date((value as Date).valueOf()) as T;
     case "RegExp":
-      return cloneRegExp(value as RegExp);
+      return cloneRegExp(value as RegExp) as T;
     case "Int8Array":
     case "Uint8Array":
     case "Uint8ClampedArray":
@@ -52,7 +38,7 @@ export function cloneDeep(value: unknown, map?: Map<unknown, unknown>) {
     case "Float64Array":
     case "BigInt64Array":
     case "BigUint64Array":
-      return (value as Int8Array).slice();
+      return (value as Int8Array).slice() as T;
     default:
       return value;
   }

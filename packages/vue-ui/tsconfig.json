@@ -10,7 +10,8 @@
     "eslint.config.js",
     ".storybook/**/*",
     "src/vite-env.d.ts",
-    ".prettierrc.mjs"
+    ".prettierrc.mjs",
+    "../js-helpers/src/lib/utils/generate-id.ts"
   ],
   "exclude": ["node_modules", "dist"],
   "references": [
