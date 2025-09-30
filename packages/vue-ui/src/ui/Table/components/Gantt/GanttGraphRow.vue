@@ -12,6 +12,7 @@
   };
 
   const props = defineProps<Props>();
+  defineEmits<{ cellClick: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent] }>();
   const rowStyles = computed(() => ({
     transform: props.virtualStart != undefined ? `translateY(${props.virtualStart}px)` : undefined,
     minHeight: `${props.rowHeight}px`,
@@ -20,7 +21,12 @@
 </script>
 
 <template>
-  <GanttGraphCell :body-width="$props.bodyWidth" :row="$props.row" :rows-map="$props.rowsMap" />
+  <GanttGraphCell
+    :body-width="$props.bodyWidth"
+    :row="$props.row"
+    :rows-map="$props.rowsMap"
+    @click="(row, event) => $emit('cellClick', row, event)"
+  />
   <div
     class="ksd-gantt-graph__row"
     :class="{ virtual: $props.virtualStart != undefined }"

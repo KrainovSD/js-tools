@@ -7,6 +7,7 @@ export {
   DND_EVENT_BUS_MESSAGE_TYPES,
   createInteractiveChildrenController,
   createHighlight,
+  extractDragPosition,
 } from "./lib";
 export type { DragInfo, HighlightText } from "./lib";
 export { THEME_CONFIG } from "./constants";

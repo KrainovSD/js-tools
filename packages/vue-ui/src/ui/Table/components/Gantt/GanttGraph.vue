@@ -31,6 +31,7 @@
     ganttGraphGrid: boolean;
     ganttLinkGetAround: boolean;
     ganttLinkVisibleInRange: boolean;
+    ganttLinkHighlight: boolean;
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
 
@@ -47,6 +48,7 @@
   };
 
   const props = defineProps<Props>();
+  defineEmits<{ cellClick: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent] }>();
   const graphElement = useTemplateRef("gantt-graph");
   const graphBodyElement = useTemplateRef("gantt-graph-body");
 
@@ -143,6 +145,7 @@
             :row-height="rowHeight"
             :rows-map="rowsMap"
             :virtual-start="virtualRow.start"
+            @cell-click="(row, event) => $emit('cellClick', row, event)"
           />
         </template>
         <template v-if="!$props.rowVirtualEnabled">
@@ -154,6 +157,7 @@
             :row-height="rowHeight"
             :rows-map="rowsMap"
             :virtual-start="undefined"
+            @cell-click="(row, event) => $emit('cellClick', row, event)"
           />
         </template>
         <GanttGraphLinks
@@ -165,6 +169,8 @@
           :rows-virtual="$props.rowsVirtual"
           :gantt-link-get-around="$props.ganttLinkGetAround"
           :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange"
+          :gantt-link-highlight="$props.ganttLinkHighlight"
+          :container="graphBodyElement"
         />
       </div>
     </div>
@@ -181,7 +187,7 @@
       &.frozen {
         position: sticky;
         top: 0;
-        z-index: 5;
+        z-index: 6;
       }
     }
     &__header {

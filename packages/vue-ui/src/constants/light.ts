@@ -398,6 +398,7 @@ export const LIGHT_THEME: ThemeVariableConfig = {
       "ksd-table-gantt-milestone-color": "var(--ksd-warning-color)",
       "ksd-table-gantt-task-color": "var(--ksd-info-color)",
       "ksd-table-gantt-link-color": "#a1a4a6",
+      "ksd-table-gantt-link-active-color": "var(--ksd-error-color)",
     },
     loader: {
       "ksd-loader-primary-color": "var(--ksd-accent-color)",

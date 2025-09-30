@@ -1,5 +1,5 @@
 import { type ComputedRef, ref, watch } from "vue";
-import { extractDnDPosition } from "../../../../lib";
+import { extractDragPosition } from "../../../../lib";
 import {
   GANTT_GRAPH_BODY_ID,
   GANTT_GRAPH_HEADER_ID,
@@ -127,14 +127,14 @@ function onDragStart(elements: ScrollElements) {
   return function onDragStart(event: MouseEvent | TouchEvent) {
     event.preventDefault();
     const eventController = new AbortController();
-    const { clientX: startClientX } = extractDnDPosition(event);
+    const { clientX: startClientX } = extractDragPosition(event);
     const thumbLeft = parseInt(elements.thumb.style.left, 10);
 
     function onDragMove(event: MouseEvent | TouchEvent) {
       const trackWidth = elements.scroll.clientWidth;
       const thumbWidth = elements.thumb.clientWidth;
       const maxLeft = trackWidth - thumbWidth;
-      const { clientX } = extractDnDPosition(event);
+      const { clientX } = extractDragPosition(event);
 
       const left = Math.max(0, Math.min(thumbLeft + clientX - startClientX, maxLeft));
       elements.thumb.style.left = `${left}px`;

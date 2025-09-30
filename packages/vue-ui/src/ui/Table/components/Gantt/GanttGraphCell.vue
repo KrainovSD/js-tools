@@ -17,6 +17,7 @@
   };
 
   const props = defineProps<Props>();
+  defineEmits<{ click: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent] }>();
 
   const start = computed(() => new Date(props.row.original.start));
   const end = computed(() => new Date(props.row.original.end));
@@ -97,28 +98,47 @@
           ? "10px"
           : undefined,
   }));
+
+  function onKeyDown(event: KeyboardEvent) {
+    const target = event.target as HTMLDivElement;
+    const currentTarget = event.currentTarget as HTMLDivElement;
+
+    if ((event.key === " " || event.key === "Enter") && target === currentTarget) {
+      event.preventDefault();
+      currentTarget.click();
+    }
+  }
 </script>
 
 <template>
-  <div class="ksd-gantt-graph__cell" :style="cellStyles">
+  <div
+    class="ksd-gantt-graph__cell"
+    :style="cellStyles"
+    tabindex="0"
+    role="button"
+    @click="(event) => $emit('click', $props.row, event)"
+    @keydown="onKeyDown"
+  >
     <GanttGraphTooltip v-if="rowInfo" :duration="duration" :row="$props.row.original">
-      <div class="ksd-gantt-graph__task" :class="taskClasses" :style="taskStyles">
+      <div class="ksd-gantt-graph__task-container">
+        <div class="ksd-gantt-graph__task" :class="taskClasses" :style="taskStyles">
+          <VText
+            v-if="rowInfo.textWidth <= rowInfo.width"
+            :ellipsis="true"
+            class="ksd-gantt-graph__task-name"
+          >
+            {{ $props.row.original.name }}
+          </VText>
+        </div>
         <VText
-          v-if="rowInfo.textWidth <= rowInfo.width"
-          :ellipsis="true"
+          v-if="rowInfo.textWidth > rowInfo.width"
           class="ksd-gantt-graph__task-name"
+          :style="textStyles"
+          :ellipsis="true"
         >
           {{ $props.row.original.name }}
         </VText>
       </div>
-      <VText
-        v-if="rowInfo.textWidth > rowInfo.width"
-        class="ksd-gantt-graph__task-name"
-        :style="textStyles"
-        :ellipsis="true"
-      >
-        {{ $props.row.original.name }}
-      </VText>
     </GanttGraphTooltip>
   </div>
 </template>
@@ -128,7 +148,21 @@
     &__cell {
       display: flex;
       position: absolute;
-      z-index: 4;
+      z-index: 5;
+      cursor: pointer;
+      border-radius: var(--ksd-border-radius);
+
+      &:focus-visible {
+        outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
+        outline-offset: 1px;
+        transition:
+          outline-offset 0s,
+          outline 0s;
+      }
+    }
+
+    &__task-container {
+      display: flex;
     }
 
     &__task {
@@ -137,7 +171,7 @@
       position: relative;
       align-items: center;
       width: 100%;
-      z-index: 4;
+      z-index: 5;
 
       &.group {
         background-color: var(--ksd-table-gantt-group-color);

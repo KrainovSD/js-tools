@@ -14,7 +14,7 @@ import {
   DND_EVENT_BUS,
   DND_EVENT_BUS_MESSAGE_TYPES,
   type DragInfo,
-  extractDnDPosition,
+  extractDragPosition,
 } from "../lib";
 import { createDndScrollContainerController } from "../lib/dnd-scroll-container-controller";
 import { DROP_GROUP_ATTRIBUTE, DROP_ID_ATTRIBUTE, DROP_UNIQUE_ID_ATTRIBUTE } from "./use-drop";
@@ -196,7 +196,7 @@ function handleDragStart<Meta extends Record<string, unknown>>(
   )
     return;
 
-  const { clientX, clientY } = extractDnDPosition(event);
+  const { clientX, clientY } = extractDragPosition(event);
   DND_EVENT_BUS.sendMessage(
     DND_EVENT_BUS_MESSAGE_TYPES.Position,
     {
@@ -244,7 +244,7 @@ function handleDragMove(
   if (!dragInfo) return;
 
   /** Send Cursor Position */
-  const { clientX, clientY } = extractDnDPosition(event);
+  const { clientX, clientY } = extractDragPosition(event);
   DND_EVENT_BUS.sendMessage(
     DND_EVENT_BUS_MESSAGE_TYPES.Position,
     {

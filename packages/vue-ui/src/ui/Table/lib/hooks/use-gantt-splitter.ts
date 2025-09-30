@@ -1,5 +1,5 @@
 import { type ComputedRef, type ShallowRef, computed, ref, shallowRef, watch } from "vue";
-import { extractDnDPosition } from "../../../../lib";
+import { extractDragPosition } from "../../../../lib";
 import { MIN_GANTT_PART_WIDTH } from "../../constants";
 
 type UseGanttSplitterOptions = {
@@ -24,7 +24,7 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
     let size: number | undefined;
 
     if (event) {
-      const { clientX } = extractDnDPosition(event);
+      const { clientX } = extractDragPosition(event);
       size = clientX - rect.left;
     } else {
       size = tempSizes[0] || rect.width / 2;

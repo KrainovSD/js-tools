@@ -123,6 +123,7 @@ export type GanttProps<
   ganttSplitterInstant?: boolean;
   ganttLinkGetAround?: boolean;
   ganttLinkVisibleInRange?: boolean;
+  ganttLinkHighlight?: boolean;
   ganttView?: GanttViewType;
   ganttLinkStyleGetter?: GanttLinkStyleGetter<RowData>;
 

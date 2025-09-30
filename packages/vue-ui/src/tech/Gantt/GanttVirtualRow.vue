@@ -30,6 +30,12 @@
     :gantt-graph-grid="true"
     :gantt-link-visible-in-range="true"
     :gantt-link-get-around="true"
+    :gantt-link-highlight="true"
+    @graph-task-click="
+      (row, event) => {
+        console.log(row, event);
+      }
+    "
   />
 </template>
 

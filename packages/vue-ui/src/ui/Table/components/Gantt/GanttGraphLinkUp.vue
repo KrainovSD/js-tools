@@ -5,15 +5,20 @@
 
   type Props = {
     link: GanttLinkDrawInstruction;
+    selectedLink: string | null;
   };
 
   const props = defineProps<Props>();
 
   const linkStyles = computed<CSSProperties>(() => ({
-    "--color": props.link.color,
+    "--color":
+      props.selectedLink === props.link.id
+        ? "var(--ksd-table-gantt-link-active-color)"
+        : props.link.color,
     "--size": props.link.size,
     "--arrow-size": props.link.arrowSize,
     "--corner-size": props.link.cornerSize,
+    zIndex: props.selectedLink === props.link.id ? 4 : 3,
   }));
 
   const leftToRightFirstStyles = computed<CSSProperties>(() => ({
@@ -81,7 +86,11 @@
 </script>
 
 <template>
-  <div class="ksd-gantt-graph__link-up" :style="linkStyles">
+  <div
+    :data-id="$props.link.id"
+    class="ksd-gantt-graph__link ksd-gantt-graph__link-up"
+    :style="linkStyles"
+  >
     <div
       class="ksd-gantt-graph__link-part link left-to-right-first"
       :style="leftToRightFirstStyles"

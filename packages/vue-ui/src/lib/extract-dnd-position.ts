@@ -1,4 +1,4 @@
-export function extractDnDPosition(event: TouchEvent | MouseEvent) {
+export function extractDragPosition(event: TouchEvent | MouseEvent) {
   let clientX = 0;
   let clientY = 0;
   if ("touches" in event) {

@@ -26,6 +26,7 @@
     ganttSplitterInstant: boolean;
     ganttLinkGetAround: boolean;
     ganttLinkVisibleInRange: boolean;
+    ganttLinkHighlight: boolean;
     ganttView: GanttViewType;
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
@@ -58,6 +59,7 @@
     dragRow: [sourceId: string, targetId: string];
     click: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
     dblclick: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
+    graphTaskClick: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
   };
 
   const props = defineProps<Props>();
@@ -164,6 +166,8 @@
         :row-height="rowHeight"
         :gantt-link-get-around="$props.ganttLinkGetAround"
         :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange"
+        :gantt-link-highlight="$props.ganttLinkHighlight"
+        @cell-click="(row, event) => $emit('graphTaskClick', row, event)"
       />
     </div>
   </div>
@@ -186,7 +190,7 @@
       background-color: var(--ksd-table-border);
       position: relative;
       top: 0;
-      z-index: 7;
+      z-index: 8;
     }
     &__splitter-trigger {
       position: absolute;
@@ -208,7 +212,7 @@
       top: 0px;
       left: 0px;
       width: 0px;
-      z-index: 6;
+      z-index: 7;
       display: none;
 
       &.visible {

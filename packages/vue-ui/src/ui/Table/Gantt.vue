@@ -45,6 +45,7 @@
     dragRow: [sourceId: string, targetId: string];
     click: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
     dblclick: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
+    graphTaskClick: [row: RowInterface<GanttInfo<RowData>>, event: MouseEvent];
   };
 
   const props = withDefaults(
@@ -76,6 +77,7 @@
       gantt: false,
       ganttLinkGetAround: true,
       ganttLinkVisibleInRange: true,
+      ganttLinkHighlight: true,
     },
   );
   defineEmits<Emits>();
@@ -184,6 +186,7 @@
         :gantt-link-style-getter="$props.ganttLinkStyleGetter"
         :gantt-link-get-around="$props.ganttLinkGetAround ?? true"
         :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange ?? true"
+        :gantt-link-highlight="$props.ganttLinkHighlight ?? true"
         @drag-row="
           (sid, tid) => {
             $emit('dragRow', sid, tid);
@@ -191,6 +194,7 @@
         "
         @click="(row, event) => $emit('click', row, event)"
         @dblclick="(row, event) => $emit('dblclick', row, event)"
+        @graph-task-click="(row, event) => $emit('graphTaskClick', row, event)"
       />
       <TableTotal v-if="$props.withTotal" :total-rows="totalRows" />
     </div>
