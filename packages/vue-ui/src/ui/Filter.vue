@@ -363,6 +363,7 @@
   <div ref="filter" class="ksd-filter" :class="filterClasses">
     <div v-if="$props.direction === 'left'" class="ksd-filter__button-wrapper">
       <Button
+        v-if="availableFilters.length !== 0"
         :size="$props.buttonSize"
         class="ksd-filter__button-filter"
         :class="{ clear: openedFields.length > 0 }"
@@ -378,6 +379,7 @@
         v-if="openedFields.length > 0"
         ref="drop"
         class="ksd-filter__button-clear"
+        :class="{ empty: availableFilters.length === 0 }"
         :size="$props.buttonSize"
         @click="dropFilters"
       >
@@ -493,6 +495,7 @@
     </div>
     <div v-if="$props.direction === 'right'" class="ksd-filter__button-wrapper">
       <Button
+        v-if="availableFilters.length !== 0"
         :size="$props.buttonSize"
         class="ksd-filter__button-filter"
         :class="{ clear: openedFields.length > 0 }"
@@ -508,6 +511,7 @@
         v-if="openedFields.length > 0"
         ref="drop"
         class="ksd-filter__button-clear"
+        :class="{ empty: availableFilters.length === 0 }"
         :size="$props.buttonSize"
         @click="dropFilters"
       >
@@ -589,6 +593,10 @@
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       color: var(--ksd-icon-color);
+      &.empty {
+        border-top-left-radius: var(--ksd-border-radius);
+        border-bottom-left-radius: var(--ksd-border-radius);
+      }
     }
 
     &__field-operator-item {
