@@ -3,25 +3,13 @@
   import { VText } from "../../..";
   import { GANTT_MAX_TEXT_WIDTH_SHIFT, GANTT_TOP_SHIFT } from "../../constants";
   import { extractGanttLinkId } from "../../lib";
-  import type {
-    DefaultRow,
-    GanttInfo,
-    GanttLinkStyleGetter,
-    GanttRowInfo,
-    GanttSize,
-    RowInterface,
-  } from "../../types";
-  import GanttGraphLinks from "./GanttGraphLinks.vue";
+  import type { DefaultRow, GanttInfo, GanttRowInfo, RowInterface } from "../../types";
   import GanttGraphTooltip from "./GanttGraphTooltip.vue";
 
   type Props = {
-    ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
     rowsMap: Record<string, GanttRowInfo | undefined>;
     bodyWidth: number | null;
-    ganttSize: GanttSize;
     row: RowInterface<GanttInfo<RowData>>;
-    rowHeight: number;
-    arrowContainer: HTMLElement | null;
   };
   type ArrowInfo = {
     up: boolean;
@@ -133,23 +121,6 @@
       </VText>
     </GanttGraphTooltip>
   </div>
-  <Teleport
-    v-if="
-      rowInfo &&
-      $props.arrowContainer &&
-      $props.row.original.links &&
-      $props.row.original.links.length > 0
-    "
-    :to="$props.arrowContainer"
-  >
-    <GanttGraphLinks
-      :gantt-link-style-getter="$props.ganttLinkStyleGetter"
-      :gantt-size="$props.ganttSize"
-      :row="$props.row.original"
-      :rows-map="$props.rowsMap"
-      :row-info="rowInfo"
-    />
-  </Teleport>
 </template>
 
 <style lang="scss">

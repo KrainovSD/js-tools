@@ -20,6 +20,7 @@
     TableInterface,
   } from "../../types";
   import GanttGraphHeaderRow from "./GanttGraphHeaderRow.vue";
+  import GanttGraphLinks from "./GanttGraphLinks.vue";
   import GanttGraphRow from "./GanttGraphRow.vue";
 
   type Props = {
@@ -28,6 +29,8 @@
     ganttSize: GanttSize;
     ganttView: GanttViewType;
     ganttGraphGrid: boolean;
+    ganttLinkGetAround: boolean;
+    ganttLinkVisibleInRange: boolean;
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
 
@@ -136,13 +139,10 @@
             v-for="virtualRow in $props.rowsVirtual"
             :key="virtualRow.index"
             :body-width="bodyWidth"
-            :gantt-link-style-getter="$props.ganttLinkStyleGetter"
-            :gantt-size="$props.ganttSize"
             :row="$props.rows[virtualRow.index]"
             :row-height="rowHeight"
             :rows-map="rowsMap"
             :virtual-start="virtualRow.start"
-            :arrow-container="graphBodyElement"
           />
         </template>
         <template v-if="!$props.rowVirtualEnabled">
@@ -150,15 +150,22 @@
             v-for="row in $props.rows"
             :key="row.id"
             :body-width="bodyWidth"
-            :gantt-link-style-getter="$props.ganttLinkStyleGetter"
-            :gantt-size="$props.ganttSize"
             :row="row"
             :row-height="rowHeight"
             :rows-map="rowsMap"
             :virtual-start="undefined"
-            :arrow-container="graphBodyElement"
           />
         </template>
+        <GanttGraphLinks
+          :gantt-link-style-getter="$props.ganttLinkStyleGetter"
+          :gantt-size="$props.ganttSize"
+          :row-virtual-enabled="$props.rowVirtualEnabled"
+          :rows="$props.rows"
+          :rows-map="rowsMap"
+          :rows-virtual="$props.rowsVirtual"
+          :gantt-link-get-around="$props.ganttLinkGetAround"
+          :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange"
+        />
       </div>
     </div>
   </div>

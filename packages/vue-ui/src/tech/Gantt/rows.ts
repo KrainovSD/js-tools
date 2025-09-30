@@ -166,6 +166,7 @@ export const GANTT_EASY_ROWS = [
     start: "2025-05-01",
     end: "2027-12-07",
     type: "group",
+    links: ["2.2.12"],
     children: [
       {
         id: "1.1",

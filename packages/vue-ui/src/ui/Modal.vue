@@ -219,8 +219,8 @@
         <div class="ksd-modal__footer" :class="$props.classNameFooter">
           <slot v-if="$slots.footer" name="footer"></slot>
           <template v-else>
-            <Button @click="onConfirm">{{ $props.cancelButton }}</Button>
-            <Button type="primary" @click="onCancel">{{ $props.okButton }}</Button></template
+            <Button @click="onCancel">{{ $props.cancelButton }}</Button>
+            <Button type="primary" @click="onConfirm">{{ $props.okButton }}</Button></template
           >
         </div>
       </div>

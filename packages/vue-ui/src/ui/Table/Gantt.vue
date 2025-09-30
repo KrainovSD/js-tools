@@ -74,6 +74,8 @@
       ganttView: "months",
       ganttSplitterInstant: true,
       gantt: false,
+      ganttLinkGetAround: true,
+      ganttLinkVisibleInRange: true,
     },
   );
   defineEmits<Emits>();
@@ -180,6 +182,8 @@
         :gantt-splitter-instant="$props.ganttSplitterInstant ?? true"
         :gantt-view="$props.ganttView ?? 'months'"
         :gantt-link-style-getter="$props.ganttLinkStyleGetter"
+        :gantt-link-get-around="$props.ganttLinkGetAround ?? true"
+        :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange ?? true"
         @drag-row="
           (sid, tid) => {
             $emit('dragRow', sid, tid);

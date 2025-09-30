@@ -34,6 +34,7 @@ import VSelect from "./Select.vue";
 import VSkeleton from "./Skeleton.vue";
 import VSlider from "./Slider.vue";
 import VSwitch from "./Switch.vue";
+import VTabs from "./Tabs.vue";
 import VTag from "./Tag.vue";
 import VTagCheckable from "./TagCheckable.vue";
 import VText from "./Text.vue";
@@ -137,8 +138,10 @@ export type { DatePickerProps } from "./DatePicker.vue";
 export type { UserAvatarProps, UserAvatarSize } from "./UserAvatar.vue";
 export type { UserInfoProps, UserInfoSize } from "./UserInfo.vue";
 export type { User, UserPickerPosition, UserPickerProps, UserPickerSize } from "./UserPicker.vue";
+export type { Tab, TabsProps } from "./Tabs.vue";
 
 export {
+  VTabs,
   VImport,
   VButton,
   VCollapse,

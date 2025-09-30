@@ -26,7 +26,10 @@
     :get-sub-rows="getSubRows"
     :gantt-splitter-instant="true"
     :gantt-view="'years'"
+    :gantt-size="'sm'"
     :gantt-graph-grid="true"
+    :gantt-link-visible-in-range="true"
+    :gantt-link-get-around="true"
   />
 </template>
 

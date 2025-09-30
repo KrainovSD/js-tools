@@ -1,24 +1,14 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import { computed } from "vue";
-  import type {
-    DefaultRow,
-    GanttInfo,
-    GanttLinkStyleGetter,
-    GanttRowInfo,
-    GanttSize,
-    RowInterface,
-  } from "../../types";
+  import type { DefaultRow, GanttInfo, GanttRowInfo, RowInterface } from "../../types";
   import GanttGraphCell from "./GanttGraphCell.vue";
 
   type Props = {
-    ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
     rowsMap: Record<string, GanttRowInfo | undefined>;
     bodyWidth: number | null;
-    ganttSize: GanttSize;
     row: RowInterface<GanttInfo<RowData>>;
     rowHeight: number;
     virtualStart: number | undefined;
-    arrowContainer: HTMLElement | null;
   };
 
   const props = defineProps<Props>();
@@ -30,15 +20,7 @@
 </script>
 
 <template>
-  <GanttGraphCell
-    :body-width="$props.bodyWidth"
-    :gantt-link-style-getter="$props.ganttLinkStyleGetter"
-    :gantt-size="$props.ganttSize"
-    :row="$props.row"
-    :row-height="$props.rowHeight"
-    :rows-map="$props.rowsMap"
-    :arrow-container="$props.arrowContainer"
-  />
+  <GanttGraphCell :body-width="$props.bodyWidth" :row="$props.row" :rows-map="$props.rowsMap" />
   <div
     class="ksd-gantt-graph__row"
     :class="{ virtual: $props.virtualStart != undefined }"

@@ -81,11 +81,19 @@ export type GanttHeaderInfo = {
   months: number[];
 };
 
+export type GanttRowLinks = {
+  index: number;
+  left: number;
+  top: number;
+  links: GanttLinkDrawInstruction[];
+};
+
 export type GanttLinkDrawInstruction = {
   id: string;
   color: string | undefined;
   size: number;
   position: "up" | "down";
+  dependentIndex: number;
   extraCorner: boolean;
   leftToRightFirst: number;
   leftToRightSecond: number;
@@ -113,6 +121,8 @@ export type GanttProps<
   ganttSize?: GanttSize;
   ganttGraphGrid?: boolean;
   ganttSplitterInstant?: boolean;
+  ganttLinkGetAround?: boolean;
+  ganttLinkVisibleInRange?: boolean;
   ganttView?: GanttViewType;
   ganttLinkStyleGetter?: GanttLinkStyleGetter<RowData>;
 

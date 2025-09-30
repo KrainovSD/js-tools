@@ -24,6 +24,8 @@
     ganttSize: GanttSize;
     ganttGraphGrid: boolean;
     ganttSplitterInstant: boolean;
+    ganttLinkGetAround: boolean;
+    ganttLinkVisibleInRange: boolean;
     ganttView: GanttViewType;
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
@@ -160,6 +162,8 @@
         :table="$props.table"
         :width="sizes[1]"
         :row-height="rowHeight"
+        :gantt-link-get-around="$props.ganttLinkGetAround"
+        :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange"
       />
     </div>
   </div>

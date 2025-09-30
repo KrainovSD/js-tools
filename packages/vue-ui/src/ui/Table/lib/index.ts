@@ -10,3 +10,4 @@ export * from "./get-gantt-row-info";
 export * from "./get-gantt-row-height";
 export * from "./get-day-of-year";
 export * from "./extract-gantt-link-id";
+export * from "./segment-tree";
