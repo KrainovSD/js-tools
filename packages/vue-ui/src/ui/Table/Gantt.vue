@@ -195,7 +195,11 @@
         @click="(row, event) => $emit('click', row, event)"
         @dblclick="(row, event) => $emit('dblclick', row, event)"
         @graph-task-click="(row, event) => $emit('graphTaskClick', row, event)"
-      />
+      >
+        <template v-if="$slots['graphCell']" #graphCell="graphCellProps">
+          <slot name="graphCell" v-bind="graphCellProps"></slot>
+        </template>
+      </GanttContainer>
       <TableTotal v-if="$props.withTotal" :total-rows="totalRows" />
     </div>
   </div>

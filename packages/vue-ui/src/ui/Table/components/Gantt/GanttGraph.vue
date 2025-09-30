@@ -146,7 +146,11 @@
             :rows-map="rowsMap"
             :virtual-start="virtualRow.start"
             @cell-click="(row, event) => $emit('cellClick', row, event)"
-          />
+          >
+            <template v-if="$slots['graphCell']" #graphCell="graphCellProps">
+              <slot name="graphCell" v-bind="graphCellProps"></slot>
+            </template>
+          </GanttGraphRow>
         </template>
         <template v-if="!$props.rowVirtualEnabled">
           <GanttGraphRow
@@ -158,7 +162,11 @@
             :rows-map="rowsMap"
             :virtual-start="undefined"
             @cell-click="(row, event) => $emit('cellClick', row, event)"
-          />
+          >
+            <template v-if="$slots['graphCell']" #graphCell="graphCellProps">
+              <slot name="graphCell" v-bind="graphCellProps"></slot>
+            </template>
+          </GanttGraphRow>
         </template>
         <GanttGraphLinks
           :gantt-link-style-getter="$props.ganttLinkStyleGetter"

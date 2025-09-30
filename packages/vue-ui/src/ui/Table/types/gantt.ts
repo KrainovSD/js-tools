@@ -12,14 +12,18 @@ import type {
   SortRenderComponent,
 } from "./utils";
 
+export type GanttTaskArrowInfo = {
+  up: boolean;
+  down: boolean;
+};
+
 export type GanttTaskProps<RowData extends DefaultRow> = {
+  rowInfo: GanttRowInfo | undefined;
+  arrows: GanttTaskArrowInfo;
+  maxTextWidth: number | undefined;
+  duration: number;
   row: RowInterface<GanttInfo<RowData>>;
-  ganttInfo: GanttInfo<RowData>;
-  rowInfo: GanttRowInfo;
   bodyWidth: number | null;
-  rowsMap: Record<string | number, GanttRowInfo | undefined>;
-  hasUpArrow: boolean;
-  hasDownArrow: boolean;
 };
 export type GanttTooltipProps<RowData extends DefaultRow> = {
   row: RowInterface<RowData>;
@@ -126,9 +130,6 @@ export type GanttProps<
   ganttLinkHighlight?: boolean;
   ganttView?: GanttViewType;
   ganttLinkStyleGetter?: GanttLinkStyleGetter<RowData>;
-
-  GanttTooltip?: React.FC<GanttTooltipProps<RowData>>;
-  GanttTask?: React.FC<GanttTaskProps<RowData>> | undefined;
 } & Omit<
   TableProps<
     GanttInfo<RowData>,

@@ -2,6 +2,7 @@
   import { shallowRef } from "vue";
   import Gantt from "../../ui/Table/Gantt.vue";
   import type { GanttInfo } from "../../ui/Table/types";
+  import GanttTask from "./GanttTask.vue";
   import { COLUMNS } from "./columns";
   import { GANTT_EASY_ROWS } from "./rows";
   import type { RowData } from "./types";
@@ -36,7 +37,11 @@
         console.log(row, event);
       }
     "
-  />
+  >
+    <template #graphCell="graphCellProps">
+      <GanttTask v-bind="graphCellProps" />
+    </template>
+  </Gantt>
 </template>
 
 <style lang="scss"></style>

@@ -26,7 +26,11 @@
     :row="$props.row"
     :rows-map="$props.rowsMap"
     @click="(row, event) => $emit('cellClick', row, event)"
-  />
+  >
+    <template v-if="$slots['graphCell']" #graphCell="graphCellProps">
+      <slot name="graphCell" v-bind="graphCellProps"></slot>
+    </template>
+  </GanttGraphCell>
   <div
     class="ksd-gantt-graph__row"
     :class="{ virtual: $props.virtualStart != undefined }"

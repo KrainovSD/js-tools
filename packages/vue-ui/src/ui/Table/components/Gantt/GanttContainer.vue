@@ -168,7 +168,11 @@
         :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange"
         :gantt-link-highlight="$props.ganttLinkHighlight"
         @cell-click="(row, event) => $emit('graphTaskClick', row, event)"
-      />
+      >
+        <template v-if="$slots['graphCell']" #graphCell="graphCellProps">
+          <slot name="graphCell" v-bind="graphCellProps"></slot>
+        </template>
+      </GanttGraph>
     </div>
   </div>
   <GanttScroll ref="gantt-scroll" :sizes="sizes" />

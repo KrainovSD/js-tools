@@ -3,17 +3,19 @@
   import { VText } from "../../..";
   import { GANTT_MAX_TEXT_WIDTH_SHIFT, GANTT_TOP_SHIFT } from "../../constants";
   import { extractGanttLinkId } from "../../lib";
-  import type { DefaultRow, GanttInfo, GanttRowInfo, RowInterface } from "../../types";
+  import type {
+    DefaultRow,
+    GanttInfo,
+    GanttRowInfo,
+    GanttTaskArrowInfo,
+    RowInterface,
+  } from "../../types";
   import GanttGraphTooltip from "./GanttGraphTooltip.vue";
 
   type Props = {
     rowsMap: Record<string, GanttRowInfo | undefined>;
     bodyWidth: number | null;
     row: RowInterface<GanttInfo<RowData>>;
-  };
-  type ArrowInfo = {
-    up: boolean;
-    down: boolean;
   };
 
   const props = defineProps<Props>();
@@ -25,7 +27,7 @@
     () => (end.value.getTime() - start.value.getTime()) / (1000 * 60 * 60 * 24),
   );
   const rowInfo = computed(() => props.rowsMap[props.row.original.id]);
-  const arrows = computed<ArrowInfo>(() => {
+  const arrows = computed<GanttTaskArrowInfo>(() => {
     let up = false;
     let down = false;
     if (rowInfo.value == undefined) {
@@ -119,7 +121,11 @@
     @click="(event) => $emit('click', $props.row, event)"
     @keydown="onKeyDown"
   >
-    <GanttGraphTooltip v-if="rowInfo" :duration="duration" :row="$props.row.original">
+    <GanttGraphTooltip
+      v-if="rowInfo && !$slots['graphCell']"
+      :duration="duration"
+      :row="$props.row.original"
+    >
       <div class="ksd-gantt-graph__task-container">
         <div class="ksd-gantt-graph__task" :class="taskClasses" :style="taskStyles">
           <VText
@@ -140,6 +146,16 @@
         </VText>
       </div>
     </GanttGraphTooltip>
+    <slot
+      v-if="rowInfo && $slots['graphCell']"
+      name="graphCell"
+      :row-info="rowInfo"
+      :arrows="arrows"
+      :max-text-width="maxTextWidth"
+      :duration="duration"
+      :row="$props.row"
+      :body-width="bodyWidth"
+    ></slot>
   </div>
 </template>
 
