@@ -87,13 +87,27 @@ export const COLUMNS: Column[] = [
     key: "firstName",
     name: "firstName",
     filterable: true,
-    filterType: "includes-string",
-    filterRender: {
-      component: "string",
-      props: { placeholder: "Введите имя", allowClear: true },
-
-      displayValue: "text",
-    },
+    filterType: "equals",
+    filterRender: [
+      {
+        component: "string",
+        props: { placeholder: "Введите имя", allowClear: true },
+        displayValue: "text",
+        operatorValue: "equals",
+        operatorLabel: "Равны",
+        operatorShortLabel: "==",
+        clearTag: "text",
+      },
+      {
+        component: "string",
+        props: { placeholder: "Введите имя", allowClear: true },
+        displayValue: "text",
+        operatorValue: "customFuzzy",
+        operatorLabel: "Fuzzy",
+        operatorShortLabel: "fuzzy search",
+        clearTag: "text",
+      },
+    ],
     sortRender: {
       component: "single-arrow",
     },

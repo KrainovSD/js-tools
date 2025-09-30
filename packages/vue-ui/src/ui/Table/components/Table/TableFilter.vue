@@ -26,6 +26,7 @@
             displayValue: filterRender.displayValue,
             operatorLabel: filterRender.operatorLabel,
             operatorValue: filterRender.operatorValue,
+            operatorShortLabel: filterRender.operatorShortLabel,
             props: filterRender.props,
             clearTag: filterRender.clearTag,
           })),
@@ -35,6 +36,7 @@
       return acc;
     }, []),
   );
+
   const form = ref<Record<string, unknown>>(
     Object.fromEntries(
       props.table.getState().columnFilters.map((filter) => [filter.id, filter.value]),
@@ -67,14 +69,14 @@
     (form) => {
       updateFilter(form, operators.value);
     },
-    { deep: true },
+    { deep: true, immediate: true },
   );
   watch(
     () => operators.value,
     (operators) => {
       updateFilter(form.value, operators);
     },
-    { deep: true },
+    { deep: true, immediate: true },
   );
   watch(
     () => props.table.getAllColumns(),

@@ -229,6 +229,7 @@ export function useColumns<
                 displayValue: filter.displayValue,
                 operatorLabel: filter.operatorLabel,
                 operatorValue: filter.operatorValue as string,
+                operatorShortLabel: filter.operatorShortLabel,
                 props: filter.props,
                 clearTag: filter.clearTag,
               };

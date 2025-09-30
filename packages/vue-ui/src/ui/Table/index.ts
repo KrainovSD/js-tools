@@ -31,6 +31,7 @@ declare module "@tanstack/vue-table" {
           key: string;
           operatorValue?: string | number;
           operatorLabel?: string;
+          operatorShortLabel?: string;
           displayValue?: keyof ControlComponents;
           clearTag?: string;
         }[]

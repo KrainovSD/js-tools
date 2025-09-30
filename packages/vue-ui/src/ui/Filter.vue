@@ -447,7 +447,7 @@
           <Tooltip :text="extractFilterDisplayValue(filter)" :open-not-visible="true">
             <span class="ksd-filter__field-value">
               {{
-                form[filter.field] != undefined
+                form[filter.field] != undefined && form[filter.field] != ""
                   ? extractFilterDisplayValue(filter)
                   : "Выберите значение"
               }}
