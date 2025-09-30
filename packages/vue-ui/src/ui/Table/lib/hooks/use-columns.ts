@@ -327,7 +327,7 @@ export function useColumns<
         filterFn: filterTypeKey as string,
       };
 
-      if (column.width == undefined && props.rubberColumn) {
+      if (column.width == undefined) {
         columnDef.size = 0;
       }
 

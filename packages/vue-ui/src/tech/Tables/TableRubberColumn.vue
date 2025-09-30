@@ -1,8 +1,10 @@
 <script setup lang="ts">
-  import { shallowRef } from "vue";
-  import { VTable } from "../../ui";
+  import { nextTick, shallowRef, useTemplateRef, watch } from "vue";
+  import { type ColumnsVisibleState, VButton, VTable } from "../../ui";
   import { createRows } from "./rows";
   import type { Column, RowData } from "./types";
+
+  const tableComponentRef = useTemplateRef("table");
 
   const rows = shallowRef<RowData[]>(createRows(100, false));
   const column = shallowRef<Column[]>([
@@ -31,6 +33,11 @@
       minWidth: 250,
     },
     {
+      key: "birth",
+      name: "birth",
+      minWidth: 250,
+    },
+    {
       key: "age",
       name: "age",
       maxWidth: 200,
@@ -42,20 +49,64 @@
       width: 150,
     },
   ]);
+  const visibleColumns = shallowRef<ColumnsVisibleState>(
+    Object.fromEntries(column.value.map((column) => [column.id ?? column.key, true])),
+  );
+
+  function toggleVisible() {
+    if (visibleColumns.value?.firstName) {
+      visibleColumns.value = { ...visibleColumns.value, firstName: false, birth: true };
+    } else {
+      visibleColumns.value = { ...visibleColumns.value, firstName: true, birth: false };
+    }
+
+    void nextTick(() => {
+      tableComponentRef.value?.defineRubberColumnSize?.();
+    });
+  }
+
+  watch(
+    () => tableComponentRef.value?.element,
+    (tableRef, _, clean) => {
+      if (!tableRef) return;
+
+      const resizeObserver = new ResizeObserver(() => {
+        tableComponentRef.value?.defineRubberColumnSize?.();
+      });
+      resizeObserver.observe(tableRef);
+
+      clean(() => {
+        resizeObserver.disconnect();
+      });
+    },
+    { immediate: true },
+  );
 </script>
 
 <template>
-  <VTable
-    :columns="column"
-    :rows="rows"
-    :virtual-rows="true"
-    :with-filters="true"
-    :with-pagination="true"
-    :full-size="false"
-    :rubber-column="true"
-    :page-sizes="[5, 10, 25, 50, 100]"
-    :initial-pagination="{ pageIndex: 0, pageSize: 100 }"
-  />
+  <div :class="$style.base">
+    <VButton @click="toggleVisible">Toggle Columns</VButton>
+    <VTable
+      ref="table"
+      v-model:column-visibility="visibleColumns"
+      :columns="column"
+      :rows="rows"
+      :virtual-rows="true"
+      :with-filters="true"
+      :with-pagination="true"
+      :full-size="false"
+      :rubber-column="false"
+      :page-sizes="[5, 10, 25, 50, 100]"
+      :initial-pagination="{ pageIndex: 0, pageSize: 100 }"
+    />
+  </div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss" module>
+  .base {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+</style>

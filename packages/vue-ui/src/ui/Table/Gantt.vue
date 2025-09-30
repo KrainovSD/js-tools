@@ -105,8 +105,14 @@
 
   const rootRef = useTemplateRef<HTMLDivElement>("root");
 
-  const ganttContainerComponent = useTemplateRef<{ element: HTMLDivElement }>("table-container");
+  const ganttContainerComponent = useTemplateRef<{
+    element: HTMLDivElement;
+    defineRubberColumnSize: () => void;
+  }>("table-container");
   const tableContainerRef = computed(() => ganttContainerComponent.value?.element);
+  const defineRubberColumnSize = computed(
+    () => ganttContainerComponent.value?.defineRubberColumnSize,
+  );
 
   const { columnsDef, initialState } = useColumns(props, { gantt: true });
   const table = useTableOptions(
@@ -144,7 +150,7 @@
     ganttSize,
   });
 
-  defineExpose({ element: rootRef, tableInstance: table });
+  defineExpose({ element: rootRef, tableInstance: table, defineRubberColumnSize });
 </script>
 
 <template>

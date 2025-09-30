@@ -86,6 +86,7 @@
   const graphScrollElement = computed(() => ganttScrollElement.value?.graphScrollElement);
   const tableElement = computed(() => tableComponent.value?.element);
   const graphElement = computed(() => graphComponent.value?.element);
+  const defineRubberColumnSize = computed(() => tableComponent.value?.defineRubberColumnSize);
 
   const ganttScrollElement = useTemplateRef("gantt-scroll");
   const tableScrollElement = computed(() => ganttScrollElement.value?.tableScrollElement);
@@ -104,7 +105,7 @@
     instantSizing,
   });
 
-  defineExpose({ element: tableContainerElement });
+  defineExpose({ element: tableContainerElement, defineRubberColumnSize });
 </script>
 
 <template>

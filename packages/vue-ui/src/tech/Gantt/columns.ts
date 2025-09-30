@@ -120,9 +120,8 @@ export const COLUMNS: Column[] = [
       component: "default",
       props: { dateFormat: "DD/MM/YYYY" },
     },
-    width: 150,
+    minWidth: 150,
   },
-
   {
     key: "data.age",
     name: "age",

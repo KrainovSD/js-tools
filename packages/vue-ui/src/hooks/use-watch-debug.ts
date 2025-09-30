@@ -1,12 +1,19 @@
 import { watch } from "vue";
 
-export function useWatchDebug(value: unknown, caption?: string) {
+type UseWatchDebugOptions = {
+  caption?: string;
+  clone?: boolean;
+};
+export function useWatchDebug(
+  value: unknown,
+  { clone = true, caption }: UseWatchDebugOptions = {},
+) {
   watch(
     value as Record<string, unknown>,
     (value) => {
       let clonedValue = value;
 
-      if (!(value instanceof HTMLElement))
+      if (!(value instanceof HTMLElement) && clone)
         try {
           clonedValue = JSON.parse(JSON.stringify(clonedValue));
         } catch {}

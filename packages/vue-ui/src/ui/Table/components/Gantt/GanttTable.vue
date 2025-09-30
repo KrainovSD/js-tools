@@ -1,10 +1,9 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
-  import { type CSSProperties, type Component, computed, onMounted, useTemplateRef } from "vue";
+  import { type CSSProperties, type Component, computed, useTemplateRef, watch } from "vue";
   import { GANTT_TABLE_BODY_ID, GANTT_TABLE_HEADER_ID } from "../../constants";
+  import { defineRubberColumnSize } from "../../lib";
   import type {
-    ColumnSizingSettings,
-    ColumnSizingState,
     DefaultRow,
     GanttSize,
     HeaderGroupInterface,
@@ -84,95 +83,41 @@
         : undefined,
   }));
 
-  onMounted(() => {
-    if (!tableRef.value || !props.rubberColumn) return;
+  function defineRubberColumnSizeFn() {
+    defineRubberColumnSize({
+      setColumnSizing: props.table.setColumnSizing,
+      table: tableRef.value,
+      visibleHeadersGroup: visibleHeadersGroup.value,
+    });
+  }
 
-    const tableWidth = tableRef.value.getBoundingClientRect().width;
-    const visibleHeaders = visibleHeadersGroup.value?.[0]?.headers ?? [];
+  watch(
+    () => [visibleHeadersGroup.value, tableRef.value],
+    () => {
+      if (!props.rubberColumn) return;
 
-    const columnSizing: ColumnSizingState = {};
-    const columnSizingSettings: ColumnSizingSettings = {};
-    let totalWidth = 0;
-    let flexColumnCount = 0;
+      defineRubberColumnSizeFn();
+    },
+    { immediate: true },
+  );
+  watch(
+    tableRef,
+    (table, _, clean) => {
+      if (!table || !props.rubberColumn) return;
 
-    for (let i = 0; i < visibleHeaders.length; i++) {
-      const column = visibleHeaders[i].column;
-      const size = column.columnDef.size;
-      const maxSize = column.columnDef.maxSize;
-      const minSize = column.columnDef.minSize;
+      const resizeObserver = new ResizeObserver(() => {
+        defineRubberColumnSizeFn();
+      });
+      resizeObserver.observe(table);
 
-      const width = column.getSize();
-      const id = column.id;
+      clean(() => {
+        resizeObserver.disconnect();
+      });
+    },
+    { immediate: true },
+  );
 
-      if (size === 0) {
-        flexColumnCount += 1;
-      } else {
-        totalWidth += width;
-      }
-      columnSizing[id] = size === 0 ? 0 : width;
-      columnSizingSettings[id] = {
-        maxSize,
-        minSize,
-      };
-    }
-
-    if (flexColumnCount === 0) return;
-
-    let hasConflictSize = true;
-    /** Processing max size less then flex size and min size greater than flex size  */
-    while (hasConflictSize) {
-      hasConflictSize = false;
-      let flexColumnSize = (tableWidth - totalWidth) / flexColumnCount;
-
-      for (const [key, value] of Object.entries(columnSizing)) {
-        if (value === 0) {
-          const maxSize = columnSizingSettings[key].maxSize;
-
-          if (maxSize != undefined && maxSize < flexColumnSize) {
-            columnSizing[key] = maxSize;
-            totalWidth += maxSize;
-            flexColumnCount -= 1;
-            hasConflictSize = true;
-            continue;
-          }
-        }
-      }
-
-      flexColumnSize = (tableWidth - totalWidth) / flexColumnCount;
-
-      for (const [key, value] of Object.entries(columnSizing)) {
-        if (value === 0) {
-          const minSize = columnSizingSettings[key].minSize;
-
-          if (minSize != undefined && minSize > flexColumnSize) {
-            columnSizing[key] = minSize;
-            totalWidth += minSize;
-            flexColumnCount -= 1;
-            hasConflictSize = true;
-            continue;
-          }
-        }
-      }
-    }
-
-    if (flexColumnCount === 0) {
-      props.table.setColumnSizing(columnSizing);
-
-      return;
-    }
-
-    /** Processing flex size  */
-    const flexColumnSize = (tableWidth - totalWidth) / flexColumnCount;
-    for (const [key, value] of Object.entries(columnSizing)) {
-      if (value === 0) {
-        columnSizing[key] = flexColumnSize;
-      }
-    }
-
-    props.table.setColumnSizing(columnSizing);
-  });
-
-  defineExpose({ element: tableRef });
+  defineExpose({ element: tableRef, defineRubberColumnSize: defineRubberColumnSizeFn });
 </script>
 
 <template>

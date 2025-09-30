@@ -101,6 +101,8 @@
   });
 
   const rootRef = useTemplateRef<HTMLDivElement>("root");
+  const tableComponentRef = useTemplateRef("table-component");
+  const defineRubberColumnSize = computed(() => tableComponentRef.value?.defineRubberColumnSize);
 
   const tableContainerRef = useTemplateRef<HTMLDivElement>("table-container");
 
@@ -138,7 +140,11 @@
     ganttSize: undefined,
   });
 
-  defineExpose({ element: rootRef, tableInstance: table });
+  defineExpose({
+    element: rootRef,
+    tableInstance: table,
+    defineRubberColumnSize,
+  });
 </script>
 
 <template>
@@ -157,6 +163,7 @@
       <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
       <div ref="table-container" class="ksd-table__container" :class="{ full: $props.fullSize }">
         <TableCommon
+          ref="table-component"
           :column-virtual-enabled="columnVirtualEnabled"
           :row-virtual-enabled="rowVirtualEnabled"
           :columns-virtual="columnsVirtual"
