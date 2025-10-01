@@ -98,7 +98,7 @@ export const DARK_THEME: ThemeVariableConfig = {
       "ksd-text-main-disabled-color": "rgba(255,255,255,0.25)",
       "ksd-text-main-hover-color": "",
       "ksd-text-secondary-color": "rgba(255, 255, 255, 0.65)",
-      "ksd-text-secondary-disabled-color": "rga(255, 255, 255, 0.25)",
+      "ksd-text-secondary-disabled-color": "rgba(255, 255, 255, 0.25)",
       "ksd-text-secondary-hover-color": "",
       "ksd-text-tertiary-color": "rgba(255, 255, 255, 0.45)",
       "ksd-text-quaternary-color": "rgba(255, 255, 255, 0.25)",

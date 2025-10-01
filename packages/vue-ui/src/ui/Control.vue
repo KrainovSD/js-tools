@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { isArray, isNumber, isString } from "@krainovsd/js-helpers";
-  import DatePicker from "./DatePicker.vue";
+  import DatePicker from "./DatePicker/DatePicker.vue";
   import type { InputSize, InputVariant } from "./Input.vue";
   import Input from "./Input.vue";
   import InputNumber from "./InputNumber.vue";

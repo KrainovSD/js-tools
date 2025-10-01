@@ -122,7 +122,7 @@
     }
 
     /** Size */
-    &.size-default {
+    &:where(.size-default) {
       height: var(--ksd-control-height);
       min-height: var(--ksd-control-height);
       font-size: var(--ksd-font-size);
@@ -154,7 +154,7 @@
       }
     }
 
-    &.size-large {
+    &:where(.size-large) {
       height: var(--ksd-control-height-lg);
       min-height: var(--ksd-control-height-lg);
       font-size: var(--ksd-font-size-lg);
@@ -181,7 +181,7 @@
     }
 
     /** Type */
-    &.type-default {
+    &:where(.type-default) {
       color: var(--ksd-text-main-color);
       border-color: var(--ksd-button-border);
       background-color: var(--ksd-button-bg);
@@ -206,7 +206,7 @@
       }
     }
 
-    &.type-dashed {
+    &:where(.type-dashed) {
       border-style: dashed;
       color: var(--ksd-text-main-color);
       border-color: var(--ksd-button-border);
@@ -232,7 +232,7 @@
       }
     }
 
-    &.type-primary {
+    &:where(.type-primary) {
       color: var(--ksd-text-reverse-color);
       border-color: var(--ksd-accent-color);
       background-color: var(--ksd-accent-color);
@@ -257,7 +257,7 @@
       }
     }
 
-    &.type-text {
+    &:where(.type-text) {
       color: var(--ksd-text-main-color);
       border-color: transparent;
       background-color: transparent;
@@ -271,7 +271,7 @@
       }
     }
 
-    &.type-link {
+    &:where(.type-link) {
       color: var(--ksd-accent-color);
       border-color: transparent;
       background-color: transparent;

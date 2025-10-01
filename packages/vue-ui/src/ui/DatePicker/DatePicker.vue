@@ -1,10 +1,12 @@
 <script setup lang="ts" generic="Multiple extends true | false = false">
   import { dateFormat, isArray, isNumber, isString } from "@krainovsd/js-helpers";
   import { computed, useTemplateRef } from "vue";
-  import { DATE_PICKER_DISPLAY_FORMAT, DATE_PICKER_OUTPUT_FORMAT } from "../constants/tech";
-  import type { InputSize, InputVariant } from "./Input.vue";
-  import Input from "./Input.vue";
-  import Text from "./Text.vue";
+  import { DATE_PICKER_DISPLAY_FORMAT, DATE_PICKER_OUTPUT_FORMAT } from "../../constants/tech";
+  import type { InputSize, InputVariant } from "../Input.vue";
+  import Input from "../Input.vue";
+  import Text from "../Text.vue";
+  import DatePickerCalendar from "./DatePickerCalendar.vue";
+  import type { DatePickerSize, DatePickerView } from "./date-picker.types";
 
   export type DatePickerProps<Multiple extends true | false> = {
     multiple?: Multiple;
@@ -12,13 +14,26 @@
     displayFormat?: string;
     inputSize?: InputSize;
     inputVariant?: InputVariant;
+    startWeek?: number;
+    locale?: string;
+    size?: DatePickerSize;
+    view?: DatePickerView;
   };
 
   type Value = Multiple extends false
     ? string | number | undefined | null
     : (string | number | null)[] | undefined | null;
 
-  const props = defineProps<DatePickerProps<Multiple>>();
+  const props = withDefaults(defineProps<DatePickerProps<Multiple>>(), {
+    displayFormat: DATE_PICKER_DISPLAY_FORMAT,
+    outputFormat: DATE_PICKER_OUTPUT_FORMAT,
+    inputSize: "default",
+    inputVariant: "outlined",
+    locale: "ru-RU",
+    size: "default",
+    view: "days",
+    startWeek: 1,
+  });
   const model = defineModel<Value>();
   const firstDate = computed(() =>
     !props.multiple
@@ -136,6 +151,30 @@
         "
       />
     </div>
+
+    <DatePickerCalendar
+      :locale="$props.locale"
+      :size="$props.size"
+      :start-week="$props.startWeek"
+      :multiple="$props.multiple ?? false"
+      :view="$props.view"
+      :model-value="isArray(model) ? model : model != undefined ? [model] : []"
+      @update:model-value="
+        (value) => {
+          if ($props.multiple) {
+            model = value.map((v) =>
+              v ? dateFormat(v, $props.outputFormat ?? DATE_PICKER_OUTPUT_FORMAT) : null,
+            ) as Value;
+          } else {
+            model = (
+              value[0]
+                ? dateFormat(value[0], $props.outputFormat ?? DATE_PICKER_OUTPUT_FORMAT)
+                : null
+            ) as Value;
+          }
+        }
+      "
+    />
   </div>
 </template>
 

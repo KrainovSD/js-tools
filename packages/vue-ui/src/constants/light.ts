@@ -98,7 +98,7 @@ export const LIGHT_THEME: ThemeVariableConfig = {
       "ksd-text-main-disabled-color": "rgba(0, 0, 0, 0.25)",
       "ksd-text-main-hover-color": "",
       "ksd-text-secondary-color": "#8c8c8c",
-      "ksd-text-secondary-disabled-color": "rga(140, 140, 140, 0.25)",
+      "ksd-text-secondary-disabled-color": "rgba(140, 140, 140, 0.25)",
       "ksd-text-secondary-hover-color": "",
       "ksd-text-tertiary-color": "rgba(0, 0, 0, 0.45)",
       "ksd-text-quaternary-color": "rgba(0, 0, 0, 0.25)",

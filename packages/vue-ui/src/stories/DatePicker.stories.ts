@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { type DefineComponent, h } from "vue";
-import { VDatePicker } from "../ui";
-import type { DatePickerProps } from "../ui/DatePicker.vue";
+import { type DatePickerProps, VDatePicker } from "../ui";
 
 const meta = {
   title: "Components/DatePicker",
@@ -51,6 +50,14 @@ export const AllInOne: Story = {
         h(VDatePicker, {
           ...args,
           multiple: true,
+          "onUpdate:modelValue": (value) => {
+            console.log("updated", value);
+          },
+        }),
+        h(VDatePicker, {
+          ...args,
+          multiple: true,
+          size: "large",
           "onUpdate:modelValue": (value) => {
             console.log("updated", value);
           },

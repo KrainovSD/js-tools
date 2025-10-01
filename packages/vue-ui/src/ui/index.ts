@@ -3,7 +3,6 @@ import VCheckBox from "./CheckBox.vue";
 import VCollapse from "./Collapse.vue";
 import VColorPicker from "./ColorPicker.vue";
 import VControl from "./Control.vue";
-import VDatePicker from "./DatePicker.vue";
 import VDivider from "./Divider.vue";
 import VDrawer from "./Drawer.vue";
 import VDropDown from "./DropDown.vue";
@@ -134,7 +133,6 @@ export type {
   ControlTextComponentProps,
 } from "./Control.vue";
 export type { ColorPickerProps } from "./ColorPicker.vue";
-export type { DatePickerProps } from "./DatePicker.vue";
 export type { UserAvatarProps, UserAvatarSize } from "./UserAvatar.vue";
 export type { UserInfoProps, UserInfoSize } from "./UserInfo.vue";
 export type { User, UserPickerPosition, UserPickerProps, UserPickerSize } from "./UserPicker.vue";
@@ -181,7 +179,6 @@ export {
   VMarkdownEditor,
   VControl,
   VColorPicker,
-  VDatePicker,
   VUserAvatar,
   VUserInfo,
   VUserPicker,
@@ -189,3 +186,4 @@ export {
 };
 export * from "./Table";
 export * from "./QueryBuilder";
+export * from "./DatePicker";
