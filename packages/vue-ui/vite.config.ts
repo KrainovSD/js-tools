@@ -3,7 +3,8 @@ import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
 import type { InputPluginOption } from "rollup";
 import { type PluginOption, defineConfig } from "vite";
-import dts from "vite-plugin-dts";
+
+// import dts from "vite-plugin-dts";
 
 // import vueDevTools from "vite-plugin-vue-devtools";
 
@@ -14,11 +15,11 @@ const production = process.env.npm_lifecycle_event === "build:js";
 export default defineConfig({
   plugins: [
     vue(),
-    dts({
-      outDir: "lib/",
-      rollupTypes: true,
-      tsconfigPath: "./tsconfig.build.json",
-    }),
+    // dts({
+    //   outDir: "lib/",
+    //   rollupTypes: true,
+    //   tsconfigPath: "./tsconfig.build.json",
+    // }),
     // vueDevTools(),
     presets.plugins.visualizer() as PluginOption,
   ],

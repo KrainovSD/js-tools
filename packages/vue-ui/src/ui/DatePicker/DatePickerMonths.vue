@@ -2,8 +2,8 @@
   type Props = {
     finalView: boolean;
   };
-  const props = defineProps<Props>();
-  const month = defineModel<number>("month", { default: 0 });
+  defineProps<Props>();
+  defineModel<number>("month", { default: 0 });
 </script>
 
 <template>

@@ -120,7 +120,6 @@ export type GanttProps<
   FilterType extends Record<string, FilterFn<GanttInfo<RowData>>>,
   SortType extends Record<string, SortFn<GanttInfo<RowData>>>,
 > = {
-  gantt?: boolean;
   ganttIntervalDate?: GanttDate;
   ganttSize?: GanttSize;
   ganttGraphGrid?: boolean;

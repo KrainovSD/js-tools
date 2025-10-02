@@ -11,7 +11,7 @@
 
   const tableComponentRef = useTemplateRef("table");
   const rows = shallowRef<GanttInfo<RowData>[]>(GANTT_EASY_ROWS);
-  const column = shallowRef<typeof COLUMNS>(COLUMNS);
+  const column = shallowRef(COLUMNS);
   const expanded = shallowRef<ExpandedState>({});
   const fullSize = ref(false);
 
@@ -84,7 +84,6 @@
       :rows="rows"
       :virtual-rows="true"
       :full-size="fullSize"
-      :gantt="true"
       :get-sub-rows="getSubRows"
       :get-row-id="getRowId"
       :gantt-splitter-instant="true"

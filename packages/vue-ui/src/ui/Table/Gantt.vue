@@ -74,7 +74,6 @@
       ganttSize: "sm",
       ganttView: "months",
       ganttSplitterInstant: true,
-      gantt: false,
       ganttLinkGetAround: true,
       ganttLinkVisibleInRange: true,
       ganttLinkHighlight: true,

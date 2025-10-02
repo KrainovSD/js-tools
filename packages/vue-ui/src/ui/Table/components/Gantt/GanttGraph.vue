@@ -61,10 +61,14 @@
   const columnWidth = computed(() => getGanttColumnWidth(props.ganttView));
   const graphStyles = computed(() => ({ width: `${props.width}px` }));
   const headerStyles = { minHeight: `${GANTT_HEADER_HEIGHT * 2}px` };
-  const bodyStyles = {
-    height: props.rowVirtualizer ? `${props.rowVirtualizer.getTotalSize()}px` : undefined,
+  const bodyStyles = computed(() => ({
+    height:
+      props.rowVirtualizer && props.rowsVirtual.length > 0
+        ? `${props.rowVirtualizer.getTotalSize()}px`
+        : undefined,
     width: `${columnsCount.value * columnWidth.value}px`,
-  };
+  }));
+
   const gridRender = computed(() =>
     Array.from({ length: columnsCount.value }, (_, index) => index),
   );

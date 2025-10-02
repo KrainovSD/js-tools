@@ -11,7 +11,7 @@
     ".storybook/**/*",
     "src/vite-env.d.ts",
     ".prettierrc.mjs",
-    "../js-helpers/src/lib/utils/generate-id.ts"
+    "rollup.config.js"
   ],
   "exclude": ["node_modules", "dist"],
   "references": [
