@@ -183,6 +183,7 @@
   .ksd-gantt {
     &__container {
       display: flex;
+      height: 100%;
     }
 
     &__splitter {

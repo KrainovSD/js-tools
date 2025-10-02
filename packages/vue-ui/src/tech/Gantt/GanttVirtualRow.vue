@@ -1,7 +1,9 @@
 <script setup lang="ts">
-  import { shallowRef, useTemplateRef, watch } from "vue";
+  import { ref, shallowRef, useTemplateRef, watch } from "vue";
+  import Button from "../../ui/Button.vue";
+  import CheckBox from "../../ui/CheckBox.vue";
   import Gantt from "../../ui/Table/Gantt.vue";
-  import type { GanttInfo } from "../../ui/Table/types";
+  import type { ExpandedState, GanttInfo } from "../../ui/Table/types";
   import GanttTask from "./GanttTask.vue";
   import { COLUMNS } from "./columns";
   import { GANTT_EASY_ROWS } from "./rows";
@@ -10,9 +12,44 @@
   const tableComponentRef = useTemplateRef("table");
   const rows = shallowRef<GanttInfo<RowData>[]>(GANTT_EASY_ROWS);
   const column = shallowRef<typeof COLUMNS>(COLUMNS);
+  const expanded = shallowRef<ExpandedState>({});
+  const fullSize = ref(false);
 
   function getSubRows(row: GanttInfo<RowData>) {
     return row.children;
+  }
+  function getRowId(row: GanttInfo<RowData>) {
+    return row.id.toString();
+  }
+
+  function recursiveIterateRows(rows: GanttInfo<RowData>[], cb: (row: GanttInfo<RowData>) => void) {
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      cb(row);
+
+      if (row.children) {
+        recursiveIterateRows(row.children, cb);
+      }
+    }
+  }
+
+  function expand() {
+    const expandedRows: ExpandedState = {};
+
+    recursiveIterateRows(rows.value, (row) => {
+      expandedRows[row.id] = true;
+    });
+
+    expanded.value = expandedRows;
+  }
+  function unexpand() {
+    const expandedRows: ExpandedState = {};
+
+    recursiveIterateRows(rows.value, (row) => {
+      expandedRows[row.id] = false;
+    });
+
+    expanded.value = expandedRows;
   }
 
   watch(
@@ -34,33 +71,55 @@
 </script>
 
 <template>
-  <Gantt
-    ref="table"
-    :columns="column"
-    :rows="rows"
-    :virtual-rows="true"
-    :full-size="false"
-    :gantt="true"
-    :initial-expanded="true"
-    :expanded="true"
-    :get-sub-rows="getSubRows"
-    :gantt-splitter-instant="true"
-    :gantt-view="'years'"
-    :gantt-size="'sm'"
-    :gantt-graph-grid="true"
-    :gantt-link-visible-in-range="true"
-    :gantt-link-get-around="true"
-    :gantt-link-highlight="true"
-    @graph-task-click="
-      (row, event) => {
-        console.log(row, event);
-      }
-    "
-  >
-    <template #graphCell="graphCellProps">
-      <GanttTask v-bind="graphCellProps" />
-    </template>
-  </Gantt>
+  <div :class="$style.base">
+    <div :class="$style.upper">
+      <Button @click="expand">Раскрыть</Button>
+      <Button @click="unexpand">Закрыть</Button>
+      <CheckBox v-model="fullSize"> Полный размер</CheckBox>
+    </div>
+    <Gantt
+      ref="table"
+      v-model:expanded="expanded"
+      :columns="column"
+      :rows="rows"
+      :virtual-rows="true"
+      :full-size="fullSize"
+      :gantt="true"
+      :get-sub-rows="getSubRows"
+      :get-row-id="getRowId"
+      :gantt-splitter-instant="true"
+      :gantt-view="'years'"
+      :gantt-size="'sm'"
+      :gantt-graph-grid="true"
+      :gantt-link-visible-in-range="true"
+      :gantt-link-get-around="true"
+      :gantt-link-highlight="true"
+      :with-total="false"
+      @graph-task-click="
+        (row, event) => {
+          console.log(row, event);
+        }
+      "
+    >
+      <template #graphCell="graphCellProps">
+        <GanttTask v-bind="graphCellProps" />
+      </template>
+    </Gantt>
+  </div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss" module>
+  .base {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ksd-padding);
+  }
+
+  .upper {
+    display: flex;
+    gap: var(--ksd-padding);
+    align-items: center;
+  }
+</style>

@@ -212,6 +212,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
+      overflow: hidden;
 
       &.full {
         height: 100%;

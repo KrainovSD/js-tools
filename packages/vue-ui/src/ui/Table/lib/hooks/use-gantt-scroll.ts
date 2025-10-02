@@ -81,15 +81,10 @@ function watchScroll(bodyId: string, headerId: string, setScroll: (scroll: boole
 
     const eventController = new AbortController();
     const resizeObserver = new ResizeObserver(resizeObserve(elements, setScroll));
-    resizeObserver.observe(bodyContainer);
-    resizeObserver.observe(body);
+    resizeObserver.observe(element);
 
     if (scroll) {
-      body.addEventListener("wheel", onWheel(elements), {
-        passive: false,
-        signal: eventController.signal,
-      });
-      header.addEventListener("wheel", onWheel(elements), {
+      element.addEventListener("wheel", onWheel(elements), {
         passive: false,
         signal: eventController.signal,
       });

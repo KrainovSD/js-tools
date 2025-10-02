@@ -212,6 +212,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    min-height: 100%;
 
     &__header-container {
       display: flex;

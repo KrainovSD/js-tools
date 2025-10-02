@@ -83,6 +83,17 @@ export const COLUMNS: Column[] = [
     leftFrozen: true,
   },
   {
+    id: "expand",
+    name: "",
+    key: "id",
+    sortable: false,
+    width: 50,
+    additionalCellClass: ["wCenter", "hCenter"],
+    leftFrozen: true,
+    cellRender: { component: "expand" },
+    grouping: false,
+  },
+  {
     key: "data.firstName",
     name: "firstName",
     filterable: true,
