@@ -191,6 +191,9 @@
 
 <style lang="scss">
   .ksd-gantt-graph {
+    height: fit-content;
+    min-height: 100%;
+
     &__header-container {
       display: flex;
       flex-direction: column;

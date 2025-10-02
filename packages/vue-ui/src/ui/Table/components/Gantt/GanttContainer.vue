@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
-  import { type Component, computed, useTemplateRef } from "vue";
+  import { type Component, computed, ref, useTemplateRef, watch } from "vue";
   import { GANTT_HEADER_HEIGHT } from "../../constants";
   import { getGanttRowHeight, useGanttScroll, useGanttSplitter } from "../../lib";
   import type {
@@ -81,12 +81,19 @@
   });
 
   const tableContainerElement = useTemplateRef("table-container");
-  const tableComponent = useTemplateRef("gantt-table");
+  const tableComponent = useTemplateRef<{
+    element: HTMLDivElement | null;
+    defineRubberColumnSize: () => void;
+  }>("gantt-table");
   const graphComponent = useTemplateRef("gantt-graph");
   const graphScrollElement = computed(() => ganttScrollElement.value?.graphScrollElement);
   const tableElement = computed(() => tableComponent.value?.element);
   const graphElement = computed(() => graphComponent.value?.element);
   const defineRubberColumnSize = computed(() => tableComponent.value?.defineRubberColumnSize);
+  const splitterHeight = ref(0);
+  const splitterStyles = computed(() => ({
+    height: `${splitterHeight.value}px`,
+  }));
 
   const ganttScrollElement = useTemplateRef("gantt-scroll");
   const tableScrollElement = computed(() => ganttScrollElement.value?.tableScrollElement);
@@ -104,6 +111,22 @@
     splitter: splitterRef,
     instantSizing,
   });
+
+  watch(
+    tableElement,
+    (tableElement, _, clean) => {
+      if (!tableElement) return;
+
+      const observer = new ResizeObserver((entries) => {
+        splitterHeight.value = entries[0].contentRect.height;
+      });
+      observer.observe(tableElement);
+      clean(() => {
+        observer.disconnect();
+      });
+    },
+    { immediate: true },
+  );
 
   defineExpose({ element: tableContainerElement, defineRubberColumnSize });
 </script>
@@ -140,11 +163,19 @@
         @click="(row, event) => $emit('click', row, event)"
         @dblclick="(row, event) => $emit('dblclick', row, event)"
       />
-      <div ref="splitter" class="ksd-gantt__splitter">
+      <div
+        ref="splitter"
+        class="ksd-gantt__splitter"
+        :style="[splitterStyles, { left: `${sizes[0]}px` }]"
+      >
         <div class="ksd-gantt__splitter-trigger"></div>
         <div ref="ghost" class="ksd-gantt__splitter-ghost"></div>
       </div>
-      <div class="ksd-gantt__splitter-overlay-container" :class="{ visible: dragging }">
+      <div
+        class="ksd-gantt__splitter-overlay-container"
+        :class="{ visible: dragging }"
+        :style="splitterStyles"
+      >
         <div ref="overlay" class="ksd-gantt__splitter-overlay"></div>
       </div>
       <GanttGraph
@@ -194,7 +225,7 @@
       overflow: visible;
       cursor: col-resize;
       background-color: var(--ksd-table-border);
-      position: relative;
+      position: absolute;
       top: 0;
       z-index: 8;
     }
