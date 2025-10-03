@@ -59,7 +59,7 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
   const templateColumns =
     visibleHeadersGroup[0]?.headers?.map?.((header) => `${header.column.getSize()}px`) ?? [];
 
-  React.useLayoutEffect(() => {
+  function defineRubberColumnSizeFn() {
     if (!tableRef.current || !props.rubberColumn) return;
 
     const tableWidth = tableRef.current.getBoundingClientRect().width;
@@ -145,9 +145,28 @@ export function TableCommon<RowData extends DefaultRow>(props: TableContainerPro
     }
 
     props.table.setColumnSizing(columnSizing);
+  }
 
+  React.useLayoutEffect(() => {
+    defineRubberColumnSizeFn();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [visibleHeadersGroup]);
+
+  React.useEffect(() => {
+    if (!tableRef.current) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      defineRubberColumnSizeFn();
+    });
+    resizeObserver.observe(tableRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tableRef.current, visibleHeadersGroup]);
 
   return (
     <div
