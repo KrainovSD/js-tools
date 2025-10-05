@@ -66,6 +66,8 @@ export const AllInOne: Story = {
           ...args,
           multiple: true,
           view: "months",
+          displayFormat: "MM.YYYY",
+          outputFormat: "YYYY.MM",
           "onUpdate:modelValue": (value) => {
             console.log("updated", value);
           },
@@ -74,6 +76,8 @@ export const AllInOne: Story = {
           ...args,
           multiple: true,
           view: "years",
+          displayFormat: "YYYY",
+          outputFormat: "YYYY",
           "onUpdate:modelValue": (value) => {
             console.log("updated", value);
           },

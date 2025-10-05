@@ -26,7 +26,7 @@
 </script>
 
 <template>
-  <div class="ksd-date-picker__calendar">
+  <div class="ksd-date-picker__calendar" @mousedown.prevent="">
     <DatePickerHeader
       v-model:month="month"
       v-model:year="year"

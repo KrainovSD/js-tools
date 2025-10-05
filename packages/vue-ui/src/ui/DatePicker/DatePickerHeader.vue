@@ -180,9 +180,11 @@
   button.ksd-date-picker__header-month {
     padding: 0;
     border: none;
+    background-color: transparent;
   }
   button.ksd-date-picker__header-view-mode {
     padding: 0;
     border: none;
+    background-color: transparent;
   }
 </style>

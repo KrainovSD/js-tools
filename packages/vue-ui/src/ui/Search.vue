@@ -2,11 +2,12 @@
   import { debounce as debounceFn, isString, speedTest } from "@krainovsd/js-helpers";
   import fuzzysort from "fuzzysort";
   import { type Component, computed, ref, useTemplateRef, watch } from "vue";
+  import { INPUT_POPPER_TRIGGERS } from "../constants/tech";
   import { type HighlightText, createHighlight } from "../lib";
   import Empty from "./Empty.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
-  import type { PopperProps, PopperTrigger } from "./Popper.vue";
+  import type { PopperProps } from "./Popper.vue";
   import Popper from "./Popper.vue";
   import type { SelectGroupItem, SelectItem, SelectValue } from "./Select.vue";
 
@@ -66,7 +67,6 @@
     click: [key: string | number];
   };
 
-  const TRIGGERS: PopperTrigger[] = [];
   const GROUP_ROOT = "__root__";
   const SCROLL_SHIFT_TOP = 4;
   const SCROLL_SHIFT_BOTTOM = -4;
@@ -334,7 +334,7 @@
     :shift-y="$props.shiftY"
     :placement="$props.placement"
     :z-index="$props.zIndex"
-    :triggers="TRIGGERS"
+    :triggers="INPUT_POPPER_TRIGGERS"
     :class-name-positioner-content="`ksd-search__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class="`ksd-search__positioner`"
   >

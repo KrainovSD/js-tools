@@ -155,9 +155,11 @@
     }
     &__prefix {
       margin-inline-end: var(--ksd-padding-xxs);
+      color: var(--ksd-icon-color);
     }
     &__suffix {
       margin-inline-start: var(--ksd-padding-xxs);
+      color: var(--ksd-icon-color);
     }
 
     &__clear {

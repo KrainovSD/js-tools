@@ -1,4 +1,5 @@
 import type { CloseByClickOutsideEvent } from "../types";
+import type { PopperTrigger } from "../ui";
 
 export const DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT: CloseByClickOutsideEvent = "pointerdown";
 export const POPPER_SELECTOR = "[ksd-popper]";
@@ -17,3 +18,4 @@ export const WEEK_DAY_DATE_MAP = [
   new Date("2026-01-09T00:00:00.000Z").getTime(),
   new Date("2026-01-10T00:00:00.000Z").getTime(),
 ];
+export const INPUT_POPPER_TRIGGERS: PopperTrigger[] = [];

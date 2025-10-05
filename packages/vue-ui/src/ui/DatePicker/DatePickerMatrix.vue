@@ -93,7 +93,7 @@
   });
   const range = computed(() => props.multiple && props.targetView === view.value);
 
-  function onClickDay(day: DatePickerCell) {
+  function onClickDay(event: MouseEvent, day: DatePickerCell) {
     if (props.targetView !== view.value) {
       if (view.value === "months") {
         month.value = day.value;
@@ -183,7 +183,7 @@
       v-for="day in week"
       :key="day.id"
       class="ksd-date-picker__day-container"
-      @click="() => onClickDay(day)"
+      @click="(event) => onClickDay(event, day)"
       @mouseenter="
         () => {
           hoveredDateId = day.id;
@@ -257,6 +257,7 @@
       cursor: pointer;
       padding-inline: var(--ksd-padding-xxs);
       position: relative;
+      z-index: 2;
 
       &::before {
         position: absolute;
@@ -270,7 +271,6 @@
         transform: translateY(-50%);
         content: "";
         pointer-events: none;
-        z-index: -1;
       }
       &:has(.size-large) {
         &::before {
@@ -322,6 +322,8 @@
       justify-content: center;
       border-radius: var(--ksd-border-radius);
       color: var(--ksd-text-main-color);
+      position: relative;
+      z-index: 2;
 
       &.hover {
         background-color: var(--ksd-bg-hover-color);
