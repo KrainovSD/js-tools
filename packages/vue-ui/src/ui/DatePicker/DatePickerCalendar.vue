@@ -20,15 +20,23 @@
 
   const localView = ref<DatePickerLocalView>(props.view);
   const now = new Date();
-  const year = ref(props.targetDate ? props.targetDate.getFullYear() : now.getFullYear());
-  const month = ref(props.targetDate ? props.targetDate.getMonth() : now.getMonth());
+  const year = ref(
+    props.targetDate && !Number.isNaN(props.targetDate.getTime())
+      ? props.targetDate.getFullYear()
+      : now.getFullYear(),
+  );
+  const month = ref(
+    props.targetDate && !Number.isNaN(props.targetDate.getTime())
+      ? props.targetDate.getMonth()
+      : now.getMonth(),
+  );
   const decade = ref(Math.floor(year.value / 10));
   const century = computed(() => Math.floor(decade.value / 10));
 
   watch(
     () => props.targetDate,
     (targetDate) => {
-      if (!targetDate) return;
+      if (!targetDate || Number.isNaN(targetDate.getTime())) return;
 
       year.value = targetDate.getFullYear();
       month.value = targetDate.getMonth();
