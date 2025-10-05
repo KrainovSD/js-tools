@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, ref } from "vue";
+  import { computed, ref, watch } from "vue";
   import DatePickerHeader from "./DatePickerHeader.vue";
   import DatePickerMatrix from "./DatePickerMatrix.vue";
   import DatePickerWeekDays from "./DatePickerWeekDays.vue";
@@ -11,6 +11,7 @@
     size: DatePickerSize;
     multiple: boolean;
     view: DatePickerView;
+    targetDate: Date | null;
   };
 
   const props = defineProps<Props>();
@@ -19,10 +20,22 @@
 
   const localView = ref<DatePickerLocalView>(props.view);
   const now = new Date();
-  const year = ref(now.getFullYear());
-  const month = ref(now.getMonth());
+  const year = ref(props.targetDate ? props.targetDate.getFullYear() : now.getFullYear());
+  const month = ref(props.targetDate ? props.targetDate.getMonth() : now.getMonth());
   const decade = ref(Math.floor(year.value / 10));
   const century = computed(() => Math.floor(decade.value / 10));
+
+  watch(
+    () => props.targetDate,
+    (targetDate) => {
+      if (!targetDate) return;
+
+      year.value = targetDate.getFullYear();
+      month.value = targetDate.getMonth();
+      decade.value = Math.floor(targetDate.getFullYear() / 10);
+    },
+    { immediate: true },
+  );
 </script>
 
 <template>

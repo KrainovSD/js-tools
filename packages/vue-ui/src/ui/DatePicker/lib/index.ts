@@ -5,3 +5,5 @@ export * from "./get-month-id";
 export * from "./generate-month-matrix";
 export * from "./generate-year-matrix";
 export * from "./generate-decade-matrix";
+export * from "./mutate-date-by-format-mask";
+export * from "./parse-date-from-input";

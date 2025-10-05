@@ -2,11 +2,7 @@
   import { dateFormat, isArray, isNumber, isString } from "@krainovsd/js-helpers";
   import { VCalendarOutlined, VCloseCircleFilled } from "@krainovsd/vue-icons";
   import { computed, ref, watch } from "vue";
-  import {
-    DATE_PICKER_DISPLAY_FORMAT,
-    DATE_PICKER_OUTPUT_FORMAT,
-    INPUT_POPPER_TRIGGERS,
-  } from "../../constants/tech";
+  import { INPUT_POPPER_TRIGGERS, NUMBER_KEYS } from "../../constants/tech";
   import IconWrapper from "../IconWrapper.vue";
   import type { InputSize, InputVariant } from "../Input.vue";
   import Input from "../Input.vue";
@@ -14,12 +10,18 @@
   import Popper from "../Popper.vue";
   import Text from "../Text.vue";
   import DatePickerCalendar from "./DatePickerCalendar.vue";
-  import type { DatePickerSize, DatePickerView } from "./date-picker.types";
+  import { DATE_PICKER_OUTPUT_FORMAT, DISPLAY_FORMATS } from "./date-picker.constants";
+  import type {
+    DatePickerDisplayFormat,
+    DatePickerSize,
+    DatePickerView,
+  } from "./date-picker.types";
+  import { mutateDateByFormatMask, parseDateFromInput } from "./lib";
 
   export type DatePickerProps<Multiple extends true | false> = {
     multiple?: Multiple;
     outputFormat?: string;
-    displayFormat?: string;
+    displayFormat?: DatePickerDisplayFormat;
     inputSize?: InputSize;
     inputVariant?: InputVariant;
     startWeek?: number;
@@ -50,7 +52,7 @@
     : (string | number | null)[] | undefined | null;
 
   const props = withDefaults(defineProps<DatePickerProps<Multiple>>(), {
-    displayFormat: DATE_PICKER_DISPLAY_FORMAT,
+    displayFormat: "ru-dot",
     outputFormat: DATE_PICKER_OUTPUT_FORMAT,
     inputSize: "default",
     inputVariant: "outlined",
@@ -97,38 +99,116 @@
 
   const displayedFirstDate = computed(() =>
     firstDate.value != undefined
-      ? dateFormat(firstDate.value, props.displayFormat ?? DATE_PICKER_DISPLAY_FORMAT)
+      ? dateFormat(firstDate.value, DISPLAY_FORMATS[props.view]?.[props.displayFormat])
       : undefined,
   );
   const displayedSecondDate = computed(() =>
     secondDate.value != undefined
-      ? dateFormat(secondDate.value, props.displayFormat ?? DATE_PICKER_DISPLAY_FORMAT)
+      ? dateFormat(secondDate.value, DISPLAY_FORMATS[props.view]?.[props.displayFormat])
       : undefined,
   );
+  const firstInputValue = ref(displayedFirstDate.value);
+  const secondInputValue = ref(displayedSecondDate.value);
+  const targetDate = ref<Date | null>(null);
 
   function onClose() {
     open.value = false;
   }
-  function onOpen() {
+
+  function setTargetDate(input: number) {
+    if (input === 0 && firstDate.value != undefined) {
+      targetDate.value = new Date(firstDate.value);
+    } else if (input === 0 && firstDate.value == undefined && secondDate.value != undefined) {
+      targetDate.value = new Date(secondDate.value);
+    } else if (input === 1 && secondDate.value != undefined) {
+      targetDate.value = new Date(secondDate.value);
+    } else if (input === 1 && secondDate.value == undefined && firstDate.value != undefined) {
+      targetDate.value = new Date(firstDate.value);
+    } else {
+      targetDate.value = new Date();
+    }
+  }
+  function onOpen(input: number) {
+    setTargetDate(input);
     open.value = true;
   }
 
-  function actionInputKeyboard() {
-    if (!open.value) {
-      onOpen();
+  function actionInputKeyboard(event: KeyboardEvent, input: number) {
+    if (event.key === "Tab") {
+      return;
     }
+    if (!open.value) {
+      onOpen(input);
+    }
+    event.preventDefault();
+    if (!NUMBER_KEYS.has(event.key) && event.key !== "Backspace" && event.key !== "Delete") {
+      return;
+    }
+
+    mutateDateByFormatMask({
+      displayFormat: props.displayFormat,
+      target: event.target as HTMLInputElement,
+      updateValue: input === 0 ? updateFirstInputValue : updateSecondInputValue,
+      view: props.view,
+      delete: event.key === "Backspace" || event.key === "Delete",
+      key: event.key,
+    });
   }
 
-  watch(
-    model,
-    (model) => {
+  /** process custom input  */
+  function updateFirstInputValue(value: string | undefined) {
+    const formattedDate = parseDateFromInput(
+      value,
+      props.outputFormat,
+      props.view,
+      props.displayFormat,
+    );
+
+    if (formattedDate != undefined || value == undefined) {
       if (props.multiple) {
-        if (isArray(model) && model[0] != undefined && model[1] != undefined) {
-          open.value = false;
-        }
-      } else if (model != undefined) {
-        open.value = false;
+        model.value = [formattedDate, isArray(model.value) ? model.value?.[1] : null] as Value;
+      } else {
+        model.value = formattedDate as Value;
       }
+    }
+    if (formattedDate != undefined) {
+      setTargetDate(0);
+    }
+
+    firstInputValue.value = value;
+  }
+  function updateSecondInputValue(value: string | undefined) {
+    const formattedDate = parseDateFromInput(
+      value,
+      props.outputFormat,
+      props.view,
+      props.displayFormat,
+    );
+
+    if (formattedDate != undefined || value == undefined) {
+      if (props.multiple) {
+        model.value = [isArray(model.value) ? model.value?.[0] : null, formattedDate] as Value;
+      }
+    }
+    if (formattedDate != undefined) {
+      setTargetDate(1);
+    }
+
+    secondInputValue.value = value;
+  }
+
+  /** update input value after model change */
+  watch(
+    displayedFirstDate,
+    (date) => {
+      firstInputValue.value = date;
+    },
+    { immediate: true },
+  );
+  watch(
+    displayedSecondDate,
+    (date) => {
+      secondInputValue.value = date;
     },
     { immediate: true },
   );
@@ -165,16 +245,23 @@
           :class-name-root="'ksd-date-picker__input'"
           :size="$props.inputSize"
           :variant="$props.inputVariant"
-          :model-value="displayedFirstDate"
+          :model-value="firstInputValue"
           placeholder="Выберите дату"
-          @keydown="actionInputKeyboard"
-          @blur="onClose"
-          @focus="onOpen"
-          @click="onOpen"
+          @keydown="(event) => actionInputKeyboard(event, 0)"
+          @blur="
+            () => {
+              firstInputValue = displayedFirstDate;
+              onClose();
+            }
+          "
+          @focus="() => onOpen(0)"
+          @click="() => onOpen(0)"
+          @update:model-value="updateFirstInputValue"
         >
           <template #suffix>
             <IconWrapper
               class="ksd-date-picker__input-icon calendar"
+              tabindex="-1"
               @click.prevent.stop="open = !open"
               @mousedown.prevent=""
             >
@@ -194,16 +281,46 @@
       <Text v-if="$props.multiple"> - </Text>
       <div v-if="$props.multiple" class="ksd-date-picker__container">
         <Input
+          :class-name-root="'ksd-date-picker__input'"
           :size="$props.inputSize"
           :variant="$props.inputVariant"
+          :model-value="secondInputValue"
           placeholder="Выберите дату"
-          :model-value="displayedSecondDate"
-        />
+          @keydown="(event) => actionInputKeyboard(event, 1)"
+          @blur="
+            () => {
+              secondInputValue = displayedSecondDate;
+              onClose();
+            }
+          "
+          @focus="() => onOpen(1)"
+          @click="() => onOpen(1)"
+          @update:model-value="updateFirstInputValue"
+        >
+          <template #suffix>
+            <IconWrapper
+              class="ksd-date-picker__input-icon calendar"
+              tabindex="-1"
+              @click.prevent.stop="open = !open"
+              @mousedown.prevent=""
+            >
+              <VCalendarOutlined />
+            </IconWrapper>
+            <IconWrapper
+              class="ksd-date-picker__input-icon cancel"
+              @click.prevent.stop="model = undefined"
+              @mousedown.prevent=""
+            >
+              <VCloseCircleFilled />
+            </IconWrapper>
+          </template>
+        </Input>
       </div>
     </div>
     <template #content>
       <DatePickerCalendar
         :locale="$props.locale"
+        :target-date="targetDate"
         :size="$props.size"
         :start-week="$props.startWeek"
         :multiple="$props.multiple ?? false"
@@ -211,17 +328,29 @@
         :model-value="isArray(model) ? model : model != undefined ? [model] : []"
         @update:model-value="
           (value) => {
+            let newModel: Value;
+
             if ($props.multiple) {
-              model = value.map((v) =>
+              newModel = value.map((v) =>
                 v ? dateFormat(v, $props.outputFormat ?? DATE_PICKER_OUTPUT_FORMAT) : null,
               ) as Value;
             } else {
-              model = (
+              newModel = (
                 value[0]
                   ? dateFormat(value[0], $props.outputFormat ?? DATE_PICKER_OUTPUT_FORMAT)
                   : null
               ) as Value;
             }
+
+            if (props.multiple) {
+              if (isArray(newModel) && newModel[0] != undefined && newModel[1] != undefined) {
+                open = false;
+              }
+            } else if (newModel != undefined) {
+              open = false;
+            }
+
+            model = newModel;
           }
         "
       />
@@ -265,6 +394,11 @@
 
     &__input-icon {
       color: currentColor;
+      transition: color var(--ksd-transition-mid) ease-out;
+      &:hover {
+        color: var(--ksd-icon-hover-color);
+      }
+
       &.calendar {
         display: flex;
       }

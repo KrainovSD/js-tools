@@ -17,3 +17,4 @@ export type DatePickerWeekDay = {
   label: string;
 };
 export type DatePickerSize = "default" | "large";
+export type DatePickerDisplayFormat = "ru-dot" | "ru-slash" | "iso";

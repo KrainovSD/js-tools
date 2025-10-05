@@ -1,4 +1,4 @@
-import { WEEK_DAY_DATE_MAP } from "../../../constants/tech";
+import { WEEK_DAY_DATE_MAP } from "../date-picker.constants";
 import type { DatePickerWeekDay } from "../date-picker.types";
 
 export function generateWeekDay(startWeek: number, locale: string) {

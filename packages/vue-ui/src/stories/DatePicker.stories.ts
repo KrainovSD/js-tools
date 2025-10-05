@@ -43,45 +43,122 @@ export const AllInOne: Story = {
       return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
         h(VDatePicker, {
           ...args,
+          displayFormat: "ru-dot",
           "onUpdate:modelValue": (value) => {
             console.log("updated", value);
           },
         }),
         h(VDatePicker, {
           ...args,
+          displayFormat: "ru-dot",
           multiple: true,
           "onUpdate:modelValue": (value) => {
             console.log("updated", value);
           },
         }),
-        h(VDatePicker, {
-          ...args,
-          multiple: true,
-          size: "large",
-          "onUpdate:modelValue": (value) => {
-            console.log("updated", value);
-          },
-        }),
-        h(VDatePicker, {
-          ...args,
-          multiple: true,
-          view: "months",
-          displayFormat: "MM.YYYY",
-          outputFormat: "YYYY.MM",
-          "onUpdate:modelValue": (value) => {
-            console.log("updated", value);
-          },
-        }),
-        h(VDatePicker, {
-          ...args,
-          multiple: true,
-          view: "years",
-          displayFormat: "YYYY",
-          outputFormat: "YYYY",
-          "onUpdate:modelValue": (value) => {
-            console.log("updated", value);
-          },
-        }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   displayFormat: "ru-slash",
+        //   modelValue: "2025-10-15",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   displayFormat: "iso",
+        //   modelValue: "2025-10-15",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   displayFormat: "ru-dot",
+        //   view: "months",
+        //   modelValue: "2025-10-15",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   displayFormat: "ru-slash",
+        //   view: "months",
+        //   modelValue: "2025-10-15",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   displayFormat: "iso",
+        //   view: "months",
+        //   modelValue: "2025-10-15",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   displayFormat: "ru-dot",
+        //   view: "years",
+        //   modelValue: "2025-10-15",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   displayFormat: "ru-slash",
+        //   view: "years",
+        //   modelValue: "2025-10-15",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   displayFormat: "iso",
+        //   view: "years",
+        //   modelValue: "2025-10-15",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   multiple: true,
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   multiple: true,
+        //   size: "large",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   multiple: true,
+        //   view: "months",
+        //   outputFormat: "YYYY.MM",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
+        // h(VDatePicker, {
+        //   ...args,
+        //   multiple: true,
+        //   view: "years",
+        //   outputFormat: "YYYY",
+        //   "onUpdate:modelValue": (value) => {
+        //     console.log("updated", value);
+        //   },
+        // }),
       ]);
     },
   }),
