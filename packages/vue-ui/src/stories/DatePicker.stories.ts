@@ -62,6 +62,22 @@ export const AllInOne: Story = {
             console.log("updated", value);
           },
         }),
+        h(VDatePicker, {
+          ...args,
+          multiple: true,
+          view: "months",
+          "onUpdate:modelValue": (value) => {
+            console.log("updated", value);
+          },
+        }),
+        h(VDatePicker, {
+          ...args,
+          multiple: true,
+          view: "years",
+          "onUpdate:modelValue": (value) => {
+            console.log("updated", value);
+          },
+        }),
       ]);
     },
   }),

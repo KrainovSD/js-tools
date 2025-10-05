@@ -49,7 +49,7 @@ export type GanttLink =
   | string
   | number
   | {
-      dependentId: number | string;
+      id: number | string;
       type?: string;
     };
 

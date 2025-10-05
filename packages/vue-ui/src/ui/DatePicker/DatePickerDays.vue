@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { isId } from "@krainovsd/js-helpers";
   import { computed, ref } from "vue";
-  import type { DatePickerDay, DatePickerSize } from "./date-picker.types";
-  import { generateDateMatrix, generateWeekDay, getDateId } from "./lib";
+  import type { DatePickerCell, DatePickerSize } from "./date-picker.types";
+  import { generateDateMatrix, getDayId } from "./lib";
   import { isGreatestDate } from "./lib/is-greatest-date";
 
   type Props = {
@@ -12,13 +12,15 @@
     locale: string;
     size: DatePickerSize;
     multiple: boolean;
+    targetView: boolean;
   };
 
   const props = defineProps<Props>();
   const model = defineModel<(Date | string | number | null)[]>({ default: [] });
+
   const startWeek = computed(() => (props.startWeek > 6 ? 0 : props.startWeek));
   const daysMatrix = computed(() => generateDateMatrix(props.year, props.month, startWeek.value));
-  const weekDay = computed(() => generateWeekDay(startWeek.value, props.locale));
+
   const classes = computed(() => ({ [`size-${props.size}`]: true }));
   const hoveredDateId = ref<number | null>(null);
 
@@ -26,7 +28,7 @@
   const secondDate = computed(() => (isId(model.value[1]) ? new Date(model.value[1]) : undefined));
   const firstDateId = computed(() =>
     firstDate.value != undefined
-      ? getDateId(
+      ? getDayId(
           firstDate.value.getFullYear(),
           firstDate.value.getMonth(),
           firstDate.value.getDate(),
@@ -35,7 +37,7 @@
   );
   const secondDateId = computed(() =>
     secondDate.value != undefined
-      ? getDateId(
+      ? getDayId(
           secondDate.value.getFullYear(),
           secondDate.value.getMonth(),
           secondDate.value.getDate(),
@@ -43,7 +45,7 @@
       : undefined,
   );
 
-  function onClickDay(day: DatePickerDay) {
+  function onClickDay(day: DatePickerCell) {
     if (props.multiple) {
       if (model.value[0] != undefined && model.value[1] == undefined) {
         if (isGreatestDate(day.date, model.value[0])) {
@@ -61,7 +63,7 @@
     }
   }
 
-  function getDayClasses(day: DatePickerDay) {
+  function getDayClasses(day: DatePickerCell) {
     const isFirstSelectedDate = firstDateId.value === day.id;
     const isSecondSelectedDate = props.multiple
       ? secondDateId.value === day.id ||
@@ -102,7 +104,7 @@
     return {
       weekend: day.weekend,
       today: day.today,
-      notActual: !day.currentMonth,
+      noTarget: day.noTarget,
       hover: hoveredDateId.value === day.id,
       selectedInRangeStart,
       selectedInRangeEnd,
@@ -113,16 +115,6 @@
 </script>
 
 <template>
-  <div class="ksd-date-picker__week-days">
-    <div
-      v-for="day in weekDay"
-      :key="day.value"
-      class="ksd-date-picker__week-day ksd-date-picker__cell"
-      :class="[{ weekend: day.weekend }, classes]"
-    >
-      {{ day.label }}
-    </div>
-  </div>
   <div v-for="(week, index) in daysMatrix" :key="index" class="ksd-date-picker__week">
     <div
       v-for="day in week"
@@ -152,17 +144,6 @@
 
 <style lang="scss">
   .ksd-date-picker {
-    &__week-days {
-      display: flex;
-      align-items: center;
-    }
-
-    &__week-day {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     &__cell {
       width: var(--ksd-control-height);
       height: var(--ksd-control-height);
@@ -213,7 +194,7 @@
         }
       }
 
-      &.notActual {
+      &.noTarget {
         color: var(--ksd-text-secondary-color);
 
         &.hover {

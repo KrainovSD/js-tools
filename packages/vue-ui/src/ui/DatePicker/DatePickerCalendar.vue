@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { ref } from "vue";
-  import DatePickerDays from "./DatePickerDays.vue";
+  import { computed, ref } from "vue";
   import DatePickerHeader from "./DatePickerHeader.vue";
-  import DatePickerMonths from "./DatePickerMonths.vue";
-  import type { DatePickerSize, DatePickerView } from "./date-picker.types";
+  import DatePickerMatrix from "./DatePickerMatrix.vue";
+  import DatePickerWeekDays from "./DatePickerWeekDays.vue";
+  import type { DatePickerLocalView, DatePickerSize, DatePickerView } from "./date-picker.types";
 
   type Props = {
     startWeek: number;
@@ -14,13 +14,15 @@
   };
 
   const props = defineProps<Props>();
+
   const model = defineModel<(Date | string | number | null)[]>({ default: [] });
 
-  const localView = ref(props.view);
+  const localView = ref<DatePickerLocalView>(props.view);
   const now = new Date();
   const year = ref(now.getFullYear());
   const month = ref(now.getMonth());
   const decade = ref(Math.floor(year.value / 10));
+  const century = computed(() => Math.floor(decade.value / 10));
 </script>
 
 <template>
@@ -32,23 +34,27 @@
       v-model:view="localView"
       :locale="$props.locale"
       :size="$props.size"
+      :century="century"
     />
     <div class="ksd-date-picker__matrix-container">
-      <DatePickerDays
+      <DatePickerWeekDays
         v-if="localView === 'days'"
+        :locale="$props.locale"
+        :size="$props.size"
+        :start-week="$props.startWeek"
+      />
+      <DatePickerMatrix
         v-model="model"
-        :month="month"
-        :year="year"
+        v-model:decade="decade"
+        v-model:year="year"
+        v-model:month="month"
+        v-model:view="localView"
         :locale="$props.locale"
         :size="$props.size"
         :start-week="$props.startWeek"
         :multiple="$props.multiple"
-      />
-      <DatePickerMonths
-        v-if="localView === 'months'"
-        v-model="model"
-        v-model:month="month"
-        :final-view="$props.view === 'months'"
+        :target-view="$props.view"
+        :century="century"
       />
     </div>
   </div>
@@ -64,7 +70,33 @@
     &__matrix-container {
       display: flex;
       flex-direction: column;
-      /* gap: var(--ksd-padding-xxs); */
+      padding: var(--ksd-padding-xxs) var(--ksd-padding-xs);
+
+      --ksd-date-picker-cell-width: var(--ksd-control-height);
+      --ksd-date-picker-cell-width-lg: var(--ksd-control-height-lg);
+      --ksd-date-picker-cell-height: var(--ksd-control-height);
+      --ksd-date-picker-cell-height-lg: var(--ksd-control-height-lg);
+      --ksd-date-picker-cell-padding-inline: var(--ksd-padding-xxs);
+      --ksd-date-picker-cell-padding-block: var(--ksd-padding-xxs);
+      --ksd-date-picker-cell-padding-inline-lg: var(--ksd-padding-xxs);
+      --ksd-date-picker-cell-padding-block-lg: var(--ksd-padding-xxs);
+
+      --ksd-date-picker-cells-width: calc(
+        var(--ksd-date-picker-cell-width) * 7 + var(--ksd-date-picker-cell-padding-inline) * 14
+      );
+      --ksd-date-picker-cells-height: calc(
+        var(--ksd-date-picker-cell-height) * 5 + var(--ksd-date-picker-cell-height) +
+          var(--ksd-date-picker-cell-padding-block) * 10
+      );
+
+      --ksd-date-picker-cells-width-lg: calc(
+        var(--ksd-date-picker-cell-width-lg) * 7 + var(--ksd-date-picker-cell-padding-inline-lg) *
+          14
+      );
+      --ksd-date-picker-cells-height-lg: calc(
+        var(--ksd-date-picker-cell-height-lg) * 5 + var(--ksd-date-picker-cell-height-lg) +
+          var(--ksd-date-picker-cell-padding-block-lg) * 10
+      );
     }
   }
 </style>

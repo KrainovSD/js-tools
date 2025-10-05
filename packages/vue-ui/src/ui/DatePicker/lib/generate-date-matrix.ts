@@ -1,13 +1,13 @@
 import { isToday } from "@krainovsd/js-helpers";
-import type { DatePickerDay } from "../date-picker.types";
-import { getDateId } from "./get-date-id";
+import type { DatePickerCell } from "../date-picker.types";
+import { getDayId } from "./get-day-id";
 
 export function generateDateMatrix(year: number, month: number, startWeek: number) {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
   const daysInMonth = lastDay.getDate();
-  const matrix: DatePickerDay[][] = [];
-  let week: DatePickerDay[] = [];
+  const matrix: DatePickerCell[][] = [];
+  let week: DatePickerCell[] = [];
 
   let firstDayWeek = firstDay.getDay();
   firstDayWeek = firstDayWeek === 0 ? startWeek : firstDayWeek - startWeek;
@@ -24,9 +24,10 @@ export function generateDateMatrix(year: number, month: number, startWeek: numbe
     const weekDay = currentDate.getDay();
 
     week.push({
-      id: getDateId(currentYear, currentMonth, prevMonthDay),
-      currentMonth: false,
+      id: getDayId(currentYear, currentMonth, prevMonthDay),
+      noTarget: true,
       date: currentDate,
+      label: prevMonthDay.toString(),
       today: isToday(currentDate),
       value: prevMonthDay,
       weekend: weekDay === 0 || weekDay === 6,
@@ -40,9 +41,10 @@ export function generateDateMatrix(year: number, month: number, startWeek: numbe
     const weekDay = currentDate.getDay();
 
     week.push({
-      id: getDateId(year, month, day),
-      currentMonth: true,
+      id: getDayId(year, month, day),
+      noTarget: false,
       date: currentDate,
+      label: day.toString(),
       today: isToday(currentDate),
       value: day,
       weekend: weekDay === 0 || weekDay === 6,
@@ -66,9 +68,10 @@ export function generateDateMatrix(year: number, month: number, startWeek: numbe
       const weekDay = currentDate.getDay();
 
       week.push({
-        id: getDateId(currentYear, currentMonth, nextMonthDay),
-        currentMonth: false,
+        id: getDayId(currentYear, currentMonth, nextMonthDay),
+        noTarget: true,
         date: currentDate,
+        label: nextMonthDay.toString(),
         today: isToday(currentDate),
         value: nextMonthDay,
         weekend: weekDay === 0 || weekDay === 6,

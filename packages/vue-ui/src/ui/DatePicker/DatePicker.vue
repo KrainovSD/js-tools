@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="Multiple extends true | false = false">
   import { dateFormat, isArray, isNumber, isString } from "@krainovsd/js-helpers";
-  import { computed, useTemplateRef } from "vue";
+  import { computed } from "vue";
   import { DATE_PICKER_DISPLAY_FORMAT, DATE_PICKER_OUTPUT_FORMAT } from "../../constants/tech";
   import type { InputSize, InputVariant } from "../Input.vue";
   import Input from "../Input.vue";
@@ -74,9 +74,6 @@
       ? dateFormat(secondDate.value, props.displayFormat ?? DATE_PICKER_DISPLAY_FORMAT)
       : undefined,
   );
-
-  const firstDateRef = useTemplateRef("date-first");
-  const secondDatedRef = useTemplateRef("date-second");
 </script>
 
 <template>
@@ -87,33 +84,6 @@
         :variant="$props.inputVariant"
         :model-value="displayedFirstDate"
         placeholder="Выберите дату"
-        @click="firstDateRef?.showPicker?.()"
-      />
-      <input
-        ref="date-first"
-        type="date"
-        class="ksd-date-picker__date"
-        aria-hidden="true"
-        tabindex="-1"
-        :value="firstDate"
-        @input="
-          (event) => {
-            const value = (event.target as HTMLInputElement).value;
-            const transformedValue =
-              value != undefined
-                ? dateFormat(value, $props.outputFormat ?? DATE_PICKER_OUTPUT_FORMAT)
-                : undefined;
-            if ($props.multiple) {
-              if (!isArray(model)) {
-                model = [transformedValue, undefined] as unknown as Value;
-              } else {
-                model = [transformedValue, model[1]] as Value;
-              }
-            } else {
-              model = transformedValue as Value;
-            }
-          }
-        "
       />
     </div>
 
@@ -124,31 +94,6 @@
         :variant="$props.inputVariant"
         placeholder="Выберите дату"
         :model-value="displayedSecondDate"
-        @click="secondDatedRef?.showPicker?.()"
-      />
-      <input
-        ref="date-second"
-        type="date"
-        class="ksd-date-picker__date"
-        aria-hidden="true"
-        tabindex="-1"
-        :value="secondDate"
-        @input="
-          (event) => {
-            const value = (event.target as HTMLInputElement).value;
-            const transformedValue =
-              value != undefined
-                ? dateFormat(value, $props.outputFormat ?? DATE_PICKER_OUTPUT_FORMAT)
-                : undefined;
-            if ($props.multiple) {
-              if (!isArray(model)) {
-                model = [undefined, transformedValue] as unknown as Value;
-              } else {
-                model = [model[0], transformedValue] as Value;
-              }
-            }
-          }
-        "
       />
     </div>
 
@@ -187,12 +132,6 @@
     &__container {
       display: inline-flex;
       position: relative;
-    }
-
-    &__date {
-      position: absolute;
-      visibility: hidden;
-      bottom: -5px;
     }
   }
 </style>

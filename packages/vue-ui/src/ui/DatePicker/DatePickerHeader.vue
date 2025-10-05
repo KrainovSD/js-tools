@@ -6,11 +6,12 @@
     VRightOutlined,
   } from "@krainovsd/vue-icons";
   import { computed } from "vue";
-  import { type DatePickerSize, type DatePickerView } from "..";
+  import { type DatePickerLocalView, type DatePickerSize } from "..";
   import Button, { type ButtonSize } from "../Button.vue";
   import Text from "../Text.vue";
 
   type Props = {
+    century: number;
     locale: string;
     size: DatePickerSize;
   };
@@ -19,8 +20,7 @@
   const decade = defineModel<number>("decade", { default: 200 });
   const year = defineModel<number>("year", { default: 2000 });
   const month = defineModel<number>("month", { default: 0 });
-  const century = computed<number>(() => Math.floor(decade.value / 10));
-  const view = defineModel<DatePickerView>("view", { default: "days" });
+  const view = defineModel<DatePickerLocalView>("view", { default: "days" });
   const withMonth = computed(() => view.value === "days");
   const arrowButtonSize = computed<ButtonSize>(() =>
     props.size === "large" ? "default" : "small",
@@ -31,11 +31,45 @@
     new Intl.DateTimeFormat(props.locale, { month: "short" }).format(new Date(2000, month.value)),
   );
 
-  function prev() {}
-  function prevMonth() {}
+  function prev() {
+    if (view.value === "decades") {
+      decade.value -= 10;
+    } else if (view.value === "years") {
+      decade.value -= 1;
+    } else if (view.value === "months") {
+      year.value -= 1;
+    } else if (view.value === "days") {
+      year.value -= 1;
+    }
+  }
+  function prevMonth() {
+    if (month.value > 0) {
+      month.value -= 1;
+    } else {
+      month.value = 11;
+      year.value -= 1;
+    }
+  }
 
-  function next() {}
-  function nextMonth() {}
+  function next() {
+    if (view.value === "decades") {
+      decade.value += 10;
+    } else if (view.value === "years") {
+      decade.value += 1;
+    } else if (view.value === "months") {
+      year.value += 1;
+    } else if (view.value === "days") {
+      year.value += 1;
+    }
+  }
+  function nextMonth() {
+    if (month.value < 11) {
+      month.value += 1;
+    } else {
+      month.value = 0;
+      year.value += 1;
+    }
+  }
 
   function changeView() {
     if (view.value === "days") {
