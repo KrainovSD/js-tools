@@ -10,7 +10,7 @@ export function generateDateMatrix(year: number, month: number, startWeek: numbe
   let week: DatePickerCell[] = [];
 
   let firstDayWeek = firstDay.getDay();
-  firstDayWeek = firstDayWeek === 0 ? startWeek : firstDayWeek - startWeek;
+  firstDayWeek -= startWeek;
   firstDayWeek = firstDayWeek < 0 ? 7 + firstDayWeek : firstDayWeek;
 
   const lastDayPrevMonth = new Date(year, month, 0).getDate() - firstDayWeek + 1;
