@@ -91,7 +91,7 @@ export type BeforeHandler = <
   OutcomingApi = Outcoming,
 >(
   request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
-) => Promise<unknown>;
+) => Promise<void> | void;
 export type AfterHandler = <
   IncomingApi,
   Incoming = IncomingApi,
@@ -100,7 +100,7 @@ export type AfterHandler = <
 >(
   request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
   response: Response | NodeResponse | undefined,
-) => Promise<unknown>;
+) => Promise<void> | void;
 
 export type OauthOptions = {
   /** A name of expires token in localstorage */

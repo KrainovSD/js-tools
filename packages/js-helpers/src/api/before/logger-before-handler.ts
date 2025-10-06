@@ -25,13 +25,13 @@ export function loggerBeforeHandler(options: LoggerBeforeHandlerOptions = {}): B
         (options.filterParams && !options.filterParams(request.queries)) ||
         (options.filterPath && !options.filterPath(request.path))
       ) {
-        resolve(true);
+        resolve();
 
         return;
       }
       // eslint-disable-next-line no-console
       console.log(request);
-      resolve(true);
+      resolve();
     });
   };
 }

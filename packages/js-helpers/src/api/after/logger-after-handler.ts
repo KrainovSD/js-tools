@@ -22,7 +22,7 @@ export function loggerAfterHandler(options: LoggerAfterHandlerOptions = {}): Aft
             (options.filterUrl && !options.filterUrl(response.url)) ||
             (options.filterHeaders && !options.filterHeaders(response.headers))
           ) {
-            resolve(true);
+            resolve();
 
             return;
           }
@@ -51,16 +51,16 @@ export function loggerAfterHandler(options: LoggerAfterHandlerOptions = {}): Aft
             body: result,
           });
 
-          resolve(true);
+          resolve();
         } catch {
           if (response) {
             console.log({ url: response.url, status: response.status, headers: response.headers });
           }
 
-          resolve(true);
+          resolve();
         }
       })().finally(() => {
-        resolve(true);
+        resolve();
       });
     });
   };
