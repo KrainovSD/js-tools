@@ -4,6 +4,7 @@ type InjectThemeStyleOptions<T extends string> = {
   theme: T | undefined;
   fontSize: number | undefined;
   themeConfig: Record<T, ThemeVariableConfig> | undefined;
+  target: HTMLElement;
 };
 
 export function injectThemeStyle<T extends string>(opts: InjectThemeStyleOptions<T>) {
@@ -24,6 +25,11 @@ export function injectThemeStyle<T extends string>(opts: InjectThemeStyleOptions
     .flat(2)
     .filter((el) => el != "")
     .join(" ");
+  const custom = Object.entries(themeConfig.custom ?? {})
+    .map(([key, value]) => (value != undefined ? `--${key}: ${value};` : ""))
+    .filter((el) => el != "")
+    .join(" ");
 
-  document.documentElement.style.cssText = `font-size: ${opts.fontSize}px; ${common} ${components}`;
+  opts.target.style.cssText += `${common} ${components} ${custom}`;
+  document.documentElement.style.cssText += `font-size: ${opts.fontSize}px;`;
 }

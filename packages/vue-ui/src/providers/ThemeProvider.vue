@@ -7,6 +7,7 @@
     theme?: T;
     fontSize?: number;
     themeConfig?: Record<T, ThemeVariableConfig>;
+    targetStyle?: HTMLElement;
   };
 
   const props = defineProps<Props>();
@@ -14,7 +15,12 @@
   watch(
     (): [T | undefined, number | undefined] => [props.theme, props.fontSize],
     (state) => {
-      injectThemeStyle({ fontSize: state[1], theme: state[0], themeConfig: props.themeConfig });
+      injectThemeStyle({
+        fontSize: state[1],
+        theme: state[0],
+        themeConfig: props.themeConfig,
+        target: props.targetStyle ?? document.documentElement,
+      });
     },
     { immediate: true },
   );

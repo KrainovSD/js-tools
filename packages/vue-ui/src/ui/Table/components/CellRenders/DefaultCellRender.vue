@@ -116,6 +116,7 @@
       overflow: hidden;
       max-width: 100%;
       display: block;
+      height: fit-content;
     }
   }
 </style>

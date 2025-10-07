@@ -37,6 +37,7 @@ import type {
 export type ThemeName = "light" | "dark";
 
 export type ThemeVariableConfig = {
+  custom?: Record<string, string>;
   common: {
     transition: Record<ThemeTransitionVariable, string>;
     shadow: Record<ThemeShadowVariable, string>;

@@ -28,7 +28,12 @@ const themeDecorator = <T extends Record<string, string>>({
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
     const selected = themeOverride || selectedTheme || defaultTheme;
 
-    injectThemeStyle({ fontSize: 14, theme: selected as ThemeName, themeConfig: THEME_CONFIG });
+    injectThemeStyle({
+      fontSize: 14,
+      theme: selected as ThemeName,
+      themeConfig: THEME_CONFIG,
+      target: document.documentElement,
+    });
     document.documentElement.style.cssText += `--theme:${selected.toString()}; background: var(--ksd-bg-color); color: var(--ksd-text-main-color);`;
 
     return {
