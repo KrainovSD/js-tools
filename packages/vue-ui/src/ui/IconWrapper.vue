@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import { type HTMLAttributes, useTemplateRef } from "vue";
 
-  export type IconWrapperProps = {} & /*@vue-ignore*/ HTMLAttributes;
+  export type IconWrapperProps = {
+    inset?: number;
+  } & /*@vue-ignore*/ HTMLAttributes;
 
   const element = useTemplateRef("button");
   defineProps<IconWrapperProps>();
@@ -11,7 +13,13 @@
 </script>
 
 <template>
-  <button ref="button" class="ksd-icon-wrapper"><slot></slot></button>
+  <button
+    ref="button"
+    class="ksd-icon-wrapper"
+    :style="{ '--ksd-button-wrapper-inset': $props.inset }"
+  >
+    <slot></slot>
+  </button>
 </template>
 
 <style lang="scss">
@@ -23,6 +31,7 @@
     height: fit-content;
     display: flex;
     background: inherit;
+    position: relative;
     cursor: pointer;
 
     &:focus-visible {
@@ -31,6 +40,12 @@
       transition:
         outline-offset 0s,
         outline 0s;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: calc(-1px * var(--ksd-button-wrapper-inset, 0));
     }
   }
 </style>
