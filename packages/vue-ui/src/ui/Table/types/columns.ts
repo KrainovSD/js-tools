@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactNode } from "react";
-import type { Component } from "vue";
+import type { Component, DefineComponent } from "vue";
 import type { ControlComponents } from "../../Control.vue";
 import type {
   DateFilterRenderProps,
@@ -240,7 +240,9 @@ export type TableFilterRendersProps<
 
 type ComponentProps<T> = T extends (args: infer P extends Record<string, any>) => any
   ? P["settings"]
-  : unknown;
+  : T extends DefineComponent<infer P extends Record<string, any>, any, any, any, any>
+    ? P["settings"]
+    : unknown;
 type FnSettings<T> = T extends (context: infer P, settings: infer S) => any ? S : undefined;
 
 export type SortRenderMap<

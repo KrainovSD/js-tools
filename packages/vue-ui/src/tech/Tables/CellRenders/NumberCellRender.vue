@@ -1,7 +1,8 @@
-<script setup lang="ts" generic="RowData extends DefaultRow">
+<script setup lang="ts">
   import { isNullable } from "@krainovsd/js-helpers";
   import { computed } from "vue";
-  import type { CellRenderProps, DefaultRow } from "../../../ui/Table/types";
+  import type { CellRenderProps } from "../../../ui/Table/types";
+  import type { RowData } from "../types";
 
   type Props = {
     fixed?: number;

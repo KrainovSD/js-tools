@@ -50,7 +50,7 @@ export type GanttLink =
   | number
   | {
       id: number | string;
-      type?: string;
+      type?: string | number;
     };
 
 export type GanttInfo<RowData extends DefaultRow> = {
