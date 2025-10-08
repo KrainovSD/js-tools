@@ -74,7 +74,7 @@
   const modalMode = computed(() => (props.mask || props.mask == undefined) && !props.block);
   const prevActiveElement = ref<HTMLElement | null>(null);
 
-  function onClose() {
+  async function onClose() {
     if (prevActiveElement.value && modalMode.value) {
       prevActiveElement.value.focus();
     }
@@ -84,11 +84,16 @@
       animationPromises.push(execAnimation(maskRef.value, "out"));
     }
 
-    void Promise.all(animationPromises).then(() => {
-      if (!open.value) {
-        localOpen.value = false;
-      }
-    });
+    await Promise.all(animationPromises);
+
+    if (!open.value) {
+      localOpen.value = false;
+    }
+  }
+  async function close() {
+    open.value = false;
+
+    return onClose();
   }
 
   /** Register listeners after open */
@@ -188,14 +193,14 @@
       if (open) {
         localOpen.value = true;
       } else {
-        onClose();
+        void onClose();
         emit("close");
       }
     },
     { immediate: true },
   );
 
-  defineExpose({ element: drawerRef, maskElement: maskRef, close: onClose });
+  defineExpose({ element: drawerRef, maskElement: maskRef, close });
   defineOptions({
     inheritAttrs: false,
   });
