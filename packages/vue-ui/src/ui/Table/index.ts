@@ -16,7 +16,12 @@ import type {
 
 export { VTable, VGantt };
 export * from "./types";
-export { checkCellVisible } from "./lib";
+export {
+  checkCellVisible,
+  extractGanttLinkId,
+  getGanttColumnWidth,
+  getGanttRowHeight,
+} from "./lib";
 
 declare module "@tanstack/vue-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
