@@ -170,6 +170,26 @@ const FILTERS: FilterItem<string, string | number>[] = [
     ],
   },
   {
+    field: "custom_bool",
+    label: "Кастомный буль",
+    icon: VCarOutlined,
+    components: [
+      {
+        component: "select",
+        props: {
+          options: [
+            { label: "Нет", value: 0 },
+            { label: "Да", value: 1 },
+          ],
+          clear: true,
+          multiple: false,
+          placeholder: "Выберите тип",
+          search: true,
+        },
+      },
+    ],
+  },
+  {
     field: "date",
     label: "Дата создания",
     icon: VClockCircleOutlined,
@@ -213,6 +233,8 @@ const Template: StoryFn<typeof VFilter> = (args) => ({
       long: "Очень длинное значение для компонента фильтра",
       range: [1, 5],
       number: 0,
+      // eslint-disable-next-line camelcase
+      custom_bool: 0,
       select: [1],
       // eslint-disable-next-line camelcase
       select_single: 1,
