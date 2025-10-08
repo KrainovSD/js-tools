@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { cloneDeep } from "@krainovsd/js-helpers";
   import { shallowRef } from "vue";
   import { VTable } from "../../ui";
   import { COLUMNS } from "./columns";
@@ -6,10 +7,9 @@
   import type { RowData } from "./types";
 
   const rows = shallowRef<RowData[]>(createRows(100, true, 5));
-  const column = shallowRef<typeof COLUMNS>([
-    ...COLUMNS.map((column) => ({
-      ...column,
-    })).toSpliced(1, 0, {
+
+  function extractColumns() {
+    const columns = cloneDeep(COLUMNS).toSpliced(1, 0, {
       id: "expand",
       name: "",
       key: "id",
@@ -19,8 +19,16 @@
       leftFrozen: true,
       cellRender: { component: "expand" },
       grouping: undefined,
-    }),
-  ]);
+    });
+    const column = columns.find((c) => c.key === "firstName");
+    if (!column) return [];
+    column.expandable = true;
+    column.additionalCellClass = ["hCenter"];
+
+    return columns;
+  }
+
+  const column = shallowRef<typeof COLUMNS>(extractColumns());
   function getSubRows(row: RowData) {
     return row.children;
   }
@@ -37,6 +45,8 @@
     :page-sizes="[5, 10, 25, 50, 100]"
     :initial-pagination="{ pageIndex: 0, pageSize: 100 }"
     :get-sub-rows="getSubRows"
+    @click="(row) => console.log(row)"
+    @dblclick="(row) => console.log(row)"
   />
 </template>
 

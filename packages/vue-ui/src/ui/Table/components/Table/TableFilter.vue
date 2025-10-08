@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import { computed, h, markRaw, ref, watch } from "vue";
-  import type { FilterItem, VFilter } from "../../../Filter";
+  import { type FilterItem, VFilter } from "../../../Filter";
   import type { ColumnFilter, DefaultRow, TableInterface } from "../../types";
 
   type Props = {

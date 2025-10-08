@@ -85,7 +85,13 @@
   <div>
     <component :is="Content" v-if="visible && Content" :context="$props.context" />
     <template v-if="visible && (isId(content) || isBoolean(content)) && !Content">
-      <component :is="Expander" v-if="expandable && Expander" :context="$props.context" />
+      <component
+        :is="Expander"
+        v-if="expandable && Expander"
+        :context="$props.context"
+        @click.stop="props.context.row.toggleExpanded(!props.context.row.getIsExpanded())"
+        @dblclick.stop=""
+      />
       <component :is="Link" v-if="Link" :context="$props.context">
         <TooltipCellRenderWrapper
           :content="content"
