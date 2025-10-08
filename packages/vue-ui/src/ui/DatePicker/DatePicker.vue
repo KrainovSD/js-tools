@@ -1,15 +1,12 @@
 <script setup lang="ts" generic="Multiple extends true | false = false">
   import { dateFormat, isArray, isNumber, isString } from "@krainovsd/js-helpers";
-  import { VCalendarOutlined, VCloseCircleFilled } from "@krainovsd/vue-icons";
   import { computed, ref, watch } from "vue";
   import { INPUT_POPPER_TRIGGERS, NUMBER_KEYS } from "../../constants/tech";
-  import IconWrapper from "../IconWrapper.vue";
   import type { InputSize, InputVariant } from "../Input.vue";
-  import Input from "../Input.vue";
   import type { PopperProps } from "../Popper.vue";
   import Popper from "../Popper.vue";
-  import Text from "../Text.vue";
   import DatePickerCalendar from "./DatePickerCalendar.vue";
+  import DatePickerInput from "./DatePickerInput.vue";
   import { DATE_PICKER_OUTPUT_FORMAT, DISPLAY_FORMATS } from "./date-picker.constants";
   import type {
     DatePickerDisplayFormat,
@@ -25,6 +22,7 @@
     inputSize?: InputSize;
     inputVariant?: InputVariant;
     startWeek?: number;
+    disabled?: boolean;
     locale?: string;
     size?: DatePickerSize;
     view?: DatePickerView;
@@ -64,6 +62,7 @@
     animationDisappear: "scaleY",
     placement: "bottom-left",
     openDelay: 0,
+    disabled: false,
   });
   const model = defineModel<Value>();
   const open = ref(false);
@@ -216,6 +215,7 @@
 
 <template>
   <Popper
+    v-if="!props.disabled"
     ref="popper"
     v-model="open"
     role="listbox"
@@ -239,84 +239,23 @@
     :class-name-positioner-content="`ksd-date-picker__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class="`ksd-date-picker__positioner`"
   >
-    <div class="ksd-date-picker">
-      <div class="ksd-date-picker__container">
-        <Input
-          :class-name-root="'ksd-date-picker__input'"
-          :size="$props.inputSize"
-          :variant="$props.inputVariant"
-          :model-value="firstInputValue"
-          placeholder="Выберите дату"
-          @keydown="(event) => actionInputKeyboard(event, 0)"
-          @blur="
-            () => {
-              firstInputValue = displayedFirstDate;
-              onClose();
-            }
-          "
-          @focus="() => onOpen(0)"
-          @click="() => onOpen(0)"
-          @update:model-value="updateFirstInputValue"
-        >
-          <template #suffix>
-            <IconWrapper
-              class="ksd-date-picker__input-icon calendar"
-              tabindex="-1"
-              @click.prevent.stop="open = !open"
-              @mousedown.prevent=""
-            >
-              <VCalendarOutlined />
-            </IconWrapper>
-            <IconWrapper
-              class="ksd-date-picker__input-icon cancel"
-              @click.prevent.stop="model = undefined"
-              @mousedown.prevent=""
-            >
-              <VCloseCircleFilled />
-            </IconWrapper>
-          </template>
-        </Input>
-      </div>
-
-      <Text v-if="$props.multiple"> - </Text>
-      <div v-if="$props.multiple" class="ksd-date-picker__container">
-        <Input
-          :class-name-root="'ksd-date-picker__input'"
-          :size="$props.inputSize"
-          :variant="$props.inputVariant"
-          :model-value="secondInputValue"
-          placeholder="Выберите дату"
-          @keydown="(event) => actionInputKeyboard(event, 1)"
-          @blur="
-            () => {
-              secondInputValue = displayedSecondDate;
-              onClose();
-            }
-          "
-          @focus="() => onOpen(1)"
-          @click="() => onOpen(1)"
-          @update:model-value="updateFirstInputValue"
-        >
-          <template #suffix>
-            <IconWrapper
-              class="ksd-date-picker__input-icon calendar"
-              tabindex="-1"
-              @click.prevent.stop="open = !open"
-              @mousedown.prevent=""
-            >
-              <VCalendarOutlined />
-            </IconWrapper>
-            <IconWrapper
-              class="ksd-date-picker__input-icon cancel"
-              @click.prevent.stop="model = undefined"
-              @mousedown.prevent=""
-            >
-              <VCloseCircleFilled />
-            </IconWrapper>
-          </template>
-        </Input>
-      </div>
-    </div>
+    <DatePickerInput
+      v-model:first-value="firstInputValue"
+      v-model:second-value="secondInputValue"
+      :input-size="$props.inputSize"
+      :input-variant="$props.inputVariant"
+      :multiple="$props.multiple ?? false"
+      :disabled="$props.disabled"
+      :displayed-first-date="displayedFirstDate"
+      :displayed-second-date="displayedSecondDate"
+      @update-first-input-value="updateFirstInputValue"
+      @update-second-input-value="updateSecondInputValue"
+      @action-input-keyboard="actionInputKeyboard"
+      @open="onOpen"
+      @close="onClose"
+      @toggle="open = !open"
+      @clear="model = undefined"
+    />
     <template #content>
       <DatePickerCalendar
         :locale="$props.locale"
@@ -356,6 +295,24 @@
       />
     </template>
   </Popper>
+  <DatePickerInput
+    v-else
+    v-model:first-value="firstInputValue"
+    v-model:second-value="secondInputValue"
+    :input-size="$props.inputSize"
+    :input-variant="$props.inputVariant"
+    :multiple="$props.multiple ?? false"
+    :disabled="$props.disabled"
+    :displayed-first-date="displayedFirstDate"
+    :displayed-second-date="displayedSecondDate"
+    @update-first-input-value="updateFirstInputValue"
+    @update-second-input-value="updateSecondInputValue"
+    @action-input-keyboard="actionInputKeyboard"
+    @open="onOpen"
+    @close="onClose"
+    @toggle="open = !open"
+    @clear="model = undefined"
+  />
 </template>
 
 <style lang="scss">
@@ -366,45 +323,10 @@
   }
 
   .ksd-date-picker {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--ksd-padding-xs);
-
     &__positioner-content {
       padding: 0px;
       max-width: none;
       max-height: none;
-    }
-
-    &__container {
-      display: inline-flex;
-      position: relative;
-    }
-
-    &__input {
-      &:hover {
-        & .calendar {
-          display: none;
-        }
-        & .cancel {
-          display: flex;
-        }
-      }
-    }
-
-    &__input-icon {
-      color: currentColor;
-      transition: color var(--ksd-transition-mid) ease-out;
-      &:hover {
-        color: var(--ksd-icon-hover-color);
-      }
-
-      &.calendar {
-        display: flex;
-      }
-      &.cancel {
-        display: none;
-      }
     }
   }
 </style>

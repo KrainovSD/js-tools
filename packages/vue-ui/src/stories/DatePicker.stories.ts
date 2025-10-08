@@ -56,6 +56,25 @@ export const AllInOne: Story = {
             console.log("updated", value);
           },
         }),
+        h(VDatePicker, {
+          ...args,
+          displayFormat: "ru-dot",
+          modelValue: "2025-12-24",
+          disabled: true,
+          "onUpdate:modelValue": (value) => {
+            console.log("updated", value);
+          },
+        }),
+        h(VDatePicker, {
+          ...args,
+          displayFormat: "ru-dot",
+          modelValue: ["2025-12-24", "2025-12-28"],
+          multiple: true,
+          disabled: true,
+          "onUpdate:modelValue": (value) => {
+            console.log("updated", value);
+          },
+        }),
         // h(VDatePicker, {
         //   ...args,
         //   displayFormat: "ru-slash",
