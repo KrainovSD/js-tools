@@ -161,7 +161,9 @@
     filterRef.value?.querySelector?.<HTMLElement>(`button.ksd-filter__button-filter`)?.focus?.();
   }
   function dropFilters() {
-    form.value = {} as Partial<Record<F, unknown>>;
+    if (Object.keys(form.value).length !== 0) {
+      form.value = {} as Partial<Record<F, unknown>>;
+    }
     openedFields.value = [];
     filterRef.value?.querySelector?.<HTMLElement>(`button.ksd-filter__button-filter`)?.focus?.();
   }

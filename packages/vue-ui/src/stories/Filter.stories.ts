@@ -253,7 +253,11 @@ const Template: StoryFn<typeof VFilter> = (args) => ({
       h(VFilter, {
         ...args,
         modelValue: this.filter,
-        "onUpdate:modelValue": (value) => (this.filter = value),
+        "onUpdate:modelValue": (value) => {
+          this.filter = value;
+          // eslint-disable-next-line no-console
+          console.log("updated");
+        },
         operators: this.operators,
         "onUpdate:operators": (value) => (this.operators = value),
       }),
@@ -275,7 +279,11 @@ const EmptyTemplate: StoryFn<typeof VFilter> = (args) => ({
       h(VFilter, {
         ...args,
         modelValue: this.filter,
-        "onUpdate:modelValue": (value) => (this.filter = value),
+        "onUpdate:modelValue": (value) => {
+          this.filter = value;
+          // eslint-disable-next-line no-console
+          console.log("updated");
+        },
         operators: this.operators,
         "onUpdate:operators": (value) => (this.operators = value),
       }),
