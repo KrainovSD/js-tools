@@ -9,3 +9,5 @@ export const AVATAR_COUNT_DEFAULT = 3;
 export const COLOR_PICKER_DEFAULT = "#ffffff";
 export const NUMBER_KEYS = new Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]);
 export const INPUT_POPPER_TRIGGERS: PopperTrigger[] = [];
+export const SELECT_SCROLL_SHIFT_TOP = 4;
+export const SELECT_SCROLL_SHIFT_BOTTOM = 4;

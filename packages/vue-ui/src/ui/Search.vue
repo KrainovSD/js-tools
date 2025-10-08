@@ -2,7 +2,11 @@
   import { debounce as debounceFn, isString, speedTest } from "@krainovsd/js-helpers";
   import fuzzysort from "fuzzysort";
   import { type Component, computed, ref, useTemplateRef, watch } from "vue";
-  import { INPUT_POPPER_TRIGGERS } from "../constants/tech";
+  import {
+    INPUT_POPPER_TRIGGERS,
+    SELECT_SCROLL_SHIFT_BOTTOM,
+    SELECT_SCROLL_SHIFT_TOP,
+  } from "../constants/tech";
   import { type HighlightText, createHighlight } from "../lib";
   import Empty from "./Empty.vue";
   import type { InputProps } from "./Input.vue";
@@ -68,8 +72,6 @@
   };
 
   const GROUP_ROOT = "__root__";
-  const SCROLL_SHIFT_TOP = 4;
-  const SCROLL_SHIFT_BOTTOM = -4;
 
   const props = withDefaults(defineProps<SearchProps>(), {
     allowClear: false,
@@ -184,12 +186,16 @@
     if (event.key === "ArrowDown" && activeItem.value) {
       event.preventDefault();
       event.stopPropagation();
-      activeItem.value = activeItem.value.next;
+      const nextActive = activeItem.value.next;
+      activeItem.value = nextActive;
+      scrollToActive(nextActive);
     }
     if (event.key === "ArrowUp" && activeItem.value) {
       event.preventDefault();
       event.stopPropagation();
-      activeItem.value = activeItem.value.prev;
+      const prevActive = activeItem.value.prev;
+      activeItem.value = prevActive;
+      scrollToActive(prevActive);
     }
   }
   function onClose() {
@@ -201,6 +207,33 @@
   function onClick(value: SelectValue) {
     emit("click", value);
     onClose();
+  }
+
+  function scrollToActive(activeItem: SearchHTMLElement) {
+    if (!positionerContentRef.value) return;
+
+    let headerTop;
+    const sibling = activeItem.previousElementSibling;
+    if (
+      sibling instanceof HTMLElement &&
+      sibling.classList.contains("ksd-search__popper-item-header")
+    ) {
+      headerTop = sibling.offsetTop;
+    }
+
+    const itemTop = headerTop ?? activeItem.offsetTop;
+    const itemBottom = activeItem.offsetTop + activeItem.offsetHeight;
+    const containerTop: number = positionerContentRef.value.scrollTop;
+    const containerBottom: number =
+      (containerTop as number) + (positionerContentRef.value.clientHeight as number);
+
+    if (itemTop < containerTop) {
+      positionerContentRef.value.scrollTop =
+        containerTop - (containerTop - itemTop) - SELECT_SCROLL_SHIFT_TOP;
+    } else if (itemBottom > containerBottom) {
+      positionerContentRef.value.scrollTop =
+        containerTop + (itemBottom - containerBottom) + SELECT_SCROLL_SHIFT_BOTTOM;
+    }
   }
 
   /** Clear search after close positioner content */
@@ -278,30 +311,8 @@
   watch(
     activeItem,
     (activeItem, oldValue) => {
-      if (activeItem && positionerContentRef.value) {
+      if (activeItem) {
         activeItem.addActiveMark();
-        let headerTop;
-        const sibling = activeItem.previousElementSibling;
-        if (
-          sibling instanceof HTMLElement &&
-          sibling.classList.contains("ksd-search__popper-item-header")
-        ) {
-          headerTop = sibling.offsetTop;
-        }
-
-        const itemTop = headerTop ?? activeItem.offsetTop;
-        const itemBottom = activeItem.offsetTop + activeItem.offsetHeight;
-        const containerTop: number = positionerContentRef.value.scrollTop;
-        const containerBottom: number =
-          (containerTop as number) + (positionerContentRef.value.clientHeight as number);
-
-        if (itemTop < containerTop) {
-          positionerContentRef.value.scrollTop =
-            containerTop - (containerTop - itemTop) - SCROLL_SHIFT_TOP;
-        } else if (itemBottom > containerBottom) {
-          positionerContentRef.value.scrollTop =
-            containerTop + (itemBottom - containerBottom) + SCROLL_SHIFT_BOTTOM;
-        }
       }
       if (oldValue) {
         oldValue.removeActiveMark();

@@ -20,7 +20,7 @@ const Template: StoryFn<typeof VSelect> = (args) => ({
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-      h(VSelect, { ...args }, () => "Выбрать значение"),
+      h(VSelect, { ...args, style: { width: "200px" } }, () => "Выбрать значение"),
     ]);
   },
 });

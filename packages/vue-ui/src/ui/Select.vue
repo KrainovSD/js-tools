@@ -17,6 +17,7 @@
     useTemplateRef,
     watch,
   } from "vue";
+  import { SELECT_SCROLL_SHIFT_BOTTOM, SELECT_SCROLL_SHIFT_TOP } from "../constants/tech";
   import Empty from "./Empty.vue";
   import IconWrapper from "./IconWrapper.vue";
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
@@ -85,8 +86,6 @@
     : SelectValue[] | null | undefined;
 
   const TRIGGERS: PopperTrigger[] = [];
-  const SCROLL_SHIFT_TOP = 4;
-  const SCROLL_SHIFT_BOTTOM = -4;
 
   const props = withDefaults(defineProps<SelectProps<Multiple>>(), {
     clear: true,
@@ -254,17 +253,48 @@
     if (event.key === "ArrowDown" && activeItem.value) {
       event.preventDefault();
       event.stopPropagation();
-      activeItem.value = activeItem.value.next;
+      const nextActive = activeItem.value.next;
+      activeItem.value = nextActive;
+      scrollToActive(nextActive);
     }
     if (event.key === "ArrowUp" && activeItem.value) {
       event.preventDefault();
       event.stopPropagation();
-      activeItem.value = activeItem.value.prev;
+      const prevActive = activeItem.value.prev;
+      activeItem.value = prevActive;
+      scrollToActive(prevActive);
     }
   }
   function onClearValue() {
     model.value = undefined as Value;
     inputRef.value?.focus?.();
+  }
+
+  function scrollToActive(activeItem: SelectHTMLElement) {
+    if (!positionerContentRef.value) return;
+
+    let headerTop;
+    const sibling = activeItem.previousElementSibling;
+    if (
+      sibling instanceof HTMLElement &&
+      sibling.classList.contains("ksd-select__popper-item-header")
+    ) {
+      headerTop = sibling.offsetTop;
+    }
+
+    const itemTop = headerTop ?? activeItem.offsetTop;
+    const itemBottom = activeItem.offsetTop + activeItem.offsetHeight;
+    const containerTop: number = positionerContentRef.value.scrollTop;
+    const containerBottom: number =
+      (containerTop as number) + (positionerContentRef.value.clientHeight as number);
+
+    if (itemTop < containerTop) {
+      positionerContentRef.value.scrollTop =
+        containerTop - (containerTop - itemTop) - SELECT_SCROLL_SHIFT_TOP;
+    } else if (itemBottom > containerBottom) {
+      positionerContentRef.value.scrollTop =
+        containerTop + (itemBottom - containerBottom) + SELECT_SCROLL_SHIFT_BOTTOM;
+    }
   }
 
   /** Collect interactive items */
@@ -346,30 +376,8 @@
   watch(
     activeItem,
     (activeItem, oldValue) => {
-      if (activeItem && positionerContentRef.value) {
+      if (activeItem) {
         activeItem.addActiveMark();
-        let headerTop;
-        const sibling = activeItem.previousElementSibling;
-        if (
-          sibling instanceof HTMLElement &&
-          sibling.classList.contains("ksd-select__popper-item-header")
-        ) {
-          headerTop = sibling.offsetTop;
-        }
-
-        const itemTop = headerTop ?? activeItem.offsetTop;
-        const itemBottom = activeItem.offsetTop + activeItem.offsetHeight;
-        const containerTop: number = positionerContentRef.value.scrollTop;
-        const containerBottom: number =
-          (containerTop as number) + (positionerContentRef.value.clientHeight as number);
-
-        if (itemTop < containerTop) {
-          positionerContentRef.value.scrollTop =
-            containerTop - (containerTop - itemTop) - SCROLL_SHIFT_TOP;
-        } else if (itemBottom > containerBottom) {
-          positionerContentRef.value.scrollTop =
-            containerTop + (itemBottom - containerBottom) + SCROLL_SHIFT_BOTTOM;
-        }
       }
       if (oldValue) {
         oldValue.removeActiveMark();
