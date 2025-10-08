@@ -24,7 +24,7 @@ const Template: StoryFn<typeof VInputNumber> = (args) => ({
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
       h(VInputNumber, {
         ...args,
-        modelValue: this.value,
+        modelValue: undefined,
       }),
     ]);
   },

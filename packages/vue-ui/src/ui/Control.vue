@@ -98,7 +98,7 @@
               model = [];
             }
 
-            model = [value, (model as unknown[])[1]];
+            model = [value, (model as unknown[])?.[1]];
           }
         "
       />
@@ -117,7 +117,7 @@
               model = [];
             }
 
-            model = [(model as unknown[])[0], value];
+            model = [(model as unknown[])?.[0], value];
           }
         "
       />

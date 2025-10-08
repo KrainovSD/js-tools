@@ -276,17 +276,31 @@ const EmptyTemplate: StoryFn<typeof VFilter> = (args) => ({
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "100px" } }, [
-      h(VFilter, {
-        ...args,
-        modelValue: this.filter,
-        "onUpdate:modelValue": (value) => {
-          this.filter = value;
-          // eslint-disable-next-line no-console
-          console.log("updated");
+      h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            gap: "var(--ksd-filter-gap)",
+            alignItems: "center",
+            flexWrap: "wrap",
+          },
         },
-        operators: this.operators,
-        "onUpdate:operators": (value) => (this.operators = value),
-      }),
+        [
+          h(VFilter, {
+            ...args,
+            modelValue: this.filter,
+            "onUpdate:modelValue": (value) => {
+              this.filter = value;
+              // eslint-disable-next-line no-console
+              console.log("updated");
+            },
+            operators: this.operators,
+            "onUpdate:operators": (value) => (this.operators = value),
+          }),
+        ],
+      ),
+
       h("div", {}, [JSON.stringify(this.filter)]),
       h("div", {}, [JSON.stringify(this.operators)]),
     ]);
@@ -318,4 +332,9 @@ export const Left = EmptyTemplate.bind({});
 Left.args = {
   filters: FILTERS,
   direction: "left",
+};
+export const NoWrap = EmptyTemplate.bind({});
+NoWrap.args = {
+  filters: FILTERS,
+  wrap: false,
 };

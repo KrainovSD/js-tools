@@ -8,7 +8,6 @@ import VDrawer from "./Drawer.vue";
 import VDropDown from "./DropDown.vue";
 import VEmpty from "./Empty.vue";
 import VFileDrop from "./FileDrop.vue";
-import VFilter from "./Filter.vue";
 import VFlex from "./Flex.vue";
 import VIconWrapper from "./IconWrapper.vue";
 import VImport from "./Import.vue";
@@ -112,13 +111,7 @@ export type { TagProps, TagSize, TagColor } from "./Tag.vue";
 export type { CheckableProps, TagCheckableValue } from "./TagCheckable.vue";
 export type { SkeletonProps, SkeletonType, SkeletonShape, SkeletonSize } from "./Skeleton.vue";
 export type { PopoverProps, PopoverSize } from "./Popover.vue";
-export type {
-  FilterComponent,
-  FilterItem,
-  FilterProps,
-  FilterItemFlat,
-  FilterDirection,
-} from "./Filter.vue";
+
 export type { EmptyProps } from "./Empty.vue";
 export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pagination.vue";
 export type { LoaderProps, LoaderType } from "./Loader.vue";
@@ -172,7 +165,6 @@ export {
   VTagCheckable,
   VSkeleton,
   VPopover,
-  VFilter,
   VEmpty,
   VPagination,
   VLoader,
@@ -187,3 +179,4 @@ export {
 export * from "./Table";
 export * from "./QueryBuilder";
 export * from "./DatePicker";
+export * from "./Filter";

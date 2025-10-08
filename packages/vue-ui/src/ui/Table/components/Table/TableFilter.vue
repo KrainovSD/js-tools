@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import { computed, h, markRaw, ref, watch } from "vue";
-  import Filter, { type FilterItem } from "../../../Filter.vue";
+  import type { FilterItem, VFilter } from "../../../Filter";
   import type { ColumnFilter, DefaultRow, TableInterface } from "../../types";
 
   type Props = {
@@ -101,7 +101,7 @@
 </script>
 
 <template>
-  <Filter
+  <VFilter
     v-model:operators="operators"
     v-model="form"
     :filters="filters"
