@@ -1,3 +1,4 @@
+import { dateFormat } from "@krainovsd/js-helpers";
 import { type ComputedRef, type ModelRef, type ShallowRef, computed, ref, watch } from "vue";
 import { extractDragPosition } from "../../../../lib";
 import { MIN_GANTT_TODAY_LEFT } from "../../constants";
@@ -194,7 +195,7 @@ export function useGanttToday(opts: UseGanttTodayOptions) {
 
       const left = getLeftFromPointer(event);
       const date = getDateFromLeft(left);
-      opts.graphToday.value = date;
+      opts.graphToday.value = dateFormat(date, "YYYY-MM-DD");
       dragLeft.value = 0;
       dragDate.value = null;
     }
