@@ -53,7 +53,7 @@
       background-color: var(--ksd-table-border);
       position: absolute;
       top: 0;
-      z-index: 8;
+      z-index: 9;
     }
     &__splitter-trigger {
       position: absolute;
@@ -75,7 +75,7 @@
       top: 0px;
       left: 0px;
       width: 0px;
-      z-index: 7;
+      z-index: 8;
       display: none;
 
       &.visible {

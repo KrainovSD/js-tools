@@ -23,6 +23,7 @@
   import GanttGraphLinks from "./GanttGraphLinks.vue";
   import GanttGraphRow from "./GanttGraphRow.vue";
   import GanttGraphToday from "./GanttGraphToday.vue";
+  import GanttGraphTodayHeader from "./GanttGraphTodayHeader.vue";
 
   type Props = {
     width: number | undefined;
@@ -37,6 +38,8 @@
     ganttTodayInteractive: boolean;
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
+    updateGraphScroll: () => void;
+    getGraphScroll: () => number | undefined;
 
     containerHeight: number;
     rowHeight: number;
@@ -74,8 +77,11 @@
   }));
 
   /** today */
-  const todayComponentRef = useTemplateRef("today");
-  const todayElement = computed(() => todayComponentRef.value?.element);
+  const todayBodyComponentRef = useTemplateRef("today-body");
+  const todayHeaderComponentRef = useTemplateRef("today-header");
+  const todayBodyElement = computed(() => todayBodyComponentRef.value?.element);
+  const todayHeaderElement = computed(() => todayHeaderComponentRef.value?.element);
+
   const graphToday = defineModel<string>("graphToday", {
     default: new Date().toISOString(),
   });
@@ -90,9 +96,12 @@
     ganttTodayInteractive,
     graphToday,
     graphElement,
-    todayElement,
+    todayBodyElement,
+    todayHeaderElement,
     ganttView,
     headerInfoItems,
+    getGraphScroll: props.getGraphScroll,
+    updateGraphScroll: props.updateGraphScroll,
   });
 
   const gridRender = computed(() =>
@@ -142,22 +151,21 @@
 
 <template>
   <div ref="gantt-graph" class="ksd-gantt-graph" :style="graphStyles">
-    <GanttGraphToday
-      v-if="$props.ganttToday"
-      ref="today"
-      :height="$props.containerHeight"
-      :left="todayShift"
-      :interactive="$props.ganttTodayInteractive"
-      :drag-date="todayDragDate"
-      :dragging="todayDragging"
-    />
-
     <div
       :id="GANTT_GRAPH_HEADER_ID"
       class="ksd-gantt-graph__header-container"
       :class="{ frozen: $props.frozenHeader }"
     >
       <div class="ksd-gantt-graph__header" :style="headerStyles">
+        <GanttGraphTodayHeader
+          v-if="$props.ganttToday"
+          ref="today-header"
+          :height="$props.containerHeight"
+          :left="todayShift"
+          :interactive="$props.ganttTodayInteractive"
+          :drag-date="todayDragDate"
+          :dragging="todayDragging"
+        />
         <GanttGraphHeaderRow
           :header-items="headerInfoItems"
           :column-width="columnWidth"
@@ -177,6 +185,13 @@
           ></div>
         </template>
         <template v-if="$props.rowVirtualEnabled">
+          <GanttGraphToday
+            v-if="$props.ganttToday"
+            ref="today-body"
+            :height="$props.containerHeight"
+            :left="todayShift"
+            :interactive="$props.ganttTodayInteractive"
+          />
           <GanttGraphRow
             v-for="virtualRow in $props.rowsVirtual"
             :key="virtualRow.index"
@@ -239,7 +254,7 @@
       &.frozen {
         position: sticky;
         top: 0;
-        z-index: 6;
+        z-index: 7;
       }
     }
     &__header {

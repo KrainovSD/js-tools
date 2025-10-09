@@ -83,32 +83,38 @@
   const rowHeight = computed(() => {
     return getGanttRowHeight(props.ganttSize);
   });
-
+  const graphToday = defineModel<string>("graphToday", {
+    default: new Date().toISOString(),
+  });
   const tableContainerElement = useTemplateRef("table-container");
   const tableComponent = useTemplateRef<{
     element: HTMLDivElement | null;
     defineRubberColumnSize: () => void;
   }>("gantt-table");
-  const graphToday = defineModel<string>("graphToday", {
-    default: new Date().toISOString(),
-  });
-  const graphComponent = useTemplateRef("gantt-graph");
-  const graphScrollElement = computed(() => ganttScrollElement.value?.graphScrollElement);
   const tableElement = computed(() => tableComponent.value?.element);
-  const graphElement = computed(() => graphComponent.value?.element);
   const defineRubberColumnSize = computed(() => tableComponent.value?.defineRubberColumnSize);
+
+  const graphComponent = useTemplateRef("gantt-graph");
+  const graphElement = computed(() => graphComponent.value?.element);
+
   const splitterHeight = ref(0);
   const containerHeight = ref(0);
 
   const ganttScrollElement = useTemplateRef("gantt-scroll");
   const tableScrollElement = computed(() => ganttScrollElement.value?.tableScrollElement);
+  const graphScrollElement = computed(() => ganttScrollElement.value?.graphScrollElement);
 
   const splitterComponentRef = useTemplateRef("splitter");
   const splitterRef = computed(() => splitterComponentRef.value?.splitterElement);
   const ghostRef = computed(() => splitterComponentRef.value?.ghostElement);
   const overlayRef = computed(() => splitterComponentRef.value?.overlayElement);
 
-  useGanttScroll({ graphElement, graphScrollElement, tableElement, tableScrollElement });
+  const { getGraphScroll, updateGraphScroll } = useGanttScroll({
+    graphElement,
+    graphScrollElement,
+    tableElement,
+    tableScrollElement,
+  });
 
   const instantSizing = computed(() => props.ganttSplitterInstant);
   const { dragging, sizes } = useGanttSplitter({
@@ -217,6 +223,8 @@
         :gantt-today="$props.ganttToday"
         :gantt-today-interactive="$props.ganttTodayInteractive"
         :container-height="containerHeight"
+        :get-graph-scroll="getGraphScroll"
+        :update-graph-scroll="updateGraphScroll"
         @cell-click="(row, event) => $emit('graphTaskClick', row, event)"
       >
         <template v-if="$slots['graphCell']" #graphCell="graphCellProps">

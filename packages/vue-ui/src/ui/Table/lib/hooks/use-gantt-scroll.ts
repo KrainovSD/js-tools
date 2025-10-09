@@ -47,6 +47,54 @@ export function useGanttScroll(opts: UseGanttScrollOptions) {
     ),
     { immediate: true, flush: "pre" },
   );
+
+  function updateGraphScroll() {
+    const elements = extractElements(
+      opts.graphElement.value,
+      opts.graphScrollElement.value,
+      GANTT_GRAPH_BODY_ID,
+      GANTT_GRAPH_HEADER_ID,
+    );
+    if (!elements) return;
+    updateScroll(elements);
+  }
+  function getGraphScroll() {
+    const elements = extractElements(
+      opts.graphElement.value,
+      opts.graphScrollElement.value,
+      GANTT_GRAPH_BODY_ID,
+      GANTT_GRAPH_HEADER_ID,
+    );
+
+    return elements?.bodyContainer?.scrollLeft;
+  }
+
+  return { updateGraphScroll, getGraphScroll };
+}
+
+function extractElements(
+  element: HTMLDivElement | null | undefined,
+  scrollElement: HTMLDivElement | null | undefined,
+  bodyId: string,
+  headerId: string,
+): ScrollElements | undefined {
+  if (!element || !scrollElement) return;
+
+  const bodyContainer = element.querySelector<HTMLDivElement>(`#${bodyId}`);
+  const headerContainer = element.querySelector<HTMLDivElement>(`#${headerId}`);
+  const body = bodyContainer?.firstChild as HTMLDivElement | undefined;
+  const header = headerContainer?.firstChild as HTMLDivElement | undefined;
+  const thumb = scrollElement?.firstChild?.firstChild as HTMLDivElement | undefined;
+  if (!bodyContainer || !headerContainer || !body || !header || !thumb) return;
+
+  return {
+    body,
+    bodyContainer,
+    header,
+    headerContainer,
+    thumb,
+    scroll: scrollElement,
+  };
 }
 
 function watchScroll(bodyId: string, headerId: string, setScroll: (scroll: boolean) => void) {
@@ -63,21 +111,8 @@ function watchScroll(bodyId: string, headerId: string, setScroll: (scroll: boole
   ) {
     if (!element || !scrollElement) return;
 
-    const bodyContainer = element.querySelector<HTMLDivElement>(`#${bodyId}`);
-    const headerContainer = element.querySelector<HTMLDivElement>(`#${headerId}`);
-    const body = bodyContainer?.firstChild as HTMLDivElement | undefined;
-    const header = headerContainer?.firstChild as HTMLDivElement | undefined;
-    const thumb = scrollElement?.firstChild?.firstChild as HTMLDivElement | undefined;
-    if (!bodyContainer || !headerContainer || !body || !header || !thumb) return;
-
-    const elements: ScrollElements = {
-      body,
-      bodyContainer,
-      header,
-      headerContainer,
-      thumb,
-      scroll: scrollElement,
-    };
+    const elements = extractElements(element, scrollElement, bodyId, headerId);
+    if (!elements) return;
 
     const eventController = new AbortController();
     const resizeObserver = new ResizeObserver(resizeObserve(elements, setScroll));
@@ -88,8 +123,8 @@ function watchScroll(bodyId: string, headerId: string, setScroll: (scroll: boole
         passive: false,
         signal: eventController.signal,
       });
-      thumb.addEventListener("mousedown", onDragStart(elements));
-      thumb.addEventListener("touchstart", onDragStart(elements), { passive: false });
+      elements.thumb.addEventListener("mousedown", onDragStart(elements));
+      elements.thumb.addEventListener("touchstart", onDragStart(elements), { passive: false });
     }
 
     clean(() => {
