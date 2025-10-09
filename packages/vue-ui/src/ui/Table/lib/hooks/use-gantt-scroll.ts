@@ -48,14 +48,17 @@ export function useGanttScroll(opts: UseGanttScrollOptions) {
     { immediate: true, flush: "pre" },
   );
 
-  function updateGraphScroll() {
+  function updateGraphScroll(px: number) {
     const elements = extractElements(
       opts.graphElement.value,
       opts.graphScrollElement.value,
       GANTT_GRAPH_BODY_ID,
       GANTT_GRAPH_HEADER_ID,
     );
+
     if (!elements) return;
+    elements.bodyContainer.scrollLeft += px;
+    elements.headerContainer.scrollLeft += px;
     updateScroll(elements);
   }
   function getGraphScroll() {

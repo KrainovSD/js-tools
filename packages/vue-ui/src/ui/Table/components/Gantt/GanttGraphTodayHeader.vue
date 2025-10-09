@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { dateFormat } from "@krainovsd/js-helpers";
-  import { computed, useTemplateRef } from "vue";
+  import { computed, ref, useTemplateRef, watch } from "vue";
   import Tooltip from "../../../Tooltip.vue";
   import { GANTT_HEADER_HEIGHT } from "../../constants";
 
@@ -20,6 +20,17 @@
     "--gantt-today-top-shift": `${GANTT_HEADER_HEIGHT + 2}px`,
   }));
   const todayClasses = computed(() => ({ interactive: props.interactive }));
+  const tempDate = ref<string | null>(null);
+
+  watch(
+    () => props.dragDate,
+    (date) => {
+      if (date != undefined) {
+        tempDate.value = date;
+      }
+    },
+    { immediate: true },
+  );
 
   defineExpose({ element });
 </script>
@@ -31,8 +42,8 @@
     :open-by-hover="false"
     :placement="'top-center'"
     :observe="true"
-    :show="$props.dragging && $props.dragDate != undefined"
-    :text="dateFormat($props.dragDate ?? '', 'DD.MM.YYYY')"
+    :show="$props.dragging && ($props.dragDate != undefined || tempDate != undefined)"
+    :text="dateFormat($props.dragDate ?? tempDate ?? '', 'DD.MM.YYYY')"
   >
     <div ref="today" class="ksd-gantt__today-header" :class="todayClasses" :style="todayStyles">
       <svg

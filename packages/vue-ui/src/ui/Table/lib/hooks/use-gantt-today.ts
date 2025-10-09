@@ -18,7 +18,7 @@ type UseGanttTodayOptions = {
   graphElement: Readonly<ShallowRef<HTMLDivElement | null>>;
   ganttView: ComputedRef<GanttViewType>;
   headerInfoItems: ComputedRef<GanttHeaderInfo[]>;
-  updateGraphScroll: () => void;
+  updateGraphScroll: (px: number) => void;
   getGraphScroll: () => number | undefined;
 };
 
@@ -58,22 +58,51 @@ export function useGanttToday(opts: UseGanttTodayOptions) {
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
     let { clientX: cachedClientX } = extractDragPosition(event);
+    let scrollTimer: NodeJS.Timeout | null = null;
+
+    function startScroll(direction: "left" | "right") {
+      if (scrollTimer == undefined) {
+        const scrollTimerLocal = setInterval(() => {
+          opts.updateGraphScroll(direction === "left" ? -20 : 20);
+          updatePosition();
+
+          if (eventController.signal.aborted) {
+            clearInterval(scrollTimerLocal);
+          }
+        }, 25);
+        scrollTimer = scrollTimerLocal;
+      }
+    }
+    function stopScroll() {
+      if (scrollTimer) {
+        clearInterval(scrollTimer);
+        scrollTimer = null;
+      }
+    }
 
     function getLeftFromPointer(event?: MouseEvent | TouchEvent) {
       const rect = opts.graphElement.value?.getBoundingClientRect();
       if (!rect) return MIN_GANTT_TODAY_LEFT;
 
+      const maxX = rect.left + rect.width - MIN_GANTT_TODAY_LEFT;
+      const minX = rect.left + MIN_GANTT_TODAY_LEFT;
       let x = cachedClientX;
       if (event) {
         const { clientX } = extractDragPosition(event);
         cachedClientX = clientX;
         x = clientX;
       }
+      if (x > maxX) {
+        x = maxX;
+        startScroll("right");
+      } else if (x < minX) {
+        x = minX;
+        startScroll("left");
+      } else {
+        stopScroll();
+      }
 
-      return Math.max(
-        MIN_GANTT_TODAY_LEFT,
-        Math.min(x, rect.left + rect.width - 10) + (opts.getGraphScroll() ?? 0) - rect.left,
-      );
+      return x + (opts.getGraphScroll() ?? 0) - rect.left;
     }
     function getDateFromLeft(left: number) {
       const columnWidth = getGanttColumnWidth(opts.ganttView.value);
@@ -150,6 +179,10 @@ export function useGanttToday(opts: UseGanttTodayOptions) {
     }
 
     function onDragEnd(event: MouseEvent | TouchEvent) {
+      if (scrollTimer != undefined) {
+        clearInterval(scrollTimer);
+      }
+
       eventController.abort();
       dragging.value = false;
       document.body.style.cursor = "";
@@ -177,14 +210,17 @@ export function useGanttToday(opts: UseGanttTodayOptions) {
       dragLeft.value = left;
       dragDate.value = date;
     }
-    function onWheel() {
+    function updatePosition() {
       const left = getLeftFromPointer();
       const date = getDateFromLeft(left);
       dragLeft.value = left;
       dragDate.value = date;
     }
 
-    document.addEventListener("wheel", onWheel, { passive: true, signal: eventController.signal });
+    document.addEventListener("wheel", updatePosition, {
+      passive: true,
+      signal: eventController.signal,
+    });
     if (event instanceof TouchEvent) {
       document.addEventListener("touchmove", onDragMove, {
         passive: false,

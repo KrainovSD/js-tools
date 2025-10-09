@@ -38,7 +38,7 @@
     ganttTodayInteractive: boolean;
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
-    updateGraphScroll: () => void;
+    updateGraphScroll: (px: number) => void;
     getGraphScroll: () => number | undefined;
 
     containerHeight: number;
