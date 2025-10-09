@@ -17,6 +17,7 @@
   } from "../../types";
   import GanttGraph from "./GanttGraph.vue";
   import GanttScroll from "./GanttScroll.vue";
+  import GanttSplitter from "./GanttSplitter.vue";
   import GanttTable from "./GanttTable.vue";
 
   type Props = {
@@ -28,6 +29,9 @@
     ganttLinkVisibleInRange: boolean;
     ganttLinkHighlight: boolean;
     ganttView: GanttViewType;
+    ganttToday: boolean;
+    ganttTodayInteractive: boolean;
+
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
     fullSize: boolean;
@@ -85,22 +89,24 @@
     element: HTMLDivElement | null;
     defineRubberColumnSize: () => void;
   }>("gantt-table");
+  const graphToday = defineModel<string>("graphToday", {
+    default: new Date().toISOString(),
+  });
   const graphComponent = useTemplateRef("gantt-graph");
   const graphScrollElement = computed(() => ganttScrollElement.value?.graphScrollElement);
   const tableElement = computed(() => tableComponent.value?.element);
   const graphElement = computed(() => graphComponent.value?.element);
   const defineRubberColumnSize = computed(() => tableComponent.value?.defineRubberColumnSize);
   const splitterHeight = ref(0);
-  const splitterStyles = computed(() => ({
-    height: `${splitterHeight.value}px`,
-  }));
+  const containerHeight = ref(0);
 
   const ganttScrollElement = useTemplateRef("gantt-scroll");
   const tableScrollElement = computed(() => ganttScrollElement.value?.tableScrollElement);
 
-  const splitterRef = useTemplateRef("splitter");
-  const ghostRef = useTemplateRef("ghost");
-  const overlayRef = useTemplateRef("overlay");
+  const splitterComponentRef = useTemplateRef("splitter");
+  const splitterRef = computed(() => splitterComponentRef.value?.splitterElement);
+  const ghostRef = computed(() => splitterComponentRef.value?.ghostElement);
+  const overlayRef = computed(() => splitterComponentRef.value?.overlayElement);
 
   useGanttScroll({ graphElement, graphScrollElement, tableElement, tableScrollElement });
 
@@ -112,6 +118,7 @@
     instantSizing,
   });
 
+  /** table height */
   watch(
     tableElement,
     (tableElement, _, clean) => {
@@ -121,6 +128,22 @@
         splitterHeight.value = entries[0].contentRect.height;
       });
       observer.observe(tableElement);
+      clean(() => {
+        observer.disconnect();
+      });
+    },
+    { immediate: true },
+  );
+  /** container height */
+  watch(
+    tableContainerElement,
+    (tableContainerElement, _, clean) => {
+      if (!tableContainerElement) return;
+
+      const observer = new ResizeObserver((entries) => {
+        containerHeight.value = entries[0].contentRect.height;
+      });
+      observer.observe(tableContainerElement);
       clean(() => {
         observer.disconnect();
       });
@@ -163,23 +186,15 @@
         @click="(row, event) => $emit('click', row, event)"
         @dblclick="(row, event) => $emit('dblclick', row, event)"
       />
-      <div
+      <GanttSplitter
         ref="splitter"
-        class="ksd-gantt__splitter"
-        :style="[splitterStyles, { left: `${sizes[0]}px` }]"
-      >
-        <div class="ksd-gantt__splitter-trigger"></div>
-        <div ref="ghost" class="ksd-gantt__splitter-ghost"></div>
-      </div>
-      <div
-        class="ksd-gantt__splitter-overlay-container"
-        :class="{ visible: dragging }"
-        :style="splitterStyles"
-      >
-        <div ref="overlay" class="ksd-gantt__splitter-overlay"></div>
-      </div>
+        :dragging="dragging"
+        :height="splitterHeight"
+        :left="sizes[0]"
+      />
       <GanttGraph
         ref="gantt-graph"
+        v-model:graph-today="graphToday"
         :column-virtual-enabled="$props.columnVirtualEnabled"
         :columns-virtual="$props.columnsVirtual"
         :frozen-header="$props.frozenHeader"
@@ -199,6 +214,9 @@
         :gantt-link-get-around="$props.ganttLinkGetAround"
         :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange"
         :gantt-link-highlight="$props.ganttLinkHighlight"
+        :gantt-today="$props.ganttToday"
+        :gantt-today-interactive="$props.ganttTodayInteractive"
+        :container-height="containerHeight"
         @cell-click="(row, event) => $emit('graphTaskClick', row, event)"
       >
         <template v-if="$slots['graphCell']" #graphCell="graphCellProps">
@@ -215,52 +233,6 @@
     &__container {
       display: flex;
       height: 100%;
-    }
-
-    &__splitter {
-      display: flex;
-      margin-right: -1px;
-      width: 1px;
-      min-width: 1px;
-      overflow: visible;
-      cursor: col-resize;
-      background-color: var(--ksd-table-border);
-      position: absolute;
-      top: 0;
-      z-index: 8;
-    }
-    &__splitter-trigger {
-      position: absolute;
-      width: 12px;
-      height: 100%;
-      margin-left: -2px;
-      top: 0;
-      left: 0;
-    }
-    &__splitter-ghost {
-      background: var(--ksd-table-splitter-ghost-color);
-      width: 1px;
-      height: 100%;
-      position: absolute;
-      visibility: hidden;
-    }
-    &__splitter-overlay-container {
-      position: relative;
-      top: 0px;
-      left: 0px;
-      width: 0px;
-      z-index: 7;
-      display: none;
-
-      &.visible {
-        display: flex;
-      }
-    }
-    &__splitter-overlay {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: var(--ksd-table-splitter-overlay-color);
     }
   }
 </style>

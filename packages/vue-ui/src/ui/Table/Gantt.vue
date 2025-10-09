@@ -77,6 +77,8 @@
       ganttLinkGetAround: true,
       ganttLinkVisibleInRange: true,
       ganttLinkHighlight: true,
+      ganttToday: false,
+      ganttTodayInteractive: false,
     },
   );
   defineEmits<Emits>();
@@ -100,6 +102,9 @@
   const pagination = defineModel<PaginationState | undefined>("pagination", { required: false });
   const rowSelection = defineModel<RowSelectionState | undefined>("rowSelection", {
     required: false,
+  });
+  const graphToday = defineModel<string | undefined>("graphToday", {
+    default: new Date().toISOString(),
   });
 
   const rootRef = useTemplateRef<HTMLDivElement>("root");
@@ -166,6 +171,7 @@
       <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
       <GanttContainer
         ref="table-container"
+        v-model:graph-today="graphToday"
         :full-size="$props.fullSize ?? false"
         :locale="$props.locale"
         :column-virtual-enabled="columnVirtualEnabled"
@@ -192,6 +198,8 @@
         :gantt-link-get-around="$props.ganttLinkGetAround ?? true"
         :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange ?? true"
         :gantt-link-highlight="$props.ganttLinkHighlight ?? true"
+        :gantt-today="($props.ganttToday || $props.ganttTodayInteractive) ?? false"
+        :gantt-today-interactive="$props.ganttTodayInteractive ?? false"
         @drag-row="
           (sid, tid) => {
             $emit('dragRow', sid, tid);

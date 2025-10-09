@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3";
 import { type Component, type DefineComponent, h } from "vue";
+import GanttCommonComponent from "../tech/Gantt/GanttCommon.vue";
 import GanttVirtualRow from "../tech/Gantt/GanttVirtualRow.vue";
 import { VTable } from "../ui";
 import type { GanttProps } from "../ui/Table/types";
@@ -49,3 +50,4 @@ function createTableStory(component: Component): Story {
 }
 
 export const GanttVirtual = createTableStory(GanttVirtualRow);
+export const GanttCommon = createTableStory(GanttCommonComponent);

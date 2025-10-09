@@ -1,8 +1,10 @@
 import { GANTT_LEFT_SHIFT, MIN_GANTT_TASK_WIDTH } from "../constants";
 import type { GanttHeaderInfo, GanttInfo, GanttRowInfo, GanttSize, GanttViewType } from "../types";
-import { getDayOfYear } from "./get-day-of-year";
+import { getGanttCellMonthShift } from "./get-gantt-cell-month-shift";
+import { getGanttCellYearShift } from "./get-gantt-cell-year-shift";
 import { getGanttColumnWidth } from "./get-gantt-column-width";
 import { getGanttRowHeight } from "./get-gantt-row-height";
+import { getGanttStartCellByMonth } from "./get-gantt-start-cell-by-month";
 import { getMonthDiff } from "./get-month-diff";
 
 type GetGanttRowInfoOptions = {
@@ -33,27 +35,13 @@ export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
 
   const startDate = new Date(opts.row.start);
   const endDate = new Date(opts.row.end);
+
   switch (opts.ganttView) {
     case "weeks": {
       cellCount = getMonthDiff(startDate, endDate) * 4;
-      startCellLeft = ((columnWidth * 4) / 31) * startDate.getDate();
-      lastCellRight = ((columnWidth * 4) / 31) * endDate.getDate();
-
-      const startYear = startDate.getFullYear();
-      const startMonth = startDate.getMonth();
-      if (opts.headerInfoItems[0]?.year < startYear) {
-        /** Extract months from first year, all months from between years and include all until current month from current year  */
-        startCell = opts.headerInfoItems[0].months.length;
-        const diff = startYear - opts.headerInfoItems[0].year - 1;
-        for (let i = 0; i < diff; i++) {
-          startCell += 12;
-        }
-        startCell += startMonth;
-      } else {
-        /** Extract months from first year until current month */
-        startCell = startMonth - opts.headerInfoItems[0]?.months?.[0];
-      }
-
+      startCellLeft = getGanttCellMonthShift(columnWidth * 4, startDate, "start");
+      lastCellRight = getGanttCellMonthShift(columnWidth * 4, endDate, "end");
+      startCell = getGanttStartCellByMonth(startDate, opts.headerInfoItems);
       startCell *= 4;
       break;
     }
@@ -61,31 +49,16 @@ export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
     case "quarters":
     case "months": {
       cellCount = getMonthDiff(startDate, endDate);
-      startCellLeft = (columnWidth / 31) * startDate.getDate();
-      lastCellRight = (columnWidth / 31) * endDate.getDate();
-
-      const startYear = startDate.getFullYear();
-      const startMonth = startDate.getMonth();
-      if (opts.headerInfoItems[0]?.year < startYear) {
-        /** Extract months from first year, all months from between years and include all until current month from current year  */
-        startCell = opts.headerInfoItems[0].months.length;
-        const diff = startYear - opts.headerInfoItems[0].year - 1;
-        for (let i = 0; i < diff; i++) {
-          startCell += 12;
-        }
-        startCell += startMonth;
-      } else {
-        /** Extract months from first year until current month */
-        startCell = startMonth - opts.headerInfoItems[0]?.months?.[0];
-      }
+      startCellLeft = getGanttCellMonthShift(columnWidth, startDate, "start");
+      lastCellRight = getGanttCellMonthShift(columnWidth, endDate, "end");
+      startCell = getGanttStartCellByMonth(startDate, opts.headerInfoItems);
 
       break;
     }
     case "years": {
       cellCount = endDate.getFullYear() - startDate.getFullYear();
-      startCellLeft = (columnWidth / 365) * getDayOfYear(startDate);
-      lastCellRight = (columnWidth / 365) * getDayOfYear(endDate);
-
+      startCellLeft = getGanttCellYearShift(columnWidth, startDate, "start");
+      lastCellRight = getGanttCellYearShift(columnWidth, endDate, "end");
       startCell = startDate.getFullYear() - opts.headerInfoItems[0]?.year;
 
       break;

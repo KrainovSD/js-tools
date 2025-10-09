@@ -2,9 +2,8 @@
   import { nextTick, ref, shallowRef, useTemplateRef, watch } from "vue";
   import Button from "../../ui/Button.vue";
   import CheckBox from "../../ui/CheckBox.vue";
-  import Select, { type SelectItem } from "../../ui/Select.vue";
   import Gantt from "../../ui/Table/Gantt.vue";
-  import type { ExpandedState, GanttInfo, GanttSize, GanttViewType } from "../../ui/Table/types";
+  import type { ExpandedState, GanttInfo } from "../../ui/Table/types";
   import GanttTask from "./GanttTask.vue";
   import { COLUMNS } from "./columns";
   import { GANTT_EASY_ROWS } from "./rows";
@@ -15,17 +14,6 @@
   const column = shallowRef(COLUMNS);
   const expanded = shallowRef<ExpandedState>({});
   const fullSize = ref(true);
-  const instantSplitter = ref(true);
-  const view = ref<GanttViewType>("weeks");
-  const size = ref<GanttSize>("sm");
-  const today = ref(new Date(2024, 12, 30).toISOString());
-
-  const viewVariants: SelectItem[] = [
-    { label: "Год", value: "years" },
-    { label: "Квартал", value: "quarters" },
-    { label: "Месяц", value: "months" },
-    { label: "Неделя", value: "weeks" },
-  ];
 
   function getSubRows(row: GanttInfo<RowData>) {
     return row.children;
@@ -98,34 +86,22 @@
       <Button @click="expand">Раскрыть</Button>
       <Button @click="unexpand">Закрыть</Button>
       <CheckBox v-model="fullSize"> Полный размер</CheckBox>
-      <CheckBox v-model="instantSplitter"> Мгновенный разделитель</CheckBox>
-      <CheckBox
-        :model-value="size === 'sm'"
-        @update:model-value="(value) => (value ? (size = 'sm') : (size = 'lg'))"
-      >
-        Мини</CheckBox
-      >
-      <Select v-model="view" :options="viewVariants" />
     </div>
     <Gantt
       ref="table"
-      v-model:graph-today="today"
       v-model:expanded="expanded"
       :columns="column"
       :rows="rows"
-      :virtual-rows="true"
       :full-size="fullSize"
       :get-sub-rows="getSubRows"
       :get-row-id="getRowId"
-      :gantt-splitter-instant="instantSplitter"
-      :gantt-view="view"
-      :gantt-size="size"
+      :gantt-splitter-instant="true"
+      :gantt-view="'years'"
+      :gantt-size="'sm'"
       :gantt-graph-grid="true"
       :gantt-link-visible-in-range="true"
       :gantt-link-get-around="true"
       :gantt-link-highlight="true"
-      :gantt-today="true"
-      :gantt-today-interactive="true"
       :with-total="false"
       @graph-task-click="
         (row, event) => {

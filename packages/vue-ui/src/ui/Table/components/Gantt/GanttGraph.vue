@@ -7,7 +7,7 @@
     GANTT_HEADER_HEIGHT,
     GANTT_LEFT_SHIFT,
   } from "../../constants";
-  import { getGanttColumnWidth, getGanttRowInfo, useGanttColumn } from "../../lib";
+  import { getGanttColumnWidth, getGanttRowInfo, useGanttColumn, useGanttToday } from "../../lib";
   import type {
     DefaultRow,
     GanttDate,
@@ -22,6 +22,7 @@
   import GanttGraphHeaderRow from "./GanttGraphHeaderRow.vue";
   import GanttGraphLinks from "./GanttGraphLinks.vue";
   import GanttGraphRow from "./GanttGraphRow.vue";
+  import GanttGraphToday from "./GanttGraphToday.vue";
 
   type Props = {
     width: number | undefined;
@@ -32,9 +33,12 @@
     ganttLinkGetAround: boolean;
     ganttLinkVisibleInRange: boolean;
     ganttLinkHighlight: boolean;
+    ganttToday: boolean;
+    ganttTodayInteractive: boolean;
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
 
+    containerHeight: number;
     rowHeight: number;
     columnsVirtual: VirtualItem[];
     rowsVirtual: VirtualItem[];
@@ -69,6 +73,28 @@
     width: `${columnsCount.value * columnWidth.value}px`,
   }));
 
+  /** today */
+  const todayComponentRef = useTemplateRef("today");
+  const todayElement = computed(() => todayComponentRef.value?.element);
+  const graphToday = defineModel<string>("graphToday", {
+    default: new Date().toISOString(),
+  });
+  const ganttToday = computed(() => props.ganttToday);
+  const ganttTodayInteractive = computed(() => props.ganttTodayInteractive);
+  const {
+    left: todayShift,
+    dragDate: todayDragDate,
+    dragging: todayDragging,
+  } = useGanttToday({
+    ganttToday,
+    ganttTodayInteractive,
+    graphToday,
+    graphElement,
+    todayElement,
+    ganttView,
+    headerInfoItems,
+  });
+
   const gridRender = computed(() =>
     Array.from({ length: columnsCount.value }, (_, index) => index),
   );
@@ -91,7 +117,7 @@
     return rowsMap;
   });
 
-  /** Extract body width */
+  /** extract body width */
   watch(
     graphBodyElement,
     (body, _, clean) => {
@@ -116,6 +142,16 @@
 
 <template>
   <div ref="gantt-graph" class="ksd-gantt-graph" :style="graphStyles">
+    <GanttGraphToday
+      v-if="$props.ganttToday"
+      ref="today"
+      :height="$props.containerHeight"
+      :left="todayShift"
+      :interactive="$props.ganttTodayInteractive"
+      :drag-date="todayDragDate"
+      :dragging="todayDragging"
+    />
+
     <div
       :id="GANTT_GRAPH_HEADER_ID"
       class="ksd-gantt-graph__header-container"
@@ -193,6 +229,7 @@
   .ksd-gantt-graph {
     height: fit-content;
     min-height: 100%;
+    position: relative;
 
     &__header-container {
       display: flex;

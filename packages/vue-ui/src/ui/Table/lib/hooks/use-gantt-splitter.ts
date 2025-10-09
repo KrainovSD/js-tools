@@ -1,12 +1,12 @@
-import { type ComputedRef, type ShallowRef, computed, ref, shallowRef, watch } from "vue";
+import { type ComputedRef, computed, ref, shallowRef, watch } from "vue";
 import { extractDragPosition } from "../../../../lib";
 import { MIN_GANTT_PART_WIDTH } from "../../constants";
 
 type UseGanttSplitterOptions = {
   instantSizing: ComputedRef<boolean>;
-  splitter: Readonly<ShallowRef<HTMLDivElement | null>>;
-  ghost: Readonly<ShallowRef<HTMLDivElement | null>>;
-  overlay: Readonly<ShallowRef<HTMLDivElement | null>>;
+  splitter: ComputedRef<HTMLDivElement | null | undefined>;
+  ghost: ComputedRef<HTMLDivElement | null | undefined>;
+  overlay: ComputedRef<HTMLDivElement | null | undefined>;
 };
 
 export function useGanttSplitter(opts: UseGanttSplitterOptions) {
@@ -45,6 +45,16 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
 
     if (!opts.instantSizing.value && opts.ghost.value) {
       opts.ghost.value.style.visibility = "visible";
+    }
+    if (!opts.instantSizing.value && opts.overlay.value) {
+      const rect = container.value?.getBoundingClientRect();
+      if (!rect) return;
+
+      opts.overlay.value.style.width = `${rect.width}px`;
+      opts.overlay.value.style.left = `-${rect.width - tempSizes[1]}px`;
+    } else if (opts.overlay.value) {
+      opts.overlay.value.style.width = `0px`;
+      opts.overlay.value.style.left = `-0px`;
     }
 
     function onDragEnd(event: MouseEvent | TouchEvent) {
@@ -102,16 +112,23 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
         passive: false,
         signal: eventController.signal,
       });
-      document.addEventListener("touchend", onDragEnd, { signal: eventController.signal });
+      document.addEventListener("touchend", onDragEnd, {
+        signal: eventController.signal,
+        passive: false,
+      });
     } else {
       document.addEventListener("mousemove", onDragMove, {
         passive: false,
         signal: eventController.signal,
       });
-      document.addEventListener("mouseup", onDragEnd, { signal: eventController.signal });
+      document.addEventListener("mouseup", onDragEnd, {
+        signal: eventController.signal,
+        passive: false,
+      });
     }
   }
 
+  /** resize */
   watch(
     container,
     (container, _, clean) => {
@@ -162,7 +179,7 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
     },
     { immediate: true },
   );
-
+  /** drag init */
   watch(
     () => opts.splitter.value,
     (splitter, _, clean) => {

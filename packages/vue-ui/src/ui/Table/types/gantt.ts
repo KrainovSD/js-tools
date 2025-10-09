@@ -127,6 +127,8 @@ export type GanttProps<
   ganttLinkGetAround?: boolean;
   ganttLinkVisibleInRange?: boolean;
   ganttLinkHighlight?: boolean;
+  ganttToday?: boolean;
+  ganttTodayInteractive?: boolean;
   ganttView?: GanttViewType;
   ganttLinkStyleGetter?: GanttLinkStyleGetter<RowData>;
 } & Omit<

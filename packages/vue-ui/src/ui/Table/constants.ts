@@ -22,4 +22,7 @@ export const GANTT_TOP_SHIFT = 0;
 export const MAX_SCROLL_WIDTH = 10;
 export const GANTT_MAX_TEXT_WIDTH_SHIFT = 25;
 
+export const MIN_GANTT_TODAY_LEFT = 10;
+
 export const GANTT_WEEK_ARRAY = [0, 1, 2, 3];
+export const GANTT_MONTH_DAYS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
