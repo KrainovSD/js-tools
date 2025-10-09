@@ -17,6 +17,7 @@ type UseGanttTodayOptions = {
   todayBodyElement: ComputedRef<HTMLDivElement | null | undefined>;
   todayHeaderElement: ComputedRef<HTMLDivElement | null | undefined>;
   graphElement: Readonly<ShallowRef<HTMLDivElement | null>>;
+  graphBodyElement: Readonly<ShallowRef<HTMLDivElement | null>>;
   ganttView: ComputedRef<GanttViewType>;
   headerInfoItems: ComputedRef<GanttHeaderInfo[]>;
   updateGraphScroll: (px: number) => void;
@@ -85,7 +86,8 @@ export function useGanttToday(opts: UseGanttTodayOptions) {
       const rect = opts.graphElement.value?.getBoundingClientRect();
       if (!rect) return MIN_GANTT_TODAY_LEFT;
 
-      const maxX = rect.left + rect.width - MIN_GANTT_TODAY_LEFT;
+      const minWidth = Math.min(rect.width, opts.graphBodyElement?.value?.clientWidth ?? 0);
+      const maxX = rect.left + minWidth - MIN_GANTT_TODAY_LEFT;
       const minX = rect.left + MIN_GANTT_TODAY_LEFT;
       let x = cachedClientX;
       if (event) {

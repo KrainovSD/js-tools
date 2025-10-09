@@ -96,6 +96,7 @@
     ganttTodayInteractive,
     graphToday,
     graphElement,
+    graphBodyElement,
     todayBodyElement,
     todayHeaderElement,
     ganttView,
@@ -158,7 +159,7 @@
     >
       <div class="ksd-gantt-graph__header" :style="headerStyles">
         <GanttGraphTodayHeader
-          v-if="$props.ganttToday"
+          v-if="$props.ganttToday && $props.rows.length > 0"
           ref="today-header"
           :height="$props.containerHeight"
           :left="todayShift"
@@ -186,7 +187,7 @@
         </template>
         <template v-if="$props.rowVirtualEnabled">
           <GanttGraphToday
-            v-if="$props.ganttToday"
+            v-if="$props.ganttToday && $props.rows.length > 0"
             ref="today-body"
             :height="$props.containerHeight"
             :left="todayShift"
