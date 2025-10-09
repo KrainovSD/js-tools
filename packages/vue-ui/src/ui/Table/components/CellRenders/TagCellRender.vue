@@ -37,7 +37,7 @@
       initialContent = [initialContent];
     }
     const content: TagContent[] = initialContent.reduce((acc: TagContent[], content) => {
-      if (isId(content) || isBoolean(content)) {
+      if ((isId(content) || isBoolean(content)) && content !== "") {
         let color: TagColor = "default";
         let label = String(content);
 
