@@ -109,7 +109,7 @@ export function useDrag<Meta extends Record<string, unknown>>(props: UseDragOpti
           handleDragMove(event, props.canDrop);
         }
 
-        if (event instanceof TouchEvent) {
+        if (typeof TouchEvent != "undefined" && event instanceof TouchEvent) {
           document.addEventListener("touchmove", onDragMove, {
             passive: false,
             signal: dragController.signal,
@@ -267,7 +267,7 @@ function handleDragMove(
   }
 
   /** Prevent Scroll on Touch */
-  if (event instanceof TouchEvent) {
+  if (typeof TouchEvent != "undefined" && event instanceof TouchEvent) {
     event.preventDefault();
   }
 

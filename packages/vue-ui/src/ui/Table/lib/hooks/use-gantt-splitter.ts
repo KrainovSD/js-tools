@@ -87,7 +87,7 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
     function onDragMove(event: MouseEvent | TouchEvent) {
       if (!dragging.value) return;
       /** Prevent Scroll on Touch */
-      if (event instanceof TouchEvent) {
+      if (typeof TouchEvent != "undefined" && event instanceof TouchEvent) {
         event.preventDefault();
       }
 
@@ -107,7 +107,7 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
       }
     }
 
-    if (event instanceof TouchEvent) {
+    if (typeof TouchEvent != "undefined" && event instanceof TouchEvent) {
       document.addEventListener("touchmove", onDragMove, {
         passive: false,
         signal: eventController.signal,

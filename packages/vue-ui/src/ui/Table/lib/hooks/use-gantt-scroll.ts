@@ -183,7 +183,7 @@ function onDragStart(elements: ScrollElements) {
       eventController.abort();
     }
 
-    if (event instanceof TouchEvent) {
+    if (typeof TouchEvent != "undefined" && event instanceof TouchEvent) {
       document.addEventListener("touchmove", onDragMove, {
         passive: false,
         signal: eventController.signal,
