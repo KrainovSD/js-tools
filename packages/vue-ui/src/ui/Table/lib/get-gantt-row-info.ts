@@ -1,15 +1,13 @@
 import { GANTT_LEFT_SHIFT, MIN_GANTT_TASK_WIDTH } from "../constants";
-import type { GanttHeaderInfo, GanttInfo, GanttRowInfo, GanttSize, GanttViewType } from "../types";
+import type { GanttHeaderInfo, GanttInfo, GanttRowInfo, GanttViewType } from "../types";
 import { getGanttCellMonthShift } from "./get-gantt-cell-month-shift";
 import { getGanttCellYearShift } from "./get-gantt-cell-year-shift";
 import { getGanttColumnWidth } from "./get-gantt-column-width";
-import { getGanttRowHeight } from "./get-gantt-row-height";
 import { getGanttStartCellByMonth } from "./get-gantt-start-cell-by-month";
 import { getMonthDiff } from "./get-month-diff";
 
 type GetGanttRowInfoOptions = {
   ganttView: GanttViewType;
-  ganttSize: GanttSize;
   row: GanttInfo<unknown>;
   index: number;
   headerInfoItems: GanttHeaderInfo[];
@@ -17,24 +15,24 @@ type GetGanttRowInfoOptions = {
 
 export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
   const columnWidth = getGanttColumnWidth(opts.ganttView);
-  const rowHeight = getGanttRowHeight(opts.ganttSize);
 
   /** Bad solution activated */
   const textWidth = opts.row.name.length * 6.5 + 20;
-  const top = opts.index * rowHeight + rowHeight / 2;
-
-  let height = rowHeight / 2;
-  if (opts.row.type === "milestone") {
-    height /= 1.5;
-  }
 
   let cellCount = 0;
   let startCellLeft = 0;
   let lastCellRight = 0;
   let startCell = 0;
+  let actualCellCount = 0;
+  let actualStartCellLeft = 0;
+  let actualLastCellRight = 0;
+  let actualStartCell = 0;
 
   const startDate = new Date(opts.row.start);
   const endDate = new Date(opts.row.end);
+  const actualStartDate = new Date(opts.row.actualStart ?? "");
+  const actualEndDate = new Date(opts.row.actualEnd ?? "");
+  const actual = !Number.isNaN(actualStartDate.getTime()) && !Number.isNaN(actualEndDate.getTime());
 
   switch (opts.ganttView) {
     case "weeks": {
@@ -43,6 +41,15 @@ export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
       lastCellRight = getGanttCellMonthShift(columnWidth * 4, endDate, "end");
       startCell = getGanttStartCellByMonth(startDate, opts.headerInfoItems);
       startCell *= 4;
+
+      if (actual) {
+        actualCellCount = getMonthDiff(actualStartDate, actualEndDate) * 4;
+        actualStartCellLeft = getGanttCellMonthShift(columnWidth * 4, actualStartDate, "start");
+        actualLastCellRight = getGanttCellMonthShift(columnWidth * 4, actualEndDate, "end");
+        actualStartCell = getGanttStartCellByMonth(actualStartDate, opts.headerInfoItems);
+        actualStartCell *= 4;
+      }
+
       break;
     }
 
@@ -53,6 +60,13 @@ export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
       lastCellRight = getGanttCellMonthShift(columnWidth, endDate, "end");
       startCell = getGanttStartCellByMonth(startDate, opts.headerInfoItems);
 
+      if (actual) {
+        actualCellCount = getMonthDiff(actualStartDate, actualEndDate);
+        actualStartCellLeft = getGanttCellMonthShift(columnWidth, actualStartDate, "start");
+        actualLastCellRight = getGanttCellMonthShift(columnWidth, actualEndDate, "end");
+        actualStartCell = getGanttStartCellByMonth(actualStartDate, opts.headerInfoItems);
+      }
+
       break;
     }
     case "years": {
@@ -60,6 +74,13 @@ export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
       startCellLeft = getGanttCellYearShift(columnWidth, startDate, "start");
       lastCellRight = getGanttCellYearShift(columnWidth, endDate, "end");
       startCell = startDate.getFullYear() - opts.headerInfoItems[0]?.year;
+
+      if (actual) {
+        actualCellCount = actualEndDate.getFullYear() - actualStartDate.getFullYear();
+        actualStartCellLeft = getGanttCellYearShift(columnWidth, actualStartDate, "start");
+        actualLastCellRight = getGanttCellYearShift(columnWidth, actualEndDate, "end");
+        actualStartCell = actualStartDate.getFullYear() - opts.headerInfoItems[0]?.year;
+      }
 
       break;
     }
@@ -70,18 +91,25 @@ export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
 
   let width = cellCount * columnWidth + lastCellRight - startCellLeft;
   if (width < MIN_GANTT_TASK_WIDTH) width = MIN_GANTT_TASK_WIDTH;
-  if (opts.row.type === "milestone") {
-    width = height;
-  }
 
   const left = startCell * columnWidth + startCellLeft - GANTT_LEFT_SHIFT;
 
+  let actualWidth = 0;
+  if (actual) {
+    actualWidth = actualCellCount * columnWidth + actualLastCellRight - actualStartCellLeft;
+    if (actualWidth < MIN_GANTT_TASK_WIDTH) actualWidth = MIN_GANTT_TASK_WIDTH;
+  }
+  let actualLeft = 0;
+  if (actual) {
+    actualLeft = actualStartCell * columnWidth + actualStartCellLeft - GANTT_LEFT_SHIFT;
+  }
+
   return {
-    height,
     index: opts.index,
     left,
     textWidth,
-    top,
     width,
+    actualLeft,
+    actualWidth,
   };
 }

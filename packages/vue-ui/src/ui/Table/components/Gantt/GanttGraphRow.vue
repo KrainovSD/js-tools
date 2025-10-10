@@ -9,6 +9,7 @@
     row: RowInterface<GanttInfo<RowData>>;
     rowHeight: number;
     virtualStart: number | undefined;
+    todayShift: number;
   };
 
   const props = defineProps<Props>();
@@ -25,6 +26,8 @@
     :body-width="$props.bodyWidth"
     :row="$props.row"
     :rows-map="$props.rowsMap"
+    :row-height="$props.rowHeight"
+    :today-shift="$props.todayShift"
     @click="(row, event) => $emit('cellClick', row, event)"
   >
     <template v-if="$slots['graphCell']" #graphCell="graphCellProps">

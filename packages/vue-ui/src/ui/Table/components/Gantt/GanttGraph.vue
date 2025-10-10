@@ -116,7 +116,6 @@
     for (let i = 0; i < rowsLength; i++) {
       const row = props.rows[i];
       rowsMap[row.original.id] = getGanttRowInfo({
-        ganttSize: props.ganttSize,
         ganttView: props.ganttView,
         headerInfoItems: headerInfoItems.value,
         index: i,
@@ -196,6 +195,7 @@
           <GanttGraphRow
             v-for="virtualRow in $props.rowsVirtual"
             :key="virtualRow.index"
+            :today-shift="todayShift"
             :body-width="bodyWidth"
             :row="$props.rows[virtualRow.index]"
             :row-height="rowHeight"
@@ -212,6 +212,7 @@
           <GanttGraphRow
             v-for="row in $props.rows"
             :key="row.id"
+            :today-shift="todayShift"
             :body-width="bodyWidth"
             :row="row"
             :row-height="rowHeight"

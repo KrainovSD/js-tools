@@ -213,6 +213,8 @@ export type ThemeTableVariable =
   | "ksd-table-gantt-task-color"
   | "ksd-table-gantt-milestone-color"
   | "ksd-table-gantt-group-color"
+  | "ksd-table-gantt-actual-task-past-color"
+  | "ksd-table-gantt-actual-task-future-color"
   | "ksd-table-gantt-link-color"
   | "ksd-table-gantt-link-active-color"
   | "ksd-table-gantt-today-color";

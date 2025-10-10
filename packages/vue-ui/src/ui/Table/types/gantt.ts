@@ -24,6 +24,8 @@ export type GanttTaskProps<RowData extends DefaultRow> = {
   duration: number;
   row: RowInterface<GanttInfo<RowData>>;
   bodyWidth: number | null;
+  todayShift: number;
+  rowHeight: number;
 };
 export type GanttTooltipProps<RowData extends DefaultRow> = {
   row: RowInterface<RowData>;
@@ -57,6 +59,8 @@ export type GanttInfo<RowData extends DefaultRow> = {
   id: number | string;
   start: string;
   end: string;
+  actualStart?: string;
+  actualEnd?: string;
   name: string;
   type?: GanttTypeShapes;
   progress?: number;
@@ -74,10 +78,10 @@ export type GanttDateInfo = {
 export type GanttRowInfo = {
   index: number;
   left: number;
-  top: number;
   width: number;
-  height: number;
   textWidth: number;
+  actualLeft: number;
+  actualWidth: number;
 };
 
 export type GanttHeaderInfo = {

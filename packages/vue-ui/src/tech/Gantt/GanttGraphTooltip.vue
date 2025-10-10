@@ -14,7 +14,11 @@
   <VTooltip :open-above-cursor="true" :class-name-content="$style.base">
     <slot></slot>
     <template #content>
-      <VText :strong="true" type="secondary" :class="$style.header">Задача:</VText>
+      <VText :strong="true" type="secondary" :class="$style.header">Идентификатор:</VText>
+      <VText :class="$style.info">
+        {{ $props.row.id }}
+      </VText>
+      <VText :strong="true" type="secondary" :class="$style.header">Название:</VText>
       <VText :class="$style.info">
         {{ $props.row.name }}
       </VText>

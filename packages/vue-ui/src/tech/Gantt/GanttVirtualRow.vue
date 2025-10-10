@@ -16,9 +16,9 @@
   const expanded = shallowRef<ExpandedState>({});
   const fullSize = ref(true);
   const instantSplitter = ref(true);
-  const view = ref<GanttViewType>("weeks");
+  const view = ref<GanttViewType>("months");
   const size = ref<GanttSize>("sm");
-  const today = ref(new Date(2024, 12, 30).toISOString());
+  const today = ref(new Date().toISOString());
 
   const viewVariants: SelectItem[] = [
     { label: "Год", value: "years" },

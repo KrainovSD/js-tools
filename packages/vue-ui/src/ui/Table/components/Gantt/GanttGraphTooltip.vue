@@ -13,7 +13,15 @@
   <VTooltip :open-above-cursor="true" class-name-content="ksd-gantt-graph__tooltip">
     <slot></slot>
     <template #content>
-      <VText :strong="true" type="secondary" class="ksd-gantt-graph__tooltip-header">Задача:</VText>
+      <VText :strong="true" type="secondary" class="ksd-gantt-graph__tooltip-header"
+        >Идентификатор:</VText
+      >
+      <VText class="ksd-gantt-graph__tooltip-info">
+        {{ $props.row.id }}
+      </VText>
+      <VText :strong="true" type="secondary" class="ksd-gantt-graph__tooltip-header"
+        >Название:</VText
+      >
       <VText class="ksd-gantt-graph__tooltip-info">
         {{ $props.row.name }}
       </VText>

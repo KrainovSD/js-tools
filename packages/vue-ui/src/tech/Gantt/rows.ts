@@ -748,12 +748,23 @@ export const GANTT_EASY_ROWS = [
 // ) as GanttInfo<RowData>[];
 
 function recursiveAddData(row: GanttInfo<unknown>): GanttInfo<RowData> {
+  const startDate = new Date(row.start);
+  const endDate = new Date(row.end);
+
   return {
     id: row.id,
     start: row.start,
     end: row.end,
     children: row.children?.map?.(recursiveAddData),
     name: row.name,
+    actualStart: getDateByRules(
+      [{ increment: randomNumber(-100, 100), type: "days" }],
+      startDate,
+    ).toISOString(),
+    actualEnd: getDateByRules(
+      [{ increment: randomNumber(-100, 100), type: "days" }],
+      endDate,
+    ).toISOString(),
     links: row.links,
     type: row.type,
     data: createRow(String(row.id)),

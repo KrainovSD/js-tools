@@ -93,7 +93,7 @@
       )
         return rowLinks;
 
-      const top = rowInfo.top + topShift.value;
+      const top = rowInfo.index * rowHeight.value + rowHeight.value / 2 + topShift.value;
       const left = rowInfo.left + rowInfo.width - GANTT_LINK_LEFT_SHIFT;
 
       const links: GanttLinkDrawInstruction[] = [];

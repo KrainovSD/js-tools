@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import { computed } from "vue";
   import { VText } from "../../..";
-  import { GANTT_MAX_TEXT_WIDTH_SHIFT, GANTT_TOP_SHIFT } from "../../constants";
+  import { GANTT_MAX_TEXT_WIDTH_SHIFT } from "../../constants";
   import { extractGanttLinkId } from "../../lib";
   import type {
     DefaultRow,
@@ -16,6 +16,8 @@
     rowsMap: Record<string, GanttRowInfo | undefined>;
     bodyWidth: number | null;
     row: RowInterface<GanttInfo<RowData>>;
+    todayShift: number;
+    rowHeight: number;
   };
 
   const props = defineProps<Props>();
@@ -74,10 +76,11 @@
   const taskStyles = computed(() =>
     rowInfo.value
       ? {
-          height: `${rowInfo.value.height}px`,
-          width: `${rowInfo.value.width}px`,
-          minWidth: `${rowInfo.value.width}px`,
-          maxWidth: `${rowInfo.value.width}px`,
+          top: props.row.original.type === "milestone" ? "25%" : "50%",
+          height: `${props.rowHeight / 2}px`,
+          width: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : rowInfo.value.width}px`,
+          minWidth: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : rowInfo.value.width}px`,
+          maxWidth: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : rowInfo.value.width}px`,
         }
       : undefined,
   );
@@ -86,7 +89,8 @@
     rowInfo.value
       ? {
           left: `${rowInfo.value.left}px`,
-          top: `${rowInfo.value.top - rowInfo.value.height / 2 - GANTT_TOP_SHIFT}px`,
+          top: `${rowInfo.value.index * props.rowHeight}px`,
+          height: `${props.rowHeight}px`,
         }
       : undefined,
   );
@@ -100,6 +104,24 @@
           ? "10px"
           : undefined,
   }));
+
+  const actualPast = computed(() =>
+    Math.max(0, props.todayShift - (rowInfo.value?.actualLeft ?? 0)),
+  );
+
+  const actualTaskStyles = computed(() =>
+    rowInfo.value
+      ? {
+          left: `${rowInfo.value.actualLeft - rowInfo.value.left}px`,
+          top: `${props.rowHeight / 2 + props.rowHeight / 4}px`,
+          height: `${props.rowHeight / 6}px`,
+          width: `${rowInfo.value.actualWidth}px`,
+          minWidth: `${rowInfo.value.actualWidth}px`,
+          maxWidth: `${rowInfo.value.actualWidth}px`,
+        }
+      : undefined,
+  );
+  const pastTaskStyle = computed(() => ({ width: `${actualPast.value}px` }));
 
   function onKeyDown(event: KeyboardEvent) {
     const target = event.target as HTMLDivElement;
@@ -127,6 +149,14 @@
       :row="$props.row.original"
     >
       <div class="ksd-gantt-graph__task-container">
+        <div
+          v-if="rowInfo.actualLeft != 0 && rowInfo.actualWidth != 0"
+          class="ksd-gantt-graph__task-actual"
+          :style="actualTaskStyles"
+        >
+          <div class="ksd-gantt-graph__task-actual-past" :style="pastTaskStyle"></div>
+          <div class="ksd-gantt-graph__task-actual-future"></div>
+        </div>
         <div class="ksd-gantt-graph__task" :class="taskClasses" :style="taskStyles">
           <VText
             v-if="rowInfo.textWidth <= rowInfo.width"
@@ -155,6 +185,8 @@
       :duration="duration"
       :row="$props.row"
       :body-width="bodyWidth"
+      :row-height="$props.rowHeight"
+      :today-shift="$props.todayShift"
     ></slot>
   </div>
 </template>
@@ -177,6 +209,20 @@
       }
     }
 
+    &__task-actual {
+      position: absolute;
+      display: flex;
+      transform: translateY(-50%);
+      z-index: 6;
+    }
+    &__task-actual-past {
+      background-color: var(--ksd-table-gantt-actual-task-past-color);
+    }
+    &__task-actual-future {
+      flex: 1;
+      background-color: var(--ksd-table-gantt-actual-task-future-color);
+    }
+
     &__task-container {
       display: flex;
     }
@@ -185,6 +231,7 @@
       display: flex;
       border-radius: 4px;
       position: relative;
+      transform: translateY(-50%);
       align-items: center;
       width: 100%;
       z-index: 5;
@@ -207,6 +254,10 @@
     &__task-name {
       margin-inline-end: 10px;
       margin-inline-start: 10px;
+      height: fit-content;
+      top: 50%;
+      position: relative;
+      transform: translateY(-50%);
     }
   }
 </style>
