@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@krainovsd/fastify-logger": "0.3.3",
-    "@krainovsd/js-helpers": "0.14.7",
+    "@krainovsd/js-helpers": "0.16.6",
     "@krainovsd/fastify-health-controller": "0.3.2",
     "@krainovsd/fastify-trace": "0.0.5",
     "dotenv": "16.4.7",
