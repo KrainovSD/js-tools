@@ -758,11 +758,11 @@ function recursiveAddData(row: GanttInfo<unknown>): GanttInfo<RowData> {
     children: row.children?.map?.(recursiveAddData),
     name: row.name,
     actualStart: getDateByRules(
-      [{ increment: randomNumber(-100, 100), type: "days" }],
+      [{ increment: randomNumber(-30, 30), type: "days" }],
       startDate,
     ).toISOString(),
     actualEnd: getDateByRules(
-      [{ increment: randomNumber(-100, 100), type: "days" }],
+      [{ increment: randomNumber(-30, 30), type: "days" }],
       endDate,
     ).toISOString(),
     links: row.links,

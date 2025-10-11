@@ -1,23 +1,14 @@
 import { GANTT_LEFT_SHIFT, MIN_GANTT_TASK_WIDTH } from "../constants";
-import type { GanttHeaderInfo, GanttInfo, GanttRowInfo, GanttViewType } from "../types";
+import type { GanttRowInfo, GanttRowInfoGetterOptions } from "../types";
 import { getGanttCellMonthShift } from "./get-gantt-cell-month-shift";
 import { getGanttCellYearShift } from "./get-gantt-cell-year-shift";
 import { getGanttColumnWidth } from "./get-gantt-column-width";
+import { getGanttLinkTopShift } from "./get-gantt-link-top-shift";
 import { getGanttStartCellByMonth } from "./get-gantt-start-cell-by-month";
 import { getMonthDiff } from "./get-month-diff";
 
-type GetGanttRowInfoOptions = {
-  ganttView: GanttViewType;
-  row: GanttInfo<unknown>;
-  index: number;
-  headerInfoItems: GanttHeaderInfo[];
-};
-
-export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
+export function getGanttRowInfo(opts: GanttRowInfoGetterOptions): GanttRowInfo {
   const columnWidth = getGanttColumnWidth(opts.ganttView);
-
-  /** Bad solution activated */
-  const textWidth = opts.row.name.length * 6.5 + 20;
 
   let cellCount = 0;
   let startCellLeft = 0;
@@ -88,11 +79,19 @@ export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
       break;
     }
   }
+  /** Bad solution activated */
+  const textWidth = opts.row.name.length * 6.5 + 20;
 
-  let width = cellCount * columnWidth + lastCellRight - startCellLeft;
-  if (width < MIN_GANTT_TASK_WIDTH) width = MIN_GANTT_TASK_WIDTH;
+  const taskHeight = opts.rowHeight / 2;
+  let taskWidth = cellCount * columnWidth + lastCellRight - startCellLeft;
+  if (taskWidth < MIN_GANTT_TASK_WIDTH) {
+    taskWidth = MIN_GANTT_TASK_WIDTH;
+  }
+  if (opts.row.type === "milestone") {
+    taskWidth = taskHeight;
+  }
 
-  const left = startCell * columnWidth + startCellLeft - GANTT_LEFT_SHIFT;
+  const cellLeft = startCell * columnWidth + startCellLeft - GANTT_LEFT_SHIFT;
 
   let actualWidth = 0;
   if (actual) {
@@ -106,10 +105,21 @@ export function getGanttRowInfo(opts: GetGanttRowInfoOptions): GanttRowInfo {
 
   return {
     index: opts.index,
-    left,
-    textWidth,
-    width,
+    cellLeft,
     actualLeft,
+    actualTop: opts.rowHeight / 2 + opts.rowHeight / 4,
+    cellTop: opts.index * opts.rowHeight,
+    taskTop: opts.row.type === "milestone" ? opts.rowHeight / 4 : opts.rowHeight / 2,
+    textTop: textWidth <= taskWidth ? taskHeight / 2 : opts.rowHeight / 2,
+    textWidth,
+    taskWidth,
     actualWidth,
+    cellHeight: opts.rowHeight,
+    actualHeight: opts.rowHeight / 6,
+    taskHeight,
+    linkInputTop:
+      opts.index * opts.rowHeight + opts.rowHeight / 2 + getGanttLinkTopShift(opts.ganttSize),
+    linkOutputTop:
+      opts.index * opts.rowHeight + opts.rowHeight / 2 + getGanttLinkTopShift(opts.ganttSize),
   };
 }

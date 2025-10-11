@@ -8,6 +8,7 @@
     GanttDate,
     GanttInfo,
     GanttLinkStyleGetter,
+    GanttRowInfoGetter,
     GanttSize,
     GanttViewType,
     HeaderGroupInterface,
@@ -31,6 +32,7 @@
     ganttView: GanttViewType;
     ganttToday: boolean;
     ganttTodayInteractive: boolean;
+    ganttRowInfoGetter: GanttRowInfoGetter | undefined;
 
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
@@ -207,6 +209,7 @@
         :gantt-graph-grid="$props.ganttGraphGrid"
         :gantt-interval-date="$props.ganttIntervalDate"
         :gantt-link-style-getter="$props.ganttLinkStyleGetter"
+        :gantt-row-info-getter="$props.ganttRowInfoGetter"
         :gantt-size="$props.ganttSize"
         :gantt-view="$props.ganttView"
         :locale="$props.locale"

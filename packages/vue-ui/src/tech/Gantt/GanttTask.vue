@@ -16,6 +16,9 @@
           ? "10px"
           : undefined,
   }));
+  const textCommonStyles = computed(() => ({
+    top: `${props.rowInfo?.textTop}px`,
+  }));
 
   const taskClasses = computed(() => ({
     [styles.group]: props.row.original.type === "group",
@@ -26,11 +29,11 @@
   const taskStyles = computed(() =>
     props.rowInfo
       ? {
-          top: props.row.original.type === "milestone" ? "25%" : "50%",
-          height: `${props.rowHeight / 2}px`,
-          width: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : props.rowInfo.width}px`,
-          minWidth: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : props.rowInfo.width}px`,
-          maxWidth: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : props.rowInfo.width}px`,
+          top: `${props.rowInfo.taskTop}px`,
+          height: `${props.rowInfo.taskHeight}px`,
+          width: `${props.rowInfo.taskWidth}px`,
+          minWidth: `${props.rowInfo.taskWidth}px`,
+          maxWidth: `${props.rowInfo.taskWidth}px`,
         }
       : undefined,
   );
@@ -41,9 +44,9 @@
   const actualTaskStyles = computed(() =>
     props.rowInfo
       ? {
-          left: `${props.rowInfo.actualLeft - props.rowInfo.left}px`,
-          top: `${props.rowHeight / 2 + props.rowHeight / 4}px`,
-          height: `${props.rowHeight / 6}px`,
+          left: `${props.rowInfo.actualLeft - props.rowInfo.cellLeft}px`,
+          top: `${props.rowInfo.actualTop}px`,
+          height: `${props.rowInfo.actualHeight}px`,
           width: `${props.rowInfo.actualWidth}px`,
           minWidth: `${props.rowInfo.actualWidth}px`,
           maxWidth: `${props.rowInfo.actualWidth}px`,
@@ -65,14 +68,19 @@
         <div :class="$style.taskActual_future"></div>
       </div>
       <div :class="[$style.taskItem, taskClasses]" :style="taskStyles">
-        <VText v-if="rowInfo.textWidth <= rowInfo.width" :ellipsis="true" :class="$style.name">
+        <VText
+          v-if="rowInfo.textWidth <= rowInfo.taskWidth"
+          :ellipsis="true"
+          :class="$style.name"
+          :style="textCommonStyles"
+        >
           {{ $props.row.original.name }}
         </VText>
       </div>
       <VText
-        v-if="rowInfo.textWidth > rowInfo.width"
+        v-if="rowInfo.textWidth > rowInfo.taskWidth"
         :class="$style.name"
-        :style="textStyles"
+        :style="[textStyles, textCommonStyles]"
         :ellipsis="true"
       >
         {{ $props.row.original.name }}
@@ -129,7 +137,6 @@
     margin-inline-end: 10px;
     margin-inline-start: 10px;
     height: fit-content;
-    top: 50%;
     position: relative;
     transform: translateY(-50%);
   }

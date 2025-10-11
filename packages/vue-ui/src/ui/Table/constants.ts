@@ -15,6 +15,9 @@ export const GANTT_HEADER_HEIGHT = 30;
 export const GANTT_ROW_LG_HEIGHT = 69;
 export const GANTT_ROW_SM_HEIGHT = 45;
 
+export const GANTT_LINK_TOP_SHIFT_LG = -1;
+export const GANTT_LINK_TOP_SHIFT_SM = -2;
+
 export const MIN_GANTT_TASK_WIDTH = 10;
 export const MIN_GANTT_PART_WIDTH = 10;
 export const GANTT_LEFT_SHIFT = 1;

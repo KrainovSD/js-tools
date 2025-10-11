@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import type { VirtualItem } from "@tanstack/vue-virtual";
   import { computed, ref, watch } from "vue";
-  import { SegmentTree, extractGanttLinkId, getGanttRowHeight } from "../../lib";
+  import { SegmentTree, extractGanttLinkId } from "../../lib";
   import type {
     DefaultRow,
     GanttInfo,
@@ -29,8 +29,6 @@
   };
 
   const GANTT_LINK_MARGIN = 4;
-  const GANTT_LINK_TOP_SHIFT_LG = -1;
-  const GANTT_LINK_TOP_SHIFT_SM = -2;
 
   const GANTT_LINK_DEFAULT_SIZE = 2;
   const GANTT_LINK_CORNER_DEFAULT_SIZE = 4;
@@ -48,19 +46,6 @@
   const props = defineProps<Props>();
   const selectedLink = ref<string | null>(null);
 
-  const topShift = computed(() => {
-    switch (props.ganttSize) {
-      case "sm": {
-        return GANTT_LINK_TOP_SHIFT_SM;
-      }
-      case "lg": {
-        return GANTT_LINK_TOP_SHIFT_LG;
-      }
-      default: {
-        return GANTT_LINK_TOP_SHIFT_SM;
-      }
-    }
-  });
   const topToBottomExtra = computed(() => {
     switch (props.ganttSize) {
       case "sm": {
@@ -74,13 +59,12 @@
       }
     }
   });
-  const rowHeight = computed(() => getGanttRowHeight(props.ganttSize));
 
   const rowsLinks = computed<GanttRowLinks[]>(() => {
     let segmentTree: SegmentTree | undefined;
     if (props.ganttLinkGetAround) {
       segmentTree = new SegmentTree(
-        props.rows.map((row) => props.rowsMap[row.original.id]?.left ?? 0),
+        props.rows.map((row) => props.rowsMap[row.original.id]?.cellLeft ?? 0),
       );
     }
 
@@ -93,8 +77,8 @@
       )
         return rowLinks;
 
-      const top = rowInfo.index * rowHeight.value + rowHeight.value / 2 + topShift.value;
-      const left = rowInfo.left + rowInfo.width - GANTT_LINK_LEFT_SHIFT;
+      const top = rowInfo.linkOutputTop;
+      const left = rowInfo.cellLeft + rowInfo.taskWidth - GANTT_LINK_LEFT_SHIFT;
 
       const links: GanttLinkDrawInstruction[] = [];
       for (let i = 0; i < row.original.links.length; i++) {
@@ -102,7 +86,7 @@
         const dependentRowInfo = props.rowsMap[extractGanttLinkId(link)];
         if (!dependentRowInfo) continue;
 
-        let minLeft = dependentRowInfo.left;
+        let minLeft = dependentRowInfo.cellLeft;
         if (segmentTree) {
           minLeft = Math.min(
             minLeft,
@@ -114,7 +98,7 @@
         }
 
         const diff = dependentRowInfo.index - rowInfo.index;
-        const left = rowInfo.left + rowInfo.width - GANTT_LINK_LEFT_SHIFT;
+        const left = rowInfo.cellLeft + rowInfo.taskWidth - GANTT_LINK_LEFT_SHIFT;
         const {
           color,
           size = GANTT_LINK_DEFAULT_SIZE,
@@ -129,17 +113,19 @@
         const extraCorner = minLeft < endOfLink;
 
         const rightToLeft = endOfLink - minLeft;
-        let topToBottom = Math.abs(diff * rowHeight.value) - GANTT_LINK_CORNER_DEFAULT_SIZE * 2;
+        let topToBottom =
+          Math.abs(dependentRowInfo.linkInputTop - top) - GANTT_LINK_CORNER_DEFAULT_SIZE * 2;
+
         if (extraCorner) {
           topToBottom -= topToBottomExtra.value + GANTT_LINK_CORNER_DEFAULT_SIZE * 2;
         }
 
         const leftToRightSecond = extraCorner
-          ? dependentRowInfo.left -
+          ? dependentRowInfo.cellLeft -
             (left + GANTT_LINK_LEFT_TO_RIGHT_FIRST - rightToLeft - GANTT_LINK_CORNER_DEFAULT_SIZE) -
             GANTT_LINK_CORNER_DEFAULT_SIZE +
             GANTT_LINK_END_ARROW_SHIFT
-          : dependentRowInfo.left -
+          : dependentRowInfo.cellLeft -
             left -
             GANTT_LINK_LEFT_TO_RIGHT_FIRST -
             GANTT_LINK_CORNER_DEFAULT_SIZE * 2 +

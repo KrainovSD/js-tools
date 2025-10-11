@@ -19,6 +19,11 @@ export * from "./lib/get-gantt-column-width";
 export * from "./lib/get-gantt-row-height";
 export * from "./lib/extract-gantt-link-id";
 export * from "./lib/check-cell-visible";
+export * from "./lib/get-month-diff";
+export * from "./lib/get-gantt-cell-month-shift";
+export * from "./lib/get-gantt-cell-year-shift";
+export * from "./lib/get-gantt-start-cell-by-month";
+export * from "./lib/get-gantt-link-top-shift";
 
 export * from "./types";
 

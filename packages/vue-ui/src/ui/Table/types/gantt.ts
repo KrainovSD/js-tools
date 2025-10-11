@@ -75,13 +75,32 @@ export type GanttDateInfo = {
   day: number;
 };
 
+export type GanttRowInfoGetterOptions = {
+  ganttView: GanttViewType;
+  ganttSize: GanttSize;
+  row: GanttInfo<unknown>;
+  index: number;
+  headerInfoItems: GanttHeaderInfo[];
+  rowHeight: number;
+};
+export type GanttRowInfoGetter = (opts: GanttRowInfoGetterOptions) => GanttRowInfo;
+
 export type GanttRowInfo = {
   index: number;
-  left: number;
-  width: number;
-  textWidth: number;
+  cellTop: number;
+  taskTop: number;
+  actualTop: number;
+  textTop: number;
+  cellLeft: number;
   actualLeft: number;
+  textWidth: number;
+  taskWidth: number;
   actualWidth: number;
+  cellHeight: number;
+  taskHeight: number;
+  actualHeight: number;
+  linkOutputTop: number;
+  linkInputTop: number;
 };
 
 export type GanttHeaderInfo = {
@@ -135,6 +154,7 @@ export type GanttProps<
   ganttTodayInteractive?: boolean;
   ganttView?: GanttViewType;
   ganttLinkStyleGetter?: GanttLinkStyleGetter<RowData>;
+  ganttRowInfoGetter?: GanttRowInfoGetter;
 } & Omit<
   TableProps<
     GanttInfo<RowData>,

@@ -14,6 +14,7 @@
     GanttInfo,
     GanttLinkStyleGetter,
     GanttRowInfo,
+    GanttRowInfoGetter,
     GanttSize,
     GanttViewType,
     RowInterface,
@@ -36,6 +37,8 @@
     ganttLinkHighlight: boolean;
     ganttToday: boolean;
     ganttTodayInteractive: boolean;
+    ganttRowInfoGetter: GanttRowInfoGetter | undefined;
+
     locale: string | undefined;
     ganttLinkStyleGetter: GanttLinkStyleGetter<RowData> | undefined;
     updateGraphScroll: (px: number) => void;
@@ -115,12 +118,23 @@
 
     for (let i = 0; i < rowsLength; i++) {
       const row = props.rows[i];
-      rowsMap[row.original.id] = getGanttRowInfo({
-        ganttView: props.ganttView,
-        headerInfoItems: headerInfoItems.value,
-        index: i,
-        row: row.original,
-      });
+      rowsMap[row.original.id] = props.ganttRowInfoGetter
+        ? props.ganttRowInfoGetter({
+            ganttView: props.ganttView,
+            headerInfoItems: headerInfoItems.value,
+            index: i,
+            row: row.original,
+            rowHeight: props.rowHeight,
+            ganttSize: props.ganttSize,
+          })
+        : getGanttRowInfo({
+            ganttView: props.ganttView,
+            headerInfoItems: headerInfoItems.value,
+            index: i,
+            row: row.original,
+            rowHeight: props.rowHeight,
+            ganttSize: props.ganttSize,
+          });
     }
 
     return rowsMap;

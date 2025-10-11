@@ -195,6 +195,7 @@
         :gantt-splitter-instant="$props.ganttSplitterInstant ?? true"
         :gantt-view="$props.ganttView ?? 'months'"
         :gantt-link-style-getter="$props.ganttLinkStyleGetter"
+        :gantt-row-info-getter="$props.ganttRowInfoGetter"
         :gantt-link-get-around="$props.ganttLinkGetAround ?? true"
         :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange ?? true"
         :gantt-link-highlight="$props.ganttLinkHighlight ?? true"

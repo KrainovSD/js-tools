@@ -17,3 +17,4 @@ export * from "./get-days-in-year";
 export * from "./get-days-in-month";
 export * from "./get-gantt-cell-month-shift";
 export * from "./get-gantt-cell-year-shift";
+export * from "./get-gantt-link-top-shift";

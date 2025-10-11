@@ -58,11 +58,14 @@
   const maxTextWidth = computed(() => {
     if (
       rowInfo.value &&
-      rowInfo.value.textWidth > rowInfo.value.width &&
+      rowInfo.value.textWidth > rowInfo.value.taskWidth &&
       props.bodyWidth != undefined
     ) {
       return (
-        props.bodyWidth - rowInfo.value.width - rowInfo.value.left - GANTT_MAX_TEXT_WIDTH_SHIFT
+        props.bodyWidth -
+        rowInfo.value.taskWidth -
+        rowInfo.value.cellLeft -
+        GANTT_MAX_TEXT_WIDTH_SHIFT
       );
     }
 
@@ -76,11 +79,11 @@
   const taskStyles = computed(() =>
     rowInfo.value
       ? {
-          top: props.row.original.type === "milestone" ? "25%" : "50%",
-          height: `${props.rowHeight / 2}px`,
-          width: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : rowInfo.value.width}px`,
-          minWidth: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : rowInfo.value.width}px`,
-          maxWidth: `${props.row.original.type === "milestone" ? props.rowHeight / 2 : rowInfo.value.width}px`,
+          top: `${rowInfo.value.taskTop}px`,
+          height: `${rowInfo.value.taskHeight}px`,
+          width: `${rowInfo.value.taskWidth}px`,
+          minWidth: `${rowInfo.value.taskWidth}px`,
+          maxWidth: `${rowInfo.value.taskWidth}px`,
         }
       : undefined,
   );
@@ -88,13 +91,14 @@
   const cellStyles = computed(() =>
     rowInfo.value
       ? {
-          left: `${rowInfo.value.left}px`,
-          top: `${rowInfo.value.index * props.rowHeight}px`,
-          height: `${props.rowHeight}px`,
+          left: `${rowInfo.value.cellLeft}px`,
+          top: `${rowInfo.value.cellTop}px`,
+          height: `${rowInfo.value.cellHeight}px`,
         }
       : undefined,
   );
   const textStyles = computed(() => ({
+    top: `${rowInfo.value?.textTop}px`,
     maxWidth: maxTextWidth.value ? `${maxTextWidth.value}px` : undefined,
     marginInlineStart: arrows.value.up && arrows.value.down ? "30px" : "10px",
     marginBlockStart:
@@ -104,6 +108,9 @@
           ? "10px"
           : undefined,
   }));
+  const textCommonStyles = computed(() => ({
+    top: `${rowInfo.value?.textTop}px`,
+  }));
 
   const actualPast = computed(() =>
     Math.max(0, props.todayShift - (rowInfo.value?.actualLeft ?? 0)),
@@ -112,9 +119,9 @@
   const actualTaskStyles = computed(() =>
     rowInfo.value
       ? {
-          left: `${rowInfo.value.actualLeft - rowInfo.value.left}px`,
-          top: `${props.rowHeight / 2 + props.rowHeight / 4}px`,
-          height: `${props.rowHeight / 6}px`,
+          left: `${rowInfo.value.actualLeft - rowInfo.value.cellLeft}px`,
+          top: `${rowInfo.value.actualTop}px`,
+          height: `${rowInfo.value.actualHeight}px`,
           width: `${rowInfo.value.actualWidth}px`,
           minWidth: `${rowInfo.value.actualWidth}px`,
           maxWidth: `${rowInfo.value.actualWidth}px`,
@@ -159,17 +166,18 @@
         </div>
         <div class="ksd-gantt-graph__task" :class="taskClasses" :style="taskStyles">
           <VText
-            v-if="rowInfo.textWidth <= rowInfo.width"
+            v-if="rowInfo.textWidth <= rowInfo.taskWidth"
             :ellipsis="true"
             class="ksd-gantt-graph__task-name"
+            :style="textCommonStyles"
           >
             {{ $props.row.original.name }}
           </VText>
         </div>
         <VText
-          v-if="rowInfo.textWidth > rowInfo.width"
+          v-if="rowInfo.textWidth > rowInfo.taskWidth"
           class="ksd-gantt-graph__task-name"
-          :style="textStyles"
+          :style="[textStyles, textCommonStyles]"
           :ellipsis="true"
         >
           {{ $props.row.original.name }}
@@ -255,7 +263,6 @@
       margin-inline-end: 10px;
       margin-inline-start: 10px;
       height: fit-content;
-      top: 50%;
       position: relative;
       transform: translateY(-50%);
     }
