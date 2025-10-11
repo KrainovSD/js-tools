@@ -188,11 +188,12 @@ export const GANTT_EASY_ROWS = [
             name: "Contract",
             start: "2025-02-01",
             end: "2025-06-02",
-            links: ["1.1"],
+            links: ["1.1", "1.1.2.1"],
           },
           {
             id: "1.1.2",
             name: "Design",
+            links: ["1.1.0"],
             start: "2025-02-02",
             end: "2025-07-01",
             children: [

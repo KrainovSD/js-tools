@@ -249,6 +249,7 @@
           :gantt-link-get-around="$props.ganttLinkGetAround"
           :gantt-link-visible-in-range="$props.ganttLinkVisibleInRange"
           :gantt-link-highlight="$props.ganttLinkHighlight"
+          :row-height="$props.rowHeight"
           :container="graphBodyElement"
         />
       </div>

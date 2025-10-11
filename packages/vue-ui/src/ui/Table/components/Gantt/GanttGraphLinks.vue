@@ -26,6 +26,7 @@
     ganttSize: GanttSize;
     rowsMap: Record<string, GanttRowInfo | undefined>;
     container: HTMLElement | null;
+    rowHeight: number;
   };
 
   const GANTT_LINK_MARGIN = 4;
@@ -35,8 +36,6 @@
   const GANTT_LINK_ARROW_DEFAULT_SIZE = 16;
 
   const GANTT_LINK_LEFT_TO_RIGHT_FIRST = 22;
-  const GANTT_LINK_TOP_TO_BOTTOM_EXTRA_LG = 25;
-  const GANTT_LINK_TOP_TO_BOTTOM_EXTRA_SM = 13;
 
   const GANTT_LINK_LEFT_TO_RIGHT_SECOND_DEFAULT = 22;
 
@@ -45,20 +44,6 @@
   const GANTT_LINK_LEFT_SHIFT = 2;
   const props = defineProps<Props>();
   const selectedLink = ref<string | null>(null);
-
-  const topToBottomExtra = computed(() => {
-    switch (props.ganttSize) {
-      case "sm": {
-        return GANTT_LINK_TOP_TO_BOTTOM_EXTRA_SM;
-      }
-      case "lg": {
-        return GANTT_LINK_TOP_TO_BOTTOM_EXTRA_LG;
-      }
-      default: {
-        return GANTT_LINK_TOP_TO_BOTTOM_EXTRA_SM;
-      }
-    }
-  });
 
   const rowsLinks = computed<GanttRowLinks[]>(() => {
     let segmentTree: SegmentTree | undefined;
@@ -116,8 +101,13 @@
         let topToBottom =
           Math.abs(dependentRowInfo.linkInputTop - top) - GANTT_LINK_CORNER_DEFAULT_SIZE * 2;
 
+        let topToBottomExtra = 0;
         if (extraCorner) {
-          topToBottom -= topToBottomExtra.value + GANTT_LINK_CORNER_DEFAULT_SIZE * 2;
+          topToBottomExtra =
+            diff > 0
+              ? props.rowHeight - (top - rowInfo.index * props.rowHeight) - cornerSize * 2
+              : top - rowInfo.index * props.rowHeight - cornerSize * 2;
+          topToBottom -= topToBottomExtra + GANTT_LINK_CORNER_DEFAULT_SIZE * 2;
         }
 
         const leftToRightSecond = extraCorner
@@ -144,7 +134,7 @@
           rightToLeft,
           topArrowShift: GANTT_LINK_TOP_ARROW_SHIFT,
           topToBottom,
-          topToBottomExtra: topToBottomExtra.value,
+          topToBottomExtra,
           position: diff > 0 ? "down" : "up",
         });
       }
