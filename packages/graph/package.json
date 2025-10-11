@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/graph",
-  "version": "0.12.0-beta.1",
+  "version": "0.12.0-beta.2",
   "description": "Krainov graph",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -60,7 +60,7 @@
     "svelte": "5.23.2"
   },
   "dependencies": {
-    "@krainovsd/js-helpers": "^0.14.6",
+    "@krainovsd/js-helpers": "^0.16.5",
     "@types/d3-zoom": "3.0.8",
     "@types/d3-force": "3.0.10",
     "@types/d3-drag": "3.0.7",

@@ -279,8 +279,8 @@ importers:
   packages/graph:
     dependencies:
       '@krainovsd/js-helpers':
-        specifier: ^0.14.6
-        version: 0.14.6
+        specifier: ^0.16.5
+        version: 0.16.5
       '@types/d3-drag':
         specifier: 3.0.7
         version: 3.0.7
@@ -355,11 +355,8 @@ importers:
   packages/js-helpers:
     dependencies:
       dayjs:
-        specifier: 1.11.13
+        specifier: ^1.11.13
         version: 1.11.13
-      lodash:
-        specifier: 4.17.21
-        version: 4.17.21
     devDependencies:
       '@krainovsd/presets':
         specifier: 0.3.6
@@ -373,9 +370,6 @@ importers:
       '@types/jest':
         specifier: 29.5.14
         version: 29.5.14
-      '@types/lodash':
-        specifier: 4.17.14
-        version: 4.17.14
       '@types/node':
         specifier: 22.13.8
         version: 22.13.8
@@ -1270,8 +1264,8 @@ importers:
   packages/vue-ui:
     dependencies:
       '@krainovsd/js-helpers':
-        specifier: ^0.16.3
-        version: 0.16.3
+        specifier: ^0.16.6
+        version: 0.16.6
       '@krainovsd/markdown-editor':
         specifier: ^0.4.8
         version: 0.4.8(@codemirror/search@6.5.10)
@@ -2775,9 +2769,6 @@ packages:
   '@krainovsd/fastify-trace@0.0.5':
     resolution: {integrity: sha512-meOOjz2XQvOzSLnByCulI6wDMtVkAR8cDTIVc2YOCxwhPQ2xAekhQM1Iv599BeOW7QMWsAQFoXtmtO1o/s5TPQ==}
 
-  '@krainovsd/js-helpers@0.14.12':
-    resolution: {integrity: sha512-csk34zg71PDI3NYY4kbzl1GNk3L1gm9v8rZypsQYV4+zY+CRSmgcLfTKN0x4JBlRQmklinZ/y866wZDiEvGIgg==}
-
   '@krainovsd/js-helpers@0.14.6':
     resolution: {integrity: sha512-RX1FhQkLJa6b930IoBbeNRsQyqKVU95CFSuN/vxAlYpO3cEUhG9vkNrXYWv58TfP/cxFpZq8X7PTpOLbz/4xgw==}
 
@@ -2787,8 +2778,11 @@ packages:
   '@krainovsd/js-helpers@0.15.3':
     resolution: {integrity: sha512-XGit1dvm0PHV5xbi3DHInNOrqBPT/B4SZsvRELKdzkG/OgotFOk3SXc6QJCntYTVuoekhGMQq9i6yWJ+1swESA==}
 
-  '@krainovsd/js-helpers@0.16.3':
-    resolution: {integrity: sha512-+IgEinOwZECQk8L1Pv/3WivS5/uWrl3qofYNZA47TI9n7NLfZur+Oc6WvKDXIYu3V2XPWdt8LeUog9YrLMUUgA==}
+  '@krainovsd/js-helpers@0.16.5':
+    resolution: {integrity: sha512-2irPYOAwqeudtjX94EUQot0mF8brYxx1Po2pMWcQoQyvNHD60PNwlLXCrLgk/5hKteqygOxjSF4jnt6ByV43Iw==}
+
+  '@krainovsd/js-helpers@0.16.6':
+    resolution: {integrity: sha512-UJ28eJIQSFFKEKeDjI1EyqUzACYjf49/uHVvCHML7ObFCEg2TNMDros3WpGGCGggSczmVmAh7WvGe2Kp2npQuA==}
 
   '@krainovsd/markdown-editor@0.4.8':
     resolution: {integrity: sha512-SbAakaloHDx07xQR1k58QBQlCwsd8Y4VfeZwmEREwHBDxUGBzbiYPf+gSw7Dtk95qM0zaOQ6w4Y3Tct5KhW8yg==}
@@ -9838,8 +9832,8 @@ packages:
   vue-component-type-helpers@2.2.10:
     resolution: {integrity: sha512-iDUO7uQK+Sab2tYuiP9D1oLujCWlhHELHMgV/cB13cuGbG4qwkLHvtfWb6FzvxrIOPDnU0oHsz2MlQjhYDeaHA==}
 
-  vue-component-type-helpers@3.1.0:
-    resolution: {integrity: sha512-cC1pYNRZkSS1iCvdlaMbbg2sjDwxX098FucEjtz9Yig73zYjWzQsnMe5M9H8dRNv55hAIDGUI29hF2BEUA4FMQ==}
+  vue-component-type-helpers@3.1.1:
+    resolution: {integrity: sha512-B0kHv7qX6E7+kdc5nsaqjdGZ1KwNKSUQDWGy7XkTYT7wFsOpkEyaJ1Vq79TjwrrtuLRgizrTV7PPuC4rRQo+vw==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -12147,11 +12141,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@krainovsd/js-helpers@0.14.12':
-    dependencies:
-      dayjs: 1.11.13
-      lodash: 4.17.21
-
   '@krainovsd/js-helpers@0.14.6':
     dependencies:
       dayjs: 1.11.13
@@ -12167,10 +12156,13 @@ snapshots:
       dayjs: 1.11.13
       lodash: 4.17.21
 
-  '@krainovsd/js-helpers@0.16.3':
+  '@krainovsd/js-helpers@0.16.5':
     dependencies:
       dayjs: 1.11.13
-      lodash: 4.17.21
+
+  '@krainovsd/js-helpers@0.16.6':
+    dependencies:
+      dayjs: 1.11.13
 
   '@krainovsd/markdown-editor@0.4.8(@codemirror/search@6.5.10)':
     dependencies:
@@ -12523,7 +12515,7 @@ snapshots:
   '@krainovsd/react-ui@0.8.17(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3)':
     dependencies:
       '@emotion/css': 11.13.5
-      '@krainovsd/js-helpers': 0.14.12
+      '@krainovsd/js-helpers': 0.14.7
       '@krainovsd/react-icons': 0.4.0(react@18.3.1)
       antd: 5.22.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       clsx: 2.1.1
@@ -14087,7 +14079,7 @@ snapshots:
       storybook: 9.0.16(@testing-library/dom@10.4.0)(prettier@3.6.1)
       type-fest: 2.19.0
       vue: 3.5.14(typescript@5.8.3)
-      vue-component-type-helpers: 3.1.0
+      vue-component-type-helpers: 3.1.1
 
   '@sveltejs/acorn-typescript@1.0.5(acorn@8.14.1)':
     dependencies:
@@ -20943,7 +20935,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.10: {}
 
-  vue-component-type-helpers@3.1.0: {}
+  vue-component-type-helpers@3.1.1: {}
 
   vue-docgen-api@4.79.2(vue@3.5.14(typescript@5.8.3)):
     dependencies:

@@ -4,7 +4,7 @@ type SpeedTestOptions = {
   type?: "time" | "performance";
 };
 
-export function speedTest<T>(cb: () => T, opts: SpeedTestOptions): T {
+export function speedTest<T>(cb: (i: number) => T, opts: SpeedTestOptions): T {
   const { name, iterations = 10000, type = "performance" } = opts;
   let result: T | undefined;
 
@@ -12,10 +12,10 @@ export function speedTest<T>(cb: () => T, opts: SpeedTestOptions): T {
     const start = performance.now();
 
     if (iterations <= 1) {
-      result = cb();
+      result = cb(0);
     } else {
       for (let i = 0; i < iterations; i++) {
-        result = cb();
+        result = cb(i);
       }
     }
 
@@ -27,10 +27,10 @@ export function speedTest<T>(cb: () => T, opts: SpeedTestOptions): T {
     console.time(name);
 
     if (iterations <= 1) {
-      result = cb();
+      result = cb(0);
     } else {
       for (let i = 0; i < iterations; i++) {
-        result = cb();
+        result = cb(i);
       }
     }
 
