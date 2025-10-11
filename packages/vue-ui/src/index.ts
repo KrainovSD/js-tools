@@ -8,6 +8,7 @@ export {
   createInteractiveChildrenController,
   createHighlight,
   extractDragPosition,
+  extractThemeVariables,
 } from "./lib";
 export type { DragInfo, HighlightText } from "./lib";
 export { THEME_CONFIG } from "./constants";

@@ -1,4 +1,5 @@
 <script setup lang="ts" generic="T extends string">
+  import { IS_BROWSER } from "@krainovsd/js-helpers";
   import { watch } from "vue";
   import { injectThemeStyle } from "../lib";
   import type { ThemeVariableConfig } from "../types";
@@ -15,6 +16,8 @@
   watch(
     (): [T | undefined, number | undefined] => [props.theme, props.fontSize],
     (state) => {
+      if (!IS_BROWSER) return;
+
       injectThemeStyle({
         fontSize: state[1],
         theme: state[0],

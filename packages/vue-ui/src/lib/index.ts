@@ -5,3 +5,4 @@ export * from "./extract-dnd-position";
 export * from "./create-highlight-text";
 export * from "./get-watched-node";
 export * from "./interactive-children-controller";
+export * from "./extract-theme-variables";
