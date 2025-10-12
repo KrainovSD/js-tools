@@ -1,0 +1,72 @@
+@import url("./assets/fonts/fonts-style.css");
+
+*,
+*::before,
+*::after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-family: Nunito;
+  color: var(--white-color);
+}
+
+html,
+body,
+#__nuxt,
+#app {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  background-color: var(--ksd-bg-color);
+  color: var(--ksd-text-main-color);
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  line-height: var(--ksd-line-height);
+  overflow: hidden;
+}
+
+body.dragging {
+  user-select: none;
+
+  & * {
+    cursor: grabbing !important;
+  }
+}
+
+a {
+  color: var(--ksd-accent-color);
+  text-decoration: none;
+  transition: all var(--ksd-transition-fast) ease;
+
+  &:hover {
+    color: var(--ksd-accent-border-hover-color);
+  }
+
+  &:focus-visible {
+    outline: var(--ksd-outline-width) var(--ksd-outline-type) var(--ksd-outline-color);
+    outline-offset: 1px;
+    transition:
+      outline-offset 0s,
+      outline 0s;
+  }
+}
+
+*::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 4px solid transparent;
+  border-radius: 10px;
+
+  background-clip: padding-box;
+  background-color: var(--ksd-text-main-color);
+}

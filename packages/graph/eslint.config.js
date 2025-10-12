@@ -1,13 +1,14 @@
-import plugin from "@krainovsd/presets/eslint";
+import plugins from "@krainovsd/presets/eslint";
 
 export default [
-  ...plugin.presets.typescript,
+  ...plugins.presets.vue,
   {
-    ignores: ["tmp/", "node_modules/", "lib/", ".turbo/", "stats/", "coverage/", "dist/"],
+    ignores: ["tmp/", "node_modules/", ".turbo/", "dist/", "storybook-static/"],
   },
   {
     rules: {
-      "max-params": ["off", { max: 4 }],
+      camelcase: "off",
+      "max-params": ["error", 4],
     },
   },
 ];

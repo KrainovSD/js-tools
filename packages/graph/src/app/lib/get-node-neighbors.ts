@@ -1,3 +1,4 @@
+import { cloneDeep } from "@krainovsd/js-helpers";
 import type { GraphCanvasInterface } from "@/module/GraphCanvas";
 import type { LinkData, NodeData } from "../types";
 
@@ -5,8 +6,10 @@ export function getNodeNeighbors(
   data: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links">,
 ) {
   const neighbors: Record<string, (string | number)[]> = {};
+  const links = cloneDeep(data.links);
+  const nodes = cloneDeep(data.nodes);
 
-  data.links.forEach((link) => {
+  links.forEach((link) => {
     if (typeof link.source === "object" || typeof link.target === "object") return;
 
     const prevSource = neighbors[link.source];
@@ -18,7 +21,7 @@ export function getNodeNeighbors(
     else neighbors[link.target] = [link.source];
   });
 
-  data.nodes.forEach((node) => {
+  nodes.forEach((node) => {
     if (neighbors[node.id]) {
       node.neighbors = [...new Set(neighbors[node.id])];
       node.linkCount = neighbors[node.id].length;
@@ -32,4 +35,9 @@ export function getNodeNeighbors(
 
     node.label = "+5";
   });
+
+  return {
+    nodes,
+    links,
+  };
 }

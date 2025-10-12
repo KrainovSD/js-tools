@@ -1,8 +1,8 @@
 import type { GraphCanvas, NodeInterface, NodeOptionsInterface } from "@/module/GraphCanvas";
 import type { LinkData, NodeData } from "../types";
 
-export function getNodeSettings(opts: Partial<NodeOptionsInterface<NodeData, LinkData>>) {
-  return function nodeSettings(
+export function getNodeOptions(opts: Partial<NodeOptionsInterface<NodeData, LinkData>>) {
+  return function nodeOptions(
     this: GraphCanvas<NodeData, LinkData>,
     node: NodeInterface<NodeData>,
   ): NodeOptionsInterface<NodeData, LinkData> {

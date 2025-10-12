@@ -7,20 +7,19 @@
       "@/*": ["./src/*"]
     },
     "baseUrl": "./",
-    "moduleDetection": "force",
     "allowJs": true,
     "checkJs": true
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.js",
-    "src/**/*.svelte",
-    "eslint.config.js",
+    "src/**/*.vue",
     "src/typings.d.ts",
+    "src/vite-env.d.ts",
+    "eslint.config.js",
     "rollup.config.ts",
     "rollup-singleton.config.ts",
-    ".prettierrc.mjs",
-    "svelte.config.js"
+    ".prettierrc.mjs"
   ],
   "exclude": ["node_modules", "dist"],
   "references": [

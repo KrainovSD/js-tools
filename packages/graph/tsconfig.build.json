@@ -9,6 +9,6 @@
     "plugins": [{ "transform": "typescript-transform-paths", "afterDeclarations": true }]
   },
   "files": ["src/index.ts"],
-  "include": ["src/**/*", "src/typings.d.ts"],
+  "include": ["src/**/*", "src/typings.d.ts", "src/vite-env.d.ts"],
   "exclude": ["**/*.spec.ts", "src/app"]
 }

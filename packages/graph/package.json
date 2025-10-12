@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/graph",
-  "version": "0.12.0-beta.2",
+  "version": "0.12.0-beta.3",
   "description": "Krainov graph",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
-    "dev": "vite --host",
+    "dev": "vite --host --force",
     "clear": "rm -rf ./lib",
     "build-dev": "vite build",
     "build": "npm run clear && npm run build:types && npm run build:js",
@@ -56,8 +56,12 @@
     "@types/d3-array": "3.2.1",
     "vite": "6.2.1",
     "@types/lodash": "4.17.14",
-    "@sveltejs/vite-plugin-svelte": "5.0.3",
-    "svelte": "5.23.2"
+    "vue-tsc": "3.1.0",
+    "vue": "3.5.14",
+    "@vitejs/plugin-vue": "5.2.4",
+    "@krainovsd/vue-ui": "0.4.0-beta.23",
+    "@krainovsd/vue-icons": "0.1.4",
+    "sass-embedded": "1.81.0"
   },
   "dependencies": {
     "@krainovsd/js-helpers": "^0.16.5",
