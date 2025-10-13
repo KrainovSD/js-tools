@@ -12,6 +12,7 @@ import type {
 
 export type NodeData = {
   image?: string;
+  text?: unknown;
 };
 export type LinkData = {
   id?: string;

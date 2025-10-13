@@ -28,7 +28,7 @@
   const props = defineProps<Props>();
   const graphRef = useTemplateRef("graph");
   let graphController: GraphCanvas<NodeData, LinkData> | undefined;
-  const selectedNodes = defineModel<(string | number)[]>("selectedNodes", { default: [] });
+  const selectedNode = defineModel<Node | null>("selectedNode", { default: null });
   const selectedLink = defineModel<string | null>("selectedLink", { default: null });
   const checkedGraph = computed(() =>
     getNodeNeighbors({ nodes: props.graph.nodes, links: props.graph.links }),
@@ -38,27 +38,17 @@
     if (!graphController) return;
 
     if (!node && !link) {
-      selectedNodes.value = [];
+      selectedNode.value = null;
       selectedLink.value = null;
     }
 
     if (node) {
       selectedLink.value = null;
-      if (event.ctrlKey) {
-        const nodeIndex = selectedNodes.value.findIndex((nid) => nid === node.id);
-
-        if (nodeIndex === -1) {
-          selectedNodes.value = [...selectedNodes.value, node.id];
-        } else {
-          selectedNodes.value = selectedNodes.value.filter((nid) => nid !== node.id);
-        }
-      } else {
-        selectedNodes.value = [node.id];
-      }
+      selectedNode.value = node;
     }
 
     if (link) {
-      selectedNodes.value = [];
+      selectedNode.value = null;
       selectedLink.value = link.data?.id ?? null;
     }
   }
@@ -85,12 +75,12 @@
   );
   /** node settings */
   watch(
-    () => [props.nodeSettings, props.nodeOptions] as const,
-    ([nodeSettings, nodeOptions]) => {
+    () => [props.nodeSettings, props.nodeOptions, selectedNode.value] as const,
+    ([nodeSettings, nodeOptions, selectedNode]) => {
       if (!graphController) return;
 
       graphController.changeSettings({
-        nodeSettings: { ...nodeSettings, options: getNodeOptions(nodeOptions) },
+        nodeSettings: { ...nodeSettings, options: getNodeOptions(nodeOptions, selectedNode) },
       });
     },
     { immediate: true },
@@ -137,7 +127,7 @@
         },
         nodeSettings: {
           ...props.nodeSettings,
-          options: getNodeOptions(props.nodeOptions),
+          options: getNodeOptions(props.nodeOptions, selectedNode.value),
         },
         listeners: {
           onClick,

@@ -12,11 +12,12 @@
     NodeSettingsInterface,
   } from "../module/GraphCanvas";
   import Graph from "./components/Graph.vue";
+  import Info from "./components/Info.vue";
   import Settings from "./components/Settings.vue";
   import { DEFAULT_SETTINGS } from "./constants";
   import "./global.scss";
   import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
-  import type { LinkData, NodeData } from "./types";
+  import type { LinkData, Node, NodeData } from "./types";
 
   const dataArray: {
     id: number;
@@ -31,6 +32,7 @@
   ];
   const dataRef = ref(1);
   const graph = computed(() => dataArray.find((d) => d.id === dataRef.value)?.data);
+  const selectedNode = ref<Node | null>(null);
 
   const forceSettings = ref<Partial<ForceSettingsInterface<NodeData, LinkData>>>(
     DEFAULT_SETTINGS.forceSettings,
@@ -79,6 +81,7 @@
       </div>
       <Graph
         v-if="graph"
+        v-model:selected-node="selectedNode"
         :graph="graph"
         :theme="'dark'"
         :force-settings="forceSettings"
@@ -98,6 +101,7 @@
         :root="rootRef"
         @cancel="clearSettings"
       />
+      <Info :mount-root="rootRef" :selected-node="selectedNode" />
     </div>
   </VThemeProvider>
 </template>
@@ -120,5 +124,6 @@
     gap: var(--ksd-padding-xxs);
     background-color: #1f1f1f;
     border: 1px solid var(--ksd-border-color);
+    z-index: 1;
   }
 </style>
