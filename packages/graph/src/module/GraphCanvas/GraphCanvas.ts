@@ -174,11 +174,13 @@ export class GraphCanvas<
 
   changeData(
     options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">,
-    alpha?: number,
+    alpha: number = 0.5,
+    clearCache: boolean = true,
   ) {
     if (options.links != undefined) this.links = options.links;
     if (options.nodes != undefined) this.nodes = options.nodes;
-    if (options.nodes != undefined || options.links != undefined) this.updateData(alpha);
+    if (options.nodes != undefined || options.links != undefined)
+      this.updateData(alpha, clearCache);
   }
 
   changeSettings(
@@ -186,6 +188,7 @@ export class GraphCanvas<
       Partial<GraphCanvasInterface<NodeData, LinkData>>,
       "links" | "nodes" | "listeners"
     >,
+    clearCache: boolean = true,
   ) {
     if (options.graphSettings) {
       this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
@@ -209,22 +212,32 @@ export class GraphCanvas<
         options.highlightSettings,
         this.highlightSettings,
       );
-      this.linkOptionsCache = {};
-      this.cachedNodeText = {};
-      this.cachedNodeLabel = {};
-      this.cachedTextNodeParameters = {};
-      this.nodeOptionsCache = {};
+
+      if (clearCache) {
+        this.linkOptionsCache = {};
+        this.cachedNodeText = {};
+        this.cachedNodeLabel = {};
+        this.cachedTextNodeParameters = {};
+        this.nodeOptionsCache = {};
+      }
     }
     if (options.linkSettings) {
       this.linkSettings = linkSettingsGetter(options.linkSettings, this.linkSettings);
-      this.linkOptionsCache = {};
+
+      if (clearCache) {
+        this.linkOptionsCache = {};
+      }
     }
     if (options.nodeSettings) {
       this.nodeSettings = nodeSettingsGetter(options.nodeSettings, this.nodeSettings);
-      this.cachedNodeText = {};
-      this.cachedNodeLabel = {};
-      this.cachedTextNodeParameters = {};
-      this.nodeOptionsCache = {};
+
+      if (clearCache) {
+        this.cachedNodeText = {};
+        this.cachedNodeLabel = {};
+        this.cachedTextNodeParameters = {};
+        this.nodeOptionsCache = {};
+      }
+
       initCollideForce.call<
         GraphCanvas<NodeData, LinkData>,
         Parameters<typeof initCollideForce>,
@@ -344,8 +357,10 @@ export class GraphCanvas<
     this.highlightWorking = false;
   }
 
-  protected updateData(alpha?: number) {
-    this.clearCache();
+  protected updateData(alpha: number = 0.5, clearCache: boolean = true) {
+    if (clearCache) {
+      this.clearCache();
+    }
 
     if (this.simulation) {
       initCollideForce.call<
@@ -376,7 +391,7 @@ export class GraphCanvas<
                 : 0,
             ),
         )
-        .alpha(alpha ?? 0.5)
+        .alpha(alpha)
         .restart();
     }
   }
