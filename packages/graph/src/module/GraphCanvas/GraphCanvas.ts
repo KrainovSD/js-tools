@@ -85,7 +85,7 @@ export class GraphCanvas<
 
   protected areaRect: DOMRect | undefined;
 
-  protected draw: (this: GraphCanvas<NodeData, LinkData>) => void;
+  protected draw: (this: GraphCanvas<NodeData, LinkData>, recursive?: boolean) => void;
 
   protected eventAbortController: AbortController;
 
@@ -112,8 +112,6 @@ export class GraphCanvas<
   protected highlightProgress: number = 1;
 
   protected highlightWorking: boolean = false;
-
-  protected highlightDrawing: boolean = false;
 
   protected get simulationWorking() {
     const simulationAlpha = this.simulation?.alpha?.() ?? 0;
@@ -344,7 +342,6 @@ export class GraphCanvas<
     this.highlightedNeighbors = null;
     this.highlightProgress = 0;
     this.highlightWorking = false;
-    this.highlightDrawing = false;
   }
 
   protected updateData(alpha?: number) {

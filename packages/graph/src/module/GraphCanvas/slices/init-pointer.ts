@@ -55,7 +55,7 @@ export function initPointer<
       this.highlightedNeighbors = new Set(this.highlightedNode?.neighbors ?? []);
       this.highlightWorking = true;
 
-      if (!this.simulationWorking && !this.highlightDrawing)
+      if (!this.simulationWorking)
         requestAnimationFrame(() => {
           this.draw();
         });
@@ -72,13 +72,13 @@ export function initPointer<
       this.highlightedNeighbors = new Set([currentLink.source.id, currentLink.target.id]);
       this.highlightWorking = true;
 
-      if (!this.simulationWorking && !this.highlightDrawing)
+      if (!this.simulationWorking)
         requestAnimationFrame(() => {
           this.draw();
         });
     } else if (!currentNode && !currentLink && (this.highlightedNode || this.highlightedLink)) {
       this.highlightWorking = false;
-      if (!this.simulationWorking && !this.highlightDrawing)
+      if (!this.simulationWorking)
         requestAnimationFrame(() => {
           this.draw();
         });

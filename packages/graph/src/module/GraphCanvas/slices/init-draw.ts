@@ -7,34 +7,53 @@ export function initDraw<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(this: GraphCanvas<NodeData, LinkData>) {
-  function calculateHighlight(this: GraphCanvas<NodeData, LinkData>) {
-    this.highlightDrawing = true;
+  let hasHighlight = false;
 
+  function calculateHighlight(this: GraphCanvas<NodeData, LinkData>, recursive: boolean) {
+    if (hasHighlight && !recursive) return;
+
+    /** animation up */
     if (!this.highlightWorking && this.highlightProgress > 0) {
       const highlightDownStep = 1 / this.highlightSettings.highlightDownFrames;
       this.highlightProgress -= highlightDownStep;
 
       if (!this.simulationWorking) {
-        return void requestAnimationFrame(() => this.draw());
+        hasHighlight = true;
+
+        return void requestAnimationFrame(() => this.draw(true));
       }
 
-      if (!this.linkSettings.particles) return;
+      if (!this.linkSettings.particles) {
+        hasHighlight = false;
+
+        return;
+      }
     }
+    /** animation down */
     if (this.highlightWorking && this.highlightProgress < 1) {
       const highlightUpStep = 1 / this.highlightSettings.highlightUpFrames;
       this.highlightProgress += highlightUpStep;
 
       if (!this.simulationWorking) {
-        return void requestAnimationFrame(() => this.draw());
+        hasHighlight = true;
+
+        return void requestAnimationFrame(() => this.draw(true));
       }
 
-      if (!this.linkSettings.particles) return;
-    }
+      if (!this.linkSettings.particles) {
+        hasHighlight = false;
 
+        return;
+      }
+    }
+    /** animation active */
     if (this.linkSettings.particles && this.highlightWorking && !this.simulationWorking) {
-      return void requestAnimationFrame(() => this.draw());
+      hasHighlight = true;
+
+      return void requestAnimationFrame(() => this.draw(true));
     }
 
+    /** animation stop */
     if (!this.highlightWorking && this.highlightProgress <= 0) {
       if (this.highlightedNeighbors || this.highlightedNode || this.highlightedLink) {
         this.highlightedNeighbors = null;
@@ -43,15 +62,17 @@ export function initDraw<
         this.particles = {};
 
         if (!this.simulationWorking) {
-          return void requestAnimationFrame(() => this.draw());
+          hasHighlight = true;
+
+          return void requestAnimationFrame(() => this.draw(true));
         }
       }
     }
 
-    this.highlightDrawing = false;
+    hasHighlight = false;
   }
 
-  function draw(this: GraphCanvas<NodeData, LinkData>) {
+  function draw(this: GraphCanvas<NodeData, LinkData>, recursive: boolean = false) {
     if (!this.context) return;
 
     if (this.listeners.onDraw) {
@@ -81,7 +102,7 @@ export function initDraw<
 
     this.listeners.onDrawFinished?.call?.(this);
 
-    calculateHighlight.bind(this)();
+    calculateHighlight.bind(this)(recursive);
   }
 
   if (this.graphSettings.showDrawTime) {

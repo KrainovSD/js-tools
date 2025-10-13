@@ -1,10 +1,10 @@
 let countTime = 0;
 let countOperation = 0;
 
-export function setDrawTime(cb: () => void, showEveryTick: boolean) {
-  return () => {
+export function setDrawTime(cb: (recursive?: boolean) => void, showEveryTick: boolean) {
+  return (recursive?: boolean) => {
     const start = performance.now();
-    cb();
+    cb(recursive);
     const end = performance.now();
     const result = end - start;
 
