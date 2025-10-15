@@ -58,6 +58,7 @@
     multiple?: Multiple;
     placeholder?: string;
     options: (SelectItem | SelectGroupItem)[];
+    labelOptions?: (SelectItem | SelectGroupItem)[];
     searchFn?: (item: SelectItem, search: string) => boolean;
   } & Pick<
     PopperProps,
@@ -103,6 +104,7 @@
     placement: "bottom-left",
     openDelay: 0,
     searchFn: undefined,
+    labelOptions: undefined,
   });
   const model = defineModel<Value>({ default: undefined });
   const popperRef = useTemplateRef("popper");
@@ -177,7 +179,7 @@
       }
     }
 
-    extractValueRecursively(props.options);
+    extractValueRecursively(props.labelOptions ?? props.options);
 
     return optionsMap;
   });

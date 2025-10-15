@@ -1,7 +1,14 @@
 import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
-import { type DefineComponent, h } from "vue";
-import { type SelectProps, VSelect, VText } from "../ui";
+import { type DefineComponent, computed, h, shallowRef } from "vue";
+import {
+  type SelectGroupItem,
+  type SelectItem,
+  type SelectProps,
+  type SelectValue,
+  VSelect,
+  VText,
+} from "../ui";
 
 const meta = {
   title: "Components/Select",
@@ -28,6 +35,55 @@ const Template: StoryFn<typeof VSelect> = (args) => ({
 export const Primary = Template.bind({});
 Primary.args = {
   options: Array.from({ length: 100 }, (_, i) => ({ label: `Значение ${i}`, value: i })),
+};
+
+export const LabelOptions: Story = {
+  render: (args) => ({
+    components: { VSelect },
+    setup() {
+      const result = shallowRef<SelectValue[]>([]);
+      // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+      const filteredOptions = computed<(SelectItem | SelectGroupItem)[]>(() =>
+        args.options.filter((o) => "value" in o && !result.value.includes(o.value)),
+      );
+
+      return { args, filteredOptions, result };
+    },
+    render() {
+      return h("div", {}, [
+        h(VSelect, {
+          ...args,
+          options: this.filteredOptions,
+          labelOptions: args.options,
+          modelValue: this.result,
+          placeholder: "Обычный",
+          multiple: true,
+          "onUpdate:modelValue": (value) => {
+            this.result = value ?? [];
+          },
+          style: {
+            width: "300px",
+          },
+        }),
+      ]);
+    },
+  }),
+  args: {
+    options: [
+      { value: "1", label: "Значение 1" },
+      { value: 2, label: "Значение 2" },
+      { value: 3, label: "Значение 3" },
+      { value: "4", label: "Очень Длинное значение для проверки размеров у селектов 4" },
+      {
+        value: 5,
+        label: "Значение 5",
+        desc: h("div", { style: { display: "flex", gap: "10px", alignItems: "center" } }, [
+          h(VSettingFilled, { size: 14 }),
+          h(VText, {}, () => "Особое значение 5"),
+        ]),
+      },
+    ],
+  },
 };
 
 export const AllInOne: Story = {
