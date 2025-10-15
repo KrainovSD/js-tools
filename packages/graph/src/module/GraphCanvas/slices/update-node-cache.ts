@@ -72,7 +72,33 @@ export function updateNodeCache<
 
       labelSize *= size.additionalSizeCoefficient;
     }
-    /** Size by text in textNode */
+    /** label in not text shape */
+    if (nodeOptions.shape !== "text" && nodeOptions.label) {
+      this.context.font = `${nodeOptions.labelStyle} normal ${nodeOptions.labelWeight} ${nodeOptions.labelSize}px ${nodeOptions.labelFont}`;
+      this.context.fillStyle = nodeOptions.labelColor;
+      this.context.textAlign = nodeOptions.labelAlign;
+
+      if (
+        nodeOptions.labelWidth == undefined ||
+        this.context.measureText(nodeOptions.label).width <= nodeOptions.labelWidth
+      ) {
+        this.cachedNodeLabel[node.id] = [nodeOptions.label];
+      }
+
+      const { lines } = getTextLines({
+        context: this.context,
+        maxWidth: nodeOptions.labelWidth,
+        text: nodeOptions.label,
+        textAlign: nodeOptions.labelAlign,
+        textColor: nodeOptions.labelColor,
+        textFont: nodeOptions.labelFont,
+        textSize: nodeOptions.labelSize,
+        textStyle: nodeOptions.labelStyle,
+        textWeight: nodeOptions.labelWeight,
+      });
+      this.cachedNodeLabel[node.id] = lines;
+    }
+    /** label in text shape */
     if (nodeOptions.shape === "text" && nodeOptions.label) {
       const textInfo = getTextLines({
         context: this.context,
@@ -96,12 +122,40 @@ export function updateNodeCache<
         nodeOptions.labelYPadding;
 
       width = maxSize + nodeOptions.labelXPadding;
+      this.cachedNodeLabel[node.id] = lines;
     }
 
     nodeOptions.width = width;
     nodeOptions.height = height;
     nodeOptions.radius = radius;
     nodeOptions.labelSize = labelSize;
+
+    /** text */
+    if (nodeOptions.text) {
+      this.context.font = `${nodeOptions.textStyle} normal ${nodeOptions.textWeight} ${nodeOptions.textSize}px ${nodeOptions.textFont}`;
+      this.context.fillStyle = nodeOptions.textColor;
+      this.context.textAlign = nodeOptions.textAlign;
+
+      if (
+        nodeOptions.textWidth == undefined ||
+        this.context.measureText(nodeOptions.text).width <= nodeOptions.textWidth
+      ) {
+        this.cachedNodeText[node.id] = [nodeOptions.text];
+      }
+
+      const { lines } = getTextLines({
+        context: this.context,
+        maxWidth: nodeOptions.textWidth,
+        text: nodeOptions.text,
+        textAlign: nodeOptions.textAlign,
+        textColor: nodeOptions.textColor,
+        textFont: nodeOptions.textFont,
+        textSize: nodeOptions.textSize,
+        textStyle: nodeOptions.textStyle,
+        textWeight: nodeOptions.textWeight,
+      });
+      this.cachedNodeText[node.id] = lines;
+    }
 
     this.nodeOptionsCache[node.id] = nodeOptions;
   }

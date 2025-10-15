@@ -201,6 +201,7 @@ export function getDrawNode<
       this.context.lineWidth = borderWidth;
       this.context.strokeStyle = borderColor;
       this.context.fillStyle = color;
+      const labelLines = this.cachedNodeLabel[node.id];
 
       switch (nodeOptions.shape) {
         case "circle": {
@@ -230,13 +231,11 @@ export function getDrawNode<
             }
           }
 
-          if (node.label) {
+          if (node.label && labelLines) {
             this.context.globalAlpha = labelAlpha;
             drawText({
               context: this.context,
-              cachedNodeText: this.cachedNodeLabel,
-              id: node.id,
-              text: node.label,
+              lines: labelLines,
               textAlign: nodeOptions.labelAlign,
               textColor: nodeOptions.labelColor,
               textFont: nodeOptions.labelFont,
@@ -244,7 +243,6 @@ export function getDrawNode<
               textSize: labelSize,
               textStyle: nodeOptions.labelStyle,
               textWeight: labelWeight,
-              maxWidth: nodeOptions.labelWidth,
               x: node.x,
               y: node.y + labelSize / 3,
             });
@@ -289,13 +287,11 @@ export function getDrawNode<
               this.context.stroke();
             }
           }
-          if (node.label) {
+          if (node.label && labelLines) {
             this.context.globalAlpha = labelAlpha;
             drawText({
               context: this.context,
-              cachedNodeText: this.cachedNodeLabel,
-              id: node.id,
-              text: node.label,
+              lines: labelLines,
               textAlign: nodeOptions.labelAlign,
               textColor: nodeOptions.labelColor,
               textFont: nodeOptions.labelFont,
@@ -303,7 +299,6 @@ export function getDrawNode<
               textSize: labelSize,
               textStyle: nodeOptions.labelStyle,
               textWeight: labelWeight,
-              maxWidth: nodeOptions.labelWidth,
               x: node.x,
               y: node.y + labelSize / 3,
             });
@@ -315,20 +310,16 @@ export function getDrawNode<
             this.context.strokeRect(node.x - width / 2, node.y - height / 2, width, height);
           }
 
-          const lines = this.cachedNodeLabel[node.id];
-          if (nodeOptions.label && lines)
+          if (nodeOptions.label && labelLines)
             drawText({
-              id: node.id,
-              cachedNodeText: this.cachedNodeLabel,
+              lines: labelLines,
               context: this.context,
-              text: nodeOptions.label,
               textAlign: nodeOptions.labelAlign,
               textColor: nodeOptions.labelColor,
               textFont: nodeOptions.labelFont,
               textSize: labelSize,
               x: node.x,
-              y: node.y + textSize / 4 - (lines.length - 1) * (textSize / 2),
-              maxWidth: nodeOptions.labelWidth,
+              y: node.y + textSize / 4 - (labelLines.length - 1) * (textSize / 2),
               textStyle: nodeOptions.labelStyle,
               textWeight,
               textGap: nodeOptions.labelGap,
@@ -367,7 +358,8 @@ export function getDrawNode<
     }
 
     /** Text draw */
-    if (nodeOptions.textVisible && nodeOptions.text) {
+    const textLines = this.cachedNodeText[node.id];
+    if (nodeOptions.textVisible && nodeOptions.text && textLines) {
       textRenders.push(() => {
         if (nodeOptions.textDraw) {
           nodeOptions.textDraw.bind(this)(node, {
@@ -398,17 +390,14 @@ export function getDrawNode<
         }
 
         drawText({
-          id: node.id,
-          cachedNodeText: this.cachedNodeText,
+          lines: textLines,
           context: this.context,
-          text: nodeOptions.text,
           textAlign: nodeOptions.textAlign,
           textColor: nodeOptions.textColor,
           textFont: nodeOptions.textFont,
           textSize,
           x: node.x + textShiftX,
           y,
-          maxWidth: nodeOptions.textWidth,
           textStyle: nodeOptions.textStyle,
           textWeight,
           textGap: nodeOptions.textGap,

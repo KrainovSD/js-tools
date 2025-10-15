@@ -1,10 +1,9 @@
-import type { CachedNodeTextInterface, TextStyleEnum } from "../types";
+import type { TextStyleEnum } from "../types";
 
 export type DrawTextOptions = {
-  id: string | number;
+  lines: string[];
   x: number;
   y: number;
-  text: string;
   textSize: number;
   textStyle: TextStyleEnum;
   textWeight: number;
@@ -13,15 +12,12 @@ export type DrawTextOptions = {
   textGap: number;
   textAlign: CanvasTextAlign;
   context: CanvasRenderingContext2D;
-  cachedNodeText: CachedNodeTextInterface;
-  maxWidth?: number;
 };
 
 const SPACE = " ";
 
 export function drawText({
   context,
-  id,
   textAlign,
   textColor,
   textFont,
@@ -29,44 +25,14 @@ export function drawText({
   textGap,
   textWeight,
   textSize,
-  text,
   x,
   y,
-  cachedNodeText,
-  maxWidth,
+  lines,
 }: DrawTextOptions) {
   context.font = `${textStyle} normal ${textWeight} ${textSize}px ${textFont}`;
   context.fillStyle = textColor;
   context.textAlign = textAlign;
 
-  if (cachedNodeText[id] != undefined) {
-    cachedNodeText[id].forEach((line, index) => {
-      context.fillText(line, x, y + index * textSize + index * textGap);
-    });
-
-    return;
-  }
-
-  if (maxWidth == undefined || context.measureText(text).width <= maxWidth) {
-    cachedNodeText[id] = [text];
-    context.fillText(text, x, y);
-
-    return;
-  }
-
-  const { lines } = getTextLines({
-    context,
-    maxWidth,
-    text,
-    textAlign,
-    textColor,
-    textFont,
-    textSize,
-    textStyle,
-    textWeight,
-  });
-
-  cachedNodeText[id] = lines;
   lines.forEach((line, index) => {
     context.fillText(line, x, y + index * textSize + index * textGap);
   });

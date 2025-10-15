@@ -23,7 +23,6 @@ import {
 } from "./slices";
 import type {
   CachedNodeTextInterface,
-  CachedTextNodeParametersMap,
   ForceSettingsInterface,
   GraphCanvasInterface,
   GraphCanvasSimulation,
@@ -94,8 +93,6 @@ export class GraphCanvas<
   protected cachedNodeText: CachedNodeTextInterface = {};
 
   protected cachedNodeLabel: CachedNodeTextInterface = {};
-
-  protected cachedTextNodeParameters: CachedTextNodeParametersMap = {};
 
   protected linkOptionsCache: Record<string, Required<LinkOptionsInterface<NodeData, LinkData>>> =
     {};
@@ -216,13 +213,7 @@ export class GraphCanvas<
       );
 
       if (clearCache) {
-        this.clearCache([
-          "cachedNodeText",
-          "cachedNodeLabel",
-          "cachedTextNodeParameters",
-          "nodeOptionsCache",
-          "linkOptionsCache",
-        ]);
+        this.clearCache(["nodeOptionsCache", "linkOptionsCache"]);
       }
     }
     if (options.linkSettings) {
@@ -236,12 +227,7 @@ export class GraphCanvas<
       this.nodeSettings = nodeSettingsGetter(options.nodeSettings, this.nodeSettings);
 
       if (clearCache) {
-        this.clearCache([
-          "cachedNodeText",
-          "cachedNodeLabel",
-          "cachedTextNodeParameters",
-          "nodeOptionsCache",
-        ]);
+        this.clearCache(["nodeOptionsCache"]);
       }
 
       initCollideForce.call<
@@ -277,15 +263,7 @@ export class GraphCanvas<
     this.draw();
   }
 
-  clearCache(
-    keys?: (
-      | "nodeOptionsCache"
-      | "linkOptionsCache"
-      | "cachedNodeText"
-      | "cachedNodeLabel"
-      | "cachedTextNodeParameters"
-    )[],
-  ) {
+  clearCache(keys?: ("nodeOptionsCache" | "linkOptionsCache")[]) {
     if (!keys) {
       updateNodeCache.call<
         GraphCanvas<NodeData, LinkData>,
@@ -297,9 +275,6 @@ export class GraphCanvas<
         Parameters<typeof updateLinkCache>,
         ReturnType<typeof updateLinkCache>
       >(this);
-      this.cachedNodeText = {};
-      this.cachedNodeLabel = {};
-      this.cachedTextNodeParameters = {};
     } else {
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
@@ -309,14 +284,12 @@ export class GraphCanvas<
             Parameters<typeof updateNodeCache>,
             ReturnType<typeof updateNodeCache>
           >(this);
-        } else if (key === "linkOptionsCache") {
+        } else {
           updateLinkCache.call<
             GraphCanvas<NodeData, LinkData>,
             Parameters<typeof updateLinkCache>,
             ReturnType<typeof updateLinkCache>
           >(this);
-        } else {
-          this[key] = {};
         }
       }
     }

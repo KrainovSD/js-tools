@@ -25,10 +25,3 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
 export type NodeShape = "circle" | "square" | "text";
 export type TextStyleEnum = "normal" | "italic" | "oblique";
 export type CachedNodeTextInterface = Record<string | number, string[] | undefined>;
-export type CachedTextNodeParametersMap = Record<string | number, [number, number] | undefined>;
-
-/**
- * 1. Initial max size of text
- * 2. Initial size of text
- */
-export type CachedTextNodeParametersInterface = [number, number];
