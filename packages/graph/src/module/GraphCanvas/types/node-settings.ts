@@ -8,11 +8,17 @@ export type NodeSettingsInterface<
 > = {
   cacheOptions?: boolean;
   nodeRadiusFlexible?: boolean;
-  nodeRadiusCoefficient?: number;
-  nodeRadiusFactor?: number;
+  nodeRadiusLinkCountForStep?: number;
+  nodeRadiusIncrementByStep?: number;
+  nodeRadiusMaxLinearSteps?: number;
+  nodeRadiusLogFactor?: number;
+  nodeRadiusLinkCountDividerForLog?: number;
   nodeSizeFlexible?: boolean;
-  nodeSizeCoefficient?: number;
-  nodeSizeFactor?: number;
+  nodeSizeLinkCountForStep?: number;
+  nodeSizeIncrementByStep?: number;
+  nodeSizeMaxLinearSteps?: number;
+  nodeSizeLogFactor?: number;
+  nodeSizeLinkCountDividerForLog?: number;
   textNodeDebug?: boolean;
   textScaleMin?: number;
   textScaleMax?: number;

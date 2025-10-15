@@ -187,9 +187,12 @@ export function initCollideForce<
                 const radius = nodeRadiusGetter({
                   radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
                   radiusInitial: nodeOptions.radius,
-                  radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
-                  radiusFactor: this.nodeSettings.nodeRadiusFactor,
                   linkCount: node.linkCount,
+                  radiusIncrementByStep: this.nodeSettings.nodeRadiusIncrementByStep,
+                  radiusLinkCountForStep: this.nodeSettings.nodeRadiusLinkCountForStep,
+                  radiusMaxLinearSteps: this.nodeSettings.nodeRadiusMaxLinearSteps,
+                  radiusLogFactor: this.nodeSettings.nodeRadiusLogFactor,
+                  radiusLinkCountDividerForLog: this.nodeSettings.nodeRadiusLinkCountDividerForLog,
                 });
 
                 return radius + this.forceSettings.collideAdditionalRadius;
@@ -199,9 +202,12 @@ export function initCollideForce<
                   heightInitial: nodeOptions.width,
                   widthInitial: nodeOptions.height,
                   linkCount: node.linkCount,
-                  sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
-                  sizeFactor: this.nodeSettings.nodeSizeFactor,
                   sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+                  sizeIncrementByStep: this.nodeSettings.nodeSizeIncrementByStep,
+                  sizeLinkCountForStep: this.nodeSettings.nodeSizeLinkCountForStep,
+                  sizeMaxLinearSteps: this.nodeSettings.nodeSizeMaxLinearSteps,
+                  sizeLogFactor: this.nodeSettings.nodeSizeLogFactor,
+                  sizeLinkCountDividerForLog: this.nodeSettings.nodeSizeLinkCountDividerForLog,
                 });
 
                 return (
@@ -214,9 +220,12 @@ export function initCollideForce<
                   heightInitial: nodeOptions.width,
                   widthInitial: nodeOptions.height,
                   linkCount: node.linkCount,
-                  sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
-                  sizeFactor: this.nodeSettings.nodeSizeFactor,
                   sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+                  sizeIncrementByStep: this.nodeSettings.nodeSizeIncrementByStep,
+                  sizeLinkCountForStep: this.nodeSettings.nodeSizeLinkCountForStep,
+                  sizeMaxLinearSteps: this.nodeSettings.nodeSizeMaxLinearSteps,
+                  sizeLogFactor: this.nodeSettings.nodeSizeLogFactor,
+                  sizeLinkCountDividerForLog: this.nodeSettings.nodeSizeLinkCountDividerForLog,
                 });
 
                 if (this.context && nodeOptions.text) {
@@ -258,8 +267,11 @@ export function initCollideForce<
                 const radius = nodeRadiusGetter({
                   radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
                   radiusInitial: nodeOptions.radius,
-                  radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
-                  radiusFactor: this.nodeSettings.nodeRadiusFactor,
+                  radiusIncrementByStep: this.nodeSettings.nodeRadiusIncrementByStep,
+                  radiusLinkCountForStep: this.nodeSettings.nodeRadiusLinkCountForStep,
+                  radiusMaxLinearSteps: this.nodeSettings.nodeRadiusMaxLinearSteps,
+                  radiusLogFactor: this.nodeSettings.nodeRadiusLogFactor,
+                  radiusLinkCountDividerForLog: this.nodeSettings.nodeRadiusLinkCountDividerForLog,
                   linkCount: node.linkCount,
                 });
 

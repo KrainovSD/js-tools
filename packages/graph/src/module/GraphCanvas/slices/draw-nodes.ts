@@ -202,8 +202,11 @@ export function getDrawNode<
         ? nodeRadiusGetter({
             radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
             radiusInitial,
-            radiusCoefficient: this.nodeSettings.nodeRadiusCoefficient,
-            radiusFactor: this.nodeSettings.nodeRadiusFactor,
+            radiusIncrementByStep: this.nodeSettings.nodeRadiusIncrementByStep,
+            radiusLinkCountForStep: this.nodeSettings.nodeRadiusLinkCountForStep,
+            radiusMaxLinearSteps: this.nodeSettings.nodeRadiusMaxLinearSteps,
+            radiusLogFactor: this.nodeSettings.nodeRadiusLogFactor,
+            radiusLinkCountDividerForLog: this.nodeSettings.nodeRadiusLinkCountDividerForLog,
             linkCount: node.linkCount,
           })
         : radiusInitial;
@@ -215,9 +218,12 @@ export function getDrawNode<
         heightInitial,
         widthInitial,
         linkCount: node.linkCount,
-        sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
-        sizeFactor: this.nodeSettings.nodeSizeFactor,
         sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+        sizeIncrementByStep: this.nodeSettings.nodeSizeIncrementByStep,
+        sizeLinkCountForStep: this.nodeSettings.nodeSizeLinkCountForStep,
+        sizeMaxLinearSteps: this.nodeSettings.nodeSizeMaxLinearSteps,
+        sizeLogFactor: this.nodeSettings.nodeSizeLogFactor,
+        sizeLinkCountDividerForLog: this.nodeSettings.nodeSizeLinkCountDividerForLog,
       });
       width = size.width;
       height = size.height;
@@ -229,9 +235,12 @@ export function getDrawNode<
         heightInitial,
         widthInitial: width,
         linkCount: node.linkCount,
-        sizeCoefficient: this.nodeSettings.nodeSizeCoefficient,
-        sizeFactor: this.nodeSettings.nodeSizeFactor,
         sizeFlexible: this.nodeSettings.nodeSizeFlexible,
+        sizeIncrementByStep: this.nodeSettings.nodeSizeIncrementByStep,
+        sizeLinkCountForStep: this.nodeSettings.nodeSizeLinkCountForStep,
+        sizeMaxLinearSteps: this.nodeSettings.nodeSizeMaxLinearSteps,
+        sizeLogFactor: this.nodeSettings.nodeSizeLogFactor,
+        sizeLinkCountDividerForLog: this.nodeSettings.nodeSizeLinkCountDividerForLog,
       });
 
       labelSize *= size.additionalSizeCoefficient;

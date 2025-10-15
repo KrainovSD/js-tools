@@ -81,43 +81,71 @@ export function nodeTextSizeGetter<
 export type NodeRadiusGetterOptions = {
   linkCount: number | undefined;
   radiusFlexible: boolean;
-  radiusCoefficient: number;
-  radiusFactor: number;
   radiusInitial: number;
+  radiusLinkCountForStep: number;
+  radiusIncrementByStep: number;
+  radiusMaxLinearSteps: number;
+  radiusLogFactor: number;
+  radiusLinkCountDividerForLog: number;
 };
 
 export function nodeRadiusGetter({
   radiusFlexible,
-  radiusInitial,
   linkCount,
-  radiusCoefficient,
-  radiusFactor,
+  radiusInitial,
+  radiusIncrementByStep,
+  radiusLinkCountDividerForLog,
+  radiusLinkCountForStep,
+  radiusLogFactor,
+  radiusMaxLinearSteps,
 }: NodeRadiusGetterOptions) {
+  if (!radiusFlexible || !linkCount) return radiusInitial;
+  const steps = linkCount / radiusLinkCountForStep;
+
+  if (steps < radiusMaxLinearSteps) {
+    return steps * radiusIncrementByStep + radiusInitial;
+  }
+
   return (
-    (radiusFlexible && linkCount ? linkCount / radiusCoefficient : 0) * radiusFactor + radiusInitial
+    radiusInitial +
+    radiusMaxLinearSteps * radiusIncrementByStep +
+    radiusLogFactor * Math.log10(linkCount / radiusLinkCountDividerForLog)
   );
 }
 
 export type NodeSizeGetterOptions = {
   linkCount: number | undefined;
   sizeFlexible: boolean;
-  sizeCoefficient: number;
-  sizeFactor: number;
   widthInitial: number;
   heightInitial: number;
+  sizeLinkCountForStep: number;
+  sizeIncrementByStep: number;
+  sizeMaxLinearSteps: number;
+  sizeLogFactor: number;
+  sizeLinkCountDividerForLog: number;
 };
 
 export function nodeSizeGetter({
   heightInitial,
   linkCount,
-  sizeCoefficient,
-  sizeFactor,
   sizeFlexible,
   widthInitial,
+  sizeIncrementByStep,
+  sizeLinkCountDividerForLog,
+  sizeLinkCountForStep,
+  sizeLogFactor,
+  sizeMaxLinearSteps,
 }: NodeSizeGetterOptions) {
   let additionalSizeCoefficient = 1;
   if (sizeFlexible && linkCount != undefined) {
-    additionalSizeCoefficient += (linkCount / sizeCoefficient) * sizeFactor;
+    const steps = linkCount / sizeLinkCountForStep;
+    if (steps < sizeMaxLinearSteps) {
+      additionalSizeCoefficient += steps * sizeIncrementByStep;
+    } else {
+      additionalSizeCoefficient +=
+        sizeMaxLinearSteps * sizeIncrementByStep +
+        sizeLogFactor * Math.log10(linkCount / sizeLinkCountDividerForLog);
+    }
   }
 
   return {
