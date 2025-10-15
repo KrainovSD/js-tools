@@ -1,49 +1,19 @@
 import { isNumber } from "@krainovsd/js-helpers";
 import type { GraphCanvas } from "../GraphCanvas";
-import {
-  isNodeVisible,
-  nodeFade,
-  nodeHighlight,
-  nodeIterationExtractor,
-  nodeOptionsGetter,
-  nodeRadiusGetter,
-  nodeSizeGetter,
-} from "../lib";
-import type {
-  CachedTextNodeParametersInterface,
-  NodeInterface,
-  NodeOptionsInterface,
-} from "../types";
-import { drawText, getTextLines } from "./draw-text";
+import { isNodeVisible, nodeFade, nodeHighlight } from "../lib";
+import type { NodeInterface } from "../types";
+import { drawText } from "./draw-text";
 
 export function getDrawNode<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(nodeRenders: (() => void)[], textRenders: (() => void)[]) {
-  return function drawNode(
-    this: GraphCanvas<NodeData, LinkData>,
-    node: NodeInterface<NodeData>,
-    index: number,
-  ) {
+  return function drawNode(this: GraphCanvas<NodeData, LinkData>, node: NodeInterface<NodeData>) {
     if (!this.context || !node.x || !node.y) return;
     if (node.visible != undefined && !node.visible) return;
 
-    let nodeOptions: Required<NodeOptionsInterface<NodeData, LinkData>>;
-    if (this.nodeSettings.cacheOptions && this.nodeOptionsCache[node.id]) {
-      nodeOptions = this.nodeOptionsCache[node.id];
-    } else {
-      nodeOptions = nodeIterationExtractor(
-        node,
-        index,
-        this.nodes,
-        this,
-        this.nodeSettings.options ?? {},
-        nodeOptionsGetter,
-      );
-      if (this.nodeSettings.cacheOptions) {
-        this.nodeOptionsCache[node.id] = nodeOptions;
-      }
-    }
+    const nodeOptions = this.nodeOptionsCache[node.id];
+    if (!nodeOptions) return;
 
     if (nodeOptions.nodeDraw && nodeOptions.textDraw) {
       nodeRenders.push(() => {
@@ -61,13 +31,13 @@ export function getDrawNode<
       return;
     }
 
+    let radius = nodeOptions.radius;
+    let width = nodeOptions.width;
+    let height = nodeOptions.height;
     let alpha = nodeOptions.alpha;
     let color = nodeOptions.color;
     let borderColor = nodeOptions.borderColor;
     let borderWidth = nodeOptions.borderWidth;
-    let radiusInitial = nodeOptions.radius;
-    let widthInitial = nodeOptions.width;
-    let heightInitial = nodeOptions.height;
     let textAlpha = nodeOptions.textAlpha;
     let textSize = nodeOptions.textSize;
     let textShiftX = nodeOptions.textShiftX;
@@ -124,9 +94,9 @@ export function getDrawNode<
         color = highlightOptions.color;
         borderColor = highlightOptions.borderColor;
         borderWidth = highlightOptions.borderWidth;
-        radiusInitial = highlightOptions.radiusInitial;
-        widthInitial = highlightOptions.widthInitial;
-        heightInitial = highlightOptions.heightInitial;
+        radius = highlightOptions.radiusInitial;
+        width = highlightOptions.widthInitial;
+        height = highlightOptions.heightInitial;
         textSize = highlightOptions.textSize;
         textShiftX = highlightOptions.textShiftX;
         textShiftY = highlightOptions.textShiftY;
@@ -184,9 +154,9 @@ export function getDrawNode<
         color = highlightOptions.color;
         borderColor = highlightOptions.borderColor;
         borderWidth = highlightOptions.borderWidth;
-        radiusInitial = highlightOptions.radiusInitial;
-        widthInitial = highlightOptions.widthInitial;
-        heightInitial = highlightOptions.heightInitial;
+        radius = highlightOptions.radiusInitial;
+        width = highlightOptions.widthInitial;
+        height = highlightOptions.heightInitial;
         textSize = highlightOptions.textSize;
         textShiftX = highlightOptions.textShiftX;
         textShiftY = highlightOptions.textShiftY;
@@ -194,95 +164,6 @@ export function getDrawNode<
         labelSize = highlightOptions.labelSize;
         labelWeight = highlightOptions.labelWeight;
       }
-    }
-
-    /** Flex radius */
-    const radius =
-      nodeOptions.shape === "circle"
-        ? nodeRadiusGetter({
-            radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-            radiusInitial,
-            radiusIncrementByStep: this.nodeSettings.nodeRadiusIncrementByStep,
-            radiusLinkCountForStep: this.nodeSettings.nodeRadiusLinkCountForStep,
-            radiusMaxLinearSteps: this.nodeSettings.nodeRadiusMaxLinearSteps,
-            radiusLogFactor: this.nodeSettings.nodeRadiusLogFactor,
-            radiusLinkCountDividerForLog: this.nodeSettings.nodeRadiusLinkCountDividerForLog,
-            linkCount: node.linkCount,
-          })
-        : radiusInitial;
-    /** Flex size */
-    let height: number = heightInitial;
-    let width: number = widthInitial;
-    if (nodeOptions.shape === "square") {
-      const size = nodeSizeGetter({
-        heightInitial,
-        widthInitial,
-        linkCount: node.linkCount,
-        sizeFlexible: this.nodeSettings.nodeSizeFlexible,
-        sizeIncrementByStep: this.nodeSettings.nodeSizeIncrementByStep,
-        sizeLinkCountForStep: this.nodeSettings.nodeSizeLinkCountForStep,
-        sizeMaxLinearSteps: this.nodeSettings.nodeSizeMaxLinearSteps,
-        sizeLogFactor: this.nodeSettings.nodeSizeLogFactor,
-        sizeLinkCountDividerForLog: this.nodeSettings.nodeSizeLinkCountDividerForLog,
-      });
-      width = size.width;
-      height = size.height;
-    }
-    if (nodeOptions.shape === "text") {
-      width = nodeOptions.width;
-
-      const size = nodeSizeGetter({
-        heightInitial,
-        widthInitial: width,
-        linkCount: node.linkCount,
-        sizeFlexible: this.nodeSettings.nodeSizeFlexible,
-        sizeIncrementByStep: this.nodeSettings.nodeSizeIncrementByStep,
-        sizeLinkCountForStep: this.nodeSettings.nodeSizeLinkCountForStep,
-        sizeMaxLinearSteps: this.nodeSettings.nodeSizeMaxLinearSteps,
-        sizeLogFactor: this.nodeSettings.nodeSizeLogFactor,
-        sizeLinkCountDividerForLog: this.nodeSettings.nodeSizeLinkCountDividerForLog,
-      });
-
-      labelSize *= size.additionalSizeCoefficient;
-    }
-    /** Size by text in textNode */
-    if (nodeOptions.shape === "text" && nodeOptions.label) {
-      let lines: string[];
-
-      let textNodeParameters: CachedTextNodeParametersInterface;
-
-      const cachedLines = this.cachedNodeLabel[node.id];
-      const cachedTextNodeParameters = this.cachedTextNodeParameters[node.id];
-      if (cachedLines != undefined && cachedTextNodeParameters != undefined) {
-        lines = cachedLines;
-        textNodeParameters = cachedTextNodeParameters;
-      } else {
-        const textInfo = getTextLines({
-          context: this.context,
-          text: nodeOptions.label,
-          textAlign: nodeOptions.labelAlign,
-          textColor: nodeOptions.labelColor,
-          textFont: nodeOptions.labelFont,
-          textSize: labelSize,
-          maxWidth: nodeOptions.labelWidth,
-          textStyle: nodeOptions.labelStyle,
-          textWeight,
-        });
-        textNodeParameters = [textInfo.currentMaxSize, labelSize];
-        lines = textInfo.lines;
-        this.cachedNodeLabel[node.id] = lines;
-        this.cachedTextNodeParameters[node.id] = textNodeParameters;
-      }
-
-      const textSizeCoefficient = labelSize / textNodeParameters[1];
-      const maxSize = textNodeParameters[0] * textSizeCoefficient;
-
-      height =
-        lines.length * labelSize +
-        (lines.length - 1) * nodeOptions.labelGap +
-        nodeOptions.labelYPadding;
-
-      width = maxSize + nodeOptions.labelXPadding;
     }
 
     /** Node parameters */

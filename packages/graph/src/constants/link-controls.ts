@@ -14,12 +14,6 @@ export const LINK_SETTINGS_CONTROLS: GraphSettingsInputInterface<
   >
 >[] = [
   {
-    id: "cacheOptions",
-    type: "checkbox",
-    label: "Кеширование вычисляемых настроек",
-    initialValue: LINK_SETTINGS.cacheOptions,
-  },
-  {
     id: "prettyDraw",
     type: "checkbox",
     label: "Обсчет корректного соединения",

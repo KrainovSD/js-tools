@@ -3,6 +3,8 @@ import { select as d3Select } from "d3-selection";
 import { ZoomTransform, zoom } from "d3-zoom";
 import type { GraphCanvas } from "../GraphCanvas";
 import type { ZoomEventInterface } from "../types";
+import { updateLinkCache } from "./update-link-cache";
+import { updateNodeCache } from "./update-node-cache";
 
 export function initZoom<
   NodeData extends Record<string, unknown>,
@@ -15,8 +17,16 @@ export function initZoom<
     .on("zoom", (event: ZoomEventInterface) => {
       this.listeners.onZoom?.call?.(this, event);
       this.areaTransform = event.transform;
-      this.linkOptionsCache = {};
-      this.nodeOptionsCache = {};
+      updateLinkCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateLinkCache>,
+        ReturnType<typeof updateLinkCache>
+      >(this);
+      updateNodeCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateNodeCache>,
+        ReturnType<typeof updateNodeCache>
+      >(this);
 
       if (!this.simulationWorking && !this.highlightWorking)
         requestAnimationFrame(() => this.draw());

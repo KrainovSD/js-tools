@@ -6,7 +6,6 @@ export type LinkSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
-  cacheOptions?: boolean;
   prettyDraw?: boolean;
   arrow?: boolean;
   arrowByHighlight?: boolean;

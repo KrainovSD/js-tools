@@ -18,6 +18,8 @@ import {
   initSimulation,
   initSimulationForces,
   initZoom,
+  updateLinkCache,
+  updateNodeCache,
 } from "./slices";
 import type {
   CachedNodeTextInterface,
@@ -214,28 +216,32 @@ export class GraphCanvas<
       );
 
       if (clearCache) {
-        this.linkOptionsCache = {};
-        this.cachedNodeText = {};
-        this.cachedNodeLabel = {};
-        this.cachedTextNodeParameters = {};
-        this.nodeOptionsCache = {};
+        this.clearCache([
+          "cachedNodeText",
+          "cachedNodeLabel",
+          "cachedTextNodeParameters",
+          "nodeOptionsCache",
+          "linkOptionsCache",
+        ]);
       }
     }
     if (options.linkSettings) {
       this.linkSettings = linkSettingsGetter(options.linkSettings, this.linkSettings);
 
       if (clearCache) {
-        this.linkOptionsCache = {};
+        this.clearCache(["linkOptionsCache"]);
       }
     }
     if (options.nodeSettings) {
       this.nodeSettings = nodeSettingsGetter(options.nodeSettings, this.nodeSettings);
 
       if (clearCache) {
-        this.cachedNodeText = {};
-        this.cachedNodeLabel = {};
-        this.cachedTextNodeParameters = {};
-        this.nodeOptionsCache = {};
+        this.clearCache([
+          "cachedNodeText",
+          "cachedNodeLabel",
+          "cachedTextNodeParameters",
+          "nodeOptionsCache",
+        ]);
       }
 
       initCollideForce.call<
@@ -281,15 +287,37 @@ export class GraphCanvas<
     )[],
   ) {
     if (!keys) {
-      this.nodeOptionsCache = {};
-      this.linkOptionsCache = {};
+      updateNodeCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateNodeCache>,
+        ReturnType<typeof updateNodeCache>
+      >(this);
+      updateLinkCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateLinkCache>,
+        ReturnType<typeof updateLinkCache>
+      >(this);
       this.cachedNodeText = {};
       this.cachedNodeLabel = {};
       this.cachedTextNodeParameters = {};
     } else {
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        this[key] = {};
+        if (key === "nodeOptionsCache") {
+          updateNodeCache.call<
+            GraphCanvas<NodeData, LinkData>,
+            Parameters<typeof updateNodeCache>,
+            ReturnType<typeof updateNodeCache>
+          >(this);
+        } else if (key === "linkOptionsCache") {
+          updateLinkCache.call<
+            GraphCanvas<NodeData, LinkData>,
+            Parameters<typeof updateLinkCache>,
+            ReturnType<typeof updateLinkCache>
+          >(this);
+        } else {
+          this[key] = {};
+        }
       }
     }
   }
@@ -401,6 +429,16 @@ export class GraphCanvas<
       GraphCanvas<NodeData, LinkData>,
       Parameters<typeof initArea>,
       ReturnType<typeof initArea>
+    >(this);
+    updateNodeCache.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof updateNodeCache>,
+      ReturnType<typeof updateNodeCache>
+    >(this);
+    updateLinkCache.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof updateLinkCache>,
+      ReturnType<typeof updateLinkCache>
     >(this);
     initSimulation.call<
       GraphCanvas<NodeData, LinkData>,

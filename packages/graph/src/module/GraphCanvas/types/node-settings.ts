@@ -6,7 +6,6 @@ export type NodeSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = {
-  cacheOptions?: boolean;
   nodeRadiusFlexible?: boolean;
   nodeRadiusLinkCountForStep?: number;
   nodeRadiusIncrementByStep?: number;

@@ -1,13 +1,6 @@
 import type { GraphCanvas } from "../GraphCanvas";
-import {
-  calculateLinkPositionByNode,
-  getParticlePosition,
-  linkFade,
-  linkHighlight,
-  linkIterationExtractor,
-  linkOptionsGetter,
-} from "../lib";
-import type { LinkInterface, LinkOptionsInterface, LinkParticle } from "../types";
+import { calculateLinkPositionByNode, getParticlePosition, linkFade, linkHighlight } from "../lib";
+import type { LinkInterface, LinkParticle } from "../types";
 
 export function getDrawLink<
   NodeData extends Record<string, unknown>,
@@ -16,7 +9,6 @@ export function getDrawLink<
   return function drawLink(
     this: GraphCanvas<NodeData, LinkData>,
     link: LinkInterface<NodeData, LinkData>,
-    index: number,
   ) {
     if (
       !this.context ||
@@ -39,22 +31,8 @@ export function getDrawLink<
     if (!link.source._visible && !link.target._visible) return;
 
     const id = `${link.target.id}${link.source.id}`;
-    let linkOptions: Required<LinkOptionsInterface<NodeData, LinkData>>;
-    if (this.linkSettings.cacheOptions && this.linkOptionsCache[id]) {
-      linkOptions = this.linkOptionsCache[id];
-    } else {
-      linkOptions = linkIterationExtractor(
-        link,
-        index,
-        this.links,
-        this,
-        this.linkSettings.options ?? {},
-        linkOptionsGetter,
-      );
-      if (this.linkSettings.cacheOptions) {
-        this.linkOptionsCache[id] = linkOptions;
-      }
-    }
+    const linkOptions = this.linkOptionsCache[id];
+    if (!linkOptions) return;
 
     if (linkOptions.drawLink) {
       linkOptions.drawLink.call(this, link, linkOptions);
@@ -162,7 +140,11 @@ export function getDrawLink<
     let xEnd = link.target.x;
     let yEnd = link.target.y;
     let linkDistance = 0;
-    if (this.linkSettings.prettyDraw || this.linkSettings.particleFlexSpeed) {
+    if (
+      this.linkSettings.prettyDraw ||
+      this.linkSettings.particleFlexSpeed ||
+      (this.linkSettings.arrow && arrowAlpha > 0)
+    ) {
       const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
       const position = calculateLinkPositionByNode(link, isHasArrow ? arrowSize : 0);
 
@@ -252,18 +234,6 @@ export function getDrawLink<
 
     /** Arrow */
     if (this.linkSettings.arrow && arrowAlpha > 0) {
-      const {
-        x1: xStart,
-        x2: xEnd,
-        y1: yStart,
-        y2: yEnd,
-      } = calculateLinkPositionByNode(link) ?? {
-        x1: 0,
-        x2: 0,
-        y1: 0,
-        y2: 0,
-      };
-
       this.context.beginPath();
       this.context.globalAlpha = arrowAlpha;
       this.context.strokeStyle = arrowBorderColor;

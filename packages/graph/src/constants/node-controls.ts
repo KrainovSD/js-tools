@@ -14,12 +14,6 @@ export const NODE_SETTINGS_CONTROLS: GraphSettingsInputInterface<
   >
 >[] = [
   {
-    id: "cacheOptions",
-    type: "checkbox",
-    initialValue: NODE_SETTINGS.cacheOptions,
-    label: "Кеширование вычисляемых настроек",
-  },
-  {
     id: "textNodeDebug",
     type: "checkbox",
     initialValue: NODE_SETTINGS.textNodeDebug,
