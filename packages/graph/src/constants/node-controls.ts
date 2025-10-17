@@ -186,7 +186,6 @@ export const NODE_OPTIONS_NODE_CONTROLS: GraphSettingsInputInterface<
     initialValue: NODE_OPTIONS.shape,
     label: "Форма",
     options: [
-      { label: "Картинки", value: "icon" },
       { label: "Круг", value: "circle" },
       { label: "Прямоугольник", value: "square" },
       { label: "Текст", value: "text" },
