@@ -16,6 +16,7 @@
   const expanded = shallowRef<ExpandedState>({});
   const fullSize = ref(true);
   const instantSplitter = ref(true);
+  const ganttVisible = ref(true);
   const view = ref<GanttViewType>("months");
   const size = ref<GanttSize>("sm");
   const today = ref(new Date().toISOString());
@@ -99,6 +100,8 @@
       <Button @click="unexpand">Закрыть</Button>
       <CheckBox v-model="fullSize"> Полный размер</CheckBox>
       <CheckBox v-model="instantSplitter"> Мгновенный разделитель</CheckBox>
+      <CheckBox v-model="ganttVisible"> Отображение ганта</CheckBox>
+
       <CheckBox
         :model-value="size === 'sm'"
         @update:model-value="(value) => (value ? (size = 'sm') : (size = 'lg'))"
@@ -127,6 +130,7 @@
       :gantt-today="true"
       :gantt-today-interactive="true"
       :with-total="false"
+      :gantt-visible="ganttVisible"
       @graph-task-click="
         (row, event) => {
           console.log(row, event);

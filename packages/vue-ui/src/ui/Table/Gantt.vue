@@ -79,6 +79,7 @@
       ganttLinkHighlight: true,
       ganttToday: false,
       ganttTodayInteractive: false,
+      ganttVisible: true,
     },
   );
   defineEmits<Emits>();
@@ -201,6 +202,7 @@
         :gantt-link-highlight="$props.ganttLinkHighlight ?? true"
         :gantt-today="($props.ganttToday || $props.ganttTodayInteractive) ?? false"
         :gantt-today-interactive="$props.ganttTodayInteractive ?? false"
+        :gantt-visible="$props.ganttVisible ?? true"
         @drag-row="
           (sid, tid) => {
             $emit('dragRow', sid, tid);

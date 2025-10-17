@@ -3,6 +3,7 @@
 
   type Props = {
     sizes: number[];
+    ganttVisible: boolean;
   };
 
   defineProps<Props>();
@@ -26,6 +27,7 @@
       </div>
     </div>
     <div
+      v-if="$props.ganttVisible"
       ref="graph-scroll"
       class="ksd-gantt-scroll__container"
       :style="{ width: `${$props.sizes[1]}px` }"

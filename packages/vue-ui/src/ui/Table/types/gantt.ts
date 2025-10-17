@@ -153,6 +153,7 @@ export type GanttProps<
   ganttToday?: boolean;
   ganttTodayInteractive?: boolean;
   ganttView?: GanttViewType;
+  ganttVisible?: boolean;
   ganttLinkStyleGetter?: GanttLinkStyleGetter<RowData>;
   ganttRowInfoGetter?: GanttRowInfoGetter;
 } & Omit<

@@ -30,6 +30,7 @@
     ganttLinkVisibleInRange: boolean;
     ganttLinkHighlight: boolean;
     ganttView: GanttViewType;
+    ganttVisible: boolean;
     ganttToday: boolean;
     ganttTodayInteractive: boolean;
     ganttRowInfoGetter: GanttRowInfoGetter | undefined;
@@ -89,6 +90,9 @@
     default: new Date().toISOString(),
   });
   const tableContainerElement = useTemplateRef("table-container");
+  const tableGanttContainerElement = computed(
+    () => tableContainerElement.value?.children?.[0] as HTMLElement | undefined,
+  );
   const tableComponent = useTemplateRef<{
     element: HTMLDivElement | null;
     defineRubberColumnSize: () => void;
@@ -118,12 +122,15 @@
     tableScrollElement,
   });
 
+  const ganttVisible = computed(() => props.ganttVisible);
   const instantSizing = computed(() => props.ganttSplitterInstant);
   const { dragging, sizes } = useGanttSplitter({
     ghost: ghostRef,
     overlay: overlayRef,
     splitter: splitterRef,
     instantSizing,
+    container: tableGanttContainerElement,
+    ganttVisible,
   });
 
   /** table height */
@@ -195,12 +202,14 @@
         @dblclick="(row, event) => $emit('dblclick', row, event)"
       />
       <GanttSplitter
+        v-if="$props.ganttVisible"
         ref="splitter"
         :dragging="dragging"
         :height="splitterHeight"
         :left="sizes[0]"
       />
       <GanttGraph
+        v-if="$props.ganttVisible"
         ref="gantt-graph"
         v-model:graph-today="graphToday"
         :column-virtual-enabled="$props.columnVirtualEnabled"
@@ -236,7 +245,7 @@
       </GanttGraph>
     </div>
   </div>
-  <GanttScroll ref="gantt-scroll" :sizes="sizes" />
+  <GanttScroll ref="gantt-scroll" :sizes="sizes" :gantt-visible="$props.ganttVisible" />
 </template>
 
 <style lang="scss">

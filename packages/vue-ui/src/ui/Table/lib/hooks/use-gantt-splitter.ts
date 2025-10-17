@@ -1,4 +1,4 @@
-import { type ComputedRef, computed, ref, shallowRef, watch } from "vue";
+import { type ComputedRef, ref, shallowRef, watch } from "vue";
 import { extractDragPosition } from "../../../../lib";
 import { MIN_GANTT_PART_WIDTH } from "../../constants";
 
@@ -7,17 +7,24 @@ type UseGanttSplitterOptions = {
   splitter: ComputedRef<HTMLDivElement | null | undefined>;
   ghost: ComputedRef<HTMLDivElement | null | undefined>;
   overlay: ComputedRef<HTMLDivElement | null | undefined>;
+  container: ComputedRef<HTMLElement | undefined>;
+  ganttVisible: ComputedRef<boolean>;
 };
 
 export function useGanttSplitter(opts: UseGanttSplitterOptions) {
   const sizes = shallowRef([0, 0]);
   const dragging = ref(false);
   let tempSizes = [0, 0];
-  const container = computed(() => opts.splitter.value?.parentElement);
 
   function getSizesFromPointer(event?: MouseEvent | TouchEvent) {
-    const rect = container.value?.getBoundingClientRect();
+    const rect = opts.container.value?.getBoundingClientRect();
     if (!rect) return;
+
+    if (!opts.ganttVisible.value) {
+      sizes.value = [rect.width, 0];
+
+      return;
+    }
 
     const maxWidth = rect.width - MIN_GANTT_PART_WIDTH;
     const minWidth = MIN_GANTT_PART_WIDTH;
@@ -47,7 +54,7 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
       opts.ghost.value.style.visibility = "visible";
     }
     if (!opts.instantSizing.value && opts.overlay.value) {
-      const rect = container.value?.getBoundingClientRect();
+      const rect = opts.container.value?.getBoundingClientRect();
       if (!rect) return;
 
       opts.overlay.value.style.width = `${rect.width}px`;
@@ -76,7 +83,7 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
         }
 
         if (opts.overlay.value) {
-          const rect = container.value?.getBoundingClientRect();
+          const rect = opts.container.value?.getBoundingClientRect();
           if (!rect) return;
 
           opts.overlay.value.style.width = `${rect.width}px`;
@@ -96,7 +103,7 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
 
       if (!opts.instantSizing.value) {
         const splitterRect = opts.splitter.value?.getBoundingClientRect();
-        const containerRect = container.value?.getBoundingClientRect();
+        const containerRect = opts.container.value?.getBoundingClientRect();
         if (!splitterRect || !containerRect || !opts.ghost.value) return;
 
         opts.ghost.value.style.left = `${newSizes[0] - splitterRect.left + containerRect.left}px`;
@@ -130,8 +137,8 @@ export function useGanttSplitter(opts: UseGanttSplitterOptions) {
 
   /** resize */
   watch(
-    container,
-    (container, _, clean) => {
+    () => [opts.container.value, opts.ganttVisible.value] as const,
+    ([container], _, clean) => {
       if (!container) return;
       let parentWidth = 0;
 
