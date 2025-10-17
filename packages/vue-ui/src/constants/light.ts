@@ -402,6 +402,8 @@ export const LIGHT_THEME: ThemeVariableConfig = {
       "ksd-table-gantt-link-color": "#a1a4a6",
       "ksd-table-gantt-link-active-color": "var(--ksd-error-color)",
       "ksd-table-gantt-today-color": "var(--ksd-error-color)",
+      "ksd-table-gantt-today-line-type": "solid",
+      "ksd-table-gantt-today-header-shift": "2px",
     },
     loader: {
       "ksd-loader-primary-color": "var(--ksd-accent-color)",

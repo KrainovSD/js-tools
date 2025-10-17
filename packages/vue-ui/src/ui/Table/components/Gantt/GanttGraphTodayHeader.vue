@@ -87,9 +87,9 @@
 
     &__today-header-trigger {
       position: absolute;
-      border-right: 1px dashed var(--ksd-table-gantt-today-color);
+      border-right: 1px var(--ksd-table-gantt-today-line-type) var(--ksd-table-gantt-today-color);
       width: 1px;
-      height: calc(100% - var(--gantt-today-top-shift));
+      height: calc(100% - var(--gantt-today-top-shift) + var(--ksd-table-gantt-today-header-shift));
       top: 0;
       left: 0;
       &::before {

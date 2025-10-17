@@ -42,7 +42,7 @@
 
     &__today-trigger {
       position: absolute;
-      border-right: 1px dashed var(--ksd-table-gantt-today-color);
+      border-right: 1px var(--ksd-table-gantt-today-line-type) var(--ksd-table-gantt-today-color);
       width: 1px;
       height: 100%;
       top: 0;

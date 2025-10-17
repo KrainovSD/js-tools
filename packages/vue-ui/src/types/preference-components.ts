@@ -217,7 +217,9 @@ export type ThemeTableVariable =
   | "ksd-table-gantt-actual-task-future-color"
   | "ksd-table-gantt-link-color"
   | "ksd-table-gantt-link-active-color"
-  | "ksd-table-gantt-today-color";
+  | "ksd-table-gantt-today-color"
+  | "ksd-table-gantt-today-line-type"
+  | "ksd-table-gantt-today-header-shift";
 
 export type ThemeFilterVariable = "ksd-filter-gap" | "ksd-filter-field-gap";
 
