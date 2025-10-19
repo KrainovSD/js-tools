@@ -173,7 +173,6 @@
   }
 
   /** Effect by appear positioner  */
-
   watchEffect((clean) => {
     const positioner = positionerComponentRef.value?.element;
     if (!positioner) return;
@@ -206,7 +205,7 @@
 
   /** Effect by open positioner */
   watchEffect((clean) => {
-    if (!open.value) return;
+    if (!open.value || !targetNode.value) return;
 
     const eventController = new AbortController();
     lastActive.value = document.activeElement as HTMLElement;
@@ -232,19 +231,32 @@
       },
     );
     /** Update position by scroll */
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (props.closeByScroll) {
-          onDisAppear();
-        } else {
-          positionerComponentRef.value?.updatePosition?.();
-        }
-      },
-      {
-        signal: eventController.signal,
-        passive: true,
-      },
+    const scrollContainers: HTMLElement[] = [];
+    let parent = targetNode.value.parentElement;
+
+    while (parent != undefined) {
+      if (parent.clientWidth < parent.scrollWidth || parent.clientHeight < parent.scrollHeight) {
+        scrollContainers.push(parent);
+      }
+
+      parent = parent.parentElement;
+    }
+
+    scrollContainers.forEach((c) =>
+      c.addEventListener(
+        "scroll",
+        () => {
+          if (props.closeByScroll) {
+            onDisAppear();
+          } else {
+            positionerComponentRef.value?.updatePosition?.();
+          }
+        },
+        {
+          signal: eventController.signal,
+          passive: true,
+        },
+      ),
     );
 
     if (triggers.value.includes("hover")) {

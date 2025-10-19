@@ -34,6 +34,58 @@ const Template: StoryFn<typeof VPopper> = (args) => ({
 export const Primary = Template.bind({});
 Primary.args = {};
 
+export const Scroll: Story = {
+  render: (args) => ({
+    components: { VPopper },
+    setup() {
+      const contentInteractive = [
+        h(VText, {}, () => "Пункт 1"),
+        h(VText, {}, () => "Пункт 2"),
+        h(VText, {}, () => "Пункт 3"),
+        h(VDivider, {}),
+        h(VText, {}, () => "Пункт 4"),
+      ];
+
+      return { args, contentInteractive };
+    },
+    render() {
+      return h(
+        "div",
+        {
+          style: {
+            display: "flex",
+            gap: "20px",
+            flexDirection: "column",
+            border: "1px solid var(--ksd-border-color)",
+            padding: "var(--ksd-padding",
+            height: "100%",
+            overflow: "auto",
+          },
+        },
+        [
+          h("div", { display: "flex", gap: "20px", flexDirection: "column" }, [
+            h("div", { style: { display: "flex", height: "400px", minHeight: "400px" } }, [
+              "Контент",
+            ]),
+            h(
+              VPopper,
+              { ...args, triggers: ["click"] },
+              {
+                default: () => h(VButton, {}, () => "Click"),
+                content: () => this.contentInteractive,
+              },
+            ),
+            h("div", { style: { display: "flex", height: "400px", minHeight: "400px" } }, [
+              "Контент",
+            ]),
+          ]),
+        ],
+      );
+    },
+  }),
+  args: {},
+};
+
 export const AllInOne: Story = {
   render: (args) => ({
     components: { VPopper },
