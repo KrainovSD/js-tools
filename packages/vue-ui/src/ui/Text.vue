@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { type HTMLAttributes, computed, useTemplateRef } from "vue";
 
-  export type TextSize = "sm" | "lg" | "xl" | "default";
+  export type TextSize = "small" | "large" | "extra-large" | "default";
   export type TextType = "secondary" | "success" | "warning" | "error" | "default";
 
   export type TextProps = {
@@ -96,13 +96,13 @@
     &.size-default {
       font-size: var(--ksd-font-size);
     }
-    &.size-sm {
+    &.size-small {
       font-size: var(--ksd-font-size-sm);
     }
-    &.size-lg {
+    &.size-large {
       font-size: var(--ksd-font-size-lg);
     }
-    &.size-xl {
+    &.size-extra-large {
       font-size: var(--ksd-font-size-xl);
     }
 

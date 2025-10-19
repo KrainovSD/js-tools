@@ -26,6 +26,7 @@
     locale?: string;
     size?: DatePickerSize;
     view?: DatePickerView;
+    autofocus?: boolean;
   } & Pick<
     PopperProps,
     | "animationAppear"
@@ -63,6 +64,7 @@
     placement: "bottom-left",
     openDelay: 0,
     disabled: false,
+    autofocus: false,
   });
   const model = defineModel<Value>();
   const open = ref(false);
@@ -240,8 +242,10 @@
     :class="`ksd-date-picker__positioner`"
   >
     <DatePickerInput
+      ref="input"
       v-model:first-value="firstInputValue"
       v-model:second-value="secondInputValue"
+      :autofocus="$props.autofocus"
       :input-size="$props.inputSize"
       :input-variant="$props.inputVariant"
       :multiple="$props.multiple ?? false"
@@ -299,6 +303,7 @@
     v-else
     v-model:first-value="firstInputValue"
     v-model:second-value="secondInputValue"
+    :autofocus="false"
     :input-size="$props.inputSize"
     :input-variant="$props.inputVariant"
     :multiple="$props.multiple ?? false"

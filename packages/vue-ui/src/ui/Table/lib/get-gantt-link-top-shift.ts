@@ -3,10 +3,10 @@ import type { GanttSize } from "../types";
 
 export function getGanttLinkTopShift(size: GanttSize) {
   switch (size) {
-    case "sm": {
+    case "small": {
       return GANTT_LINK_TOP_SHIFT_SM;
     }
-    case "lg": {
+    case "large": {
       return GANTT_LINK_TOP_SHIFT_LG;
     }
     default: {

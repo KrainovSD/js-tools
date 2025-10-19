@@ -18,7 +18,7 @@
   const instantSplitter = ref(true);
   const ganttVisible = ref(true);
   const view = ref<GanttViewType>("months");
-  const size = ref<GanttSize>("sm");
+  const size = ref<GanttSize>("small");
   const today = ref(new Date().toISOString());
 
   const viewVariants: SelectItem[] = [
@@ -103,8 +103,8 @@
       <CheckBox v-model="ganttVisible"> Отображение ганта</CheckBox>
 
       <CheckBox
-        :model-value="size === 'sm'"
-        @update:model-value="(value) => (value ? (size = 'sm') : (size = 'lg'))"
+        :model-value="size === 'small'"
+        @update:model-value="(value) => (value ? (size = 'small') : (size = 'large'))"
       >
         Мини</CheckBox
       >

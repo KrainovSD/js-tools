@@ -18,6 +18,7 @@
     watch,
   } from "vue";
   import { SELECT_SCROLL_SHIFT_BOTTOM, SELECT_SCROLL_SHIFT_TOP } from "../constants/tech";
+  import { waitParentAnimation } from "../lib";
   import Empty from "./Empty.vue";
   import IconWrapper from "./IconWrapper.vue";
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
@@ -425,7 +426,11 @@
 
   onMounted(() => {
     if (props.autofocus && inputRef.value) {
-      inputRef.value.focus();
+      void waitParentAnimation(inputRef.value).then(() => {
+        if (!inputRef.value) return;
+        inputRef.value.focus();
+        open.value = true;
+      });
     }
   });
 

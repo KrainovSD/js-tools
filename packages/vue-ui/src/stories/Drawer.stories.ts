@@ -1,6 +1,6 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h, ref, useTemplateRef } from "vue";
-import { VButton, VDrawer, VText, VTooltip } from "../ui";
+import { VButton, VDrawer, VInput, VSelect, VText, VTextArea, VTooltip } from "../ui";
 
 const meta = {
   title: "Components/Drawer",
@@ -55,6 +55,9 @@ export const AllInOne: Story = {
         { style: { display: "flex", flexDirection: "column", gap: "20px" } },
         {
           default: () => [
+            h(VInput, { autofocus: false }),
+            h(VTextArea, { autofocus: true }),
+            h(VSelect, { autofocus: true, options: [] }),
             h(VText, {}, { default: () => "Содержимое модального окна" }),
             h(VText, {}, { default: () => "Содержимое модального окна" }),
             h(VButton, {}, { default: () => "Содержимое модального окна" }),
@@ -95,6 +98,7 @@ export const AllInOne: Story = {
               h(
                 VDrawer,
                 {
+                  autofocus: false,
                   header: "Right Modal",
                 },
                 {

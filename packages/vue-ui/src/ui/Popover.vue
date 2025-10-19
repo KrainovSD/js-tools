@@ -8,6 +8,7 @@
 
   export type PopoverProps = {
     size?: PopoverSize;
+    autofocus?: boolean;
   } & Pick<
     PopperProps,
     | "animationAppear"
@@ -38,6 +39,7 @@
     fit: true,
     interactiveMode: "keyboard",
     size: "default",
+    autofocus: true,
   });
   const triggersKey = computed(() => props.triggers.join(";"));
   const triggersArray = computed(() => {
@@ -66,7 +68,7 @@
       const interactiveChildrenController = createInteractiveChildrenController(
         positionerContentRef,
         {
-          autofocus: true,
+          autofocus: props.autofocus,
         },
       );
       positionerContentRef.tabIndex = 0;

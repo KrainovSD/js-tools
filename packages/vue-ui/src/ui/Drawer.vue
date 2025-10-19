@@ -238,7 +238,7 @@
           <Button type="text" size="small" class="ksd-drawer__header-close" @click="open = false"
             ><template #icon> <VCloseOutlined :size="16" /> </template>
           </Button>
-          <Text v-if="$props.header" size="lg" class="ksd-drawer__header-text">{{
+          <Text v-if="$props.header" size="large" class="ksd-drawer__header-text">{{
             $props.header
           }}</Text>
           <slot v-if="$slots.header" name="header"></slot>
@@ -272,7 +272,7 @@
           <Button type="text" size="small" class="ksd-drawer__header-close" @click="open = false"
             ><template #icon> <VCloseOutlined :size="16" /> </template>
           </Button>
-          <Text v-if="$props.header" size="lg" class="ksd-drawer__header-text">{{
+          <Text v-if="$props.header" size="large" class="ksd-drawer__header-text">{{
             $props.header
           }}</Text>
           <slot v-if="$slots.header" name="header"></slot>

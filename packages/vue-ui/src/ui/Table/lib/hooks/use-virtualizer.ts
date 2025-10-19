@@ -108,10 +108,10 @@ export function useVirtualizer<
       estimateSize: () => {
         if (extra.ganttSize) {
           switch (extra.ganttSize.value) {
-            case "lg": {
+            case "large": {
               return GANTT_ROW_LG_HEIGHT;
             }
-            case "sm": {
+            case "small": {
               return GANTT_ROW_SM_HEIGHT;
             }
             default: {

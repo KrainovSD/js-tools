@@ -1,7 +1,7 @@
 import { randomString } from "@krainovsd/js-helpers";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { type DefineComponent, h } from "vue";
-import { type User, type UserPickerProps, VUserPicker } from "../ui";
+import { type UserPickerProps, type UserPickerUser, VUserPicker } from "../ui";
 
 const meta = {
   title: "Components/UserPicker",
@@ -13,7 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const USERS = Array.from<unknown, User>({ length: 30 }, (_, i) => ({
+const USERS = Array.from<unknown, UserPickerUser>({ length: 30 }, (_, i) => ({
   id: i,
   name: randomString(10),
   username: `user_${i}`,

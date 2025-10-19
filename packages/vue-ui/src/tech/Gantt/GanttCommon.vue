@@ -97,7 +97,7 @@
       :get-row-id="getRowId"
       :gantt-splitter-instant="true"
       :gantt-view="'years'"
-      :gantt-size="'sm'"
+      :gantt-size="'small'"
       :gantt-graph-grid="true"
       :gantt-link-visible-in-range="true"
       :gantt-link-get-around="true"

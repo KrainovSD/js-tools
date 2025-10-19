@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { debounce as debounceFn, isString, speedTest } from "@krainovsd/js-helpers";
   import fuzzysort from "fuzzysort";
-  import { type Component, computed, ref, useTemplateRef, watch } from "vue";
+  import { type Component, computed, onMounted, ref, useTemplateRef, watch } from "vue";
   import {
     INPUT_POPPER_TRIGGERS,
     SELECT_SCROLL_SHIFT_BOTTOM,
     SELECT_SCROLL_SHIFT_TOP,
   } from "../constants/tech";
-  import { type HighlightText, createHighlight } from "../lib";
+  import { type HighlightText, createHighlight, waitParentAnimation } from "../lib";
   import Empty from "./Empty.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -45,6 +45,7 @@
     threshold?: number;
     limit?: number;
     debounce?: number;
+    autofocus?: boolean;
   } & Pick<InputProps, "allowClear" | "autofocus" | "disabled" | "size" | "status" | "variant"> &
     Pick<
       PopperProps,
@@ -88,11 +89,14 @@
     threshold: 0.3,
     debounce: 0,
     limit: 50,
+    autofocus: false,
   });
   const emit = defineEmits<Emits>();
   const model = defineModel<string>();
   const search = ref(model.value);
   const popperRef = useTemplateRef("popper");
+  const inputComponentRef = useTemplateRef("input");
+  const inputRef = computed(() => inputComponentRef.value?.element);
   const positionerContentRef = computed(() => popperRef.value?.positioner?.contentElement);
   const open = ref(false);
 
@@ -321,6 +325,16 @@
     { immediate: true },
   );
 
+  onMounted(() => {
+    if (props.autofocus && inputRef.value) {
+      void waitParentAnimation(inputRef.value).then(() => {
+        if (!inputRef.value) return;
+        inputRef.value.focus();
+        open.value = true;
+      });
+    }
+  });
+
   defineExpose({ popper: popperRef });
 </script>
 
@@ -350,6 +364,7 @@
     :class="`ksd-search__positioner`"
   >
     <Input
+      ref="input"
       :model-value="search"
       v-bind="$attrs"
       :status="$props.status"

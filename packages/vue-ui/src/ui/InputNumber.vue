@@ -1,7 +1,16 @@
 <script setup lang="ts">
   import { isNumber } from "@krainovsd/js-helpers";
   import { VDownOutlined, VUpOutlined } from "@krainovsd/vue-icons";
-  import { type HTMLAttributes, computed, ref, useAttrs, useTemplateRef, watchEffect } from "vue";
+  import {
+    type HTMLAttributes,
+    computed,
+    onMounted,
+    ref,
+    useAttrs,
+    useTemplateRef,
+    watchEffect,
+  } from "vue";
+  import { waitParentAnimation } from "../lib";
   import Flex from "./Flex.vue";
   import type { InputProps } from "./Input.vue";
   import Input from "./Input.vue";
@@ -153,6 +162,15 @@
     },
     { flush: "pre" },
   );
+
+  onMounted(() => {
+    if (props.autofocus && inputRef.value) {
+      void waitParentAnimation(inputRef.value).then(() => {
+        if (!inputRef.value) return;
+        inputRef.value.focus();
+      });
+    }
+  });
 
   defineExpose({ element: inputRef });
 </script>

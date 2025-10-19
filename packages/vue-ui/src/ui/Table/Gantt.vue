@@ -71,7 +71,7 @@
       withTotal: true,
       draggableRow: false,
       ganttGraphGrid: false,
-      ganttSize: "sm",
+      ganttSize: "small",
       ganttView: "months",
       ganttSplitterInstant: true,
       ganttLinkGetAround: true,
@@ -192,7 +192,7 @@
         :can-drop-to-row="$props.canDropToRow"
         :gantt-interval-date="$props.ganttIntervalDate"
         :gantt-graph-grid="$props.ganttGraphGrid ?? false"
-        :gantt-size="$props.ganttSize ?? 'sm'"
+        :gantt-size="$props.ganttSize ?? 'small'"
         :gantt-splitter-instant="$props.ganttSplitterInstant ?? true"
         :gantt-view="$props.ganttView ?? 'months'"
         :gantt-link-style-getter="$props.ganttLinkStyleGetter"

@@ -39,8 +39,8 @@ export const AllInOne: Story = {
     render() {
       return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
         h(VUserAvatar, { ...args }),
-        h(VUserAvatar, { ...args, size: "lg" }),
-        h(VUserAvatar, { ...args, size: "sm" }),
+        h(VUserAvatar, { ...args, size: "large" }),
+        h(VUserAvatar, { ...args, size: "small" }),
       ]);
     },
   }),

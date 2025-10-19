@@ -116,7 +116,7 @@
                 component.operatorLabel && component.operatorShortLabel
                   ? h("div", { class: "ksd-filter__field-operator-item" }, [
                       h(Text, {}, () => component.operatorShortLabel),
-                      h(Text, { type: "secondary", size: "sm" }, () => component.operatorLabel),
+                      h(Text, { type: "secondary", size: "small" }, () => component.operatorLabel),
                     ])
                   : (component.operatorShortLabel ?? component.operatorLabel),
             });
@@ -341,7 +341,7 @@
         >{{ filter.operatorShortLabel ?? filter.operatorLabel ?? operators[filter.field] }}</Button
       >
     </DropDown>
-    <Popover :size="$props.controlSize">
+    <Popover :size="$props.controlSize" :autofocus="false">
       <Button
         :data-id="filter.field"
         :size="$props.buttonSize"
@@ -374,6 +374,7 @@
             v-model="form[filter.field]"
             :component="filter.component"
             :props="filter.props"
+            :autofocus="true"
             :control-size="$props.controlSize"
             :control-variant="$props.controlVariant"
             :class="{

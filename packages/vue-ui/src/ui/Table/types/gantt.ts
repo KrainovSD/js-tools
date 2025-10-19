@@ -32,7 +32,7 @@ export type GanttTooltipProps<RowData extends DefaultRow> = {
 };
 
 export type GanttDate = [string | number, string | number];
-export type GanttSize = "sm" | "lg";
+export type GanttSize = "small" | "large";
 export type GanttTypeShapes = "task" | "group" | "milestone";
 export type GanttViewType = "years" | "months" | "quarters" | "weeks";
 

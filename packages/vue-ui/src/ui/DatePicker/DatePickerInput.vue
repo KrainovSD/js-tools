@@ -6,6 +6,7 @@
   import Text from "../Text.vue";
 
   type Props = {
+    autofocus: boolean;
     inputSize: InputSize;
     inputVariant: InputVariant;
     disabled: boolean;
@@ -37,6 +38,7 @@
         :class-name-root="'ksd-date-picker__input'"
         :class="classes"
         :size="$props.inputSize"
+        :autofocus="$props.autofocus"
         :variant="$props.inputVariant"
         :model-value="firstInputValue"
         :disabled="$props.disabled"

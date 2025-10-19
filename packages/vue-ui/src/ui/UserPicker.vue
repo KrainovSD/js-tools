@@ -1,9 +1,9 @@
 <script setup lang="ts" generic="Multiple extends true | false = false">
   import { arrayToMapByKey, isArray } from "@krainovsd/js-helpers";
   import { VCheckOutlined } from "@krainovsd/vue-icons";
-  import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
+  import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from "vue";
   import { AVATAR_COUNT_DEFAULT, AVATAR_SHIFT_DEFAULT } from "../constants/tech";
-  import { createInteractiveChildrenController } from "../lib";
+  import { createInteractiveChildrenController, waitParentAnimation } from "../lib";
   import Button from "./Button.vue";
   import Divider from "./Divider.vue";
   import Input from "./Input.vue";
@@ -13,7 +13,7 @@
   import UserAvatar from "./UserAvatar.vue";
   import UserInfo from "./UserInfo.vue";
 
-  export type User = {
+  export type UserPickerUser = {
     id: number;
     name: string;
     username: string;
@@ -21,11 +21,11 @@
     avatar?: string;
   };
 
-  export type UserPickerSize = "default" | "lg" | "sm";
+  export type UserPickerSize = "default" | "large" | "small";
   export type UserPickerPosition = "left" | "right" | "center";
 
   export type UserPickerProps<Multiple extends true | false> = {
-    users: User[];
+    users: UserPickerUser[];
     size?: UserPickerSize;
     position?: UserPickerPosition;
     count?: number;
@@ -34,7 +34,8 @@
     empty?: string;
     multiple?: Multiple;
     nested?: boolean;
-    tooltip?: (users: User[]) => string;
+    tooltip?: (users: UserPickerUser[]) => string;
+    autofocus?: boolean;
   };
 
   const props = withDefaults(defineProps<UserPickerProps<Multiple>>(), {
@@ -45,6 +46,7 @@
     empty: "Выберите пользователей",
     position: "left",
     tooltip: undefined,
+    autofocus: false,
   });
   const currentUsersModel = defineModel<
     Multiple extends true ? number[] | undefined : number | undefined
@@ -61,6 +63,8 @@
   const inputRef = useTemplateRef("input");
   const positionerRef = computed(() => popoverRef.value?.popper?.positioner?.contentElement);
   const classes = computed(() => ({ [`size-${props.size}`]: true }));
+  const openerRef = useTemplateRef("opener");
+  const open = ref(false);
 
   const activeUsers = computed(() => {
     const usersMap = arrayToMapByKey(props.users, "id");
@@ -240,13 +244,25 @@
     },
     { immediate: true, flush: "post" },
   );
+
+  onMounted(() => {
+    if (props.autofocus && openerRef.value) {
+      void waitParentAnimation(openerRef.value).then(() => {
+        if (!openerRef.value) return;
+        openerRef.value.focus();
+        open.value = true;
+      });
+    }
+  });
 </script>
 
 <template>
   <Popover
     ref="popover"
+    v-model="open"
     :class-name-positioner-content="'ksd-user-picker__positioner'"
     :observe="true"
+    :autofocus="false"
     :nested="$props.nested"
     :placement="
       $props.position === 'left'
@@ -256,7 +272,7 @@
           : 'bottom-center'
     "
   >
-    <div v-bind="$attrs" class="ksd-user-picker" :tabindex="0">
+    <div ref="opener" v-bind="$attrs" class="ksd-user-picker" :tabindex="0" :role="'button'">
       <Tooltip v-if="currentUsers.length > 0" :placement="'top-center'" :text="avatarTooltip">
         <div
           class="ksd-user-picker__users"
@@ -267,7 +283,7 @@
             '--avatar-size':
               $props.size === 'default'
                 ? 'var(--ksd-control-height)'
-                : $props.size === 'sm'
+                : $props.size === 'small'
                   ? 'var(--ksd-control-height-sm)'
                   : 'var(--ksd-control-height-lg)',
             '--avatar-shift': `${AVATAR_SHIFT_DEFAULT}px`,
@@ -305,12 +321,13 @@
         <Text>{{ $props.header }}</Text>
         <Button :type="'text'" :size="'small'" @click="clearUsers">Очистить</Button>
       </div>
-      <Input ref="input" v-model="search" placeholder="Поиск..." />
+      <Input ref="input" v-model="search" :autofocus="true" placeholder="Поиск..." />
       <div class="ksd-user-picker__list">
         <div
           v-for="user of filteredActiveUsers"
           :key="user.id"
           :tabindex="0"
+          :role="'button'"
           :data-id="user.id"
           class="ksd-user-picker__item active"
           @click="unSelectUser(user.id)"
@@ -329,6 +346,7 @@
             v-for="user of filteredOtherUsers"
             :key="user.id"
             :tabindex="0"
+            :role="'button'"
             :data-id="user.id"
             class="ksd-user-picker__item"
             @click="selectUser(user.id)"
@@ -384,10 +402,10 @@
     &__empty {
       line-height: var(--ksd-control-height);
 
-      &.size-sm {
+      &.size-small {
         line-height: var(--ksd-control-height-sm);
       }
-      &.size-lg {
+      &.size-large {
         line-height: var(--ksd-control-height-lg);
       }
     }

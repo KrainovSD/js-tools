@@ -3,10 +3,10 @@ import type { GanttSize } from "../types";
 
 export function getGanttRowHeight(ganttSize: GanttSize) {
   switch (ganttSize) {
-    case "lg": {
+    case "large": {
       return GANTT_ROW_LG_HEIGHT;
     }
-    case "sm": {
+    case "small": {
       return GANTT_ROW_SM_HEIGHT;
     }
     default: {

@@ -128,7 +128,12 @@ export type {
 export type { ColorPickerProps } from "./ColorPicker.vue";
 export type { UserAvatarProps, UserAvatarSize } from "./UserAvatar.vue";
 export type { UserInfoProps, UserInfoSize } from "./UserInfo.vue";
-export type { User, UserPickerPosition, UserPickerProps, UserPickerSize } from "./UserPicker.vue";
+export type {
+  UserPickerUser,
+  UserPickerPosition,
+  UserPickerProps,
+  UserPickerSize,
+} from "./UserPicker.vue";
 export type { Tab, TabsProps } from "./Tabs.vue";
 
 export {

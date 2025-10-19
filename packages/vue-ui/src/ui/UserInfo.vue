@@ -2,7 +2,7 @@
   import Text from "./Text.vue";
   import UserAvatar from "./UserAvatar.vue";
 
-  export type UserInfoSize = "lg" | "sm" | "default";
+  export type UserInfoSize = "large" | "small" | "default";
 
   export type UserInfoProps = {
     name: string;
@@ -18,7 +18,7 @@
   <div class="ksd-user-info">
     <UserAvatar
       :name="$props.name"
-      :size="$props.size === 'sm' ? 'default' : $props.size"
+      :size="$props.size === 'small' ? 'default' : $props.size"
       :url="$props.avatar"
     />
     <div class="ksd-user-info__info">

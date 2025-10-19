@@ -1,4 +1,4 @@
-import { dateFormat, getDateByRules } from "@krainovsd/js-helpers";
+import { dateFormat, getDateByRules, randomString } from "@krainovsd/js-helpers";
 import {
   VCarOutlined,
   VClockCircleOutlined,
@@ -9,7 +9,7 @@ import {
 } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn } from "@storybook/vue3";
 import { type DefineComponent, h, ref } from "vue";
-import { type FilterItem, type FilterProps, VFilter } from "../ui";
+import { type FilterItem, type FilterProps, type UserPickerUser, VFilter } from "../ui";
 
 const Filter = VFilter as unknown as DefineComponent<FilterProps<string, string>>;
 
@@ -21,6 +21,12 @@ const meta = {
 } satisfies Meta<typeof Filter>;
 
 export default meta;
+
+const USERS = Array.from<unknown, UserPickerUser>({ length: 30 }, (_, i) => ({
+  id: i,
+  name: randomString(10),
+  username: `user_${i}`,
+}));
 
 const FILTERS: FilterItem<string, string | number>[] = [
   {
@@ -223,6 +229,18 @@ const FILTERS: FilterItem<string, string | number>[] = [
       { component: "date", operatorLabel: "Дата", operatorValue: "date" },
     ],
   },
+  {
+    field: "users",
+    label: "Редактор",
+    components: [
+      {
+        component: "user",
+        operatorValue: "equal",
+        operatorLabel: "Равен",
+        props: { users: USERS, multiple: true },
+      },
+    ],
+  },
 ];
 
 const Template: StoryFn<typeof VFilter> = (args) => ({
@@ -243,6 +261,7 @@ const Template: StoryFn<typeof VFilter> = (args) => ({
         dateFormat(getDateByRules([{ increment: -1, type: "years" }]), "YYYY-MM-DD"),
         dateFormat(getDateByRules([{ increment: 0, type: "years" }]), "YYYY-MM-DD"),
       ],
+      users: [USERS[0].id],
     });
     const operators = ref<Record<string, unknown>>({});
 

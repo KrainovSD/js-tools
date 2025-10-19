@@ -6,12 +6,15 @@
   import InputNumber from "./InputNumber.vue";
   import type { SelectItem, SelectValue } from "./Select.vue";
   import Select from "./Select.vue";
+  import type { UserPickerPosition, UserPickerUser } from "./UserPicker.vue";
+  import UserPicker from "./UserPicker.vue";
 
   export type ControlComponents = {
     select: {
       props: ControlSelectComponentProps;
       value: SelectValue[] | string | number | null | undefined;
     };
+    user: { props: ControlUserComponentProps; value: number[] | number | null | undefined };
     text: { props: ControlTextComponentProps; value: string };
     number: { props: ControlNumberComponentProps; value: number };
     "number-range": { props: ControlNumberComponentProps; value: [number, number] };
@@ -19,6 +22,14 @@
     "date-range": { props: ControlDateComponentProps; value: [string, string] };
   };
 
+  export type ControlUserComponentProps = {
+    multiple?: boolean;
+    header?: string;
+    count?: number;
+    shift?: number;
+    position?: UserPickerPosition;
+    users: UserPickerUser[];
+  };
   export type ControlSelectComponentProps = {
     options: SelectItem[];
     multiple?: boolean;
@@ -41,6 +52,7 @@
   };
 
   export type ControlProps = {
+    autofocus?: boolean;
     component: keyof ControlComponents;
     props?: Record<string, unknown>;
     controlSize?: InputSize;
@@ -58,6 +70,7 @@
     :model-value="isString(model) ? model : ''"
     :size="$props.controlSize"
     :variant="$props.controlVariant"
+    :autofocus="$props.autofocus"
     :allow-clear="($props.props as ControlTextComponentProps)?.allowClear"
     :placeholder="($props.props as ControlTextComponentProps)?.placeholder"
     @update:model-value="
@@ -72,6 +85,7 @@
     :model-value="isNumber(model) ? model : undefined"
     :size="$props.controlSize"
     :variant="$props.controlVariant"
+    :autofocus="$props.autofocus"
     :placeholder="($props.props as ControlNumberComponentProps)?.placeholder"
     :min="($props.props as ControlNumberComponentProps)?.min"
     :max="($props.props as ControlNumberComponentProps)?.max"
@@ -88,6 +102,7 @@
         :model-value="isArray(model) && isNumber(model[0]) ? model[0] : undefined"
         :size="$props.controlSize"
         :variant="$props.controlVariant"
+        :autofocus="$props.autofocus"
         :placeholder="($props.props as ControlNumberComponentProps)?.placeholder"
         :min="($props.props as ControlNumberComponentProps)?.min"
         :max="($props.props as ControlNumberComponentProps)?.max"
@@ -129,6 +144,7 @@
     :options="($props.props as ControlSelectComponentProps)?.options ?? []"
     :size="$props.controlSize"
     :variant="$props.controlVariant"
+    :autofocus="$props.autofocus"
     :multiple="($props.props as ControlSelectComponentProps)?.multiple"
     :search="($props.props as ControlSelectComponentProps)?.search"
     :clear="($props.props as ControlSelectComponentProps)?.clear"
@@ -151,6 +167,7 @@
     v-if="$props.component === 'date'"
     v-bind="$attrs"
     :input-size="$props.controlSize"
+    :autofocus="$props.autofocus"
     :input-variant="$props.controlVariant"
     :multiple="false"
     :model-value="isString(model) ? model : ''"
@@ -163,6 +180,7 @@
   <DatePicker
     v-if="$props.component === 'date-range'"
     v-bind="$attrs"
+    :autofocus="$props.autofocus"
     :input-size="$props.controlSize"
     :input-variant="$props.controlVariant"
     :multiple="true"
@@ -172,6 +190,19 @@
         model = value;
       }
     "
+  />
+  <UserPicker
+    v-if="$props.component === 'user'"
+    v-bind="$attrs"
+    :users="($props.props as ControlUserComponentProps)?.users ?? []"
+    :multiple="($props.props as ControlUserComponentProps)?.multiple"
+    :header="($props.props as ControlUserComponentProps)?.header"
+    :count="($props.props as ControlUserComponentProps)?.count"
+    :shift="($props.props as ControlUserComponentProps)?.shift"
+    :position="($props.props as ControlUserComponentProps)?.position"
+    :size="$props.controlSize"
+    :autofocus="$props.autofocus"
+    :nested="true"
   />
 </template>
 

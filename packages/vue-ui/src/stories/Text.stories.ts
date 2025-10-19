@@ -135,7 +135,7 @@ export const AllInOne: Story = {
         h("div", { style: { display: "flex", maxWidth: "400px" } }, [
           h(
             VText,
-            { size: "sm", ellipsis: true },
+            { size: "small", ellipsis: true },
             {
               default: () =>
                 "[Size sm] " +

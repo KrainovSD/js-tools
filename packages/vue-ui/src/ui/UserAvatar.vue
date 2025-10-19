@@ -2,7 +2,7 @@
   import { computed } from "vue";
   import Text from "./Text.vue";
 
-  export type UserAvatarSize = "lg" | "sm" | "default";
+  export type UserAvatarSize = "large" | "small" | "default";
 
   export type UserAvatarProps = {
     name: string;
@@ -55,11 +55,11 @@
     background-size: cover;
     background-color: var(--ksd-bg-modal-color);
 
-    &.size-sm {
+    &.size-small {
       width: var(--ksd-control-height-sm);
       height: var(--ksd-control-height-sm);
     }
-    &.size-lg {
+    &.size-large {
       width: var(--ksd-control-height-lg);
       height: var(--ksd-control-height-lg);
     }
