@@ -38,7 +38,13 @@ function isNearLink<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(mouseX: number, mouseY: number, link: LinkInterface<NodeData, LinkData>, threshold = 2) {
-  if (!isObject(link.source) || !isObject(link.target)) return false;
+  if (
+    !isObject(link.source) ||
+    !isObject(link.target) ||
+    link.source.visible === false ||
+    link.target.visible === false
+  )
+    return false;
 
   const x1 = link.source.x as number;
   const y1 = link.source.y as number;

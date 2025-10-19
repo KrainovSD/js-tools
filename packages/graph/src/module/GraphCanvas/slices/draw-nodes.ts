@@ -10,7 +10,11 @@ export function getDrawNode<
 >(nodeRenders: (() => void)[], textRenders: (() => void)[]) {
   return function drawNode(this: GraphCanvas<NodeData, LinkData>, node: NodeInterface<NodeData>) {
     if (!this.context || !node.x || !node.y) return;
-    if (node.visible != undefined && !node.visible) return;
+    if (node.visible != undefined && !node.visible) {
+      node._radius = 0;
+
+      return;
+    }
 
     const nodeOptions = this.nodeOptionsCache[node.id];
     if (!nodeOptions) return;

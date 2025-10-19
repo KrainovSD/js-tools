@@ -6,7 +6,7 @@ export function isOverlapsNode<NodeData extends Record<string, unknown>>(
   pointerY: number,
   radius: number | undefined,
 ) {
-  if (node.x == undefined || node.y == undefined) return false;
+  if (node.x == undefined || node.y == undefined || node.visible === false) return false;
 
   switch (node._shape) {
     case "circle": {

@@ -12,6 +12,10 @@ export function getNodeOptions(
   ): NodeOptionsInterface<NodeData, LinkData> {
     const selected = selectedNode?.id === node.id;
 
+    if (node.name === "Cited Works 70") {
+      node.visible = false;
+    }
+
     return {
       ...opts,
       borderColor: selected ? HIGHLIGHT_COLOR : "transparent",
