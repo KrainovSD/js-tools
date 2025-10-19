@@ -10,14 +10,8 @@ import {
 } from "d3-force";
 import { getDrawTime, resetDrawTime } from "@/lib";
 import type { GraphCanvas } from "../GraphCanvas";
-import {
-  nodeIterationExtractor,
-  nodeOptionsGetter,
-  nodeRadiusGetter,
-  nodeSizeGetter,
-} from "../lib";
+import { nodeIterationExtractor } from "../lib";
 import type { LinkInterface, NodeInterface } from "../types";
-import { getTextLines } from "./draw-text";
 
 export function initSimulation<
   NodeData extends Record<string, unknown>,
@@ -163,14 +157,8 @@ export function initCollideForce<
         "collide",
         forceCollide<NodeInterface<NodeData>>()
           .radius((node, index) => {
-            const nodeOptions = nodeIterationExtractor(
-              node,
-              index,
-              this.nodes,
-              this,
-              this.nodeSettings.options ?? {},
-              nodeOptionsGetter,
-            );
+            const nodeOptions = this.nodeOptionsCache[node.id];
+            if (!nodeOptions) return 0;
 
             switch (nodeOptions.shape) {
               case "circle": {
@@ -184,72 +172,18 @@ export function initCollideForce<
                     undefined,
                   );
                 }
-                const radius = nodeRadiusGetter({
-                  radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-                  radiusInitial: nodeOptions.radius,
-                  linkCount: node.linkCount,
-                  radiusIncrementByStep: this.nodeSettings.nodeRadiusIncrementByStep,
-                  radiusLinkCountForStep: this.nodeSettings.nodeRadiusLinkCountForStep,
-                  radiusMaxLinearSteps: this.nodeSettings.nodeRadiusMaxLinearSteps,
-                  radiusLogFactor: this.nodeSettings.nodeRadiusLogFactor,
-                  radiusLinkCountDividerForLog: this.nodeSettings.nodeRadiusLinkCountDividerForLog,
-                });
 
-                return radius + this.forceSettings.collideAdditionalRadius;
+                return nodeOptions.radius + this.forceSettings.collideAdditionalRadius;
               }
               case "square": {
-                const { height, width } = nodeSizeGetter({
-                  heightInitial: nodeOptions.width,
-                  widthInitial: nodeOptions.height,
-                  linkCount: node.linkCount,
-                  sizeFlexible: this.nodeSettings.nodeSizeFlexible,
-                  sizeIncrementByStep: this.nodeSettings.nodeSizeIncrementByStep,
-                  sizeLinkCountForStep: this.nodeSettings.nodeSizeLinkCountForStep,
-                  sizeMaxLinearSteps: this.nodeSettings.nodeSizeMaxLinearSteps,
-                  sizeLogFactor: this.nodeSettings.nodeSizeLogFactor,
-                  sizeLinkCountDividerForLog: this.nodeSettings.nodeSizeLinkCountDividerForLog,
-                });
-
                 return (
-                  Math.sqrt(width ** 2 + height ** 2) / 2 +
+                  Math.sqrt(nodeOptions.width ** 2 + nodeOptions.height ** 2) / 2 +
                   this.forceSettings.collideAdditionalRadius
                 );
               }
               case "text": {
-                let { height, width } = nodeSizeGetter({
-                  heightInitial: nodeOptions.width,
-                  widthInitial: nodeOptions.height,
-                  linkCount: node.linkCount,
-                  sizeFlexible: this.nodeSettings.nodeSizeFlexible,
-                  sizeIncrementByStep: this.nodeSettings.nodeSizeIncrementByStep,
-                  sizeLinkCountForStep: this.nodeSettings.nodeSizeLinkCountForStep,
-                  sizeMaxLinearSteps: this.nodeSettings.nodeSizeMaxLinearSteps,
-                  sizeLogFactor: this.nodeSettings.nodeSizeLogFactor,
-                  sizeLinkCountDividerForLog: this.nodeSettings.nodeSizeLinkCountDividerForLog,
-                });
-
-                if (this.context && nodeOptions.text) {
-                  const textInfo = getTextLines({
-                    context: this.context,
-                    text: nodeOptions.text,
-                    textAlign: nodeOptions.textAlign,
-                    textColor: nodeOptions.textColor,
-                    textFont: nodeOptions.textFont,
-                    textSize: nodeOptions.textSize,
-                    maxWidth: width,
-                    textStyle: nodeOptions.textStyle,
-                    textWeight: nodeOptions.textWeight,
-                  });
-
-                  height =
-                    textInfo.lines.length * nodeOptions.textSize +
-                    (textInfo.lines.length - 1) * nodeOptions.textGap +
-                    nodeOptions.labelYPadding;
-                  width = textInfo.currentMaxSize + nodeOptions.labelXPadding;
-                }
-
                 return (
-                  Math.sqrt(width ** 2 + height ** 2) / 2 +
+                  Math.sqrt(nodeOptions.width ** 2 + nodeOptions.height ** 2) / 2 +
                   this.forceSettings.collideAdditionalRadius
                 );
               }
@@ -264,18 +198,8 @@ export function initCollideForce<
                     undefined,
                   );
                 }
-                const radius = nodeRadiusGetter({
-                  radiusFlexible: this.nodeSettings.nodeRadiusFlexible,
-                  radiusInitial: nodeOptions.radius,
-                  radiusIncrementByStep: this.nodeSettings.nodeRadiusIncrementByStep,
-                  radiusLinkCountForStep: this.nodeSettings.nodeRadiusLinkCountForStep,
-                  radiusMaxLinearSteps: this.nodeSettings.nodeRadiusMaxLinearSteps,
-                  radiusLogFactor: this.nodeSettings.nodeRadiusLogFactor,
-                  radiusLinkCountDividerForLog: this.nodeSettings.nodeRadiusLinkCountDividerForLog,
-                  linkCount: node.linkCount,
-                });
 
-                return radius + this.forceSettings.collideAdditionalRadius;
+                return nodeOptions.radius + this.forceSettings.collideAdditionalRadius;
               }
             }
           })

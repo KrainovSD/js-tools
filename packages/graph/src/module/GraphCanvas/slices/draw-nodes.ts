@@ -12,6 +12,8 @@ export function getDrawNode<
     if (!this.context || !node.x || !node.y) return;
     if (node.visible != undefined && !node.visible) {
       node._radius = 0;
+      node._width = 0;
+      node._height = 0;
 
       return;
     }

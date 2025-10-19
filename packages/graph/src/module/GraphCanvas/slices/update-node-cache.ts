@@ -125,9 +125,9 @@ export function updateNodeCache<
       this.cachedNodeLabel[node.id] = lines;
     }
 
-    nodeOptions.width = width;
-    nodeOptions.height = height;
-    nodeOptions.radius = radius;
+    nodeOptions.width = node.visible === false ? 0 : width;
+    nodeOptions.height = node.visible === false ? 0 : height;
+    nodeOptions.radius = node.visible === false ? 0 : radius;
     nodeOptions.labelSize = labelSize;
 
     /** text */
