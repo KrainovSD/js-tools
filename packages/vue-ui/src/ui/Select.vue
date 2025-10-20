@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="Multiple extends true | false = false">
+<script setup lang="ts" generic="V extends string | number, Multiple extends true | false = false">
   import { createGlobalId, isArray, isString } from "@krainovsd/js-helpers";
   import {
     VCheckOutlined,
@@ -23,16 +23,14 @@
   import IconWrapper from "./IconWrapper.vue";
   import Popper, { type PopperProps, type PopperTrigger } from "./Popper.vue";
 
-  export type SelectValue = string | number;
-
-  export type SelectItem = {
+  export type SelectItem<V extends string | number> = {
     label: string;
-    value: SelectValue;
+    value: V;
     desc?: string | Component;
   };
-  export type SelectGroupItem = {
+  export type SelectGroupItem<V extends string | number> = {
     title: string | Component;
-    options: SelectItem[];
+    options: SelectItem<V>[];
   };
 
   export interface SelectHTMLElement extends HTMLElement {
@@ -47,7 +45,7 @@
   export type SelectSize = "default" | "large" | "small";
   export type SelectStatus = "error" | "warning" | "success" | "default";
 
-  export type SelectProps<Multiple extends true | false> = {
+  export type SelectProps<V extends string | number, Multiple extends true | false> = {
     variant?: SelectVariant;
     size?: SelectSize;
     status?: SelectStatus;
@@ -58,9 +56,9 @@
     autofocus?: boolean;
     multiple?: Multiple;
     placeholder?: string;
-    options: (SelectItem | SelectGroupItem)[];
-    labelOptions?: (SelectItem | SelectGroupItem)[];
-    searchFn?: (item: SelectItem, search: string) => boolean;
+    options: (SelectItem<V> | SelectGroupItem<V>)[];
+    labelOptions?: (SelectItem<V> | SelectGroupItem<V>)[];
+    searchFn?: (item: SelectItem<V>, search: string) => boolean;
   } & Pick<
     PopperProps,
     | "animationAppear"
@@ -83,13 +81,11 @@
   > &
     /*@vue-ignore*/ HTMLAttributes;
 
-  type Value = Multiple extends false
-    ? SelectValue | null | undefined
-    : SelectValue[] | null | undefined;
+  type Value = Multiple extends false ? V | undefined : V[] | undefined;
 
   const TRIGGERS: PopperTrigger[] = [];
 
-  const props = withDefaults(defineProps<SelectProps<Multiple>>(), {
+  const props = withDefaults(defineProps<SelectProps<V, Multiple>>(), {
     clear: true,
     search: true,
     disabled: false,
@@ -137,8 +133,8 @@
   const cancelIcon = computed(() => props.clear && filledModel.value && !props.disabled);
   const loadingIcon = computed(() => props.loading);
   const inputRef = useTemplateRef("input");
-  const filteredGroupedOptions = computed<SelectGroupItem[]>(() => {
-    const filteredGroupedOptions: SelectGroupItem[] = [{ title: "", options: [] }];
+  const filteredGroupedOptions = computed<SelectGroupItem<V>[]>(() => {
+    const filteredGroupedOptions: SelectGroupItem<V>[] = [{ title: "", options: [] }];
 
     for (let i = 0; i < props.options.length; i++) {
       const option = props.options[i];
@@ -167,15 +163,15 @@
   });
   const activeItem = ref<SelectHTMLElement | null>(null);
   const optionsMap = computed(() => {
-    const optionsMap: Record<string, SelectItem> = {};
+    const optionsMap: Record<string, SelectItem<V>> = {};
 
-    function extractValueRecursively(options: (SelectItem | SelectGroupItem)[]) {
+    function extractValueRecursively(options: (SelectItem<V> | SelectGroupItem<V>)[]) {
       for (let i = 0; i < options.length; i++) {
         const option = options[i];
         if ("title" in option) {
           extractValueRecursively(option.options);
         } else {
-          optionsMap[option.value] = option;
+          optionsMap[option.value.toString()] = option;
         }
       }
     }
@@ -184,7 +180,7 @@
 
     return optionsMap;
   });
-  const selectedItems = computed<SelectItem[]>(() => {
+  const selectedItems = computed<SelectItem<V>[]>(() => {
     if (model.value == undefined) {
       return [];
     }
@@ -198,7 +194,7 @@
 
     const label = optionsMap.value[model.value.toString()]?.label;
 
-    return [{ label: label ?? model.value, value: model.value }];
+    return [{ label: label ?? model.value, value: model.value }] as SelectItem<V>[];
   });
   const empty = computed(
     () => !filteredGroupedOptions.value.some((options) => options.options.length > 0),
@@ -210,14 +206,12 @@
     return false;
   }
 
-  function selectValue(selectedValue: SelectValue | undefined | null) {
+  function selectValue(selectedValue: V | undefined | null) {
     if (!props.multiple && selectedValue != undefined) {
       model.value = selectedValue as Value;
       open.value = false;
     } else if (selectedValue != undefined) {
-      const nextValue: SelectValue[] = isArray(model.value)
-        ? ([...model.value] as SelectValue[])
-        : [];
+      const nextValue: V[] = isArray(model.value) ? ([...model.value] as V[]) : [];
       const indexValue = nextValue.findIndex((val) => val === selectedValue);
       if (~indexValue != 0) {
         nextValue.splice(indexValue, 1);

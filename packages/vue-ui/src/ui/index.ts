@@ -89,7 +89,6 @@ export type {
 export type {
   SelectProps,
   SelectItem,
-  SelectValue,
   SelectHTMLElement,
   SelectSize,
   SelectStatus,

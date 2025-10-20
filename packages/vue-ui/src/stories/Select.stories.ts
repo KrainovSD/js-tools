@@ -1,18 +1,11 @@
 import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { type DefineComponent, computed, h, shallowRef } from "vue";
-import {
-  type SelectGroupItem,
-  type SelectItem,
-  type SelectProps,
-  type SelectValue,
-  VSelect,
-  VText,
-} from "../ui";
+import { type SelectGroupItem, type SelectItem, type SelectProps, VSelect, VText } from "../ui";
 
 const meta = {
   title: "Components/Select",
-  component: VSelect as unknown as DefineComponent<SelectProps<false>>,
+  component: VSelect as unknown as DefineComponent<SelectProps<number | string, boolean>>,
   tags: ["autodocs"],
   argTypes: {},
 } satisfies Meta<typeof VSelect>;
@@ -41,11 +34,11 @@ export const LabelOptions: Story = {
   render: (args) => ({
     components: { VSelect },
     setup() {
-      const result = shallowRef<SelectValue[]>([]);
-      // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-      const filteredOptions = computed<(SelectItem | SelectGroupItem)[]>(() =>
-        args.options.filter((o) => "value" in o && !result.value.includes(o.value)),
-      );
+      const result = shallowRef<(string | number)[]>([]);
+      const filteredOptions = computed<
+        // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+        (SelectItem<number | string> | SelectGroupItem<number | string>)[]
+      >(() => args.options.filter((o) => "value" in o && !result.value.includes(o.value)));
 
       return { args, filteredOptions, result };
     },
@@ -57,7 +50,7 @@ export const LabelOptions: Story = {
           labelOptions: args.options,
           modelValue: this.result,
           placeholder: "Обычный",
-          multiple: true,
+          multiple: false,
           "onUpdate:modelValue": (value) => {
             this.result = value ?? [];
           },
@@ -70,10 +63,10 @@ export const LabelOptions: Story = {
   }),
   args: {
     options: [
-      { value: "1", label: "Значение 1" },
+      { value: 1, label: "Значение 1" },
       { value: 2, label: "Значение 2" },
       { value: 3, label: "Значение 3" },
-      { value: "4", label: "Очень Длинное значение для проверки размеров у селектов 4" },
+      { value: 4, label: "Очень Длинное значение для проверки размеров у селектов 4" },
       {
         value: 5,
         label: "Значение 5",
@@ -403,10 +396,10 @@ export const AllInOne: Story = {
   }),
   args: {
     options: [
-      { value: "1", label: "Значение 1" },
+      { value: 1, label: "Значение 1" },
       { value: 2, label: "Значение 2" },
       { value: 3, label: "Значение 3" },
-      { value: "4", label: "Очень Длинное значение для проверки размеров у селектов 4" },
+      { value: 4, label: "Очень Длинное значение для проверки размеров у селектов 4" },
       {
         value: 5,
         label: "Значение 5",

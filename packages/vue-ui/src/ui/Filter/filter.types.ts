@@ -8,7 +8,7 @@ export type FilterDirection = "left" | "right";
 export type FilterComponent<O extends string | number> =
   | {
       [K in keyof ControlComponents]: {
-        props?: ControlComponents[K]["props"];
+        props?: ControlComponents[K];
         component: K;
         operatorValue?: O;
         operatorLabel?: string;
@@ -40,12 +40,12 @@ export type FilterItemFlat<F extends string | number, O extends string | number>
         field: F;
         label: string;
         icon?: Component;
-        props?: ControlComponents[K]["props"];
+        props?: ControlComponents[K];
         component: K;
         operatorValue?: O;
         operatorLabel?: string;
         operatorShortLabel?: string;
-        operators: SelectItem[];
+        operators: SelectItem<O>[];
         /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
         clearTag?: string;
       };
@@ -60,7 +60,7 @@ export type FilterItemFlat<F extends string | number, O extends string | number>
       component: Component;
       displayValue?: keyof ControlComponents;
       props?: Record<string, unknown>;
-      operators: SelectItem[];
+      operators: SelectItem<O>[];
       /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
       clearTag?: string;
     };

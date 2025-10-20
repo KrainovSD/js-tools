@@ -13,13 +13,19 @@
   import type { QueryCombinator, QueryConditionRule, QueryField } from "./QueryBuilder.vue";
 
   type Props = {
+    /** the common list of fields with available operators and ui components */
     fields: QueryField<F, O>[];
+    /** the list of available combinators */
     combinators: QueryCombinator<C>[];
     rule: QueryConditionRule<F, O>;
-    fieldVariants: SelectItem[];
-    buttonSize?: ButtonSize;
-    controlSize?: InputSize;
-    controlVariant?: InputVariant;
+    /** the field list extracted from common list for select */
+    fieldVariants: SelectItem<F>[];
+    /** the size of buttons */
+    buttonSize: ButtonSize;
+    /** the size of controls */
+    controlSize: InputSize;
+    /** this variant of controls */
+    controlVariant: InputVariant;
   };
   type Emits = {
     updateRule: [rule: QueryConditionRule<F, O>];
@@ -30,10 +36,10 @@
   defineEmits<Emits>();
 
   const currentField = computed(() => props.fields.find((f) => f.field === props.rule.field));
-  const operatorVariants = computed<SelectItem[]>(() => {
+  const operatorVariants = computed<SelectItem<O>[]>(() => {
     if (!currentField.value) return [];
 
-    return currentField.value.components.map<SelectItem>((c) => ({
+    return currentField.value.components.map<SelectItem<O>>((c) => ({
       label: c.operatorLabel,
       value: c.operatorValue,
     }));

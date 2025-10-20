@@ -1,11 +1,11 @@
 import { randomString } from "@krainovsd/js-helpers";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
-import { h } from "vue";
-import { type SelectItem, VSearch } from "../ui";
+import { type DefineComponent, h } from "vue";
+import { type SearchProps, type SelectItem, VSearch } from "../ui";
 
 const meta = {
   title: "Components/Search",
-  component: VSearch,
+  component: VSearch as unknown as DefineComponent<SearchProps<number | string>>,
   tags: ["autodocs"],
   argTypes: {},
 } satisfies Meta<typeof VSearch>;
@@ -31,14 +31,14 @@ Primary.args = {
   options: [
     {
       title: "first",
-      options: Array.from<unknown, SelectItem>({ length: 150 }, (_, i) => ({
+      options: Array.from<unknown, SelectItem<string | number>>({ length: 150 }, (_, i) => ({
         value: i,
         label: randomString(50),
       })),
     },
     {
       title: "second",
-      options: Array.from<unknown, SelectItem>({ length: 150 }, (_, i) => ({
+      options: Array.from<unknown, SelectItem<string | number>>({ length: 150 }, (_, i) => ({
         value: i,
         label: randomString(50),
       })),
@@ -70,7 +70,7 @@ export const AllInOne: Story = {
     },
   }),
   args: {
-    options: Array.from<unknown, SelectItem>({ length: 30000 }, (_, i) => ({
+    options: Array.from<unknown, SelectItem<string | number>>({ length: 30000 }, (_, i) => ({
       value: i,
       label: randomString(50),
     })),

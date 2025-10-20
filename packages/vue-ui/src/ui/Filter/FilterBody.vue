@@ -10,6 +10,7 @@
   import type { SelectItem } from "../Select.vue";
   import Text from "../Text.vue";
   import Tooltip from "../Tooltip.vue";
+  import type { UserPickerUser } from "../UserPicker.vue";
   import type { FilterItemFlat, FilterProps } from "./filter.types";
 
   type Emits = {
@@ -107,7 +108,7 @@
         ...filterItem,
         ...filterComponent,
         icon: isObject(filterItem.icon) ? toRaw(filterItem.icon) : filterItem.icon,
-        operators: filterItem.components.reduce((acc: SelectItem[], component) => {
+        operators: filterItem.components.reduce((acc: SelectItem<O>[], component) => {
           if (component.operatorLabel && component.operatorValue != undefined) {
             acc.push({
               value: component.operatorValue,
@@ -141,35 +142,40 @@
           : "text";
     const filterProps = isObject(filter.props) ? filter.props : {};
 
-    if (displayType === "select" && "options" in filterProps && isArray(filterProps.options)) {
+    /** user */
+    if (displayType === "user" && "users" in filterProps && isArray(filterProps.users)) {
+      const tempValue = (isArray(filterValue) ? filterValue : [filterValue]).map(
+        (v) =>
+          (filterProps.users as UserPickerUser<string | number>[]).find((u) => u.id === v)?.name,
+      );
+      displayValue = tempValue.join(", ");
+      /** select */
+    } else if (
+      displayType === "select" &&
+      "options" in filterProps &&
+      isArray(filterProps.options)
+    ) {
       if (filterProps?.multiple) {
         const tempValue = isArray(filterValue)
           ? filterValue.map(
               (value) =>
-                (filterProps?.options as SelectItem[])?.find?.((option) => option?.value === value)
-                  ?.label ?? value,
+                (filterProps?.options as SelectItem<string | number>[])?.find?.(
+                  (option) => option?.value === value,
+                )?.label ?? value,
             )
           : [];
         displayValue = tempValue.join(", ");
       } else {
         displayValue = isId(filterValue)
           ? (
-              (filterProps?.options as SelectItem[])?.find?.(
+              (filterProps?.options as SelectItem<string | number>[])?.find?.(
                 (option) => option?.value === filterValue,
               )?.label ?? filterValue
             ).toString()
           : "";
       }
-    } else if (displayType === "date") {
-      displayValue = isId(filterValue)
-        ? dateFormat(
-            filterValue,
-            "format" in filterProps && isString(filterProps.format)
-              ? filterProps.format
-              : (props.displayedDateFormat ?? "DD-MM-YYYY"),
-          )
-        : "";
-    } else if (displayType === "date-range") {
+      /** date */
+    } else if (displayType === "date" && "multiple" in filterProps && filterProps.multiple) {
       const tempValue = isArray(filterValue) ? filterValue : [];
       const tempFirst = isId(tempValue[0])
         ? dateFormat(
@@ -189,6 +195,16 @@
         : "";
 
       displayValue = `${tempFirst} ${tempFirst ? " - " : ""} ${tempSecond}`;
+    } else if (displayType === "date") {
+      displayValue = isId(filterValue)
+        ? dateFormat(
+            filterValue,
+            "format" in filterProps && isString(filterProps.format)
+              ? filterProps.format
+              : (props.displayedDateFormat ?? "DD-MM-YYYY"),
+          )
+        : "";
+      /** other */
     } else {
       displayValue = isId(filterValue)
         ? filterValue.toString()

@@ -1,25 +1,21 @@
 <script setup lang="ts">
-  import { isArray, isNumber, isString } from "@krainovsd/js-helpers";
+  import { isArray, isId, isNumber, isString } from "@krainovsd/js-helpers";
   import DatePicker from "./DatePicker/DatePicker.vue";
   import type { InputSize, InputVariant } from "./Input.vue";
   import Input from "./Input.vue";
   import InputNumber from "./InputNumber.vue";
-  import type { SelectItem, SelectValue } from "./Select.vue";
+  import type { SelectItem } from "./Select.vue";
   import Select from "./Select.vue";
   import type { UserPickerPosition, UserPickerUser } from "./UserPicker.vue";
   import UserPicker from "./UserPicker.vue";
 
   export type ControlComponents = {
-    select: {
-      props: ControlSelectComponentProps;
-      value: SelectValue[] | string | number | null | undefined;
-    };
-    user: { props: ControlUserComponentProps; value: number[] | number | null | undefined };
-    text: { props: ControlTextComponentProps; value: string };
-    number: { props: ControlNumberComponentProps; value: number };
-    "number-range": { props: ControlNumberComponentProps; value: [number, number] };
-    date: { props: ControlDateComponentProps; value: string };
-    "date-range": { props: ControlDateComponentProps; value: [string, string] };
+    select: ControlSelectComponentProps;
+    user: ControlUserComponentProps;
+    text: ControlTextComponentProps;
+    number: ControlNumberComponentProps;
+    "number-range": ControlNumberComponentProps;
+    date: ControlDateComponentProps;
   };
 
   export type ControlUserComponentProps = {
@@ -28,10 +24,10 @@
     count?: number;
     shift?: number;
     position?: UserPickerPosition;
-    users: UserPickerUser[];
+    users: UserPickerUser<string | number>[];
   };
   export type ControlSelectComponentProps = {
-    options: SelectItem[];
+    options: SelectItem<string | number>[];
     multiple?: boolean;
     placeholder?: string;
     search?: boolean;
@@ -49,6 +45,7 @@
   };
   export type ControlDateComponentProps = {
     format?: string;
+    multiple?: boolean;
   };
 
   export type ControlProps = {
@@ -153,9 +150,9 @@
     :model-value="
       $props.props?.multiple
         ? isArray(model)
-          ? (model as SelectValue[])
+          ? (model as string[] | number[])
           : undefined
-        : (model as SelectValue)
+        : (model as string | number)
     "
     @update:model-value="
       (value) => {
@@ -169,22 +166,17 @@
     :input-size="$props.controlSize"
     :autofocus="$props.autofocus"
     :input-variant="$props.controlVariant"
-    :multiple="false"
-    :model-value="isString(model) ? model : ''"
-    @update:model-value="
-      (value) => {
-        model = value;
-      }
+    :nested="true"
+    :multiple="($props.props as ControlDateComponentProps)?.multiple"
+    :model-value="
+      ($props.props as ControlDateComponentProps)?.multiple
+        ? isArray(model)
+          ? (model as [string, string])
+          : undefined
+        : isString(model)
+          ? model
+          : ''
     "
-  />
-  <DatePicker
-    v-if="$props.component === 'date-range'"
-    v-bind="$attrs"
-    :autofocus="$props.autofocus"
-    :input-size="$props.controlSize"
-    :input-variant="$props.controlVariant"
-    :multiple="true"
-    :model-value="isArray(model) ? (model as [string, string]) : undefined"
     @update:model-value="
       (value) => {
         model = value;
@@ -194,6 +186,15 @@
   <UserPicker
     v-if="$props.component === 'user'"
     v-bind="$attrs"
+    :model-value="
+      ($props.props as ControlUserComponentProps)?.multiple
+        ? isArray(model)
+          ? (model as string[] | number[])
+          : []
+        : isId(model)
+          ? model
+          : undefined
+    "
     :users="($props.props as ControlUserComponentProps)?.users ?? []"
     :multiple="($props.props as ControlUserComponentProps)?.multiple"
     :header="($props.props as ControlUserComponentProps)?.header"
@@ -203,6 +204,11 @@
     :size="$props.controlSize"
     :autofocus="$props.autofocus"
     :nested="true"
+    @update:model-value="
+      (value) => {
+        model = value;
+      }
+    "
   />
 </template>
 

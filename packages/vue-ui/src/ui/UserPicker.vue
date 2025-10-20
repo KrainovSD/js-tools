@@ -1,4 +1,8 @@
-<script setup lang="ts" generic="Multiple extends true | false = false">
+<script
+  setup
+  lang="ts"
+  generic="ID extends string | number = string | number, Multiple extends true | false = false"
+>
   import { arrayToMapByKey, isArray } from "@krainovsd/js-helpers";
   import { VCheckOutlined } from "@krainovsd/vue-icons";
   import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from "vue";
@@ -13,8 +17,8 @@
   import UserAvatar from "./UserAvatar.vue";
   import UserInfo from "./UserInfo.vue";
 
-  export type UserPickerUser = {
-    id: number;
+  export type UserPickerUser<ID extends string | number> = {
+    id: ID;
     name: string;
     username: string;
     initial?: string;
@@ -24,8 +28,8 @@
   export type UserPickerSize = "default" | "large" | "small";
   export type UserPickerPosition = "left" | "right" | "center";
 
-  export type UserPickerProps<Multiple extends true | false> = {
-    users: UserPickerUser[];
+  export type UserPickerProps<ID extends string | number, Multiple extends true | false> = {
+    users: UserPickerUser<ID>[];
     size?: UserPickerSize;
     position?: UserPickerPosition;
     count?: number;
@@ -34,11 +38,11 @@
     empty?: string;
     multiple?: Multiple;
     nested?: boolean;
-    tooltip?: (users: UserPickerUser[]) => string;
+    tooltip?: (users: UserPickerUser<ID>[]) => string;
     autofocus?: boolean;
   };
 
-  const props = withDefaults(defineProps<UserPickerProps<Multiple>>(), {
+  const props = withDefaults(defineProps<UserPickerProps<ID, Multiple>>(), {
     count: AVATAR_COUNT_DEFAULT,
     size: "default",
     shift: AVATAR_SHIFT_DEFAULT,
@@ -48,14 +52,14 @@
     tooltip: undefined,
     autofocus: false,
   });
-  const currentUsersModel = defineModel<
-    Multiple extends true ? number[] | undefined : number | undefined
-  >({ default: undefined });
-  const currentUsers = computed<number[]>(() =>
+  const currentUsersModel = defineModel<Multiple extends true ? ID[] | undefined : ID | undefined>({
+    default: undefined,
+  });
+  const currentUsers = computed<ID[]>(() =>
     isArray(currentUsersModel.value)
-      ? currentUsersModel.value
+      ? (currentUsersModel.value as ID[])
       : currentUsersModel.value != undefined
-        ? [currentUsersModel.value]
+        ? ([currentUsersModel.value] as ID[])
         : [],
   );
   const search = ref("");
@@ -69,7 +73,7 @@
   const activeUsers = computed(() => {
     const usersMap = arrayToMapByKey(props.users, "id");
 
-    return currentUsers.value.map((userId) => usersMap[userId]);
+    return currentUsers.value.map((userId) => usersMap[userId.toString()]);
   });
   const filteredActiveUsers = computed(() =>
     search.value === ""
@@ -102,15 +106,13 @@
         ),
   );
 
-  function selectUser(id: number) {
+  function selectUser(id: ID) {
     if (props.multiple) {
       currentUsersModel.value = [...currentUsers.value, id] as Multiple extends true
-        ? number[] | undefined
-        : number | undefined;
+        ? ID[] | undefined
+        : ID | undefined;
     } else {
-      currentUsersModel.value = id as Multiple extends true
-        ? number[] | undefined
-        : number | undefined;
+      currentUsersModel.value = id as Multiple extends true ? ID[] | undefined : ID | undefined;
     }
     const userElement = positionerRef.value?.querySelector?.<HTMLElement>(
       `.ksd-user-picker__item[data-id="${id}"]`,
@@ -127,15 +129,15 @@
       }
     });
   }
-  function unSelectUser(id: number) {
+  function unSelectUser(id: ID) {
     if (props.multiple) {
       currentUsersModel.value = currentUsers.value.filter(
         (userId) => userId !== id,
-      ) as Multiple extends true ? number[] | undefined : number | undefined;
+      ) as Multiple extends true ? ID[] | undefined : ID | undefined;
     } else {
       currentUsersModel.value = undefined as Multiple extends true
-        ? number[] | undefined
-        : number | undefined;
+        ? ID[] | undefined
+        : ID | undefined;
     }
 
     const userElement = positionerRef.value?.querySelector?.<HTMLElement>(
@@ -160,12 +162,12 @@
   function clearUsers() {
     if (props.multiple) {
       currentUsersModel.value = [] as unknown as Multiple extends true
-        ? number[] | undefined
-        : number | undefined;
+        ? ID[] | undefined
+        : ID | undefined;
     } else {
       currentUsersModel.value = undefined as Multiple extends true
-        ? number[] | undefined
-        : number | undefined;
+        ? ID[] | undefined
+        : ID | undefined;
     }
   }
 

@@ -91,7 +91,7 @@
     return visiblePages;
   });
   const pageSizeOptions = computed(() =>
-    props.pageSizes.map<SelectItem>((size) => ({ label: size.toString(), value: size })),
+    props.pageSizes.map<SelectItem<number>>((size) => ({ label: size.toString(), value: size })),
   );
 
   watch<[HTMLDivElement | null, number[]], true>(

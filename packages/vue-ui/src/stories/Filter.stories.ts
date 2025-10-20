@@ -22,7 +22,7 @@ const meta = {
 
 export default meta;
 
-const USERS = Array.from<unknown, UserPickerUser>({ length: 30 }, (_, i) => ({
+const USERS = Array.from<unknown, UserPickerUser<number>>({ length: 30 }, (_, i) => ({
   id: i,
   name: randomString(10),
   username: `user_${i}`,
@@ -201,9 +201,15 @@ const FILTERS: FilterItem<string, string | number>[] = [
     icon: VClockCircleOutlined,
     components: [
       { component: "date", operatorLabel: "Дата", operatorValue: "date" },
-      { component: "date-range", operatorLabel: "Между датами", operatorValue: "date-range" },
       {
-        component: "date-range",
+        component: "date",
+        props: { multiple: true },
+        operatorLabel: "Между датами",
+        operatorValue: "date-range",
+      },
+      {
+        component: "date",
+        props: { multiple: true },
         operatorLabel: "Не между датами",
         operatorValue: "not-date-range",
       },
@@ -215,13 +221,15 @@ const FILTERS: FilterItem<string, string | number>[] = [
     icon: VEditOutlined,
     components: [
       {
-        component: "date-range",
+        component: "date",
+        props: { multiple: true },
         operatorLabel: "Между датами",
         operatorValue: "date-range",
         clearTag: "date-range",
       },
       {
-        component: "date-range",
+        component: "date",
+        props: { multiple: true },
         operatorLabel: "Не между датами",
         operatorValue: "not-date-range",
         clearTag: "date-range",

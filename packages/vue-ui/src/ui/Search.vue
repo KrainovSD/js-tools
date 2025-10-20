@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="V extends string | number">
   import { debounce as debounceFn, isString, speedTest } from "@krainovsd/js-helpers";
   import fuzzysort from "fuzzysort";
   import { type Component, computed, onMounted, ref, useTemplateRef, watch } from "vue";
@@ -13,35 +13,28 @@
   import Input from "./Input.vue";
   import type { PopperProps } from "./Popper.vue";
   import Popper from "./Popper.vue";
-  import type { SelectGroupItem, SelectItem, SelectValue } from "./Select.vue";
-
-  interface SearchHTMLElement extends HTMLElement {
-    next: SearchHTMLElement;
-    prev: SearchHTMLElement;
-    addActiveMark: (this: SearchHTMLElement) => void;
-    removeActiveMark: (this: SearchHTMLElement) => void;
-  }
+  import type { SelectGroupItem, SelectItem } from "./Select.vue";
 
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-  export type SearchItemFlat = SelectItem & {
+  export type SearchItemFlat<V extends string | number> = SelectItem<V> & {
     title?: string | Component;
   };
 
-  export type SearchItem = {
-    value: SelectValue;
+  export type SearchItem<V extends string | number> = {
+    value: V;
     label: string;
     labels: HighlightText[];
     desc?: string | Component;
     title: string | Component;
   };
-  export type SearchGroupeItem = {
+  export type SearchGroupeItem<V extends string | number> = {
     title: string | Component;
-    options: SearchItem[];
+    options: SearchItem<V>[];
   };
 
-  export type SearchProps = {
+  export type SearchProps<V extends string | number> = {
     // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
-    options: (SelectItem | SelectGroupItem)[];
+    options: (SelectItem<V> | SelectGroupItem<V>)[];
     threshold?: number;
     limit?: number;
     debounce?: number;
@@ -68,13 +61,20 @@
       | "closeByClickOutsideEvent"
     >;
 
+  interface SearchHTMLElement extends HTMLElement {
+    next: SearchHTMLElement;
+    prev: SearchHTMLElement;
+    addActiveMark: (this: SearchHTMLElement) => void;
+    removeActiveMark: (this: SearchHTMLElement) => void;
+  }
+
   type Emits = {
-    click: [key: string | number];
+    click: [key: V];
   };
 
   const GROUP_ROOT = "__root__";
 
-  const props = withDefaults(defineProps<SearchProps>(), {
+  const props = withDefaults(defineProps<SearchProps<V>>(), {
     allowClear: false,
     disabled: false,
     loading: false,
@@ -104,10 +104,10 @@
   const filteredGroupedOptions = computed(() => {
     return speedTest(
       () => {
-        const filteredGroupedOptions: SearchGroupeItem[] = [{ title: "", options: [] }];
+        const filteredGroupedOptions: SearchGroupeItem<V>[] = [{ title: "", options: [] }];
         const groupsPositionMap = new Map<string | Component, number>();
         groupsPositionMap.set(GROUP_ROOT, 0);
-        const flatOptions: SearchItemFlat[] = [];
+        const flatOptions: SearchItemFlat<V>[] = [];
 
         for (let i = 0; i < props.options.length; i++) {
           const option = props.options[i];
@@ -208,7 +208,7 @@
   function onOpen() {
     open.value = true;
   }
-  function onClick(value: SelectValue) {
+  function onClick(value: V) {
     emit("click", value);
     onClose();
   }

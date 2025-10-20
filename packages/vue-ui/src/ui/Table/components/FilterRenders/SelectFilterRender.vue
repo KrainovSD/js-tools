@@ -1,11 +1,11 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
   import { isArray } from "@krainovsd/js-helpers";
-  import type { SelectItem, SelectValue } from "../../../Select.vue";
+  import type { SelectItem } from "../../../Select.vue";
   import Select from "../../../Select.vue";
   import type { DefaultRow, FilterRenderProps } from "../../types";
 
   export type SelectFilterRenderProps = {
-    options: SelectItem[];
+    options: SelectItem<string | number>[];
     multiple?: boolean;
     search?: boolean;
     clear?: boolean;
@@ -27,9 +27,9 @@
     :model-value="
       $props.settings?.multiple
         ? isArray(filterValue)
-          ? (filterValue as SelectValue[])
+          ? (filterValue as string[] | number[])
           : undefined
-        : (filterValue as SelectValue)
+        : (filterValue as string[] | number[])
     "
     @update:model-value="(value) => (filterValue = value)"
   />

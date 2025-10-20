@@ -18,15 +18,25 @@
   import QueryBuilderRule from "./QueryBuilderRule.vue";
 
   type Props = {
+    /** the common list of fields with available operators and ui components */
     fields: QueryField<F, O>[];
+    /** the list of available combinators */
     combinators: QueryCombinator<C>[];
+    /** the level of recursion */
     level: number;
+    /** the size of buttons */
     buttonSize: ButtonSize;
+    /** the size of controls */
     controlSize: InputSize;
+    /** this variant of controls */
     controlVariant: InputVariant;
-    fieldVariants: SelectItem[];
+    /** the field list extracted from common list for select */
+    fieldVariants: SelectItem<F>[];
+    /** the first field extracted from common list for auto set */
     firstField: F;
+    /** the first combinator extracted from common list for auto set */
     firstCombinator: C;
+    /** the first operator extracted from common list for auto set */
     firstOperator: O;
   };
   const props = defineProps<Props>();

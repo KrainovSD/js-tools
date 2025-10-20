@@ -18,7 +18,7 @@
     | {
         [K in keyof ControlComponents]: {
           component: K;
-          props?: ControlComponents[K]["props"];
+          props?: ControlComponents[K];
           operatorValue: O;
           operatorLabel: string;
           operatorShortLabel?: string;
@@ -151,8 +151,8 @@
     model.value = [{ type: "group", combinator, id: randomNumber(), rules: [] }];
   }
 
-  const fieldVariants = computed<SelectItem[]>(() =>
-    props.fields.map<SelectItem>((f) => ({ label: f.label, value: f.field })),
+  const fieldVariants = computed<SelectItem<string | number>[]>(() =>
+    props.fields.map<SelectItem<string | number>>((f) => ({ label: f.label, value: f.field })),
   );
 
   const hasFirst = computed(
