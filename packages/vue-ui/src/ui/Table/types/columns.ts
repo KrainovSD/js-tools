@@ -3,14 +3,9 @@ import type { ReactNode } from "react";
 import type { Component, DefineComponent } from "vue";
 import type { ControlComponents } from "../../Control.vue";
 import type {
-  DateFilterRenderProps,
   DefaultCellRenderProps,
   DragCellRenderProps,
-  NumberFilterRenderProps,
-  NumberRangeFilterRenderProps,
   SelectCellRenderProps,
-  SelectFilterRenderProps,
-  StringFilterRenderProps,
   TagCellRenderProps,
 } from "../components";
 import type {
@@ -126,61 +121,17 @@ export type FilterOperator<
 export type DefaultFilterRenderProps<
   RowData extends DefaultRow,
   FilterType extends Record<string, FilterFn<RowData>> = {},
-> =
-  | {
-      component?: "string";
-      props?: StringFilterRenderProps;
-      operatorValue?: keyof FilterType | FilterKey;
-      operatorLabel?: string;
-      operatorShortLabel?: string;
-      displayValue?: keyof ControlComponents;
-      clearTag?: string;
-    }
-  | {
-      component?: "number";
-      props?: NumberFilterRenderProps;
-      operatorValue?: keyof FilterType | FilterKey;
-      operatorLabel?: string;
-      operatorShortLabel?: string;
-      displayValue?: keyof ControlComponents;
-      clearTag?: string;
-    }
-  | {
-      component?: "number-range";
-      props?: NumberRangeFilterRenderProps;
-      operatorValue?: keyof FilterType | FilterKey;
-      operatorLabel?: string;
-      operatorShortLabel?: string;
-      displayValue?: keyof ControlComponents;
-      clearTag?: string;
-    }
-  | {
-      component?: "select";
-      props?: SelectFilterRenderProps;
-      operatorValue?: keyof FilterType | FilterKey;
-      operatorLabel?: string;
-      operatorShortLabel?: string;
-      displayValue?: keyof ControlComponents;
-      clearTag?: string;
-    }
-  | {
-      component?: "date";
-      props?: DateFilterRenderProps;
-      operatorValue?: keyof FilterType | FilterKey;
-      operatorLabel?: string;
-      operatorShortLabel?: string;
-      displayValue?: keyof ControlComponents;
-      clearTag?: string;
-    }
-  | {
-      component?: "date-range";
-      props?: DateFilterRenderProps;
-      operatorValue?: keyof FilterType | FilterKey;
-      operatorLabel?: string;
-      operatorShortLabel?: string;
-      displayValue?: keyof ControlComponents;
-      clearTag?: string;
-    };
+> = {
+  [K in keyof ControlComponents]: {
+    props?: ControlComponents[K];
+    component: K;
+    operatorValue?: keyof FilterType | FilterKey;
+    operatorLabel?: string;
+    operatorShortLabel?: string;
+    /** When the operator is changed, the tags of the old and new components are compared. If they differ or are missing, the previous filter value will be cleared. */
+    clearTag?: string;
+  };
+}[keyof ControlComponents];
 
 export type DefaultSortRenderProps = { component?: TableSortRenderKey; props?: never };
 

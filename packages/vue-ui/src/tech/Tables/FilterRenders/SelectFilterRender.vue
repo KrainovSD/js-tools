@@ -3,7 +3,7 @@
   import type { DefaultRow, FilterRenderProps } from "../../../ui/Table/types";
 
   type Props = {
-    options?: SelectItem<number>[];
+    options?: SelectItem<string>[];
   };
 
   defineProps<FilterRenderProps<RowData, Props>>();

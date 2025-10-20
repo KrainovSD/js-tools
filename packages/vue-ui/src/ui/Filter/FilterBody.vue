@@ -1,5 +1,12 @@
 <script setup lang="ts" generic="F extends string | number, O extends string | number">
-  import { dateFormat, isArray, isId, isObject, isString } from "@krainovsd/js-helpers";
+  import {
+    arrayToMapByKey,
+    dateFormat,
+    isArray,
+    isId,
+    isObject,
+    isString,
+  } from "@krainovsd/js-helpers";
   import { VCloseCircleFilled, VDeleteOutlined, VPlusOutlined } from "@krainovsd/vue-icons";
   import { computed, h, onMounted, ref, shallowRef, toRaw, useTemplateRef, watch } from "vue";
   import Button from "../Button.vue";
@@ -11,7 +18,7 @@
   import Text from "../Text.vue";
   import Tooltip from "../Tooltip.vue";
   import type { UserPickerUser } from "../UserPicker.vue";
-  import type { FilterItemFlat, FilterProps } from "./filter.types";
+  import type { FilterItem, FilterItemFlat, FilterProps } from "./filter.types";
 
   type Emits = {
     focus: [F | undefined];
@@ -20,14 +27,15 @@
   const emit = defineEmits<Emits>();
   const props = defineProps<Required<FilterProps<F, O>>>();
 
-  const form = defineModel<Partial<Record<F, unknown>>>({ default: {} });
-  const operators = defineModel<Partial<Record<F, O>>>("operators", { default: {} });
+  const filter = defineModel<FilterItem<F, O>[]>({ default: [] });
   const openedFields = shallowRef<F[]>([]);
   const dropRef = useTemplateRef("drop");
   const buttonRef = useTemplateRef("button");
   const hoverDrop = ref(false);
   const focusDrop = ref(false);
   const activeDrop = computed(() => hoverDrop.value || focusDrop.value);
+
+  const filterMap = computed(() => arrayToMapByKey(filter.value, "field"));
 
   function openFilterField() {
     const field = availableFilters.value[0]?.field;
@@ -46,8 +54,9 @@
   function changeFilterField(field: F, index: number) {
     openedFields.value = openedFields.value.map((openField, openIndex) => {
       if (openIndex === index) {
-        if (form.value[openField] != undefined) {
-          delete form.value[openField];
+        const filterIndex = filter.value.findIndex((f) => f.field === openField);
+        if (filterIndex !== -1) {
+          filter.value = filter.value.toSpliced(filterIndex, 1);
         }
 
         return field;
@@ -59,18 +68,53 @@
   }
   function closeFilter(field: F) {
     openedFields.value = openedFields.value.filter((filter) => filter !== field);
-    if (form.value[field] != undefined) {
-      delete form.value[field];
+    const filterIndex = filter.value.findIndex((f) => f.field === field);
+    if (filterIndex !== -1) {
+      filter.value = filter.value.toSpliced(filterIndex, 1);
     }
 
     emit("focus", undefined);
   }
   function dropFilters() {
-    if (Object.keys(form.value).length !== 0) {
-      form.value = {} as Partial<Record<F, unknown>>;
+    if (filter.value.length !== 0) {
+      filter.value = [];
     }
     openedFields.value = [];
     emit("focus", undefined);
+  }
+  function changeOperator(openedFilter: FilterItemFlat<F, O>, operator: O) {
+    let clearValue = false;
+    const nextClearTag = props.filters
+      .find((propsFilter) => propsFilter.field === openedFilter.field)
+      ?.components?.find?.((component) => component.operatorValue === operator)?.clearTag;
+    if (!nextClearTag || !openedFilter.clearTag || nextClearTag !== openedFilter.clearTag) {
+      clearValue = true;
+    }
+
+    const filterIndex = filter.value.findIndex((f) => f.field === openedFilter.field);
+    if (filterIndex === -1) {
+      filter.value = [...filter.value, { field: openedFilter.field, value: undefined, operator }];
+    } else {
+      filter.value = filter.value.toSpliced(filterIndex, 1, {
+        ...filter.value[filterIndex],
+        operator,
+        value: clearValue ? undefined : filter.value[filterIndex].value,
+      });
+    }
+  }
+  function changeValue(openedFilter: FilterItemFlat<F, O>, value: unknown) {
+    const filterIndex = filter.value.findIndex((f) => f.field === openedFilter.field);
+    if (filterIndex === -1) {
+      filter.value = [
+        ...filter.value,
+        { field: openedFilter.field, value, operator: openedFilter.operators[0]?.value },
+      ];
+    } else {
+      filter.value = filter.value.toSpliced(filterIndex, 1, {
+        ...filter.value[filterIndex],
+        value,
+      });
+    }
   }
 
   const availableFilters = computed(() =>
@@ -89,26 +133,26 @@
 
   const openedFilters = computed(() => {
     return openedFields.value.reduce((acc: FilterItemFlat<F, O>[], field) => {
-      const filterItem = props.filters.find((filter) => filter.field === field);
-      if (!filterItem) {
+      const openedField = props.filters.find((filter) => filter.field === field);
+      if (!openedField) {
         return acc;
       }
 
+      const operator = filterMap.value[openedField.field.toString()]?.operator;
       const filterComponent =
-        operators.value[field] != undefined
-          ? (filterItem.components.find(
-              (component) => component.operatorValue === operators.value[field],
-            ) ?? filterItem.components[0])
-          : filterItem.components[0];
+        operator != undefined
+          ? (openedField.components.find((component) => component.operatorValue === operator) ??
+            openedField.components[0])
+          : openedField.components[0];
       if (!filterComponent) {
         return acc;
       }
 
       acc.push({
-        ...filterItem,
+        ...openedField,
         ...filterComponent,
-        icon: isObject(filterItem.icon) ? toRaw(filterItem.icon) : filterItem.icon,
-        operators: filterItem.components.reduce((acc: SelectItem<O>[], component) => {
+        icon: isObject(openedField.icon) ? toRaw(openedField.icon) : openedField.icon,
+        operators: openedField.components.reduce((acc: SelectItem<O>[], component) => {
           if (component.operatorLabel && component.operatorValue != undefined) {
             acc.push({
               value: component.operatorValue,
@@ -131,16 +175,16 @@
     }, []);
   });
 
-  function extractFilterDisplayValue(filter: FilterItemFlat<F, O>) {
+  function extractFilterDisplayValue(extractingFilter: FilterItemFlat<F, O>) {
     let displayValue: string = "";
-    const filterValue = form.value[filter.field];
+    const filterValue = filter.value.find((f) => f.field === extractingFilter.field)?.value;
     const displayType: keyof ControlComponents =
-      "displayValue" in filter
-        ? (filter.displayValue ?? "text")
-        : isString(filter.component)
-          ? filter.component
+      "displayValue" in extractingFilter
+        ? (extractingFilter.displayValue ?? "text")
+        : isString(extractingFilter.component)
+          ? extractingFilter.component
           : "text";
-    const filterProps = isObject(filter.props) ? filter.props : {};
+    const filterProps = isObject(extractingFilter.props) ? extractingFilter.props : {};
 
     /** user */
     if (displayType === "user" && "users" in filterProps && isArray(filterProps.users)) {
@@ -217,11 +261,12 @@
   }
 
   watch(
-    form,
-    (form) => {
-      const formKeys = Object.keys(form) as F[];
-      if (formKeys.length !== openedFields.value.length) {
-        const actualOpenedFields = new Set([...openedFields.value, ...formKeys]);
+    filter,
+    (filter) => {
+      const fields = filter.map((f) => f.field);
+
+      if (fields.length !== openedFields.value.length) {
+        const actualOpenedFields = new Set([...openedFields.value, ...fields]);
         openedFields.value = Array.from(actualOpenedFields);
       }
     },
@@ -265,18 +310,7 @@
   );
 
   onMounted(() => {
-    openedFields.value = Object.keys(form.value) as F[];
-
-    for (let i = 0; i < props.filters.length; i++) {
-      const filter = props.filters[i];
-      if (
-        filter.components.length > 0 &&
-        filter.components[0].operatorValue != undefined &&
-        operators.value[filter.field] == undefined
-      ) {
-        operators.value[filter.field] = filter.components[0].operatorValue;
-      }
-    }
+    openedFields.value = filter.value.map((f) => f.field);
   });
 
   defineExpose({ element: buttonRef });
@@ -311,100 +345,90 @@
     </Button>
   </div>
   <div
-    v-for="(filter, index) in openedFilters"
-    :key="filter.field"
+    v-for="(openedFilter, index) in openedFilters"
+    :key="openedFilter.field"
     class="ksd-filter__field"
     :class="{ drop: activeDrop }"
   >
     <DropDown :menu="dropMenu(index)">
       <Button
-        :data-id="filter.field"
+        :data-id="openedFilter.field"
         :size="$props.buttonSize"
         class="ksd-filter__field-button-info"
-        :class="{ operator: filter.operators && filter.operators.length > 0 }"
+        :class="{ operator: openedFilter.operators && openedFilter.operators.length > 0 }"
       >
-        <component :is="filter.icon" v-if="filter.icon" class="ksd-filter__field-icon" />
+        <component
+          :is="openedFilter.icon"
+          v-if="openedFilter.icon"
+          class="ksd-filter__field-icon"
+        />
         <span class="ksd-filter__field-label">
-          {{ filter.label }}
+          {{ openedFilter.label }}
         </span>
       </Button>
     </DropDown>
     <DropDown
-      v-if="filter.operators && filter.operators.length > 0"
+      v-if="openedFilter.operators && openedFilter.operators.length > 0"
       :menu="
-        filter.operators.map((operator) => ({
+        openedFilter.operators.map((operator) => ({
           key: String(operator.value),
           label: operator.desc,
-          onClick: () => {
-            operators[filter.field] = operator.value as O;
-
-            const nextClearTag = $props.filters
-              .find((propsFilter) => propsFilter.field === filter.field)
-              ?.components?.find?.(
-                (component) => component.operatorValue === operator.value,
-              )?.clearTag;
-            if (!nextClearTag || !filter.clearTag || nextClearTag !== filter.clearTag) {
-              form[filter.field] = undefined;
-            }
-          },
+          onClick: () => changeOperator(openedFilter, operator.value),
         }))
       "
     >
       <Button
-        :data-id="filter.field"
+        :data-id="openedFilter.field"
         :size="$props.buttonSize"
         class="ksd-filter__field-button-operator"
-        >{{ filter.operatorShortLabel ?? filter.operatorLabel ?? operators[filter.field] }}</Button
+        >{{
+          openedFilter.operatorShortLabel ??
+          openedFilter.operatorLabel ??
+          filterMap[openedFilter.field.toString()]?.operator
+        }}</Button
       >
     </DropDown>
     <Popover :size="$props.controlSize" :autofocus="false">
       <Button
-        :data-id="filter.field"
+        :data-id="openedFilter.field"
         :size="$props.buttonSize"
         class="ksd-filter__field-button-value"
-        :class="{ operator: filter.operators && filter.operators.length > 0 }"
+        :class="{ operator: openedFilter.operators && openedFilter.operators.length > 0 }"
       >
-        <Tooltip :text="extractFilterDisplayValue(filter)" :open-not-visible="true">
+        <Tooltip :text="extractFilterDisplayValue(openedFilter)" :open-not-visible="true">
           <span class="ksd-filter__field-value">
             {{
-              form[filter.field] == undefined || form[filter.field] === ""
+              filterMap[openedFilter.field.toString()]?.value == undefined ||
+              filterMap[openedFilter.field.toString()]?.value === ""
                 ? "Выберите значение"
-                : extractFilterDisplayValue(filter)
+                : extractFilterDisplayValue(openedFilter)
             }}
           </span>
         </Tooltip>
       </Button>
       <template #content>
         <component
-          :is="filter.component"
-          v-if="!isString(filter.component)"
-          :model-value="form[filter.field]"
-          @update:model-value="
-            (value: unknown) => {
-              form[filter.field] = value;
-            }
-          "
+          :is="openedFilter.component"
+          v-if="!isString(openedFilter.component)"
+          :model-value="filterMap[openedFilter.field.toString()]?.value"
+          @update:model-value="(value: unknown) => changeValue(openedFilter, value)"
         />
-        <template v-if="isString(filter.component)">
+        <template v-if="isString(openedFilter.component)">
           <Control
-            v-model="form[filter.field]"
-            :component="filter.component"
-            :props="filter.props"
+            :model-value="filterMap[openedFilter.field.toString()]?.value"
+            :component="openedFilter.component"
+            :props="openedFilter.props"
             :autofocus="true"
             :control-size="$props.controlSize"
             :control-variant="$props.controlVariant"
             :class="{
               'ksd-filter__field-control': true,
-              text: filter.component === 'text',
-              select: filter.component === 'select',
-              number: filter.component === 'number',
-              'number-range': filter.component === 'number-range',
+              text: openedFilter.component === 'text',
+              select: openedFilter.component === 'select',
+              number: openedFilter.component === 'number',
+              'number-range': openedFilter.component === 'number-range',
             }"
-            @update:model-value="
-              (value) => {
-                console.log(value);
-              }
-            "
+            @update:model-value="(value: unknown) => changeValue(openedFilter, value)"
           />
         </template>
       </template>
@@ -412,7 +436,7 @@
     <Button
       :size="$props.buttonSize"
       class="ksd-filter__field-button-close"
-      @click="closeFilter(filter.field)"
+      @click="closeFilter(openedFilter.field)"
     >
       <template #icon>
         <VCloseCircleFilled />

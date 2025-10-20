@@ -51,7 +51,7 @@ export const EXAMPLE_CUSTOM_COLUMN: Column[] = [
 export const DEFAULT_COLUMN: DefaultColumn = {
   cellRender: "default",
   headerRender: "default",
-  filterRender: "string",
+  filterRender: "text",
   sortRender: "double-arrow",
   cellClass: ["common", "lineClamp"],
   headerClass: ["common", "lineClamp"],
@@ -90,18 +90,16 @@ export const COLUMNS: Column[] = [
     filterType: "equals",
     filterRender: [
       {
-        component: "string",
+        component: "text",
         props: { placeholder: "Введите имя", allowClear: true },
-        displayValue: "text",
         operatorValue: "equals",
         operatorLabel: "Равны",
         operatorShortLabel: "==",
         clearTag: "text",
       },
       {
-        component: "string",
+        component: "text",
         props: { placeholder: "Введите имя", allowClear: true },
-        displayValue: "text",
         operatorValue: "customFuzzy",
         operatorLabel: "Fuzzy",
         operatorShortLabel: "fuzzy search",
@@ -129,9 +127,8 @@ export const COLUMNS: Column[] = [
     filterable: true,
     filterType: "date-in-range",
     filterRender: {
-      component: "date-range",
-      props: { format: "DD/MM/YYYY" },
-      displayValue: "date-range",
+      component: "date",
+      props: { format: "DD/MM/YYYY", multiple: true },
     },
     cellRender: {
       component: "default",
@@ -148,7 +145,6 @@ export const COLUMNS: Column[] = [
     filterRender: {
       component: "number-range",
       props: { min: 18, max: 100 },
-      displayValue: "number-range",
     },
     cellRender: {
       component: "default",
@@ -167,22 +163,19 @@ export const COLUMNS: Column[] = [
         props: { format: "DD/MM/YYYY" },
         operatorLabel: "Равно Дате",
         operatorValue: "date",
-        displayValue: "date",
       },
       {
-        component: "date-range",
-        props: { format: "DD/MM/YYYY" },
+        component: "date",
+        props: { format: "DD/MM/YYYY", multiple: true },
         operatorLabel: "Между датами",
         operatorValue: "date-in-range",
-        displayValue: "date-range",
         clearTag: "date-range",
       },
       {
-        component: "date-range",
-        props: { format: "DD/MM/YYYY" },
+        component: "date",
+        props: { format: "DD/MM/YYYY", multiple: true },
         operatorLabel: "Не между датами",
         operatorValue: "not-date-in-range",
-        displayValue: "date-range",
         clearTag: "date-range",
       },
     ],
@@ -200,7 +193,6 @@ export const COLUMNS: Column[] = [
     filterRender: {
       component: "number",
       props: { min: 0, max: 5 },
-      displayValue: "number",
     },
     cellRender: {
       component: "default",
@@ -214,9 +206,9 @@ export const COLUMNS: Column[] = [
     filterable: true,
     filterType: "equals",
     filterRender: {
-      component: "select",
-      displayValue: "select",
+      component: "customSelect",
       props: { options: SPORTS.map((sport) => ({ label: sport, value: sport })) },
+      displayValue: "select",
     },
     cellRender: {
       component: "default",
@@ -248,7 +240,6 @@ export const COLUMNS: Column[] = [
     filterRender: [
       {
         component: "select",
-        displayValue: "select",
         props: { options: COLORS.map((color) => ({ label: color, value: color })), multiple: true },
         operatorLabel: "==",
         operatorValue: "includes-array-some",

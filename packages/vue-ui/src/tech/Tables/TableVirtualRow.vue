@@ -2,6 +2,7 @@
   import { ref, shallowRef } from "vue";
   import { type ColumnFilter, VTable } from "../../ui";
   import { COLUMNS } from "./columns";
+  import { FILTER_RENDERS } from "./constants";
   import { createRows } from "./rows";
   import type { RowData } from "./types";
 
@@ -25,6 +26,7 @@
     :with-filters="true"
     :with-pagination="false"
     :full-size="false"
+    :filter-renders="FILTER_RENDERS"
     :virtual-row-size="54"
   />
 </template>

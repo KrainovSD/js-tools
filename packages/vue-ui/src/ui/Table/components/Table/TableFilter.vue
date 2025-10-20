@@ -1,6 +1,8 @@
 <script setup lang="ts" generic="RowData extends DefaultRow">
-  import { computed, h, markRaw, ref, watch } from "vue";
-  import { type FilterItem, VFilter } from "../../../Filter";
+  import { arrayToMapByKey, isString } from "@krainovsd/js-helpers";
+  import type { Column } from "@tanstack/vue-table";
+  import { type Component, computed, h, markRaw, ref, watch } from "vue";
+  import { type FilterField, type FilterItem, VFilter } from "../../../Filter";
   import type { ColumnFilter, DefaultRow, TableInterface } from "../../types";
 
   type Props = {
@@ -10,19 +12,22 @@
   const props = defineProps<Props>();
   const headers = computed(() => props.table.getHeaderGroups()?.[0]?.headers ?? []);
   const filters = computed(() =>
-    headers.value.reduce<FilterItem<string, string | number>[]>((acc, header) => {
+    headers.value.reduce<FilterField<string, string | number>[]>((acc, header) => {
       const column = header.column.columnDef;
-      const context = header.getContext();
 
       if (column.enableColumnFilter && column.filterRenders) {
+        const context = header.getContext();
+
         acc.push({
           field: column.id ?? (column.accessorKey as string),
           label: column.name,
           icon: column.icon,
           components: column.filterRenders.map((filterRender) => ({
-            component: markRaw(
-              h(filterRender.component, { context, settings: filterRender.props }),
-            ),
+            component: (isString(filterRender.component)
+              ? filterRender.component
+              : markRaw(
+                  h(filterRender.component, { context, settings: filterRender.props }),
+                )) as Component,
             displayValue: filterRender.displayValue,
             operatorLabel: filterRender.operatorLabel,
             operatorValue: filterRender.operatorValue,
@@ -37,76 +42,71 @@
     }, []),
   );
 
-  const form = ref<Record<string, unknown>>(
-    Object.fromEntries(
-      props.table.getState().columnFilters.map((filter) => [filter.id, filter.value]),
-    ),
-  );
-  const operators = ref<Record<string, string>>(
-    Object.fromEntries(
-      props.table.getAllColumns().map((column) => [column.id, column.columnDef.filterFn]),
-    ),
-  );
+  const filter = ref<FilterItem<string, string>[]>([]);
 
-  function updateFilter(form: Record<string, unknown>, operators: Record<string, string>) {
-    const filter: ColumnFilter[] = [];
-    for (const [key, value] of Object.entries(form)) {
-      if (value != undefined) {
-        filter.push({ id: key, value });
-      }
+  function updateFilter(filter: FilterItem<string, string>[]) {
+    const columnFilter: ColumnFilter[] = [];
+
+    for (const item of filter) {
+      columnFilter.push({ id: item.field, value: item.value });
     }
 
     props.table.getAllColumns().forEach((column) => {
-      if (operators[column.id] != undefined) {
-        column.columnDef.filterFn = operators[column.id];
+      const operator = filter.find((f) => f.field === column.id)?.operator;
+      if (operator != undefined) {
+        column.columnDef.filterFn = operator;
       }
     });
-    props.table.setColumnFilters(filter);
+    props.table.setColumnFilters(columnFilter);
   }
 
   watch(
-    () => form.value,
-    (form) => {
-      updateFilter(form, operators.value);
-    },
-    { deep: true, immediate: true },
-  );
-  watch(
-    () => operators.value,
-    (operators) => {
-      updateFilter(form.value, operators);
+    filter,
+    (filter) => {
+      updateFilter(filter);
     },
     { deep: true, immediate: true },
   );
   watch(
     () => props.table.getAllColumns(),
     (columns) => {
-      operators.value = Object.fromEntries(
-        columns.map((column) => [column.id, column.columnDef.filterFn]),
-      );
+      const columnsMap: Record<string, Column<RowData>> = arrayToMapByKey(
+        columns as unknown as Record<string, unknown>[],
+        "id",
+      ) as unknown as Record<string, Column<RowData>>;
+
+      filter.value = filter.value.map((f) => ({
+        ...f,
+        op: columnsMap[f.field]?.columnDef?.filterFn,
+      }));
     },
   );
   watch(
     () => props.table.getState().columnFilters,
-    (filters) => {
-      const isEqual = filters.every((filter) => {
-        return form.value[filter.id] === filter.value;
+    (columnFilters) => {
+      const isEqual = columnFilters.every((columnFilter) => {
+        return filter.value.find((f) => f.field === columnFilter.id)?.value === columnFilter.value;
       });
 
       if (!isEqual) {
-        form.value = Object.fromEntries(filters.map((filter) => [filter.id, filter.value]));
+        const columnsMap: Record<string, Column<RowData>> = arrayToMapByKey(
+          props.table.getAllColumns() as unknown as Record<string, unknown>[],
+          "id",
+        ) as unknown as Record<string, Column<RowData>>;
+
+        filter.value = columnFilters.map((f) => ({
+          field: f.id,
+          value: f.value,
+          operator: columnsMap[f.id]?.columnDef?.filterFn,
+        }));
       }
     },
+    { immediate: true },
   );
 </script>
 
 <template>
-  <VFilter
-    v-model:operators="operators"
-    v-model="form"
-    :filters="filters"
-    class="ksd-table__filter"
-  />
+  <VFilter v-model="filter" :filters="filters" class="ksd-table__filter" />
 </template>
 
 <style lang="scss">

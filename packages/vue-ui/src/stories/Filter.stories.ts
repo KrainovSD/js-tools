@@ -9,7 +9,13 @@ import {
 } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn } from "@storybook/vue3";
 import { type DefineComponent, h, ref } from "vue";
-import { type FilterItem, type FilterProps, type UserPickerUser, VFilter } from "../ui";
+import {
+  type FilterField,
+  type FilterItem,
+  type FilterProps,
+  type UserPickerUser,
+  VFilter,
+} from "../ui";
 
 const Filter = VFilter as unknown as DefineComponent<FilterProps<string, string>>;
 
@@ -28,7 +34,7 @@ const USERS = Array.from<unknown, UserPickerUser<number>>({ length: 30 }, (_, i)
   username: `user_${i}`,
 }));
 
-const FILTERS: FilterItem<string, string | number>[] = [
+const FILTERS: FilterField<string, string | number>[] = [
   {
     field: "string",
     label: "Имя файла",
@@ -254,52 +260,51 @@ const FILTERS: FilterItem<string, string | number>[] = [
 const Template: StoryFn<typeof VFilter> = (args) => ({
   components: { VFilter },
   setup() {
-    const filter = ref<Record<string, unknown>>({
-      string: "Тестовое",
-      long: "Очень длинное значение для компонента фильтра",
-      range: [1, 5],
-      number: 0,
-      // eslint-disable-next-line camelcase
-      custom_bool: 0,
-      select: [1],
-      // eslint-disable-next-line camelcase
-      select_single: 1,
-      date: dateFormat(getDateByRules([{ increment: -1, type: "years" }]), "YYYY-MM-DD"),
-      "date-range": [
-        dateFormat(getDateByRules([{ increment: -1, type: "years" }]), "YYYY-MM-DD"),
-        dateFormat(getDateByRules([{ increment: 0, type: "years" }]), "YYYY-MM-DD"),
-      ],
-      users: [USERS[0].id],
-    });
-    const operators = ref<Record<string, unknown>>({});
+    const filterValues = ref<FilterItem<string | number, string | number>[]>([
+      { field: "string", value: "Тестовое" },
+      { field: "long", value: "Очень длинное значение для компонента фильтра" },
+      { field: "range", value: [1, 5] },
+      { field: "number", value: 0 },
+      { field: "custom_bool", value: 0 },
+      { field: "select", value: [1] },
+      { field: "select_single", value: 1 },
+      {
+        field: "date",
+        value: dateFormat(getDateByRules([{ increment: -1, type: "years" }]), "YYYY-MM-DD"),
+      },
+      {
+        field: "date-range",
+        value: [
+          dateFormat(getDateByRules([{ increment: -1, type: "years" }]), "YYYY-MM-DD"),
+          dateFormat(getDateByRules([{ increment: 0, type: "years" }]), "YYYY-MM-DD"),
+        ],
+      },
+      { field: "users", value: [USERS[0].id] },
+    ]);
 
-    return { args, filter, operators };
+    return { args, filterValues };
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "100px" } }, [
       h(VFilter, {
         ...args,
-        modelValue: this.filter,
+        modelValue: this.filterValues,
         "onUpdate:modelValue": (value) => {
-          this.filter = value;
+          this.filterValues = value;
           // eslint-disable-next-line no-console
           console.log("updated");
         },
-        operators: this.operators,
-        "onUpdate:operators": (value) => (this.operators = value),
       }),
-      h("div", {}, [JSON.stringify(this.filter)]),
-      h("div", {}, [JSON.stringify(this.operators)]),
+      h("div", {}, [JSON.stringify(this.filterValues)]),
     ]);
   },
 });
 const EmptyTemplate: StoryFn<typeof VFilter> = (args) => ({
   components: { VFilter },
   setup() {
-    const filter = ref<Record<string, unknown>>({});
-    const operators = ref<Record<string, unknown>>({});
+    const filterValues = ref<FilterItem<string | number, string | number>[]>([]);
 
-    return { args, filter, operators };
+    return { args, filterValues };
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "100px" } }, [
@@ -316,20 +321,17 @@ const EmptyTemplate: StoryFn<typeof VFilter> = (args) => ({
         [
           h(VFilter, {
             ...args,
-            modelValue: this.filter,
+            modelValue: this.filterValues,
             "onUpdate:modelValue": (value) => {
-              this.filter = value;
+              this.filterValues = value;
               // eslint-disable-next-line no-console
               console.log("updated");
             },
-            operators: this.operators,
-            "onUpdate:operators": (value) => (this.operators = value),
           }),
         ],
       ),
 
-      h("div", {}, [JSON.stringify(this.filter)]),
-      h("div", {}, [JSON.stringify(this.operators)]),
+      h("div", {}, [JSON.stringify(this.filterValues)]),
     ]);
   },
 });

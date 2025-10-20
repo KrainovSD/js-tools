@@ -11,6 +11,7 @@ import type {
 } from "@tanstack/vue-table";
 import type { PaginationState } from "@tanstack/vue-table";
 import type { Component } from "vue";
+import type { ControlComponents } from "../../Control.vue";
 import type { TableColumnsSettings } from "./columns";
 import type {
   CellClassInterface,
@@ -34,13 +35,7 @@ import type {
 
 export type TableCellRenderKey = "default" | "select" | "tag" | "empty" | "drag" | "expand";
 export type TableHeaderRenderKey = "default" | "select" | "empty";
-export type TableFilterRenderKey =
-  | "number"
-  | "number-range"
-  | "select"
-  | "string"
-  | "date"
-  | "date-range";
+export type TableFilterRenderKey = keyof ControlComponents;
 export type TableSortRenderKey = "single-arrow" | "double-arrow";
 export type TableCellClassKey = "common" | "empty" | "nowrap" | "lineClamp" | "wCenter" | "hCenter";
 export type TableHeaderClassKey =

@@ -28,12 +28,19 @@ export type FilterComponent<O extends string | number> =
       clearTag?: string;
     };
 
-export type FilterItem<F extends string | number, O extends string | number> = {
+export type FilterField<F extends string | number, O extends string | number> = {
   field: F;
   label: string;
   icon?: Component;
   components: FilterComponent<O>[];
 };
+
+export type FilterItem<F extends string | number, O extends string | number> = {
+  field: F;
+  operator?: O | undefined;
+  value: unknown;
+};
+
 export type FilterItemFlat<F extends string | number, O extends string | number> =
   | {
       [K in keyof ControlComponents]: {
@@ -69,13 +76,22 @@ export type FilterProps<
   F extends string | number = string | number,
   O extends string | number = string | number,
 > = {
-  filters: FilterItem<F, O>[];
+  /** the common list of fields with operators */
+  filters: FilterField<F, O>[];
+  /** the label of button that add filters */
   label?: string;
+  /** the icon of button that add filters */
   icon?: Component;
+  /** the size of all buttons */
   buttonSize?: ButtonSize;
+  /** the size of all controls */
   controlSize?: ButtonSize;
+  /** the variant of all controls */
   controlVariant?: InputVariant;
+  /** the direction of appear new filters */
   direction?: FilterDirection;
+  /** the common date displayed format */
   displayedDateFormat?: string;
+  /** the flag for wrap filter in flex-wrap container */
   wrap?: boolean;
 };

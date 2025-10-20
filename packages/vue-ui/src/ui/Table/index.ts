@@ -35,7 +35,7 @@ declare module "@tanstack/vue-table" {
     sortRender: SortRenderComponent<TData> | undefined;
     filterRenders:
       | {
-          component: FilterRenderComponent<TData>;
+          component: FilterRenderComponent<TData> | keyof ControlComponents;
           props?: Record<string, unknown>;
           key: string;
           operatorValue?: string | number;

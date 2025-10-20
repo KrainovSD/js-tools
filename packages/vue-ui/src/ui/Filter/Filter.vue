@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="F extends string | number, O extends string | number">
   import { computed, nextTick, useTemplateRef } from "vue";
   import FilterBody from "./FilterBody.vue";
-  import type { FilterProps } from "./filter.types";
+  import type { FilterItem, FilterProps } from "./filter.types";
 
   withDefaults(defineProps<FilterProps<F, O>>(), {
     label: "Фильтр",
@@ -13,10 +13,9 @@
     direction: "right",
     wrap: true,
   });
-  const filterRef = useTemplateRef("filter");
+  const filterRef = useTemplateRef("filter-component");
   const filterBodyComponentTef = useTemplateRef("body");
-  const form = defineModel<Partial<Record<F, unknown>>>({ default: {} });
-  const operators = defineModel<Partial<Record<F, O>>>("operators", { default: {} });
+  const filter = defineModel<FilterItem<F, O>[]>({ default: [] });
   const rootRef = computed(
     () => filterRef.value ?? filterBodyComponentTef.value?.element?.parentElement,
   );
@@ -37,23 +36,10 @@
 </script>
 
 <template>
-  <div v-if="$props.wrap == undefined || $props.wrap" ref="filter" class="ksd-filter">
-    <FilterBody
-      ref="body"
-      v-model="form"
-      v-model:operators="operators"
-      v-bind="$props"
-      @focus="focus"
-    />
+  <div v-if="$props.wrap == undefined || $props.wrap" ref="filter-component" class="ksd-filter">
+    <FilterBody ref="body" v-model="filter" v-bind="$props" @focus="focus" />
   </div>
-  <FilterBody
-    v-else
-    ref="body"
-    v-model="form"
-    v-model:operators="operators"
-    v-bind="$props"
-    @focus="focus"
-  />
+  <FilterBody v-else ref="body" v-model="filter" v-bind="$props" @focus="focus" />
 </template>
 
 <style lang="scss">

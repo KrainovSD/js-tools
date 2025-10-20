@@ -6,9 +6,8 @@ import type {
   SortingFn,
 } from "@tanstack/vue-table";
 import { computed } from "vue";
+import type { ControlComponents } from "../../../Control.vue";
 import {
-  DateFilterRender,
-  DateRangeFilterRender,
   DefaultCellRender,
   DefaultHeaderRender,
   DoubleSortRender,
@@ -16,13 +15,9 @@ import {
   EmptyCellRender,
   EmptyHeaderRender,
   ExpandCellRender,
-  NumberFilterRender,
-  NumberRangeFilterRender,
   SelectCellRender,
-  SelectFilterRender,
   SelectHeaderRender,
   SingleSortRender,
-  StringFilterRender,
   TagCellRender,
 } from "../../components";
 import type {
@@ -42,8 +37,6 @@ import type {
   TableCellRenderKey,
   TableCellRenders,
   TableDefaultColumnOptions,
-  TableFilterRenderKey,
-  TableFilterRenders,
   TableHeaderClassKey,
   TableHeaderClasses,
   TableHeaderRenderKey,
@@ -67,14 +60,7 @@ const HEADER_RENDERS: TableHeaderRenders<DefaultRow> = {
   empty: EmptyHeaderRender,
   select: SelectHeaderRender,
 };
-const FILTER_RENDERS: TableFilterRenders<DefaultRow> = {
-  "date-range": DateRangeFilterRender,
-  "number-range": NumberRangeFilterRender,
-  date: DateFilterRender,
-  number: NumberFilterRender,
-  string: StringFilterRender,
-  select: SelectFilterRender,
-};
+
 const SORT_RENDERS: TableSortRenders<DefaultRow> = {
   "double-arrow": DoubleSortRender,
   "single-arrow": SingleSortRender,
@@ -107,7 +93,7 @@ const SORTS: Record<SortingKey, SortingFn<DefaultRow> | BuiltInSortingFn> = {
 const DEFAULT_COLUMNS_SETTINGS: TableDefaultColumnOptions = {
   cellRender: "default",
   headerRender: "default",
-  filterRender: "string",
+  filterRender: "text",
   sortRender: "double-arrow",
   cellClass: ["common"],
   headerClass: ["common"],
@@ -224,9 +210,10 @@ export function useColumns<
               return {
                 component:
                   (key ? props.filterRenders?.[key] : undefined) ??
-                  (FILTER_RENDERS[key as TableFilterRenderKey] as FilterRenderComponent<RowData>),
+                  // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+                  (key as keyof ControlComponents),
                 key: key as string,
-                displayValue: filter.displayValue,
+                displayValue: "displayValue" in filter ? filter.displayValue : undefined,
                 operatorLabel: filter.operatorLabel,
                 operatorValue: filter.operatorValue as string,
                 operatorShortLabel: filter.operatorShortLabel,
@@ -238,9 +225,8 @@ export function useColumns<
               {
                 component:
                   (filterRenderKey ? props.filterRenders?.[filterRenderKey] : undefined) ??
-                  (FILTER_RENDERS[
-                    filterRenderKey as TableFilterRenderKey
-                  ] as FilterRenderComponent<RowData>),
+                  // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
+                  (filterRenderKey as keyof ControlComponents),
                 key: filterRenderKey as string,
               },
             ],
