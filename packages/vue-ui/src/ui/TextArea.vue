@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { type HTMLAttributes, computed, onMounted, useTemplateRef, watch } from "vue";
+  import { type HTMLAttributes, computed, useTemplateRef, watch } from "vue";
   import { waitParentAnimation } from "../lib";
   import type { InputProps } from "./Input.vue";
 
@@ -59,14 +59,19 @@
     { immediate: true },
   );
 
-  onMounted(() => {
-    if (props.autofocus && inputRef.value) {
-      void waitParentAnimation(inputRef.value).then(() => {
-        if (!inputRef.value) return;
-        inputRef.value.focus();
-      });
-    }
-  });
+  /** autofocus */
+  watch(
+    inputRef,
+    (inputRef) => {
+      if (props.autofocus && inputRef) {
+        void waitParentAnimation(inputRef).then(() => {
+          if (!inputRef) return;
+          inputRef.focus();
+        });
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
 
   defineExpose({ element: inputRef });
 </script>

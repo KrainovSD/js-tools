@@ -121,7 +121,11 @@
     width: isObject(attrs.style) ? (attrs.style.width as string) : undefined,
   }));
   const role = computed(() => attrs.role as string | undefined);
-  const componentClasses = computed(() => ({ arrow: props.arrow }));
+  const componentClasses = computed(() => ({
+    arrow: props.arrow,
+    [`appear-${props.animationAppear}`]: true,
+    [`disappear-${props.animationDisappear}`]: true,
+  }));
 
   function updatePosition() {
     if (!positionerRef.value) return;
@@ -217,17 +221,14 @@
     positionerRef.value.setAttribute("placement", position.value.placement);
   }
 
-  /** Animation by close */
+  /** animation by close */
   watch(
     () => props.open,
     (value) => {
       if (value) {
         localOpen.value = true;
       } else if (props.animationDisappear != undefined) {
-        void execAnimation(
-          positionerRef.value,
-          `ksd-positioner_${props.animationDisappear}-out`,
-        ).then(() => {
+        void execAnimation(positionerRef.value, `out`).then(() => {
           if (!props.open) {
             localOpen.value = false;
           } else {
@@ -240,8 +241,17 @@
     },
     { immediate: true },
   );
-
-  /** Check position */
+  /** animation by open */
+  watch(
+    positionerRef,
+    (positioner) => {
+      if (positioner) {
+        void execAnimation(positioner, "in");
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
+  /** check position */
   watch(
     () => [positionerRef.value, props.target, props.visibleArea],
     () => {
@@ -263,7 +273,7 @@
       v-bind="$attrs"
       :role="undefined"
       :style="{ ...positionerStyles, ...($attrs.style ?? {}) }"
-      :class="[$attrs.class, componentClasses, `ksd-positioner_${props.animationAppear}-in`]"
+      :class="[$attrs.class, componentClasses]"
     >
       <VCaretUpFilled
         v-if="$props.arrow"
@@ -333,78 +343,86 @@
       transform-origin: left bottom;
     }
 
-    &_translate-in {
-      animation-duration: var(--ksd-transition-mid);
-      animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
+    &.appear-translate {
+      &.in {
+        animation-duration: var(--ksd-transition-mid);
+        animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
 
-      &[placement="top-left"],
-      &[placement="top-center"],
-      &[placement="top-right"] {
-        animation-name: ksd-positioner-translate-top-in;
-      }
-      &[placement="bottom-left"],
-      &[placement="bottom-center"],
-      &[placement="bottom-right"] {
-        animation-name: ksd-positioner-translate-bottom-in;
-      }
-      &[placement="left-top"],
-      &[placement="left-center"],
-      &[placement="left-bottom"] {
-        animation-name: ksd-positioner-translate-left-in;
-      }
-      &[placement="right-top"],
-      &[placement="right-center"],
-      &[placement="right-bottom"] {
-        animation-name: ksd-positioner-translate-right-in;
+        &[placement="top-left"],
+        &[placement="top-center"],
+        &[placement="top-right"] {
+          animation-name: ksd-positioner-translate-top-in;
+        }
+        &[placement="bottom-left"],
+        &[placement="bottom-center"],
+        &[placement="bottom-right"] {
+          animation-name: ksd-positioner-translate-bottom-in;
+        }
+        &[placement="left-top"],
+        &[placement="left-center"],
+        &[placement="left-bottom"] {
+          animation-name: ksd-positioner-translate-left-in;
+        }
+        &[placement="right-top"],
+        &[placement="right-center"],
+        &[placement="right-bottom"] {
+          animation-name: ksd-positioner-translate-right-in;
+        }
       }
     }
-    &_translate-out {
-      animation-duration: var(--ksd-transition-mid);
-      animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
-      &[placement="top-left"],
-      &[placement="top-center"],
-      &[placement="top-right"] {
-        animation-name: ksd-positioner-translate-top-out;
-      }
-      &[placement="bottom-left"],
-      &[placement="bottom-center"],
-      &[placement="bottom-right"] {
-        animation-name: ksd-positioner-translate-bottom-out;
-      }
-      &[placement="left-top"],
-      &[placement="left-center"],
-      &[placement="left-bottom"] {
-        animation-name: ksd-positioner-translate-left-out;
-      }
-      &[placement="right-top"],
-      &[placement="right-center"],
-      &[placement="right-bottom"] {
-        animation-name: ksd-positioner-translate-right-out;
+    &.disappear-translate {
+      &.out {
+        animation-duration: var(--ksd-transition-mid);
+        animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
+        &[placement="top-left"],
+        &[placement="top-center"],
+        &[placement="top-right"] {
+          animation-name: ksd-positioner-translate-top-out;
+        }
+        &[placement="bottom-left"],
+        &[placement="bottom-center"],
+        &[placement="bottom-right"] {
+          animation-name: ksd-positioner-translate-bottom-out;
+        }
+        &[placement="left-top"],
+        &[placement="left-center"],
+        &[placement="left-bottom"] {
+          animation-name: ksd-positioner-translate-left-out;
+        }
+        &[placement="right-top"],
+        &[placement="right-center"],
+        &[placement="right-bottom"] {
+          animation-name: ksd-positioner-translate-right-out;
+        }
       }
     }
-
-    &_scale-in {
-      animation-name: ksd-positioner-scale-in;
-      animation-duration: var(--ksd-transition-mid);
-      animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
+    &.appear-scale {
+      &.in {
+        animation-name: ksd-positioner-scale-in;
+        animation-duration: var(--ksd-transition-mid);
+        animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
+      }
     }
-
-    &_scale-out {
-      animation-name: ksd-positioner-scale-out;
-      animation-duration: var(--ksd-transition-mid);
-      animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
+    &.disappear-scale {
+      &.out {
+        animation-name: ksd-positioner-scale-out;
+        animation-duration: var(--ksd-transition-mid);
+        animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
+      }
     }
-
-    &_scaleY-in {
-      animation-name: ksd-positioner-scaleY-in;
-      animation-duration: var(--ksd-transition-mid);
-      animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
+    &.appear-scaleY {
+      &.in {
+        animation-name: ksd-positioner-scaleY-in;
+        animation-duration: var(--ksd-transition-mid);
+        animation-timing-function: cubic-bezier(0.22, 1, 0.28, 0.8);
+      }
     }
-
-    &_scaleY-out {
-      animation-name: ksd-positioner-scaleY-out;
-      animation-duration: var(--ksd-transition-mid);
-      animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
+    &.disappear-scaleY {
+      &.out {
+        animation-name: ksd-positioner-scaleY-out;
+        animation-duration: var(--ksd-transition-mid);
+        animation-timing-function: cubic-bezier(0.72, 0.2, 0.77, 0);
+      }
     }
 
     &__arrow {

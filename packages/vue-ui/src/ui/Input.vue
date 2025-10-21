@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { VCloseCircleFilled } from "@krainovsd/vue-icons";
-  import { type HTMLAttributes, computed, onMounted, useSlots, useTemplateRef } from "vue";
+  import { type HTMLAttributes, computed, useSlots, useTemplateRef, watch } from "vue";
   import { waitParentAnimation } from "../lib";
 
   export type InputVariant = "filled" | "borderless" | "underline" | "outlined";
@@ -57,14 +57,19 @@
     if (document.activeElement !== inputRef.value) inputRef.value?.focus?.();
   }
 
-  onMounted(() => {
-    if (props.autofocus && inputRef.value) {
-      void waitParentAnimation(inputRef.value).then(() => {
-        if (!inputRef.value) return;
-        inputRef.value.focus();
-      });
-    }
-  });
+  /** autofocus */
+  watch(
+    inputRef,
+    (inputRef) => {
+      if (props.autofocus && inputRef) {
+        void waitParentAnimation(inputRef).then(() => {
+          if (!inputRef) return;
+          inputRef.focus();
+        });
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
 
   defineExpose({
     element: inputRef,

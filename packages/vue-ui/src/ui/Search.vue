@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="V extends string | number">
   import { debounce as debounceFn, isString, speedTest } from "@krainovsd/js-helpers";
   import fuzzysort from "fuzzysort";
-  import { type Component, computed, onMounted, ref, useTemplateRef, watch } from "vue";
+  import { type Component, computed, ref, useTemplateRef, watch } from "vue";
   import {
     INPUT_POPPER_TRIGGERS,
     SELECT_SCROLL_SHIFT_BOTTOM,
@@ -325,15 +325,20 @@
     { immediate: true },
   );
 
-  onMounted(() => {
-    if (props.autofocus && inputRef.value) {
-      void waitParentAnimation(inputRef.value).then(() => {
-        if (!inputRef.value) return;
-        inputRef.value.focus();
-        open.value = true;
-      });
-    }
-  });
+  /** autofocus */
+  watch(
+    inputRef,
+    (inputRef) => {
+      if (props.autofocus && inputRef) {
+        void waitParentAnimation(inputRef).then(() => {
+          if (!inputRef) return;
+          inputRef.focus();
+          open.value = true;
+        });
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
 
   defineExpose({ popper: popperRef });
 </script>

@@ -8,15 +8,7 @@
     VLoadingOutlined,
     VSearchOutlined,
   } from "@krainovsd/vue-icons";
-  import {
-    type Component,
-    type HTMLAttributes,
-    computed,
-    onMounted,
-    ref,
-    useTemplateRef,
-    watch,
-  } from "vue";
+  import { type Component, type HTMLAttributes, computed, ref, useTemplateRef, watch } from "vue";
   import { SELECT_SCROLL_SHIFT_BOTTOM, SELECT_SCROLL_SHIFT_TOP } from "../constants/tech";
   import { waitParentAnimation } from "../lib";
   import Empty from "./Empty.vue";
@@ -418,15 +410,20 @@
     { immediate: true },
   );
 
-  onMounted(() => {
-    if (props.autofocus && inputRef.value) {
-      void waitParentAnimation(inputRef.value).then(() => {
-        if (!inputRef.value) return;
-        inputRef.value.focus();
-        open.value = true;
-      });
-    }
-  });
+  /** autofocus */
+  watch(
+    inputRef,
+    (inputRef) => {
+      if (props.autofocus && inputRef) {
+        void waitParentAnimation(inputRef).then(() => {
+          if (!inputRef) return;
+          inputRef.focus();
+          open.value = true;
+        });
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
 
   defineExpose({ popper: popperRef });
 </script>

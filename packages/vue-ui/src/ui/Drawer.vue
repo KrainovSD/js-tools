@@ -96,7 +96,7 @@
     return onClose();
   }
 
-  /** Register listeners after open */
+  /** register listeners after open */
   watch(
     drawerRef,
     (drawerRef, _, clean) => {
@@ -162,8 +162,7 @@
     },
     { immediate: true },
   );
-
-  /** Target Node Observe */
+  /** observe slot for click */
   watch(
     targetNode,
     (targetNode, _, clean) => {
@@ -185,8 +184,7 @@
     },
     { immediate: true },
   );
-
-  /** Open state */
+  /** toggle local open state */
   watch(
     open,
     (open) => {
@@ -198,6 +196,25 @@
       }
     },
     { immediate: true },
+  );
+  /** animation by open */
+  watch(
+    drawerRef,
+    (drawer) => {
+      if (drawer) {
+        void execAnimation(drawer, "in");
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
+  watch(
+    maskRef,
+    (mask) => {
+      if (mask) {
+        void execAnimation(mask, "in");
+      }
+    },
+    { immediate: true, flush: "pre" },
   );
 
   defineExpose({ element: drawerRef, maskElement: maskRef, close });
@@ -309,7 +326,9 @@
       inset: 0;
       background-color: var(--ksd-bg-mask-color);
       pointer-events: auto;
-      animation: ksd-drawer-mask-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+      &.in {
+        animation: ksd-drawer-mask-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+      }
       &.out {
         animation: ksd-drawer-mask-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
       }
@@ -346,28 +365,35 @@
       }
 
       &.right {
-        animation: ksd-drawer-right-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
-
+        &.in {
+          animation: ksd-drawer-right-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
         &.out {
           animation: ksd-drawer-right-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
         }
       }
       &.top {
-        animation: ksd-drawer-top-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        &.in {
+          animation: ksd-drawer-top-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
 
         &.out {
           animation: ksd-drawer-top-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
         }
       }
       &.left {
-        animation: ksd-drawer-left-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        &.in {
+          animation: ksd-drawer-left-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
 
         &.out {
           animation: ksd-drawer-left-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
         }
       }
       &.bottom {
-        animation: ksd-drawer-bottom-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        &.in {
+          animation: ksd-drawer-bottom-in var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
 
         &.out {
           animation: ksd-drawer-bottom-out var(--ksd-transition-slow) cubic-bezier(0.7, 0.3, 0.1, 1);
@@ -460,10 +486,11 @@
       }
 
       &.right {
-        transform-origin: right;
-        animation: ksd-drawer-right-in-block var(--ksd-transition-slow)
-          cubic-bezier(0.7, 0.3, 0.1, 1);
-
+        &.in {
+          transform-origin: right;
+          animation: ksd-drawer-right-in-block var(--ksd-transition-slow)
+            cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
         &.out {
           transform-origin: right;
           animation: ksd-drawer-right-out-block var(--ksd-transition-slow)
@@ -471,10 +498,11 @@
         }
       }
       &.top {
-        transform-origin: bottom;
-        animation: ksd-drawer-bottom-in-block var(--ksd-transition-slow)
-          cubic-bezier(0.7, 0.3, 0.1, 1);
-
+        &.in {
+          transform-origin: bottom;
+          animation: ksd-drawer-bottom-in-block var(--ksd-transition-slow)
+            cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
         &.out {
           transform-origin: bottom;
           animation: ksd-drawer-bottom-out-block var(--ksd-transition-slow)
@@ -482,10 +510,11 @@
         }
       }
       &.left {
-        transform-origin: right;
-        animation: ksd-drawer-right-in-block var(--ksd-transition-slow)
-          cubic-bezier(0.7, 0.3, 0.1, 1);
-
+        &.in {
+          transform-origin: right;
+          animation: ksd-drawer-right-in-block var(--ksd-transition-slow)
+            cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
         &.out {
           transform-origin: right;
           animation: ksd-drawer-right-out-block var(--ksd-transition-slow)
@@ -493,10 +522,11 @@
         }
       }
       &.bottom {
-        transform-origin: bottom;
-        animation: ksd-drawer-bottom-in-block var(--ksd-transition-slow)
-          cubic-bezier(0.7, 0.3, 0.1, 1);
-
+        &.in {
+          transform-origin: bottom;
+          animation: ksd-drawer-bottom-in-block var(--ksd-transition-slow)
+            cubic-bezier(0.7, 0.3, 0.1, 1);
+        }
         &.out {
           transform-origin: bottom;
           animation: ksd-drawer-bottom-out-block var(--ksd-transition-slow)

@@ -4,10 +4,10 @@
   import {
     type HTMLAttributes,
     computed,
-    onMounted,
     ref,
     useAttrs,
     useTemplateRef,
+    watch,
     watchEffect,
   } from "vue";
   import { waitParentAnimation } from "../lib";
@@ -163,14 +163,19 @@
     { flush: "pre" },
   );
 
-  onMounted(() => {
-    if (props.autofocus && inputRef.value) {
-      void waitParentAnimation(inputRef.value).then(() => {
-        if (!inputRef.value) return;
-        inputRef.value.focus();
-      });
-    }
-  });
+  /** autofocus */
+  watch(
+    inputRef,
+    (inputRef) => {
+      if (props.autofocus && inputRef) {
+        void waitParentAnimation(inputRef).then(() => {
+          if (!inputRef) return;
+          inputRef.focus();
+        });
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
 
   defineExpose({ element: inputRef });
 </script>

@@ -1,6 +1,6 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h, ref, useTemplateRef } from "vue";
-import { VButton, VDrawer, VInput, VSelect, VText, VTextArea, VTooltip } from "../ui";
+import { VButton, VDrawer, VInput, VSelect, VText, VTooltip } from "../ui";
 
 const meta = {
   title: "Components/Drawer",
@@ -50,14 +50,44 @@ export const AllInOne: Story = {
   render: () => ({
     components: { VButton, VDrawer, VText },
     setup() {
+      const flag = ref(0);
       const content = h(
         "div",
         { style: { display: "flex", flexDirection: "column", gap: "20px" } },
         {
           default: () => [
-            h(VInput, { autofocus: false }),
-            h(VTextArea, { autofocus: true }),
-            h(VSelect, { autofocus: true, options: [] }),
+            h(
+              VButton,
+              {
+                onClick: () => {
+                  flag.value = 1;
+                },
+              },
+              () => "SWITCH",
+            ),
+            h(VSelect, { options: [], autofocus: true, placeholder: "TextArea" }),
+            h(VText, {}, { default: () => "Содержимое модального окна" }),
+            h(VText, {}, { default: () => "Содержимое модального окна" }),
+            h(VButton, {}, { default: () => "Содержимое модального окна" }),
+            h(VButton, {}, { default: () => "Содержимое модального окна" }),
+          ],
+        },
+      );
+      const content2 = h(
+        "div",
+        { style: { display: "flex", flexDirection: "column", gap: "20px" } },
+        {
+          default: () => [
+            h(
+              VButton,
+              {
+                onClick: () => {
+                  flag.value = 0;
+                },
+              },
+              () => "SWITCH",
+            ),
+            h(VInput, { autofocus: true, placeholder: "Input" }),
             h(VText, {}, { default: () => "Содержимое модального окна" }),
             h(VText, {}, { default: () => "Содержимое модального окна" }),
             h(VButton, {}, { default: () => "Содержимое модального окна" }),
@@ -70,6 +100,8 @@ export const AllInOne: Story = {
 
       return {
         content,
+        content2,
+        flag,
         modalRoot,
         modalRoot2,
       };
@@ -102,7 +134,7 @@ export const AllInOne: Story = {
                   header: "Right Modal",
                 },
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () => h(VButton, {}, () => "Right Modal"),
                 },
               ),
@@ -113,7 +145,7 @@ export const AllInOne: Story = {
                   placement: "bottom",
                 },
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () => h(VButton, {}, () => "Bottom Modal"),
                 },
               ),
@@ -125,7 +157,7 @@ export const AllInOne: Story = {
                   placement: "left",
                 },
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () => h(VButton, {}, () => "Left Modal"),
                 },
               ),
@@ -137,7 +169,7 @@ export const AllInOne: Story = {
                   placement: "top",
                 },
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () => h(VButton, {}, () => "Top Modal"),
                 },
               ),
@@ -149,7 +181,7 @@ export const AllInOne: Story = {
                   mask: false,
                 },
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () => h(VButton, {}, () => "Without Mask"),
                 },
               ),
@@ -161,7 +193,7 @@ export const AllInOne: Story = {
                   mask: false,
                 },
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () =>
                     h(VTooltip, { text: "Drawer" }, () => h(VButton, {}, () => "Tooltip")),
                 },
@@ -171,7 +203,7 @@ export const AllInOne: Story = {
                 VDrawer,
                 {},
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () => h(VButton, {}, () => "Custom Header"),
 
                   "custom-header": () => "Custom Header",
@@ -186,7 +218,7 @@ export const AllInOne: Story = {
                   target: this.modalRoot as HTMLElement | undefined,
                 },
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () => h(VButton, {}, () => "Block right"),
                 },
               ),
@@ -199,7 +231,7 @@ export const AllInOne: Story = {
                   placement: "bottom",
                 },
                 {
-                  content: () => this.content,
+                  content: () => (this.flag ? this.content2 : this.content),
                   default: () => h(VButton, {}, () => "Block bottom"),
                 },
               ),

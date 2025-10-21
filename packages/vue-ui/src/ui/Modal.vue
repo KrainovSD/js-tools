@@ -57,8 +57,8 @@
     }
 
     void Promise.all([
-      execAnimation(modalRef.value, "ksd-modal_out"),
-      execAnimation(modalMaskRef.value, "ksd-modal__mask_out"),
+      execAnimation(modalRef.value, "out"),
+      execAnimation(modalMaskRef.value, "out"),
     ]).then(() => {
       if (!open.value) {
         localOpen.value = false;
@@ -74,7 +74,7 @@
     open.value = false;
   }
 
-  /** Open state */
+  /** toggle local open state */
   watch(
     open,
     (value) => {
@@ -99,7 +99,7 @@
     { immediate: true, flush: "pre" },
   );
 
-  /** Register listeners after open */
+  /** register listeners after open */
   watch(
     modalRef,
     (modalRef, _, clean) => {
@@ -156,7 +156,7 @@
     { immediate: true },
   );
 
-  /** Target Node Observe */
+  /** observe slot for click */
   watch(
     targetNode,
     (targetNode, _, clean) => {
@@ -177,6 +177,25 @@
       });
     },
     { immediate: true },
+  );
+  /** animation by open */
+  watch(
+    modalRef,
+    (modal) => {
+      if (modal) {
+        void execAnimation(modal, "in");
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
+  watch(
+    modalMaskRef,
+    (mask) => {
+      if (mask) {
+        void execAnimation(mask, "in");
+      }
+    },
+    { immediate: true, flush: "pre" },
   );
 
   defineExpose({ element: modalRef, close: onClose });
@@ -252,9 +271,11 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    animation: ksd-modal-in var(--ksd-transition-slow) cubic-bezier(0.22, 1, 0.28, 0.8);
 
-    &_out {
+    &:where(.in) {
+      animation: ksd-modal-in var(--ksd-transition-slow) cubic-bezier(0.22, 1, 0.28, 0.8);
+    }
+    &:where(.out) {
       animation: ksd-modal-out var(--ksd-transition-mid) cubic-bezier(0.22, 1, 0.28, 0.8);
     }
 
@@ -276,8 +297,12 @@
       font-family: var(--ksd-font-family);
       font-size: var(--ksd-font-size);
       overflow: auto;
-      animation: ksd-modal-mask-in var(--ksd-transition-mid) linear;
-      &_out {
+
+      &:where(.in) {
+        animation: ksd-modal-mask-in var(--ksd-transition-mid) linear;
+      }
+
+      &:where(.out) {
         animation: ksd-modal-mask-out var(--ksd-transition-mid) linear;
       }
     }

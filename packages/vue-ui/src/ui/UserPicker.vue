@@ -5,7 +5,7 @@
 >
   import { arrayToMapByKey, isArray } from "@krainovsd/js-helpers";
   import { VCheckOutlined } from "@krainovsd/vue-icons";
-  import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from "vue";
+  import { computed, nextTick, ref, useTemplateRef, watch } from "vue";
   import { AVATAR_COUNT_DEFAULT, AVATAR_SHIFT_DEFAULT } from "../constants/tech";
   import { createInteractiveChildrenController, waitParentAnimation } from "../lib";
   import Button from "./Button.vue";
@@ -247,15 +247,20 @@
     { immediate: true, flush: "post" },
   );
 
-  onMounted(() => {
-    if (props.autofocus && openerRef.value) {
-      void waitParentAnimation(openerRef.value).then(() => {
-        if (!openerRef.value) return;
-        openerRef.value.focus();
-        open.value = true;
-      });
-    }
-  });
+  /** autofocus */
+  watch(
+    openerRef,
+    (openerRef) => {
+      if (props.autofocus && openerRef) {
+        void waitParentAnimation(openerRef).then(() => {
+          if (!openerRef) return;
+          openerRef.focus();
+          open.value = true;
+        });
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
 </script>
 
 <template>

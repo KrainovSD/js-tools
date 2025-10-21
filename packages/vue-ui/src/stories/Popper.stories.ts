@@ -1,6 +1,6 @@
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
-import { h } from "vue";
-import { VButton, VDivider, VPopper, VText } from "../ui";
+import { h, ref } from "vue";
+import { VButton, VDivider, VInput, VPopper, VSelect, VText } from "../ui";
 
 const meta = {
   title: "Components/Popper",
@@ -15,7 +15,45 @@ type Story = StoryObj<typeof meta>;
 const Template: StoryFn<typeof VPopper> = (args) => ({
   components: { VPopper },
   setup() {
-    return { args };
+    const flag = ref(0);
+    const content = h(
+      "div",
+      { style: { display: "flex", flexDirection: "column", gap: "20px" } },
+      {
+        default: () => [
+          h(
+            VButton,
+            {
+              onClick: () => {
+                flag.value = 1;
+              },
+            },
+            () => "SWITCH",
+          ),
+          h(VSelect, { options: [], autofocus: true, placeholder: "TextArea" }),
+        ],
+      },
+    );
+    const content2 = h(
+      "div",
+      { style: { display: "flex", flexDirection: "column", gap: "20px" } },
+      {
+        default: () => [
+          h(
+            VButton,
+            {
+              onClick: () => {
+                flag.value = 0;
+              },
+            },
+            () => "SWITCH",
+          ),
+          h(VInput, { autofocus: true, placeholder: "Input" }),
+        ],
+      },
+    );
+
+    return { args, flag, content, content2 };
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
@@ -24,7 +62,7 @@ const Template: StoryFn<typeof VPopper> = (args) => ({
         { ...args },
         {
           default: () => h(VText, { fit: true, ellipsis: true }, () => "Текст для поппера"),
-          content: () => "Test",
+          content: () => (this.flag ? this.content2 : this.content),
         },
       ),
     ]);
