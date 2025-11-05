@@ -260,6 +260,9 @@ export class GraphCanvas<
     this.area.height = this.dpi * this.height;
     this.areaRect = this.area.getBoundingClientRect();
 
+    this.context = this.area.getContext("2d");
+    if (!this.context) throw new Error("couldn't create canvas context");
+    this.context.scale(this.dpi, this.dpi);
     this.draw();
   }
 
