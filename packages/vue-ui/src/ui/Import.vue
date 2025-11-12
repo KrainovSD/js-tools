@@ -4,12 +4,13 @@
 
   export type ImportProps = {
     multiple?: boolean;
+    disabled?: boolean;
   };
   type Emits = {
     upload: [files: File[], event: Event];
   };
 
-  defineProps<ImportProps>();
+  const props = defineProps<ImportProps>();
   const emit = defineEmits<Emits>();
   const importGhostRef = useTemplateRef("import-ghost");
   const inputRef = useTemplateRef("input");
@@ -32,6 +33,8 @@
       if (!targetNode) return;
 
       function onClickImport() {
+        if (props.disabled) return;
+
         inputRef.value?.click?.();
       }
 

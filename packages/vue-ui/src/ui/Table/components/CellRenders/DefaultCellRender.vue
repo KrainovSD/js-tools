@@ -17,7 +17,7 @@
   export type DefaultCellRenderProps<RowData extends DefaultRow> = {
     arraySeparator?: string;
     objectPath?: string;
-    mappings?: Record<string, string | number | React.ReactNode>;
+    mappings?: Record<string, string | number | Component>;
     Link?: Component<{ context: CellContext<RowData> }>;
     floatRound?: boolean;
     floatFixed?: number;

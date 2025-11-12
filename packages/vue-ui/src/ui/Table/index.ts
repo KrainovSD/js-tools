@@ -14,6 +14,7 @@ import type {
   TableRenderers,
 } from "./types";
 
+export { TooltipCellWrapper } from "./components";
 export { VTable, VGantt };
 export * from "./lib/get-gantt-column-width";
 export * from "./lib/get-gantt-row-height";
