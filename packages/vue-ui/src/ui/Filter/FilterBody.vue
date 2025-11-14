@@ -362,9 +362,11 @@
           v-if="openedFilter.icon"
           class="ksd-filter__field-icon"
         />
-        <span class="ksd-filter__field-label">
-          {{ openedFilter.label }}
-        </span>
+        <Tooltip :text="openedFilter.label" :open-not-visible="true">
+          <span class="ksd-filter__field-label">
+            {{ openedFilter.label }}
+          </span>
+        </Tooltip>
       </Button>
     </DropDown>
     <DropDown
