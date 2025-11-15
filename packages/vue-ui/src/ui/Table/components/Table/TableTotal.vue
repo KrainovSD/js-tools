@@ -1,11 +1,8 @@
 <script setup lang="ts">
   import Text from "../../../Text.vue";
+  import type { TableTotalProps } from "../../types";
 
-  type Props = {
-    totalRows: number;
-  };
-
-  defineProps<Props>();
+  defineProps<TableTotalProps>();
 </script>
 
 <template>

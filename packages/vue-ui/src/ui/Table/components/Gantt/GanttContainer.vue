@@ -13,7 +13,6 @@
     GanttViewType,
     HeaderGroupInterface,
     RowInterface,
-    TableEmptyProps,
     TableInterface,
   } from "../../types";
   import GanttGraph from "./GanttGraph.vue";
@@ -60,7 +59,6 @@
 
     canDropToRow: ((dropId: string) => boolean | undefined) | undefined;
     Row: ((row: RowInterface<GanttInfo<RowData>>) => Component | undefined) | undefined;
-    Empty: Component<TableEmptyProps> | undefined;
   };
   type Emits = {
     dragRow: [sourceId: string, targetId: string];
@@ -183,7 +181,6 @@
         :rows="$props.rows"
         :table="$props.table"
         :row-class-name="$props.rowClassName"
-        :-empty="$props.Empty"
         :-row="$props.Row"
         :draggable-row="$props.draggableRow"
         :header-row-class-name="$props.headerRowClassName"

@@ -3,13 +3,9 @@
   import type { Column } from "@tanstack/vue-table";
   import { type Component, computed, h, markRaw, ref, watch } from "vue";
   import { type FilterField, type FilterItem, VFilter } from "../../../Filter";
-  import type { ColumnFilter, DefaultRow, TableInterface } from "../../types";
+  import type { ColumnFilter, DefaultRow, TableFilterProps } from "../../types";
 
-  type Props = {
-    table: TableInterface<RowData>;
-  };
-
-  const props = defineProps<Props>();
+  const props = defineProps<TableFilterProps<RowData>>();
   const headers = computed(() => props.table.getHeaderGroups()?.[0]?.headers ?? []);
   const filters = computed(() =>
     headers.value.reduce<FilterField<string, string | number>[]>((acc, header) => {

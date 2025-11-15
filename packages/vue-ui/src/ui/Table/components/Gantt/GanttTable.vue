@@ -8,7 +8,6 @@
     GanttSize,
     HeaderGroupInterface,
     RowInterface,
-    TableEmptyProps,
     TableInterface,
   } from "../../types";
   import TableHeaderRow from "../Table/TableHeaderRow.vue";
@@ -34,7 +33,6 @@
       | string
       | undefined;
     Row: ((row: RowInterface<RowData>) => Component | undefined) | undefined;
-    Empty: Component<TableEmptyProps> | undefined;
     draggableRow: boolean;
     canDropToRow: ((dropId: string) => boolean | undefined) | undefined;
   };

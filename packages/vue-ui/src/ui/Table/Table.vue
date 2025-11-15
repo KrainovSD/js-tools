@@ -140,6 +140,9 @@
     ganttSize: undefined,
   });
 
+  const paginationState = computed(() => table.getState().pagination);
+  const pageSizes = computed(() => props.pageSizes ?? [10, 25, 50, 100, 150, 200]);
+
   defineExpose({
     element: rootRef,
     tableInstance: table,
@@ -149,18 +152,16 @@
 
 <template>
   <div ref="root" v-bind="$attrs" class="ksd-table__wrapper" :class="{ full: $props.fullSize }">
-    <TableFilter
-      v-if="$props.withFilters && !$props.Filter"
-      :with-filters="$props.withFilters ?? false"
-      :table="table"
-    />
-    <component :is="$props.Filter" v-if="$props.withFilters && $props.Filter" :table="table" />
+    <TableFilter v-if="$props.withFilters && !$slots.filter" :table="table" />
+    <slot v-if="$props.withFilters && $slots.filter" name="filter" :table="table"></slot>
 
     <div class="ksd-table__overlay" :class="{ full: $props.fullSize }">
-      <TableEmpty v-if="rows.length === 0 && !$props.Empty" />
-      <component :is="$props.Empty" v-if="rows.length === 0 && $props.Empty" />
-      <TableLoading v-if="$props.loading && !$props.Loader" />
-      <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
+      <TableEmpty v-if="rows.length === 0 && !$slots.empty" />
+      <slot v-if="rows.length === 0 && $slots.empty" name="empty"></slot>
+
+      <TableLoading v-if="$props.loading && !$slots.loader" />
+      <slot v-if="rows.length === 0 && $slots.loader" name="loader"></slot>
+
       <div ref="table-container" class="ksd-table__container" :class="{ full: $props.fullSize }">
         <TableCommon
           ref="table-component"
@@ -173,7 +174,6 @@
           :rows="rows"
           :table="table"
           :row-class-name="$props.rowClassName"
-          :-empty="$props.Empty"
           :-row="$props.Row"
           :draggable-row="$props.draggableRow ?? false"
           :header-row-class-name="$props.headerRowClassName"
@@ -190,16 +190,27 @@
           @dblclick="(row, event) => $emit('dblclick', row, event)"
         />
       </div>
-      <TableTotal v-if="$props.withTotal" :total-rows="totalRows" />
+      <TableTotal v-if="$props.withTotal && !$slots.total" :total-rows="totalRows" />
+      <slot v-if="$props.withTotal && $slots.total" name="total" :total-rows="totalRows"></slot>
     </div>
 
     <TablePagination
-      v-if="$props.withPagination"
-      :-pagination="$props.Pagination"
+      v-if="$props.withPagination && !$slots.pagination"
       :table="table"
       :total-rows="totalRows"
-      :page-sizes="$props.pageSizes"
+      :page-index="paginationState.pageIndex"
+      :page-size="paginationState.pageSize"
+      :page-sizes="pageSizes"
     />
+    <slot
+      v-if="$props.withPagination && $slots.pagination"
+      name="pagination"
+      :table="table"
+      :total-rows="totalRows"
+      :page-index="paginationState.pageIndex"
+      :page-size="paginationState.pageSize"
+      :page-sizes="pageSizes"
+    ></slot>
   </div>
 </template>
 

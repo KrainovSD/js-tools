@@ -2,13 +2,7 @@
   import type { VirtualItem, Virtualizer } from "@tanstack/vue-virtual";
   import { type CSSProperties, type Component, computed, useTemplateRef, watch } from "vue";
   import { defineRubberColumnSize } from "../../lib";
-  import type {
-    DefaultRow,
-    HeaderGroupInterface,
-    RowInterface,
-    TableEmptyProps,
-    TableInterface,
-  } from "../../types";
+  import type { DefaultRow, HeaderGroupInterface, RowInterface, TableInterface } from "../../types";
   import TableHeaderRow from "./TableHeaderRow.vue";
   import TableRow from "./TableRow.vue";
 
@@ -30,7 +24,6 @@
       | string
       | undefined;
     Row: ((row: RowInterface<RowData>) => Component | undefined) | undefined;
-    Empty: Component<TableEmptyProps> | undefined;
     draggableRow: boolean;
     canDropToRow: ((dropId: string) => boolean | undefined) | undefined;
   };

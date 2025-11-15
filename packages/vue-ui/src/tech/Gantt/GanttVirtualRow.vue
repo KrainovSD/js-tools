@@ -21,7 +21,7 @@
   const size = ref<GanttSize>("small");
   const today = ref(new Date().toISOString());
 
-  const viewVariants: SelectItem[] = [
+  const viewVariants: SelectItem<string>[] = [
     { label: "Год", value: "years" },
     { label: "Квартал", value: "quarters" },
     { label: "Месяц", value: "months" },
@@ -129,7 +129,7 @@
       :gantt-link-highlight="true"
       :gantt-today="true"
       :gantt-today-interactive="true"
-      :with-total="false"
+      :with-total="true"
       :gantt-visible="ganttVisible"
       @graph-task-click="
         (row, event) => {
@@ -140,6 +140,7 @@
       <template #graphCell="graphCellProps">
         <GanttTask v-bind="graphCellProps" />
       </template>
+      <template #total="totalProps"> count: {{ totalProps.totalRows }} </template>
     </Gantt>
   </div>
 </template>

@@ -160,16 +160,13 @@
 
 <template>
   <div ref="root" v-bind="$attrs" class="ksd-table__wrapper" :class="{ full: $props.fullSize }">
-    <TableFilter
-      v-if="$props.withFilters && !$props.Filter"
-      :with-filters="$props.withFilters ?? false"
-      :table="table"
-    />
-    <component :is="$props.Filter" v-if="$props.withFilters && $props.Filter" :table="table" />
+    <TableFilter v-if="$props.withFilters && !$slots.filter" :table="table" />
+    <slot v-if="$props.withFilters && $slots.filter" name="filter" :table="table"></slot>
 
     <div class="ksd-table__overlay" :class="{ full: $props.fullSize }">
-      <TableLoading v-if="$props.loading && !$props.Loader" />
-      <component :is="$props.Loader" v-if="$props.loading && $props.Loader" />
+      <TableLoading v-if="$props.loading && !$slots.loader" />
+      <slot v-if="rows.length === 0 && $slots.loader" name="loader"></slot>
+
       <GanttContainer
         ref="table-container"
         v-model:graph-today="graphToday"
@@ -184,7 +181,6 @@
         :rows="rows"
         :table="table"
         :row-class-name="$props.rowClassName"
-        :-empty="$props.Empty"
         :-row="$props.Row"
         :draggable-row="$props.draggableRow ?? false"
         :header-row-class-name="$props.headerRowClassName"
@@ -216,7 +212,8 @@
           <slot name="graphCell" v-bind="graphCellProps"></slot>
         </template>
       </GanttContainer>
-      <TableTotal v-if="$props.withTotal" :total-rows="totalRows" />
+      <TableTotal v-if="$props.withTotal && !$slots.total" :total-rows="totalRows" />
+      <slot v-if="$props.withTotal && $slots.total" name="total" :total-rows="totalRows"></slot>
     </div>
   </div>
 </template>

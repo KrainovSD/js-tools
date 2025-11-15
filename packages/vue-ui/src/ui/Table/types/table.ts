@@ -106,6 +106,9 @@ export type TableFilterProps<RowData extends DefaultRow> = {
 };
 export type TableEmptyProps = {};
 export type TableLoaderProps = {};
+export type TableTotalProps = {
+  totalRows: number;
+};
 
 export type DragRowHandler = (
   sourceIndex: number,
@@ -174,10 +177,6 @@ export type TableProps<
   virtualRowSize?: number;
   virtualRowOverScan?: number;
   locale?: string;
-  Filter?: Component<TableFilterProps<RowData>>;
-  Pagination?: Component<TablePaginationProps<RowData>>;
-  Empty?: Component<TableEmptyProps>;
-  Loader?: Component<TableLoaderProps>;
   loading?: boolean;
   headerRowClassName?: ((header: HeaderGroupInterface<RowData>) => string | undefined) | string;
   rowClassName?: ((row: RowInterface<RowData>) => string | undefined) | string;
