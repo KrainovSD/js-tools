@@ -158,10 +158,10 @@ export function createFetchClient(options: CreateRequestClientInstance) {
       }
 
       if (
-        (requestContentType == undefined || requestContentType.toLowerCase().includes("json")) &&
+        ((requestContentType == undefined && !isString(preparedBody)) ||
+          requestContentType?.toLowerCase()?.includes("json")) &&
         preparedBody != undefined &&
-        !(preparedBody instanceof FormData) &&
-        !isString(preparedBody)
+        !(preparedBody instanceof FormData)
       ) {
         preparedBody = JSON.stringify(preparedBody) as OutcomingApi;
       }
