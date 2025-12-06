@@ -40,7 +40,7 @@ export function limitStreamOfRequests<T>({
       const results: T[] = [];
 
       for (let i = 0; i < maxCountInParallel; i++) {
-        request(requestsAmount);
+        request(++requestsAmount);
       }
 
       function request(position: number, tryCount: number = 1) {
