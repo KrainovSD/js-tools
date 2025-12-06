@@ -6,6 +6,7 @@ type LimitStreamOfRequestsOptions<T> = {
   promiseGetter: (count: number) => Promise<T>;
   refetchAfterError?: boolean;
   maxTryCount?: number;
+  tryDelay?: number;
   collectResult?: boolean;
   resultCb?: (result: T) => void;
   throwError?: boolean;
@@ -20,6 +21,7 @@ export function limitStreamOfRequests<T>({
   resultCb,
   collectResult,
   maxTryCount = 3,
+  tryDelay = 1000,
   throwError,
   errorCb,
 }: LimitStreamOfRequestsOptions<T>): { promise: Promise<T[]>; cancel: () => void } {
@@ -32,47 +34,46 @@ export function limitStreamOfRequests<T>({
       isStopped = true;
     },
     promise: new Promise((resolve, reject) => {
-      let currentRequests = 0;
-      let currentResponses = 0;
+      let requestsAmount = 0;
+      let responsesAmount = 0;
+      let requestInProgress = 0;
       const results: T[] = [];
 
       for (let i = 0; i < maxCountInParallel; i++) {
-        request(promiseGetter(++currentRequests), currentRequests);
+        request(requestsAmount);
       }
 
-      function request(promise: Promise<T> | T, position: number, tryCount: number = 1) {
+      function request(position: number, tryCount: number = 1) {
         if (isStopped) return void resolve(results);
-        if (currentResponses === countRequests) return void resolve(results);
-        if (position > countRequests) resolve(results);
+        if (responsesAmount === countRequests) return void resolve(results);
+        if (position > countRequests) {
+          if (requestInProgress === 0) {
+            return void resolve(results);
+          }
 
+          return;
+        }
+        const promise = promiseGetter(position);
+        requestInProgress++;
         Promise.resolve(promise)
           .then((result) => {
-            if (isStopped) return void resolve(results);
-
+            requestInProgress--;
             if (collectResult) results.push(result);
             if (resultCb) resultCb(result);
-            currentResponses++;
-            if (currentResponses === countRequests) return void resolve(results);
-
-            request(promiseGetter(++currentRequests), currentRequests);
+            responsesAmount++;
+            request(++requestsAmount);
           })
           .catch((error: unknown) => {
+            requestInProgress--;
             if (errorCb) errorCb(error, position, tryCount);
-
-            if (isStopped) return void resolve(results);
-
             if (refetchAfterError && maxTryCount > tryCount) {
-              return void wait(1000).then(() =>
-                request(promiseGetter(position), position, tryCount + 1),
-              );
+              return void wait(tryDelay).then(() => request(position, tryCount + 1));
             }
-
             if (throwError) {
               reject(error);
             }
-
-            currentResponses++;
-            request(promiseGetter(++currentRequests), currentRequests);
+            responsesAmount++;
+            request(++requestsAmount);
           });
       }
     }),
