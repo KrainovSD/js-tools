@@ -288,11 +288,7 @@
     "
   >
     <div ref="opener" v-bind="$attrs" class="ksd-user-picker" :tabindex="0" :role="'button'">
-      <Tooltip
-        v-if="currentUsers.length > 0 && $props.users.length > 0"
-        :placement="'top-center'"
-        :text="avatarTooltip"
-      >
+      <Tooltip v-if="activeUsers.length > 0" :placement="'top-center'" :text="avatarTooltip">
         <div
           class="ksd-user-picker__users"
           :style="{

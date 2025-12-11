@@ -26,7 +26,7 @@ const Template: StoryFn<typeof VUserPicker> = (args) => ({
   },
   render() {
     return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-      h(VUserPicker, { ...args }),
+      h(VUserPicker, { ...args, multiple: false, modelValue: 2 }),
     ]);
   },
 });
