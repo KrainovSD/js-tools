@@ -5,7 +5,7 @@ import { type UserPickerProps, type UserPickerUser, VUserPicker } from "../ui";
 
 const meta = {
   title: "Components/UserPicker",
-  component: VUserPicker as unknown as DefineComponent<UserPickerProps<true>>,
+  component: VUserPicker as unknown as DefineComponent<UserPickerProps<string | number, true>>,
   tags: ["autodocs"],
   argTypes: {},
 } satisfies Meta<typeof VUserPicker>;
@@ -13,7 +13,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const USERS = Array.from<unknown, UserPickerUser>({ length: 30 }, (_, i) => ({
+const USERS = Array.from<unknown, UserPickerUser<string | number>>({ length: 30 }, (_, i) => ({
   id: i,
   name: randomString(10),
   username: `user_${i}`,
@@ -44,7 +44,7 @@ export const AllInOne: Story = {
     },
     render() {
       return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
-        h(VUserPicker, { ...args }),
+        h(VUserPicker, { ...args, users: args.users }),
         h(VUserPicker, { ...args, multiple: true, modelValue: [1, 6] }),
       ]);
     },

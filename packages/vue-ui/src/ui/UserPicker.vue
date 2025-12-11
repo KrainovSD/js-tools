@@ -72,8 +72,16 @@
 
   const activeUsers = computed(() => {
     const usersMap = arrayToMapByKey(props.users, "id");
+    const activeUsers: UserPickerUser<ID>[] = [];
 
-    return currentUsers.value.map((userId) => usersMap[userId.toString()]);
+    currentUsers.value.forEach((userId) => {
+      const user = usersMap[userId.toString()];
+      if (user != undefined) {
+        activeUsers.push(user);
+      }
+    });
+
+    return activeUsers;
   });
   const filteredActiveUsers = computed(() =>
     search.value === ""
@@ -280,7 +288,11 @@
     "
   >
     <div ref="opener" v-bind="$attrs" class="ksd-user-picker" :tabindex="0" :role="'button'">
-      <Tooltip v-if="currentUsers.length > 0" :placement="'top-center'" :text="avatarTooltip">
+      <Tooltip
+        v-if="currentUsers.length > 0 && $props.users.length > 0"
+        :placement="'top-center'"
+        :text="avatarTooltip"
+      >
         <div
           class="ksd-user-picker__users"
           :style="{
@@ -319,9 +331,7 @@
           />
         </div>
       </Tooltip>
-      <Text v-if="currentUsers.length === 0" class="ksd-user-picker__empty" :class="classes">{{
-        $props.empty
-      }}</Text>
+      <Text v-else class="ksd-user-picker__empty" :class="classes">{{ $props.empty }}</Text>
     </div>
     <template #content>
       <div class="ksd-user-picker__header">
