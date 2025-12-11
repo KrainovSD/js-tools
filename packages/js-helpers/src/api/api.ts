@@ -151,7 +151,7 @@ export function createFetchClient(options: CreateRequestClientInstance) {
       if (
         requestContentType == undefined &&
         !(preparedBody instanceof FormData) &&
-        preparedBody != undefined &&
+        preparedBody !== undefined &&
         !isString(preparedBody)
       ) {
         headers["content-type"] = "application/json; charset=UTF-8";
@@ -160,7 +160,7 @@ export function createFetchClient(options: CreateRequestClientInstance) {
       if (
         ((requestContentType == undefined && !isString(preparedBody)) ||
           requestContentType?.toLowerCase()?.includes("json")) &&
-        preparedBody != undefined &&
+        preparedBody !== undefined &&
         !(preparedBody instanceof FormData)
       ) {
         preparedBody = JSON.stringify(preparedBody) as OutcomingApi;
