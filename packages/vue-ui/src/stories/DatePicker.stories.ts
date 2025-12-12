@@ -43,6 +43,7 @@ export const AllInOne: Story = {
       return h("div", { style: { display: "flex", flexDirection: "column", gap: "20px" } }, [
         h(VDatePicker, {
           ...args,
+          class: "testclass",
           displayFormat: "ru-dot",
           "onUpdate:modelValue": (value) => {
             console.log("updated", value);
@@ -52,6 +53,7 @@ export const AllInOne: Story = {
           ...args,
           displayFormat: "ru-dot",
           multiple: true,
+          class: "testclass",
           "onUpdate:modelValue": (value) => {
             console.log("updated", value);
           },

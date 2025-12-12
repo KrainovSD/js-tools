@@ -243,6 +243,7 @@
   >
     <DatePickerInput
       ref="input"
+      v-bind="$attrs"
       v-model:first-value="firstInputValue"
       v-model:second-value="secondInputValue"
       :autofocus="$props.autofocus"
@@ -301,6 +302,7 @@
   </Popper>
   <DatePickerInput
     v-else
+    v-bind="$attrs"
     v-model:first-value="firstInputValue"
     v-model:second-value="secondInputValue"
     :autofocus="false"
