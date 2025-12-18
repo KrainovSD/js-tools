@@ -34,8 +34,12 @@ export type RequestInterface<
   signal?: AbortSignal;
   /** A token for Authorization header */
   token?: string;
+  /** A function that will be call after 401 status and then trigger refetch */
+  refetchAfterAuth?: (
+    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+  ) => Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>>;
   /** A boolean to activate oauth flow and then retry  */
-  refetchNoAuth?: boolean;
+  refetchAfterOauth?: boolean;
   /** A handlers before start request that rewrite global's handlers */
   beforeHandlers?: BeforeHandler[];
   /** A handlers after stop request that rewrite global's handlers */

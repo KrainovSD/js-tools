@@ -15,7 +15,13 @@ import type {
   RequestError,
   RequestInterface,
 } from "./api.types";
-import { refetchAfterOauth } from "./oauth";
+import { refetchAfterOauth as refetchAfterOauthFn } from "./oauth";
+
+export type RefetchAfterAuthFn =
+  | (<IncomingApi, Incoming = IncomingApi, Outcoming = unknown, OutcomingApi = Outcoming>(
+      request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+    ) => Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>>)
+  | undefined;
 
 type CreateRequestClientInstance = {
   client:
@@ -26,6 +32,7 @@ type CreateRequestClientInstance = {
   afterHandlers?: AfterHandler[];
   retries?: number[];
   timeout?: number;
+  refetchAfterAuth?: RefetchAfterAuthFn;
 };
 
 export type RequestInstance = {
@@ -44,6 +51,7 @@ export function createFetchClient(options: CreateRequestClientInstance) {
   let afterHandlers: AfterHandler[] | undefined = options.afterHandlers;
   let retries: number[] | undefined = options.retries;
   let timeout: number | undefined = options.timeout;
+  let refetchAfterAuthGlobal: RefetchAfterAuthFn = options.refetchAfterAuth;
 
   function recreate(options: CreateRequestClientInstance) {
     if ("client" in options) {
@@ -63,6 +71,9 @@ export function createFetchClient(options: CreateRequestClientInstance) {
     }
     if ("timeout" in options) {
       timeout = options.timeout;
+    }
+    if ("refetchAfterAuth" in options) {
+      refetchAfterAuthGlobal = options.refetchAfterAuth;
     }
   }
 
@@ -134,7 +145,11 @@ export function createFetchClient(options: CreateRequestClientInstance) {
         }
       }
 
-      const { method, body, path, queries, headers = {}, refetchNoAuth = true } = request;
+      const { method, body, path, queries, headers = {}, refetchAfterOauth = true } = request;
+      let refetchAfterAuth: RefetchAfterAuthFn = refetchAfterAuthGlobal;
+      if ("refetchAfterAuth" in request) {
+        refetchAfterAuth = request.refetchAfterAuth as RefetchAfterAuthFn;
+      }
 
       const url = createURLWithQueries({ baseURL: path, params: queries });
       let [, requestContentType] =
@@ -213,10 +228,15 @@ export function createFetchClient(options: CreateRequestClientInstance) {
 
           return { data: error, error: REQUEST_ERROR.CACHE_ERROR, response };
         }
-        if (response.status === 401 && refetchNoAuth && oauthOptions) {
-          return await refetchAfterOauth(oauthOptions, () =>
-            handleRequest({ ...request, refetchNoAuth: false }),
+        if (response.status === 401 && refetchAfterOauth && oauthOptions) {
+          return await refetchAfterOauthFn(oauthOptions, () =>
+            handleRequest({ ...request, refetchAfterOauth: false }),
           );
+        }
+        if (response.status === 401 && refetchAfterAuth) {
+          const newRequest = await refetchAfterAuth(request);
+
+          return await handleRequest({ ...newRequest, refetchAfterAuth: false });
         }
 
         if (request.defaultResponse) {
