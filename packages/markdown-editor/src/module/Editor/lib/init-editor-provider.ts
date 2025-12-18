@@ -24,7 +24,9 @@ export async function initEditorProvider({
   }
   const userColorLight = `${userColor.substring(0, 7)}33`;
 
-  const provider = new WebsocketProvider(url, roomId, multiCursorDocument);
+  const provider = new WebsocketProvider(url, roomId, multiCursorDocument, {
+    disableBc: opts.disableBc,
+  });
   provider.awareness.setLocalStateField("user", {
     name: userName,
     color: userColor,

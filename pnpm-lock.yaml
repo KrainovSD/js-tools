@@ -452,8 +452,8 @@ importers:
         specifier: ^0.16.6
         version: 0.16.6
       '@krainovsd/markdown-editor':
-        specifier: ^0.4.8
-        version: 0.4.8(@codemirror/search@6.5.10)
+        specifier: ^0.4.9
+        version: 0.4.9(@codemirror/search@6.5.10)
       '@krainovsd/vue-icons':
         specifier: ^0.1.4
         version: 0.1.4(vue@3.5.14(typescript@5.8.3))
@@ -1486,8 +1486,8 @@ packages:
   '@krainovsd/js-helpers@0.16.6':
     resolution: {integrity: sha512-UJ28eJIQSFFKEKeDjI1EyqUzACYjf49/uHVvCHML7ObFCEg2TNMDros3WpGGCGggSczmVmAh7WvGe2Kp2npQuA==}
 
-  '@krainovsd/markdown-editor@0.4.8':
-    resolution: {integrity: sha512-SbAakaloHDx07xQR1k58QBQlCwsd8Y4VfeZwmEREwHBDxUGBzbiYPf+gSw7Dtk95qM0zaOQ6w4Y3Tct5KhW8yg==}
+  '@krainovsd/markdown-editor@0.4.9':
+    resolution: {integrity: sha512-Xt5XGhumG0u5AjXpZlmYvBxAka+Xy3JQDaPgWRoZd5RSrMbDCtzB5kPeQ9f+FMSmNk1WH7n6efJfGqjLrQfk3w==}
 
   '@krainovsd/presets@0.3.6':
     resolution: {integrity: sha512-HqKrm2FDosJDu4rD7j2ETuUWR56IZRdI7phtHTqBXyEbqTiTMJey2lsUsNDyP7SGMZBVyI7BvRwblMMhCPWrmw==}
@@ -6877,8 +6877,8 @@ packages:
   vue-component-type-helpers@2.2.10:
     resolution: {integrity: sha512-iDUO7uQK+Sab2tYuiP9D1oLujCWlhHELHMgV/cB13cuGbG4qwkLHvtfWb6FzvxrIOPDnU0oHsz2MlQjhYDeaHA==}
 
-  vue-component-type-helpers@3.1.1:
-    resolution: {integrity: sha512-B0kHv7qX6E7+kdc5nsaqjdGZ1KwNKSUQDWGy7XkTYT7wFsOpkEyaJ1Vq79TjwrrtuLRgizrTV7PPuC4rRQo+vw==}
+  vue-component-type-helpers@3.1.8:
+    resolution: {integrity: sha512-oaowlmEM6BaYY+8o+9D9cuzxpWQWHqHTMKakMxXu0E+UCIOMTljyIPO15jcnaCwJtZu/zWDotK7mOIHvWD9mcw==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -8233,7 +8233,7 @@ snapshots:
     dependencies:
       dayjs: 1.11.13
 
-  '@krainovsd/markdown-editor@0.4.8(@codemirror/search@6.5.10)':
+  '@krainovsd/markdown-editor@0.4.9(@codemirror/search@6.5.10)':
     dependencies:
       '@codemirror/autocomplete': 6.18.6
       '@codemirror/commands': 6.8.0
@@ -8519,7 +8519,7 @@ snapshots:
   '@krainovsd/vue-ui@0.4.0-beta.23(vue@3.5.14(typescript@5.8.3))':
     dependencies:
       '@krainovsd/js-helpers': 0.16.6
-      '@krainovsd/markdown-editor': 0.4.8(@codemirror/search@6.5.10)
+      '@krainovsd/markdown-editor': 0.4.9(@codemirror/search@6.5.10)
       '@krainovsd/vue-icons': 0.1.4(vue@3.5.14(typescript@5.8.3))
       '@tanstack/vue-table': 8.21.3(vue@3.5.14(typescript@5.8.3))
       '@tanstack/vue-virtual': 3.13.12(vue@3.5.14(typescript@5.8.3))
@@ -9189,7 +9189,7 @@ snapshots:
       storybook: 9.0.16(@testing-library/dom@10.4.0)(prettier@3.6.1)
       type-fest: 2.19.0
       vue: 3.5.14(typescript@5.8.3)
-      vue-component-type-helpers: 3.1.1
+      vue-component-type-helpers: 3.1.8
 
   '@sveltejs/acorn-typescript@1.0.5(acorn@8.15.0)':
     dependencies:
@@ -13685,15 +13685,15 @@ snapshots:
       rollup: 4.34.9
       vite: 6.2.1(@types/node@22.13.8)(sass-embedded@1.93.2)(sass@1.93.2)(terser@5.39.0)(yaml@2.7.0)
 
-  rollup-plugin-stats@1.3.9(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8)(sass@1.89.2)):
-    optionalDependencies:
-      rollup: 4.34.9
-      vite: 6.3.5(@types/node@22.13.8)(sass@1.89.2)
-
   rollup-plugin-stats@1.3.9(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8)(yaml@2.7.0)):
     optionalDependencies:
       rollup: 4.34.9
       vite: 6.3.5(@types/node@22.13.8)(yaml@2.7.0)
+
+  rollup-plugin-stats@1.3.9(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8)):
+    optionalDependencies:
+      rollup: 4.34.9
+      vite: 6.3.5(@types/node@22.13.8)(sass@1.89.2)
 
   rollup-plugin-visualizer@6.0.3(rollup@4.34.9):
     dependencies:
@@ -13720,7 +13720,7 @@ snapshots:
 
   rollup-plugin-webpack-stats@2.0.7(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8)(sass@1.89.2)):
     dependencies:
-      rollup-plugin-stats: 1.3.9(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8)(sass@1.89.2))
+      rollup-plugin-stats: 1.3.9(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8))
     optionalDependencies:
       rollup: 4.34.9
       vite: 6.3.5(@types/node@22.13.8)(sass@1.89.2)
@@ -13734,7 +13734,7 @@ snapshots:
 
   rollup-plugin-webpack-stats@2.0.7(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8)):
     dependencies:
-      rollup-plugin-stats: 1.3.9(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8)(sass@1.89.2))
+      rollup-plugin-stats: 1.3.9(rollup@4.34.9)(vite@6.3.5(@types/node@22.13.8))
     optionalDependencies:
       rollup: 4.34.9
       vite: 6.3.5(@types/node@22.13.8)(sass@1.89.2)
@@ -14803,7 +14803,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.10: {}
 
-  vue-component-type-helpers@3.1.1: {}
+  vue-component-type-helpers@3.1.8: {}
 
   vue-docgen-api@4.79.2(vue@3.5.14(typescript@5.8.3)):
     dependencies:

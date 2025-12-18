@@ -22,6 +22,7 @@ export type MultiCursorOptions = {
   userColor?: string;
   roomId: string;
   autoInsert?: boolean;
+  disableBc?: boolean;
   onChangeStatusProvider?: (
     event: ProviderStatusEvent,
     provider: YWebsocketProvider,

@@ -167,7 +167,6 @@
 
                 switch (event.status) {
                   case "connected": {
-                    instance.replaceContent("");
                     mounted.value = true;
                     emit("connect", firstConnecting);
                     connectingCount = 0;
