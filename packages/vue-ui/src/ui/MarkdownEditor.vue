@@ -39,6 +39,7 @@
     blur: [state: EditorState];
     focus: [state: EditorState];
     change: [view: ViewUpdate];
+    changeView: [view: ViewUpdate];
     connectError: [first: boolean];
     disconnect: [];
     connect: [first: boolean];
@@ -143,16 +144,17 @@
           focus.value = false;
           emit("blur", state);
         },
-        onChange: (view) => {
-          if (!empty.value && view.state.doc.length === 0) {
-            empty.value = true;
-          } else if (empty.value && view.state.doc.length !== 0) {
-            empty.value = false;
+        onViewChange: (view) => {
+          if (view.docChanged) {
+            if (!empty.value && view.state.doc.length === 0) {
+              empty.value = true;
+            } else if (empty.value && view.state.doc.length !== 0) {
+              empty.value = false;
+            }
+            model.value = view.state.doc.toString();
+            emit("change", view);
           }
-
-          model.value = view.state.doc.toString();
-
-          emit("change", view);
+          emit("changeView", view);
         },
         onEnter: props.handleEnter,
         onFocus: (state) => {
