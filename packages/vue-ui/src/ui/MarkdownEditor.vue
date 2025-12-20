@@ -285,7 +285,7 @@
     });
   });
 
-  defineExpose({ element: mountRef });
+  defineExpose({ element: mountRef, editor });
 </script>
 
 <template>
