@@ -8,14 +8,7 @@ export type {
   DefaultKeyMapsOptions,
   CustomKeyMap,
 } from "./keymaps";
-export type {
-  InitListenersOptions,
-  GetChangeEventOptions,
-  GetFocusEventOptions,
-  HandleBlurEditorFunction,
-  HandleChangeEditorFunction,
-  HandleFocusEditorFunction,
-} from "./listeners";
+export type { InitListenersOptions, EditorStateHandle, EditorViewHandle } from "./listeners";
 export type {
   DecorationPlugin,
   GetDecorationFunction,

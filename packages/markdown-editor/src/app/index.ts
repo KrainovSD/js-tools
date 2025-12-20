@@ -76,6 +76,10 @@ function initEditor() {
 
       return true;
     },
+    onViewChange: (view) => {
+      // eslint-disable-next-line no-console
+      console.log(view);
+    },
   });
 }
 

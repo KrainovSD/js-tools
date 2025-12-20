@@ -26,6 +26,7 @@ export const initExtensions = async ({
   onFocus,
   onEnter,
   onEscape,
+  onViewChange,
   readonly = true,
   vimMode = false,
   multiCursorText,
@@ -66,7 +67,7 @@ export const initExtensions = async ({
   const extensions = [
     ...asyncPlugins,
     initTheme({ theme, dark, light }),
-    initListeners({ onBlur, onChange, onFocus }),
+    initListeners({ onBlur, onChange, onFocus, onViewChange }),
   ];
 
   if (multiCursorText && provider) {
