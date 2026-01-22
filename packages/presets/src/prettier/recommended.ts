@@ -10,7 +10,8 @@ export const recommended: Config = {
   arrowParens: "always",
   plugins: ["@trivago/prettier-plugin-sort-imports"],
   importOrder: [
-    "@krainovsd/fastify-trace/trace",
+    "(.*)trace$",
+    "(.*)tracing$",
     "<THIRD_PARTY_MODULES>",
     "^@/app",
     "^@/app/(.*)$",

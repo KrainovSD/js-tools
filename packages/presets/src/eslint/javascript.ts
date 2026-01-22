@@ -50,14 +50,13 @@ export const JS_LINTER_PLUGINS = {
         "no-underscore-dangle": "off",
         "id-length": "off",
         "no-bitwise": "off",
+        camelcase: "off",
+        "max-params": "off",
+        "padding-line-between-statements": "off",
+        "no-await-in-loop": "off",
 
-        "no-console": ["warn", { allow: ["warn", "error"] }],
-        "no-await-in-loop": "error",
-        "padding-line-between-statements": [
-          "error",
-          { blankLine: "always", prev: "*", next: "return" },
-        ],
         "prefer-const": ["error", { destructuring: "all" }],
+        "no-console": ["warn", { allow: ["warn", "error"] }],
         "no-implicit-coercion": [
           "error",
           {
