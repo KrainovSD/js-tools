@@ -44,6 +44,7 @@ Primary.args = {
       icon: h(VSettingFilled, { size: 16 }),
     },
   ],
+  disabled: false,
 };
 
 export const AllInOne: Story = {

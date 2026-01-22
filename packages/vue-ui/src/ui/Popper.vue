@@ -30,6 +30,7 @@
     fit?: boolean;
     nested?: boolean;
     closeByClickOutsideEvent?: CloseByClickOutsideEvent;
+    disabled?: boolean;
   };
 
   const props = withDefaults(defineProps<PopperProps>(), {
@@ -106,6 +107,8 @@
   const hoverCloseTimer = ref<NodeJS.Timeout | null>(null);
 
   function onAppear() {
+    if (props.disabled) return;
+
     if (closeTimer.value != undefined) {
       clearTimeout(closeTimer.value);
       closeTimer.value = null;
@@ -384,6 +387,7 @@
   <span ref="popper" class="ksd-popper" aria-hidden="true" tabindex="-1" ksd-watcher="true"></span>
   <slot></slot>
   <Positioner
+    v-if="!$props.disabled"
     ref="positioner"
     :open="open"
     :arrow="$props.arrow"

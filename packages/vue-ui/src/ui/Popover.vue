@@ -29,6 +29,7 @@
     | "triggers"
     | "nested"
     | "closeByClickOutsideEvent"
+    | "disabled"
   >;
 
   const props = withDefaults(defineProps<PopoverProps>(), {
@@ -128,6 +129,7 @@
     :shift-y="$props.shiftY"
     :placement="$props.placement"
     :z-index="$props.zIndex"
+    :disabled="$props.disabled"
     :nested="$props.nested"
     :class-name-positioner-content="`ksd-popover__positioner-content ${popoverClasses} ${$props.classNamePositionerContent ?? ''}`"
     :class="[$attrs.class, popoverClasses, 'ksd-popover__positioner']"

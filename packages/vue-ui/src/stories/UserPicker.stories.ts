@@ -34,6 +34,7 @@ const Template: StoryFn<typeof VUserPicker> = (args) => ({
 export const Primary = Template.bind({});
 Primary.args = {
   users: USERS,
+  disabled: false,
 };
 
 export const AllInOne: Story = {

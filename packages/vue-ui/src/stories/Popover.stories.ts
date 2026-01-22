@@ -56,5 +56,7 @@ export const Primary: Story = {
       ]);
     },
   }),
-  args: {},
+  args: {
+    disabled: false,
+  },
 };

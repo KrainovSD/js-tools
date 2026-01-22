@@ -66,6 +66,7 @@
     | "zIndex"
     | "triggers"
     | "nested"
+    | "disabled"
     | "closeByClickOutsideEvent"
   >;
 
@@ -364,6 +365,7 @@
     :placement="$props.placement"
     :z-index="$props.zIndex"
     :nested="$props.nested"
+    :disabled="$props.disabled"
     :class-name-positioner-content="`ksd-dropdown__positioner-content ${$props.classNamePositionerContent ?? ''}`"
     :class="[$attrs.class, 'ksd-dropdown__positioner']"
   >

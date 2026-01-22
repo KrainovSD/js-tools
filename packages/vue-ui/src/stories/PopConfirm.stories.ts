@@ -31,6 +31,7 @@ export const Primary = Template.bind({});
 Primary.args = {
   text: "Большое спасибо за внимание?",
   title: "Внимание",
+  active: true,
 };
 
 export const AllInOne: Story = {

@@ -40,6 +40,7 @@
     nested?: boolean;
     tooltip?: (users: UserPickerUser<ID>[]) => string;
     autofocus?: boolean;
+    disabled?: boolean;
   };
 
   const props = withDefaults(defineProps<UserPickerProps<ID, Multiple>>(), {
@@ -279,6 +280,7 @@
     :observe="true"
     :autofocus="false"
     :nested="$props.nested"
+    :disabled="$props.disabled"
     :placement="
       $props.position === 'left'
         ? 'bottom-left'

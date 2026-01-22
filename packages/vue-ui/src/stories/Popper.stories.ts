@@ -70,7 +70,9 @@ const Template: StoryFn<typeof VPopper> = (args) => ({
 });
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+  disabled: false,
+};
 
 export const Scroll: Story = {
   render: (args) => ({
