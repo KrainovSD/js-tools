@@ -30,7 +30,7 @@ const Template: StoryFn<typeof VTooltip> = (args) => ({
         },
       },
       [
-        h(VTooltip, { ...args, placement: "right-bottom" }, () =>
+        h(VTooltip, { ...args, placement: "right-bottom", disabled: false }, () =>
           h(VText, { ellipsis: true, fit: true, style: { height: "30px" } }, () => "Навести"),
         ),
       ],

@@ -10,6 +10,7 @@
   export type TooltipProps = {
     show?: undefined | boolean;
     text?: string | number;
+    disabled?: boolean;
     openByFocus?: boolean;
     openByHover?: boolean;
     openByClick?: boolean;
@@ -47,6 +48,7 @@
     visibleArea: undefined,
     text: "",
     classNameContent: undefined,
+    disabled: false,
   });
   const elementRef = useTemplateRef("tooltip");
   const positionerRef = useTemplateRef("positioner");
@@ -78,7 +80,7 @@
   const open = computed(() => props.show ?? localOpen.value);
 
   watchEffect((clean) => {
-    if (!content.value) return;
+    if (!content.value || props.disabled) return;
 
     const eventController = new AbortController();
 
