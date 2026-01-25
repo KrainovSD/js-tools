@@ -13,8 +13,7 @@
   import Input from "./Input.vue";
   import Popover from "./Popover.vue";
   import Text from "./Text.vue";
-  import Tooltip from "./Tooltip.vue";
-  import UserAvatar from "./UserAvatar.vue";
+  import UserAvatars, { type UserAvatarsProps } from "./UserAvatars.vue";
   import UserInfo from "./UserInfo.vue";
 
   export type UserPickerUser<ID extends string | number> = {
@@ -25,23 +24,18 @@
     avatar?: string;
   };
 
-  export type UserPickerSize = "default" | "large" | "small";
   export type UserPickerPosition = "left" | "right" | "center";
 
   export type UserPickerProps<ID extends string | number, Multiple extends true | false> = {
     users: UserPickerUser<ID>[];
-    size?: UserPickerSize;
     position?: UserPickerPosition;
-    count?: number;
-    shift?: number;
     header?: string;
     empty?: string;
     multiple?: Multiple;
     nested?: boolean;
-    tooltip?: (users: UserPickerUser<ID>[]) => string;
     autofocus?: boolean;
     disabled?: boolean;
-  };
+  } & Pick<UserAvatarsProps, "count" | "shift" | "size" | "tooltip">;
 
   const props = withDefaults(defineProps<UserPickerProps<ID, Multiple>>(), {
     count: AVATAR_COUNT_DEFAULT,
@@ -93,13 +87,7 @@
             user.username.toLowerCase().includes(search.value.toLowerCase()),
         ),
   );
-  const shortActiveUsers = computed(() => activeUsers.value.toSpliced(props.count));
-  const avatarTooltip = computed(() => {
-    return (
-      props.tooltip?.(shortActiveUsers.value) ??
-      `${shortActiveUsers.value.map((user) => user.name).join(", ")}${currentUsers.value.length > (props.count ?? AVATAR_COUNT_DEFAULT) ? ` и еще ${activeUsers.value.length - (props.count ?? AVATAR_COUNT_DEFAULT)}` : ""}`
-    );
-  });
+
   const otherUsers = computed(() => {
     const active = new Set(activeUsers.value.map((user) => user.id));
 
@@ -290,45 +278,14 @@
     "
   >
     <div ref="opener" v-bind="$attrs" class="ksd-user-picker" :tabindex="0" :role="'button'">
-      <Tooltip v-if="activeUsers.length > 0" :placement="'top-center'" :text="avatarTooltip">
-        <div
-          class="ksd-user-picker__users"
-          :style="{
-            '--avatar-count':
-              shortActiveUsers.length +
-              (currentUsers.length > ($props.count ?? AVATAR_COUNT_DEFAULT) ? 1 : 0),
-            '--avatar-size':
-              $props.size === 'default'
-                ? 'var(--ksd-control-height)'
-                : $props.size === 'small'
-                  ? 'var(--ksd-control-height-sm)'
-                  : 'var(--ksd-control-height-lg)',
-            '--avatar-shift': `${AVATAR_SHIFT_DEFAULT}px`,
-          }"
-        >
-          <template v-for="(user, index) of shortActiveUsers" :key="user.id">
-            <UserAvatar
-              :name="user.name"
-              :size="$props.size"
-              :avatar="user.avatar"
-              class="ksd-user-picker__avatar"
-              :style="{
-                left:
-                  index > 0 ? `-${($props.shift ?? AVATAR_SHIFT_DEFAULT) * index}px` : undefined,
-              }"
-            />
-          </template>
-          <UserAvatar
-            v-if="currentUsers.length > ($props.count ?? AVATAR_COUNT_DEFAULT)"
-            :name="''"
-            :initials="String(activeUsers.length - ($props.count ?? AVATAR_COUNT_DEFAULT))"
-            class="ksd-user-picker__avatar"
-            :style="{
-              left: `-${($props.shift ?? AVATAR_SHIFT_DEFAULT) * ($props.count ?? AVATAR_COUNT_DEFAULT)}px`,
-            }"
-          />
-        </div>
-      </Tooltip>
+      <UserAvatars
+        v-if="activeUsers.length > 0"
+        :avatars="activeUsers"
+        :shift="$props.shift"
+        :size="$props.size"
+        :count="$props.count"
+        :tooltip="$props.tooltip"
+      />
       <Text v-else class="ksd-user-picker__empty" :class="classes">{{ $props.empty }}</Text>
     </div>
     <template #content>
@@ -400,18 +357,6 @@
 
     &__positioner {
       max-height: min(70dvh, 400px);
-    }
-
-    &__users {
-      display: flex;
-      align-items: center;
-      width: calc(
-        var(--avatar-count) * var(--avatar-size) - (var(--avatar-count) - 1) * var(--avatar-shift)
-      );
-    }
-
-    &__avatar {
-      position: relative;
     }
 
     &__empty {

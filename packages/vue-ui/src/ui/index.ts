@@ -39,6 +39,7 @@ import VText from "./Text.vue";
 import VTextArea from "./TextArea.vue";
 import VTooltip from "./Tooltip.vue";
 import VUserAvatar from "./UserAvatar.vue";
+import VUserAvatars from "./UserAvatars.vue";
 import VUserInfo from "./UserInfo.vue";
 import VUserPicker from "./UserPicker.vue";
 
@@ -127,13 +128,9 @@ export type {
 export type { ColorPickerProps } from "./ColorPicker.vue";
 export type { UserAvatarProps, UserAvatarSize } from "./UserAvatar.vue";
 export type { UserInfoProps, UserInfoSize } from "./UserInfo.vue";
-export type {
-  UserPickerUser,
-  UserPickerPosition,
-  UserPickerProps,
-  UserPickerSize,
-} from "./UserPicker.vue";
+export type { UserPickerUser, UserPickerPosition, UserPickerProps } from "./UserPicker.vue";
 export type { Tab, TabsProps } from "./Tabs.vue";
+export type { UserAvatarsProps } from "./UserAvatars.vue";
 
 export {
   VTabs,
@@ -179,6 +176,7 @@ export {
   VUserInfo,
   VUserPicker,
   VFileDrop,
+  VUserAvatars,
 };
 export * from "./Table";
 export * from "./QueryBuilder";

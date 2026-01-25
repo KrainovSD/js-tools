@@ -58,10 +58,14 @@
     &.size-small {
       width: var(--ksd-control-height-sm);
       height: var(--ksd-control-height-sm);
+      min-width: var(--ksd-control-height-sm);
+      min-height: var(--ksd-control-height-sm);
     }
     &.size-large {
       width: var(--ksd-control-height-lg);
       height: var(--ksd-control-height-lg);
+      min-width: var(--ksd-control-height-lg);
+      min-height: var(--ksd-control-height-lg);
     }
   }
 </style>
