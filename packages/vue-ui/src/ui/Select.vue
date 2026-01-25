@@ -589,6 +589,7 @@
           v-if="cancelIcon && !loadingIcon"
           class="ksd-select__selection-clear"
           aria-label="clear"
+          :inset="5"
           @click.prevent.stop="onClearValue"
         >
           <VCloseCircleFilled :size="12" />
