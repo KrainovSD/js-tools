@@ -36,11 +36,8 @@ export const oauthBeforeHandler =
         expiresTokenStorageName: options.expiresTokenStorageName,
         closeObserveInterval: options.closeObserveInterval,
       });
-      if (options.tokenRequest) {
-        token = await options.tokenRequest();
-        if (token != undefined && options.tokenStorageName) {
-          localStorage.setItem(options.tokenStorageName, token);
-        }
+      if (options.tokenStorageName) {
+        token = localStorage.getItem(options.tokenStorageName);
       }
       OAUTH_STATE.fetching = false;
     }

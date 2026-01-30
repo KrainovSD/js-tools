@@ -117,8 +117,6 @@ export type OauthOptions = {
   onWindowOpenError?: () => void;
   /** A name of token in localstorage */
   tokenStorageName?: string;
-  /** An url for refresh token */
-  tokenRequest?: () => Promise<string | null | undefined>;
   /** A number of millisecond for waiting oauth flow window before force close it */
   wait?: number;
   /** An interval for check closable property by oauth flow window in ms */
@@ -134,6 +132,10 @@ export type GetOauthTokenOptions = {
   expiresTokenQueryName: string;
   /** A name of flag in query for oauth flow window */
   onlyRefreshTokenWindowQueryName: string;
+  /** A name of token in localstorage */
+  tokenStorageName?: string;
+  /** An url for refresh token */
+  tokenRequest?: () => Promise<string | null | undefined>;
 };
 
 export type GetOauthTokenFromOtherWindowOptions = {

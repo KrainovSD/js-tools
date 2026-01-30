@@ -70,18 +70,12 @@ export async function refetchAfterOauth<T>(options: OauthOptions, refetch: () =>
     expiresTokenStorageName: options.expiresTokenStorageName,
     closeObserveInterval: options.closeObserveInterval,
   });
-  if (options.tokenRequest) {
-    const token = await options.tokenRequest();
-    if (token != undefined && options.tokenStorageName) {
-      localStorage.setItem(options.tokenStorageName, token);
-    }
-  }
   OAUTH_STATE.fetching = false;
 
   return await refetch();
 }
 
-export function getOauthToken(options: GetOauthTokenOptions) {
+export async function getOauthToken(options: GetOauthTokenOptions) {
   const queries = getQueryValues([
     options.expiresTokenQueryName,
     options.onlyRefreshTokenWindowQueryName,
@@ -112,7 +106,12 @@ export function getOauthToken(options: GetOauthTokenOptions) {
   }
 
   localStorage.setItem(options.expiresTokenStorageName, expires);
-
+  if (options.tokenRequest) {
+    const token = await options.tokenRequest();
+    if (token != undefined && options.tokenStorageName) {
+      localStorage.setItem(options.tokenStorageName, token);
+    }
+  }
   /** Close if OnlyRefresh window  */
   if (isRefresh) {
     const channel = new BroadcastChannel(options.onlyRefreshTokenWindowQueryName);

@@ -46,6 +46,8 @@
   font-display: block;
 }
 
+/* FiraCode */
+
 @font-face {
   font-family: "FiraCode";
   src: url("FiraCode-Light.ttf") format("truetype");
