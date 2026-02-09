@@ -1,10 +1,10 @@
-import preset from "./lib/prettier/cjs/index.cjs";
+import presets from "./lib/prettier/esm/index.js";
 
 /**
  * @see https://prettier.io/docs/configuration
  * @type {import("prettier").Config}
  */
 const config = {
-  ...preset.recommended,
+  ...presets.recommended,
 };
 export default config;

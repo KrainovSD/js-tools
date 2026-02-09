@@ -73,6 +73,10 @@
   > &
     /*@vue-ignore*/ HTMLAttributes;
 
+  type Emits = {
+    focus: [event: FocusEvent];
+    blur: [event: FocusEvent];
+  };
   type Value = Multiple extends false ? V | undefined : V[] | undefined;
 
   const TRIGGERS: PopperTrigger[] = [];
@@ -95,6 +99,7 @@
     searchFn: undefined,
     labelOptions: undefined,
   });
+  defineEmits<Emits>();
   const model = defineModel<Value>({ default: undefined });
   const popperRef = useTemplateRef("popper");
   const positionerContentRef = computed(() => popperRef.value?.positioner?.contentElement);
@@ -487,14 +492,16 @@
                 :aria-expanded="open"
                 @keydown="actionInputKeyboard"
                 @blur="
-                  () => {
+                  (e) => {
                     open = false;
                     focusable = false;
+                    $emit('blur', e);
                   }
                 "
                 @focus="
-                  () => {
+                  (e) => {
                     focusable = true;
+                    $emit('focus', e);
                   }
                 "
               />
@@ -534,14 +541,16 @@
                 :disabled="props.disabled"
                 @keydown="actionInputKeyboard"
                 @blur="
-                  () => {
+                  (e) => {
                     open = false;
                     focusable = false;
+                    $emit('blur', e);
                   }
                 "
                 @focus="
-                  () => {
+                  (e) => {
                     focusable = true;
+                    $emit('focus', e);
                   }
                 "
               />

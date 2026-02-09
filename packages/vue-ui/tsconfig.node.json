@@ -1,4 +1,0 @@
-{
-  "extends": "@krainovsd/presets/typescript/node",
-  "include": ["vite.config.ts"]
-}

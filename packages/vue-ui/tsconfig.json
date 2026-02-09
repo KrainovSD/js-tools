@@ -11,12 +11,8 @@
     ".storybook/**/*",
     "src/vite-env.d.ts",
     ".prettierrc.mjs",
-    "rollup.config.js"
+    "rollup.config.js",
+    "vite.config.ts"
   ],
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "exclude": ["node_modules", "dist"]
 }

@@ -22,6 +22,7 @@ export const VUE_LINTER_PLUGINS = {
   krainovVue: [
     {
       rules: {
+        "vue/prop-name-casing": "off",
         "vue/multi-word-component-names": "off",
         "no-useless-assignment": "off",
         "@typescript-eslint/no-unsafe-call": "off",
