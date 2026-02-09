@@ -13,6 +13,7 @@ import type {
 export type NodeData = {
   image?: string;
   text?: unknown;
+  collapsed?: boolean;
 };
 export type LinkData = {
   id?: string;

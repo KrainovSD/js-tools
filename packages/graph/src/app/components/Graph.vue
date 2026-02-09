@@ -10,6 +10,7 @@
     type LinkSettingsInterface,
     type NodeOptionsInterface,
     type NodeSettingsInterface,
+    extractLinkPointIds,
   } from "@/module/GraphCanvas";
   import { DEFAULT_SETTINGS } from "../constants";
   import { getLinkOptions, getNodeNeighbors, getNodeOptions } from "../lib";
@@ -37,6 +38,56 @@
 
   function onClick(event: MouseEvent | TouchEvent, node: Node | undefined, link: Link | undefined) {
     if (!graphController) return;
+
+    // collapsible mode
+    if (event.ctrlKey && node?.id != undefined) {
+      const relationsMap: Record<string, string[]> = {};
+      for (const link of graphController.getData().links) {
+        const { sourceId, targetId } = extractLinkPointIds(link);
+        relationsMap[sourceId] ??= [];
+        relationsMap[sourceId].push(String(targetId));
+      }
+      const collapsedNodes = new Set<string>();
+      for (const node of graphController.getData().nodes) {
+        if (node.data?.collapsed) {
+          collapsedNodes.add(String(node.id));
+        }
+      }
+      const opening = !!node.data?.collapsed;
+      function getAllChildren(graph: Record<string, string[]>, start: string) {
+        const visited = new Set();
+        const result: string[] = [];
+        function dfs(node: string) {
+          if (visited.has(node)) return;
+          visited.add(node);
+          result.push(node);
+
+          if (node !== start && collapsedNodes.has(node)) return;
+          for (const child of graph[node] || []) {
+            dfs(child);
+          }
+        }
+        dfs(start);
+
+        return result.slice(1);
+      }
+      const childrenNodes = new Set(getAllChildren(relationsMap, String(node.id)));
+      for (const node of graphController.getData().nodes) {
+        if (childrenNodes.has(String(node.id))) {
+          node.visible = opening;
+        }
+      }
+      node.data ??= {};
+      node.data.collapsed = !opening;
+      if (opening) {
+        node.label = "";
+      } else {
+        node.label = String(childrenNodes.size);
+      }
+      graphController.clearCache(true);
+
+      return;
+    }
 
     if (!node && !link) {
       selectedNode.value = null;
