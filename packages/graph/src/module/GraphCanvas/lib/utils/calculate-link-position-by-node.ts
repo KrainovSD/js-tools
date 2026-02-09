@@ -21,7 +21,8 @@ export function calculateLinkPositionByNode<
     oppositeNode: target,
   });
   const targetPoint = getLinkPoint({
-    arrowSize: arrowSize > 0 ? arrowSize * 0.85 : 0,
+    // arrowSize: arrowSize > 0 ? arrowSize * 0.85 : 0,
+    arrowSize: arrowSize > 0 ? arrowSize : 0,
     node: target,
     oppositeNode: source,
   });

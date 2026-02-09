@@ -234,6 +234,18 @@ export function getDrawLink<
 
     /** Arrow */
     if (this.linkSettings.arrow && arrowAlpha > 0) {
+      const {
+        x1: xStart,
+        x2: xEnd,
+        y1: yStart,
+        y2: yEnd,
+      } = calculateLinkPositionByNode(link) ?? {
+        x1: 0,
+        x2: 0,
+        y1: 0,
+        y2: 0,
+      };
+
       this.context.beginPath();
       this.context.globalAlpha = arrowAlpha;
       this.context.strokeStyle = arrowBorderColor;
