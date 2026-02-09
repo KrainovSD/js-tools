@@ -1,4 +1,6 @@
+import type { ValueOf } from "@krainovsd/js-helpers";
 import type { Simulation } from "d3-force";
+import type { GRAPH_CACHE_TYPE } from "../constants";
 import type { ForceSettingsInterface } from "./force-settings";
 import type { GraphSettingsInterface } from "./graph-settings";
 import type { HighlightSettingsInterface } from "./highlight-settings";
@@ -27,3 +29,5 @@ export type GraphCanvasSimulation<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 > = Simulation<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>;
+
+export type GraphCanvasCacheKeys = ValueOf<typeof GRAPH_CACHE_TYPE>;

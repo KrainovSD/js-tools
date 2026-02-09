@@ -43,7 +43,7 @@
     "build:types": "tspc -p tsconfig.build.json"
   },
   "devDependencies": {
-    "@krainovsd/presets": "0.3.6",
+    "@krainovsd/presets": "0.4.0",
     "rollup": "4.34.9",
     "prettier": "3.6.1",
     "eslint": "9.29.0",

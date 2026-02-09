@@ -58,7 +58,7 @@
     "dayjs": "^1.11.13"
   },
   "devDependencies": {
-    "@krainovsd/presets": "0.3.9",
+    "@krainovsd/presets": "0.4.0",
     "rollup": "4.34.9",
     "prettier": "3.6.1",
     "eslint": "9.29.0",

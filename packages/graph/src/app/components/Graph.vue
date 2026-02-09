@@ -3,6 +3,7 @@
   import { computed, toRaw, useTemplateRef, watch } from "vue";
   import {
     type ForceSettingsInterface,
+    GRAPH_CACHE_TYPE,
     GraphCanvas,
     type HighlightSettingsInterface,
     type LinkOptionsInterface,
@@ -79,9 +80,12 @@
     ([nodeSettings, nodeOptions, selectedNode]) => {
       if (!graphController) return;
 
-      graphController.changeSettings({
-        nodeSettings: { ...nodeSettings, options: getNodeOptions(nodeOptions, selectedNode) },
-      });
+      graphController.changeSettings(
+        {
+          nodeSettings: { ...nodeSettings, options: getNodeOptions(nodeOptions, selectedNode) },
+        },
+        [GRAPH_CACHE_TYPE.NodeOptions],
+      );
     },
     { immediate: true },
   );

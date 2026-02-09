@@ -16,17 +16,20 @@ export function initZoom<
     .scaleExtent(this.graphSettings.zoomExtent)
     .on("zoom", (event: ZoomEventInterface) => {
       this.listeners.onZoom?.call?.(this, event);
+      const oldTransform = this.areaTransform;
       this.areaTransform = event.transform;
-      updateLinkCache.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof updateLinkCache>,
-        ReturnType<typeof updateLinkCache>
-      >(this);
-      updateNodeCache.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof updateNodeCache>,
-        ReturnType<typeof updateNodeCache>
-      >(this);
+      if (this.areaTransform.k !== oldTransform.k) {
+        updateLinkCache.call<
+          GraphCanvas<NodeData, LinkData>,
+          Parameters<typeof updateLinkCache>,
+          ReturnType<typeof updateLinkCache>
+        >(this);
+        updateNodeCache.call<
+          GraphCanvas<NodeData, LinkData>,
+          Parameters<typeof updateNodeCache>,
+          ReturnType<typeof updateNodeCache>
+        >(this, true);
+      }
 
       if (!this.simulationWorking && !this.highlightWorking)
         requestAnimationFrame(() => this.draw());

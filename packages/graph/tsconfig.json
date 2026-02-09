@@ -19,12 +19,8 @@
     "eslint.config.js",
     "rollup.config.ts",
     "rollup-singleton.config.ts",
+    "vite.config.ts",
     ".prettierrc.mjs"
   ],
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "exclude": ["node_modules", "dist"]
 }

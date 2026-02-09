@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/presets",
-  "version": "0.3.9",
+  "version": "0.4.0",
   "description": "Krainov presets",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -100,7 +100,7 @@
     "@types/node": "22.13.8"
   },
   "peerDependencies": {
-    "rollup": "^4.39.9",
+    "rollup": "^4.34.9",
     "eslint": "^9.29.0",
     "prettier": "^3.6.1",
     "typescript": "^5.8.3"
