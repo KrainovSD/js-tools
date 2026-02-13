@@ -228,7 +228,12 @@ export function createFetchClient(options: CreateRequestClientInstance) {
 
           return { data: error, error: REQUEST_ERROR.CACHE_ERROR, response };
         }
-        if (response.status === 401 && refetchAfterOauth && oauthOptions) {
+        if (
+          (oauthOptions?.responseStatusesForOauth?.includes(response.status) ||
+            (!oauthOptions?.responseStatusesForOauth && response.status === 401)) &&
+          oauthOptions &&
+          refetchAfterOauth
+        ) {
           return await refetchAfterOauthFn(oauthOptions, () =>
             handleRequest({ ...request, refetchAfterOauth: false }),
           );
@@ -460,7 +465,6 @@ function executeBeforeHandlers<
   return new Promise((resolve) => {
     void (async () => {
       for (const handler of handlers) {
-        // eslint-disable-next-line no-await-in-loop
         await handler(request);
       }
 
@@ -482,7 +486,6 @@ function executeAfterHandlers<
   return new Promise((resolve) => {
     void (async () => {
       for (const handler of handlers) {
-        // eslint-disable-next-line no-await-in-loop
         await handler(request, response);
       }
 

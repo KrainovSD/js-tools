@@ -1,48 +1,17 @@
 import { startWith, waitUntil } from "../../lib/utils";
-import { OAUTH_STATE } from "../api.constants";
-import type { BeforeHandler, OauthOptions } from "../api.types";
-import { getOauthTokenFromOtherWindow } from "../oauth";
+import { OAUTH_STATE, OAUTH_TOKEN_STORAGE_NAME } from "../api.constants";
+import type { AuthBeforeHandlerOptions, BeforeHandler } from "../api.types";
 
-export const oauthBeforeHandler =
-  (options: OauthOptions): BeforeHandler =>
+export const authBeforeHandler =
+  (options: AuthBeforeHandlerOptions = {}): BeforeHandler =>
   async (request) => {
-    if (!options.expiresTokenStorageName) {
-      throw new Error("Auth middleware hasn't required options");
-    }
-
-    const isSameOrigin = !startWith(request.path, "http");
-
-    if (request.token) {
-      if (!isSameOrigin)
-        request.headers = {
-          ...request.headers,
-          Authorization: `Bearer ${request.token}`,
-        };
-
-      return;
-    }
-
+    const { tokenStorageName = OAUTH_TOKEN_STORAGE_NAME, forceSetToken = false } = options;
     if (OAUTH_STATE.fetching) await waitUntil(() => OAUTH_STATE.fetching);
 
-    const expires = localStorage.getItem(options.expiresTokenStorageName);
-    let token: string | undefined | null;
-    if (!expires || Number.isNaN(+expires) || Date.now() > +expires) {
-      OAUTH_STATE.fetching = true;
-      await getOauthTokenFromOtherWindow({
-        onlyRefreshTokenWindowQueryName: options.onlyRefreshTokenWindowQueryName,
-        onWindowOpenError: options.onWindowOpenError,
-        refreshTokenWindowUrl: options.refreshTokenWindowUrl,
-        wait: options.wait,
-        expiresTokenStorageName: options.expiresTokenStorageName,
-        closeObserveInterval: options.closeObserveInterval,
-      });
-      if (options.tokenStorageName) {
-        token = localStorage.getItem(options.tokenStorageName);
-      }
-      OAUTH_STATE.fetching = false;
-    }
-
-    if (!isSameOrigin && token)
+    const token = request.token ?? localStorage.getItem(tokenStorageName);
+    const isSameOrigin =
+      request.path.includes(window.location.origin) || !startWith(request.path, "http");
+    if ((!isSameOrigin || forceSetToken) && token)
       request.headers = {
         ...request.headers,
         Authorization: `Bearer ${token}`,

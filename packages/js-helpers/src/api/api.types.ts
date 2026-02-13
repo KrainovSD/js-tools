@@ -107,48 +107,38 @@ export type AfterHandler = <
 ) => Promise<void> | void;
 
 export type OauthOptions = {
-  /** A name of expires token in localstorage */
-  expiresTokenStorageName: string;
-  /** A name of flag in query for oauth flow window */
-  onlyRefreshTokenWindowQueryName: string;
+  /** A response statuses that trigger refetch oauth */
+  responseStatusesForOauth?: number[];
+  /** An url of proxy auth service */
+  oauthUrl?: (() => string) | string;
   /** An url of start oauth flow window */
   refreshTokenWindowUrl?: (() => string) | string;
+  /** A name of flag in query for oauth flow window */
+  onlyRefreshTokenWindowQueryName?: string;
   /** An error handle that call if oauth flow window wasn't open  */
   onWindowOpenError?: () => void;
-  /** A name of token in localstorage */
-  tokenStorageName?: string;
   /** A number of millisecond for waiting oauth flow window before force close it */
   wait?: number;
   /** An interval for check closable property by oauth flow window in ms */
   closeObserveInterval?: number;
 };
 
-export type GetOauthTokenOptions = {
-  /** An url of start oauth flow */
-  oauthUrl: (() => string) | string;
+export type ExtractOauthTokenOptions = {
   /** A name of expires token in localstorage */
-  expiresTokenStorageName: string;
+  expiresTokenStorageName?: string;
   /** A name of expires token in query */
-  expiresTokenQueryName: string;
+  expiresTokenQueryName?: string;
   /** A name of flag in query for oauth flow window */
-  onlyRefreshTokenWindowQueryName: string;
+  onlyRefreshTokenWindowQueryName?: string;
   /** A name of token in localstorage */
   tokenStorageName?: string;
   /** An url for refresh token */
   tokenRequest?: () => Promise<string | null | undefined>;
 };
 
-export type GetOauthTokenFromOtherWindowOptions = {
-  /** An url of start oauth flow window */
-  refreshTokenWindowUrl?: (() => string) | string;
-  /** A name of flag in query for oauth flow window */
-  onlyRefreshTokenWindowQueryName: string;
-  /** A name of expires token in localstorage */
-  expiresTokenStorageName: string;
-  /** An error handle that call if oauth flow window wasn't open  */
-  onWindowOpenError?: () => void;
-  /** A number of millisecond for waiting oauth flow window before force close it */
-  wait?: number;
-  /** An interval for check closable property by oauth flow window in ms */
-  closeObserveInterval?: number;
+export type AuthBeforeHandlerOptions = {
+  /** A name of token in localstorage */
+  tokenStorageName?: string;
+  /** Set token event if it is same origin */
+  forceSetToken?: boolean;
 };

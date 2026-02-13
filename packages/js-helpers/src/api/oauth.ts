@@ -1,20 +1,23 @@
 import { getQueryValues, isArray, isString, waitUntil } from "../lib";
-import { OAUTH_STATE } from "./api.constants";
-import type {
-  GetOauthTokenFromOtherWindowOptions,
-  GetOauthTokenOptions,
-  OauthOptions,
-} from "./api.types";
+import {
+  OAUTH_REFRESH_QUERY,
+  OAUTH_STATE,
+  OAUTH_TOKEN_EXPIRES_STORAGE_NAME,
+  OAUTH_TOKEN_STORAGE_NAME,
+} from "./api.constants";
+import type { ExtractOauthTokenOptions, OauthOptions } from "./api.types";
 
-export async function getOauthTokenFromOtherWindow(options: GetOauthTokenFromOtherWindowOptions) {
+export async function getOauthTokenFromOtherWindow(options: OauthOptions) {
   let waiting = true;
   const url = new URL(
     typeof options.refreshTokenWindowUrl === "function"
       ? options.refreshTokenWindowUrl()
       : (options.refreshTokenWindowUrl ?? window.origin),
   );
-  url.searchParams.append(options.onlyRefreshTokenWindowQueryName, "true");
+  // added only refresh tag to autoclose window after flow
+  url.searchParams.append(options.onlyRefreshTokenWindowQueryName ?? OAUTH_REFRESH_QUERY, "true");
 
+  // try open window with both of action
   let windowInstance = window.open(
     url.toString(),
     "_blank",
@@ -23,7 +26,9 @@ export async function getOauthTokenFromOtherWindow(options: GetOauthTokenFromOth
   windowInstance ??= window.open(url.toString(), "_blank");
 
   if (windowInstance) {
-    const channel = new BroadcastChannel(options.onlyRefreshTokenWindowQueryName);
+    const channel = new BroadcastChannel(
+      options.onlyRefreshTokenWindowQueryName ?? OAUTH_REFRESH_QUERY,
+    );
     const windowCloseObserver = setInterval(() => {
       if (windowInstance.closed) {
         if (waiting) {
@@ -49,9 +54,12 @@ export async function getOauthTokenFromOtherWindow(options: GetOauthTokenFromOth
       if (windowInstance && !windowInstance.closed) {
         windowInstance.close();
       }
-    }, options.wait ?? 15000);
+    }, options.wait ?? 8000);
   } else {
-    if (options.onWindowOpenError) options.onWindowOpenError();
+    if ("onWindowOpenError" in options) options.onWindowOpenError?.();
+    else {
+      getOauthToken(options.oauthUrl);
+    }
     waiting = false;
 
     return;
@@ -67,7 +75,6 @@ export async function refetchAfterOauth<T>(options: OauthOptions, refetch: () =>
     onWindowOpenError: options.onWindowOpenError,
     refreshTokenWindowUrl: options.refreshTokenWindowUrl,
     wait: options.wait,
-    expiresTokenStorageName: options.expiresTokenStorageName,
     closeObserveInterval: options.closeObserveInterval,
   });
   OAUTH_STATE.fetching = false;
@@ -75,13 +82,24 @@ export async function refetchAfterOauth<T>(options: OauthOptions, refetch: () =>
   return await refetch();
 }
 
-export async function getOauthToken(options: GetOauthTokenOptions) {
-  const queries = getQueryValues([
-    options.expiresTokenQueryName,
-    options.onlyRefreshTokenWindowQueryName,
-  ]);
-  const refreshQuery = queries?.[options.onlyRefreshTokenWindowQueryName];
-  const expiresQuery = queries?.[options.expiresTokenQueryName];
+export function getOauthToken(oauthUrl?: (() => string) | string) {
+  oauthUrl ??= `/api/v1/auth?frontend_protocol=${window.location.protocol.replace(":", "")}&frontend_host=${window.location.host}&comeback_path=${window.location.pathname}${encodeURIComponent(window.location.search)}`;
+  window.location.replace(typeof oauthUrl === "function" ? oauthUrl() : oauthUrl);
+  return null;
+}
+
+export async function extractOauthOptions(options: ExtractOauthTokenOptions = {}) {
+  const {
+    expiresTokenQueryName = OAUTH_TOKEN_EXPIRES_STORAGE_NAME,
+    onlyRefreshTokenWindowQueryName = OAUTH_REFRESH_QUERY,
+    tokenStorageName = OAUTH_TOKEN_STORAGE_NAME,
+    expiresTokenStorageName = OAUTH_TOKEN_EXPIRES_STORAGE_NAME,
+    tokenRequest = undefined,
+  } = options;
+
+  const queries = getQueryValues([expiresTokenQueryName, onlyRefreshTokenWindowQueryName]);
+  const refreshQuery = queries?.[onlyRefreshTokenWindowQueryName];
+  const expiresQuery = queries?.[expiresTokenQueryName];
 
   /** Is OnlyRefresh window */
   const isRefresh = isString(refreshQuery)
@@ -96,25 +114,19 @@ export async function getOauthToken(options: GetOauthTokenOptions) {
       ? expiresQuery[expiresQuery.length - 1]
       : false;
 
-  /** OAuth flow if not expires */
-  if (!expires) {
-    window.location.replace(
-      typeof options.oauthUrl === "function" ? options.oauthUrl() : options.oauthUrl,
-    );
-
-    return null;
-  }
-
-  localStorage.setItem(options.expiresTokenStorageName, expires);
-  if (options.tokenRequest) {
-    const token = await options.tokenRequest();
-    if (token != undefined && options.tokenStorageName) {
-      localStorage.setItem(options.tokenStorageName, token);
+  if (expires && !Number.isNaN(+expires) && Date.now() < +expires) {
+    localStorage.setItem(expiresTokenStorageName, expires);
+    if (tokenRequest) {
+      const token = await tokenRequest();
+      if (token != undefined && tokenStorageName) {
+        localStorage.setItem(tokenStorageName, token);
+      }
     }
   }
+
   /** Close if OnlyRefresh window  */
   if (isRefresh) {
-    const channel = new BroadcastChannel(options.onlyRefreshTokenWindowQueryName);
+    const channel = new BroadcastChannel(onlyRefreshTokenWindowQueryName);
     channel.postMessage(true);
     channel.close();
     window.close();
@@ -123,7 +135,7 @@ export async function getOauthToken(options: GetOauthTokenOptions) {
   /** Delete expires query */
   if (expires) {
     const url = new URL(window.location.href);
-    url.searchParams.delete(options.expiresTokenQueryName);
+    url.searchParams.delete(expiresTokenQueryName);
     window.location.replace(url.toString());
 
     return null;
