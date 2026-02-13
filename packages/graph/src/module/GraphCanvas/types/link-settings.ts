@@ -7,6 +7,7 @@ export type LinkSettingsInterface<
   LinkData extends Record<string, unknown>,
 > = {
   prettyDraw?: boolean;
+  curve?: boolean;
   arrow?: boolean;
   arrowByHighlight?: boolean;
   particles?: boolean;

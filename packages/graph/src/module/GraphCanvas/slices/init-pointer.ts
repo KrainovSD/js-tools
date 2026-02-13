@@ -38,6 +38,7 @@ export function initPointer<
         areaTransform: this.areaTransform,
         mouseEvent: event,
         links: this.links,
+        curve: this.linkSettings.curve,
       });
       if (currentLink?.highlight != undefined) highlightLink = currentLink?.highlight;
 
@@ -100,6 +101,7 @@ export function initPointer<
         areaTransform: this.areaTransform,
         mouseEvent: event,
         links: this.links,
+        curve: this.linkSettings.curve,
       });
     }
 
@@ -128,6 +130,7 @@ export function initPointer<
         areaTransform: this.areaTransform,
         mouseEvent: event,
         links: this.links,
+        curve: this.linkSettings.curve,
       });
 
       return void this.listeners.onWheelClick.call(this, event, undefined, currentLink);
@@ -152,6 +155,7 @@ export function initPointer<
         areaTransform: this.areaTransform,
         mouseEvent: event,
         links: this.links,
+        curve: this.linkSettings.curve,
       });
 
       return void this.listeners.onContextMenu.call(this, event, undefined, currentLink);
@@ -175,6 +179,7 @@ export function initPointer<
         areaTransform: this.areaTransform,
         mouseEvent: event,
         links: this.links,
+        curve: this.linkSettings.curve,
       });
 
       return void this.listeners.onDoubleClick.call(this, event, undefined, currentLink);
@@ -198,6 +203,7 @@ export function initPointer<
         areaTransform: this.areaTransform,
         mouseEvent: event,
         links: this.links,
+        curve: this.linkSettings.curve,
       });
 
       return void this.listeners.onClick.call(this, event, undefined, currentLink);

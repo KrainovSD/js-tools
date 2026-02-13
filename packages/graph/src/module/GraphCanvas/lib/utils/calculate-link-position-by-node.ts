@@ -1,33 +1,47 @@
 import { COMMON_SETTINGS } from "../../constants";
-import type { LinkInterface, NodeInterface } from "../../types";
+import type { NodeInterface } from "../../types";
 
 type Point = {
   x: number;
   y: number;
 };
 
-export function calculateLinkPositionByNode<
-  NodeData extends Record<string, unknown>,
-  LinkData extends Record<string, unknown>,
->(link: LinkInterface<NodeData, LinkData>, arrowSize = 0) {
-  const source = link.source;
-  const target = link.target;
-
-  if (typeof source != "object" || typeof target != "object") return null;
-
+export function calculateLinkPositionByNode<NodeData extends Record<string, unknown>>(
+  xStart: number,
+  yStart: number,
+  xEnd: number,
+  yEnd: number,
+  sourceNode: NodeInterface<NodeData>,
+  targetNode: NodeInterface<NodeData>,
+  arrowSize = 0,
+) {
   const sourcePoint = getLinkPoint({
+    xStart,
+    yStart,
+    xEnd,
+    yEnd,
     arrowSize: 0,
-    node: source,
-    oppositeNode: target,
+    node: sourceNode,
+    oppositeNode: targetNode,
   });
   const targetPoint = getLinkPoint({
-    // arrowSize: arrowSize > 0 ? arrowSize * 0.85 : 0,
-    arrowSize: arrowSize > 0 ? arrowSize : 0,
-    node: target,
-    oppositeNode: source,
+    xStart: xEnd,
+    yStart: yEnd,
+    xEnd: xStart,
+    yEnd: yStart,
+    arrowSize: arrowSize > 0 ? arrowSize * 0.9 : 0,
+    node: targetNode,
+    oppositeNode: sourceNode,
   });
-
-  if (!sourcePoint || !targetPoint) return null;
+  const targetPointArrow = getLinkPoint({
+    xStart: xEnd,
+    yStart: yEnd,
+    xEnd: xStart,
+    yEnd: yStart,
+    arrowSize: 0,
+    node: targetNode,
+    oppositeNode: sourceNode,
+  });
 
   const distance =
     targetPoint && sourcePoint
@@ -35,39 +49,37 @@ export function calculateLinkPositionByNode<
       : 0;
 
   return {
-    x1: sourcePoint.x,
-    y1: sourcePoint.y,
-    x2: targetPoint.x,
-    y2: targetPoint.y,
+    xStart: sourcePoint.x,
+    yStart: sourcePoint.y,
+    xEnd: targetPoint.x,
+    yEnd: targetPoint.y,
+    xEndArrow: targetPointArrow.x,
+    yEndArrow: targetPointArrow.y,
     distance,
   };
 }
 
 type GetLinkPointProps<NodeData extends Record<string, unknown>> = {
+  xStart: number;
+  yStart: number;
+  xEnd: number;
+  yEnd: number;
   arrowSize: number;
   node: NodeInterface<NodeData>;
   oppositeNode: NodeInterface<NodeData>;
 };
 function getLinkPoint<NodeData extends Record<string, unknown>>(opts: GetLinkPointProps<NodeData>) {
-  if (
-    opts.node.x == undefined ||
-    opts.node.y == undefined ||
-    opts.oppositeNode.x == undefined ||
-    opts.oppositeNode.y == undefined
-  )
-    return null;
-
   let nodePoint: Point;
   switch (opts.node._shape) {
     case "circle": {
       nodePoint = getCircleIntersection({
-        x: opts.node.x,
-        y: opts.node.y,
+        x: opts.xStart,
+        y: opts.yStart,
         radius:
           (opts.node._radius ?? COMMON_SETTINGS.nodeRadius) +
           (opts.node._borderWidth ? opts.node._borderWidth / 2 : 0),
-        oppositeX: opts.oppositeNode.x,
-        oppositeY: opts.oppositeNode.y,
+        oppositeX: opts.xEnd,
+        oppositeY: opts.yEnd,
         arrowSize: opts.arrowSize,
       });
       break;
@@ -76,23 +88,23 @@ function getLinkPoint<NodeData extends Record<string, unknown>>(opts: GetLinkPoi
     case "text": {
       nodePoint = getRectangleIntersection({
         arrowSize: opts.arrowSize,
-        x: opts.node.x,
-        y: opts.node.y,
+        x: opts.xStart,
+        y: opts.yStart,
         height: (opts.node._height ?? COMMON_SETTINGS.nodeSize) + (opts.node._borderWidth ?? 0),
         width: (opts.node._width ?? COMMON_SETTINGS.nodeSize) + (opts.node._borderWidth ?? 0),
-        oppositeX: opts.oppositeNode.x,
-        oppositeY: opts.oppositeNode.y,
+        oppositeX: opts.xEnd,
+        oppositeY: opts.yEnd,
         borderRadius: opts.node._shape === "text" ? 0 : (opts.node._borderRadius ?? 0),
       });
       break;
     }
     default: {
       nodePoint = getCircleIntersection({
-        x: opts.node.x,
-        y: opts.node.y,
+        x: opts.xStart,
+        y: opts.yStart,
         radius: opts.node._radius ?? COMMON_SETTINGS.nodeRadius,
-        oppositeX: opts.oppositeNode.x,
-        oppositeY: opts.oppositeNode.y,
+        oppositeX: opts.xEnd,
+        oppositeY: opts.yEnd,
         arrowSize: opts.arrowSize,
       });
     }

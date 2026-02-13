@@ -5,6 +5,7 @@ export const LINK_SETTINGS: Omit<
   "options"
 > = {
   prettyDraw: true,
+  curve: false,
   linkScaleSwitch: 1,
   linkColorAfterScaleSwitch: "#000000FF",
   linkColorBeforeScaleSwitch: "#999",

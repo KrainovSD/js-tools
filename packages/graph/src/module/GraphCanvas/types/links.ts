@@ -8,6 +8,25 @@ export interface LinkInterface<
   data?: LinkData;
   highlight?: boolean;
   visible?: boolean;
+  _groupIndex?: number;
+  _groupSize?: number;
+  _self?: boolean;
+  // x start
+  _x1?: number;
+  // y start
+  _y1?: number;
+  // x end
+  _x2?: number;
+  // y end
+  _y2?: number;
+  // x control curve
+  _cx?: number;
+  // y control curve
+  _cy?: number;
+  // x arrow
+  _ax?: number;
+  // y arrow
+  _ay?: number;
 }
 
 export type LinkParticle = {

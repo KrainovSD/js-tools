@@ -1,5 +1,6 @@
 import type { GraphCanvas } from "../GraphCanvas";
 import { calculateLinkPositionByNode, getParticlePosition, linkFade, linkHighlight } from "../lib";
+import { calculateCurveLinkPositionByNode } from "../lib/utils/calculate-curve-link-position-by-node";
 import type { LinkInterface, LinkParticle } from "../types";
 
 export function getDrawLink<
@@ -139,26 +140,86 @@ export function getDrawLink<
     let yStart = link.source.y;
     let xEnd = link.target.x;
     let yEnd = link.target.y;
+    let xControl = 0;
+    let yControl = 0;
+    let xEndArrow = xEnd;
+    let yEndArrow = yEnd;
     let linkDistance = 0;
-    if (
-      this.linkSettings.prettyDraw ||
-      this.linkSettings.particleFlexSpeed ||
-      (this.linkSettings.arrow && arrowAlpha > 0)
-    ) {
-      const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
-      const position = calculateLinkPositionByNode(link, isHasArrow ? arrowSize : 0);
+    const isHasArrow = this.linkSettings.arrow && arrowAlpha > 0;
+    if (!this.linkSettings.curve) {
+      if (
+        this.linkSettings.prettyDraw ||
+        this.linkSettings.particleFlexSpeed ||
+        (this.linkSettings.arrow && arrowAlpha > 0)
+      ) {
+        const position = calculateLinkPositionByNode(
+          xStart,
+          yStart,
+          xEnd,
+          yEnd,
+          link.source,
+          link.target,
+          isHasArrow ? arrowSize : 0,
+        );
 
-      if (position) {
-        xStart = position.x1;
-        xEnd = position.x2;
-        yStart = position.y1;
-        yEnd = position.y2;
+        xStart = position.xStart;
+        xEnd = position.xEnd;
+        yStart = position.yStart;
+        yEnd = position.yEnd;
+        xEndArrow = position.xEndArrow;
+        yEndArrow = position.yEndArrow;
         linkDistance = position.distance;
       }
+      link._x1 = xStart;
+      link._y1 = yStart;
+      link._x2 = xEnd;
+      link._y2 = yEnd;
+      link._ax = xEndArrow;
+      link._ay = yEndArrow;
+      this.context.moveTo(xStart, yStart);
+      this.context.lineTo(xEnd, yEnd);
+      this.context.stroke();
+    } else {
+      const position = calculateCurveLinkPositionByNode(
+        xStart,
+        yStart,
+        xEnd,
+        yEnd,
+        link.source,
+        link.target,
+        link._groupIndex ?? 0,
+        isHasArrow ? arrowSize : 0,
+      );
+      xStart = position.xStart;
+      yStart = position.yStart;
+      xEnd = position.xEnd;
+      yEnd = position.yEnd;
+      xControl = position.xControl;
+      yControl = position.yControl;
+      xEndArrow = position.xEndArrow;
+      yEndArrow = position.yEndArrow;
+      link._x1 = position.xStart;
+      link._y1 = position.yStart;
+      link._x2 = position.xEnd;
+      link._y2 = position.yEnd;
+      link._cx = position.xControl;
+      link._cy = position.yControl;
+      link._ax = position.xEndArrow;
+      link._ay = position.yEndArrow;
+      this.context.beginPath();
+      this.context.moveTo(position.xStart, position.yStart);
+      this.context.quadraticCurveTo(
+        position.xControl,
+        position.yControl,
+        position.xEnd,
+        position.yEnd,
+      );
+      this.context.setLineDash([]);
+      // if (isDashed) {
+      // this.context.setLineDash([10, 5]);
+      // }
+      this.context.stroke();
     }
-    this.context.moveTo(xStart, yStart);
-    this.context.lineTo(xEnd, yEnd);
-    this.context.stroke();
 
     /** Particle */
     if (
@@ -234,32 +295,31 @@ export function getDrawLink<
 
     /** Arrow */
     if (this.linkSettings.arrow && arrowAlpha > 0) {
-      const {
-        x1: xStart,
-        x2: xEnd,
-        y1: yStart,
-        y2: yEnd,
-      } = calculateLinkPositionByNode(link) ?? {
-        x1: 0,
-        x2: 0,
-        y1: 0,
-        y2: 0,
-      };
-
+      let angle = 0;
+      if (!this.linkSettings.curve) {
+        angle = Math.atan2(yEndArrow - yStart, xEndArrow - xStart);
+      } else {
+        const tangentX = 2 * (xEndArrow - xControl);
+        const tangentY = 2 * (yEndArrow - yControl);
+        if (Math.abs(tangentX) < 0.001 && Math.abs(tangentY) < 0.001) {
+          angle = Math.atan2(yEndArrow - yControl, xEndArrow - xControl);
+        } else {
+          angle = Math.atan2(tangentY, tangentX);
+        }
+      }
       this.context.beginPath();
       this.context.globalAlpha = arrowAlpha;
       this.context.strokeStyle = arrowBorderColor;
       this.context.lineWidth = arrowBorderWidth;
       this.context.fillStyle = arrowColor;
-      const angle = Math.atan2(yEnd - yStart, xEnd - xStart);
-      this.context.moveTo(xEnd, yEnd);
+      this.context.moveTo(xEndArrow, yEndArrow);
       this.context.lineTo(
-        xEnd - arrowSize * Math.cos(angle - Math.PI / 6),
-        yEnd - arrowSize * Math.sin(angle - Math.PI / 6),
+        xEndArrow - arrowSize * Math.cos(angle - Math.PI / 6),
+        yEndArrow - arrowSize * Math.sin(angle - Math.PI / 6),
       );
       this.context.lineTo(
-        xEnd - arrowSize * Math.cos(angle + Math.PI / 6),
-        yEnd - arrowSize * Math.sin(angle + Math.PI / 6),
+        xEndArrow - arrowSize * Math.cos(angle + Math.PI / 6),
+        yEndArrow - arrowSize * Math.sin(angle + Math.PI / 6),
       );
       this.context.closePath();
       this.context.fill();

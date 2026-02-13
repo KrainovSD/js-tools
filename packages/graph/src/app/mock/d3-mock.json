@@ -1,6 +1,11 @@
 {
   "links": [
     { "source": "custom-1", "target": "custom-2" },
+    { "source": "custom-1", "target": "custom-2" },
+    { "source": "custom-1", "target": "custom-2" },
+    { "source": "custom-2", "target": "custom-1" },
+    { "source": "custom-2", "target": "custom-1" },
+    { "source": "custom-2", "target": "custom-1" },
     { "source": "custom-2", "target": "custom-3" },
     {
       "source": "Structural basis of PROTAC cooperative recognition for selective protein degradation.",
