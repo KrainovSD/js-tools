@@ -82,13 +82,15 @@ export async function refetchAfterOauth<T>(options: OauthOptions, refetch: () =>
   return await refetch();
 }
 
+// Trigger an oauth flow through some proxy server
 export function getOauthToken(oauthUrl?: (() => string) | string) {
   oauthUrl ??= `/api/v1/auth?frontend_protocol=${window.location.protocol.replace(":", "")}&frontend_host=${window.location.host}&comeback_path=${window.location.pathname}${encodeURIComponent(window.location.search)}`;
   window.location.replace(typeof oauthUrl === "function" ? oauthUrl() : oauthUrl);
   return null;
 }
 
-export async function extractOauthOptions(options: ExtractOauthTokenOptions = {}) {
+// Processing an oauth flow: extract expires, get token, close sub windows
+export async function applyOauthProvider(options: ExtractOauthTokenOptions = {}) {
   const {
     expiresTokenQueryName = OAUTH_TOKEN_EXPIRES_STORAGE_NAME,
     onlyRefreshTokenWindowQueryName = OAUTH_REFRESH_QUERY,
@@ -137,9 +139,5 @@ export async function extractOauthOptions(options: ExtractOauthTokenOptions = {}
     const url = new URL(window.location.href);
     url.searchParams.delete(expiresTokenQueryName);
     window.location.replace(url.toString());
-
-    return null;
   }
-
-  return expires;
 }
