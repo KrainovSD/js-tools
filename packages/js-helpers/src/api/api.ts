@@ -11,54 +11,25 @@ import { REQUEST_ERROR, RESPONSE_DATA_SYMBOL } from "./api.constants";
 import type {
   AfterHandler,
   BeforeHandler,
-  OauthOptions,
+  CreateRequestClientInstance,
+  RefetchAfterAuthFn,
   RequestError,
   RequestInterface,
 } from "./api.types";
-import { refetchAfterOauth as refetchAfterOauthFn } from "./oauth";
-
-export type RefetchAfterAuthFn =
-  | (<IncomingApi, Incoming = IncomingApi, Outcoming = unknown, OutcomingApi = Outcoming>(
-      request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
-    ) => Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>>)
-  | undefined;
-
-type CreateRequestClientInstance = {
-  client:
-    | ((url: URL | NodeRequestInfo, init?: NodeRequestInit) => Promise<NodeResponse>)
-    | typeof fetch;
-  oauthOptions?: OauthOptions;
-  beforeHandlers?: BeforeHandler[];
-  afterHandlers?: AfterHandler[];
-  retries?: number[];
-  timeout?: number;
-  refetchAfterAuth?: RefetchAfterAuthFn;
-};
-
-export type RequestInstance = {
-  <IncomingApi, Incoming = IncomingApi, Outcoming = unknown, OutcomingApi = Outcoming>(
-    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
-  ): Promise<Incoming>;
-  recreate: (options: CreateRequestClientInstance) => void;
-};
 
 export function createFetchClient(options: CreateRequestClientInstance) {
   let client:
     | ((url: URL | NodeRequestInfo, init?: NodeRequestInit) => Promise<NodeResponse>)
     | typeof fetch = options.client;
-  let oauthOptions: OauthOptions | undefined = options.oauthOptions;
   let beforeHandlers: BeforeHandler[] | undefined = options.beforeHandlers;
   let afterHandlers: AfterHandler[] | undefined = options.afterHandlers;
   let retries: number[] | undefined = options.retries;
   let timeout: number | undefined = options.timeout;
-  let refetchAfterAuthGlobal: RefetchAfterAuthFn = options.refetchAfterAuth;
+  let refetchAfterAuthGlobal: RefetchAfterAuthFn | undefined = options.refetchAfterAuth;
 
   function recreate(options: CreateRequestClientInstance) {
     if ("client" in options) {
       client = options.client;
-    }
-    if ("oauthOptions" in options) {
-      oauthOptions = options.oauthOptions;
     }
     if ("beforeHandlers" in options) {
       beforeHandlers = options.beforeHandlers;
@@ -145,10 +116,10 @@ export function createFetchClient(options: CreateRequestClientInstance) {
         }
       }
 
-      const { method, body, path, queries, headers = {}, refetchAfterOauth = true } = request;
-      let refetchAfterAuth: RefetchAfterAuthFn = refetchAfterAuthGlobal;
+      const { method, body, path, queries, headers = {} } = request;
+      let refetchAfterAuth: RefetchAfterAuthFn | undefined = refetchAfterAuthGlobal;
       if ("refetchAfterAuth" in request) {
-        refetchAfterAuth = request.refetchAfterAuth as RefetchAfterAuthFn;
+        refetchAfterAuth = request.refetchAfterAuth;
       }
 
       const url = createURLWithQueries({ baseURL: path, params: queries });
@@ -228,16 +199,7 @@ export function createFetchClient(options: CreateRequestClientInstance) {
 
           return { data: error, error: REQUEST_ERROR.CACHE_ERROR, response };
         }
-        if (
-          (oauthOptions?.responseStatusesForOauth?.includes(response.status) ||
-            (!oauthOptions?.responseStatusesForOauth && response.status === 401)) &&
-          oauthOptions &&
-          refetchAfterOauth
-        ) {
-          return await refetchAfterOauthFn(oauthOptions, () =>
-            handleRequest({ ...request, refetchAfterOauth: false }),
-          );
-        }
+        /** if you need observe other than only 401 status, you can override some statuses in after handler middleware to 401 */
         if (response.status === 401 && refetchAfterAuth) {
           const newRequest = await refetchAfterAuth(request);
 

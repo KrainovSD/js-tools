@@ -1,4 +1,8 @@
-import type { Response as NodeResponse } from "node-fetch";
+import type {
+  RequestInfo as NodeRequestInfo,
+  RequestInit as NodeRequestInit,
+  Response as NodeResponse,
+} from "node-fetch";
 import type { ResponseError } from "../constants";
 import type { IsEqual, ValueOf } from "../types";
 import type { REQUEST_ERROR } from "./api.constants";
@@ -35,11 +39,7 @@ export type RequestInterface<
   /** A token for Authorization header */
   token?: string;
   /** A function that will be call after 401 status and then trigger refetch */
-  refetchAfterAuth?: (
-    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
-  ) => Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>>;
-  /** A boolean to activate oauth flow and then retry  */
-  refetchAfterOauth?: boolean;
+  refetchAfterAuth?: RefetchAfterAuthFn | undefined;
   /** A handlers before start request that rewrite global's handlers */
   beforeHandlers?: BeforeHandler[];
   /** A handlers after stop request that rewrite global's handlers */
@@ -88,6 +88,33 @@ export type RequestTransformIncoming<IncomingApi, Incoming> =
         transformIncomingData: (data: IncomingApi) => Incoming;
       };
 
+export type CreateRequestClientInstance = {
+  client:
+    | ((url: URL | NodeRequestInfo, init?: NodeRequestInit) => Promise<NodeResponse>)
+    | typeof fetch;
+  beforeHandlers?: BeforeHandler[];
+  afterHandlers?: AfterHandler[];
+  retries?: number[];
+  timeout?: number;
+  refetchAfterAuth?: RefetchAfterAuthFn | undefined;
+};
+
+export type RequestInstance = {
+  <IncomingApi, Incoming = IncomingApi, Outcoming = unknown, OutcomingApi = Outcoming>(
+    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+  ): Promise<Incoming>;
+  recreate: (options: CreateRequestClientInstance) => void;
+};
+
+export type RefetchAfterAuthFn = <
+  IncomingApi,
+  Incoming = IncomingApi,
+  Outcoming = unknown,
+  OutcomingApi = Outcoming,
+>(
+  request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+) => Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>>;
+
 export type BeforeHandler = <
   IncomingApi,
   Incoming = IncomingApi,
@@ -107,38 +134,34 @@ export type AfterHandler = <
 ) => Promise<void> | void;
 
 export type OauthOptions = {
-  /** A response statuses that trigger refetch oauth */
-  responseStatusesForOauth?: number[];
-  /** An url of proxy auth service */
-  oauthUrl?: (() => string) | string;
+  /** An url of start oauth login flow through proxy */
+  loginUrl?: (() => string) | string;
+  /** An url of start oauth logout flow through proxy */
+  logoutUrl?: (() => string) | string;
   /** An url of start oauth flow window */
   refreshTokenWindowUrl?: (() => string) | string;
-  /** A name of flag in query for oauth flow window */
-  onlyRefreshTokenWindowQueryName?: string;
-  /** An error handle that call if oauth flow window wasn't open  */
-  onWindowOpenError?: () => void;
   /** A number of millisecond for waiting oauth flow window before force close it */
-  wait?: number;
+  waitSubWindow?: number;
   /** An interval for check closable property by oauth flow window in ms */
-  closeObserveInterval?: number;
-};
-
-export type ExtractOauthTokenOptions = {
-  /** A name of expires token in localstorage */
+  closeObserveSubWindowInterval?: number;
+  /** An error handle that call if oauth flow window wasn't open. Required obviously set undefined that stop auto start flow */
+  onSubWindowOpenError?: () => void;
+  /** A logout page url that will be used to start logout flow in some extra situations */
+  logoutPageUrl?: string;
+  /** An error page url that will be used to stop oauth provider register logic  */
+  errorPageUrl?: string;
+  /** A clear page url that will be used to clear all storage data */
+  clearPageUrl?: string;
+  /** A page url that will be used after clear for back to login flow  */
+  afterClearPageUrl?: string;
+  /** A name of expires token in local storage */
   expiresTokenStorageName?: string;
   /** A name of expires token in query */
   expiresTokenQueryName?: string;
-  /** A name of flag in query for oauth flow window */
-  onlyRefreshTokenWindowQueryName?: string;
-  /** A name of token in localstorage */
+  /** A name of token in local storage */
   tokenStorageName?: string;
-  /** An url for refresh token */
+  /** A request for update token */
   tokenRequest?: () => Promise<string | null | undefined>;
-};
-
-export type AuthBeforeHandlerOptions = {
-  /** A name of token in localstorage */
-  tokenStorageName?: string;
-  /** Set token event if it is same origin */
+  /** Set token to request headers event if it is same origin */
   forceSetToken?: boolean;
 };
