@@ -1,12 +1,13 @@
 export const RESPONSE_DATA_SYMBOL = Symbol("response data");
 export const REQUEST_ERROR = {
-  HTTP_ERROR: "http",
-  NETWORK_ERROR: "network",
-  TIMEOUT_ERROR: "timeout",
-  ABORT_ERROR: "abort",
-  VALIDATION_ERROR: "validation",
-  CACHE_ERROR: "cache",
-  UNKNOWN_ERROR: "unknown",
+  Http: "http",
+  Network: "network",
+  Timeout: "timeout",
+  Abort: "abort",
+  Validation: "validation",
+  Cache: "cache",
+  Unknown: "unknown",
+  Disabled: "disabled",
 } as const;
 
 class OauthState {

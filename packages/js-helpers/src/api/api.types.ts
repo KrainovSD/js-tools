@@ -89,6 +89,7 @@ export type RequestTransformIncoming<IncomingApi, Incoming> =
       };
 
 export type CreateRequestClientInstance = {
+  enabled?: boolean;
   client:
     | ((url: URL | NodeRequestInfo, init?: NodeRequestInit) => Promise<NodeResponse>)
     | typeof fetch;

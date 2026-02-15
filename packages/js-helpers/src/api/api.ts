@@ -26,6 +26,7 @@ export function createFetchClient(options: CreateRequestClientInstance) {
   let retries: number[] | undefined = options.retries;
   let timeout: number | undefined = options.timeout;
   let refetchAfterAuthGlobal: RefetchAfterAuthFn | undefined = options.refetchAfterAuth;
+  let enabled: boolean = options.enabled ?? true;
 
   function recreate(options: CreateRequestClientInstance) {
     if ("client" in options) {
@@ -46,6 +47,9 @@ export function createFetchClient(options: CreateRequestClientInstance) {
     if ("refetchAfterAuth" in options) {
       refetchAfterAuthGlobal = options.refetchAfterAuth;
     }
+    if ("enabled" in options) {
+      enabled = options.enabled ?? true;
+    }
   }
 
   async function handleRequest<
@@ -63,6 +67,14 @@ export function createFetchClient(options: CreateRequestClientInstance) {
       }
     | { data: Incoming; error: null; response: Response | NodeResponse | null }
   > {
+    if (!enabled) {
+      return {
+        response: null,
+        data: new ResponseError({ message: "requests disabled", status: 0 }),
+        error: REQUEST_ERROR.Disabled,
+      };
+    }
+
     const timeoutController = new AbortController();
     const requestController = new AbortController();
     const requestTimeout = request.timeout ?? timeout;
@@ -191,13 +203,13 @@ export function createFetchClient(options: CreateRequestClientInstance) {
       if (!response.ok) {
         if (response.status === 304) {
           const error = new ResponseError({
-            message: REQUEST_ERROR.CACHE_ERROR,
+            message: REQUEST_ERROR.Cache,
             status: response.status,
             headers: Object.fromEntries(response.headers.entries()),
           });
-          request.onError?.(REQUEST_ERROR.CACHE_ERROR, error);
+          request.onError?.(REQUEST_ERROR.Cache, error);
 
-          return { data: error, error: REQUEST_ERROR.CACHE_ERROR, response };
+          return { data: error, error: REQUEST_ERROR.Cache, response };
         }
         /** if you need observe other than only 401 status, you can override some statuses in after handler middleware to 401 */
         if (response.status === 401 && refetchAfterAuth) {
@@ -245,15 +257,15 @@ export function createFetchClient(options: CreateRequestClientInstance) {
 
         const error = new ResponseError({
           status: response.status,
-          message: REQUEST_ERROR.HTTP_ERROR,
+          message: REQUEST_ERROR.Http,
           description: result,
           headers: Object.fromEntries(response.headers.entries()),
         });
-        request.onError?.(REQUEST_ERROR.HTTP_ERROR, error);
+        request.onError?.(REQUEST_ERROR.Http, error);
 
         return {
           data: error,
-          error: REQUEST_ERROR.HTTP_ERROR,
+          error: REQUEST_ERROR.Http,
           response,
         };
       }
@@ -330,43 +342,43 @@ export function createFetchClient(options: CreateRequestClientInstance) {
 
       if (err instanceof TypeError) {
         const error = new ResponseError({
-          message: REQUEST_ERROR.NETWORK_ERROR,
+          message: REQUEST_ERROR.Network,
           status: 0,
           description: String(err.message),
         });
-        request.onError?.(REQUEST_ERROR.NETWORK_ERROR, error);
+        request.onError?.(REQUEST_ERROR.Network, error);
 
-        return { data: error, error: REQUEST_ERROR.NETWORK_ERROR, response: null };
+        return { data: error, error: REQUEST_ERROR.Network, response: null };
       }
 
       if (err instanceof Error && err.name === "AbortError") {
         if (timeoutController.signal.aborted) {
           const error = new ResponseError({
-            message: REQUEST_ERROR.TIMEOUT_ERROR,
+            message: REQUEST_ERROR.Timeout,
             status: 0,
           });
-          request.onError?.(REQUEST_ERROR.TIMEOUT_ERROR, error);
+          request.onError?.(REQUEST_ERROR.Timeout, error);
 
-          return { data: error, error: REQUEST_ERROR.TIMEOUT_ERROR, response: null };
+          return { data: error, error: REQUEST_ERROR.Timeout, response: null };
         }
 
         const error = new ResponseError({
-          message: REQUEST_ERROR.ABORT_ERROR,
+          message: REQUEST_ERROR.Abort,
           status: 0,
         });
-        request.onError?.(REQUEST_ERROR.ABORT_ERROR, error);
+        request.onError?.(REQUEST_ERROR.Abort, error);
 
-        return { data: error, error: REQUEST_ERROR.ABORT_ERROR, response: null };
+        return { data: error, error: REQUEST_ERROR.Abort, response: null };
       }
 
       const error = new ResponseError({
-        message: REQUEST_ERROR.UNKNOWN_ERROR,
+        message: REQUEST_ERROR.Unknown,
         status: 0,
         description: String(err),
       });
-      request.onError?.(REQUEST_ERROR.UNKNOWN_ERROR, error);
+      request.onError?.(REQUEST_ERROR.Unknown, error);
 
-      return { data: error, error: REQUEST_ERROR.UNKNOWN_ERROR, response: null };
+      return { data: error, error: REQUEST_ERROR.Unknown, response: null };
     } finally {
       requestController.abort();
     }

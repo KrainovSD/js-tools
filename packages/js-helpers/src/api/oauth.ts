@@ -207,6 +207,11 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     register,
     refetchAfterRefreshFlow,
     beforeHandler,
+    get isServicePage() {
+      return [errorPageUrl, clearPageUrl, logoutPageUrl].some(
+        (u) => document.location.pathname === u,
+      );
+    },
     get processing() {
       return processing;
     },
