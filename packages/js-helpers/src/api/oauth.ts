@@ -113,7 +113,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
 
   // Trigger an oauth flow through some proxy server
   function startLogoutFlow(logoutUrlArg: (() => string) | string | undefined = logoutUrl) {
-    logoutUrlArg ??= `/api/v1/auth/logout?frontend_protocol=${window.location.protocol.replace(":", "")}&frontend_host=${window.location.host}&comeback_path=${window.location.pathname}${encodeURIComponent(window.location.search)}`;
+    logoutUrlArg ??= `/api/v1/auth/logout?frontend_protocol=${window.location.protocol.replace(":", "")}&frontend_host=${window.location.host}`;
     window.location.replace(typeof logoutUrlArg === "function" ? logoutUrlArg() : logoutUrlArg);
     return null;
   }
