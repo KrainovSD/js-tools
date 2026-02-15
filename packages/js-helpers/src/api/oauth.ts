@@ -162,23 +162,23 @@ export function createOauthProvider(opts: OauthOptions = {}) {
           localStorage.setItem(tokenStorageName, token);
         }
       }
-    }
 
-    /** Close if OnlyRefresh window  */
-    if (isRefresh) {
-      const channel = new BroadcastChannel(OAUTH_REFRESH_QUERY);
-      channel.postMessage(true);
-      channel.close();
-      window.close();
-      return false;
-    }
-    /** Delete expires query */
-    if (expires) {
+      /** Close if OnlyRefresh window  */
+      if (isRefresh) {
+        const channel = new BroadcastChannel(OAUTH_REFRESH_QUERY);
+        channel.postMessage(true);
+        channel.close();
+        window.close();
+        return false;
+      }
+
+      /** Delete expires query */
       const url = new URL(window.location.href);
       url.searchParams.delete(expiresTokenQueryName);
       window.location.replace(url.toString());
       return false;
     }
+
     return true;
   }
 
