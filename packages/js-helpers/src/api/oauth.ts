@@ -76,6 +76,12 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     return request;
   }
 
+  function isServicePageCheck() {
+    return [errorPageUrl, clearPageUrl, logoutPageUrl].some(
+      (u) => document.location.pathname === u,
+    );
+  }
+
   async function startLoginFlowInSubWindow() {
     processing = true;
     let waiting = true;
@@ -240,6 +246,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     Outcoming = unknown,
     OutcomingApi = Outcoming,
   >(request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>): Promise<void> {
+    if (isServicePageCheck()) return;
     const expires = localStorage.getItem(expiresTokenStorageName);
     if (checkExpires(expires)) {
       return;
@@ -275,9 +282,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     beforeHandlerCheckExpires,
     register,
     get isServicePage() {
-      return [errorPageUrl, clearPageUrl, logoutPageUrl].some(
-        (u) => document.location.pathname === u,
-      );
+      return isServicePageCheck();
     },
     get processing() {
       return processing;
