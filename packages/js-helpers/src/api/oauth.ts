@@ -13,7 +13,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   const {
     refreshTokenWindowUrl = window.origin,
     closeObserveSubWindowInterval = 500,
-    waitSubWindow = 8000,
+    waitSubWindow = 15000,
     loginUrl = undefined,
     logoutUrl = undefined,
     clearPageUrl = OAUTH_CLEAR_PAGE_URL,
@@ -30,6 +30,13 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   } = opts;
   let processing = false;
 
+  function getExpires(expires: number) {
+    return Date.now() + (expires - 30);
+  }
+  function checkExpires(expires: null | undefined | string | number): expires is number | string {
+    return expires != undefined && !Number.isNaN(+expires) && Date.now() < +expires;
+  }
+
   async function refetchAfterRefreshFlow<
     IncomingApi,
     Incoming = IncomingApi,
@@ -39,38 +46,37 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
   ): Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>> {
     if (processing) {
-      await beforeHandler(request);
+      await beforeHandlerSetToken(request);
       return request;
     }
     processing = true;
     if (refreshToken && tokenRequest) {
-      const token = await tokenRequest();
-      if (token == undefined) {
+      const tokenInfo = await startRefreshFlow();
+      if (tokenInfo == undefined) {
         if (subWindow) {
-          await startRefreshFlowInSubWindow();
+          await startLoginFlowInSubWindow();
         } else {
           await startLoginFlow();
         }
         processing = false;
-        await beforeHandler(request);
+        await beforeHandlerSetToken(request);
         return request;
       }
-      localStorage.setItem(tokenStorageName, token);
       processing = false;
-      await beforeHandler(request);
+      await beforeHandlerSetToken(request);
       return request;
     }
     if (subWindow) {
-      await startRefreshFlowInSubWindow();
+      await startLoginFlowInSubWindow();
     } else {
       await startLoginFlow();
     }
     processing = false;
-    await beforeHandler(request);
+    await beforeHandlerSetToken(request);
     return request;
   }
 
-  async function startRefreshFlowInSubWindow() {
+  async function startLoginFlowInSubWindow() {
     processing = true;
     let waiting = true;
     const url = new URL(
@@ -151,6 +157,17 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     return null;
   }
 
+  async function startRefreshFlow() {
+    const tokenInfo = await tokenRequest?.();
+    if (tokenInfo) {
+      localStorage.setItem(tokenStorageName, tokenInfo.token);
+      if (tokenInfo.expires !== 0) {
+        localStorage.setItem(expiresTokenStorageName, String(getExpires(tokenInfo.expires)));
+      }
+    }
+    return tokenInfo;
+  }
+
   // Processing an oauth flow: extract expires, get token, close sub windows, check if logout/clear/error url
   async function register(): Promise<boolean> {
     if (window.location.pathname === logoutPageUrl) {
@@ -179,20 +196,20 @@ export function createOauthProvider(opts: OauthOptions = {}) {
       ? refreshQuery === "true"
       : isArray(refreshQuery)
         ? refreshQuery[refreshQuery.length - 1] === "true"
-        : false;
+        : null;
     /** Expires token */
     const expires = isString(expiresQuery)
       ? expiresQuery
       : isArray(expiresQuery)
         ? expiresQuery[expiresQuery.length - 1]
-        : false;
+        : null;
 
-    if (expires && !Number.isNaN(+expires) && Date.now() < +expires) {
+    if (checkExpires(expires)) {
       localStorage.setItem(expiresTokenStorageName, expires);
       if (tokenRequest) {
-        const token = await tokenRequest();
-        if (token != undefined && tokenStorageName) {
-          localStorage.setItem(tokenStorageName, token);
+        const tokenInfo = await tokenRequest();
+        if (tokenInfo != undefined) {
+          localStorage.setItem(tokenStorageName, tokenInfo.token);
         }
       }
 
@@ -215,7 +232,20 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     return true;
   }
 
-  async function beforeHandler<
+  async function beforeHandlerCheckExpires<
+    IncomingApi,
+    Incoming = IncomingApi,
+    Outcoming = unknown,
+    OutcomingApi = Outcoming,
+  >(request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>): Promise<void> {
+    const expires = localStorage.getItem(expiresTokenStorageName);
+    if (checkExpires(expires)) {
+      return;
+    }
+    await refetchAfterRefreshFlow(request);
+  }
+
+  async function beforeHandlerSetToken<
     IncomingApi,
     Incoming = IncomingApi,
     Outcoming = unknown,
@@ -234,12 +264,14 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   }
 
   return {
-    startRefreshFlowInSubWindow,
+    startRefreshFlow,
+    startLoginFlowInSubWindow,
     startLoginFlow,
     startLogoutFlow,
-    register,
     refetchAfterRefreshFlow,
-    beforeHandler,
+    beforeHandlerSetToken,
+    beforeHandlerCheckExpires,
+    register,
     get isServicePage() {
       return [errorPageUrl, clearPageUrl, logoutPageUrl].some(
         (u) => document.location.pathname === u,

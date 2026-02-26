@@ -134,6 +134,11 @@ export type AfterHandler = <
   response: Response | NodeResponse | undefined,
 ) => Promise<void> | void;
 
+export type OauthToken = {
+  token: string;
+  expires: number;
+};
+
 export type OauthOptions = {
   /** An url of start oauth login flow through proxy */
   loginUrl?: (() => string) | string;
@@ -162,7 +167,7 @@ export type OauthOptions = {
   /** A name of token in local storage */
   tokenStorageName?: string;
   /** A request for update token */
-  tokenRequest?: () => Promise<string | null | undefined>;
+  tokenRequest?: () => Promise<OauthToken | null | undefined>;
   /** Set token to request headers event if it is same origin */
   forceSetToken?: boolean;
   /** Set to update token flow in sub window, by default true */
