@@ -47,7 +47,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
       const token = await tokenRequest();
       if (token == undefined) {
         if (subWindow) {
-          void startRefreshFlowInSubWindow();
+          await startRefreshFlowInSubWindow();
         } else {
           await startLoginFlow();
         }
@@ -61,7 +61,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
       return request;
     }
     if (subWindow) {
-      void startRefreshFlowInSubWindow();
+      await startRefreshFlowInSubWindow();
     } else {
       await startLoginFlow();
     }
