@@ -165,4 +165,8 @@ export type OauthOptions = {
   tokenRequest?: () => Promise<string | null | undefined>;
   /** Set token to request headers event if it is same origin */
   forceSetToken?: boolean;
+  /** Set to update token flow in sub window, by default true */
+  subWindow?: boolean;
+  /** Set to use refresh token flow, by default false */
+  refreshToken?: boolean;
 };

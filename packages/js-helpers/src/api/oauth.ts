@@ -1,4 +1,4 @@
-import { getQueryValues, isArray, isString, startWith, waitUntil } from "../lib";
+import { getQueryValues, isArray, isString, startWith, wait, waitUntil } from "../lib";
 import {
   OAUTH_CLEAR_PAGE_URL,
   OAUTH_ERROR_PAGE_URL,
@@ -25,6 +25,8 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     expiresTokenStorageName = OAUTH_TOKEN_EXPIRES_STORAGE_NAME,
     tokenRequest = undefined,
     forceSetToken = false,
+    subWindow = true,
+    refreshToken = false,
   } = opts;
   let processing = false;
 
@@ -40,7 +42,30 @@ export function createOauthProvider(opts: OauthOptions = {}) {
       await beforeHandler(request);
       return request;
     }
-    void startRefreshFlowInSubWindow();
+    processing = true;
+    if (refreshToken && tokenRequest) {
+      const token = await tokenRequest();
+      if (token == undefined) {
+        if (subWindow) {
+          void startRefreshFlowInSubWindow();
+        } else {
+          await startLoginFlow();
+        }
+        processing = false;
+        await beforeHandler(request);
+        return request;
+      }
+      localStorage.setItem(tokenStorageName, token);
+      processing = false;
+      await beforeHandler(request);
+      return request;
+    }
+    if (subWindow) {
+      void startRefreshFlowInSubWindow();
+    } else {
+      await startLoginFlow();
+    }
+    processing = false;
     await beforeHandler(request);
     return request;
   }
@@ -93,7 +118,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     } else {
       if ("onSubWindowOpenError" in opts) opts.onSubWindowOpenError?.();
       else {
-        startLoginFlow();
+        await startLoginFlow();
       }
       waiting = false;
 
@@ -105,23 +130,31 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   }
 
   // Trigger an oauth flow through some proxy server
-  function startLoginFlow(loginUrlArg: (() => string) | string | undefined = loginUrl) {
+  async function startLoginFlow(
+    loginUrlArg: (() => string) | string | undefined = loginUrl,
+    delay: number = 2000,
+  ) {
     loginUrlArg ??= `/api/v1/auth?frontend_protocol=${window.location.protocol.replace(":", "")}&frontend_host=${window.location.host}&comeback_path=${window.location.pathname}${encodeURIComponent(window.location.search)}`;
     window.location.replace(typeof loginUrlArg === "function" ? loginUrlArg() : loginUrlArg);
+    await wait(delay);
     return null;
   }
 
   // Trigger an oauth flow through some proxy server
-  function startLogoutFlow(logoutUrlArg: (() => string) | string | undefined = logoutUrl) {
+  async function startLogoutFlow(
+    logoutUrlArg: (() => string) | string | undefined = logoutUrl,
+    delay: number = 2000,
+  ) {
     logoutUrlArg ??= `/api/v1/auth/logout?frontend_protocol=${window.location.protocol.replace(":", "")}&frontend_host=${window.location.host}`;
     window.location.replace(typeof logoutUrlArg === "function" ? logoutUrlArg() : logoutUrlArg);
+    await wait(delay);
     return null;
   }
 
   // Processing an oauth flow: extract expires, get token, close sub windows, check if logout/clear/error url
   async function register(): Promise<boolean> {
     if (window.location.pathname === logoutPageUrl) {
-      startLogoutFlow();
+      await startLogoutFlow();
       return false;
     }
     if (window.location.pathname === clearPageUrl) {
