@@ -30,8 +30,8 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   } = opts;
   let processing = false;
 
-  function getExpires(expires: number) {
-    return Date.now() + (expires - 30);
+  function getExpiresDate(expires: number) {
+    return Date.now() + (expires - 30) * 1000;
   }
   function checkExpires(expires: null | undefined | string | number): expires is number | string {
     return expires != undefined && !Number.isNaN(+expires) && Date.now() < +expires;
@@ -162,7 +162,8 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     if (tokenInfo) {
       localStorage.setItem(tokenStorageName, tokenInfo.token);
       if (tokenInfo.expires !== 0) {
-        localStorage.setItem(expiresTokenStorageName, String(getExpires(tokenInfo.expires)));
+        tokenInfo.expires = getExpiresDate(tokenInfo.expires);
+        localStorage.setItem(expiresTokenStorageName, String(tokenInfo.expires));
       }
     }
     return tokenInfo;
@@ -205,7 +206,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
         : null;
 
     if (checkExpires(expires)) {
-      localStorage.setItem(expiresTokenStorageName, String(getExpires(+expires)));
+      localStorage.setItem(expiresTokenStorageName, String(getExpiresDate(+expires)));
       if (tokenRequest) {
         const tokenInfo = await tokenRequest();
         if (tokenInfo != undefined) {
