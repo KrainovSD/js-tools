@@ -205,7 +205,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
         : null;
 
     if (checkExpires(expires)) {
-      localStorage.setItem(expiresTokenStorageName, expires);
+      localStorage.setItem(expiresTokenStorageName, String(getExpires(+expires)));
       if (tokenRequest) {
         const tokenInfo = await tokenRequest();
         if (tokenInfo != undefined) {
