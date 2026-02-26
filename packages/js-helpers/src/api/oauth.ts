@@ -28,6 +28,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     subWindow = true,
     refreshToken = false,
   } = opts;
+  let refreshing = false;
   let processing = false;
 
   function getExpiresDate(expires: number) {
@@ -35,6 +36,9 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   }
   function checkExpires(expires: null | undefined | string | number): expires is number | string {
     return expires != undefined && !Number.isNaN(+expires) && Date.now() < +expires;
+  }
+  function isRefreshing() {
+    return refreshing || processing;
   }
 
   async function refetchAfterRefreshFlow<
@@ -45,7 +49,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   >(
     request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
   ): Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>> {
-    if (processing) {
+    if (isRefreshing()) {
       await beforeHandlerSetToken(request);
       return request;
     }
@@ -83,7 +87,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   }
 
   async function startLoginFlowInSubWindow() {
-    processing = true;
+    refreshing = true;
     let waiting = true;
     const url = new URL(
       typeof refreshTokenWindowUrl === "function" ? refreshTokenWindowUrl() : refreshTokenWindowUrl,
@@ -138,7 +142,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     }
 
     await waitUntil(() => waiting);
-    processing = false;
+    refreshing = false;
   }
 
   // Trigger an oauth flow through some proxy server
@@ -164,7 +168,9 @@ export function createOauthProvider(opts: OauthOptions = {}) {
   }
 
   async function startRefreshFlow() {
+    refreshing = true;
     const tokenInfo = await tokenRequest?.();
+    refreshing = false;
     if (tokenInfo) {
       localStorage.setItem(tokenStorageName, tokenInfo.token);
       if (tokenInfo.expires !== 0) {
@@ -247,6 +253,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     OutcomingApi = Outcoming,
   >(request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>): Promise<void> {
     if (isServicePageCheck()) return;
+    if (isRefreshing()) await waitUntil(() => isRefreshing());
     const expires = localStorage.getItem(expiresTokenStorageName);
     if (checkExpires(expires)) {
       return;
@@ -260,8 +267,7 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     Outcoming = unknown,
     OutcomingApi = Outcoming,
   >(request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>): Promise<void> {
-    if (processing) await waitUntil(() => processing);
-
+    if (isRefreshing()) await waitUntil(() => isRefreshing());
     const token = request.token ?? localStorage.getItem(tokenStorageName);
     const isSameOrigin =
       request.path.includes(window.location.origin) || !startWith(request.path, "http");
@@ -284,8 +290,8 @@ export function createOauthProvider(opts: OauthOptions = {}) {
     get isServicePage() {
       return isServicePageCheck();
     },
-    get processing() {
-      return processing;
+    get refreshing() {
+      return isRefreshing();
     },
     get token() {
       return localStorage.getItem(tokenStorageName);
