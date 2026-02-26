@@ -197,16 +197,17 @@ export function createOauthProvider(opts: OauthOptions = {}) {
       ? refreshQuery === "true"
       : isArray(refreshQuery)
         ? refreshQuery[refreshQuery.length - 1] === "true"
-        : null;
+        : false;
     /** Expires token */
-    const expires = isString(expiresQuery)
+    const expiresStr = isString(expiresQuery)
       ? expiresQuery
       : isArray(expiresQuery)
         ? expiresQuery[expiresQuery.length - 1]
         : null;
+    const expires = expiresStr ? getExpiresDate(+expiresStr) : null;
 
     if (checkExpires(expires)) {
-      localStorage.setItem(expiresTokenStorageName, String(getExpiresDate(+expires)));
+      localStorage.setItem(expiresTokenStorageName, String(expires));
       if (tokenRequest) {
         const tokenInfo = await tokenRequest();
         if (tokenInfo != undefined) {
