@@ -70,6 +70,7 @@
 
   type Emits = {
     click: [key: V];
+    keydown: [event: KeyboardEvent];
   };
 
   const GROUP_ROOT = "__root__";
@@ -385,7 +386,12 @@
           setModel(value);
         }
       "
-      @keydown="actionInputKeyboard"
+      @keydown="
+        (e) => {
+          actionInputKeyboard(e);
+          $emit('keydown', e);
+        }
+      "
       @blur="onClose"
       @focus="onOpen"
     />

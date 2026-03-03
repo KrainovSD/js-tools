@@ -121,6 +121,7 @@
     width: isObject(attrs.style) ? (attrs.style.width as string) : undefined,
   }));
   const role = computed(() => attrs.role as string | undefined);
+  const tabindex = computed(() => attrs.tabindex as string | undefined);
   const componentClasses = computed(() => ({
     arrow: props.arrow,
     [`appear-${props.animationAppear}`]: true,
@@ -285,6 +286,7 @@
       <div
         :style="contentStyles"
         :role="role"
+        :tabindex="tabindex"
         class="ksd-positioner__content"
         :class="[$props.classNameContent]"
       >

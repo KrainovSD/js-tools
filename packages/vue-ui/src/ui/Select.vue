@@ -76,6 +76,7 @@
   type Emits = {
     focus: [event: FocusEvent];
     blur: [event: FocusEvent];
+    keydown: [event: KeyboardEvent];
   };
   type Value = Multiple extends false ? V | undefined : V[] | undefined;
 
@@ -236,13 +237,6 @@
       }
 
       return;
-    }
-    if (event.key === "Tab" && open.value) {
-      event.preventDefault();
-      event.stopPropagation();
-      if (activeItem?.value?.valueKey != undefined) {
-        selectValue(optionsMap.value[activeItem.value.valueKey]?.value);
-      }
     }
     if (event.key === "ArrowDown" && activeItem.value) {
       event.preventDefault();
@@ -415,16 +409,28 @@
     { immediate: true },
   );
 
+  // open by focus
+  watch(
+    focusable,
+    (focusable) => {
+      if (focusable && inputRef.value) {
+        void waitParentAnimation(inputRef.value).then(() => {
+          if (!inputRef) return;
+          open.value = true;
+        });
+      } else if (!focusable) {
+        open.value = false;
+      }
+    },
+    { immediate: true, flush: "pre" },
+  );
+
   /** autofocus */
   watch(
     inputRef,
     (inputRef) => {
       if (props.autofocus && inputRef) {
-        void waitParentAnimation(inputRef).then(() => {
-          if (!inputRef) return;
-          inputRef.focus();
-          open.value = true;
-        });
+        inputRef.focus();
       }
     },
     { immediate: true, flush: "pre" },
@@ -438,6 +444,7 @@
     ref="popper"
     v-model="open"
     role="listbox"
+    tabindex="-1"
     :animation-appear="$props.animationAppear"
     :animation-disappear="$props.animationDisappear"
     :arrow="$props.arrow"
@@ -490,10 +497,14 @@
                 :readonly="!props.search || $props.disabled"
                 :disabled="props.disabled"
                 :aria-expanded="open"
-                @keydown="actionInputKeyboard"
+                @keydown="
+                  (e) => {
+                    $emit('keydown', e);
+                    actionInputKeyboard(e);
+                  }
+                "
                 @blur="
                   (e) => {
-                    open = false;
                     focusable = false;
                     $emit('blur', e);
                   }
@@ -539,10 +550,14 @@
                 :readonly="!props.search || $props.disabled"
                 :aria-expanded="open"
                 :disabled="props.disabled"
-                @keydown="actionInputKeyboard"
+                @keydown="
+                  (e) => {
+                    $emit('keydown', e);
+                    actionInputKeyboard(e);
+                  }
+                "
                 @blur="
                   (e) => {
-                    open = false;
                     focusable = false;
                     $emit('blur', e);
                   }
@@ -665,6 +680,7 @@
     list-style: none;
     font-family: var(--ksd-font-family);
     height: var(--ksd-control-height);
+    min-height: var(--ksd-control-height);
     position: relative;
     border-radius: var(--ksd-border-radius);
     transition: all var(--ksd-transition-mid) ease-in-out;
@@ -676,11 +692,13 @@
     &.size-small {
       font-size: var(--ksd-font-size);
       height: var(--ksd-control-height-sm);
+      min-height: var(--ksd-control-height-sm);
     }
 
     &.size-large {
       font-size: var(--ksd-font-size-lg);
       height: var(--ksd-select-single-item-height-lg);
+      min-height: var(--ksd-select-single-item-height-lg);
     }
 
     &.multiple {
