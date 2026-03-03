@@ -12,12 +12,8 @@
     "eslint.config.js",
     "src/types.d.ts",
     "rollup.config.ts",
-    ".prettierrc.mjs"
+    ".prettierrc.mjs",
+    "vite.config.ts"
   ],
-  "exclude": ["node_modules", "dist"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "exclude": ["node_modules", "dist"]
 }
