@@ -128,7 +128,8 @@
         mounted.value = true;
       }
 
-      const instance = new Factory({
+      const instance = new Factory();
+      void instance.init({
         root: mountRef,
         initialText: model.value,
         readonly: props.readonly,
@@ -240,7 +241,7 @@
 
       clean(() => {
         if (instance) {
-          instance.destroy();
+          void instance.destroy();
         }
         editor.value = undefined;
         emit("unmounted");

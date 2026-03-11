@@ -452,8 +452,8 @@ importers:
         specifier: ^0.16.6
         version: 0.16.6
       '@krainovsd/markdown-editor':
-        specifier: ^0.4.10
-        version: 0.4.10(@codemirror/search@6.5.10)
+        specifier: ^0.5.0-beta.1
+        version: 0.5.0-beta.1(@codemirror/search@6.5.10)
       '@krainovsd/vue-icons':
         specifier: ^0.1.4
         version: 0.1.4(vue@3.5.14(typescript@5.8.3))
@@ -1511,11 +1511,11 @@ packages:
   '@krainovsd/js-helpers@0.16.6':
     resolution: {integrity: sha512-UJ28eJIQSFFKEKeDjI1EyqUzACYjf49/uHVvCHML7ObFCEg2TNMDros3WpGGCGggSczmVmAh7WvGe2Kp2npQuA==}
 
-  '@krainovsd/markdown-editor@0.4.10':
-    resolution: {integrity: sha512-0iVmSPkr70eS+72dpYW8UJL2yS42M2nbiZor1u9PNGZ9+ZDpL2AxiKG8a1thdtnjHJuih+lUU8YwIFS9QsQ3hQ==}
-
   '@krainovsd/markdown-editor@0.4.9':
     resolution: {integrity: sha512-Xt5XGhumG0u5AjXpZlmYvBxAka+Xy3JQDaPgWRoZd5RSrMbDCtzB5kPeQ9f+FMSmNk1WH7n6efJfGqjLrQfk3w==}
+
+  '@krainovsd/markdown-editor@0.5.0-beta.1':
+    resolution: {integrity: sha512-l39kKetkNbzKfRx7gUee+BbIMKXO/dcp10nOG2La2LmfDNThTA1NnFktfPuVbNVxnUe3M5L9EV/9I9rv1ZNu+w==}
 
   '@krainovsd/presets@0.4.0':
     resolution: {integrity: sha512-W+gC/n6zR6d75gMjiEcQk15Kr7USI3GI7C1F6+TIJCLyAn4rxGFLfsT+rFR+0FQA9yhM6WyA6ZvYMS37o81l6Q==}
@@ -6940,8 +6940,8 @@ packages:
   vue-component-type-helpers@2.2.10:
     resolution: {integrity: sha512-iDUO7uQK+Sab2tYuiP9D1oLujCWlhHELHMgV/cB13cuGbG4qwkLHvtfWb6FzvxrIOPDnU0oHsz2MlQjhYDeaHA==}
 
-  vue-component-type-helpers@3.2.4:
-    resolution: {integrity: sha512-05lR16HeZDcDpB23ku5b5f1fBOoHqFnMiKRr2CiEvbG5Ux4Yi0McmQBOET0dR0nxDXosxyVqv67q6CzS3AK8rw==}
+  vue-component-type-helpers@3.2.5:
+    resolution: {integrity: sha512-tkvNr+bU8+xD/onAThIe7CHFvOJ/BO6XCOrxMzeytJq40nTfpGDJuVjyCM8ccGZKfAbGk2YfuZyDMXM56qheZQ==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -8340,7 +8340,7 @@ snapshots:
     dependencies:
       dayjs: 1.11.13
 
-  '@krainovsd/markdown-editor@0.4.10(@codemirror/search@6.5.10)':
+  '@krainovsd/markdown-editor@0.4.9(@codemirror/search@6.5.10)':
     dependencies:
       '@codemirror/autocomplete': 6.18.6
       '@codemirror/commands': 6.8.0
@@ -8359,7 +8359,7 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@krainovsd/markdown-editor@0.4.9(@codemirror/search@6.5.10)':
+  '@krainovsd/markdown-editor@0.5.0-beta.1(@codemirror/search@6.5.10)':
     dependencies:
       '@codemirror/autocomplete': 6.18.6
       '@codemirror/commands': 6.8.0
@@ -9320,7 +9320,7 @@ snapshots:
       storybook: 9.0.16(@testing-library/dom@10.4.0)(prettier@3.6.1)
       type-fest: 2.19.0
       vue: 3.5.14(typescript@5.8.3)
-      vue-component-type-helpers: 3.2.4
+      vue-component-type-helpers: 3.2.5
 
   '@sveltejs/acorn-typescript@1.0.5(acorn@8.15.0)':
     dependencies:
@@ -14961,7 +14961,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.10: {}
 
-  vue-component-type-helpers@3.2.4: {}
+  vue-component-type-helpers@3.2.5: {}
 
   vue-docgen-api@4.79.2(vue@3.5.14(typescript@5.8.3)):
     dependencies:
