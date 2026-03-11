@@ -1,4 +1,3 @@
-/* eslint-disable max-params */
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { CLASSES } from "@/extensions/theme";
 import { saveDispatch } from "@/lib/utils";

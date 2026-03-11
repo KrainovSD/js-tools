@@ -51,7 +51,6 @@ export function overlapMark({ marks, shift, state, requireMatched }: OverlapMark
   };
 }
 
-// eslint-disable-next-line max-params
 function findMarkIndex(
   text: string,
   marks: (number | undefined)[],

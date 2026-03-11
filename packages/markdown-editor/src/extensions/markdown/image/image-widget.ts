@@ -1,4 +1,3 @@
-/* eslint-disable max-params */
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { saveDispatch } from "@/lib/utils";
 import { openedImageEffect } from "../markdown-state";

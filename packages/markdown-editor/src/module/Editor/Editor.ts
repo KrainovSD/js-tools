@@ -18,40 +18,50 @@ export class Editor {
 
   provider: WebsocketProvider | undefined;
 
-  arguments: EditorArguments;
+  arguments: EditorArguments | undefined;
 
   yText: Text | undefined;
 
-  constructor(options: EditorArguments) {
-    void initEditor(options).then((editor) => {
-      this.view = editor.view;
-      this.provider = editor.provider;
-      this.yText = editor.multiCursorText;
-    });
-
+  init = async (options: EditorArguments) => {
+    const editor = await initEditor(options);
+    this.view = editor.view;
+    this.provider = editor.provider;
+    this.yText = editor.multiCursorText;
     this.arguments = options;
-  }
+  };
+
+  destroy = () => {
+    return new Promise((resolve) => {
+      saveDispatch(() => {
+        this.view?.destroy?.();
+        this.provider?.destroy?.();
+        resolve(true);
+      });
+    });
+  };
+
+  reset = async () => {
+    await this.destroy();
+    if (!this.arguments) return;
+    return this.init(this.arguments);
+  };
 
   focus = () => {
     if (!this.view) return;
-
     this.view.focus();
   };
 
   getContent = () => {
     if (!this.view) return;
-
     return this.view.state.doc.toString();
   };
 
   setContent = (content: string, position?: number) => {
     if (!this.view) return;
-
     if (position == undefined) {
       const cursor = this.view.state.selection.main.head;
       position = cursor;
     }
-
     const transaction = this.view.state.update({
       changes: {
         from: position,
@@ -66,21 +76,12 @@ export class Editor {
   };
 
   replaceContent = (content: string) => {
-    // if (!this.yText) return;
-
-    // this.yText.delete(0, this.yText.length);
-    // this.yText.insert(0, content);
-
-    // return;
-
     if (!this.view) return;
-
     const transaction = this.view.state.update({
       changes: { from: 0, to: this.view.state.doc.length, insert: content },
     });
     saveDispatch(() => {
       if (!this.view) return;
-
       this.view.dispatch(transaction);
     });
   };
@@ -101,13 +102,13 @@ export class Editor {
         effects: ThemeCompartment.reconfigure(
           theme === "dark"
             ? getDarkTheme({
-                dark: this.arguments.dark,
-                light: this.arguments.light,
+                dark: this.arguments?.dark,
+                light: this.arguments?.light,
                 theme,
               })
             : getLightTheme({
-                dark: this.arguments.dark,
-                light: this.arguments.light,
+                dark: this.arguments?.dark,
+                light: this.arguments?.light,
                 theme,
               }),
         ),
@@ -117,9 +118,7 @@ export class Editor {
 
   setVimMode = async (mode: boolean) => {
     if (!this.view) return;
-
     const { vim } = await import("@replit/codemirror-vim");
-
     saveDispatch(() => {
       if (!this.view) return;
       this.view.dispatch({
@@ -132,18 +131,7 @@ export class Editor {
 
   setUserProvider = (name: string = "Anonymous", color: string = "#000000") => {
     if (!this.provider) return;
-
     this.provider.awareness.setLocalStateField("user", { name, color });
-  };
-
-  destroy = () => {
-    saveDispatch(() => {
-      if (!this.view) return;
-      this.view.destroy();
-    });
-    saveDispatch(() => {
-      if (this.provider) this.provider.destroy();
-    });
   };
 }
 

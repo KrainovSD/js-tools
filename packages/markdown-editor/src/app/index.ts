@@ -8,8 +8,8 @@ import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } fro
 /** Multi Cursor Mode */
 const roomId = window.location.href.replace(window.location.origin, "").replace("/", "");
 const presetMultiCursor: MultiCursorOptions = {
-  roomId: `${roomId}/main/Readme.md`,
-  url: "ws://192.168.135.150:4007/ws/v1/editor",
+  roomId: "",
+  url: "ws://192.168.135.198:3000/ws/v1/editor/2/137",
   userName: randomString(5),
   userColor: randomColor(),
   onChangeStatusProvider: (status) => {
@@ -34,10 +34,11 @@ const viewStressTest = false;
 const root = document.querySelector<HTMLElement>("#root");
 if (!root) throw new Error("Hasn't root");
 
-function initEditor() {
+async function initEditor() {
   if (!root) return;
 
-  editor = new Editor({
+  editor = new Editor();
+  await editor.init({
     root,
     multiCursor,
     initialText: viewStressTest ? STRESS_TEST : viewFullExample ? FULL_EXAMPLE : COMMON_TEST,
@@ -103,6 +104,17 @@ function initEditor() {
 }
 
 {
+  /** Edit Mode */
+  const resetButton = document.querySelector(".reset");
+  if (resetButton) {
+    resetButton.addEventListener("click", () => {
+      if (!editor) return;
+      void editor.reset();
+    });
+  }
+}
+
+{
   /** Multi Cursor Mode */
   const multiButton = document.querySelector(".multi-mode");
 
@@ -115,20 +127,20 @@ function initEditor() {
     multiButton.addEventListener("click", () => {
       if (!editor) return;
 
-      editor.destroy();
+      void editor.destroy().then(() => {
+        if (!multiCursor) {
+          if (!presetMultiCursor.roomId) presetMultiCursor.roomId = randomString(10);
+          multiCursor = presetMultiCursor;
+          window.history.pushState({}, "", `${window.location.origin}/${presetMultiCursor.roomId}`);
+        } else {
+          multiCursor = undefined;
+          window.history.pushState({}, "", window.location.origin);
+        }
 
-      if (!multiCursor) {
-        if (!presetMultiCursor.roomId) presetMultiCursor.roomId = randomString(10);
-        multiCursor = presetMultiCursor;
-        window.history.pushState({}, "", `${window.location.origin}/${presetMultiCursor.roomId}`);
-      } else {
-        multiCursor = undefined;
-        window.history.pushState({}, "", window.location.origin);
-      }
-
-      initEditor();
-
-      multiButton.textContent = text[String(Boolean(multiCursor))];
+        void initEditor().then(() => {
+          multiButton.textContent = text[String(Boolean(multiCursor))];
+        });
+      });
     });
   }
 }
@@ -146,8 +158,8 @@ function initEditor() {
     stateButton.addEventListener("click", () => {
       if (!editor) return;
 
-      if (created) editor.destroy();
-      if (!created) initEditor();
+      if (created) void editor.destroy();
+      if (!created) void initEditor();
 
       created = !created;
       stateButton.textContent = text[String(Boolean(created))];
@@ -170,4 +182,4 @@ function initEditor() {
   }
 }
 
-initEditor();
+void initEditor();
