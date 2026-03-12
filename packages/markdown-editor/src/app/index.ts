@@ -27,7 +27,12 @@ const presetMultiCursor: MultiCursorOptions = {
 let editor: Editor | undefined;
 let multiCursor: MultiCursorOptions | undefined = roomId ? presetMultiCursor : undefined;
 let readonly: boolean = false;
-const dark: ThemeOptions | undefined = undefined;
+const dark: ThemeOptions | undefined = {
+  themeConfig: {
+    codeFontFamily: "FiraCode",
+    fontFamily: "Nunito",
+  },
+};
 const light: ThemeOptions | undefined = undefined;
 const viewFullExample = false;
 const viewStressTest = false;

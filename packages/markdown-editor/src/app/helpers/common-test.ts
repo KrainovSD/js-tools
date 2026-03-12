@@ -10,6 +10,18 @@ const string = "string"
 const number = 20
 const bool = true
 const arrray = [1, 2, 3]
+\`\`\`
+
+\`\`\`yaml
+redis: 
+  out:
+    - landing_availability
+    - name: landing_availability_set
+      entities: 
+        - landings
+      comment: Кладет список лендингов
+
+\`\`\`
 
 
-\`\`\``;
+`;

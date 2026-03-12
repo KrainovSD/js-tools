@@ -108,7 +108,16 @@ const array = [1, "test"]
 
 
 
+\`\`\`yaml
+redis: 
+  out:
+    - landing_availability
+    - name: landing_availability_set
+      entities: 
+        - landings
+      comment: Кладет список лендингов
 
+\`\`\`
 
 
 
