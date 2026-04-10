@@ -23,6 +23,9 @@ export function initResize<
     }
 
     this.updateSize();
+    requestAnimationFrame(() => {
+      this.updateSize();
+    });
   });
 
   document.addEventListener("scroll", this.updateRect.bind(this), {
@@ -30,6 +33,14 @@ export function initResize<
     passive: true,
     signal: abortController.signal,
   });
+
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      if (!document.hidden) this.updateRect();
+    },
+    { signal: abortController.signal },
+  );
 
   observer.observe(this.area);
 }
