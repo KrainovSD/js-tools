@@ -10,7 +10,6 @@ RUN pnpm i
 ADD ./nginx.conf ./nginx.conf
 ADD ./tsconfig.build.json ./tsconfig.build.json
 ADD ./tsconfig.json ./tsconfig.json
-ADD ./tsconfig.node.json ./tsconfig.node.json
 ADD ./vite.config.ts ./vite.config.ts
 ADD ./.storybook ./.storybook
 ADD ./public ./public
