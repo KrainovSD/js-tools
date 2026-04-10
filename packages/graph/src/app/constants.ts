@@ -50,7 +50,7 @@ export const DEFAULT_SETTINGS: GraphSettings = {
   linkSettings: { ...LINK_SETTINGS, curve: true },
   nodeOptions: { ...NODE_OPTIONS, textColor: "#d2d2d2" },
   nodeSettings: { ...NODE_SETTINGS },
-  highlightSettings: { ...HIGHLIGHT_SETTINGS },
+  highlightSettings: { ...HIGHLIGHT_SETTINGS, linkHoverExtraZone: 1 },
 };
 export const HIGHLIGHT_COLOR = "#ce7a1c";
 export const TEXT_DARK_COLOR = "#d2d2d2";
