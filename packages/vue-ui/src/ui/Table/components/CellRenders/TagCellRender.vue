@@ -101,7 +101,7 @@
 
 <template>
   <template v-if="visible">
-    <div class="ksd-table__cell-tag-container">
+    <div class="ksd-table__cell-tag">
       <component :is="Expander" v-if="expandable && Expander" :context="$props.context" />
 
       <TooltipCellRenderWrapper
@@ -121,7 +121,7 @@
             :color="tag.color"
             :borderless="$props.settings?.bordered != undefined && !$props.settings.bordered"
             :size="$props.settings?.size ?? 'default'"
-            class="ksd-table__cell-tag"
+            class="ksd-table__cell-tag-item"
             :style="{ cursor: filterable ? 'pointer' : 'inherit' }"
             :tabindex="$props.settings?.filterable ? 0 : undefined"
             @click="
@@ -150,27 +150,59 @@
 </template>
 
 <style lang="scss">
-  span.ksd-table__cell-tag {
+  .ksd-table__cell {
+    &:where(.common) {
+      & .ksd-table__cell-tag {
+        padding: 6px 8px;
+        padding-left: calc(8px + var(--table-cell-shift, 0px));
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        gap: 10px;
+        display: flex;
+      }
+    }
+    &:where(.hCenter) {
+      & .ksd-table__cell-tag {
+        height: 100%;
+        align-items: center;
+      }
+    }
+    &:where(.wCenter) {
+      & .ksd-table__cell-tag {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    &:where(.nowrap) {
+      & .ksd-table__cell-tag-item {
+        flex-shrink: 1;
+      }
+      & .ksd-table__cell-tag-wrapper {
+        flex-wrap: nowrap;
+      }
+    }
+  }
+
+  span.ksd-table__cell-tag-item {
     display: inline-block;
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     position: relative;
+    flex-shrink: 0;
   }
-  .ksd-table {
-    &__cell {
-      & > div.ksd-table__cell-tag-container {
-        height: fit-content;
-      }
-    }
-    &__cell-tag-wrapper {
-      display: flex;
-      gap: inherit;
-      overflow: hidden;
-      max-width: 100%;
-      height: fit-content;
-      width: fit-content;
-    }
+
+  .ksd-table__cell-tag-wrapper {
+    display: flex;
+    gap: inherit;
+    overflow: hidden;
+    max-width: 100%;
+    height: fit-content;
+    width: fit-content;
+    flex-wrap: wrap;
   }
 </style>

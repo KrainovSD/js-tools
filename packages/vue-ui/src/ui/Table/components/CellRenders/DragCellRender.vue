@@ -37,6 +37,34 @@
 </template>
 
 <style lang="scss">
+  .ksd-table__cell {
+    &:where(.common) {
+      & .ksd-table__cell-drag {
+        padding: 6px 8px;
+        padding-left: calc(8px + var(--table-cell-shift, 0px));
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        gap: 10px;
+        display: flex;
+      }
+    }
+    &:where(.hCenter) {
+      & .ksd-table__cell-drag {
+        height: 100%;
+        align-items: center;
+      }
+    }
+    &:where(.wCenter) {
+      & .ksd-table__cell-drag {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
   div.ksd-table__cell-drag {
     & > svg {
       font-size: var(--ksd-font-size-lg);

@@ -82,7 +82,7 @@
 </script>
 
 <template>
-  <div>
+  <div :class="'ksd-table__cell-default'">
     <component :is="Content" v-if="visible && Content" :context="$props.context" />
     <template v-if="visible && (isId(content) || isBoolean(content)) && !Content">
       <component
@@ -116,13 +116,48 @@
 </template>
 
 <style lang="scss">
-  .ksd-table {
-    &__cell-default-text {
-      text-overflow: ellipsis;
-      overflow: hidden;
-      max-width: 100%;
-      display: block;
-      height: fit-content;
+  .ksd-table__cell {
+    &:where(.common) {
+      & .ksd-table__cell-default {
+        padding: 6px 8px;
+        padding-left: calc(8px + var(--table-cell-shift, 0px));
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        gap: 10px;
+        display: flex;
+      }
     }
+    &:where(.hCenter) {
+      & .ksd-table__cell-default {
+        height: 100%;
+        align-items: center;
+      }
+    }
+    &:where(.wCenter) {
+      & .ksd-table__cell-default {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    &:where(.lineClamp) {
+      & .ksd-table__cell-default-text {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        align-self: stretch;
+      }
+    }
+  }
+
+  .ksd-table__cell-default-text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
+    display: block;
+    height: fit-content;
   }
 </style>

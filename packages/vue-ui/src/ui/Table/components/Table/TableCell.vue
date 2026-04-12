@@ -117,18 +117,6 @@
         font-weight: var(--ksd-font-weight);
         font-family: var(--ksd-table-font-family);
         background-color: inherit;
-
-        & > div {
-          padding: 6px 8px;
-          padding-left: calc(8px + var(--table-cell-shift, 0px));
-          width: 100%;
-          height: 100%;
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          gap: 10px;
-          display: flex;
-        }
       }
       &:where(.empty) {
         border-inline-end: none;
@@ -136,29 +124,10 @@
       &:where(.hCenter) {
         height: 100%;
         align-items: center;
-
-        & > div {
-          height: 100%;
-          align-items: center;
-        }
       }
       &:where(.wCenter) {
         width: 100%;
         justify-content: center;
-
-        & > div {
-          width: 100%;
-          justify-content: center;
-        }
-      }
-      &:where(.lineClamp) {
-        & span {
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          line-clamp: 2;
-          align-self: stretch;
-        }
       }
       &:where(.nowrap) {
         white-space: nowrap;
