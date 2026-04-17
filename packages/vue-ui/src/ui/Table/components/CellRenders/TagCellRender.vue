@@ -177,16 +177,16 @@
       }
     }
     &:where(.nowrap) {
-      & .ksd-table__cell-tag-item {
+      & span.ksd-table__cell-tag-item {
         flex-shrink: 1;
       }
-      & .ksd-table__cell-tag-wrapper {
+      & div.ksd-table__cell-tag-wrapper {
         flex-wrap: nowrap;
       }
     }
   }
 
-  span.ksd-table__cell-tag-item {
+  .ksd-table__cell-tag-item {
     display: inline-block;
     max-width: 100%;
     overflow: hidden;

@@ -143,7 +143,7 @@
       }
     }
     &:where(.lineClamp) {
-      & .ksd-table__cell-default-text {
+      & span.ksd-table__cell-default-text {
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
