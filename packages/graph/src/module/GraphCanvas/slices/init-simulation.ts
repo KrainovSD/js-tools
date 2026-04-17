@@ -31,15 +31,14 @@ export function initSimulation<
       })
       .on("end", () => {
         this.listeners.onSimulationEnd?.call?.(this);
-
         if (this.graphSettings.showDrawTime) {
           getDrawTime();
           // eslint-disable-next-line no-console
           console.log(`nodes: ${this.nodes.length} | links: ${this.links.length}`);
           resetDrawTime();
         }
-      });
-
+      })
+      .stop();
     initSimulationForces.call<
       GraphCanvas<NodeData, LinkData>,
       Parameters<typeof initSimulationForces>,

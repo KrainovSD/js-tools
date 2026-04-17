@@ -1,3 +1,4 @@
+import "@fontsource/nunito";
 import { createApp } from "vue";
 import App from "./App.vue";
 

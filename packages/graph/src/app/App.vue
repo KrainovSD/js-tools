@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { THEME_CONFIG, VRadio, VThemeProvider } from "@krainovsd/vue-ui";
   import "@krainovsd/vue-ui/styles";
-  import { computed, ref, useTemplateRef } from "vue";
+  import { computed, ref, useTemplateRef, watch } from "vue";
   import type {
     ForceSettingsInterface,
     GraphCanvasInterface,
@@ -16,8 +16,8 @@
   import Settings from "./components/Settings.vue";
   import { DEFAULT_SETTINGS } from "./constants";
   import "./global.scss";
-  import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
-  import type { LinkData, Node, NodeData } from "./types";
+  import { bigMock, createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
+  import type { GraphMode, LinkData, Node, NodeData } from "./types";
 
   const dataArray: {
     id: number;
@@ -28,11 +28,18 @@
     { data: stressMock, id: 2, label: "Стресс" },
     { data: realMock, id: 3, label: "Реальный" },
     { data: customMock, id: 4, label: "Кастомный" },
-    { data: createNewDynamicMock({ links: [], nodes: [] }), id: 5, label: "Динамически" },
+    { data: bigMock, id: 5, label: "Big" },
+    { data: createNewDynamicMock({ links: [], nodes: [] }), id: 6, label: "Динамически" },
   ];
   const dataRef = ref(1);
   const graph = computed(() => dataArray.find((d) => d.id === dataRef.value)?.data);
   const selectedNode = ref<Node | null>(null);
+
+  const modeArray: { id: GraphMode; label: string }[] = [
+    { id: "custom", label: "Custom" },
+    { id: "performance", label: "Performance" },
+  ];
+  const modeRef = ref<GraphMode>("custom");
 
   const forceSettings = ref<Partial<ForceSettingsInterface<NodeData, LinkData>>>(
     DEFAULT_SETTINGS.forceSettings,
@@ -55,6 +62,10 @@
 
   const rootRef = useTemplateRef("root");
 
+  watch(modeRef, () => {
+    selectedNode.value = null;
+  });
+
   function clearSettings() {
     forceSettings.value = DEFAULT_SETTINGS.forceSettings;
     highlightSettings.value = DEFAULT_SETTINGS.highlightSettings;
@@ -70,6 +81,16 @@
     <div ref="root" :class="$style.base">
       <div :class="$style.data">
         <VRadio
+          v-for="mode in modeArray"
+          :key="mode.id"
+          v-model="modeRef"
+          :name="'mode'"
+          :value="mode.id"
+        >
+          {{ mode.label }}
+        </VRadio>
+        <div :class="$style.separator" />
+        <VRadio
           v-for="data in dataArray"
           :key="data.id"
           v-model="dataRef"
@@ -83,7 +104,7 @@
         v-if="graph"
         v-model:selected-node="selectedNode"
         :graph="graph"
-        :theme="'dark'"
+        :mode="modeRef"
         :force-settings="forceSettings"
         :highlight-settings="highlightSettings"
         :link-options="linkOptions"
@@ -92,6 +113,7 @@
         :node-settings="nodeSettings"
       />
       <Settings
+        v-if="modeRef === 'custom'"
         v-model:force-settings="forceSettings"
         v-model:highlight-settings="highlightSettings"
         v-model:link-options="linkOptions"
@@ -125,5 +147,11 @@
     background-color: #1f1f1f;
     border: 1px solid var(--ksd-border-color);
     z-index: 1;
+  }
+
+  .separator {
+    height: 1px;
+    background-color: var(--ksd-border-color);
+    margin: var(--ksd-padding-xxs) 0;
   }
 </style>

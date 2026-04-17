@@ -39,6 +39,7 @@ import type {
   NodeInterface,
   NodeOptionsInterface,
   NodeSettingsInterface,
+  PrecomputeForceSettingsInterface,
 } from "./types";
 
 export class GraphCanvas<
@@ -330,8 +331,54 @@ export class GraphCanvas<
     if (!this.simulationWorking && !this.highlightWorking) this.draw();
   }
 
-  restart(alpha?: number) {
-    if (this.simulation) this.simulation.alpha(alpha ?? 1).restart();
+  restart(alpha?: number, options?: Partial<PrecomputeForceSettingsInterface>) {
+    if (!this.simulation) return;
+
+    const settings: Required<PrecomputeForceSettingsInterface> = {
+      precompute: options?.precompute ?? this.forceSettings.precompute,
+      precomputeMaxTimeMs: options?.precomputeMaxTimeMs ?? this.forceSettings?.precomputeMaxTimeMs,
+      precomputeMaxTicks:
+        options?.precomputeMaxTicks ?? this.forceSettings?.precomputeMaxTicks ?? 300,
+      precomputeDisableForcesAfter:
+        options?.precomputeDisableForcesAfter ??
+        this.forceSettings?.precomputeDisableForcesAfter ??
+        false,
+    };
+    if (!settings.precompute) {
+      this.simulation.alpha(alpha ?? 1).restart();
+      return;
+    }
+    if (settings.precomputeDisableForcesAfter) {
+      this.forceSettings = forceSettingsGetter({ forces: true }, this.forceSettings);
+    }
+    initSimulationForces.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof initSimulationForces>,
+      ReturnType<typeof initSimulationForces>
+    >(this);
+    this.simulation.stop();
+    this.simulation.alpha(alpha ?? 1);
+
+    const startTime = performance.now();
+    let ticks = 0;
+    while (
+      performance.now() - startTime < settings.precomputeMaxTimeMs &&
+      ticks < settings.precomputeMaxTicks
+    ) {
+      this.simulation.tick(1);
+      ticks++;
+      if (this.simulation.alpha() <= this.simulation.alphaMin()) break;
+    }
+    if (settings.precomputeDisableForcesAfter) {
+      this.forceSettings = forceSettingsGetter({ forces: false }, this.forceSettings);
+    }
+    initSimulationForces.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof initSimulationForces>,
+      ReturnType<typeof initSimulationForces>
+    >(this);
+    this.simulation.restart();
+    if (!this.simulationWorking && !this.highlightWorking) requestAnimationFrame(() => this.draw());
   }
 
   start() {
@@ -375,8 +422,7 @@ export class GraphCanvas<
         Parameters<typeof initSimulationForces>,
         ReturnType<typeof initSimulationForces>
       >(this);
-      this.simulation.alpha(1);
-      this.simulation.restart();
+      this.restart(1);
     }
   }
 
@@ -401,30 +447,27 @@ export class GraphCanvas<
         ReturnType<typeof initCollideForce>
       >(this, false);
 
-      this.simulation
-        .nodes(this.nodes)
-        .force(
-          "link",
-          forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-            .id(this.nodeSettings.idGetter.bind(this))
-            .distance(
-              this.forceSettings.forces && this.forceSettings.linkForce
-                ? this.forceSettings.linkDistance
-                : 0,
-            )
-            .strength(
-              this.forceSettings.forces && this.forceSettings.linkForce
-                ? this.forceSettings.linkStrength
-                : 0,
-            )
-            .iterations(
-              this.forceSettings.forces && this.forceSettings.linkForce
-                ? this.forceSettings.linkIterations
-                : 0,
-            ),
-        )
-        .alpha(alpha)
-        .restart();
+      this.simulation.nodes(this.nodes).force(
+        "link",
+        forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
+          .id(this.nodeSettings.idGetter.bind(this))
+          .distance(
+            this.forceSettings.forces && this.forceSettings.linkForce
+              ? this.forceSettings.linkDistance
+              : 0,
+          )
+          .strength(
+            this.forceSettings.forces && this.forceSettings.linkForce
+              ? this.forceSettings.linkStrength
+              : 0,
+          )
+          .iterations(
+            this.forceSettings.forces && this.forceSettings.linkForce
+              ? this.forceSettings.linkIterations
+              : 0,
+          ),
+      );
+      this.restart(alpha);
     }
   }
 
@@ -449,6 +492,7 @@ export class GraphCanvas<
       Parameters<typeof initSimulation>,
       ReturnType<typeof initSimulation>
     >(this);
+    this.restart(1);
     initDnd.call<
       GraphCanvas<NodeData, LinkData>,
       Parameters<typeof initDnd>,

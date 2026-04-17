@@ -52,6 +52,33 @@ export const DEFAULT_SETTINGS: GraphSettings = {
   nodeSettings: { ...NODE_SETTINGS },
   highlightSettings: { ...HIGHLIGHT_SETTINGS, linkHoverExtraZone: 1 },
 };
+
+export const PERFORMANCE_SETTINGS: GraphSettings = {
+  forceSettings: {
+    ...DEFAULT_SETTINGS.forceSettings,
+    collideIterations: 1,
+    precompute: true,
+    precomputeMaxTicks: 800,
+    precomputeMaxTimeMs: 350,
+    precomputeDisableForcesAfter: true,
+  },
+  graphSettings: { ...DEFAULT_SETTINGS.graphSettings },
+  linkOptions: { ...DEFAULT_SETTINGS.linkOptions },
+  linkSettings: {
+    ...DEFAULT_SETTINGS.linkSettings,
+    particles: false,
+    particleFlexSpeed: false,
+    prettyDraw: false,
+  },
+  nodeOptions: { ...DEFAULT_SETTINGS.nodeOptions },
+  nodeSettings: {
+    ...DEFAULT_SETTINGS.nodeSettings,
+    nodeRadiusFlexible: false,
+    nodeSizeFlexible: false,
+  },
+  highlightSettings: { ...DEFAULT_SETTINGS.highlightSettings },
+};
+
 export const HIGHLIGHT_COLOR = "#ce7a1c";
 export const TEXT_DARK_COLOR = "#d2d2d2";
 export const TEXT_LIGHT_COLOR = "#21252D";

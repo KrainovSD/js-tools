@@ -1,6 +1,7 @@
 import type { GraphCanvasInterface, NodeInterface } from "@/module/GraphCanvas";
 import { getNodeNeighbors } from "../lib";
 import type { LinkData, NodeData } from "../types";
+import * as bigMockIncorrect from "./big.json";
 import * as d3MockIncorrect from "./d3-mock.json";
 import * as realMockIncorrect from "./real.json";
 import * as stressMockIncorrect from "./stress-mock.json";
@@ -8,6 +9,14 @@ import * as stressMockIncorrect from "./stress-mock.json";
 export const d3Mock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
   links: d3MockIncorrect.links.map((link) => ({ ...link })),
   nodes: d3MockIncorrect.nodes.map<NodeInterface<NodeData>>((node, index) => ({
+    ...node,
+    name: `${node.group} ${index}`,
+  })),
+};
+
+export const bigMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
+  links: bigMockIncorrect.links.map((link) => ({ ...link })),
+  nodes: bigMockIncorrect.nodes.map<NodeInterface<NodeData>>((node, index) => ({
     ...node,
     name: `${node.group} ${index}`,
   })),
@@ -51,6 +60,7 @@ export const realMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | 
 getNodeNeighbors(d3Mock);
 getNodeNeighbors(stressMock);
 getNodeNeighbors(realMock);
+getNodeNeighbors(bigMock);
 
 export * from "./custom-mock";
 export * from "./dynamic-mock";

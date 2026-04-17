@@ -1,5 +1,12 @@
 import type { LinkIterationPropsNoThisInterface, NodeIterationPropsNoThisInterface } from "./utils";
 
+export type PrecomputeForceSettingsInterface = {
+  precompute?: boolean;
+  precomputeMaxTimeMs?: number;
+  precomputeMaxTicks?: number;
+  precomputeDisableForcesAfter?: boolean;
+};
+
 export type ForceSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
@@ -11,7 +18,6 @@ export type ForceSettingsInterface<
   centerForce?: boolean;
   collideForce?: boolean;
   linkForce?: boolean;
-
   collideOffMax?: {
     nodes: number;
     links: number;
@@ -31,4 +37,4 @@ export type ForceSettingsInterface<
   xStrength?: NodeIterationPropsNoThisInterface<NodeData> | number;
   yPosition?: NodeIterationPropsNoThisInterface<NodeData> | number;
   yStrength?: NodeIterationPropsNoThisInterface<NodeData> | number;
-};
+} & PrecomputeForceSettingsInterface;
