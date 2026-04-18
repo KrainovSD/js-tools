@@ -1,6 +1,6 @@
-import { isObject } from "@krainovsd/js-helpers";
 import type { GraphCanvas } from "../GraphCanvas";
 import {
+  isEmptyObject,
   nodeIterationExtractor,
   nodeOptionsGetter,
   nodeRadiusGetter,
@@ -8,22 +8,40 @@ import {
 } from "../lib";
 import { getTextLines } from "./draw-text";
 
-type NodeCache = {
-  options: boolean;
-  text: boolean;
-  label: boolean;
-};
-
 export function updateNodeCache<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
->(this: GraphCanvas<NodeData, LinkData>, types: boolean | NodeCache) {
-  this.nodeOptionsCache = {};
+>(this: GraphCanvas<NodeData, LinkData>) {
   if (!this.context) return;
+
+  const currentZoom = this.areaTransform.k;
+  const options = isEmptyObject(this.nodeOptionsCache);
+  const label = isEmptyObject(this.cachedNodeLabel);
+  let text = isEmptyObject(this.cachedNodeText);
+
+  if (
+    this.nodeSettings.smartCache &&
+    this._lastNodeZoomK !== undefined &&
+    !options &&
+    !text &&
+    !label
+  ) {
+    const thresholds = this.nodeSettings.textScaleSteps;
+    if (thresholds && thresholds.length > 0) {
+      const min = Math.min(this._lastNodeZoomK, currentZoom);
+      const max = Math.max(this._lastNodeZoomK, currentZoom);
+      const crossed = thresholds.some((t) => t >= min && t <= max);
+      this._lastNodeZoomK = currentZoom;
+      if (!crossed) return;
+    }
+    this.cachedNodeText = {};
+    text = true;
+  }
+  this._lastNodeZoomK = currentZoom;
 
   for (let i = 0; i < this.nodes.length; i++) {
     const node = this.nodes[i];
-    if (types === true || (isObject(types) && types.options)) {
+    if (options) {
       const nodeOptions = nodeIterationExtractor(
         node,
         i,
@@ -88,9 +106,20 @@ export function updateNodeCache<
       this.nodeOptionsCache[node.id] = nodeOptions;
     }
 
-    const nodeOptions = this.nodeOptionsCache[node.id];
+    let nodeOptions = this.nodeOptionsCache[node.id];
     /** label */
-    if (types === true || (isObject(types) && types.label)) {
+    if (label) {
+      if (!options) {
+        nodeOptions = nodeIterationExtractor(
+          node,
+          i,
+          this.nodes,
+          this,
+          this.nodeSettings.options ?? {},
+          nodeOptionsGetter,
+        );
+        this.nodeOptionsCache[node.id].label = nodeOptions.label;
+      }
       /** label in not text shape */
       if (nodeOptions.shape !== "text" && nodeOptions.label) {
         this.context.font = `${nodeOptions.labelStyle} normal ${nodeOptions.labelWeight} ${nodeOptions.labelSize}px ${nodeOptions.labelFont}`;
@@ -141,22 +170,38 @@ export function updateNodeCache<
 
         nodeOptions.width = maxSize + nodeOptions.labelXPadding;
         this.cachedNodeLabel[node.id] = lines;
+      } else {
+        this.cachedNodeLabel[node.id] = [];
       }
     }
 
     /** text */
-    if (nodeOptions.text && (types === true || (isObject(types) && types.text))) {
+    if (text) {
+      if (!options) {
+        nodeOptions = nodeIterationExtractor(
+          node,
+          i,
+          this.nodes,
+          this,
+          this.nodeSettings.options ?? {},
+          nodeOptionsGetter,
+        );
+        this.nodeOptionsCache[node.id].text = nodeOptions.text;
+        this.nodeOptionsCache[node.id].textVisible = nodeOptions.textVisible;
+      }
+      if (!nodeOptions.text) {
+        this.cachedNodeText[node.id] = [];
+        return;
+      }
       this.context.font = `${nodeOptions.textStyle} normal ${nodeOptions.textWeight} ${nodeOptions.textSize}px ${nodeOptions.textFont}`;
       this.context.fillStyle = nodeOptions.textColor;
       this.context.textAlign = nodeOptions.textAlign;
-
       if (
         nodeOptions.textWidth == undefined ||
         this.context.measureText(nodeOptions.text).width <= nodeOptions.textWidth
       ) {
         this.cachedNodeText[node.id] = [nodeOptions.text];
       }
-
       const { lines } = getTextLines({
         context: this.context,
         maxWidth: nodeOptions.textWidth,

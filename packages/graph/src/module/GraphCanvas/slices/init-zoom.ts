@@ -28,7 +28,7 @@ export function initZoom<
           GraphCanvas<NodeData, LinkData>,
           Parameters<typeof updateNodeCache>,
           ReturnType<typeof updateNodeCache>
-        >(this, true);
+        >(this);
       }
 
       if (!this.simulationWorking && !this.highlightWorking)

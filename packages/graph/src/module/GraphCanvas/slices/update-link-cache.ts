@@ -1,10 +1,50 @@
 import type { GraphCanvas } from "../GraphCanvas";
-import { extractLinkPointIds, linkIterationExtractor, linkOptionsGetter } from "../lib";
+import {
+  extractLinkPointIds,
+  isEmptyObject,
+  linkIterationExtractor,
+  linkOptionsGetter,
+} from "../lib";
 
 export function updateLinkCache<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(this: GraphCanvas<NodeData, LinkData>) {
+  if (!this.context) return;
+
+  const current = this.areaTransform.k;
+  if (
+    this.linkSettings.smartCache &&
+    this._lastLinkZoomK !== undefined &&
+    !isEmptyObject(this.linkOptionsCache)
+  ) {
+    const corner = this.linkSettings.linkScaleSwitch;
+    const prev = this._lastLinkZoomK;
+    this._lastLinkZoomK = current;
+    if (!((prev <= corner && current >= corner) || (prev >= corner && current <= corner))) {
+      return;
+    }
+    for (let i = 0; i < this.links.length; i++) {
+      const link = this.links[i];
+      const { sourceId, targetId } = extractLinkPointIds(link);
+      const linkOptions = linkIterationExtractor(
+        link,
+        i,
+        this.links,
+        this,
+        this.linkSettings.options ?? {},
+        linkOptionsGetter,
+      );
+      const id = `${targetId}${sourceId}`;
+      const cache = this.linkOptionsCache[id];
+      cache.color = linkOptions.color;
+      cache.arrowColor = linkOptions.arrowColor;
+      cache.width = linkOptions.width;
+    }
+    return;
+  }
+
+  this._lastLinkZoomK = current;
   this.linkOptionsCache = {};
 
   const groupMap: Record<string, number> = {};

@@ -18,21 +18,20 @@ export function linkOptionsGetter<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(this: GraphCanvas<NodeData, LinkData>): Required<LinkOptionsInterface<NodeData, LinkData>> {
+  const aboveScale = this.areaTransform && this.areaTransform.k > this.linkSettings.linkScaleSwitch;
+
   return {
     ...LINK_OPTIONS,
     drawExtraLink: null,
     drawLink: null,
-    color:
-      this.areaTransform && this.areaTransform.k > this.linkSettings.linkScaleSwitch
-        ? this.linkSettings.linkColorAfterScaleSwitch
-        : this.linkSettings.linkColorBeforeScaleSwitch,
-    arrowColor:
-      this.areaTransform && this.areaTransform.k > this.linkSettings.linkScaleSwitch
-        ? this.linkSettings.linkColorAfterScaleSwitch
-        : this.linkSettings.linkColorBeforeScaleSwitch,
-    width:
-      this.areaTransform && this.areaTransform.k > this.linkSettings.linkScaleSwitch
-        ? this.linkSettings.linkWidthAfterScaleSwitch
-        : this.linkSettings.linkWidthBeforeScaleSwitch,
+    color: aboveScale
+      ? this.linkSettings.linkColorAfterScaleSwitch
+      : this.linkSettings.linkColorBeforeScaleSwitch,
+    arrowColor: aboveScale
+      ? this.linkSettings.linkColorAfterScaleSwitch
+      : this.linkSettings.linkColorBeforeScaleSwitch,
+    width: aboveScale
+      ? this.linkSettings.linkWidthAfterScaleSwitch
+      : this.linkSettings.linkWidthBeforeScaleSwitch,
   };
 }

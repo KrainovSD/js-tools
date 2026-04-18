@@ -4,6 +4,8 @@ export const NODE_SETTINGS: Omit<
   Required<NodeSettingsInterface<Record<string, unknown>, Record<string, unknown>>>,
   "options" | "idGetter"
 > = {
+  smartCache: true,
+  textScaleSteps: [],
   nodeRadiusFlexible: true,
   nodeRadiusLinkCountForStep: 5,
   nodeRadiusIncrementByStep: 1,

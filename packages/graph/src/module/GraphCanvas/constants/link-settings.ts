@@ -4,6 +4,7 @@ export const LINK_SETTINGS: Omit<
   Required<LinkSettingsInterface<Record<string, unknown>, Record<string, unknown>>>,
   "options"
 > = {
+  smartCache: true,
   prettyDraw: true,
   curve: false,
   linkScaleSwitch: 1,

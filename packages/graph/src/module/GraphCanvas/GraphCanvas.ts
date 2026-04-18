@@ -116,6 +116,10 @@ export class GraphCanvas<
 
   protected highlightWorking: boolean = false;
 
+  protected _lastNodeZoomK: number | undefined;
+
+  protected _lastLinkZoomK: number | undefined;
+
   protected get simulationWorking() {
     const simulationAlpha = this.simulation?.alpha?.() ?? 0;
     const simulationAlphaMin = this.simulation?.alphaMin?.() ?? 0;
@@ -287,44 +291,46 @@ export class GraphCanvas<
 
   clearCache(keys: boolean | GraphCanvasCacheKeys[]) {
     if (keys === true) {
-      updateNodeCache.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof updateNodeCache>,
-        ReturnType<typeof updateNodeCache>
-      >(this, true);
-      updateLinkCache.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof updateLinkCache>,
-        ReturnType<typeof updateLinkCache>
-      >(this);
+      this.nodeOptionsCache = {};
+      this.linkOptionsCache = {};
+      this.cachedNodeLabel = {};
+      this.cachedNodeText = {};
     } else if (isArray(keys)) {
-      if (
-        keys.some(
-          (k) =>
-            k === GRAPH_CACHE_TYPE.NodeText ||
-            k === GRAPH_CACHE_TYPE.NodeLabel ||
-            k === GRAPH_CACHE_TYPE.NodeOptions,
-        )
-      ) {
-        updateNodeCache.call<
-          GraphCanvas<NodeData, LinkData>,
-          Parameters<typeof updateNodeCache>,
-          ReturnType<typeof updateNodeCache>
-        >(this, {
-          label: keys.includes(GRAPH_CACHE_TYPE.NodeLabel),
-          options: keys.includes(GRAPH_CACHE_TYPE.NodeOptions),
-          text: keys.includes(GRAPH_CACHE_TYPE.NodeOptions),
-        });
-      }
-
-      if (keys.includes(GRAPH_CACHE_TYPE.LinkOptions)) {
-        updateLinkCache.call<
-          GraphCanvas<NodeData, LinkData>,
-          Parameters<typeof updateLinkCache>,
-          ReturnType<typeof updateLinkCache>
-        >(this);
+      for (const key of keys) {
+        switch (key) {
+          case GRAPH_CACHE_TYPE.NodeText: {
+            this.cachedNodeText = {};
+            break;
+          }
+          case GRAPH_CACHE_TYPE.NodeLabel: {
+            this.cachedNodeLabel = {};
+            break;
+          }
+          case GRAPH_CACHE_TYPE.NodeOptions: {
+            this.nodeOptionsCache = {};
+            break;
+          }
+          case GRAPH_CACHE_TYPE.LinkOptions: {
+            this.linkOptionsCache = {};
+            break;
+          }
+          default: {
+            break;
+          }
+        }
       }
     }
+
+    updateNodeCache.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof updateNodeCache>,
+      ReturnType<typeof updateNodeCache>
+    >(this);
+    updateLinkCache.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof updateLinkCache>,
+      ReturnType<typeof updateLinkCache>
+    >(this);
   }
 
   tick() {
@@ -481,7 +487,7 @@ export class GraphCanvas<
       GraphCanvas<NodeData, LinkData>,
       Parameters<typeof updateNodeCache>,
       ReturnType<typeof updateNodeCache>
-    >(this, true);
+    >(this);
     updateLinkCache.call<
       GraphCanvas<NodeData, LinkData>,
       Parameters<typeof updateLinkCache>,

@@ -13,11 +13,21 @@ export function nodeSettingsGetter<
     Pick<NodeSettingsInterface<NodeData, LinkData>, "options">,
 ): Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
   Pick<NodeSettingsInterface<NodeData, LinkData>, "options"> {
-  return {
+  const result = {
     ...(prevNodeSettings ?? NODE_SETTINGS),
     idGetter: nodeIdGetter,
     ...settings,
   };
+  if (result.smartCache && (!result.textScaleSteps || result.textScaleSteps.length === 0)) {
+    const step = (result.textScaleMax - result.textScaleMin) / 9;
+    const steps: number[] = [];
+    for (let i = 0; i < 10; i++) {
+      steps.push(result.textScaleMin + i * step);
+    }
+    result.textScaleSteps = steps;
+  }
+  return result as Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
+    Pick<NodeSettingsInterface<NodeData, LinkData>, "options">;
 }
 
 const color = colorGetter();

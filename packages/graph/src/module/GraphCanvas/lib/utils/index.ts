@@ -12,3 +12,4 @@ export * from "./link-by-pointer-getter";
 export * from "./node-highlight";
 export * from "./link-highlight";
 export * from "./extract-link-point-ids";
+export * from "./is-empty-object";

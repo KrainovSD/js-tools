@@ -16,7 +16,7 @@
   import Settings from "./components/Settings.vue";
   import { DEFAULT_SETTINGS } from "./constants";
   import "./global.scss";
-  import { bigMock, createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
+  import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
   import type { GraphMode, LinkData, Node, NodeData } from "./types";
 
   const dataArray: {
@@ -28,7 +28,6 @@
     { data: stressMock, id: 2, label: "Стресс" },
     { data: realMock, id: 3, label: "Реальный" },
     { data: customMock, id: 4, label: "Кастомный" },
-    { data: bigMock, id: 5, label: "Big" },
     { data: createNewDynamicMock({ links: [], nodes: [] }), id: 6, label: "Динамически" },
   ];
   const dataRef = ref(1);
