@@ -1,8 +1,10 @@
 import { isArray } from "@krainovsd/js-helpers";
 import { forceLink } from "d3-force";
-import { type ZoomTransform, zoomIdentity } from "d3-zoom";
+import { select as d3Select } from "d3-selection";
+import { type ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
 import { GRAPH_CACHE_TYPE } from "./constants";
 import {
+  computeGraphBounds,
   forceSettingsGetter,
   graphSettingsGetter,
   highlightSettingsGetter,
@@ -87,6 +89,8 @@ export class GraphCanvas<
   protected simulation: GraphCanvasSimulation<NodeData, LinkData> | undefined;
 
   protected areaTransform: ZoomTransform = zoomIdentity;
+
+  protected _translateExtent: [[number, number], [number, number]] | undefined;
 
   protected areaRect: DOMRect | undefined;
 
@@ -179,6 +183,30 @@ export class GraphCanvas<
     };
   }
 
+  fitToView(margin: number = 0.15) {
+    if (!this.area) return;
+
+    const bounds = computeGraphBounds(this.nodes);
+    if (!bounds) return;
+
+    const graphWidth = bounds.maxX - bounds.minX;
+    const graphHeight = bounds.maxY - bounds.minY;
+    if (graphWidth === 0 || graphHeight === 0) return;
+    const graphCenterX = bounds.minX + graphWidth / 2;
+    const graphCenterY = bounds.minY + graphHeight / 2;
+    const scale = (1 - margin) / Math.max(graphWidth / this.width, graphHeight / this.height);
+
+    const clampedScale = Math.min(scale, this.graphSettings.zoomExtent?.[1] ?? scale);
+    const transform = zoomIdentity
+      .translate(this.width / 2, this.height / 2)
+      .scale(clampedScale)
+      .translate(-graphCenterX, -graphCenterY);
+    this.areaTransform = transform;
+    zoom<HTMLCanvasElement, unknown>().transform(d3Select(this.area), transform);
+    this.clearCache(true);
+    if (!this.simulationWorking && !this.highlightWorking) requestAnimationFrame(() => this.draw());
+  }
+
   changeData(
     options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">,
     alpha: number = 0.5,
@@ -186,8 +214,9 @@ export class GraphCanvas<
   ) {
     if (options.links != undefined) this.links = options.links;
     if (options.nodes != undefined) this.nodes = options.nodes;
-    if (options.nodes != undefined || options.links != undefined)
+    if (options.nodes != undefined || options.links != undefined) {
       this.updateData(alpha, clearCache);
+    }
   }
 
   changeSettings(
@@ -474,6 +503,11 @@ export class GraphCanvas<
           ),
       );
       this.restart(alpha);
+      initZoom.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof initZoom>,
+        ReturnType<typeof initZoom>
+      >(this, this.areaTransform);
     }
   }
 

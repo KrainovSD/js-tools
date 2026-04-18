@@ -4,6 +4,7 @@
   import { computed, ref, useTemplateRef, watch } from "vue";
   import type {
     ForceSettingsInterface,
+    GraphCanvas,
     GraphCanvasInterface,
     HighlightSettingsInterface,
     LinkOptionsInterface,
@@ -14,6 +15,7 @@
   import Graph from "./components/Graph.vue";
   import Info from "./components/Info.vue";
   import Settings from "./components/Settings.vue";
+  import ToolPanel from "./components/ToolPanel.vue";
   import { DEFAULT_SETTINGS } from "./constants";
   import "./global.scss";
   import { createNewDynamicMock, customMock, d3Mock, realMock, stressMock } from "./mock";
@@ -60,6 +62,10 @@
   );
 
   const rootRef = useTemplateRef("root");
+  const graphRef = useTemplateRef<InstanceType<typeof Graph>>("graph");
+  const graphController = computed<GraphCanvas<NodeData, LinkData> | undefined>(
+    () => graphRef.value?.graphController as GraphCanvas<NodeData, LinkData> | undefined,
+  );
 
   watch(modeRef, () => {
     selectedNode.value = null;
@@ -101,6 +107,7 @@
       </div>
       <Graph
         v-if="graph"
+        ref="graph"
         v-model:selected-node="selectedNode"
         :graph="graph"
         :mode="modeRef"
@@ -123,6 +130,7 @@
         @cancel="clearSettings"
       />
       <Info :mount-root="rootRef" :selected-node="selectedNode" />
+      <ToolPanel :graph-controller="graphController" />
     </div>
   </VThemeProvider>
 </template>

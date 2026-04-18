@@ -10,7 +10,7 @@ export const FORCE_SETTINGS: Required<
   xForce: true,
   yForce: true,
   collideForce: true,
-  precompute: false,
+  precompute: true,
   precomputeMaxTicks: 300,
   precomputeMaxTimeMs: 200,
   precomputeDisableForcesAfter: false,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, toRaw, useTemplateRef, watch } from "vue";
+  import { computed, shallowRef, toRaw, useTemplateRef, watch } from "vue";
   import {
     type ForceSettingsInterface,
     GRAPH_CACHE_TYPE,
@@ -27,7 +27,7 @@
 
   const props = defineProps<Props>();
   const graphRef = useTemplateRef("graph");
-  let graphController: GraphCanvas<NodeData, LinkData> | undefined;
+  const graphController = shallowRef<GraphCanvas<NodeData, LinkData> | undefined>(undefined);
   const selectedNode = defineModel<Node | null>("selectedNode", { default: null });
   const selectedLink = defineModel<string | null>("selectedLink", { default: null });
   const checkedGraph = computed(() =>
@@ -35,18 +35,18 @@
   );
 
   function onClick(event: MouseEvent | TouchEvent, node: Node | undefined, link: Link | undefined) {
-    if (!graphController) return;
+    if (!graphController.value) return;
 
     // collapsible mode
     if (event.ctrlKey && node?.id != undefined) {
       const relationsMap: Record<string, string[]> = {};
-      for (const link of graphController.getData().links) {
+      for (const link of graphController.value.getData().links) {
         const { sourceId, targetId } = extractLinkPointIds(link);
         relationsMap[sourceId] ??= [];
         relationsMap[sourceId].push(String(targetId));
       }
       const collapsedNodes = new Set<string>();
-      for (const node of graphController.getData().nodes) {
+      for (const node of graphController.value.getData().nodes) {
         if (node.data?.collapsed) {
           collapsedNodes.add(String(node.id));
         }
@@ -70,7 +70,7 @@
         return result.slice(1);
       }
       const childrenNodes = new Set(getAllChildren(relationsMap, String(node.id)));
-      for (const node of graphController.getData().nodes) {
+      for (const node of graphController.value.getData().nodes) {
         if (childrenNodes.has(String(node.id))) {
           node.visible = opening;
         }
@@ -82,7 +82,7 @@
       } else {
         node.label = String(childrenNodes.size);
       }
-      graphController.clearCache(true);
+      graphController.value.clearCache(true);
 
       return;
     }
@@ -107,9 +107,9 @@
   watch(
     () => props.forceSettings,
     (forceSettings) => {
-      if (!graphController) return;
+      if (!graphController.value) return;
 
-      graphController.changeSettings({ forceSettings });
+      graphController.value.changeSettings({ forceSettings });
     },
     { immediate: true },
   );
@@ -117,9 +117,9 @@
   watch(
     () => props.highlightSettings,
     (highlightSettings) => {
-      if (!graphController) return;
+      if (!graphController.value) return;
 
-      graphController.changeSettings({ highlightSettings });
+      graphController.value.changeSettings({ highlightSettings });
     },
     { immediate: true },
   );
@@ -127,9 +127,9 @@
   watch(
     () => [props.nodeSettings, props.nodeOptions, selectedNode.value] as const,
     ([nodeSettings, nodeOptions, selectedNode]) => {
-      if (!graphController) return;
+      if (!graphController.value) return;
 
-      graphController.changeSettings(
+      graphController.value.changeSettings(
         {
           nodeSettings: { ...nodeSettings, options: getNodeOptions(nodeOptions, selectedNode) },
         },
@@ -142,9 +142,9 @@
   watch(
     () => [props.linkSettings, props.linkOptions] as const,
     ([linkSettings, linkOptions]) => {
-      if (!graphController) return;
+      if (!graphController.value) return;
 
-      graphController.changeSettings({
+      graphController.value.changeSettings({
         linkSettings: { ...linkSettings, options: getLinkOptions(linkOptions) },
       });
     },
@@ -155,9 +155,12 @@
   watch(
     checkedGraph,
     (graph) => {
-      if (!graphController) return;
+      if (!graphController.value) return;
 
-      graphController.changeData({ links: toRaw(graph.links), nodes: toRaw(graph.nodes) }, 0.3);
+      graphController.value.changeData(
+        { links: toRaw(graph.links), nodes: toRaw(graph.nodes) },
+        0.3,
+      );
     },
     { immediate: true },
   );
@@ -187,10 +190,10 @@
         },
       });
 
-      graphController = controller;
+      graphController.value = controller;
       clean(() => {
         controller.destroy();
-        graphController = undefined;
+        graphController.value = undefined;
       });
     },
     { immediate: true },

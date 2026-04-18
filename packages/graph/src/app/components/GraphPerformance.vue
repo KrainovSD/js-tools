@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, toRaw, useTemplateRef, watch } from "vue";
+  import { computed, shallowRef, toRaw, useTemplateRef, watch } from "vue";
   import { GraphCanvas } from "@/module/GraphCanvas";
   import { PERFORMANCE_SETTINGS } from "../constants";
   import { getNodeNeighbors } from "../lib";
@@ -11,7 +11,7 @@
 
   const props = defineProps<Props>();
   const graphRef = useTemplateRef("graph");
-  let graphController: GraphCanvas<NodeData, LinkData> | undefined;
+  const graphController = shallowRef<GraphCanvas<NodeData, LinkData> | undefined>(undefined);
   const selectedNode = defineModel<Node | null>("selectedNode", { default: null });
   const selectedLink = defineModel<string | null>("selectedLink", { default: null });
   const checkedGraph = computed(() =>
@@ -43,9 +43,12 @@
   watch(
     checkedGraph,
     (graph) => {
-      if (!graphController) return;
+      if (!graphController.value) return;
 
-      graphController.changeData({ links: toRaw(graph.links), nodes: toRaw(graph.nodes) }, 0.3);
+      graphController.value.changeData(
+        { links: toRaw(graph.links), nodes: toRaw(graph.nodes) },
+        0.3,
+      );
     },
     { immediate: true },
   );
@@ -76,10 +79,10 @@
         },
       });
 
-      graphController = controller;
+      graphController.value = controller;
       clean(() => {
         controller.destroy();
-        graphController = undefined;
+        graphController.value = undefined;
       });
     },
     { immediate: true },

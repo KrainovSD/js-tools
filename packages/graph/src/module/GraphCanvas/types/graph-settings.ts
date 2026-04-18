@@ -1,10 +1,13 @@
 import type { NodeInterface } from "./nodes";
 
 export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
-  zoomExtent?: [number, number];
-  translateExtent?: [[number?, number?], [number?, number?]];
-  translateExtentCoefficient?: number | [number, number];
-  translateExtentEnable?: boolean;
+  zoomExtent?: [number, number] | null;
+  // margin out of center of graph
+  zoomExtentMargin?: number;
+  translateExtent?: [[number?, number?], [number?, number?]] | null;
+  translateExtentCoefficient?: number | [number, number] | null;
+  // fraction of graph that must remain visible at max pan
+  translateExtentOverlap?: number;
   zoomInitial?: {
     k?: number;
     x?: number;

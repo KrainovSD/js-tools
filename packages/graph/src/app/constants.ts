@@ -36,8 +36,8 @@ export const DEFAULT_SETTINGS: GraphSettings = {
   },
   graphSettings: {
     ...GRAPH_SETTINGS,
-    zoomExtent: [0.1, 10],
-    translateExtentCoefficient: [10, 10],
+    // zoomExtent: [0.3, 10],
+    // translateExtentCoefficient: [10, 10],
   },
   linkOptions: {
     ...LINK_OPTIONS,
@@ -57,8 +57,6 @@ export const PERFORMANCE_SETTINGS: GraphSettings = {
   forceSettings: {
     ...DEFAULT_SETTINGS.forceSettings,
     collideIterations: 1,
-    precompute: true,
-    precomputeMaxTicks: 800,
     precomputeMaxTimeMs: 350,
     precomputeDisableForcesAfter: true,
   },

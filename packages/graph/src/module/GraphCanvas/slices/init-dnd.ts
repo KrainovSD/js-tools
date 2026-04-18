@@ -41,8 +41,20 @@ export function initDnd<
       if (!this.areaRect) return;
       const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
       const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
-      event.subject.fx = pointerX;
-      event.subject.fy = pointerY;
+
+      if (this._translateExtent) {
+        event.subject.fx = Math.max(
+          this._translateExtent[0][0],
+          Math.min(this._translateExtent[1][0], pointerX),
+        );
+        event.subject.fy = Math.max(
+          this._translateExtent[0][1],
+          Math.min(this._translateExtent[1][1], pointerY),
+        );
+      } else {
+        event.subject.fx = pointerX;
+        event.subject.fy = pointerY;
+      }
 
       this.listeners.onMoveDragFinished?.call?.(this, event);
     })
@@ -54,8 +66,19 @@ export function initDnd<
       const sourceEvent = event.sourceEvent as MouseEvent | TouchEvent;
       if (sourceEvent.altKey && this.areaRect) {
         const [pointerX, pointerY] = pointerGetter(sourceEvent, this.areaRect, this.areaTransform);
-        event.subject.fx = pointerX;
-        event.subject.fy = pointerY;
+        if (this._translateExtent) {
+          event.subject.fx = Math.max(
+            this._translateExtent[0][0],
+            Math.min(this._translateExtent[1][0], pointerX),
+          );
+          event.subject.fy = Math.max(
+            this._translateExtent[0][1],
+            Math.min(this._translateExtent[1][1], pointerY),
+          );
+        } else {
+          event.subject.fx = pointerX;
+          event.subject.fy = pointerY;
+        }
       } else {
         event.subject.fx = null;
         event.subject.fy = null;

@@ -12,6 +12,7 @@ import { getDrawTime, resetDrawTime } from "@/lib";
 import type { GraphCanvas } from "../GraphCanvas";
 import { nodeIterationExtractor } from "../lib";
 import type { LinkInterface, NodeInterface } from "../types";
+import { initZoom } from "./init-zoom";
 
 export function initSimulation<
   NodeData extends Record<string, unknown>,
@@ -31,6 +32,13 @@ export function initSimulation<
       })
       .on("end", () => {
         this.listeners.onSimulationEnd?.call?.(this);
+        if (this.area) {
+          initZoom.call<
+            GraphCanvas<NodeData, LinkData>,
+            Parameters<typeof initZoom>,
+            ReturnType<typeof initZoom>
+          >(this, this.areaTransform);
+        }
         if (this.graphSettings.showDrawTime) {
           getDrawTime();
           // eslint-disable-next-line no-console

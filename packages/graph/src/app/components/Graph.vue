@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { useTemplateRef } from "vue";
-  import type { ForceSettingsInterface, GraphCanvas } from "@/module/GraphCanvas";
+  import { computed, useTemplateRef } from "vue";
+  import type { ForceSettingsInterface } from "@/module/GraphCanvas";
   import type {
     HighlightSettingsInterface,
     LinkOptionsInterface,
@@ -27,14 +27,11 @@
   const selectedNode = defineModel<Node | null>("selectedNode", { default: null });
   const customRef = useTemplateRef<InstanceType<typeof GraphCustom>>("custom");
   const performanceRef = useTemplateRef<InstanceType<typeof GraphPerformance>>("performance");
+  const customGraph = computed(() => customRef.value?.graphController);
+  const performanceGraph = computed(() => performanceRef.value?.graphController);
+  const graphControllerRef = computed(() => customGraph.value ?? performanceGraph.value);
 
-  defineExpose({
-    get graphController(): GraphCanvas<NodeData, LinkData> | undefined {
-      if (customRef.value) return customRef.value.graphController;
-      if (performanceRef.value) return performanceRef.value.graphController;
-      return undefined;
-    },
-  });
+  defineExpose({ graphController: graphControllerRef });
 </script>
 
 <template>
