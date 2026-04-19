@@ -1,6 +1,7 @@
 import type { GraphCanvas } from "../GraphCanvas";
 import { calculateLinkPositionByNode, getParticlePosition, linkFade, linkHighlight } from "../lib";
 import { calculateCurveLinkPositionByNode } from "../lib/utils/calculate-curve-link-position-by-node";
+import { approximateQuadraticBezierLength } from "../lib/utils/get-particle-position";
 import type { LinkInterface, LinkParticle } from "../types";
 
 export function getDrawLink<
@@ -206,6 +207,14 @@ export function getDrawLink<
       link._cy = position.yControl;
       link._ax = position.xEndArrow;
       link._ay = position.yEndArrow;
+      linkDistance = approximateQuadraticBezierLength(
+        position.xStart,
+        position.yStart,
+        position.xControl,
+        position.yControl,
+        position.xEnd,
+        position.yEnd,
+      );
       this.context.beginPath();
       this.context.moveTo(position.xStart, position.yStart);
       this.context.quadraticCurveTo(
@@ -276,6 +285,8 @@ export function getDrawLink<
             xStart,
             yEnd,
             yStart,
+            xControl,
+            yControl,
           });
           if (particle.x != undefined && particle.y != undefined) {
             this.context.beginPath();
