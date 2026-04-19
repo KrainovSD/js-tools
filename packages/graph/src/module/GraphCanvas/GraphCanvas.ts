@@ -1,7 +1,7 @@
 import { isArray } from "@krainovsd/js-helpers";
 import { forceLink } from "d3-force";
 import { select as d3Select } from "d3-selection";
-import { type ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
+import { ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
 import { GRAPH_CACHE_TYPE } from "./constants";
 import {
   computeGraphBounds,
@@ -123,6 +123,8 @@ export class GraphCanvas<
 
   protected _lastLinkZoomK: number | undefined;
 
+  protected _zoomAnimating: boolean = false;
+
   protected get simulationWorking() {
     const simulationAlpha = this.simulation?.alpha?.() ?? 0;
     const simulationAlphaMin = this.simulation?.alphaMin?.() ?? 0;
@@ -182,8 +184,12 @@ export class GraphCanvas<
     };
   }
 
-  fitToView(margin: number = 0.15) {
-    if (!this.area) return;
+  fitToView(
+    margin: number = this.graphSettings.zoomToFitMargin,
+    duration: number = this.graphSettings.zoomAnimationDuration,
+  ) {
+    const area = this.area;
+    if (!area) return;
 
     const bounds = computeGraphBounds(this.nodes);
     if (!bounds) return;
@@ -196,14 +202,85 @@ export class GraphCanvas<
     const scale = (1 - margin) / Math.max(graphWidth / this.width, graphHeight / this.height);
 
     const clampedScale = Math.min(scale, this.graphSettings.zoomExtent?.[1] ?? scale);
-    const transform = zoomIdentity
+    const target = zoomIdentity
       .translate(this.width / 2, this.height / 2)
       .scale(clampedScale)
       .translate(-graphCenterX, -graphCenterY);
-    this.areaTransform = transform;
-    zoom<HTMLCanvasElement, unknown>().transform(d3Select(this.area), transform);
-    this.clearCache(true);
-    if (!this.simulationWorking && !this.highlightWorking) requestAnimationFrame(() => this.draw());
+    if (!this.graphSettings.zoomAnimation) {
+      this.areaTransform = target;
+      zoom<HTMLCanvasElement, unknown>().transform(d3Select(area), target);
+      this.clearCache(true);
+      this.tick();
+      return;
+    }
+    this.animateZoom(area, target, this.areaTransform, duration);
+  }
+
+  focusOnNode(
+    nodeId: string | number,
+    scale: number = this.graphSettings.zoomToNodeScale,
+    duration: number = this.graphSettings.zoomAnimationDuration,
+  ) {
+    const area = this.area;
+    if (!area) return;
+
+    const node = this.nodes.find((n) => n.id === nodeId);
+    if (!node) return;
+    if (node.x == undefined || node.y == undefined) return;
+
+    const target = zoomIdentity
+      .translate(this.width / 2, this.height / 2)
+      .scale(scale)
+      .translate(-node.x, -node.y);
+    if (!this.graphSettings.zoomAnimation) {
+      this.areaTransform = target;
+      zoom<HTMLCanvasElement, unknown>().transform(d3Select(area), target);
+      this.clearCache(true);
+      this.tick();
+      return;
+    }
+    this.animateZoom(area, target, this.areaTransform, duration);
+  }
+
+  private animateZoom(
+    area: HTMLCanvasElement,
+    target: ZoomTransform,
+    start: ZoomTransform,
+    duration: number,
+  ) {
+    this._zoomAnimating = true;
+    const startTime = performance.now();
+    const animate = () => {
+      const elapsed = performance.now() - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+      const x = start.x + (target.x - start.x) * eased;
+      const y = start.y + (target.y - start.y) * eased;
+      const k = start.k + (target.k - start.k) * eased;
+
+      this.areaTransform = new ZoomTransform(k, x, y);
+      zoom<HTMLCanvasElement, unknown>().transform(d3Select(area), this.areaTransform);
+      updateLinkCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateLinkCache>,
+        ReturnType<typeof updateLinkCache>
+      >(this);
+      updateNodeCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateNodeCache>,
+        ReturnType<typeof updateNodeCache>
+      >(this);
+      this.tick();
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        this._zoomAnimating = false;
+        this.clearCache(true);
+        this.tick();
+      }
+    };
+    requestAnimationFrame(animate);
   }
 
   changeData(
@@ -412,7 +489,7 @@ export class GraphCanvas<
       ReturnType<typeof initSimulationForces>
     >(this);
     this.simulation.restart();
-    if (!this.simulationWorking && !this.highlightWorking) requestAnimationFrame(() => this.draw());
+    this.tick();
   }
 
   start() {

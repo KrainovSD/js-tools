@@ -39,6 +39,7 @@ export function initZoom<
   const zoomInstance = zoom<HTMLCanvasElement, unknown>()
     .scaleExtent(zoomExtent)
     .on("zoom", (event: ZoomEventInterface) => {
+      if (this._zoomAnimating) return;
       this.listeners.onZoom?.call?.(this, event);
       const oldTransform = this.areaTransform;
       this.areaTransform = event.transform;
