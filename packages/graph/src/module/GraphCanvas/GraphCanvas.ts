@@ -250,11 +250,12 @@ export class GraphCanvas<
     options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">,
     alpha: number = 0.5,
     clearCache: boolean | GraphCanvasCacheKeys[] = true,
+    precompute: boolean = false,
   ) => {
     if (options.links != undefined) this.links = options.links;
     if (options.nodes != undefined) this.nodes = options.nodes;
     if (options.nodes != undefined || options.links != undefined) {
-      this.updateData(alpha, clearCache);
+      this.updateData(alpha, clearCache, precompute);
     }
   };
 
@@ -264,6 +265,7 @@ export class GraphCanvas<
       "links" | "nodes" | "listeners"
     >,
     clearCache: boolean | GraphCanvasCacheKeys[] = true,
+    precompute: boolean = false,
   ) => {
     if (options.graphSettings) {
       this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
@@ -329,7 +331,7 @@ export class GraphCanvas<
     }
 
     if (options.forceSettings) {
-      return void this.updateSimulation();
+      return void this.updateSimulation(precompute);
     }
 
     this.tick();
@@ -489,14 +491,14 @@ export class GraphCanvas<
     this.eventAbortController = new AbortController();
   };
 
-  protected updateSimulation = () => {
+  protected updateSimulation = (precompute: boolean = false) => {
     if (this.simulation) {
       initSimulationForces.call<
         GraphCanvas<NodeData, LinkData>,
         Parameters<typeof initSimulationForces>,
         ReturnType<typeof initSimulationForces>
       >(this);
-      this.restart(1);
+      this.restart(1, { precompute });
     }
   };
 
@@ -568,6 +570,7 @@ export class GraphCanvas<
   protected updateData = (
     alpha: number = 0.5,
     clearCache: boolean | GraphCanvasCacheKeys[] = true,
+    precompute: boolean = false,
   ) => {
     if (clearCache) {
       this.clearCache(clearCache);
@@ -600,7 +603,7 @@ export class GraphCanvas<
               : 0,
           ),
       );
-      this.restart(alpha);
+      this.restart(alpha, { precompute });
       initZoom.call<
         GraphCanvas<NodeData, LinkData>,
         Parameters<typeof initZoom>,

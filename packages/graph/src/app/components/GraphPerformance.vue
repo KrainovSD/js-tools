@@ -48,6 +48,8 @@
       graphController.value.changeData(
         { links: toRaw(graph.links), nodes: toRaw(graph.nodes) },
         0.3,
+        true,
+        true,
       );
     },
     { immediate: true },
