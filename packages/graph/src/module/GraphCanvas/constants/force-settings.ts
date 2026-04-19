@@ -31,3 +31,12 @@ export const FORCE_SETTINGS: Required<
   linkStrength: 1,
   collideRadius: null,
 };
+
+export const PERFORMANCE_FORCE_SETTINGS: Required<
+  ForceSettingsInterface<Record<string, unknown>, Record<string, unknown>>
+> = {
+  ...FORCE_SETTINGS,
+  collideIterations: 1,
+  precomputeMaxTimeMs: 350,
+  precomputeDisableForcesAfter: true,
+};

@@ -54,18 +54,42 @@ export const NODE_OPTIONS: Omit<
   textShiftX: 0,
   textFont: "Arial",
   textAlign: "center" as CanvasTextAlign,
-  textColor: "#333",
+  textColor: "#d2d2d2",
   textStyle: "normal",
   textWeight: 500,
   textGap: 0,
   label: null,
   labelAlpha: 1,
   labelAlign: "center",
-  labelColor: "#333",
+  labelColor: "#ffffff",
   labelFont: "Arial",
   labelGap: 0,
   labelSize: 3.5,
   labelStyle: "normal",
   labelWeight: 500,
   labelWidth: 20,
+};
+
+export const PERFORMANCE_NODE_SETTINGS: Omit<
+  Required<NodeSettingsInterface<Record<string, unknown>, Record<string, unknown>>>,
+  "options" | "idGetter"
+> = {
+  ...NODE_SETTINGS,
+  nodeRadiusFlexible: false,
+  nodeSizeFlexible: false,
+};
+
+export const PERFOMANCE_NODE_OPTIONS: Omit<
+  Required<NodeOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
+  | "color"
+  | "text"
+  | "textVisible"
+  | "textSize"
+  | "textShiftY"
+  | "nodeDraw"
+  | "nodeExtraDraw"
+  | "textDraw"
+  | "textExtraDraw"
+> = {
+  ...NODE_OPTIONS,
 };

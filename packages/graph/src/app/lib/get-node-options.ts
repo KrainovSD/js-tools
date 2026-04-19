@@ -22,7 +22,6 @@ export function getNodeOptions(
       borderWidth: selected ? 0.5 : 0.2,
       textSize: opts.textSize ?? (opts.shape === "text" ? 3.5 : undefined),
       label: opts.shape === "text" ? node.name : node.label,
-      labelColor: "#ffffff",
       textVisible: opts.shape === "text" ? false : undefined,
     };
   };

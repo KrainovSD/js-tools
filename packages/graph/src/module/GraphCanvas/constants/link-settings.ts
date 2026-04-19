@@ -8,7 +8,7 @@ export const LINK_SETTINGS: Omit<
   prettyDraw: true,
   curve: true,
   linkScaleSwitch: 1,
-  linkColorAfterScaleSwitch: "#000000FF",
+  linkColorAfterScaleSwitch: "#C5C5C5FF",
   linkColorBeforeScaleSwitch: "#999",
   linkWidthAfterScaleSwitch: 0.1,
   linkWidthBeforeScaleSwitch: 1,
@@ -26,13 +26,30 @@ export const LINK_OPTIONS: Omit<
   alpha: 1,
   arrowAlpha: 1,
   arrowSize: 2,
-  arrowBorderColor: "#000000FF",
+  arrowBorderColor: "#C5C5C5FF",
   arrowBorderWidth: 0.1,
   particleAlpha: 1,
-  particleColor: "#000000FF",
-  particleBorderColor: "#000000FF",
+  particleColor: "#C5C5C5FF",
+  particleBorderColor: "#C5C5C5FF",
   particleBorderWidth: 0.1,
   particleCount: 2,
   particleRadius: 0.5,
   particleSteps: 60,
+};
+
+export const PERFORMANCE_LINK_SETTINGS: Omit<
+  Required<LinkSettingsInterface<Record<string, unknown>, Record<string, unknown>>>,
+  "options"
+> = {
+  ...LINK_SETTINGS,
+  particles: false,
+  particleFlexSpeed: false,
+  prettyDraw: false,
+};
+
+export const PERFORMANCE_LINK_OPTIONS: Omit<
+  Required<LinkOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
+  "color" | "width" | "drawLink" | "drawExtraLink" | "arrowColor"
+> = {
+  ...LINK_OPTIONS,
 };

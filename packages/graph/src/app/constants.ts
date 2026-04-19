@@ -27,6 +27,13 @@ import {
   LINK_SETTINGS,
   NODE_OPTIONS,
   NODE_SETTINGS,
+  PERFOMANCE_NODE_OPTIONS,
+  PERFORMANCE_FORCE_SETTINGS,
+  PERFORMANCE_GRAPH_SETTINGS,
+  PERFORMANCE_HIGHLIGHT_SETTINGS,
+  PERFORMANCE_LINK_OPTIONS,
+  PERFORMANCE_LINK_SETTINGS,
+  PERFORMANCE_NODE_SETTINGS,
 } from "../module/GraphCanvas";
 import type { GraphSettings, SettingsTemplateInterface } from "./types";
 
@@ -41,40 +48,29 @@ export const DEFAULT_SETTINGS: GraphSettings = {
   },
   linkOptions: {
     ...LINK_OPTIONS,
-    color: "#C5C5C5FF",
-    arrowColor: "#C5C5C5FF",
-    particleColor: "#C5C5C5FF",
-    arrowBorderColor: "#C5C5C5FF",
-    particleBorderColor: "#C5C5C5FF",
   },
   linkSettings: { ...LINK_SETTINGS },
-  nodeOptions: { ...NODE_OPTIONS, textColor: "#d2d2d2" },
+  nodeOptions: { ...NODE_OPTIONS },
   nodeSettings: { ...NODE_SETTINGS },
   highlightSettings: { ...HIGHLIGHT_SETTINGS, linkHoverExtraZone: 1 },
 };
 
 export const PERFORMANCE_SETTINGS: GraphSettings = {
   forceSettings: {
-    ...DEFAULT_SETTINGS.forceSettings,
-    collideIterations: 1,
-    precomputeMaxTimeMs: 350,
-    precomputeDisableForcesAfter: true,
+    ...PERFORMANCE_FORCE_SETTINGS,
   },
-  graphSettings: { ...DEFAULT_SETTINGS.graphSettings },
-  linkOptions: { ...DEFAULT_SETTINGS.linkOptions },
+  graphSettings: { ...PERFORMANCE_GRAPH_SETTINGS },
+  linkOptions: {
+    ...PERFORMANCE_LINK_OPTIONS,
+  },
   linkSettings: {
-    ...DEFAULT_SETTINGS.linkSettings,
-    particles: false,
-    particleFlexSpeed: false,
-    prettyDraw: false,
+    ...PERFORMANCE_LINK_SETTINGS,
   },
-  nodeOptions: { ...DEFAULT_SETTINGS.nodeOptions },
+  nodeOptions: { ...PERFOMANCE_NODE_OPTIONS },
   nodeSettings: {
-    ...DEFAULT_SETTINGS.nodeSettings,
-    nodeRadiusFlexible: false,
-    nodeSizeFlexible: false,
+    ...PERFORMANCE_NODE_SETTINGS,
   },
-  highlightSettings: { ...DEFAULT_SETTINGS.highlightSettings },
+  highlightSettings: { ...PERFORMANCE_HIGHLIGHT_SETTINGS },
 };
 
 export const HIGHLIGHT_COLOR = "#ce7a1c";
