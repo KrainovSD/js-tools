@@ -6,7 +6,7 @@ export const LINK_SETTINGS: Omit<
 > = {
   smartCache: true,
   prettyDraw: true,
-  curve: false,
+  curve: true,
   linkScaleSwitch: 1,
   linkColorAfterScaleSwitch: "#000000FF",
   linkColorBeforeScaleSwitch: "#999",

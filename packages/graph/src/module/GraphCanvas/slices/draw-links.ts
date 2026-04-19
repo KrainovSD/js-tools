@@ -10,6 +10,7 @@ export function getDrawLink<
   return function drawLink(
     this: GraphCanvas<NodeData, LinkData>,
     link: LinkInterface<NodeData, LinkData>,
+    index: number,
   ) {
     if (
       !this.context ||
@@ -31,8 +32,7 @@ export function getDrawLink<
 
     if (!link.source._visible && !link.target._visible) return;
 
-    const id = `${link.target.id}${link.source.id}`;
-    const linkOptions = this.linkOptionsCache[id];
+    const linkOptions = this.linkOptionsCache[index];
     if (!linkOptions) return;
 
     if (linkOptions.drawLink) {
@@ -236,7 +236,7 @@ export function getDrawLink<
         : linkOptions.particleSteps;
       const particleCount = linkOptions.particleCount;
 
-      if (!this.particles[id]) {
+      if (!this.particles[index]) {
         const sourceId = link.source.id;
         const targetId = link.target.id;
 
@@ -260,11 +260,10 @@ export function getDrawLink<
           particles[0].prev = particles[particles.length - 1];
           particles[particles.length - 1].next = particles[0];
         }
-        this.particles[id] = particles;
+        this.particles[index] = particles;
       }
-
       if (particleSteps !== 0) {
-        this.particles[id].forEach((particle) => {
+        this.particles[index].forEach((particle) => {
           if (!this.context) return;
 
           const distance = particleSteps / particleCount;

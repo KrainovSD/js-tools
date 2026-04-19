@@ -164,7 +164,7 @@ export function initCollideForce<
         "collide",
         forceCollide<NodeInterface<NodeData>>()
           .radius((node, index) => {
-            const nodeOptions = this.nodeOptionsCache[node.id];
+            const nodeOptions = this.nodeOptionsCache[index];
             if (!nodeOptions) return 0;
 
             switch (nodeOptions.shape) {

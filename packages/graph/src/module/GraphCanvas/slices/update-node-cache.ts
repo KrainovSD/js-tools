@@ -1,6 +1,5 @@
 import type { GraphCanvas } from "../GraphCanvas";
 import {
-  isEmptyObject,
   nodeIterationExtractor,
   nodeOptionsGetter,
   nodeRadiusGetter,
@@ -15,9 +14,9 @@ export function updateNodeCache<
   if (!this.context) return;
 
   const currentZoom = this.areaTransform.k;
-  const options = isEmptyObject(this.nodeOptionsCache);
-  const label = isEmptyObject(this.cachedNodeLabel);
-  let text = isEmptyObject(this.cachedNodeText);
+  const options = this.nodeOptionsCache.length === 0;
+  const label = this.cachedNodeLabel.length === 0;
+  let text = this.cachedNodeText.length === 0;
 
   if (
     this.nodeSettings.smartCache &&
@@ -34,7 +33,7 @@ export function updateNodeCache<
       this._lastNodeZoomK = currentZoom;
       if (!crossed) return;
     }
-    this.cachedNodeText = {};
+    this.cachedNodeText.length = 0;
     text = true;
   }
   this._lastNodeZoomK = currentZoom;
@@ -103,10 +102,11 @@ export function updateNodeCache<
       nodeOptions.height = node.visible === false ? 0 : height;
       nodeOptions.radius = node.visible === false ? 0 : radius;
       nodeOptions.labelSize = labelSize;
-      this.nodeOptionsCache[node.id] = nodeOptions;
+      this.nodeOptionsCache[i] = nodeOptions;
     }
 
-    let nodeOptions = this.nodeOptionsCache[node.id];
+    let nodeOptions = this.nodeOptionsCache[i];
+    if (!nodeOptions) continue;
     /** label */
     if (label) {
       if (!options) {
@@ -118,7 +118,8 @@ export function updateNodeCache<
           this.nodeSettings.options ?? {},
           nodeOptionsGetter,
         );
-        this.nodeOptionsCache[node.id].label = nodeOptions.label;
+        const cache = this.nodeOptionsCache[i];
+        if (cache) cache.label = nodeOptions.label;
       }
       /** label in not text shape */
       if (nodeOptions.shape !== "text" && nodeOptions.label) {
@@ -130,7 +131,7 @@ export function updateNodeCache<
           nodeOptions.labelWidth == undefined ||
           this.context.measureText(nodeOptions.label).width <= nodeOptions.labelWidth
         ) {
-          this.cachedNodeLabel[node.id] = [nodeOptions.label];
+          this.cachedNodeLabel[i] = [nodeOptions.label];
         }
 
         const { lines } = getTextLines({
@@ -144,7 +145,7 @@ export function updateNodeCache<
           textStyle: nodeOptions.labelStyle,
           textWeight: nodeOptions.labelWeight,
         });
-        this.cachedNodeLabel[node.id] = lines;
+        this.cachedNodeLabel[i] = lines;
         /** label in text shape */
       } else if (nodeOptions.shape === "text" && nodeOptions.label) {
         const textInfo = getTextLines({
@@ -169,9 +170,9 @@ export function updateNodeCache<
           nodeOptions.labelYPadding;
 
         nodeOptions.width = maxSize + nodeOptions.labelXPadding;
-        this.cachedNodeLabel[node.id] = lines;
+        this.cachedNodeLabel[i] = lines;
       } else {
-        this.cachedNodeLabel[node.id] = [];
+        this.cachedNodeLabel[i] = [];
       }
     }
 
@@ -186,22 +187,19 @@ export function updateNodeCache<
           this.nodeSettings.options ?? {},
           nodeOptionsGetter,
         );
-        this.nodeOptionsCache[node.id].text = nodeOptions.text;
-        this.nodeOptionsCache[node.id].textVisible = nodeOptions.textVisible;
+        const cache = this.nodeOptionsCache[i];
+        if (cache) {
+          cache.text = nodeOptions.text;
+          cache.textVisible = nodeOptions.textVisible;
+        }
       }
       if (!nodeOptions.text) {
-        this.cachedNodeText[node.id] = [];
+        this.cachedNodeText[i] = [];
         return;
       }
       this.context.font = `${nodeOptions.textStyle} normal ${nodeOptions.textWeight} ${nodeOptions.textSize}px ${nodeOptions.textFont}`;
       this.context.fillStyle = nodeOptions.textColor;
       this.context.textAlign = nodeOptions.textAlign;
-      if (
-        nodeOptions.textWidth == undefined ||
-        this.context.measureText(nodeOptions.text).width <= nodeOptions.textWidth
-      ) {
-        this.cachedNodeText[node.id] = [nodeOptions.text];
-      }
       const { lines } = getTextLines({
         context: this.context,
         maxWidth: nodeOptions.textWidth,
@@ -213,7 +211,7 @@ export function updateNodeCache<
         textStyle: nodeOptions.textStyle,
         textWeight: nodeOptions.textWeight,
       });
-      this.cachedNodeText[node.id] = lines;
+      this.cachedNodeText[i] = lines;
     }
   }
 }

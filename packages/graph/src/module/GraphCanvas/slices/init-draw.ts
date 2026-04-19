@@ -59,7 +59,7 @@ export function initDraw<
         this.highlightedNeighbors = null;
         this.highlightedNode = null;
         this.highlightedLink = null;
-        this.particles = {};
+        this.particles = [];
 
         if (!this.simulationWorking) {
           hasHighlight = true;

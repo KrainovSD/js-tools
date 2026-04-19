@@ -47,7 +47,7 @@ export const DEFAULT_SETTINGS: GraphSettings = {
     arrowBorderColor: "#C5C5C5FF",
     particleBorderColor: "#C5C5C5FF",
   },
-  linkSettings: { ...LINK_SETTINGS, curve: true },
+  linkSettings: { ...LINK_SETTINGS },
   nodeOptions: { ...NODE_OPTIONS, textColor: "#d2d2d2" },
   nodeSettings: { ...NODE_SETTINGS },
   highlightSettings: { ...HIGHLIGHT_SETTINGS, linkHoverExtraZone: 1 },

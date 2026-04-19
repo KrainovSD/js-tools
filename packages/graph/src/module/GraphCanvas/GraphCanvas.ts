@@ -26,7 +26,6 @@ import {
   updateNodeCache,
 } from "./slices";
 import type {
-  CachedNodeTextInterface,
   ForceSettingsInterface,
   GraphCanvasCacheKeys,
   GraphCanvasInterface,
@@ -54,7 +53,7 @@ export class GraphCanvas<
 
   protected links: LinkInterface<NodeData, LinkData>[];
 
-  protected particles: Record<string, LinkParticle[]> = {};
+  protected particles: (LinkParticle[] | undefined)[] = [];
 
   protected width: number;
 
@@ -98,15 +97,15 @@ export class GraphCanvas<
 
   protected eventAbortController: AbortController;
 
-  protected cachedNodeText: CachedNodeTextInterface = {};
+  protected cachedNodeText: (string[] | undefined)[] = [];
 
-  protected cachedNodeLabel: CachedNodeTextInterface = {};
+  protected cachedNodeLabel: (string[] | undefined)[] = [];
 
-  protected linkOptionsCache: Record<string, Required<LinkOptionsInterface<NodeData, LinkData>>> =
-    {};
+  protected linkOptionsCache: (Required<LinkOptionsInterface<NodeData, LinkData>> | undefined)[] =
+    [];
 
-  protected nodeOptionsCache: Record<string, Required<NodeOptionsInterface<NodeData, LinkData>>> =
-    {};
+  protected nodeOptionsCache: (Required<NodeOptionsInterface<NodeData, LinkData>> | undefined)[] =
+    [];
 
   protected isDragging: boolean = false;
 
@@ -320,27 +319,27 @@ export class GraphCanvas<
 
   clearCache(keys: boolean | GraphCanvasCacheKeys[]) {
     if (keys === true) {
-      this.nodeOptionsCache = {};
-      this.linkOptionsCache = {};
-      this.cachedNodeLabel = {};
-      this.cachedNodeText = {};
+      this.nodeOptionsCache.length = 0;
+      this.linkOptionsCache.length = 0;
+      this.cachedNodeLabel.length = 0;
+      this.cachedNodeText.length = 0;
     } else if (isArray(keys)) {
       for (const key of keys) {
         switch (key) {
           case GRAPH_CACHE_TYPE.NodeText: {
-            this.cachedNodeText = {};
+            this.cachedNodeText.length = 0;
             break;
           }
           case GRAPH_CACHE_TYPE.NodeLabel: {
-            this.cachedNodeLabel = {};
+            this.cachedNodeLabel.length = 0;
             break;
           }
           case GRAPH_CACHE_TYPE.NodeOptions: {
-            this.nodeOptionsCache = {};
+            this.nodeOptionsCache.length = 0;
             break;
           }
           case GRAPH_CACHE_TYPE.LinkOptions: {
-            this.linkOptionsCache = {};
+            this.linkOptionsCache.length = 0;
             break;
           }
           default: {

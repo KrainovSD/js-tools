@@ -8,7 +8,11 @@ export function getDrawNode<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(nodeRenders: (() => void)[], textRenders: (() => void)[]) {
-  return function drawNode(this: GraphCanvas<NodeData, LinkData>, node: NodeInterface<NodeData>) {
+  return function drawNode(
+    this: GraphCanvas<NodeData, LinkData>,
+    node: NodeInterface<NodeData>,
+    index: number,
+  ) {
     if (!this.context || !node.x || !node.y) return;
     if (node.visible != undefined && !node.visible) {
       node._radius = 0;
@@ -18,7 +22,7 @@ export function getDrawNode<
       return;
     }
 
-    const nodeOptions = this.nodeOptionsCache[node.id];
+    const nodeOptions = this.nodeOptionsCache[index];
     if (!nodeOptions) return;
 
     if (nodeOptions.nodeDraw && nodeOptions.textDraw) {
@@ -207,7 +211,7 @@ export function getDrawNode<
       this.context.lineWidth = borderWidth;
       this.context.strokeStyle = borderColor;
       this.context.fillStyle = color;
-      const labelLines = this.cachedNodeLabel[node.id];
+      const labelLines = this.cachedNodeLabel[index];
 
       switch (nodeOptions.shape) {
         case "circle": {
@@ -364,7 +368,7 @@ export function getDrawNode<
     }
 
     /** Text draw */
-    const textLines = this.cachedNodeText[node.id];
+    const textLines = this.cachedNodeText[index];
     if (nodeOptions.textVisible && nodeOptions.text && textLines) {
       textRenders.push(() => {
         if (nodeOptions.textDraw) {

@@ -1,10 +1,5 @@
 import type { GraphCanvas } from "../GraphCanvas";
-import {
-  extractLinkPointIds,
-  isEmptyObject,
-  linkIterationExtractor,
-  linkOptionsGetter,
-} from "../lib";
+import { extractLinkPointIds, linkIterationExtractor, linkOptionsGetter } from "../lib";
 
 export function updateLinkCache<
   NodeData extends Record<string, unknown>,
@@ -16,7 +11,7 @@ export function updateLinkCache<
   if (
     this.linkSettings.smartCache &&
     this._lastLinkZoomK !== undefined &&
-    !isEmptyObject(this.linkOptionsCache)
+    this.linkOptionsCache.length > 0
   ) {
     const corner = this.linkSettings.linkScaleSwitch;
     const prev = this._lastLinkZoomK;
@@ -26,7 +21,6 @@ export function updateLinkCache<
     }
     for (let i = 0; i < this.links.length; i++) {
       const link = this.links[i];
-      const { sourceId, targetId } = extractLinkPointIds(link);
       const linkOptions = linkIterationExtractor(
         link,
         i,
@@ -35,17 +29,18 @@ export function updateLinkCache<
         this.linkSettings.options ?? {},
         linkOptionsGetter,
       );
-      const id = `${targetId}${sourceId}`;
-      const cache = this.linkOptionsCache[id];
-      cache.color = linkOptions.color;
-      cache.arrowColor = linkOptions.arrowColor;
-      cache.width = linkOptions.width;
+      const cache = this.linkOptionsCache[i];
+      if (cache) {
+        cache.color = linkOptions.color;
+        cache.arrowColor = linkOptions.arrowColor;
+        cache.width = linkOptions.width;
+      }
     }
     return;
   }
 
   this._lastLinkZoomK = current;
-  this.linkOptionsCache = {};
+  this.linkOptionsCache.length = 0;
 
   const groupMap: Record<string, number> = {};
   const groupSelfMap: Record<string, number> = {};
@@ -61,10 +56,10 @@ export function updateLinkCache<
       this.linkSettings.options ?? {},
       linkOptionsGetter,
     );
-    const id = `${targetId}${sourceId}`;
-    this.linkOptionsCache[id] = linkOptions;
+    this.linkOptionsCache[i] = linkOptions;
 
     if (this.linkSettings.curve) {
+      const id = `${targetId}${sourceId}`;
       if (sourceId === targetId) {
         groupSelfMap[id] ??= 0;
         link._groupIndex = ++groupSelfMap[id];
