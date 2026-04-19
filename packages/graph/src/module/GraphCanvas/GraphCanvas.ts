@@ -94,7 +94,7 @@ export class GraphCanvas<
 
   protected areaRect: DOMRect | undefined;
 
-  protected draw: (this: GraphCanvas<NodeData, LinkData>, recursive?: boolean) => void;
+  protected draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
   protected eventAbortController: AbortController;
 
@@ -182,17 +182,17 @@ export class GraphCanvas<
     return devicePixelRatio;
   }
 
-  getData(): Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> {
+  getData = (): Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> => {
     return {
       links: this.links,
       nodes: this.nodes,
     };
-  }
+  };
 
-  fitToView(
+  fitToView = (
     margin: number = this.graphSettings.zoomToFitMargin,
     duration: number = this.graphSettings.zoomAnimationDuration,
-  ) {
+  ) => {
     const area = this.area;
     if (!area) return;
 
@@ -219,13 +219,13 @@ export class GraphCanvas<
       return;
     }
     this.animateZoom(area, target, this.areaTransform, duration);
-  }
+  };
 
-  focusOnNode(
+  focusOnNode = (
     nodeId: string | number,
     scale: number = this.graphSettings.zoomToNodeScale,
     duration: number = this.graphSettings.zoomAnimationDuration,
-  ) {
+  ) => {
     const area = this.area;
     if (!area) return;
 
@@ -245,129 +245,26 @@ export class GraphCanvas<
       return;
     }
     this.animateZoom(area, target, this.areaTransform, duration);
-  }
-
-  protected animateHighlight(
-    node: NodeInterface<NodeData> | undefined,
-    link: LinkInterface<NodeData, LinkData> | undefined,
-    baseDuration: number = this.highlightSettings.highlightDuration,
-  ) {
-    let positive = true;
-    if (node && (this.highlightedNode !== node || !this.highlightPositive)) {
-      this.highlightedNode = node;
-      this.highlightedNeighbors = new Set(node.neighbors);
-      this.particles = [];
-      this.highlightedLink = null;
-      this.highlightStart = performance.now();
-    } else if (link && (this.highlightedLink !== link || !this.highlightPositive)) {
-      const { sourceId, targetId } = extractLinkPointIds(link);
-      this.highlightProgress = 0;
-      this.highlightedLink = link;
-      this.highlightedNeighbors = new Set([sourceId, targetId]);
-      this.particles = [];
-      this.highlightedNode = null;
-      this.highlightStart = performance.now();
-    } else if (!node && !link && this.highlightPositive) {
-      positive = false;
-    } else {
-      return;
-    }
-    if (this.highlightController) {
-      this.highlightController.abort();
-    }
-    const controller = new AbortController();
-    this.highlightPositive = positive;
-    this.highlightController = controller;
-    const startTime = performance.now();
-    const startProgress = this.highlightProgress;
-    const targetProgress = positive ? 1 : 0;
-    const delta = targetProgress - startProgress;
-    const duration = baseDuration * Math.abs(delta);
-
-    const animate = () => {
-      if (controller.signal.aborted) return;
-      const elapsed = performance.now() - startTime;
-      const t = Math.min(elapsed / duration, 1);
-      const current = startProgress + delta * t;
-      const eased =
-        current < 0.5 ? 4 * current * current * current : 1 - (-2 * current + 2) ** 3 / 2;
-      this.highlightProgress = eased;
-
-      if (t < 1 || positive) {
-        requestAnimationFrame(animate);
-        this.draw();
-      } else {
-        this.highlightedNode = null;
-        this.highlightedLink = null;
-        this.highlightedNeighbors = null;
-        this.highlightStart = null;
-        this.particles = [];
-        this.tick();
-      }
-    };
-    requestAnimationFrame(animate);
-  }
-
-  protected animateZoom(
-    area: HTMLCanvasElement,
-    target: ZoomTransform,
-    start: ZoomTransform,
-    duration: number,
-  ) {
-    this._zoomAnimating = true;
-    const startTime = performance.now();
-    const animate = () => {
-      const elapsed = performance.now() - startTime;
-      const t = Math.min(elapsed / duration, 1);
-      const eased = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
-      const x = start.x + (target.x - start.x) * eased;
-      const y = start.y + (target.y - start.y) * eased;
-      const k = start.k + (target.k - start.k) * eased;
-
-      this.areaTransform = new ZoomTransform(k, x, y);
-      zoom<HTMLCanvasElement, unknown>().transform(d3Select(area), this.areaTransform);
-      updateLinkCache.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof updateLinkCache>,
-        ReturnType<typeof updateLinkCache>
-      >(this);
-      updateNodeCache.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof updateNodeCache>,
-        ReturnType<typeof updateNodeCache>
-      >(this);
-      this.tick();
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        this._zoomAnimating = false;
-        this.clearCache(true);
-        this.tick();
-      }
-    };
-    requestAnimationFrame(animate);
-  }
-
-  changeData(
+  };
+  changeData = (
     options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">,
     alpha: number = 0.5,
     clearCache: boolean | GraphCanvasCacheKeys[] = true,
-  ) {
+  ) => {
     if (options.links != undefined) this.links = options.links;
     if (options.nodes != undefined) this.nodes = options.nodes;
     if (options.nodes != undefined || options.links != undefined) {
       this.updateData(alpha, clearCache);
     }
-  }
+  };
 
-  changeSettings(
+  changeSettings = (
     options: Omit<
       Partial<GraphCanvasInterface<NodeData, LinkData>>,
       "links" | "nodes" | "listeners"
     >,
     clearCache: boolean | GraphCanvasCacheKeys[] = true,
-  ) {
+  ) => {
     if (options.graphSettings) {
       this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
 
@@ -436,15 +333,15 @@ export class GraphCanvas<
     }
 
     this.tick();
-  }
+  };
 
-  updateRect() {
+  updateRect = () => {
     if (!this.area) return;
 
     this.areaRect = this.area.getBoundingClientRect();
-  }
+  };
 
-  updateSize() {
+  updateSize = () => {
     if (!this.area) return;
 
     const { width, height } = this.root.getBoundingClientRect();
@@ -458,9 +355,9 @@ export class GraphCanvas<
     if (!this.context) throw new Error("couldn't create canvas context");
     this.context.scale(this.dpi, this.dpi);
     this.draw();
-  }
+  };
 
-  clearCache(keys: boolean | GraphCanvasCacheKeys[]) {
+  clearCache = (keys: boolean | GraphCanvasCacheKeys[]) => {
     if (keys === true) {
       this.nodeOptionsCache.length = 0;
       this.linkOptionsCache.length = 0;
@@ -502,13 +399,13 @@ export class GraphCanvas<
       Parameters<typeof updateLinkCache>,
       ReturnType<typeof updateLinkCache>
     >(this);
-  }
+  };
 
-  tick() {
+  tick = () => {
     if (!this.simulationWorking) this.draw();
-  }
+  };
 
-  restart(alpha?: number, options?: Partial<PrecomputeForceSettingsInterface>) {
+  restart = (alpha?: number, options?: Partial<PrecomputeForceSettingsInterface>) => {
     if (!this.simulation) return;
 
     const settings: Required<PrecomputeForceSettingsInterface> = {
@@ -556,23 +453,23 @@ export class GraphCanvas<
     >(this);
     this.simulation.restart();
     this.tick();
-  }
+  };
 
-  start() {
+  start = () => {
     if (this.simulation) this.simulation.alpha(1).restart();
     if (this.container) this.container.style.display = "block";
-  }
+  };
 
-  stop() {
+  stop = () => {
     if (this.simulation) this.simulation.stop();
     if (this.container) this.container.style.display = "none";
-  }
+  };
 
-  create() {
+  create = () => {
     this.init();
-  }
+  };
 
-  destroy() {
+  destroy = () => {
     if (this.simulation) {
       this.simulation.stop();
       this.simulation = undefined;
@@ -581,18 +478,18 @@ export class GraphCanvas<
     this.clearHTMLElements();
     this.clearState();
     this.clearCache(true);
-  }
+  };
 
-  protected clearHTMLElements() {
+  protected clearHTMLElements = () => {
     this.root.replaceChildren();
     this.area = undefined;
     this.context = undefined;
     this.container = undefined;
     this.eventAbortController.abort();
     this.eventAbortController = new AbortController();
-  }
+  };
 
-  protected updateSimulation() {
+  protected updateSimulation = () => {
     if (this.simulation) {
       initSimulationForces.call<
         GraphCanvas<NodeData, LinkData>,
@@ -601,9 +498,9 @@ export class GraphCanvas<
       >(this);
       this.restart(1);
     }
-  }
+  };
 
-  protected clearState() {
+  protected clearState = () => {
     this.isDragging = false;
     this.highlightedNode = null;
     this.highlightedLink = null;
@@ -611,50 +508,9 @@ export class GraphCanvas<
     this.highlightProgress = 0;
     this.highlightStart = null;
     this.highlightPositive = false;
-  }
+  };
 
-  protected updateData(alpha: number = 0.5, clearCache: boolean | GraphCanvasCacheKeys[] = true) {
-    if (clearCache) {
-      this.clearCache(clearCache);
-    }
-
-    if (this.simulation) {
-      initCollideForce.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof initCollideForce>,
-        ReturnType<typeof initCollideForce>
-      >(this, false);
-
-      this.simulation.nodes(this.nodes).force(
-        "link",
-        forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
-          .id(this.nodeSettings.idGetter.bind(this))
-          .distance(
-            this.forceSettings.forces && this.forceSettings.linkForce
-              ? this.forceSettings.linkDistance
-              : 0,
-          )
-          .strength(
-            this.forceSettings.forces && this.forceSettings.linkForce
-              ? this.forceSettings.linkStrength
-              : 0,
-          )
-          .iterations(
-            this.forceSettings.forces && this.forceSettings.linkForce
-              ? this.forceSettings.linkIterations
-              : 0,
-          ),
-      );
-      this.restart(alpha);
-      initZoom.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof initZoom>,
-        ReturnType<typeof initZoom>
-      >(this, this.areaTransform);
-    }
-  }
-
-  protected init() {
+  protected init = () => {
     initArea.call<
       GraphCanvas<NodeData, LinkData>,
       Parameters<typeof initArea>,
@@ -696,5 +552,151 @@ export class GraphCanvas<
       Parameters<typeof initPointer>,
       ReturnType<typeof initPointer>
     >(this);
-  }
+  };
+
+  protected updateData = (
+    alpha: number = 0.5,
+    clearCache: boolean | GraphCanvasCacheKeys[] = true,
+  ) => {
+    if (clearCache) {
+      this.clearCache(clearCache);
+    }
+
+    if (this.simulation) {
+      initCollideForce.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof initCollideForce>,
+        ReturnType<typeof initCollideForce>
+      >(this, false);
+
+      this.simulation.nodes(this.nodes).force(
+        "link",
+        forceLink<NodeInterface<NodeData>, LinkInterface<NodeData, LinkData>>(this.links)
+          .id(this.nodeSettings.idGetter.bind(this))
+          .distance(
+            this.forceSettings.forces && this.forceSettings.linkForce
+              ? this.forceSettings.linkDistance
+              : 0,
+          )
+          .strength(
+            this.forceSettings.forces && this.forceSettings.linkForce
+              ? this.forceSettings.linkStrength
+              : 0,
+          )
+          .iterations(
+            this.forceSettings.forces && this.forceSettings.linkForce
+              ? this.forceSettings.linkIterations
+              : 0,
+          ),
+      );
+      this.restart(alpha);
+      initZoom.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof initZoom>,
+        ReturnType<typeof initZoom>
+      >(this, this.areaTransform);
+    }
+  };
+
+  protected animateHighlight = (
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+    baseDuration: number = this.highlightSettings.highlightDuration,
+  ) => {
+    let positive = true;
+    if (node && (this.highlightedNode !== node || !this.highlightPositive)) {
+      this.highlightedNode = node;
+      this.highlightedNeighbors = new Set(node.neighbors);
+      this.particles = [];
+      this.highlightedLink = null;
+      this.highlightStart = performance.now();
+    } else if (link && (this.highlightedLink !== link || !this.highlightPositive)) {
+      const { sourceId, targetId } = extractLinkPointIds(link);
+      this.highlightProgress = 0;
+      this.highlightedLink = link;
+      this.highlightedNeighbors = new Set([sourceId, targetId]);
+      this.particles = [];
+      this.highlightedNode = null;
+      this.highlightStart = performance.now();
+    } else if (!node && !link && this.highlightPositive) {
+      positive = false;
+    } else {
+      return;
+    }
+    if (this.highlightController) {
+      this.highlightController.abort();
+    }
+    const controller = new AbortController();
+    this.highlightPositive = positive;
+    this.highlightController = controller;
+    const startTime = performance.now();
+    const startProgress = this.highlightProgress;
+    const targetProgress = positive ? 1 : 0;
+    const delta = targetProgress - startProgress;
+    const duration = baseDuration * Math.abs(delta);
+
+    const animate = () => {
+      if (controller.signal.aborted) return;
+      const elapsed = performance.now() - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const current = startProgress + delta * t;
+      const eased =
+        current < 0.5 ? 4 * current * current * current : 1 - (-2 * current + 2) ** 3 / 2;
+      this.highlightProgress = eased;
+
+      if (t < 1 || positive) {
+        requestAnimationFrame(animate);
+        this.draw();
+      } else {
+        this.highlightedNode = null;
+        this.highlightedLink = null;
+        this.highlightedNeighbors = null;
+        this.highlightStart = null;
+        this.particles = [];
+        this.tick();
+      }
+    };
+    requestAnimationFrame(animate);
+  };
+
+  protected animateZoom = (
+    area: HTMLCanvasElement,
+    target: ZoomTransform,
+    start: ZoomTransform,
+    duration: number,
+  ) => {
+    this._zoomAnimating = true;
+    const startTime = performance.now();
+    const animate = () => {
+      const elapsed = performance.now() - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const eased = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
+      const x = start.x + (target.x - start.x) * eased;
+      const y = start.y + (target.y - start.y) * eased;
+      const k = start.k + (target.k - start.k) * eased;
+
+      this.areaTransform = new ZoomTransform(k, x, y);
+      zoom<HTMLCanvasElement, unknown>().transform(d3Select(area), this.areaTransform);
+      updateLinkCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateLinkCache>,
+        ReturnType<typeof updateLinkCache>
+      >(this);
+      updateNodeCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateNodeCache>,
+        ReturnType<typeof updateNodeCache>
+      >(this);
+      this.tick();
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        this._zoomAnimating = false;
+        this.clearCache(true);
+        this.tick();
+      }
+    };
+    requestAnimationFrame(animate);
+  };
 }
