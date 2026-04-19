@@ -51,10 +51,13 @@ export function getDrawLink<
     let arrowBorderWidth = linkOptions.arrowBorderWidth;
     let arrowBorderColor = linkOptions.arrowBorderColor;
 
+    const currentNodeHighlighted =
+      this.highlightedNode &&
+      (this.highlightedNode.id == link.source.id || this.highlightedNode.id == link.target.id);
     /** Highlight */
     if (this.highlightedNeighbors && this.highlightedNode) {
       /** By Node Not Highlight */
-      if (this.highlightedNode.id != link.source.id && this.highlightedNode.id != link.target.id) {
+      if (!currentNodeHighlighted) {
         const fadeOptions = linkFade({
           arrow: this.linkSettings.arrow,
           arrowByHighlight: this.linkSettings.arrowByHighlight,
@@ -90,9 +93,11 @@ export function getDrawLink<
         arrowBorderColor = highlightOptions.arrowBorderColor;
       }
     }
+
+    const currentLinkHighlighted = this.highlightedLink === link;
     if (this.highlightedNeighbors && this.highlightedLink) {
       /** By Link Not Highlight */
-      if (this.highlightedLink !== link) {
+      if (!currentLinkHighlighted) {
         const fadeOptions = linkFade({
           arrow: this.linkSettings.arrow,
           arrowByHighlight: this.linkSettings.arrowByHighlight,
@@ -132,11 +137,9 @@ export function getDrawLink<
 
     /** Link */
     this.context.beginPath();
-
     this.context.globalAlpha = alpha;
     this.context.strokeStyle = color;
     this.context.lineWidth = width;
-
     let xStart = link.source.x;
     let yStart = link.source.y;
     let xEnd = link.target.x;
@@ -150,8 +153,8 @@ export function getDrawLink<
     if (!this.linkSettings.curve) {
       if (
         this.linkSettings.prettyDraw ||
-        this.linkSettings.particleFlexSpeed ||
-        (this.linkSettings.arrow && arrowAlpha > 0)
+        (this.linkSettings.arrow && arrowAlpha > 0) ||
+        (this.particles && (currentNodeHighlighted || currentLinkHighlighted))
       ) {
         const position = calculateLinkPositionByNode(
           xStart,
@@ -231,27 +234,17 @@ export function getDrawLink<
     }
 
     /** Particle */
-    if (
-      this.linkSettings.particles &&
-      ((this.highlightedNode &&
-        (this.highlightedNode.id === link.source.id ||
-          this.highlightedNode.id === link.target.id)) ||
-        (this.highlightedLink && this.highlightedLink === link))
-    ) {
-      const particleSteps = this.linkSettings.particleFlexSpeed
-        ? linkDistance <= 0
-          ? 0
-          : linkDistance * this.linkSettings.particleFlexSpeedCoefficient
-        : linkOptions.particleSteps;
-      const particleCount = linkOptions.particleCount;
-
+    if (this.linkSettings.particles && (currentLinkHighlighted || currentNodeHighlighted)) {
+      const particleCount = Math.max(
+        1,
+        Math.floor(linkDistance / this.linkSettings.particleCountByDistance),
+      );
+      const duration = linkDistance / ((1 / this.linkSettings.particleSpeedByDistance) * (1 + 0.5));
       if (!this.particles[index]) {
         const sourceId = link.source.id;
         const targetId = link.target.id;
-
         const particles: LinkParticle[] = [];
         let prevParticle: LinkParticle | undefined;
-
         for (let i = 0; i < particleCount; i++) {
           const particle: LinkParticle = {
             step: 0,
@@ -271,15 +264,14 @@ export function getDrawLink<
         }
         this.particles[index] = particles;
       }
-      if (particleSteps !== 0) {
-        this.particles[index].forEach((particle) => {
+      const start = this.highlightStart;
+      if (start != undefined) {
+        this.particles[index].forEach((particle, index) => {
           if (!this.context) return;
-
-          const distance = particleSteps / particleCount;
           getParticlePosition({
-            distance,
+            distance: linkDistance,
             particle,
-            totalSteps: particleSteps,
+            index,
             totalCount: particleCount,
             xEnd,
             xStart,
@@ -287,6 +279,8 @@ export function getDrawLink<
             yStart,
             xControl,
             yControl,
+            duration,
+            start,
           });
           if (particle.x != undefined && particle.y != undefined) {
             this.context.beginPath();

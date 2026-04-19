@@ -8,41 +8,18 @@ type GetParticlePositionOptions = {
   yEnd: number;
   xControl: number;
   yControl: number;
-  totalSteps: number;
-  totalCount: number;
   distance: number;
+  totalCount: number;
+  index: number;
+  duration: number;
+  start: number;
 };
 
 export function getParticlePosition(opts: GetParticlePositionOptions) {
-  const prevStepDifference = opts.particle.step - (opts.particle.prev?.step ?? 0);
-  const nextStepDifference = (opts.particle.next?.step ?? 0) - opts.particle.step;
-
-  const needWait =
-    opts.particle.next &&
-    opts.particle.next.step > opts.particle.step &&
-    nextStepDifference <= opts.distance;
-  const needSpeed =
-    opts.particle.prev &&
-    opts.particle.prev.step !== 0 &&
-    opts.particle.prev.step < opts.particle.step &&
-    prevStepDifference < opts.distance;
-
-  if (opts.particle.step === 0 && needWait) {
-    opts.particle.x = undefined;
-    opts.particle.y = undefined;
-    return;
-  }
-
-  const remainingSteps = opts.totalSteps - opts.particle.step;
-  const progress = opts.particle.step / opts.totalSteps;
-
-  if (remainingSteps <= 0) {
-    opts.particle.x = opts.xEnd;
-    opts.particle.y = opts.yEnd;
-    opts.particle.step = 0;
-    return;
-  }
-
+  const startDuration = (opts.duration / opts.totalCount) * opts.index;
+  const elapsed = performance.now() - opts.start - startDuration;
+  if (elapsed < 0) return;
+  const progress = Math.min((elapsed % opts.duration) / opts.duration, 1);
   if (opts.xControl !== 0 && opts.yControl !== 0) {
     const t = 1 - progress;
     opts.particle.x =
@@ -54,12 +31,6 @@ export function getParticlePosition(opts: GetParticlePositionOptions) {
     const dy = opts.yEnd - opts.yStart;
     opts.particle.x = opts.xStart + dx * progress;
     opts.particle.y = opts.yStart + dy * progress;
-  }
-
-  if (needSpeed) {
-    opts.particle.step += prevStepDifference <= 3 ? prevStepDifference : 3;
-  } else {
-    opts.particle.step++;
   }
 }
 

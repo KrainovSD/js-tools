@@ -15,8 +15,10 @@ export const LINK_SETTINGS: Omit<
   arrow: true,
   arrowByHighlight: true,
   particles: true,
-  particleFlexSpeed: true,
-  particleFlexSpeedCoefficient: 4,
+  // spawn one more particle for N px
+  particleCountByDistance: 25,
+  // speed for 1px
+  particleSpeedByDistance: 50,
 };
 
 export const LINK_OPTIONS: Omit<
@@ -32,9 +34,7 @@ export const LINK_OPTIONS: Omit<
   particleColor: "#C5C5C5FF",
   particleBorderColor: "#C5C5C5FF",
   particleBorderWidth: 0.1,
-  particleCount: 2,
   particleRadius: 0.5,
-  particleSteps: 60,
 };
 
 export const PERFORMANCE_LINK_SETTINGS: Omit<
@@ -43,7 +43,6 @@ export const PERFORMANCE_LINK_SETTINGS: Omit<
 > = {
   ...LINK_SETTINGS,
   particles: false,
-  particleFlexSpeed: false,
   prettyDraw: false,
 };
 

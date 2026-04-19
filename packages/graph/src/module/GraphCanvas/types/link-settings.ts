@@ -12,8 +12,8 @@ export type LinkSettingsInterface<
   arrow?: boolean;
   arrowByHighlight?: boolean;
   particles?: boolean;
-  particleFlexSpeed?: boolean;
-  particleFlexSpeedCoefficient?: number;
+  particleCountByDistance?: number;
+  particleSpeedByDistance?: number;
   linkScaleSwitch?: number;
   linkWidthBeforeScaleSwitch?: number;
   linkWidthAfterScaleSwitch?: number;
@@ -65,8 +65,6 @@ export type LinkOptionsParticleInterface = {
   particleAlpha?: number;
   particleColor?: string;
   particleRadius?: number;
-  particleCount?: number;
-  particleSteps?: number;
   particleBorderWidth?: number;
   particleBorderColor?: string;
 };

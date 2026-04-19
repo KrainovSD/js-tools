@@ -3,8 +3,7 @@ import type { HighlightSettingsInterface } from "../types/highlight-settings";
 export const HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
   highlightByHoverNode: true,
   highlightByHoverLink: true,
-  highlightUpFrames: 5,
-  highlightDownFrames: 5,
+  highlightDuration: 150,
   linkHoverExtraZone: 2,
   /** Node */
   highlightByNodeOnlyRoot: true,

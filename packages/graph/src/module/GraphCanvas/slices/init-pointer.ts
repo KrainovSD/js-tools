@@ -1,5 +1,3 @@
-import { isObject } from "lodash";
-import { checkType } from "@/lib";
 import type { GraphCanvas } from "../GraphCanvas";
 import { linkByPointerGetter, nodeByPointerGetter } from "../lib";
 import type { LinkInterface, NodeInterface } from "../types";
@@ -41,7 +39,6 @@ export function initPointer<
         curve: this.linkSettings.curve,
       });
       if (currentLink?.highlight != undefined) highlightLink = currentLink?.highlight;
-
       if (currentLink && highlightLink) {
         this.area.style.cursor = "pointer";
       } else {
@@ -50,43 +47,12 @@ export function initPointer<
     } else {
       this.area.style.cursor = "default";
     }
-    if (currentNode && highlightNode && this.highlightedNode !== currentNode) {
-      this.highlightedNode = currentNode;
-      this.highlightedLink = null;
-      this.highlightedNeighbors = new Set(this.highlightedNode?.neighbors ?? []);
-      this.highlightWorking = true;
-
-      if (!this.simulationWorking)
-        requestAnimationFrame(() => {
-          this.draw();
-        });
-    } else if (
-      currentLink &&
-      highlightLink &&
-      checkType<NodeInterface<NodeData>>(currentLink.source, isObject(currentLink.source)) &&
-      checkType<NodeInterface<NodeData>>(currentLink.target, isObject(currentLink.target)) &&
-      this.highlightedLink !== currentLink
-    ) {
-      this.highlightProgress = 0;
-      this.highlightedLink = currentLink;
-      this.highlightedNode = null;
-      this.highlightedNeighbors = new Set([currentLink.source.id, currentLink.target.id]);
-      this.highlightWorking = true;
-
-      if (!this.simulationWorking)
-        requestAnimationFrame(() => {
-          this.draw();
-        });
-    } else if (!currentNode && !currentLink && (this.highlightedNode || this.highlightedLink)) {
-      this.highlightWorking = false;
-      if (!this.simulationWorking)
-        requestAnimationFrame(() => {
-          this.draw();
-        });
-    }
+    this.animateHighlight(
+      highlightNode ? currentNode : undefined,
+      highlightLink ? currentLink : undefined,
+    );
 
     if (!this.listeners.onMove) return;
-
     if (!currentNode && !checkHighlightNode)
       currentNode = nodeByPointerGetter({
         areaRect: this.areaRect,

@@ -55,9 +55,7 @@ export function initZoom<
           ReturnType<typeof updateNodeCache>
         >(this);
       }
-
-      if (!this.simulationWorking && !this.highlightWorking)
-        requestAnimationFrame(() => this.draw());
+      this.tick();
     });
 
   zoomInstance.translateExtent(translateExtent);

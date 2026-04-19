@@ -5,6 +5,7 @@ import { ZoomTransform, zoom, zoomIdentity } from "d3-zoom";
 import { GRAPH_CACHE_TYPE } from "./constants";
 import {
   computeGraphBounds,
+  extractLinkPointIds,
   forceSettingsGetter,
   graphSettingsGetter,
   highlightSettingsGetter,
@@ -117,7 +118,11 @@ export class GraphCanvas<
 
   protected highlightProgress: number = 1;
 
-  protected highlightWorking: boolean = false;
+  protected highlightStart: number | null = null;
+
+  protected highlightPositive: boolean = false;
+
+  protected highlightController: AbortController | undefined;
 
   protected _lastNodeZoomK: number | undefined;
 
@@ -242,7 +247,68 @@ export class GraphCanvas<
     this.animateZoom(area, target, this.areaTransform, duration);
   }
 
-  private animateZoom(
+  protected animateHighlight(
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+    baseDuration: number = this.highlightSettings.highlightDuration,
+  ) {
+    let positive = true;
+    if (node && (this.highlightedNode !== node || !this.highlightPositive)) {
+      this.highlightedNode = node;
+      this.highlightedNeighbors = new Set(node.neighbors);
+      this.particles = [];
+      this.highlightedLink = null;
+      this.highlightStart = performance.now();
+    } else if (link && (this.highlightedLink !== link || !this.highlightPositive)) {
+      const { sourceId, targetId } = extractLinkPointIds(link);
+      this.highlightProgress = 0;
+      this.highlightedLink = link;
+      this.highlightedNeighbors = new Set([sourceId, targetId]);
+      this.particles = [];
+      this.highlightedNode = null;
+      this.highlightStart = performance.now();
+    } else if (!node && !link && this.highlightPositive) {
+      positive = false;
+    } else {
+      return;
+    }
+    if (this.highlightController) {
+      this.highlightController.abort();
+    }
+    const controller = new AbortController();
+    this.highlightPositive = positive;
+    this.highlightController = controller;
+    const startTime = performance.now();
+    const startProgress = this.highlightProgress;
+    const targetProgress = positive ? 1 : 0;
+    const delta = targetProgress - startProgress;
+    const duration = baseDuration * Math.abs(delta);
+
+    const animate = () => {
+      if (controller.signal.aborted) return;
+      const elapsed = performance.now() - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const current = startProgress + delta * t;
+      const eased =
+        current < 0.5 ? 4 * current * current * current : 1 - (-2 * current + 2) ** 3 / 2;
+      this.highlightProgress = eased;
+
+      if (t < 1 || positive) {
+        requestAnimationFrame(animate);
+        this.draw();
+      } else {
+        this.highlightedNode = null;
+        this.highlightedLink = null;
+        this.highlightedNeighbors = null;
+        this.highlightStart = null;
+        this.particles = [];
+        this.tick();
+      }
+    };
+    requestAnimationFrame(animate);
+  }
+
+  protected animateZoom(
     area: HTMLCanvasElement,
     target: ZoomTransform,
     start: ZoomTransform,
@@ -439,7 +505,7 @@ export class GraphCanvas<
   }
 
   tick() {
-    if (!this.simulationWorking && !this.highlightWorking) this.draw();
+    if (!this.simulationWorking) this.draw();
   }
 
   restart(alpha?: number, options?: Partial<PrecomputeForceSettingsInterface>) {
@@ -543,7 +609,8 @@ export class GraphCanvas<
     this.highlightedLink = null;
     this.highlightedNeighbors = null;
     this.highlightProgress = 0;
-    this.highlightWorking = false;
+    this.highlightStart = null;
+    this.highlightPositive = false;
   }
 
   protected updateData(alpha: number = 0.5, clearCache: boolean | GraphCanvasCacheKeys[] = true) {

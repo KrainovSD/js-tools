@@ -11,8 +11,7 @@ export type HighlightSettingsInterface = HighlighCommonSettingsInterface &
   HighlightByLinkForArrowSettingsInterface;
 
 export type HighlighCommonSettingsInterface = {
-  highlightDownFrames?: number;
-  highlightUpFrames?: number;
+  highlightDuration?: number;
   highlightByHoverNode?: boolean;
   highlightByHoverLink?: boolean;
   linkHoverExtraZone?: number;
