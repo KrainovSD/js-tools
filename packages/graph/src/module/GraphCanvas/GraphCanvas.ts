@@ -552,6 +552,17 @@ export class GraphCanvas<
       Parameters<typeof initPointer>,
       ReturnType<typeof initPointer>
     >(this);
+    updateNodeCache.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof updateNodeCache>,
+      ReturnType<typeof updateNodeCache>
+    >(this);
+    updateLinkCache.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof updateLinkCache>,
+      ReturnType<typeof updateLinkCache>
+    >(this);
+    this.tick();
   };
 
   protected updateData = (
