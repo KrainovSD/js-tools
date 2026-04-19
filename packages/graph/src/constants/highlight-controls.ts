@@ -39,22 +39,13 @@ export const HIGHLIGHT_COMMON_CONTROLS: GraphSettingsInputInterface<
     label: "Расширение границы связи для курсора",
   },
   {
-    id: "highlightDownFrames",
-    initialValue: HIGHLIGHT_SETTINGS.highlightDownFrames,
-    max: 60,
-    min: 1,
+    id: "highlightDuration",
+    initialValue: HIGHLIGHT_SETTINGS.highlightDuration,
+    max: 1000,
+    min: 10,
     step: 1,
     type: "range",
-    label: "Скорость отмены анимации в кадрах",
-  },
-  {
-    id: "highlightUpFrames",
-    initialValue: HIGHLIGHT_SETTINGS.highlightUpFrames,
-    max: 60,
-    min: 1,
-    step: 1,
-    type: "range",
-    label: "Скорость применения анимации в кадрах",
+    label: "Скорость анимации",
   },
 ];
 

@@ -103,7 +103,7 @@
     }
   }
 
-  function onDoubleClick(event: MouseEvent | TouchEvent, node: Node | undefined) {
+  function onDoubleClick(_: MouseEvent | TouchEvent, node: Node | undefined) {
     if (node) {
       graphController.value?.focusOnNode(node.id);
     }
@@ -192,7 +192,7 @@
           options: getNodeOptions(props.nodeOptions, selectedNode.value),
         },
         listeners: {
-          // onClick,
+          onClick,
           onDoubleClick,
         },
       });
