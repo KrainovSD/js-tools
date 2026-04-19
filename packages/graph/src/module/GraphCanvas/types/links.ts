@@ -30,12 +30,10 @@ export interface LinkInterface<
 }
 
 export type LinkParticle = {
-  step: number;
   index: number;
-  prev: LinkParticle | undefined;
-  next: LinkParticle | undefined;
   x?: number;
   y?: number;
-  sourceId: string | number;
-  targetId: string | number;
+  _distanceTraveled?: number;
+  _lastDistance?: number;
+  _lastTime?: number;
 };

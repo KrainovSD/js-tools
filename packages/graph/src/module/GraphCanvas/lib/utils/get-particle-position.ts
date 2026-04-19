@@ -10,27 +10,45 @@ type GetParticlePositionOptions = {
   yControl: number;
   distance: number;
   totalCount: number;
-  index: number;
-  duration: number;
-  start: number;
+  speed: number;
 };
 
+const FRAME_INTERVAL = 1000 / 60;
+
 export function getParticlePosition(opts: GetParticlePositionOptions) {
-  const startDuration = (opts.duration / opts.totalCount) * opts.index;
-  const elapsed = performance.now() - opts.start - startDuration;
-  if (elapsed < 0) return;
-  const progress = Math.min((elapsed % opts.duration) / opts.duration, 1);
+  const now = performance.now();
+  const particle = opts.particle;
+
+  if (particle._lastTime == undefined) {
+    particle._distanceTraveled = (opts.distance / opts.totalCount) * particle.index;
+    particle._lastTime = now;
+    particle._lastDistance = opts.distance;
+  }
+
+  const lastDistance = particle._lastDistance ?? 0;
+  if (lastDistance !== opts.distance && lastDistance > 0) {
+    const scale = opts.distance / lastDistance;
+    particle._distanceTraveled = ((particle._distanceTraveled ?? 0) * scale) % opts.distance;
+    particle._lastDistance = opts.distance;
+  }
+
+  const delta = Math.min(now - particle._lastTime, FRAME_INTERVAL);
+  particle._lastTime = now;
+  particle._distanceTraveled =
+    ((particle._distanceTraveled ?? 0) + opts.speed * delta) % opts.distance;
+
+  const progress = particle._distanceTraveled / opts.distance;
   if (opts.xControl !== 0 && opts.yControl !== 0) {
     const t = 1 - progress;
-    opts.particle.x =
+    particle.x =
       t * t * opts.xStart + 2 * t * progress * opts.xControl + progress * progress * opts.xEnd;
-    opts.particle.y =
+    particle.y =
       t * t * opts.yStart + 2 * t * progress * opts.yControl + progress * progress * opts.yEnd;
   } else {
     const dx = opts.xEnd - opts.xStart;
     const dy = opts.yEnd - opts.yStart;
-    opts.particle.x = opts.xStart + dx * progress;
-    opts.particle.y = opts.yStart + dy * progress;
+    particle.x = opts.xStart + dx * progress;
+    particle.y = opts.yStart + dy * progress;
   }
 }
 

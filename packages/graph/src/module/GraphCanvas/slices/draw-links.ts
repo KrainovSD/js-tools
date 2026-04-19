@@ -235,66 +235,47 @@ export function getDrawLink<
 
     /** Particle */
     if (this.linkSettings.particles && (currentLinkHighlighted || currentNodeHighlighted)) {
-      const particleCount = Math.max(
-        1,
-        Math.floor(linkDistance / this.linkSettings.particleCountByDistance),
-      );
-      const duration = linkDistance / ((1 / this.linkSettings.particleSpeedByDistance) * (1 + 0.5));
+      const speed = (1 / this.linkSettings.particleSpeedByDistance) * (1 + 0.5);
       if (!this.particles[index]) {
-        const sourceId = link.source.id;
-        const targetId = link.target.id;
+        const particleCount = Math.max(
+          1,
+          Math.floor(linkDistance / this.linkSettings.particleCountByDistance),
+        );
         const particles: LinkParticle[] = [];
-        let prevParticle: LinkParticle | undefined;
         for (let i = 0; i < particleCount; i++) {
           const particle: LinkParticle = {
-            step: 0,
-            sourceId,
-            targetId,
-            prev: prevParticle,
-            next: undefined,
             index: i,
           };
-          if (prevParticle) prevParticle.next = particle;
           particles.push(particle);
-          prevParticle = particle;
-        }
-        if (particles.length >= 2) {
-          particles[0].prev = particles[particles.length - 1];
-          particles[particles.length - 1].next = particles[0];
         }
         this.particles[index] = particles;
       }
-      const start = this.highlightStart;
-      if (start != undefined) {
-        this.particles[index].forEach((particle, index) => {
-          if (!this.context) return;
-          getParticlePosition({
-            distance: linkDistance,
-            particle,
-            index,
-            totalCount: particleCount,
-            xEnd,
-            xStart,
-            yEnd,
-            yStart,
-            xControl,
-            yControl,
-            duration,
-            start,
-          });
-          if (particle.x != undefined && particle.y != undefined) {
-            this.context.beginPath();
-            this.context.strokeStyle = linkOptions.particleBorderColor;
-            this.context.lineWidth = linkOptions.particleBorderWidth;
-            this.context.arc(particle.x, particle.y, linkOptions.particleRadius, 0, Math.PI * 2);
-            this.context.fillStyle = linkOptions.particleColor;
-            this.context.fill();
-            if (linkOptions.particleBorderWidth > 0) {
-              this.context.stroke();
-            }
-          }
+      this.particles[index].forEach((particle, _, particles) => {
+        if (!this.context) return;
+        getParticlePosition({
+          distance: linkDistance,
+          particle,
+          totalCount: particles.length,
+          xEnd,
+          xStart,
+          yEnd,
+          yStart,
+          xControl,
+          yControl,
+          speed,
         });
-      }
+        if (particle.x != undefined && particle.y != undefined) {
+          this.context.beginPath();
+          this.context.strokeStyle = linkOptions.particleBorderColor;
+          this.context.lineWidth = linkOptions.particleBorderWidth;
+          this.context.arc(particle.x, particle.y, linkOptions.particleRadius, 0, Math.PI * 2);
+          this.context.fillStyle = linkOptions.particleColor;
+          this.context.fill();
+          if (linkOptions.particleBorderWidth > 0) {
+            this.context.stroke();
+          }
+        }
+      });
     }
 
     /** Arrow */
