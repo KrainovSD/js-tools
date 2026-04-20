@@ -9,7 +9,7 @@ export function initPointer<
   if (!this.area || !this.nodes) throw new Error("bad init data");
 
   function onHover(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
-    if (!this.area) return;
+    if (!this.area || this.isSelecting) return;
 
     let currentNode: NodeInterface<NodeData> | undefined;
     let currentLink: LinkInterface<NodeData, LinkData> | undefined;

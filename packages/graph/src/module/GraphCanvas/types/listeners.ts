@@ -66,4 +66,19 @@ export type ListenersInterface<
   ) => void;
   onDrawFinished?: (this: GraphCanvas<NodeData, LinkData>) => void;
   onSimulationEnd?: (this: GraphCanvas<NodeData, LinkData>) => void;
+  onSelectionIn?: (
+    this: GraphCanvas<NodeData, LinkData>,
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+  ) => void;
+  onSelectionOut?: (
+    this: GraphCanvas<NodeData, LinkData>,
+    node: NodeInterface<NodeData> | undefined,
+    link: LinkInterface<NodeData, LinkData> | undefined,
+  ) => void;
+  onSelectionEnd?: (
+    this: GraphCanvas<NodeData, LinkData>,
+    nodes: NodeInterface<NodeData>[],
+    links: LinkInterface<NodeData, LinkData>[],
+  ) => void;
 };

@@ -35,6 +35,20 @@ export function initDraw<
 
     this.context.restore();
 
+    /** selection rectangle */
+    if (this.isSelecting && this.selectionRect) {
+      const rect = this.selectionRect;
+      const screenX = Math.min(rect.x1, rect.x2) * this.areaTransform.k + this.areaTransform.x;
+      const screenY = Math.min(rect.y1, rect.y2) * this.areaTransform.k + this.areaTransform.y;
+      const screenW = Math.abs(rect.x2 - rect.x1) * this.areaTransform.k;
+      const screenH = Math.abs(rect.y2 - rect.y1) * this.areaTransform.k;
+
+      this.context.fillStyle = "rgba(66, 133, 244, 0.2)";
+      this.context.fillRect(screenX, screenY, screenW, screenH);
+      this.context.strokeStyle = "rgba(66, 133, 244, 0.8)";
+      this.context.lineWidth = 2;
+      this.context.strokeRect(screenX, screenY, screenW, screenH);
+    }
     this.listeners.onDrawFinished?.call?.(this);
   }
 

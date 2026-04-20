@@ -74,6 +74,7 @@ export const PERFORMANCE_SETTINGS: GraphSettings = {
 };
 
 export const HIGHLIGHT_COLOR = "#ce7a1c";
+export const SELECT_COLOR = "#29d1c6ff";
 export const TEXT_DARK_COLOR = "#d2d2d2";
 export const TEXT_LIGHT_COLOR = "#21252D";
 export const LINK_DARK_COLOR = "#D8D8D8FF";

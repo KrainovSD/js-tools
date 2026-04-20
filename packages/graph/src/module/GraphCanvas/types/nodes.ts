@@ -19,6 +19,7 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
   highlight?: boolean;
   visible?: boolean;
   image?: HTMLImageElement;
+  _selected?: boolean;
   data?: NodeData;
 }
 

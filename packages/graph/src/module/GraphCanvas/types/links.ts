@@ -8,6 +8,7 @@ export interface LinkInterface<
   data?: LinkData;
   highlight?: boolean;
   visible?: boolean;
+  _selected?: boolean;
   _groupIndex?: number;
   _groupSize?: number;
   _self?: boolean;

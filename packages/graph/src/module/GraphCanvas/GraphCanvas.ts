@@ -20,6 +20,7 @@ import {
   initDraw,
   initPointer,
   initResize,
+  initSelection,
   initSimulation,
   initSimulationForces,
   initZoom,
@@ -129,6 +130,10 @@ export class GraphCanvas<
   protected _lastLinkZoomK: number | undefined;
 
   protected _zoomAnimating: boolean = false;
+
+  protected isSelecting: boolean = false;
+
+  protected selectionRect: { x1: number; y1: number; x2: number; y2: number } | null = null;
 
   protected get simulationWorking() {
     const simulationAlpha = this.simulation?.alpha?.() ?? 0;
@@ -510,6 +515,8 @@ export class GraphCanvas<
     this.highlightProgress = 0;
     this.highlightStart = null;
     this.highlightPositive = false;
+    this.isSelecting = false;
+    this.selectionRect = null;
   };
 
   protected init = () => {
@@ -548,6 +555,11 @@ export class GraphCanvas<
       GraphCanvas<NodeData, LinkData>,
       Parameters<typeof initResize>,
       ReturnType<typeof initResize>
+    >(this);
+    initSelection.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof initSelection>,
+      ReturnType<typeof initSelection>
     >(this);
     initPointer.call<
       GraphCanvas<NodeData, LinkData>,

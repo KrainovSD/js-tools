@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, shallowRef, toRaw, useTemplateRef, watch } from "vue";
+  import { computed, onMounted, onUnmounted, shallowRef, toRaw, useTemplateRef, watch } from "vue";
   import {
     type ForceSettingsInterface,
     GRAPH_CACHE_TYPE,
@@ -29,6 +29,7 @@
   const graphRef = useTemplateRef("graph");
   const graphController = shallowRef<GraphCanvas<NodeData, LinkData> | undefined>(undefined);
   const selectedNode = defineModel<Node | null>("selectedNode", { default: null });
+  const selectedNodes = defineModel<Node[]>("selectedNodes", { default: [] });
   const selectedLink = defineModel<string | null>("selectedLink", { default: null });
   const checkedGraph = computed(() =>
     getNodeNeighbors({ nodes: props.graph.nodes, links: props.graph.links }),
@@ -36,6 +37,12 @@
 
   function onClick(event: MouseEvent | TouchEvent, node: Node | undefined, link: Link | undefined) {
     if (!graphController.value) return;
+    selectedNodes.value = [];
+    graphController.value.changeSettings({
+      nodeSettings: {
+        options: getNodeOptions(props.nodeOptions, selectedNode.value, selectedNodes.value),
+      },
+    });
 
     // collapsible mode
     if (event.ctrlKey && node?.id != undefined) {
@@ -109,6 +116,27 @@
     }
   }
 
+  const controller = new AbortController();
+  onMounted(() => {
+    window.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape") {
+          selectedNodes.value = [];
+          graphController.value?.changeSettings({
+            nodeSettings: {
+              options: getNodeOptions(props.nodeOptions, selectedNode.value, selectedNodes.value),
+            },
+          });
+        }
+      },
+      { signal: controller.signal },
+    );
+  });
+  onUnmounted(() => {
+    controller.abort();
+  });
+
   /** force settings */
   watch(
     () => props.forceSettings,
@@ -137,7 +165,10 @@
 
       graphController.value.changeSettings(
         {
-          nodeSettings: { ...nodeSettings, options: getNodeOptions(nodeOptions, selectedNode) },
+          nodeSettings: {
+            ...nodeSettings,
+            options: getNodeOptions(nodeOptions, selectedNode, selectedNodes.value),
+          },
         },
         [GRAPH_CACHE_TYPE.NodeOptions],
       );
@@ -189,11 +220,21 @@
         },
         nodeSettings: {
           ...props.nodeSettings,
-          options: getNodeOptions(props.nodeOptions, selectedNode.value),
+          options: getNodeOptions(props.nodeOptions, selectedNode.value, selectedNodes.value),
         },
         listeners: {
           onClick,
           onDoubleClick,
+          onSelectionIn() {},
+          onSelectionOut() {},
+          onSelectionEnd(nodes) {
+            selectedNodes.value = nodes;
+            controller.changeSettings({
+              nodeSettings: {
+                options: getNodeOptions(props.nodeOptions, selectedNode.value, selectedNodes.value),
+              },
+            });
+          },
         },
       });
 
