@@ -37,7 +37,7 @@ export function initResize<
   document.addEventListener(
     "visibilitychange",
     () => {
-      if (!document.hidden) this.updateRect();
+      if (!document.hidden) this.updateSize();
     },
     { signal: abortController.signal },
   );

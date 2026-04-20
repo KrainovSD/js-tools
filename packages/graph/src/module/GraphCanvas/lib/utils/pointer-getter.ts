@@ -2,20 +2,25 @@ import type { ZoomTransform } from "d3-zoom";
 
 export function pointerGetter(
   mouseEvent: MouseEvent | TouchEvent,
-  areaRect: DOMRect,
+  areaRect: DOMRect | undefined,
   areaTransform: ZoomTransform,
 ) {
-  const clientX =
-    "clientX" in mouseEvent
-      ? mouseEvent.clientX
-      : (mouseEvent.touches[0]?.clientX ?? mouseEvent.changedTouches[0]?.clientX);
-  const clientY =
-    "clientX" in mouseEvent
-      ? mouseEvent.clientY
-      : (mouseEvent.touches[0]?.clientY ?? mouseEvent.changedTouches[0]?.clientY);
+  let localX: number;
+  let localY: number;
 
-  const px = (clientX - areaRect.left - areaTransform.x) / areaTransform.k;
-  const py = (clientY - areaRect.top - areaTransform.y) / areaTransform.k;
+  if ("offsetX" in mouseEvent) {
+    localX = mouseEvent.offsetX;
+    localY = mouseEvent.offsetY;
+  } else {
+    if (!areaRect) return [0, 0];
+    const clientX = mouseEvent.touches[0]?.clientX ?? mouseEvent.changedTouches[0]?.clientX;
+    const clientY = mouseEvent.touches[0]?.clientY ?? mouseEvent.changedTouches[0]?.clientY;
+    localX = clientX - areaRect.left;
+    localY = clientY - areaRect.top;
+  }
+
+  const px = (localX - areaTransform.x) / areaTransform.k;
+  const py = (localY - areaTransform.y) / areaTransform.k;
 
   return [px, py];
 }

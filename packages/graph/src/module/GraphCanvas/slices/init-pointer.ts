@@ -19,10 +19,10 @@ export function initPointer<
     let highlightLink = true;
 
     if (checkHighlightNode) {
+      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentNode = nodeByPointerGetter({
-        areaRect: this.areaRect,
-        areaTransform: this.areaTransform,
-        mouseEvent: event,
+        pointerX,
+        pointerY,
         nodes: this.nodes,
       });
       if (currentNode?.highlight != undefined) highlightNode = currentNode.highlight;
@@ -30,11 +30,11 @@ export function initPointer<
     if (currentNode && highlightNode) {
       this.area.style.cursor = "pointer";
     } else if (checkHighlightLink) {
+      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentLink = linkByPointerGetter({
+        pointerX,
+        pointerY,
         linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
-        areaRect: this.areaRect,
-        areaTransform: this.areaTransform,
-        mouseEvent: event,
         links: this.links,
         curve: this.linkSettings.curve,
       });
@@ -53,24 +53,24 @@ export function initPointer<
     );
 
     if (!this.listeners.onMove) return;
-    if (!currentNode && !checkHighlightNode)
+    if (!currentNode && !checkHighlightNode) {
+      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentNode = nodeByPointerGetter({
-        areaRect: this.areaRect,
-        areaTransform: this.areaTransform,
-        mouseEvent: event,
+        pointerX,
+        pointerY,
         nodes: this.nodes,
       });
+    }
     if (!currentNode && (!checkHighlightNode || (!checkHighlightLink && !currentLink))) {
+      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentLink = linkByPointerGetter({
+        pointerX,
+        pointerY,
         linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
-        areaRect: this.areaRect,
-        areaTransform: this.areaTransform,
-        mouseEvent: event,
         links: this.links,
         curve: this.linkSettings.curve,
       });
     }
-
     if (!currentNode) return void this.listeners.onMove.call(this, event, currentNode, currentLink);
   }
   function onWheelClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
@@ -82,19 +82,19 @@ export function initPointer<
     )
       return;
 
+    const [pointerX, pointerY] = this.getPointerAreaPosition(event);
     const currentNode = nodeByPointerGetter({
-      areaRect: this.areaRect,
-      areaTransform: this.areaTransform,
-      mouseEvent: event,
+      pointerX,
+      pointerY,
       nodes: this.nodes,
     });
 
     if (!currentNode) {
+      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       const currentLink = linkByPointerGetter({
+        pointerX,
+        pointerY,
         linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
-        areaRect: this.areaRect,
-        areaTransform: this.areaTransform,
-        mouseEvent: event,
         links: this.links,
         curve: this.linkSettings.curve,
       });
@@ -107,19 +107,19 @@ export function initPointer<
   function onRightClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent) {
     if (!this.listeners.onContextMenu) return;
 
+    const [pointerX, pointerY] = this.getPointerAreaPosition(event);
     const currentNode = nodeByPointerGetter({
-      areaRect: this.areaRect,
-      areaTransform: this.areaTransform,
-      mouseEvent: event,
+      pointerX,
+      pointerY,
       nodes: this.nodes,
     });
 
     if (!currentNode) {
+      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       const currentLink = linkByPointerGetter({
+        pointerX,
+        pointerY,
         linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
-        areaRect: this.areaRect,
-        areaTransform: this.areaTransform,
-        mouseEvent: event,
         links: this.links,
         curve: this.linkSettings.curve,
       });
@@ -132,18 +132,18 @@ export function initPointer<
   function onDoubleClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
     if (!this.listeners.onDoubleClick) return;
 
+    const [pointerX, pointerY] = this.getPointerAreaPosition(event);
     const currentNode = nodeByPointerGetter({
-      areaRect: this.areaRect,
-      areaTransform: this.areaTransform,
-      mouseEvent: event,
+      pointerX,
+      pointerY,
       nodes: this.nodes,
     });
     if (!currentNode) {
+      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       const currentLink = linkByPointerGetter({
+        pointerX,
+        pointerY,
         linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
-        areaRect: this.areaRect,
-        areaTransform: this.areaTransform,
-        mouseEvent: event,
         links: this.links,
         curve: this.linkSettings.curve,
       });
@@ -156,18 +156,18 @@ export function initPointer<
   function onClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
     if (this.isDragging || !this.listeners.onClick || ("button" in event && event.button !== 0))
       return;
+    const [pointerX, pointerY] = this.getPointerAreaPosition(event);
     const currentNode = nodeByPointerGetter({
-      areaRect: this.areaRect,
-      areaTransform: this.areaTransform,
-      mouseEvent: event,
+      pointerX,
+      pointerY,
       nodes: this.nodes,
     });
     if (!currentNode) {
+      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       const currentLink = linkByPointerGetter({
+        pointerX,
+        pointerY,
         linkHoverExtraZone: this.highlightSettings.linkHoverExtraZone,
-        areaRect: this.areaRect,
-        areaTransform: this.areaTransform,
-        mouseEvent: event,
         links: this.links,
         curve: this.linkSettings.curve,
       });

@@ -93,8 +93,6 @@ export class GraphCanvas<
 
   protected _translateExtent: [[number, number], [number, number]] | undefined;
 
-  protected areaRect: DOMRect | undefined;
-
   protected draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
   protected eventAbortController: AbortController;
@@ -134,6 +132,11 @@ export class GraphCanvas<
   protected isSelecting: boolean = false;
 
   protected selectionRect: { x1: number; y1: number; x2: number; y2: number } | null = null;
+
+  protected areaRect: DOMRect | undefined;
+  // protected get areaRect() {
+  //   return this.area?.getBoundingClientRect();
+  // }
 
   protected get simulationWorking() {
     const simulationAlpha = this.simulation?.alpha?.() ?? 0;
@@ -344,7 +347,6 @@ export class GraphCanvas<
 
   updateRect = () => {
     if (!this.area) return;
-
     this.areaRect = this.area.getBoundingClientRect();
   };
 
@@ -356,8 +358,7 @@ export class GraphCanvas<
     this.height = height;
     this.area.width = this.dpi * this.width;
     this.area.height = this.dpi * this.height;
-    this.areaRect = this.area.getBoundingClientRect();
-
+    this.updateRect();
     this.context = this.area.getContext("2d");
     if (!this.context) throw new Error("couldn't create canvas context");
     this.context.scale(this.dpi, this.dpi);
@@ -485,6 +486,25 @@ export class GraphCanvas<
     this.clearHTMLElements();
     this.clearState();
     this.clearCache(true);
+  };
+
+  protected getPointerAreaPosition = (event: MouseEvent | TouchEvent) => {
+    let localX: number;
+    let localY: number;
+    if ("offsetX" in event) {
+      localX = event.offsetX;
+      localY = event.offsetY;
+    } else {
+      const rect = this.areaRect;
+      if (!rect) return [0, 0];
+      const clientX = event.touches[0]?.clientX ?? event.changedTouches[0]?.clientX;
+      const clientY = event.touches[0]?.clientY ?? event.changedTouches[0]?.clientY;
+      localX = clientX - rect.left;
+      localY = clientY - rect.top;
+    }
+    const px = (localX - this.areaTransform.x) / this.areaTransform.k;
+    const py = (localY - this.areaTransform.y) / this.areaTransform.k;
+    return [px, py];
   };
 
   protected clearHTMLElements = () => {

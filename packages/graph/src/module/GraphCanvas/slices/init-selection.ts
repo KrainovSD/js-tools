@@ -1,12 +1,11 @@
 import type { GraphCanvas } from "../GraphCanvas";
-import { pointerGetter } from "../lib";
 import type { LinkInterface, NodeInterface, NodeOptionsInterface } from "../types";
 
 export function initSelection<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(this: GraphCanvas<NodeData, LinkData>) {
-  if (!this.area || !this.areaRect) throw new Error("bad init data");
+  if (!this.area) throw new Error("bad init data");
 
   this.isSelecting = false;
   this.selectionRect = null;
@@ -16,11 +15,11 @@ export function initSelection<
 
   function onMouseDown(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent) {
     if (event.button !== 0 || !event.shiftKey) return;
-    if (!this.areaRect || !this.area) return;
+    if (!this.area) return;
     event.stopPropagation();
     event.preventDefault();
 
-    const [startX, startY] = pointerGetter(event, this.areaRect, this.areaTransform);
+    const [startX, startY] = this.getPointerAreaPosition(event);
     this.isSelecting = true;
     localSelection = true;
     this.selectionRect = { x1: startX, y1: startY, x2: startX, y2: startY };
@@ -51,9 +50,9 @@ export function initSelection<
   }
 
   function onMouseMove(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent) {
-    if (!this.isSelecting || !this.selectionRect || !this.areaRect) return;
+    if (!this.isSelecting || !this.selectionRect) return;
     event.stopPropagation();
-    const [x, y] = pointerGetter(event, this.areaRect, this.areaTransform);
+    const [x, y] = this.getPointerAreaPosition(event);
     this.selectionRect.x2 = x;
     this.selectionRect.y2 = y;
     const rect = normalizeRect(this.selectionRect);

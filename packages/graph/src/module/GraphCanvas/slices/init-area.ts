@@ -24,7 +24,6 @@ export function initArea<
 
     if (!this.area) throw new Error("couldn't create canvas");
     this.container.appendChild(this.area);
-    this.areaRect = this.area.getBoundingClientRect();
 
     this.context = this.area.getContext("2d");
     if (!this.context) throw new Error("couldn't create canvas context");

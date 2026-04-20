@@ -3,7 +3,6 @@ import { greatest } from "d3-array";
 import { drag as d3Drag } from "d3-drag";
 import { select as d3Select } from "d3-selection";
 import type { GraphCanvas } from "../GraphCanvas";
-import { pointerGetter } from "../lib";
 import type { DragEventInterface } from "../types";
 
 export function initDnd<
@@ -18,10 +17,8 @@ export function initDnd<
         return this.listeners.onDragSubject.call(this, event);
       }
 
-      if (!this.areaRect) return;
-
       const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
-      const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
+      const [pointerX, pointerY] = this.getPointerAreaPosition(mouseEvent);
 
       return greatest(this.nodes, (node) => {
         if (!node.x || !node.y || (isBoolean(node.drag) && !node.drag)) return undefined;
@@ -38,9 +35,8 @@ export function initDnd<
         if (this.simulation) this.simulation.alphaTarget(0.3).restart();
       }
 
-      if (!this.areaRect) return;
       const mouseEvent = event.sourceEvent as MouseEvent | TouchEvent;
-      const [pointerX, pointerY] = pointerGetter(mouseEvent, this.areaRect, this.areaTransform);
+      const [pointerX, pointerY] = this.getPointerAreaPosition(mouseEvent);
 
       if (this._translateExtent) {
         event.subject.fx = Math.max(
@@ -64,8 +60,8 @@ export function initDnd<
       if (!event.active && this.simulation) this.simulation.alphaTarget(0);
 
       const sourceEvent = event.sourceEvent as MouseEvent | TouchEvent;
-      if (sourceEvent.altKey && this.areaRect) {
-        const [pointerX, pointerY] = pointerGetter(sourceEvent, this.areaRect, this.areaTransform);
+      if (sourceEvent.altKey) {
+        const [pointerX, pointerY] = this.getPointerAreaPosition(sourceEvent);
         if (this._translateExtent) {
           event.subject.fx = Math.max(
             this._translateExtent[0][0],
