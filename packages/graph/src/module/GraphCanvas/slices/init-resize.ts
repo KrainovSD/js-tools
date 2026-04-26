@@ -37,7 +37,11 @@ export function initResize<
   document.addEventListener(
     "visibilitychange",
     () => {
-      if (!document.hidden) this.updateSize();
+      if (document.hidden) return;
+      this.updateSize();
+      requestAnimationFrame(() => {
+        this.updateSize();
+      });
     },
     { signal: abortController.signal },
   );

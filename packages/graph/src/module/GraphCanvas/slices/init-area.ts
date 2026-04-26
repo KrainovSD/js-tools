@@ -11,22 +11,19 @@ export function initArea<
       .node();
     if (!this.container) throw new Error("couldn't create container");
     this.root.appendChild(this.container);
-
     const { width, height } = this.root.getBoundingClientRect();
     this.width = width;
     this.height = height;
-
     this.area = d3Create("canvas")
       .attr("width", this.dpi * this.width)
       .attr("height", this.dpi * this.height)
       .attr("style", `width: 100%; height: 100%; border: none !important;`)
       .node();
-
     if (!this.area) throw new Error("couldn't create canvas");
     this.container.appendChild(this.area);
-
     this.context = this.area.getContext("2d");
     if (!this.context) throw new Error("couldn't create canvas context");
     this.context.scale(this.dpi, this.dpi);
+    this.updateRect();
   }
 }
