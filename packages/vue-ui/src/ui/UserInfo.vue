@@ -19,7 +19,7 @@
     <UserAvatar
       :name="$props.name"
       :size="$props.size === 'small' ? 'default' : $props.size"
-      :url="$props.avatar"
+      :avatar="$props.avatar"
     />
     <div class="ksd-user-info__info">
       <Text :ellipsis="true" class="ksd-user-info__text" :size="$props.size" :weight="800">{{
