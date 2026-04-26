@@ -492,8 +492,12 @@ export class GraphCanvas<
     let localX: number;
     let localY: number;
     if ("offsetX" in event) {
-      localX = event.offsetX;
-      localY = event.offsetY;
+      // localX = event.offsetX;
+      // localY = event.offsetY;
+      const rect = this.areaRect;
+      if (!rect) return [0, 0];
+      localX = event.clientX - rect.left;
+      localY = event.clientY - rect.top;
     } else {
       const rect = this.areaRect;
       if (!rect) return [0, 0];
