@@ -1,6 +1,5 @@
 export function getWatchedNode(watcher: HTMLElement | undefined | null) {
   let watchedNode = watcher;
-
   while (watchedNode) {
     watchedNode = watchedNode.nextElementSibling as HTMLElement | undefined;
     if (watchedNode == undefined) {
@@ -8,9 +7,7 @@ export function getWatchedNode(watcher: HTMLElement | undefined | null) {
     } else if (watchedNode.hasAttribute("ksd-watcher")) {
       continue;
     }
-
     break;
   }
-
   return watchedNode;
 }

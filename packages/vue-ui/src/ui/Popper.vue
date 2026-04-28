@@ -2,7 +2,7 @@
   import { type PositionPlacements, isString } from "@krainovsd/js-helpers";
   import { computed, ref, useTemplateRef, watchEffect } from "vue";
   import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
-  import { getWatchedNode } from "../lib";
+  import { useWatcher } from "../hooks/use-watcher";
   import type { CloseByClickOutsideEvent } from "../types";
   import Positioner, { type PositionerAnimations } from "./Positioner.vue";
 
@@ -57,7 +57,6 @@
     closeByClickOutsideEvent: DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT,
   });
   const open = defineModel<boolean>();
-  const popperRef = useTemplateRef("popper");
   const positionerComponentRef = useTemplateRef("positioner");
   const triggersKey = computed(() => props.triggers.join(";"));
   // eslint-disable-next-line vue/no-dupe-keys
@@ -66,16 +65,17 @@
       ? ([] as PopperTrigger[])
       : (triggersKey.value.split(";") as PopperTrigger[]);
   });
-  const targetNode = computed(() => getWatchedNode(popperRef.value));
+
+  const { targetNode, updateTargetNode, watcherRef } = useWatcher();
   const targetNodeWidth = ref(0);
+
   const firstPlacement = computed(() => props.placement.split("-")[0]);
   const lastActive = ref<HTMLElement | null>();
   const checkedModalRoot = computed(() =>
     props.nested && props.modalRoot == undefined
-      ? popperRef.value?.closest?.<HTMLElement>(POPPER_SELECTOR)
+      ? targetNode.value?.closest?.<HTMLElement>(POPPER_SELECTOR)
       : props.modalRoot,
   );
-
   const shiftY = computed(
     () =>
       props.shiftY ??
@@ -380,11 +380,15 @@
     });
   });
 
-  defineExpose({ positioner: positionerComponentRef, observedElement: targetNode });
+  defineExpose({
+    positioner: positionerComponentRef,
+    observedElement: targetNode,
+    updateTargetNode,
+  });
 </script>
 
 <template>
-  <span ref="popper" class="ksd-popper" aria-hidden="true" tabindex="-1" ksd-watcher="true"></span>
+  <span :ref="watcherRef" class="ksd-popper" aria-hidden="true" tabindex="-1" ksd-watcher></span>
   <slot></slot>
   <Positioner
     v-if="!$props.disabled"

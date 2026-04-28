@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { computed, useTemplateRef, watch } from "vue";
-  import { getWatchedNode } from "../lib";
+  import { useTemplateRef, watch } from "vue";
+  import { useWatcher } from "../hooks/use-watcher";
 
   export type ImportProps = {
     multiple?: boolean;
@@ -12,9 +12,8 @@
 
   const props = defineProps<ImportProps>();
   const emit = defineEmits<Emits>();
-  const importGhostRef = useTemplateRef("import-ghost");
   const inputRef = useTemplateRef("input");
-  const targetNode = computed(() => getWatchedNode(importGhostRef.value));
+  const { targetNode, updateTargetNode, watcherRef } = useWatcher();
 
   function onImport(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -46,15 +45,17 @@
     },
     { immediate: true },
   );
+
+  defineExpose({ updateTargetNode });
 </script>
 
 <template>
   <span
-    ref="import-ghost"
+    :ref="watcherRef"
     class="ksd-import__ghost"
     aria-hidden="true"
     tabindex="-1"
-    ksd-watcher="true"
+    ksd-watcher
   ></span>
   <slot></slot>
   <input

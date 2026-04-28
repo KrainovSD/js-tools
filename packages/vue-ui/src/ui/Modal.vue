@@ -3,7 +3,8 @@
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useSlots, useTemplateRef, watch } from "vue";
   import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
-  import { createInteractiveChildrenController, getWatchedNode } from "../lib";
+  import { useWatcher } from "../hooks/use-watcher";
+  import { createInteractiveChildrenController } from "../lib";
   import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
 
@@ -47,9 +48,8 @@
   const modalRef = useTemplateRef("modal");
   const modalMaskRef = useTemplateRef("mask");
   const prevActiveElement = ref<HTMLElement | null>(null);
-  const modalGhostRef = useTemplateRef("modal-ghost");
-  const targetNode = computed(() => getWatchedNode(modalGhostRef.value));
   const slots = useSlots();
+  const { targetNode, updateTargetNode, watcherRef } = useWatcher();
 
   function onClose() {
     if (prevActiveElement.value) {
@@ -198,7 +198,7 @@
     { immediate: true, flush: "pre" },
   );
 
-  defineExpose({ element: modalRef, close: onClose });
+  defineExpose({ element: modalRef, close: onClose, updateTargetNode });
   defineOptions({
     inheritAttrs: false,
   });
@@ -206,11 +206,11 @@
 
 <template>
   <span
-    ref="modal-ghost"
+    :ref="watcherRef"
     class="ksd-modal__ghost"
     aria-hidden="true"
     tabindex="-1"
-    ksd-watcher="true"
+    ksd-watcher
   ></span>
   <slot></slot>
   <Teleport v-if="localOpen" :to="$props.target ?? 'body'">

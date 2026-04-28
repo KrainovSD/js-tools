@@ -3,7 +3,8 @@
   import { VCloseOutlined } from "@krainovsd/vue-icons";
   import { computed, ref, useSlots, useTemplateRef, watch } from "vue";
   import { DEFAULT_CLOSE_BY_CLICK_OUTSIDE_EVENT, POPPER_SELECTOR } from "../constants/tech";
-  import { createInteractiveChildrenController, getWatchedNode } from "../lib";
+  import { useWatcher } from "../hooks/use-watcher";
+  import { createInteractiveChildrenController } from "../lib";
   import type { CloseByClickOutsideEvent } from "../types";
   import Button from "./Button.vue";
   import Flex from "./Flex.vue";
@@ -53,8 +54,6 @@
   const emit = defineEmits<Emits>();
   const open = defineModel<boolean>();
   const localOpen = ref(false);
-  const drawerGhostRef = useTemplateRef("drawer-ghost");
-  const targetNode = computed(() => getWatchedNode(drawerGhostRef.value));
   const slots = useSlots();
   const drawerComponentRef = useTemplateRef("drawer");
   const maskComponentRef = useTemplateRef("mask");
@@ -73,6 +72,7 @@
   }));
   const modalMode = computed(() => (props.mask || props.mask == undefined) && !props.block);
   const prevActiveElement = ref<HTMLElement | null>(null);
+  const { targetNode, updateTargetNode, watcherRef } = useWatcher();
 
   async function onClose() {
     if (prevActiveElement.value && modalMode.value) {
@@ -217,7 +217,7 @@
     { immediate: true, flush: "pre" },
   );
 
-  defineExpose({ element: drawerRef, maskElement: maskRef, close });
+  defineExpose({ element: drawerRef, maskElement: maskRef, close, updateTargetNode });
   defineOptions({
     inheritAttrs: false,
   });
@@ -225,11 +225,11 @@
 
 <template>
   <span
-    ref="drawer-ghost"
+    :ref="watcherRef"
     class="ksd-drawer__ghost"
     aria-hidden="true"
     tabindex="-1"
-    ksd-watcher="true"
+    ksd-watcher
   ></span>
   <slot></slot>
   <Teleport v-if="localOpen && !props.block" :to="$props.target ?? 'body'">

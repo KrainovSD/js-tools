@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { startWith } from "@krainovsd/js-helpers";
   import { computed, ref, shallowRef, useTemplateRef, watchEffect } from "vue";
-  import { getWatchedNode } from "../lib";
+  import { useWatcher } from "../hooks/use-watcher";
   import Positioner, {
     type PositionerProps,
     type PositionerTargetNodePosition,
@@ -50,9 +50,9 @@
     classNameContent: undefined,
     disabled: false,
   });
-  const elementRef = useTemplateRef("tooltip");
   const positionerRef = useTemplateRef("positioner");
-  const content = computed(() => getWatchedNode(elementRef.value));
+  const { targetNode, updateTargetNode, watcherRef } = useWatcher();
+
   const shiftY = computed(() =>
     props.placement
       ? startWith(props.placement, "top")
@@ -80,7 +80,7 @@
   const open = computed(() => props.show ?? localOpen.value);
 
   watchEffect((clean) => {
-    if (!content.value || props.disabled) return;
+    if (!targetNode.value || props.disabled) return;
 
     const eventController = new AbortController();
 
@@ -132,17 +132,19 @@
     }
 
     if (props.openByHover == undefined || props.openByHover) {
-      content.value.addEventListener("mouseenter", onAppear, { signal: eventController.signal });
-      content.value.addEventListener("mouseleave", onDisAppear, { signal: eventController.signal });
+      targetNode.value.addEventListener("mouseenter", onAppear, { signal: eventController.signal });
+      targetNode.value.addEventListener("mouseleave", onDisAppear, {
+        signal: eventController.signal,
+      });
       if (props.stickyCursor) {
-        content.value.addEventListener("mousemove", getPlacement, {
+        targetNode.value.addEventListener("mousemove", getPlacement, {
           signal: eventController.signal,
         });
       }
     }
     if (props.openByFocus) {
-      content.value.addEventListener("focus", onAppear, { signal: eventController.signal });
-      content.value.addEventListener("blur", onDisAppear, { signal: eventController.signal });
+      targetNode.value.addEventListener("focus", onAppear, { signal: eventController.signal });
+      targetNode.value.addEventListener("blur", onDisAppear, { signal: eventController.signal });
     }
 
     const observer = new MutationObserver((mutations) => {
@@ -152,7 +154,7 @@
     });
 
     if (props.observe) {
-      observer.observe(content.value, {
+      observer.observe(targetNode.value, {
         subtree: false,
         attributes: true,
         attributeFilter: ["style", "class"],
@@ -164,22 +166,18 @@
       observer.disconnect();
     });
   });
+
+  defineExpose({ updateTargetNode });
 </script>
 
 <template>
-  <span
-    ref="tooltip"
-    class="ksd-tooltip"
-    aria-hidden="true"
-    tabindex="-1"
-    ksd-watcher="true"
-  ></span>
+  <span :ref="watcherRef" class="ksd-tooltip" aria-hidden="true" tabindex="-1" ksd-watcher></span>
   <slot ref="slot"></slot>
   <Positioner
     ref="positioner"
     :open="open"
     arrow
-    :target="cursorPosition != undefined ? cursorPosition : content"
+    :target="cursorPosition != undefined ? cursorPosition : targetNode"
     :class-name-content="`ksd-tooltip__positioner-content ${$props.classNameContent ? $props.classNameContent : ''}`"
     :class="'ksd-tooltip__positioner'"
     class-name-arrow="ksd-tooltip__positioner-arrow"

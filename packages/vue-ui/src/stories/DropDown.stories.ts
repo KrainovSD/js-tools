@@ -1,7 +1,9 @@
 import { VSettingFilled } from "@krainovsd/vue-icons";
 import type { Meta, StoryFn, StoryObj } from "@storybook/vue3";
 import { h } from "vue";
+import ReactiveDropdown from "../tech/DropDown/ReactiveDropdown.vue";
 import { VButton, VDropDown, VText } from "../ui";
+import { createStory } from "./create-story";
 
 const meta = {
   title: "Components/DropDown",
@@ -290,3 +292,5 @@ export const AllInOne: Story = {
     ],
   },
 };
+
+export const Reactive = createStory<Story>(ReactiveDropdown);
