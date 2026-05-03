@@ -208,7 +208,7 @@
           />
           <GanttGraphRow
             v-for="virtualRow in $props.rowsVirtual"
-            :key="virtualRow.index"
+            :key="$props.rows[virtualRow.index]?.id"
             :today-shift="todayShift"
             :body-width="bodyWidth"
             :row="$props.rows[virtualRow.index]"
