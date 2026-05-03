@@ -132,7 +132,7 @@
       <template v-if="$props.rowVirtualEnabled">
         <TableRow
           v-for="virtualRow in $props.rowsVirtual"
-          :key="virtualRow.index"
+          :key="$props.rows[virtualRow.index]?.id"
           :column-virtual-enabled="$props.columnVirtualEnabled"
           :columns-virtual="virtualColumns"
           :rows="$props.rows"
