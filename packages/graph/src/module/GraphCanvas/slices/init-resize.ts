@@ -37,7 +37,16 @@ export function initResize<
   document.addEventListener(
     "visibilitychange",
     () => {
-      if (document.hidden) return;
+      if (document.hidden) {
+        this.highlightController?.abort();
+        this.highlightedNode = null;
+        this.highlightedLink = null;
+        this.highlightedNeighbors = null;
+        this.highlightProgress = 0;
+        this.highlightStart = null;
+        this.highlightPositive = false;
+        return;
+      }
       this.updateSize();
       requestAnimationFrame(() => {
         this.updateSize();

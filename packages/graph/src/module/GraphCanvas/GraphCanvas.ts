@@ -688,7 +688,7 @@ export class GraphCanvas<
     const animate = () => {
       if (controller.signal.aborted) return;
       const elapsed = performance.now() - startTime;
-      const t = Math.min(elapsed / duration, 1);
+      const t = duration === 0 ? 1 : Math.min(elapsed / duration, 1);
       const current = startProgress + delta * t;
       const eased =
         current < 0.5 ? 4 * current * current * current : 1 - (-2 * current + 2) ** 3 / 2;
