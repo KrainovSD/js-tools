@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/cli",
-  "version": "0.2.1",
+  "version": "0.3.3",
   "description": "Krainov cli",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -11,49 +11,34 @@
     "directory": "packages/cli"
   },
   "bin": {
-    "ksd": "./lib/esm/index.js"
+    "ksd": "./lib/src/wrapper.js"
   },
-  "main": "./lib/esm/index.js",
-  "types": "./lib/index.d.ts",
+  "files": [
+    "lib/src/wrapper.js",
+    "lib/scripts/postinstall.js",
+    "bin"
+  ],
   "sideEffects": false,
   "keywords": [
     "cli",
     "js"
   ],
-  "files": [
-    "lib"
-  ],
   "scripts": {
-    "check-duplicate": "pnpm dev-build check-package-duplicate -f ../../pnpm-lock.yaml",
-    "dev": "node lib/index.js",
-    "dev-build": "npm run build && node lib/index.js",
-    "publish-package": "npm run build && npm run lint && npm publish",
+    "build": "npm run build:ts && node lib/scripts/build.js",
+    "build:ts": "tsc -p tsconfig.build.json",
+    "publish-package": "npm run build  && npm publish",
     "lint": "eslint . -c ./eslint.config.js --color --max-warnings 0",
-    "lint-check": "eslint --debug eslint.config.js",
-    "clear": "rm -rf ./lib",
-    "build": "npm run clear && npm run build:types && npm run build:js",
-    "build:js": "rollup  --config rollup.config.ts --configPlugin @rollup/plugin-typescript --no-stdin --environment BUILD:production,NODE_ENV:production",
-    "build:types": "tsc -p tsconfig.build.json",
     "format": "prettier --write 'src/**/*.{js,ts,tsx,scss,css,json}'",
     "format-check": "prettier --check ./src",
-    "lint-debug": "npx eslint --print-config eslint.config.js > eslint-config-rules.json",
-    "type-debug": "tsc --showConfig > typescript-config.json"
-  },
-  "dependencies": {
-    "yaml": "2.7.0",
-    "prompts": "2.4.2",
-    "chalk": "5.4.1",
-    "ora": "8.2.0",
-    "execa": "9.5.2",
-    "commander": "13.1.0"
+    "lint-check": "eslint --debug eslint.config.js",
+    "type-debug": "tsc --showConfig > typescript-config.json",
+    "postinstall": "node lib/scripts/postinstall.js || true"
   },
   "devDependencies": {
     "@krainovsd/presets": "0.4.0",
-    "rollup": "4.34.9",
-    "prettier": "3.6.1",
-    "eslint": "9.29.0",
     "typescript": "5.8.3",
     "@types/node": "22.13.8",
-    "@types/prompts": "2.4.9"
+    "eslint": "9.29.0",
+    "prettier": "3.6.1"
   }
 }

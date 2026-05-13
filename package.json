@@ -12,7 +12,7 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@krainovsd/cli": "0.2.0",
+    "@krainovsd/cli": "0.3.3",
     "husky": "9.1.7",
     "turbo": "2.4.4"
   },

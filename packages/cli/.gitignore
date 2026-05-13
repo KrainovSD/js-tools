@@ -1,13 +1,4 @@
-/dist
-/node_modules
-/tmp
-/coverage
-/lib
-/stats
-.npmrc
-.vscode
-.npmrc
-eslint-config-rules.json
-typescript-config.json
-
-airbnb.json
+bin/
+lib/
+node_modules/
+.turbo

@@ -3,5 +3,5 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["src/**/*", "eslint.config.js", "rollup.config.ts", ".prettierrc.mjs"]
+  "include": ["src/**/*", "scripts/**/*", "eslint.config.js", ".prettierrc.mjs"]
 }
