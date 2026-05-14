@@ -23,6 +23,8 @@ func main() {
 		err = workers.RunCheckPackageDuplicate(os.Args[2:])
 	case "clear-dependencies":
 		err = workers.RunClearDependencies(os.Args[2:])
+	case "translates":
+		err = workers.RunTranslates(os.Args[2:])
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command: %s\n", os.Args[1])
 		printUsage()
@@ -50,4 +52,5 @@ func printUsage() {
 	fmt.Fprintln(os.Stderr, "  exec-package-command <command:package-name>  Execute package command in monorepo")
 	fmt.Fprintln(os.Stderr, "  check-package-duplicate                     Search duplicate packages in lock file")
 	fmt.Fprintln(os.Stderr, "  clear-dependencies                         Clear all dependencies in monorepo")
+	fmt.Fprintln(os.Stderr, "  translates <gen|diff|merge>                 Translation management tools")
 }

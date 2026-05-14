@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const targetPath = "package.json"
@@ -62,7 +63,7 @@ func recursivelyFind(dir string, rootPath string, lockPath string, clearedDirs *
 		var nodeModules = filepath.Join(dir, "node_modules")
 		var lockFile = filepath.Join(dir, lockPath)
 
-		if err = os.RemoveAll(nodeModules); err != nil {
+		if err = os.RemoveAll(nodeModules); err != nil && !isRunningBinaryError(nodeModules, err) {
 			fmt.Println(err.Error())
 		}
 		if err = os.Remove(lockFile); err != nil && !os.IsNotExist(err) {
@@ -70,7 +71,6 @@ func recursivelyFind(dir string, rootPath string, lockPath string, clearedDirs *
 		}
 
 		*clearedDirs = append(*clearedDirs, dir)
-
 		if !hasWorkspaceYaml {
 			return
 		}
@@ -81,4 +81,17 @@ func recursivelyFind(dir string, rootPath string, lockPath string, clearedDirs *
 			recursivelyFind(filepath.Join(dir, entry.Name()), rootPath, lockPath, clearedDirs)
 		}
 	}
+}
+
+func isRunningBinaryError(nodeModules string, originalErr error) bool {
+	var exe string
+	var err error
+	if exe, err = os.Executable(); err != nil {
+		return false
+	}
+	var rel string
+	if rel, err = filepath.Rel(nodeModules, exe); err != nil || filepath.IsAbs(rel) || strings.HasPrefix(rel, "..") {
+		return false
+	}
+	return strings.Contains(originalErr.Error(), filepath.Base(exe))
 }
