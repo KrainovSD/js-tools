@@ -26,6 +26,7 @@
     link?: boolean;
     ellipsis?: boolean;
     noInteractive?: boolean;
+    autoclose?: boolean;
     popConfirm?: DropDownItemPopConfirmOptions;
     label?: string | Component;
     icon?: Component;
@@ -215,6 +216,8 @@
       }
       function actionClick(event: MouseEvent | KeyboardEvent) {
         const target = event.target as HTMLElement;
+        const item = target.closest<HTMLElement>("[data-autoclose]");
+        if (item?.getAttribute("data-autoclose") === "false") return;
 
         if (target.classList.contains("link")) {
           const link = target.querySelector<HTMLElement>("a");
@@ -377,6 +380,7 @@
           v-if="!item.divider && ((!item.innerOptions && !item.popConfirm) || item.disabled)"
           role="menuitem"
           class="ksd-dropdown__element"
+          :data-autoclose="item.autoclose"
           :data-level="$props.level"
           :class="[
             itemClasses,
@@ -411,6 +415,7 @@
             role="menuitem"
             class="ksd-dropdown__element"
             :data-level="$props.level"
+            :data-autoclose="item.autoclose"
             :class="[
               itemClasses,
               {
