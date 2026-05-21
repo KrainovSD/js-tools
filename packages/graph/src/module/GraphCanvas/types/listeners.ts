@@ -40,7 +40,7 @@ export type ListenersInterface<
     node: NodeInterface<NodeData> | undefined,
     link: LinkInterface<NodeData, LinkData> | undefined,
   ) => void;
-  onMove?: (
+  onHover?: (
     this: GraphCanvas<NodeData, LinkData>,
     event: MouseEvent | TouchEvent,
     node: NodeInterface<NodeData> | undefined,

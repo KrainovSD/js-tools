@@ -52,7 +52,7 @@ export function initPointer<
       highlightLink ? currentLink : undefined,
     );
 
-    if (!this.listeners.onMove) return;
+    if (!this.listeners.onHover) return;
     if (!currentNode && !checkHighlightNode) {
       const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentNode = nodeByPointerGetter({
@@ -71,7 +71,7 @@ export function initPointer<
         curve: this.linkSettings.curve,
       });
     }
-    if (!currentNode) return void this.listeners.onMove.call(this, event, currentNode, currentLink);
+    this.listeners.onHover.call(this, event, currentNode, currentLink);
   }
   function onWheelClick(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
     if (

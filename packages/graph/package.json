@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/graph",
-  "version": "0.14.0-beta-7.2",
+  "version": "0.14.0-beta.8",
   "description": "Krainov graph",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -28,7 +28,7 @@
   ],
   "scripts": {
     "publish-package": "npm run lint && npm run build && npm publish",
-    "publish-package-beta": "npm run lint && npm run build && npm publish --tag beta",
+    "publish-package-beta": "npm run lint && npm run build && npm publish --access public --tag beta",
     "dev": "vite --host --force",
     "clear": "rm -rf ./lib",
     "build-dev": "vite build",
