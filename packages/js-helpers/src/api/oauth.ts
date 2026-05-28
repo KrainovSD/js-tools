@@ -236,11 +236,11 @@ export function createOauthProvider(opts: OauthOptions = {}) {
         return false;
       }
 
-      /** Delete expires query */
+      /** Delete expires query without reload */
       const url = new URL(window.location.href);
       url.searchParams.delete(expiresTokenQueryName);
-      window.location.replace(url.toString());
-      return false;
+      history.replaceState(null, "", url.toString());
+      return true;
     }
 
     return true;
