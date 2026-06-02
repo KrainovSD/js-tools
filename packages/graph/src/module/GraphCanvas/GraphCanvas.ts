@@ -14,6 +14,7 @@ import {
   nodeSettingsGetter,
 } from "./lib";
 import {
+  exportToSvgSlice,
   initArea,
   initCollideForce,
   initDnd,
@@ -253,6 +254,13 @@ export class GraphCanvas<
       return;
     }
     this.animateZoom(area, target, this.areaTransform, duration);
+  };
+  exportToSvg = (filename: string = "graph.svg", fit: boolean = false) => {
+    exportToSvgSlice.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof exportToSvgSlice>,
+      ReturnType<typeof exportToSvgSlice>
+    >(this, filename, fit);
   };
   changeData = (
     options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">,

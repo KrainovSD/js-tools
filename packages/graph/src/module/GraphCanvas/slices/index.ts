@@ -9,5 +9,6 @@ export * from "./init-zoom";
 export * from "./draw-links";
 export * from "./draw-nodes";
 export * from "./draw-text";
+export * from "./export-svg";
 export * from "./update-link-cache";
 export * from "./update-node-cache";
