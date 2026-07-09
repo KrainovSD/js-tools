@@ -15,9 +15,11 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   zoomInitial: null,
   showDrawTime: true,
   showDrawTimeEveryTick: false,
+  maxFps: 60,
 };
 
 export const PERFORMANCE_GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unknown>>> =
   {
     ...GRAPH_SETTINGS,
+    maxFps: 30,
   };

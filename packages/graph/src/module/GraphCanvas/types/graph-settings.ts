@@ -25,4 +25,5 @@ export type GraphSettingsInterface<NodeData extends Record<string, unknown>> = {
   ) => number | undefined;
   showDrawTime?: boolean;
   showDrawTimeEveryTick?: boolean;
+  maxFps?: number;
 };

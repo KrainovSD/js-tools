@@ -9,7 +9,6 @@ import {
 import {
   initArea,
   initDnd,
-  initDraw,
   initPointer,
   initResize,
   initSelection,
@@ -26,6 +25,8 @@ export class StaticGraphCanvas<
   protected override get simulationWorking() {
     return false;
   }
+
+  protected _rafTickId: number | undefined;
 
   protected override init = () => {
     initArea.call<
@@ -83,7 +84,11 @@ export class StaticGraphCanvas<
   };
 
   override tick = () => {
-    this.draw();
+    if (this._rafTickId != undefined) return;
+    this._rafTickId = requestAnimationFrame(() => {
+      this._rafTickId = undefined;
+      this.draw();
+    });
   };
 
   override restart = () => {};
@@ -110,11 +115,7 @@ export class StaticGraphCanvas<
     if (options.graphSettings) {
       this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
 
-      this.draw = initDraw.call<
-        StaticGraphCanvas<NodeData, LinkData>,
-        Parameters<typeof initDraw>,
-        ReturnType<typeof initDraw>
-      >(this);
+      this.draw = this._initSmartDraw();
       initZoom.call<
         StaticGraphCanvas<NodeData, LinkData>,
         Parameters<typeof initZoom>,
@@ -166,6 +167,10 @@ export class StaticGraphCanvas<
   };
 
   override destroy = () => {
+    if (this._rafTickId != undefined) {
+      cancelAnimationFrame(this._rafTickId);
+      this._rafTickId = undefined;
+    }
     this.clearHTMLElements();
     this.clearState();
     this.clearCache(true);

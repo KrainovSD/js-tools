@@ -11,6 +11,8 @@ export function initPointer<
   function onHover(this: GraphCanvas<NodeData, LinkData>, event: MouseEvent | TouchEvent) {
     if (!this.area || this.isSelecting) return;
 
+    const [pointerX, pointerY] = this.getPointerAreaPosition(event);
+
     let currentNode: NodeInterface<NodeData> | undefined;
     let currentLink: LinkInterface<NodeData, LinkData> | undefined;
     const checkHighlightNode = this.highlightSettings.highlightByHoverNode && !this.isDragging;
@@ -19,7 +21,6 @@ export function initPointer<
     let highlightLink = true;
 
     if (checkHighlightNode) {
-      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentNode = nodeByPointerGetter({
         pointerX,
         pointerY,
@@ -30,7 +31,6 @@ export function initPointer<
     if (currentNode && highlightNode) {
       this.area.style.cursor = "pointer";
     } else if (checkHighlightLink) {
-      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentLink = linkByPointerGetter({
         pointerX,
         pointerY,
@@ -54,7 +54,6 @@ export function initPointer<
 
     if (!this.listeners.onHover) return;
     if (!currentNode && !checkHighlightNode) {
-      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentNode = nodeByPointerGetter({
         pointerX,
         pointerY,
@@ -62,7 +61,6 @@ export function initPointer<
       });
     }
     if (!currentNode && (!checkHighlightNode || (!checkHighlightLink && !currentLink))) {
-      const [pointerX, pointerY] = this.getPointerAreaPosition(event);
       currentLink = linkByPointerGetter({
         pointerX,
         pointerY,
