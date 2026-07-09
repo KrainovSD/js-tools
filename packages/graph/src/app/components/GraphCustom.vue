@@ -237,6 +237,7 @@
           },
         },
       });
+      controller.create();
 
       graphController.value = controller;
       clean(() => {

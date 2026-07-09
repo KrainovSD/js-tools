@@ -183,8 +183,6 @@ export class GraphCanvas<
       Parameters<typeof initDraw>,
       ReturnType<typeof initDraw>
     >(this);
-
-    this.init();
   }
 
   get dpi() {
@@ -469,16 +467,6 @@ export class GraphCanvas<
     >(this);
     this.simulation.restart();
     this.tick();
-  };
-
-  start = () => {
-    if (this.simulation) this.simulation.alpha(1).restart();
-    if (this.container) this.container.style.display = "block";
-  };
-
-  stop = () => {
-    if (this.simulation) this.simulation.stop();
-    if (this.container) this.container.style.display = "none";
   };
 
   create = () => {

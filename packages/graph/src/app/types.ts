@@ -18,7 +18,7 @@ export type NodeData = {
 export type LinkData = {
   id?: string;
 };
-export type GraphMode = "custom" | "performance";
+export type GraphMode = "custom" | "performance" | "static";
 
 export type Link = LinkInterface<NodeData, LinkData>;
 export type Node = NodeInterface<NodeData>;

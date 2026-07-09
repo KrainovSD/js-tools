@@ -44,6 +44,7 @@ export const PERFORMANCE_LINK_SETTINGS: Omit<
   ...LINK_SETTINGS,
   particles: false,
   prettyDraw: false,
+  curve: false,
 };
 
 export const PERFORMANCE_LINK_OPTIONS: Omit<

@@ -13,7 +13,6 @@ export function isOverlapsNode<NodeData extends Record<string, unknown>>(
       const nodeRadius = node._radius ?? radius ?? 5;
       const isOverX = node.x - nodeRadius <= pointerX && pointerX <= node.x + nodeRadius;
       const isOverY = node.y - nodeRadius <= pointerY && pointerY <= node.y + nodeRadius;
-
       return isOverX && isOverY;
     }
     case "square":

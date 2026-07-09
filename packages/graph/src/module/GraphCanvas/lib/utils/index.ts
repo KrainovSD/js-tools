@@ -1,4 +1,5 @@
 export * from "./compute-graph-bounds";
+export * from "./prepare-graph-data";
 export * from "./pointer-getter";
 export * from "./drag-place-coefficient-getter";
 export * from "./is-overlaps-node";

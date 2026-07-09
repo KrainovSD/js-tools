@@ -11,6 +11,7 @@
   import type { Graph, GraphMode, LinkData, Node, NodeData } from "../types";
   import GraphCustom from "./GraphCustom.vue";
   import GraphPerformance from "./GraphPerformance.vue";
+  import GraphStatic from "./GraphStatic.vue";
 
   type Props = {
     graph: Graph;
@@ -27,9 +28,13 @@
   const selectedNode = defineModel<Node | null>("selectedNode", { default: null });
   const customRef = useTemplateRef<InstanceType<typeof GraphCustom>>("custom");
   const performanceRef = useTemplateRef<InstanceType<typeof GraphPerformance>>("performance");
+  const staticRef = useTemplateRef<InstanceType<typeof GraphStatic>>("static");
   const customGraph = computed(() => customRef.value?.graphController);
   const performanceGraph = computed(() => performanceRef.value?.graphController);
-  const graphControllerRef = computed(() => customGraph.value ?? performanceGraph.value);
+  const staticGraph = computed(() => staticRef.value?.graphController);
+  const graphControllerRef = computed(
+    () => customGraph.value ?? performanceGraph.value ?? staticGraph.value,
+  );
 
   defineExpose({ graphController: graphControllerRef });
 </script>
@@ -47,5 +52,16 @@
     :node-options="nodeOptions"
     :node-settings="nodeSettings"
   />
-  <GraphPerformance v-else ref="performance" v-model:selected-node="selectedNode" :graph="graph" />
+  <GraphPerformance
+    v-else-if="mode === 'performance'"
+    ref="performance"
+    v-model:selected-node="selectedNode"
+    :graph="graph"
+  />
+  <GraphStatic
+    v-else-if="mode === 'static'"
+    ref="static"
+    v-model:selected-node="selectedNode"
+    :graph="graph"
+  />
 </template>

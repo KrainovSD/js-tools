@@ -14,6 +14,8 @@ export function nodeByPointerGetter<NodeData extends Record<string, unknown>>({
   nodes,
 }: NodeByPointerGetterOptions<NodeData>): NodeInterface<NodeData> | undefined {
   return greatest(nodes, (node) => {
-    if (isOverlapsNode(node, pointerX, pointerY, undefined)) return node.index;
+    if (isOverlapsNode(node, pointerX, pointerY, undefined)) {
+      return node.index;
+    }
   });
 }

@@ -39,6 +39,7 @@
   const modeArray: { id: GraphMode; label: string }[] = [
     { id: "custom", label: "Custom" },
     { id: "performance", label: "Performance" },
+    { id: "static", label: "Static" },
   ];
   const modeRef = ref<GraphMode>("custom");
 

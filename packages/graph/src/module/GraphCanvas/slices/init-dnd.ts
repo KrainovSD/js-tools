@@ -8,7 +8,7 @@ import type { DragEventInterface } from "../types";
 export function initDnd<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
->(this: GraphCanvas<NodeData, LinkData>) {
+>(this: GraphCanvas<NodeData, LinkData>, staticMode: boolean = false) {
   if (!this.area || !this.nodes) throw new Error("bad init data");
 
   const dragHandler = d3Drag<HTMLCanvasElement, unknown>()
@@ -39,14 +39,24 @@ export function initDnd<
       const [pointerX, pointerY] = this.getPointerAreaPosition(mouseEvent);
 
       if (this._translateExtent) {
-        event.subject.fx = Math.max(
+        const x = Math.max(
           this._translateExtent[0][0],
           Math.min(this._translateExtent[1][0], pointerX),
         );
-        event.subject.fy = Math.max(
+        const y = Math.max(
           this._translateExtent[0][1],
           Math.min(this._translateExtent[1][1], pointerY),
         );
+        if (staticMode) {
+          event.subject.x = x;
+          event.subject.y = y;
+        } else {
+          event.subject.fx = x;
+          event.subject.fy = y;
+        }
+      } else if (staticMode) {
+        event.subject.x = pointerX;
+        event.subject.y = pointerY;
       } else {
         event.subject.fx = pointerX;
         event.subject.fy = pointerY;
