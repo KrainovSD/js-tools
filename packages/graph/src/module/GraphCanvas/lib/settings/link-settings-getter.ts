@@ -1,16 +1,18 @@
 import type { GraphCanvas } from "../../GraphCanvas";
 import { LINK_OPTIONS, LINK_SETTINGS } from "../../constants";
-import type { LinkOptionsInterface, LinkSettingsInterface } from "../../types";
+import type {
+  GraphLinkSettingsInterface,
+  LinkOptionsInterface,
+  LinkSettingsInterface,
+} from "../../types";
 
 export function linkSettingsGetter<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(
   settings: LinkSettingsInterface<NodeData, LinkData> | undefined,
-  prevSettings?: Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
-    Pick<LinkSettingsInterface<NodeData, LinkData>, "options">,
-): Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
-  Pick<LinkSettingsInterface<NodeData, LinkData>, "options"> {
+  prevSettings?: GraphLinkSettingsInterface<NodeData, LinkData>,
+): GraphLinkSettingsInterface<NodeData, LinkData> {
   return { ...(prevSettings ?? LINK_SETTINGS), ...settings };
 }
 

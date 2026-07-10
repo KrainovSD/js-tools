@@ -241,7 +241,7 @@ export function getDrawNode<
             }
           }
 
-          if (node.label && labelLines) {
+          if (labelLines && labelLines.length > 0) {
             this.context.globalAlpha = labelAlpha;
             drawText({
               context: this.context,
@@ -320,7 +320,7 @@ export function getDrawNode<
             this.context.strokeRect(node.x - width / 2, node.y - height / 2, width, height);
           }
 
-          if (nodeOptions.label && labelLines)
+          if (labelLines && labelLines.length > 0)
             drawText({
               lines: labelLines,
               context: this.context,
@@ -369,7 +369,7 @@ export function getDrawNode<
 
     /** Text draw */
     const textLines = this.cachedNodeText[index];
-    if (nodeOptions.textVisible && nodeOptions.text && textLines) {
+    if (textLines && textLines.length > 0) {
       textRenders.push(() => {
         if (nodeOptions.textDraw) {
           nodeOptions.textDraw.bind(this)(node, {
@@ -387,7 +387,7 @@ export function getDrawNode<
           return;
         }
 
-        if (!this.context || !node.x || !node.y || !nodeOptions.text) return;
+        if (!this.context || !node.x || !node.y) return;
         this.context.beginPath();
         this.context.globalAlpha = textAlpha;
 

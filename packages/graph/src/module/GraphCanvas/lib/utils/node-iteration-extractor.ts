@@ -58,6 +58,10 @@ export function nodeIterationExtractor<
       constantOptions = optionConstantGetter.call(state, node, i, nodes);
     else constantOptions = optionConstantGetter;
 
+    if (customOptions === undefined) {
+      return constantOptions;
+    }
+
     if (
       constantOptions &&
       typeof constantOptions === "object" &&

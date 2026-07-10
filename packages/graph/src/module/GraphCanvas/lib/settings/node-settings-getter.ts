@@ -2,17 +2,20 @@ import type { ZoomTransform } from "d3-zoom";
 import { colorGetter } from "@/lib";
 import type { GraphCanvas } from "../../GraphCanvas";
 import { NODE_OPTIONS, NODE_SETTINGS } from "../../constants";
-import type { NodeInterface, NodeOptionsInterface, NodeSettingsInterface } from "../../types";
+import type {
+  GraphNodeSettingsInterface,
+  NodeInterface,
+  NodeOptionsInterface,
+  NodeSettingsInterface,
+} from "../../types";
 
 export function nodeSettingsGetter<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(
   settings: NodeSettingsInterface<NodeData, LinkData> | undefined,
-  prevNodeSettings?: Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
-    Pick<NodeSettingsInterface<NodeData, LinkData>, "options">,
-): Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
-  Pick<NodeSettingsInterface<NodeData, LinkData>, "options"> {
+  prevNodeSettings?: GraphNodeSettingsInterface<NodeData, LinkData>,
+): GraphNodeSettingsInterface<NodeData, LinkData> {
   const result = {
     ...(prevNodeSettings ?? NODE_SETTINGS),
     idGetter: nodeIdGetter,
@@ -48,11 +51,37 @@ export function nodeOptionsGetter<
     textDraw: null,
     textExtraDraw: null,
     color: color(String(node.group ?? "_DEFAULT")),
-    textVisible: Boolean(this.areaTransform.k > this.nodeSettings.textScaleMin),
-    text: node.name ?? node.id.toString(),
     textShiftY,
     textSize,
   };
+}
+
+export function nodeTextGetter<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+>(
+  this: GraphCanvas<NodeData, LinkData>,
+  node: NodeInterface<NodeData>,
+  index: number,
+): Required<string | null> {
+  const cache = this.nodeOptionsCache[index];
+  if (cache?.shape == "text") return null;
+  return this.areaTransform.k > this.nodeSettings.textScaleMin
+    ? (node.name ?? node.id.toString())
+    : null;
+}
+
+export function nodeLabelGetter<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+>(
+  this: GraphCanvas<NodeData, LinkData>,
+  node: NodeInterface<NodeData>,
+  index: number,
+): Required<string | null> {
+  const cache = this.nodeOptionsCache[index];
+  if (cache?.shape == "text") return node.name ?? null;
+  return node.label ?? null;
 }
 
 export function nodeTextSizeGetter<
@@ -60,8 +89,7 @@ export function nodeTextSizeGetter<
   LinkData extends Record<string, unknown>,
 >(
   transform: ZoomTransform | undefined,
-  nodeSettings: Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
-    Pick<NodeSettingsInterface<NodeData, LinkData>, "options">,
+  nodeSettings: GraphNodeSettingsInterface<NodeData, LinkData>,
 ) {
   let textSize: number = nodeSettings.textSizeMin;
   let textShiftY: number = nodeSettings.textShiftYMin;

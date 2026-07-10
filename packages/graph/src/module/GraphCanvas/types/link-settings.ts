@@ -2,6 +2,12 @@ import type { GraphCanvas } from "../GraphCanvas";
 import type { LinkInterface } from "./links";
 import type { LinkIterationPropsInterface } from "./utils";
 
+export type GraphLinkSettingsInterface<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+> = Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
+  Pick<LinkSettingsInterface<NodeData, LinkData>, "options">;
+
 export type LinkSettingsInterface<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,

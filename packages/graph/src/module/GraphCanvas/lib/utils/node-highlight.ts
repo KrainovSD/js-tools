@@ -117,20 +117,18 @@ export function nodeHighlight<
     opts.highlightProgress,
   );
 
-  if (opts.nodeOptions.label) {
-    /** Label Size */
-    labelSize = animationByProgress(
-      labelSize,
-      opts.highlightForLabelSizingAdditional,
-      opts.highlightProgress,
-    );
-    /** Label Weight */
-    labelWeight = animationByProgress(
-      labelWeight,
-      opts.highlightForLabelWeightAdditional,
-      opts.highlightProgress,
-    );
-  }
+  /** Label Size */
+  labelSize = animationByProgress(
+    labelSize,
+    opts.highlightForLabelSizingAdditional,
+    opts.highlightProgress,
+  );
+  /** Label Weight */
+  labelWeight = animationByProgress(
+    labelWeight,
+    opts.highlightForLabelWeightAdditional,
+    opts.highlightProgress,
+  );
 
   return {
     color,
@@ -180,16 +178,14 @@ export function nodeFade<
     textAlpha - textAlphaMin,
     1 - opts.highlightProgress,
   );
-  if (opts.nodeOptions.label) {
-    /** Label Alpha */
-    const labelAlphaMin =
-      opts.highlightForLabelFadingMin < labelAlpha ? opts.highlightForLabelFadingMin : labelAlpha;
-    labelAlpha = animationByProgress(
-      labelAlphaMin,
-      labelAlpha - labelAlphaMin,
-      1 - opts.highlightProgress,
-    );
-  }
+  /** Label Alpha */
+  const labelAlphaMin =
+    opts.highlightForLabelFadingMin < labelAlpha ? opts.highlightForLabelFadingMin : labelAlpha;
+  labelAlpha = animationByProgress(
+    labelAlphaMin,
+    labelAlpha - labelAlphaMin,
+    1 - opts.highlightProgress,
+  );
   if (opts.highlightForNodeColorFading) {
     /** Color Fading */
     const colorRgb = extractRgb(colorToRgb(color));

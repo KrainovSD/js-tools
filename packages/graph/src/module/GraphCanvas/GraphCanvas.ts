@@ -33,16 +33,16 @@ import type {
   GraphCanvasCacheKeys,
   GraphCanvasInterface,
   GraphCanvasSimulation,
+  GraphLinkSettingsInterface,
+  GraphNodeSettingsInterface,
   GraphSettingsInterface,
   HighlightSettingsInterface,
   LinkInterface,
   LinkOptionsInterface,
   LinkParticle,
-  LinkSettingsInterface,
   ListenersInterface,
   NodeInterface,
   NodeOptionsInterface,
-  NodeSettingsInterface,
   PrecomputeForceSettingsInterface,
 } from "./types";
 
@@ -76,11 +76,9 @@ export class GraphCanvas<
 
   protected highlightSettings: Required<HighlightSettingsInterface>;
 
-  protected nodeSettings: Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options">> &
-    Pick<NodeSettingsInterface<NodeData, LinkData>, "options">;
+  protected nodeSettings: GraphNodeSettingsInterface<NodeData, LinkData>;
 
-  protected linkSettings: Required<Omit<LinkSettingsInterface<NodeData, LinkData>, "options">> &
-    Pick<LinkSettingsInterface<NodeData, LinkData>, "options">;
+  protected linkSettings: GraphLinkSettingsInterface<NodeData, LinkData>;
 
   protected listeners: ListenersInterface<NodeData, LinkData>;
 

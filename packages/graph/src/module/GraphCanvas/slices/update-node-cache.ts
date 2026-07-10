@@ -1,9 +1,11 @@
 import type { GraphCanvas } from "../GraphCanvas";
 import {
   nodeIterationExtractor,
+  nodeLabelGetter,
   nodeOptionsGetter,
   nodeRadiusGetter,
   nodeSizeGetter,
+  nodeTextGetter,
 } from "../lib";
 import { getTextLines } from "./draw-text";
 
@@ -105,39 +107,35 @@ export function updateNodeCache<
       this.nodeOptionsCache[i] = nodeOptions;
     }
 
-    let nodeOptions = this.nodeOptionsCache[i];
+    const nodeOptions = this.nodeOptionsCache[i];
     if (!nodeOptions) continue;
     /** label */
     if (label) {
-      if (!options) {
-        nodeOptions = nodeIterationExtractor(
-          node,
-          i,
-          this.nodes,
-          this,
-          this.nodeSettings.options ?? {},
-          nodeOptionsGetter,
-        );
-        const cache = this.nodeOptionsCache[i];
-        if (cache) cache.label = nodeOptions.label;
-      }
+      const label = nodeIterationExtractor(
+        node,
+        i,
+        this.nodes,
+        this,
+        this.nodeSettings.label,
+        nodeLabelGetter,
+      );
       /** label in not text shape */
-      if (nodeOptions.shape !== "text" && nodeOptions.label) {
+      if (nodeOptions.shape !== "text" && label) {
         this.context.font = `${nodeOptions.labelStyle} normal ${nodeOptions.labelWeight} ${nodeOptions.labelSize}px ${nodeOptions.labelFont}`;
         this.context.fillStyle = nodeOptions.labelColor;
         this.context.textAlign = nodeOptions.labelAlign;
 
         if (
           nodeOptions.labelWidth == undefined ||
-          this.context.measureText(nodeOptions.label).width <= nodeOptions.labelWidth
+          this.context.measureText(label).width <= nodeOptions.labelWidth
         ) {
-          this.cachedNodeLabel[i] = [nodeOptions.label];
+          this.cachedNodeLabel[i] = [label];
         }
 
         const { lines } = getTextLines({
           context: this.context,
           maxWidth: nodeOptions.labelWidth,
-          text: nodeOptions.label,
+          text: label,
           textAlign: nodeOptions.labelAlign,
           textColor: nodeOptions.labelColor,
           textFont: nodeOptions.labelFont,
@@ -147,10 +145,10 @@ export function updateNodeCache<
         });
         this.cachedNodeLabel[i] = lines;
         /** label in text shape */
-      } else if (nodeOptions.shape === "text" && nodeOptions.label) {
+      } else if (nodeOptions.shape === "text" && label) {
         const textInfo = getTextLines({
           context: this.context,
-          text: nodeOptions.label,
+          text: label,
           textAlign: nodeOptions.labelAlign,
           textColor: nodeOptions.labelColor,
           textFont: nodeOptions.labelFont,
@@ -178,24 +176,17 @@ export function updateNodeCache<
 
     /** text */
     if (text) {
-      if (!options) {
-        nodeOptions = nodeIterationExtractor(
-          node,
-          i,
-          this.nodes,
-          this,
-          this.nodeSettings.options ?? {},
-          nodeOptionsGetter,
-        );
-        const cache = this.nodeOptionsCache[i];
-        if (cache) {
-          cache.text = nodeOptions.text;
-          cache.textVisible = nodeOptions.textVisible;
-        }
-      }
-      if (!nodeOptions.text) {
+      const text = nodeIterationExtractor(
+        node,
+        i,
+        this.nodes,
+        this,
+        this.nodeSettings.text,
+        nodeTextGetter,
+      );
+      if (!text) {
         this.cachedNodeText[i] = [];
-        return;
+        continue;
       }
       this.context.font = `${nodeOptions.textStyle} normal ${nodeOptions.textWeight} ${nodeOptions.textSize}px ${nodeOptions.textFont}`;
       this.context.fillStyle = nodeOptions.textColor;
@@ -203,7 +194,7 @@ export function updateNodeCache<
       const { lines } = getTextLines({
         context: this.context,
         maxWidth: nodeOptions.textWidth,
-        text: nodeOptions.text,
+        text,
         textAlign: nodeOptions.textAlign,
         textColor: nodeOptions.textColor,
         textFont: nodeOptions.textFont,

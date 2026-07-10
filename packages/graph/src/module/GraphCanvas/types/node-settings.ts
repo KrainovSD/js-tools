@@ -31,7 +31,15 @@ export type NodeSettingsInterface<
   options?:
     | NodeIterationPropsInterface<NodeData, LinkData, NodeOptionsInterface<NodeData, LinkData>>
     | NodeOptionsInterface<NodeData, LinkData>;
+  text?: NodeIterationPropsInterface<NodeData, LinkData, string | null> | string | null;
+  label?: NodeIterationPropsInterface<NodeData, LinkData, string | null> | string | null;
 };
+
+export type GraphNodeSettingsInterface<
+  NodeData extends Record<string, unknown>,
+  LinkData extends Record<string, unknown>,
+> = Required<Omit<NodeSettingsInterface<NodeData, LinkData>, "options" | "label" | "text">> &
+  Pick<NodeSettingsInterface<NodeData, LinkData>, "options" | "label" | "text">;
 
 export type NodeOptionsInterface<
   NodeData extends Record<string, unknown>,
@@ -81,8 +89,6 @@ export type NodeOptionsNodeInterface = {
   borderWidth?: number;
 };
 export type NodeOptionsTextInterface = {
-  textVisible?: boolean;
-  text?: string | null;
   textColor?: string;
   textSize?: number;
   textAlpha?: number;
@@ -107,5 +113,4 @@ export type NodeOptionsLabelInterface = {
   labelStyle?: TextStyleEnum;
   labelWeight?: number;
   labelGap?: number;
-  label?: string | null;
 };

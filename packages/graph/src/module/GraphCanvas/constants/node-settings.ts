@@ -2,7 +2,7 @@ import type { NodeOptionsInterface, NodeSettingsInterface } from "../types/node-
 
 export const NODE_SETTINGS: Omit<
   Required<NodeSettingsInterface<Record<string, unknown>, Record<string, unknown>>>,
-  "options" | "idGetter"
+  "options" | "idGetter" | "text" | "label"
 > = {
   smartCache: true,
   textScaleSteps: [],
@@ -58,7 +58,6 @@ export const NODE_OPTIONS: Omit<
   textStyle: "normal",
   textWeight: 500,
   textGap: 0,
-  label: null,
   labelAlpha: 1,
   labelAlign: "center",
   labelColor: "#ffffff",
@@ -72,7 +71,7 @@ export const NODE_OPTIONS: Omit<
 
 export const PERFORMANCE_NODE_SETTINGS: Omit<
   Required<NodeSettingsInterface<Record<string, unknown>, Record<string, unknown>>>,
-  "options" | "idGetter"
+  "options" | "idGetter" | "text" | "label"
 > = {
   ...NODE_SETTINGS,
   nodeRadiusFlexible: false,
