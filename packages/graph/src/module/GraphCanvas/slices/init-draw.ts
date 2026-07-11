@@ -1,5 +1,6 @@
 import { setDrawTime } from "@/lib";
 import type { GraphCanvas } from "../GraphCanvas";
+import type { LinkDrawBatch } from "../types";
 import { getDrawLink } from "./draw-links";
 import { getDrawNode } from "./draw-nodes";
 
@@ -26,7 +27,31 @@ export function initDraw<
     this.nodes.forEach(getDrawNode<NodeData, LinkData>(nodeRenders, textRenders).bind(this));
 
     /** links */
-    this.links.forEach(getDrawLink<NodeData, LinkData>().bind(this));
+    const linkDrawBatch: Record<string, LinkDrawBatch[]> = {};
+    this.links.forEach(getDrawLink<NodeData, LinkData>(linkDrawBatch).bind(this));
+
+    const keys = Object.keys(linkDrawBatch);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const group = linkDrawBatch[key];
+      const [alpha, color, width] = key.split("|");
+      this.context.beginPath();
+      this.context.globalAlpha = +alpha;
+      this.context.strokeStyle = color;
+      this.context.lineWidth = +width;
+      for (let j = 0; j < group.length; j++) {
+        const link = group[j];
+        if (!link.curve) {
+          this.context.moveTo(link.xStart, link.yStart);
+          this.context.lineTo(link.xEnd, link.yEnd);
+        } else {
+          this.context.moveTo(link.xStart, link.yStart);
+          this.context.quadraticCurveTo(link.xControl, link.yControl, link.xEnd, link.yEnd);
+          this.context.setLineDash([]);
+        }
+      }
+      this.context.stroke();
+    }
 
     /** nodes */
 

@@ -38,3 +38,13 @@ export type LinkParticle = {
   _lastDistance?: number;
   _lastTime?: number;
 };
+
+export type LinkDrawBatch = {
+  curve: boolean;
+  xStart: number;
+  yStart: number;
+  xEnd: number;
+  yEnd: number;
+  xControl: number;
+  yControl: number;
+};
