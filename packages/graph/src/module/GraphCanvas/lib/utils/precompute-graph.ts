@@ -13,11 +13,12 @@ type PrecomputeGraphOptions<
 > = {
   nodes: NodeInterface<NodeData>[];
   links: LinkInterface<NodeData, LinkData>[];
-  forceSettings: ForceSettingsInterface<NodeData, LinkData>;
-  nodeSettings: NodeSettingsInterface<NodeData, LinkData>;
-  linkSettings: LinkSettingsInterface<NodeData, LinkData>;
+  forceSettings?: ForceSettingsInterface<NodeData, LinkData>;
+  nodeSettings?: NodeSettingsInterface<NodeData, LinkData>;
+  linkSettings?: LinkSettingsInterface<NodeData, LinkData>;
+  maxMs?: number;
 };
-export async function precomputeGraph<
+export function precomputeGraph<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(opts: PrecomputeGraphOptions<NodeData, LinkData>) {
@@ -28,8 +29,14 @@ export async function precomputeGraph<
     links: opts.links,
     nodeSettings: opts.nodeSettings,
     linkSettings: opts.linkSettings,
-    forceSettings: opts.forceSettings,
+    forceSettings: {
+      ...opts.forceSettings,
+      precompute: true,
+      precomputeDisableForcesAfter: true,
+      precomputeMaxTicks: Infinity,
+      precomputeMaxTimeMs: opts.maxMs ?? Infinity,
+    },
   });
-  await graph.precompute();
+  graph.precompute();
   graph.destroy();
 }

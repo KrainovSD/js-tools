@@ -476,34 +476,27 @@ export class GraphCanvas<
   };
 
   precompute = () => {
-    return new Promise((resolve) => {
-      this.listeners.onSimulationEnd = () => {
-        resolve(true);
-      };
-      initArea.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof initArea>,
-        ReturnType<typeof initArea>
-      >(this);
-      updateNodeCache.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof updateNodeCache>,
-        ReturnType<typeof updateNodeCache>
-      >(this);
-      updateLinkCache.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof updateLinkCache>,
-        ReturnType<typeof updateLinkCache>
-      >(this);
-      initSimulation.call<
-        GraphCanvas<NodeData, LinkData>,
-        Parameters<typeof initSimulation>,
-        ReturnType<typeof initSimulation>
-      >(this);
-      if (this.simulation) {
-        this.simulation.alpha(1).restart();
-      }
-    });
+    initArea.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof initArea>,
+      ReturnType<typeof initArea>
+    >(this);
+    updateNodeCache.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof updateNodeCache>,
+      ReturnType<typeof updateNodeCache>
+    >(this);
+    updateLinkCache.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof updateLinkCache>,
+      ReturnType<typeof updateLinkCache>
+    >(this);
+    initSimulation.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof initSimulation>,
+      ReturnType<typeof initSimulation>
+    >(this);
+    this.restart(1);
   };
 
   protected _initSmartDraw = () => {
