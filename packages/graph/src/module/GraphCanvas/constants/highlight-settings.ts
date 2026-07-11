@@ -63,7 +63,3 @@ export const HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
   highlightByLinkForArrowBorderColor: null,
   highlightByLinkForArrowBorderSizingAdditional: 0,
 };
-
-export const PERFORMANCE_HIGHLIGHT_SETTINGS: Required<HighlightSettingsInterface> = {
-  ...HIGHLIGHT_SETTINGS,
-};

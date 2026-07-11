@@ -68,27 +68,3 @@ export const NODE_OPTIONS: Omit<
   labelWeight: 500,
   labelWidth: 20,
 };
-
-export const PERFORMANCE_NODE_SETTINGS: Omit<
-  Required<NodeSettingsInterface<Record<string, unknown>, Record<string, unknown>>>,
-  "options" | "idGetter" | "text" | "label"
-> = {
-  ...NODE_SETTINGS,
-  nodeRadiusFlexible: false,
-  nodeSizeFlexible: false,
-};
-
-export const PERFOMANCE_NODE_OPTIONS: Omit<
-  Required<NodeOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
-  | "color"
-  | "text"
-  | "textVisible"
-  | "textSize"
-  | "textShiftY"
-  | "nodeDraw"
-  | "nodeExtraDraw"
-  | "textDraw"
-  | "textExtraDraw"
-> = {
-  ...NODE_OPTIONS,
-};

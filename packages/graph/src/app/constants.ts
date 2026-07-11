@@ -27,13 +27,7 @@ import {
   LINK_SETTINGS,
   NODE_OPTIONS,
   NODE_SETTINGS,
-  PERFOMANCE_NODE_OPTIONS,
   PERFORMANCE_FORCE_SETTINGS,
-  PERFORMANCE_GRAPH_SETTINGS,
-  PERFORMANCE_HIGHLIGHT_SETTINGS,
-  PERFORMANCE_LINK_OPTIONS,
-  PERFORMANCE_LINK_SETTINGS,
-  PERFORMANCE_NODE_SETTINGS,
 } from "../module/GraphCanvas";
 import type { GraphSettings, SettingsTemplateInterface } from "./types";
 
@@ -59,18 +53,20 @@ export const PERFORMANCE_SETTINGS: GraphSettings = {
   forceSettings: {
     ...PERFORMANCE_FORCE_SETTINGS,
   },
-  graphSettings: { ...PERFORMANCE_GRAPH_SETTINGS },
+  graphSettings: { ...GRAPH_SETTINGS },
   linkOptions: {
-    ...PERFORMANCE_LINK_OPTIONS,
+    ...LINK_OPTIONS,
   },
   linkSettings: {
-    ...PERFORMANCE_LINK_SETTINGS,
+    ...LINK_SETTINGS,
   },
-  nodeOptions: { ...PERFOMANCE_NODE_OPTIONS },
+  nodeOptions: { ...NODE_OPTIONS },
   nodeSettings: {
-    ...PERFORMANCE_NODE_SETTINGS,
+    ...NODE_SETTINGS,
+    nodeRadiusFlexible: false,
+    nodeSizeFlexible: false,
   },
-  highlightSettings: { ...PERFORMANCE_HIGHLIGHT_SETTINGS },
+  highlightSettings: { ...HIGHLIGHT_SETTINGS },
 };
 
 export const HIGHLIGHT_COLOR = "#ce7a1c";

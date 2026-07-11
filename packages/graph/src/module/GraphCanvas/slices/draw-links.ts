@@ -2,7 +2,13 @@ import type { GraphCanvas } from "../GraphCanvas";
 import { calculateLinkPositionByNode, getParticlePosition, linkFade, linkHighlight } from "../lib";
 import { calculateCurveLinkPositionByNode } from "../lib/utils/calculate-curve-link-position-by-node";
 import { approximateQuadraticBezierLength } from "../lib/utils/get-particle-position";
-import type { LinkDrawBatch, LinkInterface, LinkParticle, LinkParticleDrawBatch } from "../types";
+import type {
+  LinkArrowDrawBatch,
+  LinkDrawBatch,
+  LinkInterface,
+  LinkParticle,
+  LinkParticleDrawBatch,
+} from "../types";
 
 export function getDrawLink<
   NodeData extends Record<string, unknown>,
@@ -10,6 +16,7 @@ export function getDrawLink<
 >(
   linkBatch: Record<string, LinkDrawBatch[]>,
   particleBatch: Record<string, LinkParticleDrawBatch[]>,
+  arrowBatch: Record<string, LinkArrowDrawBatch[]>,
 ) {
   return function drawLink(
     this: GraphCanvas<NodeData, LinkData>,
@@ -275,27 +282,16 @@ export function getDrawLink<
           angle = Math.atan2(tangentY, tangentX);
         }
       }
-      this.context.beginPath();
-      this.context.globalAlpha = arrowAlpha;
-      this.context.strokeStyle = arrowBorderColor;
-      this.context.lineWidth = arrowBorderWidth;
-      this.context.fillStyle = arrowColor;
-      this.context.moveTo(xEndArrow, yEndArrow);
-      this.context.lineTo(
-        xEndArrow - arrowSize * Math.cos(angle - Math.PI / 6),
-        yEndArrow - arrowSize * Math.sin(angle - Math.PI / 6),
-      );
-      this.context.lineTo(
-        xEndArrow - arrowSize * Math.cos(angle + Math.PI / 6),
-        yEndArrow - arrowSize * Math.sin(angle + Math.PI / 6),
-      );
-      this.context.closePath();
-      this.context.fill();
-      if (arrowBorderWidth > 0) {
-        this.context.stroke();
-      }
+      const arrowBatchKey = `${arrowAlpha}|${arrowBorderColor}|${arrowBorderWidth}|${arrowColor}`;
+      arrowBatch[arrowBatchKey] ??= [];
+      const arrowGroup = arrowBatch[arrowBatchKey];
+      arrowGroup.push({
+        x: xEndArrow,
+        y: yEndArrow,
+        size: arrowSize,
+        angle,
+      });
     }
-
     if (linkOptions.drawExtraLink) {
       linkOptions.drawExtraLink.call(this, link, { ...linkOptions, alpha });
     }

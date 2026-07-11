@@ -1,6 +1,6 @@
 import { setDrawTime } from "@/lib";
 import type { GraphCanvas } from "../GraphCanvas";
-import type { LinkDrawBatch, LinkParticleDrawBatch } from "../types";
+import type { LinkArrowDrawBatch, LinkDrawBatch, LinkParticleDrawBatch } from "../types";
 import { getDrawLink } from "./draw-links";
 import { getDrawNode } from "./draw-nodes";
 
@@ -27,7 +27,10 @@ export function initDraw<
     /** links */
     const linkBatch: Record<string, LinkDrawBatch[]> = {};
     const particleBatch: Record<string, LinkParticleDrawBatch[]> = {};
-    this.links.forEach(getDrawLink<NodeData, LinkData>(linkBatch, particleBatch).bind(this));
+    const arrowBatch: Record<string, LinkArrowDrawBatch[]> = {};
+    this.links.forEach(
+      getDrawLink<NodeData, LinkData>(linkBatch, particleBatch, arrowBatch).bind(this),
+    );
     const linkKeys = Object.keys(linkBatch);
     for (let i = 0; i < linkKeys.length; i++) {
       const key = linkKeys[i];
@@ -63,6 +66,34 @@ export function initDraw<
         const item = group[j];
         this.context.moveTo(item.x + item.r, item.y);
         this.context.arc(item.x, item.y, item.r, 0, Math.PI * 2);
+      }
+      this.context.fill();
+      if (+width > 0) {
+        this.context.stroke();
+      }
+    }
+    const arrowKeys = Object.keys(arrowBatch);
+    for (let i = 0; i < arrowKeys.length; i++) {
+      const key = arrowKeys[i];
+      const group = arrowBatch[key];
+      const [alpha, bcolor, width, color] = key.split("|");
+      this.context.beginPath();
+      this.context.globalAlpha = +alpha;
+      this.context.strokeStyle = bcolor;
+      this.context.lineWidth = +width;
+      this.context.fillStyle = color;
+      for (let j = 0; j < group.length; j++) {
+        const item = group[j];
+        this.context.moveTo(item.x, item.y);
+        this.context.lineTo(
+          item.x - item.size * Math.cos(item.angle - Math.PI / 6),
+          item.y - item.size * Math.sin(item.angle - Math.PI / 6),
+        );
+        this.context.lineTo(
+          item.x - item.size * Math.cos(item.angle + Math.PI / 6),
+          item.y - item.size * Math.sin(item.angle + Math.PI / 6),
+        );
+        this.context.closePath();
       }
       this.context.fill();
       if (+width > 0) {

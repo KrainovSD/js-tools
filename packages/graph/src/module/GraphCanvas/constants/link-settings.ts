@@ -36,19 +36,3 @@ export const LINK_OPTIONS: Omit<
   particleBorderWidth: 0.1,
   particleRadius: 0.5,
 };
-
-export const PERFORMANCE_LINK_SETTINGS: Omit<
-  Required<LinkSettingsInterface<Record<string, unknown>, Record<string, unknown>>>,
-  "options"
-> = {
-  ...LINK_SETTINGS,
-  particles: false,
-  prettyDraw: false,
-};
-
-export const PERFORMANCE_LINK_OPTIONS: Omit<
-  Required<LinkOptionsInterface<Record<string, unknown>, Record<string, unknown>>>,
-  "color" | "width" | "drawLink" | "drawExtraLink" | "arrowColor"
-> = {
-  ...LINK_OPTIONS,
-};

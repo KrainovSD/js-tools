@@ -54,3 +54,10 @@ export type LinkParticleDrawBatch = {
   y: number;
   r: number;
 };
+
+export type LinkArrowDrawBatch = {
+  x: number;
+  y: number;
+  size: number;
+  angle: number;
+};
