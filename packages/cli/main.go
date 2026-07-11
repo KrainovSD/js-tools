@@ -18,13 +18,17 @@ func main() {
 
 	switch os.Args[1] {
 	case "exec-package-command":
-		err = workers.RunExecPackageCommand(os.Args[2:])
+		var worker = workers.ExecPackageWorker{}
+		err = worker.Run(os.Args[2:])
 	case "check-package-duplicate":
-		err = workers.RunCheckPackageDuplicate(os.Args[2:])
+		var worker = workers.CheckDuplicateWorker{}
+		err = worker.Run(os.Args[2:])
 	case "clear-dependencies":
-		err = workers.RunClearDependencies(os.Args[2:])
+		var worker = workers.ClearDepsWorker{}
+		err = worker.Run(os.Args[2:])
 	case "translates":
-		err = workers.RunTranslates(os.Args[2:])
+		var worker = workers.TranslateWorker{}
+		err = worker.Run(os.Args[2:])
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command: %s\n", os.Args[1])
 		printUsage()

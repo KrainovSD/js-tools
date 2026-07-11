@@ -9,7 +9,9 @@ import (
 	"strings"
 )
 
-func RunExecPackageCommand(args []string) error {
+type ExecPackageWorker struct{}
+
+func (w *ExecPackageWorker) Run(args []string) error {
 	var prefix string
 	var prefixAlias = &helpers.AliasValue{Value: &prefix}
 

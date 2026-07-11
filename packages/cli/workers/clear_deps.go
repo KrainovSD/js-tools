@@ -12,7 +12,9 @@ const targetPath = "package.json"
 const rootPathPnpm = "pnpm-workspace.yaml"
 const lockPathPnpm = "pnpm-lock.yaml"
 
-func RunClearDependencies(args []string) error {
+type ClearDepsWorker struct{}
+
+func (w *ClearDepsWorker) Run(args []string) error {
 	var fs = flag.NewFlagSet("clear-dependencies", flag.ContinueOnError)
 	var srcPath = fs.String("src", "", "Path to root")
 
@@ -34,12 +36,12 @@ func RunClearDependencies(args []string) error {
 	fmt.Printf("Root: %s\n", root)
 
 	var clearedDirs []string
-	recursivelyFind(root, rootPathPnpm, lockPathPnpm, &clearedDirs)
+	w.recursivelyFind(root, rootPathPnpm, lockPathPnpm, &clearedDirs)
 	fmt.Printf("Cleared dirs: %v\n", clearedDirs)
 	return nil
 }
 
-func recursivelyFind(dir string, rootPath string, lockPath string, clearedDirs *[]string) {
+func (w *ClearDepsWorker) recursivelyFind(dir string, rootPath string, lockPath string, clearedDirs *[]string) {
 	var entries []os.DirEntry
 	var err error
 	if entries, err = os.ReadDir(dir); err != nil {
@@ -63,7 +65,7 @@ func recursivelyFind(dir string, rootPath string, lockPath string, clearedDirs *
 		var nodeModules = filepath.Join(dir, "node_modules")
 		var lockFile = filepath.Join(dir, lockPath)
 
-		if err = os.RemoveAll(nodeModules); err != nil && !isRunningBinaryError(nodeModules, err) {
+		if err = os.RemoveAll(nodeModules); err != nil && !w.isRunningBinaryError(nodeModules, err) {
 			fmt.Println(err.Error())
 		}
 		if err = os.Remove(lockFile); err != nil && !os.IsNotExist(err) {
@@ -78,12 +80,12 @@ func recursivelyFind(dir string, rootPath string, lockPath string, clearedDirs *
 
 	for _, entry := range entries {
 		if entry.IsDir() {
-			recursivelyFind(filepath.Join(dir, entry.Name()), rootPath, lockPath, clearedDirs)
+			w.recursivelyFind(filepath.Join(dir, entry.Name()), rootPath, lockPath, clearedDirs)
 		}
 	}
 }
 
-func isRunningBinaryError(nodeModules string, originalErr error) bool {
+func (w *ClearDepsWorker) isRunningBinaryError(nodeModules string, originalErr error) bool {
 	var exe string
 	var err error
 	if exe, err = os.Executable(); err != nil {

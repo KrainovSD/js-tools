@@ -21,8 +21,8 @@ const targets: Target[] = [
   // { goos: "windows", goarch: "arm64", output: "ksd-windows-arm64.exe" },
 ];
 
-const binDir = resolve(__dirname, "..", "..", "bin");
-const cmdDir = resolve(__dirname, "..", "..", "cmd");
+const binDir = resolve(__dirname, "..", "bin");
+const cmdDir = resolve(__dirname, "..");
 
 mkdirSync(binDir, { recursive: true });
 

@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/cli",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Krainov cli",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -24,7 +24,7 @@
     "js"
   ],
   "scripts": {
-    "build": "npm run build:ts && node lib/scripts/build.js",
+    "build": "npm run build:ts && node lib/build.js",
     "build:ts": "tsc -p tsconfig.build.json",
     "publish-package": "npm run build  && npm publish",
     "lint": "eslint . -c ./eslint.config.js --color --max-warnings 0",
@@ -32,7 +32,8 @@
     "format-check": "prettier --check ./src",
     "lint-check": "eslint --debug eslint.config.js",
     "type-debug": "tsc --showConfig > typescript-config.json",
-    "postinstall": "node lib/scripts/postinstall.js || true"
+    "postinstall": "node lib/scripts/postinstall.js || true",
+    "test-translate": "go run main.go translates gen react ru.json ./"
   },
   "devDependencies": {
     "@krainovsd/presets": "0.4.0",

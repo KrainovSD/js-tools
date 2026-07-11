@@ -30,7 +30,9 @@ type DuplicateResult struct {
 	InnerDuplicates map[string][]string `json:"innerDuplicates"`
 }
 
-func RunCheckPackageDuplicate(args []string) error {
+type CheckDuplicateWorker struct{}
+
+func (w *CheckDuplicateWorker) Run(args []string) error {
 	var fs = flag.NewFlagSet("check-package-duplicate", flag.ContinueOnError)
 	var filePath = fs.String("file", "pnpm-lock.yaml", "Path to lock file")
 	var outputPath = fs.String("output", "dependency-duplicates.json", "Path to result file")
@@ -56,10 +58,10 @@ func RunCheckPackageDuplicate(args []string) error {
 
 	fmt.Printf("File: %s, Output: %s\n", lockFilePath, outPath)
 
-	return checkPackageDuplicate(lockFilePath, outPath)
+	return w.checkPackageDuplicate(lockFilePath, outPath)
 }
 
-func checkPackageDuplicate(lockFilePath string, outputPath string) error {
+func (w *CheckDuplicateWorker) checkPackageDuplicate(lockFilePath string, outputPath string) error {
 	var data []byte
 	var err error
 	if data, err = os.ReadFile(lockFilePath); err != nil {
@@ -104,7 +106,7 @@ func checkPackageDuplicate(lockFilePath string, outputPath string) error {
 	}
 
 	for name, versions := range innerPackages {
-		var unique = dedup(versions)
+		var unique = w.dedup(versions)
 		if len(unique) > 1 {
 			innerDuplicates[name] = unique
 		}
@@ -114,12 +116,12 @@ func checkPackageDuplicate(lockFilePath string, outputPath string) error {
 	var duplicates = make(map[string][]string)
 
 	for _, importer := range lockFile.Importers {
-		collectVersions(importer.Dependencies, packages)
-		collectVersions(importer.DevDependencies, packages)
+		w.collectVersions(importer.Dependencies, packages)
+		w.collectVersions(importer.DevDependencies, packages)
 	}
 
 	for name, versions := range packages {
-		var unique = dedup(versions)
+		var unique = w.dedup(versions)
 		if len(unique) > 1 {
 			duplicates[name] = unique
 		}
@@ -140,7 +142,7 @@ func checkPackageDuplicate(lockFilePath string, outputPath string) error {
 	return nil
 }
 
-func collectVersions(deps map[string]DepVersion, packages map[string][]string) {
+func (w *CheckDuplicateWorker) collectVersions(deps map[string]DepVersion, packages map[string][]string) {
 	for name, dep := range deps {
 		var version = strings.Split(dep.Version, "(")[0]
 		if version == "" {
@@ -150,7 +152,7 @@ func collectVersions(deps map[string]DepVersion, packages map[string][]string) {
 	}
 }
 
-func dedup(slice []string) []string {
+func (w *CheckDuplicateWorker) dedup(slice []string) []string {
 	var seen = make(map[string]bool, len(slice))
 	var result []string
 	for _, v := range slice {

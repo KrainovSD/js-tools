@@ -1,18 +1,18 @@
 package workers
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io/fs"
+	"ksd/helpers"
 	"os"
 	"path/filepath"
 	"regexp"
 	"slices"
-	"sort"
 	"strings"
 )
 
@@ -21,7 +21,9 @@ type translationEntry struct {
 	Value string `json:"value"`
 }
 
-func RunTranslates(args []string) error {
+type TranslateWorker struct{}
+
+func (w *TranslateWorker) Run(args []string) error {
 	if len(args) < 2 {
 		fmt.Fprintln(os.Stderr, "Usage: ksd translates <command> [options]")
 		fmt.Fprintln(os.Stderr, "")
@@ -35,11 +37,11 @@ func RunTranslates(args []string) error {
 	var err error
 	switch args[0] {
 	case "gen":
-		err = runTranslatesGen(args[1:])
+		err = w.runTranslatesGen(args[1:])
 	case "diff":
-		err = runTranslatesDiff(args[1:])
+		err = w.runTranslatesDiff(args[1:])
 	case "merge":
-		err = runTranslatesMerge(args[1:])
+		err = w.runTranslatesMerge(args[1:])
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown translates command: %s\n", args[0])
 		fmt.Fprintln(os.Stderr, "")
@@ -53,7 +55,7 @@ func RunTranslates(args []string) error {
 	return err
 }
 
-func runTranslatesGen(args []string) error {
+func (w *TranslateWorker) runTranslatesGen(args []string) error {
 	var fs = flag.NewFlagSet("translates gen", flag.ContinueOnError)
 	fs.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage: ksd translates gen <framework> <translate-file> <scan-dir>")
@@ -83,7 +85,11 @@ func runTranslatesGen(args []string) error {
 	var target map[string]any
 	var err error
 	if target, err = getTranslationJSON[map[string]any](targetPath); err != nil {
-		return fmt.Errorf("get target file: %w", err)
+		if errors.Is(err, os.ErrNotExist) {
+			target = make(map[string]any)
+		} else {
+			return fmt.Errorf("get target file: %w", err)
+		}
 	}
 
 	var extensions []string
@@ -111,12 +117,12 @@ func runTranslatesGen(args []string) error {
 	fmt.Printf("Root: %s\n", rootDir)
 
 	var entries []translationEntry
-	if entries, err = extractTranslations(rootDir, extensions, pattern, patternSimple, patternSimpleInner); err != nil {
+	if entries, err = w.extractTranslations(rootDir, extensions, pattern, patternSimple, patternSimpleInner); err != nil {
 		return fmt.Errorf("extract translations: %w", err)
 	}
 
-	var extracted = makeTranslationJSON(entries)
-	mergeKeysRecursively(extracted, target, "")
+	var extracted = w.makeTranslationJSON(entries)
+	w.mergeKeysRecursively(extracted, target, "")
 
 	if err = writeTranslationJSON(targetPath, target); err != nil {
 		return fmt.Errorf("write target: %w", err)
@@ -126,7 +132,7 @@ func runTranslatesGen(args []string) error {
 	return nil
 }
 
-func runTranslatesDiff(args []string) error {
+func (w *TranslateWorker) runTranslatesDiff(args []string) error {
 	var fs = flag.NewFlagSet("translates diff", flag.ContinueOnError)
 	fs.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage: ksd translates diff <source-file> <target-file>")
@@ -172,11 +178,11 @@ func runTranslatesDiff(args []string) error {
 		return fmt.Errorf("get target file: %w", err)
 	}
 	if lock, err = getTranslationJSON[map[string]string](targetLockPath); err != nil {
-		lock = getTranslationLock(source)
+		lock = w.getTranslationLock(source)
 	}
 
-	var result = getTranslationDiff(source, target, lock, "")
-	var newLock = getTranslationLock(source)
+	var result = w.getTranslationDiff(source, target, lock, "")
+	var newLock = w.getTranslationLock(source)
 
 	if err = writeTranslationJSON("result.json", result); err != nil {
 		return fmt.Errorf("write result: %w", err)
@@ -189,7 +195,7 @@ func runTranslatesDiff(args []string) error {
 	return nil
 }
 
-func runTranslatesMerge(args []string) error {
+func (w *TranslateWorker) runTranslatesMerge(args []string) error {
 	var fs = flag.NewFlagSet("translates merge", flag.ContinueOnError)
 	fs.Usage = func() {
 		fmt.Fprintln(os.Stderr, "Usage: ksd translates merge <source-file> <target-file>")
@@ -228,7 +234,7 @@ func runTranslatesMerge(args []string) error {
 		return fmt.Errorf("get target file: %w", err)
 	}
 
-	mergeKeysRecursively(source, target, "")
+	w.mergeKeysRecursively(source, target, "")
 
 	if err = writeTranslationJSON(targetPath, target); err != nil {
 		return fmt.Errorf("write target: %w", err)
@@ -238,42 +244,13 @@ func runTranslatesMerge(args []string) error {
 	return nil
 }
 
-func getTranslationJSON[T map[string]any | map[string]string](path string) (T, error) {
-	var err error
-	var data []byte
-	var jsonData T
-
-	if data, err = os.ReadFile(path); err != nil {
-		return jsonData, fmt.Errorf("read file %s: %w", path, err)
-	}
-	if err = json.Unmarshal(data, &jsonData); err != nil {
-		return jsonData, fmt.Errorf("unmarshal file %s: %w", path, err)
-	}
-
-	return jsonData, nil
-}
-
-func writeTranslationJSON[T map[string]any | map[string]string](path string, data T) error {
-	var err error
-	var sortedData []byte
-
-	if sortedData, err = marshalSortedIndent(data, "", "  "); err != nil {
-		return fmt.Errorf("marshal file %s: %w", path, err)
-	}
-	if err = os.WriteFile(path, sortedData, 0666); err != nil {
-		return fmt.Errorf("write file %s: %w", path, err)
-	}
-
-	return nil
-}
-
-func getTranslationLock(source map[string]any) map[string]string {
+func (w *TranslateWorker) getTranslationLock(source map[string]any) map[string]string {
 	var lock = make(map[string]string, 200)
-	extractHashRecursively(source, "", lock)
+	w.extractHashRecursively(source, "", lock)
 	return lock
 }
 
-func extractHashRecursively(source map[string]any, prevKey string, lock map[string]string) {
+func (w *TranslateWorker) extractHashRecursively(source map[string]any, prevKey string, lock map[string]string) {
 	for key, value := range source {
 		var currentPath = key
 		if prevKey != "" {
@@ -284,20 +261,20 @@ func extractHashRecursively(source map[string]any, prevKey string, lock map[stri
 		var mapValue, isMap = value.(map[string]any)
 
 		if isString {
-			lock[currentPath] = computeHash(stringValue)
+			lock[currentPath] = w.computeHash(stringValue)
 		} else if isMap {
-			extractHashRecursively(mapValue, currentPath, lock)
+			w.extractHashRecursively(mapValue, currentPath, lock)
 		}
 	}
 }
 
-func computeHash(str string) string {
+func (w *TranslateWorker) computeHash(str string) string {
 	var hash = sha256.New()
 	hash.Write([]byte(str))
 	return hex.EncodeToString(hash.Sum(nil))
 }
 
-func getTranslationDiff(source, target map[string]any, lock map[string]string, prevKey string) map[string]any {
+func (w *TranslateWorker) getTranslationDiff(source, target map[string]any, lock map[string]string, prevKey string) map[string]any {
 	var result = make(map[string]any)
 
 	for key, sourceValue := range source {
@@ -314,13 +291,13 @@ func getTranslationDiff(source, target map[string]any, lock map[string]string, p
 			}
 
 			if sourceSubValueOk && targetSubValueOk {
-				var subResult = getTranslationDiff(sourceSubValue, targetSubValue, lock, currentPath)
+				var subResult = w.getTranslationDiff(sourceSubValue, targetSubValue, lock, currentPath)
 				if len(subResult) > 0 {
 					result[key] = subResult
 				}
 			} else if !sourceSubValueOk && !targetSubValueOk {
 				var sourceStrValue, isString = sourceValue.(string)
-				if isString && (computeHash(sourceStrValue) != lock[currentPath]) {
+				if isString && (w.computeHash(sourceStrValue) != lock[currentPath]) {
 					fmt.Printf("key \033[1m\033[32m%s\033[0m hash has changed\n", currentPath)
 					result[key] = sourceStrValue
 				}
@@ -334,7 +311,7 @@ func getTranslationDiff(source, target map[string]any, lock map[string]string, p
 	return result
 }
 
-func mergeKeysRecursively(source, target map[string]any, prevKey string) {
+func (w *TranslateWorker) mergeKeysRecursively(source, target map[string]any, prevKey string) {
 	for key, sourceValue := range source {
 		if targetValue, exists := target[key]; !exists {
 			target[key] = sourceValue
@@ -347,7 +324,7 @@ func mergeKeysRecursively(source, target map[string]any, prevKey string) {
 			}
 
 			if targetIsMap && sourceIsMap {
-				mergeKeysRecursively(sourceMap, targetMap, currentPath)
+				w.mergeKeysRecursively(sourceMap, targetMap, currentPath)
 			} else if !sourceIsMap && !targetIsMap {
 				target[key] = sourceValue
 			} else {
@@ -357,7 +334,7 @@ func mergeKeysRecursively(source, target map[string]any, prevKey string) {
 	}
 }
 
-func extractTranslations(rootDir string, extensions []string, pattern, patternSimple, patternSimpleInner *regexp.Regexp) ([]translationEntry, error) {
+func (w *TranslateWorker) extractTranslations(rootDir string, extensions []string, pattern, patternSimple, patternSimpleInner *regexp.Regexp) ([]translationEntry, error) {
 	var seenKeys = make(map[string]bool, 200)
 	var entries = make([]translationEntry, 0, 200)
 
@@ -384,14 +361,14 @@ func extractTranslations(rootDir string, extensions []string, pattern, patternSi
 			return nil
 		}
 
-		extractTranslationsContent(string(content), pattern, patternSimple, patternSimpleInner, seenKeys, &entries)
+		w.extractTranslationsContent(string(content), pattern, patternSimple, patternSimpleInner, seenKeys, &entries)
 		return nil
 	})
 
 	return entries, walkErr
 }
 
-func extractTranslationsContent(content string, pattern, patternSimple, patternSimpleInner *regexp.Regexp, seenKeys map[string]bool, entries *[]translationEntry) {
+func (w *TranslateWorker) extractTranslationsContent(content string, pattern, patternSimple, patternSimpleInner *regexp.Regexp, seenKeys map[string]bool, entries *[]translationEntry) {
 	var matches = pattern.FindAllStringSubmatch(content, -1)
 
 	for _, match := range matches {
@@ -450,7 +427,7 @@ func extractTranslationsContent(content string, pattern, patternSimple, patternS
 	}
 }
 
-func makeTranslationJSON(entries []translationEntry) map[string]any {
+func (w *TranslateWorker) makeTranslationJSON(entries []translationEntry) map[string]any {
 	var result = make(map[string]any, len(entries))
 
 	for _, entry := range entries {
@@ -470,6 +447,8 @@ func makeTranslationJSON(entries []translationEntry) map[string]any {
 			var tempObject map[string]any
 			var isObject bool
 			if tempObject, isObject = temp.(map[string]any); !isObject {
+				var conflictPath = strings.Join(paths[:index+1], ".")
+				fmt.Printf("key \033[1m\033[33m%s\033[0m has a different type\n", conflictPath)
 				tempObject = make(map[string]any)
 			}
 
@@ -481,68 +460,35 @@ func makeTranslationJSON(entries []translationEntry) map[string]any {
 	return result
 }
 
-func marshalSortedIndent(v any, prefix, indent string) ([]byte, error) {
-	var data, err = marshalSorted(v)
-	if err != nil {
-		return nil, err
+func getTranslationJSON[T map[string]any | map[string]string](path string) (T, error) {
+	var err error
+	var jsonData T
+
+	var data []byte
+	if data, err = os.ReadFile(path); err != nil {
+		return jsonData, fmt.Errorf("read file %s: %w", path, err)
+	}
+	if err = json.Unmarshal(data, &jsonData); err != nil {
+		return jsonData, fmt.Errorf("unmarshal file %s: %w", path, err)
 	}
 
-	var out bytes.Buffer
-	if err = json.Indent(&out, data, prefix, indent); err != nil {
-		return nil, err
-	}
-
-	return out.Bytes(), nil
+	return jsonData, nil
 }
 
-func marshalSorted(v any) ([]byte, error) {
-	var data, err = json.Marshal(v)
-	if err != nil {
-		return nil, err
+func writeTranslationJSON[T map[string]any | map[string]string](path string, data T) error {
+	var err error
+	var sortedData []byte
+
+	if sortedData, err = helpers.MarshalSortedIndent(data, "", "  "); err != nil {
+		return fmt.Errorf("marshal file %s: %w", path, err)
+	}
+	var dir = filepath.Dir(path)
+	if err = os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("create directory %s: %w", dir, err)
+	}
+	if err = os.WriteFile(path, sortedData, 0666); err != nil {
+		return fmt.Errorf("write file %s: %w", path, err)
 	}
 
-	var m map[string]any
-	if err = json.Unmarshal(data, &m); err != nil {
-		return nil, err
-	}
-
-	return marshalSortedMap(m), nil
-}
-
-func marshalSortedMap(m map[string]any) []byte {
-	if len(m) == 0 {
-		return []byte("{}")
-	}
-
-	var keys = make([]string, 0, len(m))
-	for k := range m {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-
-	var buf bytes.Buffer
-	buf.WriteString("{")
-
-	for i, key := range keys {
-		if i > 0 {
-			buf.WriteString(",")
-		}
-
-		var keyJSON []byte
-		keyJSON, _ = json.Marshal(key)
-		buf.Write(keyJSON)
-		buf.WriteString(":")
-
-		switch v := m[key].(type) {
-		case map[string]any:
-			buf.Write(marshalSortedMap(v))
-		default:
-			var valJSON []byte
-			valJSON, _ = json.Marshal(v)
-			buf.Write(valJSON)
-		}
-	}
-
-	buf.WriteString("}")
-	return buf.Bytes()
+	return nil
 }
