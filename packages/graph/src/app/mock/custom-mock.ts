@@ -1,5 +1,5 @@
 import type { GraphCanvasInterface } from "@/module/GraphCanvas";
-import { getNodeNeighbors } from "../lib";
+import { prepareData } from "../lib";
 import type { LinkData, NodeData } from "../types";
 
 function randomNumber(min: number, max: number) {
@@ -40,4 +40,4 @@ export const customMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" 
     };
   }),
 };
-getNodeNeighbors(customMock);
+prepareData(customMock);

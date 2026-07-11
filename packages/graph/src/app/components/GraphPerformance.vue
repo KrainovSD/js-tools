@@ -2,7 +2,7 @@
   import { computed, shallowRef, toRaw, useTemplateRef, watch } from "vue";
   import { GraphCanvas } from "@/module/GraphCanvas";
   import { PERFORMANCE_SETTINGS } from "../constants";
-  import { getNodeNeighbors } from "../lib";
+  import { prepareData } from "../lib";
   import type { Graph, Link, LinkData, Node, NodeData } from "../types";
 
   type Props = {
@@ -15,7 +15,7 @@
   const selectedNode = defineModel<Node | null>("selectedNode", { default: null });
   const selectedLink = defineModel<string | null>("selectedLink", { default: null });
   const checkedGraph = computed(() =>
-    getNodeNeighbors({ nodes: props.graph.nodes, links: props.graph.links }),
+    prepareData({ nodes: props.graph.nodes, links: props.graph.links }),
   );
 
   function onClick(

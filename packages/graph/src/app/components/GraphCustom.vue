@@ -12,7 +12,7 @@
     extractLinkPointIds,
   } from "@/module/GraphCanvas";
   import { DEFAULT_SETTINGS } from "../constants";
-  import { getLinkOptions, getNodeNeighbors, getNodeOptions } from "../lib";
+  import { getLinkOptions, getNodeOptions, prepareData } from "../lib";
   import type { Graph, Link, LinkData, Node, NodeData } from "../types";
 
   type Props = {
@@ -32,7 +32,7 @@
   const selectedNodes = defineModel<Node[]>("selectedNodes", { default: [] });
   const selectedLink = defineModel<string | null>("selectedLink", { default: null });
   const checkedGraph = computed(() =>
-    getNodeNeighbors({ nodes: props.graph.nodes, links: props.graph.links }),
+    prepareData({ nodes: props.graph.nodes, links: props.graph.links }),
   );
 
   function onClick(event: MouseEvent | TouchEvent, node: Node | undefined, link: Link | undefined) {

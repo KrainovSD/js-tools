@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { computed, onMounted, onUnmounted, shallowRef, toRaw, useTemplateRef, watch } from "vue";
-  import { GRAPH_CACHE_TYPE, StaticGraphCanvas, prepareGraphData } from "@/module/GraphCanvas";
+  import { GRAPH_CACHE_TYPE, StaticGraphCanvas } from "@/module/GraphCanvas";
   import { PERFORMANCE_SETTINGS } from "../constants";
-  import { getLinkOptions, getNodeNeighbors, getNodeOptions } from "../lib";
+  import { getLinkOptions, getNodeOptions, prepareData } from "../lib";
   import type { Graph, Link, LinkData, Node, NodeData } from "../types";
 
   type Props = {
@@ -15,7 +15,7 @@
   const selectedNode = defineModel<Node | null>("selectedNode", { default: null });
   const selectedLink = defineModel<string | null>("selectedLink", { default: null });
   const checkedGraph = computed(() =>
-    getNodeNeighbors({ nodes: props.graph.nodes, links: props.graph.links }),
+    prepareData({ nodes: props.graph.nodes, links: props.graph.links }),
   );
 
   function onClick(_: MouseEvent | TouchEvent, node: Node | undefined, link: Link | undefined) {
@@ -81,11 +81,6 @@
     checkedGraph,
     (graph) => {
       if (!graphController.value) return;
-      prepareGraphData({
-        links: toRaw(graph.links),
-        nodes: toRaw(graph.nodes),
-        idGetter: (node) => node.id,
-      });
       graphController.value.changeData(
         { links: toRaw(graph.links), nodes: toRaw(graph.nodes) },
         0.3,
@@ -98,11 +93,6 @@
     graphRef,
     (graphRef, _, clean) => {
       if (!graphRef) return;
-      prepareGraphData({
-        links: toRaw(checkedGraph.value.links),
-        nodes: toRaw(checkedGraph.value.nodes),
-        idGetter: (node) => node.id,
-      });
       const controller = new StaticGraphCanvas<NodeData, LinkData>({
         root: graphRef,
         links: toRaw(checkedGraph.value.links),

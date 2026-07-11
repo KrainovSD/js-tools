@@ -179,33 +179,6 @@ export class GraphCanvas<
     this.draw = this._initSmartDraw();
   }
 
-  _initSmartDraw = () => {
-    const draw = initDraw.call<
-      GraphCanvas<NodeData, LinkData>,
-      Parameters<typeof initDraw>,
-      ReturnType<typeof initDraw>
-    >(this);
-    const frameInterval = 1000 / this.graphSettings.maxFps;
-    let debouncedDrawId: NodeJS.Timeout | undefined;
-    let lastDraw = 0;
-
-    return () => {
-      if (debouncedDrawId != undefined) {
-        clearTimeout(debouncedDrawId);
-      }
-      const elapsed = performance.now() - lastDraw;
-      if (elapsed < frameInterval) {
-        debouncedDrawId = setTimeout(() => {
-          debouncedDrawId = undefined;
-          this.tick();
-        }, frameInterval * 2);
-        return;
-      }
-      lastDraw = performance.now();
-      draw();
-    };
-  };
-
   get dpi() {
     return devicePixelRatio;
   }
@@ -274,6 +247,7 @@ export class GraphCanvas<
     }
     this.animateZoom(area, target, this.areaTransform, duration);
   };
+
   exportToSvg = (filename: string = "graph.svg", fit: boolean = false) => {
     exportToSvgSlice.call<
       GraphCanvas<NodeData, LinkData>,
@@ -281,6 +255,7 @@ export class GraphCanvas<
       ReturnType<typeof exportToSvgSlice>
     >(this, filename, fit);
   };
+
   changeData = (
     options: Pick<Partial<GraphCanvasInterface<NodeData, LinkData>>, "links" | "nodes">,
     alpha: number = 0.5,
@@ -498,6 +473,64 @@ export class GraphCanvas<
     this.clearHTMLElements();
     this.clearState();
     this.clearCache(true);
+  };
+
+  precompute = () => {
+    return new Promise((resolve) => {
+      this.listeners.onSimulationEnd = () => {
+        resolve(true);
+      };
+      initArea.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof initArea>,
+        ReturnType<typeof initArea>
+      >(this);
+      updateNodeCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateNodeCache>,
+        ReturnType<typeof updateNodeCache>
+      >(this);
+      updateLinkCache.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof updateLinkCache>,
+        ReturnType<typeof updateLinkCache>
+      >(this);
+      initSimulation.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof initSimulation>,
+        ReturnType<typeof initSimulation>
+      >(this);
+      if (this.simulation) {
+        this.simulation.alpha(1).restart();
+      }
+    });
+  };
+
+  protected _initSmartDraw = () => {
+    const draw = initDraw.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof initDraw>,
+      ReturnType<typeof initDraw>
+    >(this);
+    const frameInterval = 1000 / this.graphSettings.maxFps;
+    let debouncedDrawId: NodeJS.Timeout | undefined;
+    let lastDraw = 0;
+
+    return () => {
+      if (debouncedDrawId != undefined) {
+        clearTimeout(debouncedDrawId);
+      }
+      const elapsed = performance.now() - lastDraw;
+      if (elapsed < frameInterval) {
+        debouncedDrawId = setTimeout(() => {
+          debouncedDrawId = undefined;
+          this.tick();
+        }, frameInterval * 2);
+        return;
+      }
+      lastDraw = performance.now();
+      draw();
+    };
   };
 
   protected getPointerAreaPosition = (event: MouseEvent | TouchEvent) => {

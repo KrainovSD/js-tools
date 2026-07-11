@@ -1,5 +1,5 @@
 import type { GraphCanvasInterface, NodeInterface } from "@/module/GraphCanvas";
-import { getNodeNeighbors } from "../lib";
+import { prepareData } from "../lib";
 import type { LinkData, NodeData } from "../types";
 import * as d3MockIncorrect from "./d3-mock.json";
 import * as realMockIncorrect from "./real.json";
@@ -38,6 +38,8 @@ export const stressMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" 
     id: node._id,
     group: 1,
     name: node.name,
+    x: node.x,
+    y: node.y,
   })),
 };
 export const realMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | "links"> = {
@@ -48,9 +50,9 @@ export const realMock: Pick<GraphCanvasInterface<NodeData, LinkData>, "nodes" | 
   })),
   links: realMockIncorrect.relations.map((link) => ({ source: link.from_id, target: link.to_id })),
 };
-getNodeNeighbors(d3Mock);
-getNodeNeighbors(stressMock);
-getNodeNeighbors(realMock);
+prepareData(d3Mock);
+prepareData(stressMock);
+prepareData(realMock);
 
 export * from "./custom-mock";
 export * from "./dynamic-mock";
