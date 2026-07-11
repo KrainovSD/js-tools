@@ -2,12 +2,15 @@ import type { GraphCanvas } from "../GraphCanvas";
 import { calculateLinkPositionByNode, getParticlePosition, linkFade, linkHighlight } from "../lib";
 import { calculateCurveLinkPositionByNode } from "../lib/utils/calculate-curve-link-position-by-node";
 import { approximateQuadraticBezierLength } from "../lib/utils/get-particle-position";
-import type { LinkDrawBatch, LinkInterface, LinkParticle } from "../types";
+import type { LinkDrawBatch, LinkInterface, LinkParticle, LinkParticleDrawBatch } from "../types";
 
 export function getDrawLink<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
->(batch: Record<string, LinkDrawBatch[]>) {
+>(
+  linkBatch: Record<string, LinkDrawBatch[]>,
+  particleBatch: Record<string, LinkParticleDrawBatch[]>,
+) {
   return function drawLink(
     this: GraphCanvas<NodeData, LinkData>,
     link: LinkInterface<NodeData, LinkData>,
@@ -136,13 +139,9 @@ export function getDrawLink<
     }
 
     /** Link */
-    const key = `${alpha}|${color}|${width}`;
-    batch[key] ??= [];
-    const group = batch[key];
-    // this.context.beginPath();
-    // this.context.globalAlpha = alpha;
-    // this.context.strokeStyle = color;
-    // this.context.lineWidth = width;
+    const linkBatchKey = `${alpha}|${color}|${width}`;
+    linkBatch[linkBatchKey] ??= [];
+    const linkGroup = linkBatch[linkBatchKey];
     let xStart = link.source.x;
     let yStart = link.source.y;
     let xEnd = link.target.x;
@@ -183,10 +182,7 @@ export function getDrawLink<
       link._y2 = yEnd;
       link._ax = xEndArrow;
       link._ay = yEndArrow;
-      group.push({ curve: false, xStart, yStart, xEnd, yEnd, xControl, yControl });
-      // this.context.moveTo(xStart, yStart);
-      // this.context.lineTo(xEnd, yEnd);
-      // this.context.stroke();
+      linkGroup.push({ curve: false, xStart, yStart, xEnd, yEnd, xControl, yControl });
     } else {
       const position = calculateCurveLinkPositionByNode(
         xStart,
@@ -222,20 +218,7 @@ export function getDrawLink<
         position.xEnd,
         position.yEnd,
       );
-      group.push({ curve: true, xStart, yStart, xEnd, yEnd, xControl, yControl });
-      // this.context.beginPath();
-      // this.context.moveTo(position.xStart, position.yStart);
-      // this.context.quadraticCurveTo(
-      //   position.xControl,
-      //   position.yControl,
-      //   position.xEnd,
-      //   position.yEnd,
-      // );
-      // this.context.setLineDash([]);
-      // if (isDashed) {
-      // this.context.setLineDash([10, 5]);
-      // }
-      // this.context.stroke();
+      linkGroup.push({ curve: true, xStart, yStart, xEnd, yEnd, xControl, yControl });
     }
 
     /** Particle */
@@ -255,6 +238,9 @@ export function getDrawLink<
         }
         this.particles[index] = particles;
       }
+      const particleBatchKey = `${linkOptions.particleBorderColor}|${linkOptions.particleBorderWidth}|${linkOptions.particleColor}`;
+      particleBatch[particleBatchKey] ??= [];
+      const particleGroup = particleBatch[particleBatchKey];
       this.particles[index].forEach((particle, _, particles) => {
         if (!this.context) return;
         getParticlePosition({
@@ -270,15 +256,7 @@ export function getDrawLink<
           speed,
         });
         if (particle.x != undefined && particle.y != undefined) {
-          this.context.beginPath();
-          this.context.strokeStyle = linkOptions.particleBorderColor;
-          this.context.lineWidth = linkOptions.particleBorderWidth;
-          this.context.arc(particle.x, particle.y, linkOptions.particleRadius, 0, Math.PI * 2);
-          this.context.fillStyle = linkOptions.particleColor;
-          this.context.fill();
-          if (linkOptions.particleBorderWidth > 0) {
-            this.context.stroke();
-          }
+          particleGroup.push({ x: particle.x, y: particle.y, r: linkOptions.particleRadius });
         }
       });
     }

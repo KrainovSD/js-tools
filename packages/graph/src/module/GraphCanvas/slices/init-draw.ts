@@ -1,6 +1,6 @@
 import { setDrawTime } from "@/lib";
 import type { GraphCanvas } from "../GraphCanvas";
-import type { LinkDrawBatch } from "../types";
+import type { LinkDrawBatch, LinkParticleDrawBatch } from "../types";
 import { getDrawLink } from "./draw-links";
 import { getDrawNode } from "./draw-nodes";
 
@@ -21,36 +21,53 @@ export function initDraw<
     this.context.clearRect(0, 0, this.width, this.height);
     this.context.translate(this.areaTransform.x, this.areaTransform.y);
     this.context.scale(this.areaTransform.k, this.areaTransform.k);
-
     const textRenders: (() => void)[] = [];
     const nodeRenders: (() => void)[] = [];
     this.nodes.forEach(getDrawNode<NodeData, LinkData>(nodeRenders, textRenders).bind(this));
-
     /** links */
-    const linkDrawBatch: Record<string, LinkDrawBatch[]> = {};
-    this.links.forEach(getDrawLink<NodeData, LinkData>(linkDrawBatch).bind(this));
-
-    const keys = Object.keys(linkDrawBatch);
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      const group = linkDrawBatch[key];
+    const linkBatch: Record<string, LinkDrawBatch[]> = {};
+    const particleBatch: Record<string, LinkParticleDrawBatch[]> = {};
+    this.links.forEach(getDrawLink<NodeData, LinkData>(linkBatch, particleBatch).bind(this));
+    const linkKeys = Object.keys(linkBatch);
+    for (let i = 0; i < linkKeys.length; i++) {
+      const key = linkKeys[i];
+      const group = linkBatch[key];
       const [alpha, color, width] = key.split("|");
       this.context.beginPath();
       this.context.globalAlpha = +alpha;
       this.context.strokeStyle = color;
       this.context.lineWidth = +width;
       for (let j = 0; j < group.length; j++) {
-        const link = group[j];
-        if (!link.curve) {
-          this.context.moveTo(link.xStart, link.yStart);
-          this.context.lineTo(link.xEnd, link.yEnd);
+        const item = group[j];
+        if (!item.curve) {
+          this.context.moveTo(item.xStart, item.yStart);
+          this.context.lineTo(item.xEnd, item.yEnd);
         } else {
-          this.context.moveTo(link.xStart, link.yStart);
-          this.context.quadraticCurveTo(link.xControl, link.yControl, link.xEnd, link.yEnd);
+          this.context.moveTo(item.xStart, item.yStart);
+          this.context.quadraticCurveTo(item.xControl, item.yControl, item.xEnd, item.yEnd);
           this.context.setLineDash([]);
         }
       }
       this.context.stroke();
+    }
+    const particleKeys = Object.keys(particleBatch);
+    for (let i = 0; i < particleKeys.length; i++) {
+      const key = particleKeys[i];
+      const group = particleBatch[key];
+      const [bcolor, width, color] = key.split("|");
+      this.context.beginPath();
+      this.context.strokeStyle = bcolor;
+      this.context.lineWidth = +width;
+      this.context.fillStyle = color;
+      for (let j = 0; j < group.length; j++) {
+        const item = group[j];
+        this.context.moveTo(item.x + item.r, item.y);
+        this.context.arc(item.x, item.y, item.r, 0, Math.PI * 2);
+      }
+      this.context.fill();
+      if (+width > 0) {
+        this.context.stroke();
+      }
     }
 
     /** nodes */
