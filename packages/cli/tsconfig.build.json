@@ -5,5 +5,5 @@
     "noEmit": false,
     "declaration": false
   },
-  "include": ["src/wrapper.ts", "scripts/build.ts", "scripts/postinstall.ts"]
+  "include": ["scripts/wrapper.ts", "scripts/build.ts", "scripts/postinstall.ts"]
 }

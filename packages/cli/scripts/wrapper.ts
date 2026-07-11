@@ -27,7 +27,7 @@ if (platform() === "win32") {
   binaryName += ".exe";
 }
 
-const binaryPath = resolve(import.meta.dirname, "..", "..", "bin", binaryName);
+const binaryPath = resolve(import.meta.dirname, "..", "bin", binaryName);
 
 const result = spawnSync(binaryPath, process.argv.slice(2), {
   stdio: "inherit",

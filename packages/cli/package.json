@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/cli",
-  "version": "0.3.6",
+  "version": "0.3.9",
   "description": "Krainov cli",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -11,11 +11,11 @@
     "directory": "packages/cli"
   },
   "bin": {
-    "ksd": "./lib/src/wrapper.js"
+    "ksd": "./lib/wrapper.js"
   },
   "files": [
-    "lib/src/wrapper.js",
-    "lib/scripts/postinstall.js",
+    "lib/wrapper.js",
+    "lib/postinstall.js",
     "bin"
   ],
   "sideEffects": false,
