@@ -15,5 +15,5 @@ export const GRAPH_SETTINGS: Required<GraphSettingsInterface<Record<string, unkn
   zoomInitial: null,
   showDrawTime: true,
   showDrawTimeEveryTick: false,
-  maxFps: 60,
+  maxFps: 120,
 };

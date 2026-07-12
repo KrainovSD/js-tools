@@ -26,3 +26,21 @@ export interface NodeInterface<NodeData extends Record<string, unknown>>
 export type NodeShape = "circle" | "square" | "text";
 export type TextStyleEnum = "normal" | "italic" | "oblique";
 export type CachedNodeTextInterface = Record<string | number, string[] | undefined>;
+
+export type NodeDrawBatch = {
+  shape: NodeShape;
+  x: number;
+  y: number;
+  radius: number;
+  width: number;
+  height: number;
+  image: HTMLImageElement | undefined;
+};
+
+export type NodeTextDrawBatch = {
+  text: string;
+  x: number;
+  y: number;
+};
+
+export type DeferredDraw = () => void;

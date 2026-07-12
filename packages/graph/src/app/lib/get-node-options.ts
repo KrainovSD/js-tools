@@ -23,6 +23,14 @@ export function getNodeOptions(
       borderColor: highlight ? HIGHLIGHT_COLOR : selected ? SELECT_COLOR : "transparent",
       borderWidth: highlight || selected ? 0.5 : 0.2,
       textSize: opts.textSize ?? (opts.shape === "text" ? 3.5 : undefined),
+      // nodeExtraDraw(node) {
+      //   if (!this.context) return;
+      //   this.context.strokeStyle = "aqua";
+      //   this.context.lineWidth = 1;
+      //   this.context.beginPath();
+      //   this.context.arc(node.x ?? 0, node.y ?? 0, (node._radius ?? 5) + 5, 0, 2 * Math.PI);
+      //   this.context.stroke();
+      // },
     };
   };
 }

@@ -1,13 +1,18 @@
 import { isNumber } from "@krainovsd/js-helpers";
 import type { GraphCanvas } from "../GraphCanvas";
 import { isNodeVisible, nodeFade, nodeHighlight } from "../lib";
-import type { NodeInterface } from "../types";
-import { drawText } from "./draw-text";
+import type { DeferredDraw, NodeDrawBatch, NodeInterface, NodeTextDrawBatch } from "../types";
 
 export function getDrawNode<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
->(nodeRenders: (() => void)[], textRenders: (() => void)[]) {
+>(
+  nodeBatch: Record<string, NodeDrawBatch[]>,
+  nodeImageBatch: Record<string, NodeDrawBatch[]>,
+  textBatch: Record<string, Record<string, NodeTextDrawBatch[]>>,
+  deferredNodeRender: DeferredDraw[],
+  deferredTextRender: DeferredDraw[],
+) {
   return function drawNode(
     this: GraphCanvas<NodeData, LinkData>,
     node: NodeInterface<NodeData>,
@@ -18,29 +23,23 @@ export function getDrawNode<
       node._radius = 0;
       node._width = 0;
       node._height = 0;
-
       return;
     }
-
     const nodeOptions = this.nodeOptionsCache[index];
     if (!nodeOptions) return;
-
     if (nodeOptions.nodeDraw && nodeOptions.textDraw) {
-      nodeRenders.push(() => {
+      deferredNodeRender.push(() => {
         if (nodeOptions.nodeDraw) {
           nodeOptions.nodeDraw.bind(this)(node, nodeOptions);
         }
       });
-
-      textRenders.push(() => {
+      deferredTextRender.push(() => {
         if (nodeOptions.textDraw) {
           nodeOptions.textDraw.bind(this)(node, nodeOptions);
         }
       });
-
       return;
     }
-
     let radius = nodeOptions.radius;
     let width = nodeOptions.width;
     let height = nodeOptions.height;
@@ -175,8 +174,6 @@ export function getDrawNode<
         labelWeight = highlightOptions.labelWeight;
       }
     }
-
-    /** Node parameters */
     node._radius = radius;
     node._borderWidth = borderWidth;
     node._width = width;
@@ -186,8 +183,6 @@ export function getDrawNode<
         ? Math.min(nodeOptions.borderRadius, nodeOptions.width / 2, nodeOptions.height / 2)
         : 0;
     node._shape = nodeOptions.shape ?? "circle";
-
-    /** Node Visibility */
     if (
       !isNodeVisible({
         height: this.height,
@@ -202,157 +197,49 @@ export function getDrawNode<
     }
     node._visible = true;
 
-    /** Node draw */
-    nodeRenders.push(() => {
-      if (!this.context || !node.x || !node.y) return;
-
-      this.context.beginPath();
-      this.context.globalAlpha = alpha;
-      this.context.lineWidth = borderWidth;
-      this.context.strokeStyle = borderColor;
-      this.context.fillStyle = color;
-      const labelLines = this.cachedNodeLabel[index];
-
-      switch (nodeOptions.shape) {
-        case "circle": {
-          if (!node.image) {
-            this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
-            this.context.fill();
-            if (borderWidth > 0) {
-              this.context.stroke();
-            }
-          } else {
-            this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
-            this.context.closePath();
-            this.context.save();
-            this.context.clip();
-
-            this.context.drawImage(
-              node.image,
-              node.x - radius,
-              node.y - radius,
-              radius * 2,
-              radius * 2,
-            );
-
-            this.context.restore();
-            if (borderWidth > 0) {
-              this.context.stroke();
-            }
-          }
-
-          if (labelLines && labelLines.length > 0) {
-            this.context.globalAlpha = labelAlpha;
-            drawText({
-              context: this.context,
-              lines: labelLines,
-              textAlign: nodeOptions.labelAlign,
-              textColor: nodeOptions.labelColor,
-              textFont: nodeOptions.labelFont,
-              textGap: nodeOptions.labelGap,
-              textSize: labelSize,
-              textStyle: nodeOptions.labelStyle,
-              textWeight: labelWeight,
-              x: node.x,
-              y: node.y + labelSize / 3,
-            });
-          }
-
-          break;
-        }
-        case "square": {
-          if (!node.image) {
-            this.context.roundRect(
-              node.x - width / 2,
-              node.y - height / 2,
-              width,
-              height,
-              node._borderRadius,
-            );
-            this.context.fill();
-            if (borderWidth > 0) {
-              this.context.stroke();
-            }
-          } else {
-            this.context.roundRect(
-              node.x - width / 2,
-              node.y - height / 2,
-              width,
-              height,
-              node._borderRadius,
-            );
-            this.context.closePath();
-            this.context.save();
-            this.context.clip();
-            this.context.drawImage(
-              node.image,
-              node.x - width / 2,
-              node.y - height / 2,
-              width,
-              height,
-            );
-            this.context.restore();
-
-            if (borderWidth > 0) {
-              this.context.stroke();
-            }
-          }
-          if (node.label && labelLines) {
-            this.context.globalAlpha = labelAlpha;
-            drawText({
-              context: this.context,
-              lines: labelLines,
-              textAlign: nodeOptions.labelAlign,
-              textColor: nodeOptions.labelColor,
-              textFont: nodeOptions.labelFont,
-              textGap: nodeOptions.labelGap,
-              textSize: labelSize,
-              textStyle: nodeOptions.labelStyle,
-              textWeight: labelWeight,
-              x: node.x,
-              y: node.y + labelSize / 3,
-            });
-          }
-          break;
-        }
-        case "text": {
-          if (this.nodeSettings.textNodeDebug) {
-            this.context.strokeRect(node.x - width / 2, node.y - height / 2, width, height);
-          }
-
-          if (labelLines && labelLines.length > 0)
-            drawText({
-              lines: labelLines,
-              context: this.context,
-              textAlign: nodeOptions.labelAlign,
-              textColor: nodeOptions.labelColor,
-              textFont: nodeOptions.labelFont,
-              textSize: labelSize,
-              x: node.x,
-              y: node.y + textSize / 4 - (labelLines.length - 1) * (textSize / 2),
-              textStyle: nodeOptions.labelStyle,
-              textWeight,
-              textGap: nodeOptions.labelGap,
-            });
-          this.context.fill();
-          if (borderWidth > 0) {
-            this.context.stroke();
-          }
-          break;
-        }
-        default: {
-          this.context.arc(node.x, node.y, radius, 0, 2 * Math.PI);
-          this.context.fill();
-          if (borderWidth > 0) {
-            this.context.stroke();
-          }
-          break;
-        }
-      }
+    const nodeBatchKey = `${alpha}|${borderColor}|${borderWidth}|${color}`;
+    let nodeGroup: NodeDrawBatch[];
+    if (!node.image) {
+      nodeBatch[nodeBatchKey] ??= [];
+      nodeGroup = nodeBatch[nodeBatchKey];
+    } else {
+      nodeImageBatch[nodeBatchKey] ??= [];
+      nodeGroup = nodeImageBatch[nodeBatchKey];
+    }
+    nodeGroup.push({
+      shape: nodeOptions.shape,
+      x: node.x,
+      y: node.y,
+      radius,
+      width,
+      height,
+      image: node.image,
     });
-
+    const labelLines = this.cachedNodeLabel[index];
+    if (labelLines && labelLines.length > 0) {
+      let y = node.y + labelSize / 3;
+      let weight = labelWeight;
+      if (nodeOptions.shape == "text") {
+        y = node.y + textSize / 4 - (labelLines.length - 1) * (textSize / 2);
+        weight = textWeight;
+      }
+      const font = `${nodeOptions.labelStyle} normal ${weight} ${labelSize}px ${nodeOptions.labelFont}`;
+      textBatch[font] ??= {};
+      const fontBatch = textBatch[font];
+      const textBatchKey = `${labelAlpha}|${nodeOptions.labelAlign}|${nodeOptions.labelColor}`;
+      fontBatch[textBatchKey] ??= [];
+      const textGroup = fontBatch[textBatchKey];
+      for (let i = 0; i < labelLines.length; i++) {
+        const line = labelLines[i];
+        textGroup.push({
+          text: line,
+          x: node.x,
+          y: y + i * textSize + i * nodeOptions.textGap,
+        });
+      }
+    }
     if (nodeOptions.nodeExtraDraw) {
-      nodeRenders.push(() => {
+      deferredNodeRender.push(() => {
         nodeOptions?.nodeExtraDraw?.bind?.(this)?.(node, {
           ...nodeOptions,
           radius,
@@ -366,13 +253,11 @@ export function getDrawNode<
         });
       });
     }
-
-    /** Text draw */
     const textLines = this.cachedNodeText[index];
     if (textLines && textLines.length > 0) {
-      textRenders.push(() => {
-        if (nodeOptions.textDraw) {
-          nodeOptions.textDraw.bind(this)(node, {
+      if (nodeOptions.textDraw) {
+        deferredTextRender.push(() => {
+          nodeOptions?.textDraw?.bind?.(this)?.(node, {
             ...nodeOptions,
             radius,
             alpha,
@@ -383,38 +268,32 @@ export function getDrawNode<
             textShiftY,
             textWeight,
           });
-
-          return;
-        }
-
-        if (!this.context || !node.x || !node.y) return;
-        this.context.beginPath();
-        this.context.globalAlpha = textAlpha;
-
-        let y = node.y + textShiftY;
-        if (nodeOptions.shape === "circle") {
-          y += radius;
-        }
-        if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
-          y += height / 2;
-        }
-
-        drawText({
-          lines: textLines,
-          context: this.context,
-          textAlign: nodeOptions.textAlign,
-          textColor: nodeOptions.textColor,
-          textFont: nodeOptions.textFont,
-          textSize,
-          x: node.x + textShiftX,
-          y,
-          textStyle: nodeOptions.textStyle,
-          textWeight,
-          textGap: nodeOptions.textGap,
         });
-
-        if (nodeOptions.textExtraDraw) {
-          nodeOptions.textExtraDraw.bind(this)(node, {
+      }
+      let y = node.y + textShiftY;
+      if (nodeOptions.shape === "circle") {
+        y += radius;
+      }
+      if (nodeOptions.shape === "square" || nodeOptions.shape === "text") {
+        y += height / 2;
+      }
+      const font = `${nodeOptions.textStyle} normal ${textWeight} ${textSize}px ${nodeOptions.textFont}`;
+      textBatch[font] ??= {};
+      const fontBatch = textBatch[font];
+      const textBatchKey = `${textAlpha}|${nodeOptions.textAlign}|${nodeOptions.textColor}`;
+      fontBatch[textBatchKey] ??= [];
+      const textGroup = fontBatch[textBatchKey];
+      for (let i = 0; i < textLines.length; i++) {
+        const line = textLines[i];
+        textGroup.push({
+          text: line,
+          x: node.x + textShiftX,
+          y: y + i * textSize + i * nodeOptions.textGap,
+        });
+      }
+      if (nodeOptions.textExtraDraw) {
+        deferredTextRender.push(() => {
+          nodeOptions?.textExtraDraw?.bind?.(this)?.(node, {
             ...nodeOptions,
             radius,
             alpha,
@@ -425,8 +304,8 @@ export function getDrawNode<
             textShiftY,
             textWeight,
           });
-        }
-      });
+        });
+      }
     }
   };
 }

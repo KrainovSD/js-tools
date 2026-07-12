@@ -16,28 +16,6 @@ export type DrawTextOptions = {
 
 const SPACE = " ";
 
-export function drawText({
-  context,
-  textAlign,
-  textColor,
-  textFont,
-  textStyle,
-  textGap,
-  textWeight,
-  textSize,
-  x,
-  y,
-  lines,
-}: DrawTextOptions) {
-  context.font = `${textStyle} normal ${textWeight} ${textSize}px ${textFont}`;
-  context.fillStyle = textColor;
-  context.textAlign = textAlign;
-
-  lines.forEach((line, index) => {
-    context.fillText(line, x, y + index * textSize + index * textGap);
-  });
-}
-
 export type GetTextLines = {
   text: string;
   textSize: number;
