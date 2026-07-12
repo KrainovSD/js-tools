@@ -94,6 +94,8 @@ export class GraphCanvas<
 
   protected draw: (this: GraphCanvas<NodeData, LinkData>) => void;
 
+  protected instantDraw: (this: GraphCanvas<NodeData, LinkData>) => void;
+
   protected eventAbortController: AbortController;
 
   protected cachedNodeText: (string[] | undefined)[] = [];
@@ -176,7 +178,13 @@ export class GraphCanvas<
     this.height = 0;
     this.width = 0;
 
-    this.draw = this._initSmartDraw();
+    const draw = initDraw.call<
+      GraphCanvas<NodeData, LinkData>,
+      Parameters<typeof initDraw>,
+      ReturnType<typeof initDraw>
+    >(this);
+    this.draw = this.initSmartDraw(draw);
+    this.instantDraw = draw;
   }
 
   get dpi() {
@@ -279,8 +287,13 @@ export class GraphCanvas<
   ) => {
     if (options.graphSettings) {
       this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
-
-      this.draw = this._initSmartDraw();
+      const draw = initDraw.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof initDraw>,
+        ReturnType<typeof initDraw>
+      >(this);
+      this.draw = this.initSmartDraw(draw);
+      this.instantDraw = draw;
       initZoom.call<
         GraphCanvas<NodeData, LinkData>,
         Parameters<typeof initZoom>,
@@ -360,7 +373,7 @@ export class GraphCanvas<
     this.context = this.area.getContext("2d");
     if (!this.context) throw new Error("couldn't create canvas context");
     this.context.scale(this.dpi, this.dpi);
-    this.draw();
+    this.instantDraw();
   };
 
   clearCache = (keys: boolean | GraphCanvasCacheKeys[]) => {
@@ -499,16 +512,10 @@ export class GraphCanvas<
     this.restart(1);
   };
 
-  protected _initSmartDraw = () => {
-    const draw = initDraw.call<
-      GraphCanvas<NodeData, LinkData>,
-      Parameters<typeof initDraw>,
-      ReturnType<typeof initDraw>
-    >(this);
+  protected initSmartDraw = (draw: ReturnType<typeof initDraw>) => {
     const frameInterval = 1000 / this.graphSettings.maxFps;
     let debouncedDrawId: NodeJS.Timeout | undefined;
     let lastDraw = 0;
-
     return () => {
       if (debouncedDrawId != undefined) {
         clearTimeout(debouncedDrawId);

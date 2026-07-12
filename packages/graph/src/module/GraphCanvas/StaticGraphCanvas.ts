@@ -9,6 +9,7 @@ import {
 import {
   initArea,
   initDnd,
+  initDraw,
   initPointer,
   initResize,
   initSelection,
@@ -114,8 +115,13 @@ export class StaticGraphCanvas<
   ) => {
     if (options.graphSettings) {
       this.graphSettings = graphSettingsGetter(options.graphSettings, this.graphSettings);
-
-      this.draw = this._initSmartDraw();
+      const draw = initDraw.call<
+        GraphCanvas<NodeData, LinkData>,
+        Parameters<typeof initDraw>,
+        ReturnType<typeof initDraw>
+      >(this);
+      this.draw = this.initSmartDraw(draw);
+      this.instantDraw = draw;
       initZoom.call<
         StaticGraphCanvas<NodeData, LinkData>,
         Parameters<typeof initZoom>,
