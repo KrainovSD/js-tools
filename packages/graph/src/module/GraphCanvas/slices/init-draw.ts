@@ -1,6 +1,7 @@
 import { setDrawTime } from "@/lib";
 import type { GraphCanvas } from "../GraphCanvas";
 import type {
+  Area,
   DeferredDraw,
   LinkArrowDrawBatch,
   LinkDrawBatch,
@@ -11,25 +12,65 @@ import type {
 import { getDrawLink } from "./draw-links";
 import { getDrawNode } from "./draw-nodes";
 
+const COS_PI_6 = 0.8660254037844386;
+const SIN_PI_6 = 0.5;
+
+function clearBatch<T>(batch: Record<string, T[]>) {
+  // eslint-disable-next-line guard-for-in
+  for (const key in batch) {
+    batch[key].length = 0;
+  }
+}
+
+function clearNestedBatch<T>(batch: Record<string, Record<string, T[]>>) {
+  // eslint-disable-next-line guard-for-in
+  for (const outerKey in batch) {
+    const inner = batch[outerKey];
+    // eslint-disable-next-line guard-for-in
+    for (const innerKey in inner) {
+      inner[innerKey].length = 0;
+    }
+  }
+}
+
 export function initDraw<
   NodeData extends Record<string, unknown>,
   LinkData extends Record<string, unknown>,
 >(this: GraphCanvas<NodeData, LinkData>) {
+  const nodeBatch: Record<string, NodeDrawBatch[]> = {};
+  const nodeImageBatch: Record<string, NodeDrawBatch[]> = {};
+  const textBatch: Record<string, Record<string, NodeTextDrawBatch[]>> = {};
+  const deferredNodeDraw: DeferredDraw[] = [];
+  const deferredTextDraw: DeferredDraw[] = [];
+  const linkBatch: Record<string, LinkDrawBatch[]> = {};
+  const particleBatch: Record<string, LinkParticleDrawBatch[]> = {};
+  const arrowBatch: Record<string, LinkArrowDrawBatch[]> = {};
+
   function draw(this: GraphCanvas<NodeData, LinkData>) {
     if (!this.context) return;
     if (this.listeners.onDraw) {
       this.listeners.onDraw.call(this);
       return;
     }
+    clearBatch(nodeBatch);
+    clearBatch(nodeImageBatch);
+    clearNestedBatch(textBatch);
+    deferredNodeDraw.length = 0;
+    deferredTextDraw.length = 0;
+    clearBatch(linkBatch);
+    clearBatch(particleBatch);
+    clearBatch(arrowBatch);
+    const k = this.areaTransform.k;
+    const area: Area = {
+      left: -this.areaTransform.x / k,
+      right: (this.width - this.areaTransform.x) / k,
+      top: -this.areaTransform.y / k,
+      bottom: (this.height - this.areaTransform.y) / k,
+    };
     this.context.save();
     this.context.clearRect(0, 0, this.width, this.height);
     this.context.translate(this.areaTransform.x, this.areaTransform.y);
     this.context.scale(this.areaTransform.k, this.areaTransform.k);
-    const nodeBatch: Record<string, NodeDrawBatch[]> = {};
-    const nodeImageBatch: Record<string, NodeDrawBatch[]> = {};
-    const textBatch: Record<string, Record<string, NodeTextDrawBatch[]>> = {};
-    const deferredNodeDraw: DeferredDraw[] = [];
-    const deferredTextDraw: DeferredDraw[] = [];
     this.nodes.forEach(
       getDrawNode<NodeData, LinkData>(
         nodeBatch,
@@ -37,13 +78,13 @@ export function initDraw<
         textBatch,
         deferredNodeDraw,
         deferredTextDraw,
-      ).bind(this),
+        area,
+      ),
+      this,
     );
-    const linkBatch: Record<string, LinkDrawBatch[]> = {};
-    const particleBatch: Record<string, LinkParticleDrawBatch[]> = {};
-    const arrowBatch: Record<string, LinkArrowDrawBatch[]> = {};
     this.links.forEach(
-      getDrawLink<NodeData, LinkData>(linkBatch, particleBatch, arrowBatch).bind(this),
+      getDrawLink<NodeData, LinkData>(linkBatch, particleBatch, arrowBatch, performance.now()),
+      this,
     );
     const linkKeys = Object.keys(linkBatch);
     for (let i = 0; i < linkKeys.length; i++) {
@@ -54,6 +95,7 @@ export function initDraw<
       this.context.globalAlpha = +alpha;
       this.context.strokeStyle = color;
       this.context.lineWidth = +width;
+      this.context.setLineDash([]);
       for (let j = 0; j < group.length; j++) {
         const item = group[j];
         if (!item.curve) {
@@ -62,7 +104,6 @@ export function initDraw<
         } else {
           this.context.moveTo(item.xStart, item.yStart);
           this.context.quadraticCurveTo(item.xControl, item.yControl, item.xEnd, item.yEnd);
-          this.context.setLineDash([]);
         }
       }
       this.context.stroke();
@@ -73,6 +114,7 @@ export function initDraw<
       const group = particleBatch[key];
       const [bcolor, width, color] = key.split("|");
       this.context.beginPath();
+      this.context.globalAlpha = 1;
       this.context.strokeStyle = bcolor;
       this.context.lineWidth = +width;
       this.context.fillStyle = color;
@@ -99,14 +141,14 @@ export function initDraw<
       for (let j = 0; j < group.length; j++) {
         const item = group[j];
         this.context.moveTo(item.x, item.y);
-        this.context.lineTo(
-          item.x - item.size * Math.cos(item.angle - Math.PI / 6),
-          item.y - item.size * Math.sin(item.angle - Math.PI / 6),
-        );
-        this.context.lineTo(
-          item.x - item.size * Math.cos(item.angle + Math.PI / 6),
-          item.y - item.size * Math.sin(item.angle + Math.PI / 6),
-        );
+        const cosA = Math.cos(item.angle);
+        const sinA = Math.sin(item.angle);
+        const cos1 = cosA * COS_PI_6 + sinA * SIN_PI_6;
+        const sin1 = sinA * COS_PI_6 - cosA * SIN_PI_6;
+        const cos2 = cosA * COS_PI_6 - sinA * SIN_PI_6;
+        const sin2 = sinA * COS_PI_6 + cosA * SIN_PI_6;
+        this.context.lineTo(item.x - item.size * cos1, item.y - item.size * sin1);
+        this.context.lineTo(item.x - item.size * cos2, item.y - item.size * sin2);
         this.context.closePath();
       }
       this.context.fill();

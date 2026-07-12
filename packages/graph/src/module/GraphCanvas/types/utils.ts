@@ -38,3 +38,10 @@ export type LinkIterationPropsNoThisInterface<
   i: number,
   links: LinkInterface<NodeData, LinkData>[],
 ) => Return;
+
+export type Area = {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};

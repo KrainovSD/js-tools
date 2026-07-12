@@ -1,57 +1,45 @@
-import type { ZoomTransform } from "d3-zoom";
 import { COMMON_SETTINGS } from "../../constants";
-import type { NodeInterface } from "../../types";
-
-type IsNodeVisibleOptions<NodeData extends Record<string, unknown>> = {
-  width: number;
-  height: number;
-  transform: ZoomTransform;
-  node: NodeInterface<NodeData>;
-};
+import type { Area, NodeInterface } from "../../types";
 
 const ADDITIONAL_VIEWPORT = 10;
 
 export function isNodeVisible<NodeData extends Record<string, unknown>>(
-  opts: IsNodeVisibleOptions<NodeData>,
+  node: NodeInterface<NodeData>,
+  area: Area,
 ) {
-  const left = -opts.transform.x / opts.transform.k;
-  const right = (opts.width - opts.transform.x) / opts.transform.k;
-  const top = -opts.transform.y / opts.transform.k;
-  const bottom = (opts.height - opts.transform.y) / opts.transform.k;
+  if (node.x == undefined || node.y == undefined) return false;
 
-  if (opts.node.x == undefined || opts.node.y == undefined) return false;
-
-  switch (opts.node._shape) {
+  switch (node._shape) {
     case "circle": {
-      const radius = opts.node._radius ?? COMMON_SETTINGS.nodeRadius;
+      const radius = node._radius ?? COMMON_SETTINGS.nodeRadius;
 
       return (
-        left < opts.node.x + radius + ADDITIONAL_VIEWPORT &&
-        opts.node.x - radius - ADDITIONAL_VIEWPORT < right &&
-        top < opts.node.y + radius + ADDITIONAL_VIEWPORT &&
-        opts.node.y - radius - ADDITIONAL_VIEWPORT < bottom
+        area.left < node.x + radius + ADDITIONAL_VIEWPORT &&
+        node.x - radius - ADDITIONAL_VIEWPORT < area.right &&
+        area.top < node.y + radius + ADDITIONAL_VIEWPORT &&
+        node.y - radius - ADDITIONAL_VIEWPORT < area.bottom
       );
     }
     case "square":
     case "text": {
-      const width = opts.node._width ?? COMMON_SETTINGS.nodeSize;
-      const height = opts.node._height ?? COMMON_SETTINGS.nodeSize;
+      const width = node._width ?? COMMON_SETTINGS.nodeSize;
+      const height = node._height ?? COMMON_SETTINGS.nodeSize;
 
       return (
-        left < opts.node.x + width + ADDITIONAL_VIEWPORT &&
-        opts.node.x - width - ADDITIONAL_VIEWPORT < right &&
-        top < opts.node.y + height + ADDITIONAL_VIEWPORT &&
-        opts.node.y - height - ADDITIONAL_VIEWPORT < bottom
+        area.left < node.x + width + ADDITIONAL_VIEWPORT &&
+        node.x - width - ADDITIONAL_VIEWPORT < area.right &&
+        area.top < node.y + height + ADDITIONAL_VIEWPORT &&
+        node.y - height - ADDITIONAL_VIEWPORT < area.bottom
       );
     }
     default: {
-      const radius = opts.node._radius ?? COMMON_SETTINGS.nodeRadius;
+      const radius = node._radius ?? COMMON_SETTINGS.nodeRadius;
 
       return (
-        left < opts.node.x + radius + ADDITIONAL_VIEWPORT &&
-        opts.node.x - radius - ADDITIONAL_VIEWPORT < right &&
-        top < opts.node.y + radius + ADDITIONAL_VIEWPORT &&
-        opts.node.y - radius - ADDITIONAL_VIEWPORT < bottom
+        area.left < node.x + radius + ADDITIONAL_VIEWPORT &&
+        node.x - radius - ADDITIONAL_VIEWPORT < area.right &&
+        area.top < node.y + radius + ADDITIONAL_VIEWPORT &&
+        node.y - radius - ADDITIONAL_VIEWPORT < area.bottom
       );
     }
   }

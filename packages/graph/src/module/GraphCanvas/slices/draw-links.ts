@@ -17,6 +17,7 @@ export function getDrawLink<
   linkBatch: Record<string, LinkDrawBatch[]>,
   particleBatch: Record<string, LinkParticleDrawBatch[]>,
   arrowBatch: Record<string, LinkArrowDrawBatch[]>,
+  now: number,
 ) {
   return function drawLink(
     this: GraphCanvas<NodeData, LinkData>,
@@ -261,6 +262,7 @@ export function getDrawLink<
           xControl,
           yControl,
           speed,
+          now,
         });
         if (particle.x != undefined && particle.y != undefined) {
           particleGroup.push({ x: particle.x, y: particle.y, r: linkOptions.particleRadius });

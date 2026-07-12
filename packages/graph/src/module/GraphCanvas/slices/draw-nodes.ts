@@ -1,7 +1,7 @@
 import { isNumber } from "@krainovsd/js-helpers";
 import type { GraphCanvas } from "../GraphCanvas";
 import { isNodeVisible, nodeFade, nodeHighlight } from "../lib";
-import type { DeferredDraw, NodeDrawBatch, NodeInterface, NodeTextDrawBatch } from "../types";
+import type { Area, DeferredDraw, NodeDrawBatch, NodeInterface, NodeTextDrawBatch } from "../types";
 
 export function getDrawNode<
   NodeData extends Record<string, unknown>,
@@ -12,6 +12,7 @@ export function getDrawNode<
   textBatch: Record<string, Record<string, NodeTextDrawBatch[]>>,
   deferredNodeRender: DeferredDraw[],
   deferredTextRender: DeferredDraw[],
+  area: Area,
 ) {
   return function drawNode(
     this: GraphCanvas<NodeData, LinkData>,
@@ -183,16 +184,8 @@ export function getDrawNode<
         ? Math.min(nodeOptions.borderRadius, nodeOptions.width / 2, nodeOptions.height / 2)
         : 0;
     node._shape = nodeOptions.shape ?? "circle";
-    if (
-      !isNodeVisible({
-        height: this.height,
-        width: this.width,
-        transform: this.areaTransform,
-        node,
-      })
-    ) {
+    if (!isNodeVisible(node, area)) {
       node._visible = false;
-
       return;
     }
     node._visible = true;

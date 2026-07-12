@@ -11,12 +11,13 @@ type GetParticlePositionOptions = {
   distance: number;
   totalCount: number;
   speed: number;
+  now: number;
 };
 
 const FRAME_INTERVAL = 1000 / 60;
 
 export function getParticlePosition(opts: GetParticlePositionOptions) {
-  const now = performance.now();
+  const now = opts.now;
   const particle = opts.particle;
 
   if (particle._lastTime == undefined) {
