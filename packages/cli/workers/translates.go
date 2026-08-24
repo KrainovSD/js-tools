@@ -377,7 +377,10 @@ func (w *TranslateWorker) extractTranslationsContent(content string, pattern, pa
 			var value = ""
 
 			if len(match) > 2 && match[2] != "" {
-				value = match[2]
+				if err := json.Unmarshal([]byte(`"`+match[2]+`"`), &value); err != nil {
+					fmt.Printf("key \033[1m\033[33m%s\033[0m, value \033[1m\033[33m%s\033[0m has an unmarshal error: %s\n", key, match[2], err.Error())
+					continue
+				}
 			}
 
 			if !seenKeys[key] {
