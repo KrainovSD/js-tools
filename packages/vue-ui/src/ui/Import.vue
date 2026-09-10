@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import { useTemplateRef, watch } from "vue";
+  import { type HTMLAttributes, useTemplateRef, watch } from "vue";
   import { useWatcher } from "../hooks/use-watcher";
 
   export type ImportProps = {
     multiple?: boolean;
     disabled?: boolean;
-  };
+  } & /*@vue-ignore*/ HTMLAttributes;
   type Emits = {
-    upload: [files: File[], event: Event];
+    import: [files: File[], event: Event];
   };
 
   const props = defineProps<ImportProps>();
@@ -22,7 +22,7 @@
 
     if (!files) return;
 
-    emit("upload", files, event);
+    emit("import", files, event);
   }
 
   /** Target Node Observe */
@@ -60,6 +60,7 @@
   <slot></slot>
   <input
     ref="input"
+    v-bind="$attrs"
     type="file"
     class="ksd-import__ghost"
     :multiple="$props.multiple"
