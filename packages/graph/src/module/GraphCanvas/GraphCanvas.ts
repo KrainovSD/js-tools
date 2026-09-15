@@ -130,6 +130,12 @@ export class GraphCanvas<
 
   protected _zoomAnimating: boolean = false;
 
+  protected _infiniteSimulation: boolean = false;
+
+  protected _infiniteSimulationAlpha: number = 0.3;
+
+  protected _infiniteSimulationAlphaDecay: number = 1;
+
   protected isSelecting: boolean = false;
 
   protected selectionRect: { x1: number; y1: number; x2: number; y2: number } | null = null;
@@ -437,8 +443,9 @@ export class GraphCanvas<
         this.forceSettings?.precomputeDisableForcesAfter ??
         false,
     };
+    const nextAlpha = this._infiniteSimulation ? this._infiniteSimulationAlpha : (alpha ?? 1);
     if (!settings.precompute) {
-      this.simulation.alpha(alpha ?? 1).restart();
+      this.simulation.alpha(nextAlpha).restart();
       return;
     }
     if (settings.precomputeDisableForcesAfter) {
@@ -450,7 +457,7 @@ export class GraphCanvas<
       ReturnType<typeof initSimulationForces>
     >(this);
     this.simulation.stop();
-    this.simulation.alpha(alpha ?? 1);
+    this.simulation.alpha(nextAlpha);
 
     const startTime = performance.now();
     let ticks = 0;
@@ -474,6 +481,20 @@ export class GraphCanvas<
     this.tick();
   };
 
+  startSimulation = (alpha: number = 0.3) => {
+    if (!this.simulation || this._infiniteSimulation) return;
+    this._infiniteSimulationAlphaDecay = this.simulation.alphaDecay();
+    this._infiniteSimulationAlpha = alpha;
+    this._infiniteSimulation = true;
+    this.simulation.alphaTarget(0).alpha(alpha).alphaDecay(0).restart();
+  };
+
+  stopSimulation = () => {
+    if (!this.simulation || !this._infiniteSimulation) return;
+    this._infiniteSimulation = false;
+    this.simulation.alphaTarget(0).alphaDecay(this._infiniteSimulationAlphaDecay);
+  };
+
   create = () => {
     this.init();
   };
@@ -483,6 +504,7 @@ export class GraphCanvas<
       this.simulation.stop();
       this.simulation = undefined;
     }
+    this._infiniteSimulation = false;
     this.clearHTMLElements();
     this.clearState();
     this.clearCache(true);
