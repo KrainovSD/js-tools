@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/cli",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "description": "Krainov cli",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -32,7 +32,7 @@
     "format-check": "prettier --check ./src",
     "lint-check": "eslint --debug eslint.config.js",
     "type-debug": "tsc --showConfig > typescript-config.json",
-    "postinstall": "node lib/scripts/postinstall.js || true",
+    "postinstall": "node lib/postinstall.js",
     "test-translate": "go run main.go translates gen react ru.json ./"
   },
   "devDependencies": {
