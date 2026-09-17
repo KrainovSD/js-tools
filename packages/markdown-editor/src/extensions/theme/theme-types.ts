@@ -1,12 +1,11 @@
-export type EditorTheme = "dark" | "light";
-
-export type InitThemeOptions = {
-  dark?: ThemeOptions;
-  light?: ThemeOptions;
-  theme?: EditorTheme;
-};
+export type Theme = "dark" | "light";
 
 export type ThemeOptions = {
+  dark?: ColorThemeOptions;
+  light?: ColorThemeOptions;
+};
+
+export type ColorThemeOptions = {
   themeConfig?: ThemeConfig;
   highlightConfig?: HighlightConfig;
 };

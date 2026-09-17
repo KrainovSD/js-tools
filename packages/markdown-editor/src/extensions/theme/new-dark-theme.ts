@@ -1,6 +1,7 @@
-import { type HighlightConfig, type InitThemeOptions, type ThemeConfig } from "../theme-types";
-import { getHighlightTemplate } from "./get-highlight-template";
-import { getThemeTemplate } from "./get-theme-template";
+import type { Extension } from "@codemirror/state";
+import { NewHighlightTemplate } from "./new-highlight-template";
+import { NewThemeTemplate } from "./new-theme-template";
+import { type ColorThemeOptions, type HighlightConfig, type ThemeConfig } from "./theme-types";
 
 const HIGHLIGHT_CONFIG: Required<HighlightConfig> = {
   keyword: "#f97583",
@@ -36,9 +37,8 @@ const THEME_CONFIG: Required<ThemeConfig> = {
   codeBlockBackground: "#24292e",
 };
 
-export function getDarkTheme({ dark }: InitThemeOptions) {
-  const highlightConfig = { ...HIGHLIGHT_CONFIG, ...(dark?.highlightConfig ?? {}) };
-  const themeConfig = { ...THEME_CONFIG, ...(dark?.themeConfig ?? {}) };
-
-  return [getThemeTemplate(true, themeConfig), getHighlightTemplate(highlightConfig)];
+export function NewDarkTheme(opts: ColorThemeOptions | undefined): Extension {
+  const highlightConfig = { ...HIGHLIGHT_CONFIG, ...(opts?.highlightConfig ?? {}) };
+  const themeConfig = { ...THEME_CONFIG, ...(opts?.themeConfig ?? {}) };
+  return [NewThemeTemplate(true, themeConfig), NewHighlightTemplate(highlightConfig)];
 }

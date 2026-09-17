@@ -1,2 +1,2 @@
-export * from "./init-auto-complete";
 export * from "./auto-complete-types";
+export * from "./tag-auto-complete";

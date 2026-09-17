@@ -5,7 +5,7 @@ export type EditorAutoCompleteConfig = Omit<
   "override"
 >;
 
-export type InitAutoCompleteOptions = {
-  autoCompleteTagOptions?: string[];
-  autoCompleteConfig?: EditorAutoCompleteConfig;
+export type AutoCompleteOptions = {
+  tags: string[];
+  config?: EditorAutoCompleteConfig;
 };

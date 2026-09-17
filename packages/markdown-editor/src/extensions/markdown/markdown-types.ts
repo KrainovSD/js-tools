@@ -5,7 +5,7 @@ import type { SyntaxNodeRef } from "@lezer/common";
 
 export type EditorLanguages = LanguageDescription;
 
-export type InitMarkdownOptions = {
+export type MarkdownOptions = {
   languages?: EditorLanguages[];
   imageSrcGetter?: (src: string) => string;
 };

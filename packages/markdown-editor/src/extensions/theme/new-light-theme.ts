@@ -1,6 +1,6 @@
-import { type HighlightConfig, type InitThemeOptions, type ThemeConfig } from "../theme-types";
-import { getHighlightTemplate } from "./get-highlight-template";
-import { getThemeTemplate } from "./get-theme-template";
+import { NewHighlightTemplate } from "./new-highlight-template";
+import { NewThemeTemplate } from "./new-theme-template";
+import { type ColorThemeOptions, type HighlightConfig, type ThemeConfig } from "./theme-types";
 
 const HIGHLIGHT_CONFIG: Required<HighlightConfig> = {
   keyword: "#9854f1",
@@ -36,9 +36,8 @@ const THEME_CONFIG: Required<ThemeConfig> = {
   codeBlockBorderColor: "##CCCCCDFF",
 };
 
-export function getLightTheme({ light }: InitThemeOptions) {
-  const highlightConfig = { ...HIGHLIGHT_CONFIG, ...(light?.highlightConfig ?? {}) };
-  const themeConfig = { ...THEME_CONFIG, ...(light?.themeConfig ?? {}) };
-
-  return [getThemeTemplate(false, themeConfig), getHighlightTemplate(highlightConfig)];
+export function NewLightTheme(opts: ColorThemeOptions | undefined) {
+  const highlightConfig = { ...HIGHLIGHT_CONFIG, ...(opts?.highlightConfig ?? {}) };
+  const themeConfig = { ...THEME_CONFIG, ...(opts?.themeConfig ?? {}) };
+  return [NewThemeTemplate(false, themeConfig), NewHighlightTemplate(highlightConfig)];
 }

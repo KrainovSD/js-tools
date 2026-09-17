@@ -1,8 +1,8 @@
 import { EditorView } from "@codemirror/view";
-import { CLASSES } from "../theme-constants";
-import type { ThemeConfig } from "../theme-types";
+import { CLASSES } from "./theme-constants";
+import type { ThemeConfig } from "./theme-types";
 
-export function getThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
+export function NewThemeTemplate(dark: boolean, config: Required<ThemeConfig>) {
   return EditorView.theme(
     {
       "&": {

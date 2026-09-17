@@ -1,13 +1,14 @@
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import type { Extension } from "@codemirror/state";
 import { tags } from "@lezer/highlight";
-import type { HighlightConfig } from "../theme-types";
+import type { HighlightConfig } from "./theme-types";
 
 /**
  * t.processingInstruction, t.meta - # () []
  * t.url, t.link - links
  */
 
-export function getHighlightTemplate(config: Required<HighlightConfig>) {
+export function NewHighlightTemplate(config: Required<HighlightConfig>): Extension {
   return syntaxHighlighting(
     HighlightStyle.define([
       { tag: tags.keyword, color: config.keyword },

@@ -1,5 +1,5 @@
 import { languages } from "@codemirror/language-data";
-import type { ThemeOptions } from "@/extensions";
+import type { ColorThemeOptions } from "@/extensions/theme";
 import { Editor, type MultiCursorOptions } from "@/module";
 import "./global.css";
 import { COMMON_TEST, FULL_EXAMPLE, STRESS_TEST, randomColor, randomString } from "./helpers";
@@ -27,13 +27,13 @@ const presetMultiCursor: MultiCursorOptions = {
 let editor: Editor | undefined;
 let multiCursor: MultiCursorOptions | undefined = roomId ? presetMultiCursor : undefined;
 let readonly: boolean = false;
-const dark: ThemeOptions | undefined = {
+const dark: ColorThemeOptions | undefined = {
   themeConfig: {
     codeFontFamily: "FiraCode",
     fontFamily: "Nunito",
   },
 };
-const light: ThemeOptions | undefined = undefined;
+const light: ColorThemeOptions | undefined = undefined;
 const viewFullExample = false;
 const viewStressTest = false;
 const root = document.querySelector<HTMLElement>("#root");
@@ -42,51 +42,60 @@ if (!root) throw new Error("Hasn't root");
 async function initEditor() {
   if (!root) return;
 
-  editor = new Editor();
-  await editor.init({
+  editor = new Editor({
     root,
     multiCursor,
     initialText: viewStressTest ? STRESS_TEST : viewFullExample ? FULL_EXAMPLE : COMMON_TEST,
-    vimMode: false,
-    readonly,
-    dark,
-    light,
-    theme: "dark",
-    languages,
-    imageSrcGetter: (url) => {
-      return url;
+    settings: {
+      vim: false,
+      readonly,
+      theme: "dark",
     },
-    autoCompleteTagOptions: Array.from({ length: 100 }, () => randomString(10)),
-    autoCompleteConfig: {
-      closeOnBlur: true,
+    themes: {
+      dark,
+      light,
     },
-    keyMaps: [],
-    defaultKeyMaps: {
-      theme: true,
-      vim: true,
+    autocomplete: {
+      tags: Array.from({ length: 100 }, () => randomString(10)),
+      config: {
+        closeOnBlur: false,
+      },
     },
-    // onBlur: () => {
-    //   console.log("blur");
-    // },
-    // onFocus: () => {
-    //   console.log("focus");
-    // },
-    // onChange: () => {
-    //   console.log("change");
-    // },
-    onEnter: () => {
-      return true;
+    keymaps: {
+      custom: [],
+      defaults: {
+        vim: true,
+        theme: true,
+      },
+      onEnter: () => {
+        return true;
+      },
+      onEscape: (view) => {
+        view.contentDOM.blur();
+        return true;
+      },
     },
-    onEscape: (view) => {
-      view.contentDOM.blur();
-
-      return true;
+    listeners: {
+      onViewChange: (view) => {
+        // eslint-disable-next-line no-console
+        console.log(view);
+      },
+      // onChange: () => {
+      //   console.log("change");
+      // },
+      // onBlur: () => {
+      //   console.log("blur");
+      // },
+      // onFocus: () => {
+      //   console.log("focus");
+      // },
     },
-    onViewChange: (view) => {
-      // eslint-disable-next-line no-console
-      console.log(view);
+    markdown: {
+      languages,
+      imageSrcGetter: (url) => url,
     },
   });
+  await editor.init();
 }
 
 {
@@ -114,7 +123,10 @@ async function initEditor() {
   if (resetButton) {
     resetButton.addEventListener("click", () => {
       if (!editor) return;
-      void editor.reset();
+      void editor.destroy().then(() => {
+        if (!editor) return;
+        void editor?.init();
+      });
     });
   }
 }
