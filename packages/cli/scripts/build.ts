@@ -16,7 +16,7 @@ const targets: Target[] = [
   { goos: "linux", goarch: "amd64", output: "ksd-linux-amd64" },
   // { goos: "linux", goarch: "arm64", output: "ksd-linux-arm64" },
   { goos: "darwin", goarch: "amd64", output: "ksd-darwin-amd64" },
-  // { goos: "darwin", goarch: "arm64", output: "ksd-darwin-arm64" },
+  { goos: "darwin", goarch: "arm64", output: "ksd-darwin-arm64" },
   { goos: "windows", goarch: "amd64", output: "ksd-windows-amd64.exe" },
   // { goos: "windows", goarch: "arm64", output: "ksd-windows-arm64.exe" },
 ];

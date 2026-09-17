@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/cli",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "description": "Krainov cli",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
