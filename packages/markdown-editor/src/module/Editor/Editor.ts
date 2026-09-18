@@ -11,7 +11,14 @@ import {
   ThemeCompartment,
   VimModeCompartment,
 } from "@/extensions/compartments";
-import { boldKeymap, codeKeymap, italicKeymap, linkKeymap, todoKeymap } from "@/extensions/keymaps";
+import {
+  boldKeymap,
+  codeKeymap,
+  italicKeymap,
+  linkKeymap,
+  pasteLink,
+  todoKeymap,
+} from "@/extensions/keymaps";
 import {
   type MarkdownOptions,
   markdownDecorationPlugin,
@@ -84,8 +91,10 @@ export class Editor {
         base: markdownLanguage,
         codeLanguages: this.markdown?.languages,
         addKeymap: true,
+        pasteURLAsLink: false,
         extensions: [markdownParserPlugin],
       }),
+      pasteLink,
       markdownDecorationPlugin({ ...this.markdown }),
     ];
     if (this.listeners?.onChange || this.listeners?.onViewChange) {
