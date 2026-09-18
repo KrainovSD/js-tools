@@ -11,7 +11,7 @@ import {
   ThemeCompartment,
   VimModeCompartment,
 } from "@/extensions/compartments";
-import { boldKeymap, italicKeymap, linkKeymap } from "@/extensions/keymaps";
+import { boldKeymap, codeKeymap, italicKeymap, linkKeymap, todoKeymap } from "@/extensions/keymaps";
 import {
   type MarkdownOptions,
   markdownDecorationPlugin,
@@ -187,7 +187,14 @@ export class Editor {
   };
 
   private initKeyMap = async (): Promise<Extension> => {
-    const keyBindings: CustomKeyMap[] = [indentWithTab, boldKeymap, italicKeymap, linkKeymap];
+    const keyBindings: CustomKeyMap[] = [
+      indentWithTab,
+      boldKeymap,
+      italicKeymap,
+      linkKeymap,
+      codeKeymap,
+      todoKeymap,
+    ];
     keyBindings.push(
       ...standardKeymap.map<CustomKeyMap>((keyMap) => {
         if (keyMap.key === "Enter" && this.keymaps?.onEnter) {
