@@ -26,6 +26,7 @@ import type {
 import { mentionDecorationPlugin } from "./mention/mention-decoration";
 import { strikeThroughDecorationPlugin } from "./strike-through";
 import { todoDecorationPlugin } from "./todo";
+import { underlineDecorationPlugin } from "./underline";
 
 const decorationPlugins: DecorationPlugin[] = [
   blockquoteDecorationPlugin,
@@ -41,6 +42,7 @@ const decorationPlugins: DecorationPlugin[] = [
   mentionDecorationPlugin,
   strikeThroughDecorationPlugin,
   todoDecorationPlugin,
+  underlineDecorationPlugin,
 ];
 
 let decorationFunctions: GetDecorationFunction[] = [];
@@ -58,6 +60,7 @@ const SKIP_MARKS = new Set([
   "EmphasisMark",
   "Blockquote",
   "StrikethroughMark",
+  "UnderlineMark",
   "BulletList",
   "OrderedList",
   "ListItem",
