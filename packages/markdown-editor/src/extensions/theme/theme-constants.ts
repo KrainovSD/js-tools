@@ -13,4 +13,5 @@ export const CLASSES = {
   blockquoteInner: "cm-blockquote-inner",
   link: "cm-link",
   mention: "cm-mention",
+  shortLink: "cm-short-link",
 };

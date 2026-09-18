@@ -59,6 +59,10 @@
   text-decoration: line-through;
 }
 
+.underline {
+  text-decoration: underline;
+}
+
 .list {
   &.ordered {
   }
@@ -88,6 +92,10 @@
     font-size: 12px;
     position: relative;
     top: -4px;
+  }
+
+  &.short {
+    cursor: pointer;
   }
 }
 

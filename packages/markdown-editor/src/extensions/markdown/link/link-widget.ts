@@ -20,6 +20,7 @@ export class LinkWidget extends WidgetType {
     private to: number,
     private uniqueId: string,
     private view: EditorView,
+    private readonly short: boolean = false,
   ) {
     super();
   }
@@ -52,6 +53,11 @@ export class LinkWidget extends WidgetType {
     anchor.classList.add(styles.link);
     anchor.classList.add(CLASSES.link);
 
+    if (this.short) {
+      anchor.classList.add(styles.short);
+      anchor.classList.add(CLASSES.shortLink);
+    }
+
     anchor.target = "_blank";
     anchor.textContent = this.text;
     anchor.href = this.link;
@@ -73,7 +79,17 @@ export class LinkWidget extends WidgetType {
     const abortController = new AbortController();
     anchor.addEventListener(
       "mousedown",
-      (event) => handleClick(this.view, this.text, this.link, this.from, this.to, this.key, event),
+      (event) =>
+        handleClick(
+          this.view,
+          this.text,
+          this.link,
+          this.from,
+          this.to,
+          this.key,
+          this.short,
+          event,
+        ),
       { signal: abortController.signal },
     );
     anchor.addEventListener("click", (event) => event.preventDefault(), {
@@ -211,6 +227,7 @@ function handleClick(
   from: number,
   to: number,
   key: string,
+  short: boolean,
   event: MouseEvent,
 ) {
   /** open the link if has special key or the view is readonly */
@@ -219,51 +236,42 @@ function handleClick(
   if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey || forceActive) {
     if (event.type === "mousedown") {
       event.preventDefault();
+      const textFrom = short ? from + 2 : from + 1;
+      const textTo = short ? to - 2 : from + 1 + text.length;
       if (link.charCodeAt(0) === CODE_OF_ANCHOR) {
-        navigateToHeader(view, link, from + 1, from + 1 + text.length);
+        navigateToHeader(view, link, textFrom, textTo);
         return;
       }
       const target = event.target as HTMLAnchorElement;
       window.open(target.href, "_blank");
     }
-
     return;
   }
-
   event.stopPropagation();
   event.preventDefault();
   const target = event.target as HTMLImageElement;
   const parent = target.parentNode;
   let line: HTMLElement | null = parent as HTMLElement | null;
-
   /** recursively find line that contains link */
   while (line && !line.classList.contains("cm-line")) {
     line = line.parentNode as HTMLElement | null;
   }
-
   const editor = Array.from(document.querySelectorAll(".cm-editor")).find((element) =>
     element.contains(target),
   );
   const selection = window.getSelection();
-
   if (!selection || !editor || !parent) return;
-
   const textNode = getTextNode(text, link, key, line);
-
   if (textNode) {
     return void selectLink({ selection, link, node: textNode });
   }
-
   saveDispatch(() => {
     if (!view) return;
-
     view.dispatch(view.state.update({ effects: openedLinkEffect.of(key) }));
-
     const textNode = getTextNode(text, link, key, line);
     if (textNode) {
       selectLink({ selection, link, node: textNode });
     }
-
     requestAnimationFrame(() => {
       saveDispatch(() => {
         if (view) view.dispatch(view.state.update({ effects: openedLinkEffect.of(undefined) }));
