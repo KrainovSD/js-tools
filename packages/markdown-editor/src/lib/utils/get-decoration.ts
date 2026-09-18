@@ -2,11 +2,13 @@ import { Decoration, type WidgetType } from "@codemirror/view";
 
 type GetLineDecorationOptions = {
   style: string;
+  attributes?: Record<string, string>;
   range: [number, number?];
 };
-export function getLineDecoration({ style, range }: GetLineDecorationOptions) {
+export function getLineDecoration({ style, range, attributes }: GetLineDecorationOptions) {
   return Decoration.line({
     class: style,
+    attributes,
   }).range(range[0], range[1]);
 }
 

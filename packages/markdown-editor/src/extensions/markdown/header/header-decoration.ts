@@ -7,30 +7,28 @@ import type {
 } from "../markdown-types";
 import styles from "../styles.module.scss";
 import { NAME_OF_HEADER, NAME_OF_HEADER_MARK, NAME_OF_HEADER_UNDER } from "./header-constants";
+import { getHeaderAnchorId } from "./header-index";
 
 function getHeaderDecorations({ decorations, node, view }: GetDecorationOptions) {
   const isHeader = node.name.startsWith(NAME_OF_HEADER);
   const isHeaderUnder = node.name.startsWith(NAME_OF_HEADER_UNDER);
-
   if (!isHeader && !isHeaderUnder) {
     return;
   }
-
   let level: string | undefined;
-
   if (isHeader) {
     level = node.name.replace(NAME_OF_HEADER, "");
-
     if (view.state.doc.sliceString(node.from + +level).charCodeAt(0) !== 32) return;
   } else {
     level = node.name.replace(NAME_OF_HEADER_UNDER, "");
   }
-
   if (!level) return;
 
+  const id = getHeaderAnchorId(view.state, node.from);
   decorations.push(
     utils.getLineDecoration({
       style: clsx(styles.header, styles[`level_${level}`]),
+      attributes: id ? { id } : undefined,
       range: [view.lineBlockAt(node.from).from],
     }),
   );

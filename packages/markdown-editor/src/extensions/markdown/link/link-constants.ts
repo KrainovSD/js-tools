@@ -6,4 +6,6 @@ export const CODE_OF_END_LINK_URL = 41; // )
 
 export const NAME_OF_AUTO_LINK = "Autolink";
 
+export const CODE_OF_ANCHOR = 35; // #
+
 export const CODE_OF_LINK_LABEL_END = 58; // :

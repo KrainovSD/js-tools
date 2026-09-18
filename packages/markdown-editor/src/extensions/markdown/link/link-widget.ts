@@ -1,9 +1,10 @@
-import { type EditorView, WidgetType } from "@codemirror/view";
+import { EditorView, WidgetType } from "@codemirror/view";
 import { CLASSES } from "@/extensions/theme";
-import { saveDispatch } from "@/lib/utils";
+import { getHeaderId, saveDispatch } from "@/lib/utils";
+import { getHeaderPositionById } from "../header/header-index";
 import { openedLinkEffect } from "../markdown-state";
 import styles from "../styles.module.scss";
-import { CODE_OF_START_LINK_URL } from "./link-constants";
+import { CODE_OF_ANCHOR, CODE_OF_START_LINK_URL } from "./link-constants";
 
 const LINK_NODES: Record<string, AnchorElement | undefined> = {};
 
@@ -72,7 +73,7 @@ export class LinkWidget extends WidgetType {
     const abortController = new AbortController();
     anchor.addEventListener(
       "mousedown",
-      (event) => handleClick(this.view, this.text, this.link, this.key, event),
+      (event) => handleClick(this.view, this.text, this.link, this.from, this.to, this.key, event),
       { signal: abortController.signal },
     );
     anchor.addEventListener("click", (event) => event.preventDefault(), {
@@ -189,13 +190,39 @@ function selectLink({ link, node, selection, start }: SelectLinkOptions) {
   selection.addRange(range);
 }
 
-function handleClick(view: EditorView, text: string, link: string, key: string, event: MouseEvent) {
+function navigateToHeader(view: EditorView, link: string, from: number, to: number) {
+  const position = getHeaderPositionById(view.state, getHeaderId(link));
+  if (position == undefined) {
+    view.dispatch({ selection: { anchor: from, head: to }, userEvent: "select" });
+    view.focus();
+    return;
+  }
+  view.dispatch({
+    selection: { anchor: position, head: position },
+    effects: EditorView.scrollIntoView(position, { y: "center" }),
+  });
+  view.focus();
+}
+
+function handleClick(
+  view: EditorView,
+  text: string,
+  link: string,
+  from: number,
+  to: number,
+  key: string,
+  event: MouseEvent,
+) {
   /** open the link if has special key or the view is readonly */
   const contentEditable = view.contentDOM.getAttribute("contenteditable");
   const forceActive = !contentEditable || contentEditable === "false";
-
   if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey || forceActive) {
     if (event.type === "mousedown") {
+      event.preventDefault();
+      if (link.charCodeAt(0) === CODE_OF_ANCHOR) {
+        navigateToHeader(view, link, from + 1, from + 1 + text.length);
+        return;
+      }
       const target = event.target as HTMLAnchorElement;
       window.open(target.href, "_blank");
     }

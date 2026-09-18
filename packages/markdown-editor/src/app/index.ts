@@ -76,10 +76,9 @@ async function initEditor() {
       },
     },
     listeners: {
-      onViewChange: (view) => {
-        // eslint-disable-next-line no-console
-        console.log(view);
-      },
+      // onViewChange: (view) => {
+      //   console.log(view);
+      // },
       // onChange: () => {
       //   console.log("change");
       // },
