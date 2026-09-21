@@ -1,8 +1,9 @@
 import { autocompletion } from "@codemirror/autocomplete";
 import { history, historyKeymap, indentWithTab, standardKeymap } from "@codemirror/commands";
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
-import { EditorState, type Extension } from "@codemirror/state";
+import { type AnnotationType, EditorState, type Extension } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
+import type { YSyncConfig } from "y-codemirror.next";
 import type { WebsocketProvider } from "y-websocket";
 import type { Text } from "yjs";
 import { type AutoCompleteOptions, tagAutoComplete } from "@/extensions/auto-complete";
@@ -25,6 +26,7 @@ import {
   markdownParserPlugin,
   markdownState,
 } from "@/extensions/markdown";
+import { NewListRenumber } from "@/extensions/markdown/list";
 import { NewDarkTheme, NewLightTheme, type Theme } from "@/extensions/theme";
 import { NewVim, type VimGetter } from "@/extensions/vim";
 import { saveDispatch } from "@/lib/utils";
@@ -41,6 +43,7 @@ export class Editor {
   view: EditorView | undefined;
   provider: WebsocketProvider | undefined;
   yText: Text | undefined;
+  private ySyncAnnotation: AnnotationType<YSyncConfig> | undefined;
   private vimGetter: VimGetter;
   private darkTheme: Extension;
   private lightTheme: Extension;
@@ -72,20 +75,28 @@ export class Editor {
   }
 
   init = async () => {
+    const extensions: Extension[] = [];
     let provider: WebsocketProvider | undefined;
     let multiCursorText: Text | undefined;
     if (this.multiCursor) {
       ({ provider, multiCursorText } = await this.initProvider(this.multiCursor));
+      if (provider && multiCursorText) {
+        const multiCursorModules = await Promise.all([import("yjs"), import("y-codemirror.next")]);
+        const [{ UndoManager }, { yCollab, ySyncAnnotation }] = multiCursorModules;
+        const undoManager = new UndoManager(multiCursorText);
+        this.ySyncAnnotation = ySyncAnnotation;
+        extensions.push(yCollab(multiCursorText, provider.awareness, { undoManager }));
+      }
     }
     const vimPlugin = await this.vimGetter(this.vim);
-    const asyncPlugins = await Promise.all([this.initKeyMap()]);
-    const extensions = [
+    const keyMapPlugin = await this.initKeyMap();
+    extensions.push([
       ReadonlyCompartment.of(EditorView.editable.of(!this.readonly)),
       VimModeCompartment.of(vimPlugin),
       ThemeCompartment.of(this.theme === "dark" ? this.darkTheme : this.lightTheme),
       history(),
       EditorView.lineWrapping,
-      ...asyncPlugins,
+      keyMapPlugin,
       markdownState,
       markdown({
         base: markdownLanguage,
@@ -95,8 +106,9 @@ export class Editor {
         extensions: [markdownParserPlugin],
       }),
       pasteLink,
+      NewListRenumber(this.ySyncAnnotation),
       markdownDecorationPlugin({ ...this.markdown }),
-    ];
+    ]);
     if (this.listeners?.onChange || this.listeners?.onViewChange) {
       const onViewChange = this.listeners?.onViewChange;
       const onChange = this.listeners?.onChange;
@@ -139,12 +151,7 @@ export class Editor {
         }),
       );
     }
-    if (multiCursorText && provider) {
-      const multiCursorModules = await Promise.all([import("yjs"), import("y-codemirror.next")]);
-      const [{ UndoManager }, { yCollab }] = multiCursorModules;
-      const undoManager = new UndoManager(multiCursorText);
-      extensions.push(yCollab(multiCursorText, provider.awareness, { undoManager }));
-    }
+
     const state = EditorState.create({
       // eslint-disable-next-line @typescript-eslint/no-base-to-string
       doc: multiCursorText ? multiCursorText.toString() : this.initialText,

@@ -5,6 +5,7 @@ const URL_LIKE = /^https?:\/\//i;
 
 export const pasteLink = EditorView.domEventHandlers({
   paste: (event, view) => {
+    if (!event.clipboardData) return false;
     const { main } = view.state.selection;
     if (main.empty || view.state.selection.ranges.length > 1) return false;
     const clipboard = event.clipboardData?.getData("text/plain")?.trim();
