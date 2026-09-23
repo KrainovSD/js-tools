@@ -3,15 +3,19 @@
   import type { ViewUpdate } from "@codemirror/view";
   import { getByPath, waitUntil } from "@krainovsd/js-helpers";
   import type {
+    AutoCompleteOptions,
     Editor,
-    EditorAutoCompleteConfig,
-    EditorLanguages,
-    EditorTheme,
     HandleEnterKeyMapEditorFunction,
     HandleEscapeKeyMapEditorFunction,
+    KeyMapsOptions,
+    MarkdownOptions,
     MultiCursorOptions,
     ProviderStatusEvent,
+    Theme,
     ThemeOptions,
+    VimOptions,
+    YText,
+    YWebsocketProvider,
   } from "@krainovsd/markdown-editor";
   import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
   import type { WebsocketProvider } from "y-websocket";
@@ -23,15 +27,14 @@
     variant?: Exclude<InputVariant, "borderless" | "underline">;
     readonly?: boolean;
     vimMode?: boolean;
-    languages?: EditorLanguages[];
+    theme?: Theme;
     placeholder?: string;
-    dark?: ThemeOptions;
-    light?: ThemeOptions;
-    theme?: EditorTheme;
-    collabSettings?: Omit<MultiCursorOptions, "onChangeStatusProvider" | "onSyncProvider">;
-    imageSrcGetter?: (src: string) => string;
-    autoCompleteTagOptions?: string[];
-    autoCompleteConfig?: EditorAutoCompleteConfig;
+    multiCursor?: Omit<MultiCursorOptions, "onChangeStatusProvider" | "onSyncProvider">;
+    vim?: VimOptions;
+    autocomplete?: AutoCompleteOptions;
+    keymaps?: Omit<KeyMapsOptions, "onEnter" | "onEscape">;
+    markdown?: MarkdownOptions;
+    themes?: ThemeOptions;
     handleEnter?: HandleEnterKeyMapEditorFunction;
     handleEscape?: HandleEscapeKeyMapEditorFunction;
   };
@@ -43,7 +46,7 @@
     connectError: [first: boolean];
     disconnect: [];
     connect: [first: boolean];
-    changeProviderStatus: [event: ProviderStatusEvent, provider: WebsocketProvider, doc: Text];
+    changeProviderStatus: [event: ProviderStatusEvent, provider: YWebsocketProvider, doc: YText];
     syncProvider: [synced: boolean, provider: WebsocketProvider, doc: Text];
     mounted: [];
     unmounted: [];
@@ -59,24 +62,26 @@
   const empty = ref(false);
   const variant = computed(() => props.variant ?? "outlined");
   const focus = ref(false);
-  const darkTheme = computed<ThemeOptions>(() => ({
-    highlightConfig: { ...props.dark?.highlightConfig },
-    themeConfig: {
-      fontFamily: "Nunito",
-      codeFontFamily: "FiraCode",
-      background: "transparent",
-      color: "var(--ksd-text-main-color)",
-      ...props.dark?.themeConfig,
+  const themes = computed<ThemeOptions>(() => ({
+    dark: {
+      themeConfig: {
+        fontFamily: "Nunito",
+        codeFontFamily: "FiraCode",
+        background: "transparent",
+        color: "var(--ksd-text-main-color)",
+        ...props.themes?.dark?.themeConfig,
+      },
+      highlightConfig: { ...props.themes?.dark?.highlightConfig },
     },
-  }));
-  const lightTheme = computed<ThemeOptions>(() => ({
-    highlightConfig: { ...props.light?.highlightConfig },
-    themeConfig: {
-      fontFamily: "Nunito",
-      codeFontFamily: "FiraCode",
-      background: "transparent",
-      color: "var(--ksd-text-main-color)",
-      ...props.light?.themeConfig,
+    light: {
+      themeConfig: {
+        fontFamily: "Nunito",
+        codeFontFamily: "FiraCode",
+        background: "transparent",
+        color: "var(--ksd-text-main-color)",
+        ...props.themes?.light?.themeConfig,
+      },
+      highlightConfig: { ...props.themes?.light?.highlightConfig },
     },
   }));
   const classes = computed(() => ({
@@ -90,141 +95,110 @@
     editor.value?.focus?.();
   }
 
-  /** Init Editor instance */
   watch(
     () =>
       [
         Factory.value,
         mountRef.value,
-        props.collabSettings,
-        darkTheme.value,
-        lightTheme.value,
-        props.languages,
-        props.imageSrcGetter,
-        props.autoCompleteConfig,
-        props.autoCompleteTagOptions,
+        props.multiCursor,
+        props.autocomplete,
+        props.keymaps,
+        props.markdown,
+        themes.value,
       ] as const,
-    (
-      [
-        Factory,
-        mountRef,
-        collabSettings,
-        dark,
-        light,
-        languages,
-        imageSrcGetter,
-        autoCompleteConfig,
-        autoCompleteTagOptions,
-      ],
-      _,
-      clean,
-    ) => {
+    ([Factory, mountRef, multiCursor, autocomplete, keymaps, markdown, themes], _, clean) => {
       if (!mountRef || !Factory) return;
-
       let connectingCount = 0;
       let firstConnecting = true;
-
-      if (!collabSettings) {
+      if (!multiCursor) {
         mounted.value = true;
       }
 
-      const instance = new Factory();
-      void instance.init({
+      function onChangeStatusProvider(
+        event: ProviderStatusEvent,
+        provider: YWebsocketProvider,
+        text: YText,
+      ) {
+        emit("changeProviderStatus", event, provider, text);
+        switch (event.status) {
+          case "connected": {
+            mounted.value = true;
+            emit("connect", firstConnecting);
+            connectingCount = 0;
+            firstConnecting = false;
+            break;
+          }
+          case "connecting": {
+            connectingCount++;
+            if (connectingCount > 5) {
+              connectingCount = 0;
+              emit("connectError", firstConnecting);
+            }
+            break;
+          }
+          case "disconnected": {
+            connectingCount = 0;
+            if (instance.view && "destroyed" in instance.view) {
+              const destroyed = getByPath(instance.view, "destroyed" as keyof typeof instance.view);
+
+              if (destroyed) {
+                return;
+              }
+            }
+            emit("disconnect");
+            break;
+          }
+          default: {
+            break;
+          }
+        }
+      }
+
+      const instance = new Factory({
         root: mountRef,
         initialText: model.value,
-        readonly: props.readonly,
-        vimMode: props.vimMode,
-        theme: props.theme,
-        dark,
-        light,
-        autoCompleteTagOptions,
-        autoCompleteConfig,
-        languages,
-        imageSrcGetter,
-        onBlur: (state) => {
-          focus.value = false;
-          emit("blur", state);
+        settings: {
+          readonly: props.readonly,
+          vim: props.vimMode,
+          theme: props.theme,
         },
-        onViewChange: (view) => {
-          if (view.docChanged) {
-            if (!empty.value && view.state.doc.length === 0) {
-              empty.value = true;
-            } else if (empty.value && view.state.doc.length !== 0) {
-              empty.value = false;
-            }
-            model.value = view.state.doc.toString();
-            emit("change", view);
-          }
-          emit("changeView", view);
+        vim: props.vim,
+        autocomplete,
+        markdown,
+        multiCursor: multiCursor ? { ...multiCursor, onChangeStatusProvider } : undefined,
+        themes,
+        keymaps: {
+          ...(keymaps ?? {}),
+          onEnter: props.handleEnter,
+          onEscape: props.handleEscape,
         },
-        onEnter: props.handleEnter,
-        onFocus: (state) => {
-          focus.value = true;
-          emit("focus", state);
-        },
-        multiCursor: collabSettings
-          ? {
-              ...collabSettings,
-              onChangeStatusProvider: (event, provider, text) => {
-                emit("changeProviderStatus", event, provider, text);
-
-                switch (event.status) {
-                  case "connected": {
-                    mounted.value = true;
-                    emit("connect", firstConnecting);
-                    connectingCount = 0;
-                    firstConnecting = false;
-                    break;
-                  }
-                  case "connecting": {
-                    connectingCount++;
-                    if (connectingCount > 5) {
-                      connectingCount = 0;
-                      emit("connectError", firstConnecting);
-                    }
-                    break;
-                  }
-                  case "disconnected": {
-                    connectingCount = 0;
-                    if (instance.view && "destroyed" in instance.view) {
-                      const destroyed = getByPath(
-                        instance.view,
-                        "destroyed" as keyof typeof instance.view,
-                      );
-
-                      if (destroyed) {
-                        return;
-                      }
-                    }
-
-                    emit("disconnect");
-                    break;
-                  }
-                  default: {
-                    break;
-                  }
-                }
-              },
-            }
-          : undefined,
-        defaultKeyMaps: {
-          vim: true,
-        },
-        keyMaps: [
-          {
-            key: "Escape",
-            preventDefault: true,
-            stopPropagation: true,
-            run: props.handleEscape,
+        listeners: {
+          onBlur: (state) => {
+            focus.value = false;
+            emit("blur", state);
           },
-        ],
+          onViewChange: (view) => {
+            if (view.docChanged) {
+              if (!empty.value && view.state.doc.length === 0) {
+                empty.value = true;
+              } else if (empty.value && view.state.doc.length !== 0) {
+                empty.value = false;
+              }
+              model.value = view.state.doc.toString();
+              emit("change", view);
+            }
+            emit("changeView", view);
+          },
+          onFocus: (state) => {
+            focus.value = true;
+            emit("focus", state);
+          },
+        },
       });
+      void instance.init();
       editor.value = instance;
-
       if (!props.placeholder) return;
-
       let waiting = true;
-
       void waitUntil(() => !instance?.view?.dom && waiting).then(() => {
         if (!empty.value && instance?.view?.state.doc.length === 0) {
           empty.value = true;
@@ -236,9 +210,7 @@
       setTimeout(() => {
         waiting = false;
       }, 1000);
-
       emit("mounted");
-
       clean(() => {
         if (instance) {
           void instance.destroy();
@@ -250,7 +222,6 @@
     { immediate: true },
   );
 
-  /** Change vim mode */
   watch(
     () => props.vimMode,
     (vimMode) => {
@@ -260,7 +231,7 @@
     },
     { immediate: true },
   );
-  /** Change readonly mode */
+
   watch(
     () => props.readonly,
     (readonly) => {
@@ -270,18 +241,17 @@
     },
     { immediate: true },
   );
-  /** Change theme mode */
+
   watch(
     () => props.theme,
     (theme) => {
-      if (editor.value) {
+      if (editor.value && theme) {
         void editor.value.setTheme(theme);
       }
     },
     { immediate: true },
   );
 
-  /** Dynamic import Editor Factory */
   onMounted(() => {
     void import("@krainovsd/markdown-editor").then((module) => {
       Factory.value = module.Editor;

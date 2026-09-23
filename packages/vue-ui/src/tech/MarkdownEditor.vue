@@ -1,11 +1,11 @@
 <script setup lang="ts">
   import { languages } from "@codemirror/language-data";
-  import type { EditorTheme } from "@krainovsd/markdown-editor";
+  import type { Theme } from "@krainovsd/markdown-editor";
   import { onMounted, onUnmounted, ref } from "vue";
   import { VButton, VMarkdownEditor } from "../ui";
 
   const readonly = ref(false);
-  const theme = ref<EditorTheme>("light");
+  const theme = ref<Theme>("light");
   const value1 = ref(`*italic*  **bold** ***italic-bold*** [link](/link)
 
 - [ ] Check
@@ -42,7 +42,7 @@ function test(number: number): number {
       ?.replace?.(";", "")
       ?.trim?.();
     if (htmlTheme) {
-      theme.value = htmlTheme as EditorTheme;
+      theme.value = htmlTheme as Theme;
     }
   });
   onMounted(() => {
@@ -64,7 +64,7 @@ function test(number: number): number {
       placeholder="outlined"
       :theme="theme"
       :readonly="readonly"
-      :languages="languages"
+      :markdown="{ languages }"
     />
   </div>
   <div :class="$style.group">

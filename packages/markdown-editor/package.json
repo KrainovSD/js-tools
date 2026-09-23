@@ -1,6 +1,6 @@
 {
   "name": "@krainovsd/markdown-editor",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Krainov markdown-editor",
   "type": "module",
   "author": "KrainovSD <denislosev48@gmail.com>",
@@ -52,23 +52,23 @@
     "typescript-transform-paths": "3.5.5",
     "ts-patch": "3.3.0",
     "@types/node": "22.13.8",
-    "@codemirror/language-data": "6.5.1",
+    "@codemirror/language-data": "6.5.2",
     "@lezer/common": "1.5.2",
     "@lezer/markdown": "1.7.2",
     "vite": "6.2.1"
   },
   "dependencies": {
-    "@codemirror/commands": "6.11.1",
-    "@codemirror/lang-markdown": "6.5.2",
-    "@codemirror/language": "6.12.4",
-    "@codemirror/state": "6.7.5",
-    "@codemirror/view": "6.43.12",
-    "@codemirror/autocomplete": "6.20.3",
-    "@lezer/highlight": "1.2.3",
-    "@replit/codemirror-vim": "6.4.0",
-    "clsx": "2.1.1",
-    "y-codemirror.next": "0.3.6",
-    "y-websocket": "2.1.0",
-    "yjs": "13.6.32"
+    "@codemirror/commands": "^6.11.1",
+    "@codemirror/lang-markdown": "^6.5.2",
+    "@codemirror/language": "^6.12.4",
+    "@codemirror/state": "^6.7.5",
+    "@codemirror/view": "^6.43.12",
+    "@codemirror/autocomplete": "^6.20.3",
+    "@lezer/highlight": "^1.2.3",
+    "@replit/codemirror-vim": "^6.4.0",
+    "clsx": "^2.1.1",
+    "y-codemirror.next": "^0.3.6",
+    "y-websocket": "^2.1.0",
+    "yjs": "^13.6.32"
   }
 }
