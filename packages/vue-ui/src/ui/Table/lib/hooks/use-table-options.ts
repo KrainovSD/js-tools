@@ -436,6 +436,7 @@ export function useTableOptions<
       getPaginationRowModel: props.withPagination ? getPaginationRowModel() : undefined,
       columnResizeMode: props.columnResizeMode ?? "onChange",
       groupedColumnMode: "reorder" as const,
+      autoResetExpanded: props.autoResetExpanded,
       manualExpanding: props.manualExpanding,
       manualFiltering: props.manualFiltering,
       manualGrouping: props.manualGrouping,

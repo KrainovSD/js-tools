@@ -140,6 +140,7 @@ export type TableProps<
 > & {
   getSubRows?: (originalRow: RowData, index: number) => RowData[] | undefined;
   columnResizeMode?: ColumnResizeMode;
+  autoResetExpanded?: boolean;
   manualFiltering?: boolean;
   manualExpanding?: boolean;
   manualGrouping?: boolean;
