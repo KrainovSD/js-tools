@@ -100,7 +100,10 @@ export class StaticGraphCanvas<
     clearCache: boolean | GraphCanvasCacheKeys[] = true,
   ) => {
     if (options.links != undefined) this.links = options.links;
-    if (options.nodes != undefined) this.nodes = options.nodes;
+    if (options.nodes != undefined) {
+      this.nodes = options.nodes;
+      this.reconcileImagesCache();
+    }
     if (options.nodes != undefined || options.links != undefined) {
       this.updateData(undefined, clearCache);
     }

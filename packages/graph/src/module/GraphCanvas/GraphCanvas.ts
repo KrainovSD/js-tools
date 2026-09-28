@@ -98,6 +98,8 @@ export class GraphCanvas<
 
   protected eventAbortController: AbortController;
 
+  protected cachedImages: Record<string, HTMLImageElement | undefined> = {};
+
   protected cachedNodeText: (string[] | undefined)[] = [];
 
   protected cachedNodeLabel: (string[] | undefined)[] = [];
@@ -277,7 +279,10 @@ export class GraphCanvas<
     precompute: boolean = false,
   ) => {
     if (options.links != undefined) this.links = options.links;
-    if (options.nodes != undefined) this.nodes = options.nodes;
+    if (options.nodes != undefined) {
+      this.nodes = options.nodes;
+      this.reconcileImagesCache();
+    }
     if (options.nodes != undefined || options.links != undefined) {
       this.updateData(alpha, clearCache, precompute);
     }
@@ -426,6 +431,20 @@ export class GraphCanvas<
     >(this);
   };
 
+  protected reconcileImagesCache = () => {
+    const cached = Object.keys(this.cachedImages);
+    if (cached.length === 0) return;
+
+    const actualImages = new Set<string>();
+    for (const node of this.nodes) {
+      if (node.image && !(node.image instanceof HTMLImageElement))
+        actualImages.add(String(node.image));
+    }
+    for (const url of cached) {
+      if (!actualImages.has(url)) delete this.cachedImages[url];
+    }
+  };
+
   tick = () => {
     if (!this.simulationWorking) this.draw();
   };
@@ -505,6 +524,7 @@ export class GraphCanvas<
       this.simulation = undefined;
     }
     this._infiniteSimulation = false;
+    this.cachedImages = {};
     this.clearHTMLElements();
     this.clearState();
     this.clearCache(true);

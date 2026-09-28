@@ -9,11 +9,6 @@ export function prepareData(
   const nodes = cloneDeep(data.nodes);
 
   nodes.forEach((node) => {
-    if (node.data?.image) {
-      const image = new Image();
-      image.src = node.data.image;
-      node.image = image;
-    }
     node.label = "+5";
   });
 

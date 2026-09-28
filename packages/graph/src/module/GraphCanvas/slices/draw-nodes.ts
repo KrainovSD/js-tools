@@ -192,12 +192,25 @@ export function getDrawNode<
 
     const nodeBatchKey = `${alpha}|${borderColor}|${borderWidth}|${color}`;
     let nodeGroup: NodeDrawBatch[];
+    let image: HTMLImageElement | undefined;
     if (!node.image) {
       nodeBatch[nodeBatchKey] ??= [];
       nodeGroup = nodeBatch[nodeBatchKey];
     } else {
       nodeImageBatch[nodeBatchKey] ??= [];
       nodeGroup = nodeImageBatch[nodeBatchKey];
+      if (node.image instanceof HTMLImageElement) {
+        image = node.image;
+      } else {
+        const URL = String(node.image);
+        let cachedImage = this.cachedImages[URL];
+        if (!cachedImage) {
+          cachedImage = new Image();
+          cachedImage.src = URL;
+          this.cachedImages[URL] = cachedImage;
+        }
+        image = cachedImage;
+      }
     }
     nodeGroup.push({
       shape: nodeOptions.shape,
@@ -206,7 +219,7 @@ export function getDrawNode<
       radius,
       width,
       height,
-      image: node.image,
+      image,
     });
     const labelLines = this.cachedNodeLabel[index];
     if (labelLines && labelLines.length > 0) {
