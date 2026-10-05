@@ -23,3 +23,4 @@ export * from "./declination";
 export * from "./async-loop";
 export * from "./random-base64";
 export * from "./random-hex";
+export * from "./gate";

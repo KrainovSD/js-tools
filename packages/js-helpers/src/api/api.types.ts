@@ -134,44 +134,7 @@ export type AfterHandler = <
   response: Response | NodeResponse | undefined,
 ) => Promise<void> | void;
 
-export type OauthToken = {
+export type OAuthToken = {
   token: string;
   expires: number;
-};
-
-export type OauthOptions = {
-  /** An url of start oauth login flow through proxy */
-  loginUrl?: (() => string) | string;
-  /** An url of start oauth logout flow through proxy */
-  logoutUrl?: (() => string) | string;
-  /** An url of start oauth flow window */
-  refreshTokenWindowUrl?: (() => string) | string;
-  /** A number of millisecond for waiting oauth flow window before force close it */
-  waitSubWindow?: number;
-  /** An interval for check closable property by oauth flow window in ms */
-  closeObserveSubWindowInterval?: number;
-  /** An error handle that call if oauth flow window wasn't open. Required obviously set undefined that stop auto start flow */
-  onSubWindowOpenError?: () => void;
-  /** A logout page url that will be used to start logout flow in some extra situations */
-  logoutPageUrl?: string;
-  /** An error page url that will be used to stop oauth provider register logic  */
-  errorPageUrl?: string;
-  /** A clear page url that will be used to clear all storage data */
-  clearPageUrl?: string;
-  /** A page url that will be used after clear for back to login flow  */
-  afterClearPageUrl?: string;
-  /** A name of expires token in local storage */
-  expiresTokenStorageName?: string;
-  /** A name of expires token in query */
-  expiresTokenQueryName?: string;
-  /** A name of token in local storage */
-  tokenStorageName?: string;
-  /** A request for update token */
-  tokenRequest?: () => Promise<OauthToken | null | undefined>;
-  /** Set token to request headers event if it is same origin */
-  forceSetToken?: boolean;
-  /** Set to update token flow in sub window, by default true */
-  subWindow?: boolean;
-  /** Set to use refresh token flow, by default false */
-  refreshToken?: boolean;
 };

@@ -1,310 +1,298 @@
-import { getQueryValues, isArray, isString, startWith, wait, waitUntil } from "../lib";
-import {
-  OAUTH_CLEAR_PAGE_URL,
-  OAUTH_ERROR_PAGE_URL,
-  OAUTH_LOGOUT_PAGE_URL,
-  OAUTH_REFRESH_QUERY,
-  OAUTH_TOKEN_EXPIRES_STORAGE_NAME,
-  OAUTH_TOKEN_STORAGE_NAME,
-} from "./api.constants";
-import type { OauthOptions, RequestInterface } from "./api.types";
+import { Gate, extractQueries, randomString } from "../lib";
+import type { OAuthToken, RequestInterface } from "./api.types";
 
-export function createOauthProvider(opts: OauthOptions = {}) {
-  const {
-    refreshTokenWindowUrl = window.origin,
-    closeObserveSubWindowInterval = 500,
-    waitSubWindow = 15000,
-    loginUrl = undefined,
-    logoutUrl = undefined,
-    clearPageUrl = OAUTH_CLEAR_PAGE_URL,
-    errorPageUrl = OAUTH_ERROR_PAGE_URL,
-    logoutPageUrl = OAUTH_LOGOUT_PAGE_URL,
-    afterClearPageUrl = "/",
-    expiresTokenQueryName = OAUTH_TOKEN_EXPIRES_STORAGE_NAME,
-    tokenStorageName = OAUTH_TOKEN_STORAGE_NAME,
-    expiresTokenStorageName = OAUTH_TOKEN_EXPIRES_STORAGE_NAME,
-    tokenRequest = undefined,
-    forceSetToken = false,
-    subWindow = true,
-    refreshToken = false,
-  } = opts;
-  let refreshing = false;
-  let processing = false;
+export type OAuthProviderOptions = {
+  popup?: OAuthProviderPopupOptions;
+  startSessionURL?: (() => string) | string;
+  endSessionURL?: (() => string) | string;
+  clearSessionURL?: string;
+  errorSessionURL?: string;
+  expiresQueryKey?: string;
+  tokenGetter?: () => Promise<OAuthToken | null | undefined>;
+  checkExpires?: boolean;
+};
 
-  function getExpiresDate(expires: number) {
-    return Date.now() + (expires - 30) * 1000;
-  }
-  function checkExpires(expires: null | undefined | string | number): expires is number | string {
-    return expires != undefined && !Number.isNaN(+expires) && Date.now() < +expires;
-  }
-  function isRefreshing() {
-    return refreshing || processing;
+export type OAuthProviderPopupOptions = {
+  enable?: boolean;
+  startRefreshURL?: (() => string) | string;
+  wait?: number;
+  observeInterval?: number;
+  queryKey?: string;
+};
+
+export const OAUTH_TOKEN_STORAGE_NAME = "session_token";
+export const OAUTH_EXPIRES_STORAGE_NAME = "session_token_expires";
+
+export class OAuthProvider {
+  protected _popup: Required<OAuthProviderPopupOptions>;
+  protected _startSessionURL: (() => string) | string;
+  protected _endSessionURL: (() => string) | string;
+  protected _clearSessionURL: string;
+  protected _errorSessionURL: string;
+  protected _expiresQueryKey: string;
+  protected _checkExpires: boolean;
+  protected _tokenGetter?: () => Promise<OAuthToken | null | undefined>;
+  protected _refreshing = new Gate();
+
+  constructor(opts: OAuthProviderOptions) {
+    const popup = opts.popup ?? {};
+    this._popup = {
+      enable: false,
+      startRefreshURL: window.origin,
+      observeInterval: 500,
+      wait: 15000,
+      queryKey: "popup_session",
+      ...popup,
+    };
+    this._startSessionURL =
+      opts.startSessionURL ??
+      (() => {
+        return `/api/v1/auth?frontend_protocol=${window.location.protocol.slice(0, -1)}&frontend_host=${window.location.host}&comeback_path=${window.location.pathname}${encodeURIComponent(window.location.search)}`;
+      });
+    this._endSessionURL =
+      opts.endSessionURL ??
+      (() => {
+        return `/api/v1/auth/end?frontend_protocol=${window.location.protocol.slice(0, -1)}&frontend_host=${window.location.host}`;
+      });
+    this._errorSessionURL = opts.errorSessionURL ?? "/error";
+    this._clearSessionURL = opts.clearSessionURL ?? "/clear";
+    this._expiresQueryKey = opts.expiresQueryKey ?? "session_expires";
+    this._checkExpires = opts.checkExpires ?? true;
+    this._tokenGetter = opts.tokenGetter;
   }
 
-  async function refetchAfterRefreshFlow<
+  get startSessionURL() {
+    if (typeof this._startSessionURL == "function") {
+      return this._startSessionURL();
+    }
+    return this._startSessionURL;
+  }
+
+  get endSessionURL() {
+    if (typeof this._endSessionURL == "function") {
+      return this._endSessionURL();
+    }
+    return this._endSessionURL;
+  }
+
+  get popupSessionURL() {
+    if (typeof this._popup.startRefreshURL == "function") {
+      return this._popup.startRefreshURL();
+    }
+    return this._popup.startRefreshURL;
+  }
+
+  get expires() {
+    const expires = localStorage.getItem(OAUTH_EXPIRES_STORAGE_NAME);
+    if (!expires || Number.isNaN(+expires)) return 0;
+    return +expires;
+  }
+
+  get expired() {
+    return !this.checkExpires(this.expires);
+  }
+
+  get token() {
+    return localStorage.getItem(OAUTH_TOKEN_STORAGE_NAME);
+  }
+
+  register = async () => {
+    if (this.path === this._clearSessionURL) {
+      this.clearStorage();
+      window.location.replace("/");
+      return false;
+    } else if (this.path === this._errorSessionURL) {
+      this.clearStorage();
+      return true;
+    }
+    const queries = extractQueries();
+    const expires = this.getExpires(queries[this._expiresQueryKey]?.[0]);
+    if (queries[this._expiresQueryKey]?.[0]) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete(this._expiresQueryKey);
+      history.replaceState(null, "", url.toString());
+    }
+    if (this._tokenGetter) {
+      const tokenRefreshed = await this.refreshToken();
+      if (!tokenRefreshed) {
+        if (!this.expired) {
+          window.location.replace(this._errorSessionURL);
+          return false;
+        }
+        window.location.replace(this.startSessionURL);
+        return false;
+      }
+    } else if (this.checkExpires(expires)) {
+      localStorage.setItem(OAUTH_EXPIRES_STORAGE_NAME, String(expires));
+    }
+    if (this._checkExpires && this.expired) {
+      window.location.replace(this.startSessionURL);
+      return false;
+    }
+    const popup = queries[this._popup.queryKey]?.[0];
+    if (popup) {
+      const channel = new BroadcastChannel(popup);
+      channel.postMessage(1);
+      channel.close();
+      window.close();
+      return false;
+    }
+    return true;
+  };
+
+  refetch = async <
     IncomingApi,
     Incoming = IncomingApi,
     Outcoming = unknown,
     OutcomingApi = Outcoming,
   >(
-    request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
-  ): Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>> {
-    if (isRefreshing()) {
-      await beforeHandlerSetToken(request);
-      return request;
+    req: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+  ): Promise<RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>> => {
+    if (!this._refreshing.opened) {
+      await this._refreshing.wait();
+      return req;
     }
-    processing = true;
-    if (refreshToken && tokenRequest) {
-      const tokenInfo = await startRefreshFlow();
-      if (tokenInfo == undefined) {
-        if (subWindow) {
-          await startLoginFlowInSubWindow();
-        } else {
-          await startLoginFlow();
-        }
-        processing = false;
-        await beforeHandlerSetToken(request);
-        return request;
+    this._refreshing.lock();
+    if (this._tokenGetter) {
+      const refreshed = await this.refreshToken();
+      if (refreshed) {
+        this._refreshing.unlock();
+        return req;
       }
-      processing = false;
-      await beforeHandlerSetToken(request);
-      return request;
     }
-    if (subWindow) {
-      await startLoginFlowInSubWindow();
-    } else {
-      await startLoginFlow();
+    if (this._popup.enable) {
+      const refreshed = await this.startPopup();
+      if (refreshed) {
+        this._refreshing.unlock();
+        return req;
+      }
     }
-    processing = false;
-    await beforeHandlerSetToken(request);
-    return request;
-  }
+    window.location.replace(this.startSessionURL);
+    await this._refreshing.wait();
+    return req;
+  };
 
-  function isServicePageCheck() {
-    return [errorPageUrl, clearPageUrl, logoutPageUrl].some(
-      (u) => document.location.pathname === u,
-    );
-  }
+  newCheckExpiresHandler = () => {
+    return async <
+      IncomingApi,
+      Incoming = IncomingApi,
+      Outcoming = unknown,
+      OutcomingApi = Outcoming,
+    >(
+      req: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+    ): Promise<void> => {
+      await this._refreshing.wait();
+      if (!this.expired) {
+        return;
+      }
+      await this.refetch(req);
+    };
+  };
 
-  async function startLoginFlowInSubWindow() {
-    refreshing = true;
-    let waiting = true;
-    const url = new URL(
-      typeof refreshTokenWindowUrl === "function" ? refreshTokenWindowUrl() : refreshTokenWindowUrl,
-    );
-    // added only refresh tag to autoclose window after flow
-    url.searchParams.append(OAUTH_REFRESH_QUERY, "true");
+  newTokenHandler = (always: boolean = false) => {
+    return async <
+      IncomingApi,
+      Incoming = IncomingApi,
+      Outcoming = unknown,
+      OutcomingApi = Outcoming,
+    >(
+      req: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>,
+    ): Promise<void> => {
+      await this._refreshing.wait();
+      const token = req.token ?? this.token;
+      if (token && (always || !this.isSameOrigin(req.path))) {
+        req.headers = {
+          ...req.headers,
+          Authorization: `Bearer ${token}`,
+        };
+      }
+    };
+  };
 
-    // try open window with both of action
-    let windowInstance = window.open(
-      url.toString(),
+  protected startPopup = async (): Promise<boolean> => {
+    if (!this._popup.enable) return false;
+    const startURL = new URL(this.popupSessionURL, window.location.origin);
+    const id = randomString(10);
+    startURL.searchParams.append(this._popup.queryKey, id);
+    const w = Math.round(window.screen.availWidth * 0.5);
+    const h = Math.round(window.screen.availHeight * 0.5);
+    const left = Math.round((window.screen.availWidth - w) / 2);
+    const top = Math.round((window.screen.availHeight - h) / 2);
+    let popup = window.open(
+      startURL.toString(),
       "_blank",
-      "width=800,height=600,left=100,top=100",
+      `width=${w},height=${h},left=${left},top=${top}`,
     );
-    windowInstance ??= window.open(url.toString(), "_blank");
-
-    if (windowInstance) {
-      const channel = new BroadcastChannel(OAUTH_REFRESH_QUERY);
-      const windowCloseObserver = setInterval(() => {
-        if (windowInstance.closed) {
-          if (waiting) {
-            waiting = false;
-            channel.close();
-            clearInterval(windowCloseObserver);
-          }
-        }
-      }, closeObserveSubWindowInterval);
-      channel.onmessage = () => {
-        if (waiting) {
-          waiting = false;
+    popup ??= window.open(startURL.toString(), "_blank");
+    if (!popup) {
+      return false;
+    }
+    const promise = new Promise<boolean>((resolve) => {
+      const channel = new BroadcastChannel(id);
+      const observer = setInterval(() => {
+        if (popup.closed) {
+          resolve(false);
+          clearInterval(observer);
           channel.close();
-          clearInterval(windowCloseObserver);
         }
+      }, this._popup.observeInterval);
+      channel.onmessage = function onmessage() {
+        resolve(true);
+        clearInterval(observer);
+        channel.close();
+        popup.close();
       };
       setTimeout(() => {
-        if (waiting) {
-          waiting = false;
-          channel.close();
-          clearInterval(windowCloseObserver);
-        }
-        if (windowInstance && !windowInstance.closed) {
-          windowInstance.close();
-        }
-      }, waitSubWindow);
-    } else {
-      if ("onSubWindowOpenError" in opts) opts.onSubWindowOpenError?.();
-      else {
-        await startLoginFlow();
-      }
-      waiting = false;
-
-      return;
-    }
-
-    await waitUntil(() => waiting);
-    refreshing = false;
-  }
-
-  // Trigger an oauth flow through some proxy server
-  async function startLoginFlow(
-    loginUrlArg: (() => string) | string | undefined = loginUrl,
-    delay: number = 2000,
-  ) {
-    loginUrlArg ??= `/api/v1/auth?frontend_protocol=${window.location.protocol.replace(":", "")}&frontend_host=${window.location.host}&comeback_path=${window.location.pathname}${encodeURIComponent(window.location.search)}`;
-    window.location.replace(typeof loginUrlArg === "function" ? loginUrlArg() : loginUrlArg);
-    await wait(delay);
-    return null;
-  }
-
-  // Trigger an oauth flow through some proxy server
-  async function startLogoutFlow(
-    logoutUrlArg: (() => string) | string | undefined = logoutUrl,
-    delay: number = 2000,
-  ) {
-    logoutUrlArg ??= `/api/v1/auth/logout?frontend_protocol=${window.location.protocol.replace(":", "")}&frontend_host=${window.location.host}`;
-    window.location.replace(typeof logoutUrlArg === "function" ? logoutUrlArg() : logoutUrlArg);
-    await wait(delay);
-    return null;
-  }
-
-  async function startRefreshFlow() {
-    refreshing = true;
-    const tokenInfo = await tokenRequest?.();
-    refreshing = false;
-    if (tokenInfo) {
-      localStorage.setItem(tokenStorageName, tokenInfo.token);
-      if (tokenInfo.expires !== 0) {
-        tokenInfo.expires = getExpiresDate(tokenInfo.expires);
-        localStorage.setItem(expiresTokenStorageName, String(tokenInfo.expires));
-      }
-    }
-    return tokenInfo;
-  }
-
-  // Processing an oauth flow: extract expires, get token, close sub windows, check if logout/clear/error url
-  async function register(): Promise<boolean> {
-    if (window.location.pathname === logoutPageUrl) {
-      await startLogoutFlow();
-      return false;
-    }
-    if (window.location.pathname === clearPageUrl) {
-      localStorage.removeItem(expiresTokenStorageName);
-      localStorage.removeItem(tokenStorageName);
-      window.location.replace(afterClearPageUrl);
-      return false;
-    }
-    if (window.location.pathname === errorPageUrl) {
-      localStorage.removeItem(expiresTokenStorageName);
-      localStorage.removeItem(tokenStorageName);
-      return false;
-    }
-
-    const queries = getQueryValues([expiresTokenQueryName, OAUTH_REFRESH_QUERY]);
-
-    const refreshQuery = queries?.[OAUTH_REFRESH_QUERY];
-    const expiresQuery = queries?.[expiresTokenQueryName];
-
-    /** Is OnlyRefresh window */
-    const isRefresh = isString(refreshQuery)
-      ? refreshQuery === "true"
-      : isArray(refreshQuery)
-        ? refreshQuery[refreshQuery.length - 1] === "true"
-        : false;
-    /** Expires token */
-    const expiresStr = isString(expiresQuery)
-      ? expiresQuery
-      : isArray(expiresQuery)
-        ? expiresQuery[expiresQuery.length - 1]
-        : null;
-    const expires = expiresStr ? getExpiresDate(+expiresStr) : null;
-
-    if (checkExpires(expires)) {
-      localStorage.setItem(expiresTokenStorageName, String(expires));
-      if (tokenRequest) {
-        const tokenInfo = await tokenRequest();
-        if (tokenInfo != undefined) {
-          localStorage.setItem(tokenStorageName, tokenInfo.token);
-        }
-      }
-
-      /** Close if OnlyRefresh window  */
-      if (isRefresh) {
-        const channel = new BroadcastChannel(OAUTH_REFRESH_QUERY);
-        channel.postMessage(true);
+        resolve(false);
+        clearInterval(observer);
         channel.close();
-        window.close();
-        return false;
-      }
-
-      /** Delete expires query without reload */
-      const url = new URL(window.location.href);
-      url.searchParams.delete(expiresTokenQueryName);
-      history.replaceState(null, "", url.toString());
-      return true;
-    }
-
-    return true;
-  }
-
-  async function beforeHandlerCheckExpires<
-    IncomingApi,
-    Incoming = IncomingApi,
-    Outcoming = unknown,
-    OutcomingApi = Outcoming,
-  >(request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>): Promise<void> {
-    if (isServicePageCheck()) return;
-    if (isRefreshing()) await waitUntil(() => isRefreshing());
-    const expires = localStorage.getItem(expiresTokenStorageName);
-    if (checkExpires(expires)) {
-      return;
-    }
-    await refetchAfterRefreshFlow(request);
-  }
-
-  async function beforeHandlerSetToken<
-    IncomingApi,
-    Incoming = IncomingApi,
-    Outcoming = unknown,
-    OutcomingApi = Outcoming,
-  >(request: RequestInterface<IncomingApi, Incoming, Outcoming, OutcomingApi>): Promise<void> {
-    if (isRefreshing()) await waitUntil(() => isRefreshing());
-    const token = request.token ?? localStorage.getItem(tokenStorageName);
-    const isSameOrigin =
-      request.path.includes(window.location.origin) || !startWith(request.path, "http");
-    if ((!isSameOrigin || forceSetToken) && token)
-      request.headers = {
-        ...request.headers,
-        Authorization: `Bearer ${token}`,
-      };
-  }
-
-  return {
-    startRefreshFlow,
-    startLoginFlowInSubWindow,
-    startLoginFlow,
-    startLogoutFlow,
-    refetchAfterRefreshFlow,
-    beforeHandlerSetToken,
-    beforeHandlerCheckExpires,
-    register,
-    get isServicePage() {
-      return isServicePageCheck();
-    },
-    get refreshing() {
-      return isRefreshing();
-    },
-    get token() {
-      return localStorage.getItem(tokenStorageName);
-    },
-    get expires() {
-      const expires = localStorage.getItem(expiresTokenStorageName);
-      return expires == undefined ? null : Number.isNaN(+expires) ? null : +expires;
-    },
-    get expired() {
-      const expiresStr = localStorage.getItem(expiresTokenStorageName);
-      const expires =
-        expiresStr == undefined ? null : Number.isNaN(+expiresStr) ? null : +expiresStr;
-      return expires == undefined ? true : Date.now() > expires;
-    },
+        popup.close();
+      }, this._popup.wait);
+    });
+    return promise;
   };
+
+  protected refreshToken = async (): Promise<boolean> => {
+    if (!this._tokenGetter) return false;
+    try {
+      const oauthToken = await this._tokenGetter();
+      if (!oauthToken) return false;
+      localStorage.setItem(
+        OAUTH_EXPIRES_STORAGE_NAME,
+        String(this.getExpires(String(oauthToken.expires))),
+      );
+      localStorage.setItem(OAUTH_TOKEN_STORAGE_NAME, oauthToken.token);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  protected isSameOrigin = (targetURL: string) => {
+    const current = new URL(window.location.origin);
+    const target = new URL(targetURL, window.location.origin);
+    return (
+      current.protocol === target.protocol &&
+      current.host === target.host &&
+      current.port === target.port
+    );
+  };
+
+  protected get path() {
+    return window.location.pathname;
+  }
+
+  protected clearStorage() {
+    localStorage.removeItem(OAUTH_TOKEN_STORAGE_NAME);
+    localStorage.removeItem(OAUTH_EXPIRES_STORAGE_NAME);
+  }
+
+  protected getExpires(expiresRaw: string | undefined) {
+    if (!expiresRaw || Number.isNaN(+expiresRaw)) return 0;
+    return Date.now() + (+expiresRaw - 30) * 1000;
+  }
+
+  protected checkExpires(expires: number) {
+    return Date.now() < expires;
+  }
 }
