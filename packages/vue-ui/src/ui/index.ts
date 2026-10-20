@@ -6,6 +6,7 @@ import VControl from "./Control.vue";
 import VDivider from "./Divider.vue";
 import VDrawer from "./Drawer.vue";
 import VDropDown from "./DropDown.vue";
+import VEditor from "./Editor.vue";
 import VEmpty from "./Empty.vue";
 import VFileDrop from "./FileDrop.vue";
 import VFlex from "./Flex.vue";
@@ -14,7 +15,6 @@ import VImport from "./Import.vue";
 import VInput from "./Input.vue";
 import VInputNumber from "./InputNumber.vue";
 import VLoader from "./Loader.vue";
-import VMarkdownEditor from "./MarkdownEditor.vue";
 import VMessage from "./Message.vue";
 import VModal from "./Modal.vue";
 import VNotification from "./Notification.vue";
@@ -116,7 +116,7 @@ export type { EmptyProps } from "./Empty.vue";
 export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pagination.vue";
 export type { LoaderProps, LoaderType } from "./Loader.vue";
 export type { ImportProps } from "./Import.vue";
-export type { MarkdownEditorProps } from "./MarkdownEditor.vue";
+export type { EditorProps } from "./Editor.vue";
 export type {
   ControlComponents,
   ControlProps,
@@ -169,7 +169,7 @@ export {
   VEmpty,
   VPagination,
   VLoader,
-  VMarkdownEditor,
+  VEditor,
   VControl,
   VColorPicker,
   VUserAvatar,

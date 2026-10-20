@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" style="font-size: 18px">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editor</title>
+  </head>
+  <body
+    style="
+      height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding-top: 20px;
+      padding: 20px 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    "
+  >
+    <div style="display: flex; gap: 10px; align-items: center; width: 100%">
+      <button class="state"></button>
+      <button class="replace">Вставить текст</button>
+      <button class="reset">Пересоздать редактор</button>
+      <button class="edit-mode"></button>
+      <button class="multi-mode"></button>
+      <select class="language">
+        <option value="markdown" selected>markdown</option>
+        <option value="json">json</option>
+      </select>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px">
+      <span>Переключить vim mode: Mod-Alt-v</span>
+      <span>Форматировать: Shift-Alt-F</span>
+    </div>
+    <div
+      id="root"
+      style="
+        margin-top: 20px;
+        border: 1px solid black;
+        overflow: auto;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      "
+    ></div>
+    <script type="module" src="/src/app/index.ts"></script>
+  </body>
+</html>

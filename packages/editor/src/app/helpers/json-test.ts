@@ -1,0 +1,4 @@
+export const JSON_TEST = `{"name":"Тестовый проект","version":"2.1.0","metadata":{"author":{"name":"Иван Петров","email":"ivan@example.com","contacts":{"telegram":"@ivan_p","phone":null}},"tags":["editor","codemirror","json","тест"],"created":"2026-10-20T12:00:00Z","isPublished":true,"rating":4.87,"downloads":15234},
+"features":[{"id":"folding","title":"Сворачивание блоков","enabled":true,"hotkeys":["Ctrl-Shift-[","Ctrl-Shift-]"]},{"id":"lint","title":"Подсветка ошибок","enabled":false,"hotkeys":[]},{"id":"autocomplete","title":"Автодополнение","enabled":true,"hotkeys":["Ctrl-Space"]}],
+"settings":{"theme":"dark","fontSize":14,"lineWrapping":true,"vim":{"enabled":false,"mappings":{"jk":"<Esc>"}},"multiCursor":{"enabled":true,"maxUsers":10}},
+"description":"Длинная строка с описанием возможностей редактора: подсветка синтаксиса, форматирование, автодополнение и валидация JSON прямо в браузере"}`;
