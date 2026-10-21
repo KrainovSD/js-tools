@@ -6,10 +6,7 @@ const DEV = process.env.NODE_ENV === "development";
 export default defineConfig([
   presets.configs.library({
     input: "./src/index.ts",
-    cjs: {
-      file: undefined,
-      dir: "./lib/cjs",
-    },
+    cjs: false,
     esm: true,
     singleton: false,
     compress: false,

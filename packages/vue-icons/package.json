@@ -14,8 +14,7 @@
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.cjs"
+      "import": "./lib/esm/index.js"
     }
   },
   "keywords": [

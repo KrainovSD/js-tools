@@ -35,11 +35,6 @@ export default defineConfig({
           format: "es",
           generatedCode: "es2015",
         },
-        {
-          dir: "./lib/cjs",
-          format: "cjs",
-          generatedCode: "es2015",
-        },
       ],
       plugins: [presets.plugins.externals({ includeDependencies: true }) as InputPluginOption],
     },

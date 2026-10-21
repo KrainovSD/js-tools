@@ -16,10 +16,5 @@
     "husky": "9.1.7",
     "turbo": "2.4.4"
   },
-  "pnpm": {
-    "overrides": {
-      "@krainovsd/editor": "link:./packages/editor"
-    }
-  },
   "packageManager": "pnpm@9.4.0"
 }
