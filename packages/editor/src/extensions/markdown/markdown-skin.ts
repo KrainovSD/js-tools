@@ -108,4 +108,31 @@ export const markdownSkin: Extension = EditorView.theme({
   [`.${CLASSES.mention}`]: {
     color: "var(--ksd-md-mention-color, color-mix(in srgb, currentColor 60%, #4da3ff))",
   },
+  [`.${CLASSES.table}`]: {
+    color: "var(--ksd-md-table-color, currentColor)",
+  },
+  [`.${CLASSES.tableEditor}`]: {
+    borderColor: "var(--ksd-md-table-border, color-mix(in srgb, currentColor 25%, transparent))",
+  },
+  [`.${CLASSES.tableEditor} th`]: {
+    background: "var(--ksd-md-table-header-bg, color-mix(in srgb, currentColor 7%, transparent))",
+    fontWeight: "var(--ksd-md-table-header-weight, 600)",
+    border:
+      "1px solid var(--ksd-md-table-border, color-mix(in srgb, currentColor 25%, transparent))",
+  },
+  [`.${CLASSES.tableEditor} td`]: {
+    border:
+      "1px solid var(--ksd-md-table-border, color-mix(in srgb, currentColor 25%, transparent))",
+  },
+  [`.${CLASSES.tableCell}`]: {
+    color: "var(--ksd-md-table-cell-color, currentColor)",
+  },
+  [`.${CLASSES.tableRowButton}, .${CLASSES.tableColButton}`]: {
+    color: "var(--ksd-md-table-button-color, currentColor)",
+    background: "var(--ksd-md-table-button-bg, color-mix(in srgb, currentColor 10%, transparent))",
+  },
+  [`.${CLASSES.tableRowButton}:hover, .${CLASSES.tableColButton}:hover`]: {
+    background:
+      "var(--ksd-md-table-button-hover, color-mix(in srgb, currentColor 20%, transparent))",
+  },
 });

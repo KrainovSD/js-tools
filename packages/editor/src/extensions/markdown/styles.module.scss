@@ -64,8 +64,6 @@
 }
 
 .list {
-  &.ordered {
-  }
   &.common {
     position: relative;
     visibility: hidden;
@@ -254,4 +252,74 @@
 
 .mention {
   font-weight: 700;
+}
+
+.table {
+  max-width: 100%;
+  padding: 0 2px 0 6px;
+  overflow: clip;
+
+  &__wrapper {
+    position: relative;
+    overflow-x: auto;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0 16px 16px 0;
+  }
+
+  &__editor {
+    border-collapse: collapse;
+    position: relative;
+  }
+
+  &__cell {
+    min-width: 3rem;
+    white-space: nowrap;
+    // min-height doesn't work for td
+    height: 1.5rem;
+    padding: 4px 8px;
+    vertical-align: top;
+    cursor: text;
+  }
+
+  &__cell-content {
+    display: contents;
+  }
+
+  &__row-btn,
+  &__col-btn {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__row-btn {
+    bottom: -15px;
+    left: 0;
+  }
+
+  &__col-btn {
+    top: 0;
+    right: -15px;
+  }
+
+  &:hover &__row-btn,
+  &:hover &__col-btn {
+    opacity: 0.4;
+  }
 }

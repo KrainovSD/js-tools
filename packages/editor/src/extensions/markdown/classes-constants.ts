@@ -31,4 +31,10 @@ export const CLASSES = {
   link: "ksd-cm-link",
   mention: "ksd-cm-mention",
   shortLink: "ksd-cm-short-link",
+  table: "ksd-cm-table",
+  tableWrapper: "ksd-cm-table-wrapper",
+  tableEditor: "ksd-cm-table-editor",
+  tableCell: "ksd-cm-table-cell",
+  tableRowButton: "ksd-cm-table-row-button",
+  tableColButton: "ksd-cm-table-col-button",
 };

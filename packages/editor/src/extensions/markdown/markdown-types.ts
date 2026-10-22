@@ -9,6 +9,7 @@ export type MarkdownOptions = {
   name?: "markdown";
   languages?: EditorLanguages[];
   imageSrcGetter?: (src: string) => string;
+  // tableMode?: TableMode;
 };
 
 export type GetDecorationOptions = {
@@ -42,4 +43,6 @@ export type MarkdownState = {
 
 export type MarkdownDecorationSettings = {
   imageSrcGetter?: (src: string) => string;
+  table?: boolean;
+  tablePlusButtons?: boolean;
 };

@@ -7,3 +7,4 @@ export * from "./is-range-overlap";
 export * from "./random-string";
 export * from "./save-dispatch";
 export * from "./overlap-mark";
+export * from "./normalize-link-url";

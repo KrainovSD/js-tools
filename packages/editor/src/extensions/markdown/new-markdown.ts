@@ -10,6 +10,7 @@ import { markdownParserPlugin } from "./markdown-parser";
 import { markdownSkin } from "./markdown-skin";
 import { markdownState } from "./markdown-state";
 import type { MarkdownOptions } from "./markdown-types";
+import { tableExtension } from "./table";
 
 const taglessStyles = styleTags(
   Object.fromEntries(
@@ -36,6 +37,7 @@ export function NewMarkdownLanguage(
     pasteLink,
     NewListRenumber(ySyncAnnotation),
     markdownDecorationPlugin({ ...markdownOptions }),
+    tableExtension("source"),
     keymap.of([boldKeymap, italicKeymap, linkKeymap, codeKeymap, todoKeymap]),
   ];
 }
