@@ -2,6 +2,7 @@ import type { LanguageDescription } from "@codemirror/language";
 import type { Range } from "@codemirror/state";
 import type { Decoration, EditorView } from "@codemirror/view";
 import type { SyntaxNodeRef } from "@lezer/common";
+import type Viewer from "viewerjs";
 
 export type EditorLanguages = LanguageDescription;
 
@@ -9,7 +10,10 @@ export type MarkdownOptions = {
   name?: "markdown";
   languages?: EditorLanguages[];
   imageSrcGetter?: (src: string) => string;
-  // tableMode?: TableMode;
+  imageFullscreen?: boolean;
+  imagePreviewSize?: number;
+  imageFullscreenRoot?: HTMLElement;
+  imageTransition?: boolean | Viewer.TransitionOptions;
 };
 
 export type GetDecorationOptions = {
@@ -43,6 +47,11 @@ export type MarkdownState = {
 
 export type MarkdownDecorationSettings = {
   imageSrcGetter?: (src: string) => string;
+  imageFullscreen?: boolean;
+  imagePreviewSize?: number;
+  imageFullscreenRoot?: HTMLElement;
+  imageTransition?: boolean | Viewer.TransitionOptions;
+  openImageFullscreen?: (view: EditorView, from: number) => Promise<void>;
   table?: boolean;
   tablePlusButtons?: boolean;
 };

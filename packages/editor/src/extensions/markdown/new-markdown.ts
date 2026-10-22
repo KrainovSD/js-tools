@@ -4,6 +4,7 @@ import { keymap } from "@codemirror/view";
 import { styleTags } from "@lezer/highlight";
 import type { MarkdownParser } from "@lezer/markdown";
 import { NewListRenumber } from "@/extensions/markdown/list";
+import { NewImageViewer } from "./image";
 import { boldKeymap, codeKeymap, italicKeymap, linkKeymap, pasteLink, todoKeymap } from "./keymaps";
 import { markdownDecorationPlugin } from "./markdown-decoration";
 import { markdownParserPlugin } from "./markdown-parser";
@@ -24,6 +25,12 @@ export function NewMarkdownLanguage(
   markdownOptions: MarkdownOptions | undefined,
   ySyncAnnotation: AnnotationType<unknown> | undefined,
 ): Extension[] {
+  const openImageFullscreen = NewImageViewer({
+    imageSrcGetter: markdownOptions?.imageSrcGetter,
+    imageFullscreenRoot: markdownOptions?.imageFullscreenRoot,
+    imageTransition: markdownOptions?.imageTransition,
+  });
+
   return [
     markdownState,
     markdownSkin,
@@ -36,7 +43,7 @@ export function NewMarkdownLanguage(
     }),
     pasteLink,
     NewListRenumber(ySyncAnnotation),
-    markdownDecorationPlugin({ ...markdownOptions }),
+    markdownDecorationPlugin({ ...markdownOptions, openImageFullscreen }),
     tableExtension("source"),
     keymap.of([boldKeymap, italicKeymap, linkKeymap, codeKeymap, todoKeymap]),
   ];

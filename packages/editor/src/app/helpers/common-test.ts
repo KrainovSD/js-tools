@@ -1,5 +1,11 @@
 export const COMMON_TEST = `# Заголовок для якорей
 
+## Изображение
+
+![test](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROHxYft1f_Ln_y_scKnh8-g5rLMmce7JKyPQ&s)
+![bird](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSbZ61dRVl5ylrNOs9vBEWnlNrpBrYkkYZI-kmTIJcH9XRb_BoVTWj-gg&s=10)
+![bird2](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmFMetdEEGAvN1cND66CqGJBCku5ML5jiJqNn8my-53CNTgLxeJZk2Sfg&s=10)
+
 ## Таблица
 
 | Заголовок | По центру | Вправо |
@@ -81,9 +87,7 @@ Setext-заголовок второго уровня
 - референсная ссылка: [текст по референсу][ref-demo]
 - **[жирная ссылка](https://example.com)** и *[курсивная ссылка](https://example.com)*
 
-## Изображение
 
-![test](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROHxYft1f_Ln_y_scKnh8-g5rLMmce7JKyPQ&s)
 
 ## Списки
 

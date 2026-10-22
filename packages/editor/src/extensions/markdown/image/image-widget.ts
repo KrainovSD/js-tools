@@ -1,16 +1,23 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { CLASSES } from "../classes-constants";
+import type { MarkdownDecorationSettings } from "../markdown-types";
 import styles from "../styles.module.scss";
 
 const IMAGE_NODES: Record<string, ImageContainerElement | undefined> = {};
 const INTERVAL_DELAY = 10000;
 const EXISTING_WIDGETS = new Set<string>();
+const DEFAULT_PREVIEW_SIZE = 150;
 let interval: NodeJS.Timeout | null = null;
 interface ImageContainerElement extends HTMLSpanElement {
   clearListeners?: () => void;
   destroy?: () => void;
   image?: HTMLImageElement;
 }
+
+export type ImageWidgetSettings = Pick<
+  MarkdownDecorationSettings,
+  "imageSrcGetter" | "imageFullscreen" | "imagePreviewSize" | "openImageFullscreen"
+>;
 
 export class ImageWidget extends WidgetType {
   constructor(
@@ -20,7 +27,7 @@ export class ImageWidget extends WidgetType {
     private to: number,
     private uniqueId: string,
     private fullLine: boolean,
-    private imageSrcGetter: ((src: string) => string) | undefined,
+    private settings: ImageWidgetSettings,
     private view: EditorView,
   ) {
     super();
@@ -31,7 +38,11 @@ export class ImageWidget extends WidgetType {
   }
 
   get src() {
-    return this.imageSrcGetter ? this.imageSrcGetter(this.link) : this.link;
+    return this.settings.imageSrcGetter ? this.settings.imageSrcGetter(this.link) : this.link;
+  }
+
+  get previewSize() {
+    return this.settings.imagePreviewSize ?? DEFAULT_PREVIEW_SIZE;
   }
 
   eq(widget: ImageWidget): boolean {
@@ -51,7 +62,7 @@ export class ImageWidget extends WidgetType {
     this.from = widget.from;
     this.to = widget.to;
 
-    this.registerListeners(image);
+    this.registerListeners(container);
     IMAGE_NODES[this.key] = container;
     EXISTING_WIDGETS.add(this.key);
 
@@ -80,7 +91,7 @@ export class ImageWidget extends WidgetType {
     image.classList.add(styles.image, CLASSES.image);
     image.alt = this.text;
     image.src = this.src;
-    image.style.maxWidth = "100%";
+    this.applyPreviewStyles(image);
 
     container = document.createElement("span") as ImageContainerElement;
     container.appendChild(image);
@@ -102,20 +113,28 @@ export class ImageWidget extends WidgetType {
     EXISTING_WIDGETS.delete(this.key);
   }
 
-  registerListeners(image: ImageContainerElement) {
-    image.clearListeners?.();
+  applyPreviewStyles(image: HTMLImageElement) {
+    image.style.maxWidth = "100%";
+    image.style.height = `${this.previewSize}px`;
+    image.style.width = "auto";
+    image.style.objectFit = "contain";
+    if (this.settings.imageFullscreen) image.style.cursor = "zoom-in";
+  }
+
+  registerListeners(element: ImageContainerElement) {
+    element.clearListeners?.();
     const abortController = new AbortController();
-    image.addEventListener(
+    element.addEventListener(
       "mousedown",
-      (event) => handleClick(this.view, this.link, this.from, this.to, event),
+      (event) => handleClick(this.view, this.link, this.from, this.to, event, this.settings),
       { signal: abortController.signal },
     );
-    image.clearListeners = () => {
+    element.clearListeners = () => {
       abortController.abort();
     };
-    image.destroy = () => {
-      image.clearListeners?.();
-      image.remove();
+    element.destroy = () => {
+      element.clearListeners?.();
+      element.remove();
     };
   }
 }
@@ -140,11 +159,18 @@ function handleClick(
   from: number,
   to: number,
   event: MouseEvent,
+  settings: ImageWidgetSettings,
 ) {
-  if (event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) {
+  if (!view) return;
+  const contentEditable = view.contentDOM.getAttribute("contenteditable");
+  const isReadonly = !contentEditable || contentEditable === "false";
+  const isViewerClick = settings.imageFullscreen && (isReadonly || event.ctrlKey);
+  if (isViewerClick && settings.openImageFullscreen) {
+    event.stopPropagation();
+    event.preventDefault();
+    void settings.openImageFullscreen(view, from);
     return;
   }
-  if (!view) return;
   event.stopPropagation();
   event.preventDefault();
   const content = view.state.doc.sliceString(from, to);

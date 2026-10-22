@@ -1,5 +1,7 @@
 import { languages } from "@codemirror/language-data";
 import { vsCodeDark } from "@fsegurai/codemirror-theme-vscode-dark";
+import type Viewer from "viewerjs";
+import type { MarkdownOptions } from "@/extensions/markdown";
 import { Editor, type MultiCursorOptions } from "@/module";
 import "./global.css";
 import {
@@ -48,7 +50,25 @@ async function initEditor() {
     multiCursor,
     language: {
       name: language,
-      ...(language === "markdown" ? { languages, imageSrcGetter: (url) => url } : {}),
+      ...(language === "markdown"
+        ? ({
+            languages,
+            imageSrcGetter: (url) => url,
+            imageFullscreen: true,
+            imagePreviewSize: 150,
+            imageTransition: {
+              zoom: true,
+              move: true,
+              tooltip: true,
+              hide: false,
+              play: false,
+              view: false,
+              rotate: false,
+              scale: false,
+              show: false,
+            },
+          } as MarkdownOptions)
+        : {}),
     },
     formatOnOpen: true,
     initialText:
@@ -116,7 +136,13 @@ async function initEditor() {
       void editor
         .setLanguage({
           name: next,
-          ...(next === "markdown" ? { languages, imageSrcGetter: (url) => url } : {}),
+          ...(next === "markdown"
+            ? {
+                languages,
+                imageSrcGetter: (url) => url,
+                imageFullscreen: true,
+              }
+            : {}),
         })
         .then(() => {
           language = next as "markdown" | "json";
