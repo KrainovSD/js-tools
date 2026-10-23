@@ -3,16 +3,14 @@ import type { AnnotationType, Extension } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
 import { styleTags } from "@lezer/highlight";
 import type { MarkdownParser } from "@lezer/markdown";
-import { NewListRenumber } from "@/extensions/markdown/list";
-import { NewImageViewer } from "./image";
-import {
-  OnPasteLink,
-  boldKeymap,
-  codeKeymap,
-  italicKeymap,
-  linkKeymap,
-  todoKeymap,
-} from "./keymaps";
+import { NewListRenumber } from "@/extensions/markdown/list/list-renumber";
+import { NewImageViewer } from "./image/image-viewer";
+import { boldKeymap } from "./keymaps/bold-key-map";
+import { codeKeymap } from "./keymaps/code-key-map";
+import { italicKeymap } from "./keymaps/italic-key-map";
+import { linkKeymap } from "./keymaps/link-key-map";
+import { OnPasteLink } from "./keymaps/paste-link";
+import { todoKeymap } from "./keymaps/todo-key-map";
 import { type MarkdownOptions } from "./markdown-model";
 import { markdownParserPlugin } from "./markdown-parser";
 import { Skin } from "./markdown-skin";

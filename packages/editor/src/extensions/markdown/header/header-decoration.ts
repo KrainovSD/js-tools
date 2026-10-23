@@ -1,26 +1,11 @@
-import type { EditorState } from "@codemirror/state";
 import { Decoration } from "@codemirror/view";
-import type { SyntaxNodeRef } from "@lezer/common";
 import clsx from "clsx";
 import { utils } from "@/lib";
-import { getHeaderId } from "@/lib/utils";
 import { CLASSES } from "../classes-constants";
 import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
 import styles from "../styles.module.scss";
-
-export const NAME_OF_HEADER = "ATXHeading";
-export const NAME_OF_HEADER_UNDER = "SetextHeading";
-export const NAME_OF_HEADER_MARK = "HeaderMark";
-
-export type HeaderEntry = {
-  lineStart: number;
-  from: number;
-  to: number;
-  id: string;
-  slug: string;
-  level: number;
-};
+import { NAME_OF_HEADER_MARK } from "./header-model";
 
 export function fillATXHeadingContentDecorations(opts: ContentDecorationOptions) {
   const { view, node } = opts;
@@ -28,7 +13,7 @@ export function fillATXHeadingContentDecorations(opts: ContentDecorationOptions)
   if (!header) {
     return;
   }
-  // if (view.state.doc.sliceString(node.from + +level).charCodeAt(0) !== 32) return;
+  if (view.state.doc.sliceString(node.from + header.level).charCodeAt(0) !== 32) return;
   opts.decorations.push(
     Decoration.line({
       class: clsx(
@@ -89,45 +74,4 @@ export function fillSetextHeadingSelectionDecorations(opts: SelectionDecorationO
   ) {
     decorations.push(Decoration.replace({}).range(lineMark.from, lineMark.to));
   }
-}
-
-export function parseHeader(
-  state: EditorState,
-  node: SyntaxNodeRef,
-  slugs: Map<string, number>,
-): HeaderEntry | undefined {
-  const mark = node.node.getChild(NAME_OF_HEADER_MARK);
-  if (!mark) {
-    return;
-  }
-  const slug = getHeaderId(state.doc.sliceString(mark.to, state.doc.lineAt(node.from).to).trim());
-  const index = slugs.get(slug) ?? 0;
-  slugs.set(slug, index + 1);
-  return {
-    lineStart: state.doc.lineAt(node.from).from,
-    from: node.from,
-    to: node.to,
-    id: index > 0 ? `${slug}-${index}` : slug,
-    slug,
-    level: Number(node.name.slice(NAME_OF_HEADER.length)),
-  };
-}
-
-export function parseSetextHeader(
-  state: EditorState,
-  node: SyntaxNodeRef,
-  slugs: Map<string, number>,
-): HeaderEntry {
-  const textLine = state.doc.lineAt(node.from);
-  const slug = getHeaderId(state.doc.sliceString(textLine.from, textLine.to).trim());
-  const index = slugs.get(slug) ?? 0;
-  slugs.set(slug, index + 1);
-  return {
-    lineStart: state.doc.lineAt(node.from).from,
-    from: node.from,
-    to: node.to,
-    id: index > 0 ? `${slug}-${index}` : slug,
-    slug,
-    level: Number(node.name.slice(NAME_OF_HEADER_UNDER.length)),
-  };
 }

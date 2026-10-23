@@ -1,6 +1,5 @@
 import type { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
-import { getTreeIndex } from "../markdown-state";
 import {
   MIN_COLUMN_WIDTH,
   NAME_OF_TABLE_CELL,
@@ -145,10 +144,6 @@ function collectRowCells(state: EditorState, rowNode: SyntaxNode, rowIndex: numb
   }
 
   return { cells, lineTo: line.to };
-}
-
-export function getTableAt(state: EditorState, pos: number): TableModel | undefined {
-  return getTreeIndex(state).tables.find((table) => table.from <= pos && pos <= table.to);
 }
 
 export function modelToMatrix(model: TableModel): TableMatrix {

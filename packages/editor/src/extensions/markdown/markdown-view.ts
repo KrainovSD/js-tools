@@ -7,33 +7,41 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
-import { fillBlockquoteContentDecorations, fillBlockquoteSelectionDecorations } from "./blockquote";
-import { fillBoldContentDecorations, fillBoldSelectionDecorations } from "./bold";
+import {
+  fillBlockquoteContentDecorations,
+  fillBlockquoteSelectionDecorations,
+} from "./blockquote/blockquote-decoration";
+import { fillBoldContentDecorations, fillBoldSelectionDecorations } from "./bold/bold-decoration";
 import {
   fillCodeBlockContentDecorations,
   fillFencedCodeSelectionDecorations,
   fillInlineCodeSelectionDecorations,
-} from "./code";
+} from "./code/code-decoration";
 import {
   fillATXHeadingContentDecorations,
   fillATXHeadingSelectionDecorations,
   fillSetextHeadingContentDecorations,
   fillSetextHeadingSelectionDecorations,
-} from "./header";
-import { fillHorizontalSelectionDecorations } from "./horizontal";
+} from "./header/header-decoration";
+import { fillHorizontalSelectionDecorations } from "./horizontal/horizontal-decoration";
 import {
   fillImageContentDecorations,
   fillImageSelectionDecorations,
 } from "./image/image-decoration";
-import { fillItalicContentDecorations, fillItalicSelectionDecorations } from "./italic";
+import {
+  fillItalicContentDecorations,
+  fillItalicSelectionDecorations,
+} from "./italic/italic-decoration";
 import {
   fillAutolinkSelectionDecorations,
-  fillLinkSelectionDecorations,
-  fillShortLinkSelectionDecorations,
   fillURLContentDecorations,
   fillURLSelectionDecorations,
-} from "./link";
-import { fillListMarkSelectionDecorations } from "./list";
+} from "./link/auto-link-decoration";
+import {
+  fillLinkSelectionDecorations,
+  fillShortLinkSelectionDecorations,
+} from "./link/link-decoration";
+import { fillListMarkSelectionDecorations } from "./list/list-decoration";
 import type { MarkdownDecorationSettings } from "./markdown-model";
 import {
   fillMentionContentDecorations,
@@ -42,9 +50,12 @@ import {
 import {
   fillStrikeThroughContentDecorations,
   fillStrikeThroughSelectionDecorations,
-} from "./strike-through";
-import { fillTodoSelectionDecorations } from "./todo";
-import { fillUnderlineContentDecorations, fillUnderlineSelectionDecorations } from "./underline";
+} from "./strike-through/strike-through-decoration";
+import { fillTodoSelectionDecorations } from "./todo/todo-decoration";
+import {
+  fillUnderlineContentDecorations,
+  fillUnderlineSelectionDecorations,
+} from "./underline/underline-decoration";
 
 const ContentDecorationFns = {
   StrongEmphasis: fillBoldContentDecorations,

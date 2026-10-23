@@ -3,9 +3,9 @@ import type { EditorState, Range } from "@codemirror/state";
 import type { Decoration, DecorationSet, EditorView } from "@codemirror/view";
 import type { SyntaxNodeRef } from "@lezer/common";
 import type Viewer from "viewerjs";
-import type { HeaderEntry } from "./header";
-import type { ImageEntry } from "./image";
-import type { TableModel } from "./table";
+import type { HeaderEntry } from "./header/header-model";
+import type { ImageEntry } from "./image/image-model";
+import type { TableModel } from "./table/table-model";
 
 export type EditorLanguages = LanguageDescription;
 export type MarkdownOptions = {

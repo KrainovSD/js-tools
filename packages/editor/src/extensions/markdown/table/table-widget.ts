@@ -8,10 +8,11 @@ import { CLASSES } from "../classes-constants";
 import { NAME_OF_INLINE_CODE } from "../code/code-decoration";
 import { NAME_OF_ITALIC } from "../italic/italic-decoration";
 import { NAME_OF_AUTO_LINK, NAME_OF_LINK, NAME_OF_URL } from "../link/link-model";
+import { getTreeIndex } from "../markdown-lib";
 import { NAME_OF_STRIKE_THROUGH } from "../strike-through/strike-through-decoration";
 import styles from "../styles.module.scss";
 import { NAME_OF_UNDERLINE } from "../underline/underline-model";
-import { getTableAt, matrixToSource, modelToMatrix, rowSource, withExtraColumn } from "./table-lib";
+import { matrixToSource, modelToMatrix, rowSource, withExtraColumn } from "./table-lib";
 import type { TableCellModel, TableModel } from "./table-model";
 
 export class TableWidget extends WidgetType {
@@ -213,7 +214,10 @@ export class TableWidget extends WidgetType {
 
   private getFreshModel(view: EditorView): TableModel {
     if (!this.dom) return this.model;
-    const fresh = getTableAt(view.state, view.posAtDOM(this.dom));
+    const pos = view.posAtDOM(this.dom);
+    const fresh = getTreeIndex(view.state).tables.find(
+      (table) => table.from <= pos && pos <= table.to,
+    );
     return fresh ?? this.model;
   }
 }
