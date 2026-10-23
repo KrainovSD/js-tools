@@ -1,47 +1,25 @@
+import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type {
-  DecorationPlugin,
-  GetDecorationOptions,
-  GetSelectionDecorationOptions,
-} from "../markdown-types";
+import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
 import styles from "../styles.module.scss";
-import { NAME_OF_MENTION } from "./mention-constants";
 
-function getMentionDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== NAME_OF_MENTION) {
-    return;
-  }
-
-  decorations.push(
-    utils.getMarkDecoration({
-      style: clsx(styles.mention, CLASSES.mention),
-      range: [node.from, node.to],
-    }),
+export function fillMentionContentDecorations(opts: ContentDecorationOptions) {
+  opts.decorations.push(
+    Decoration.mark({
+      class: clsx(styles.mention, CLASSES.mention),
+    }).range(opts.node.from, opts.node.to),
   );
 }
 
-function getMentionSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_MENTION) {
-    return;
-  }
-
+export function fillMentionSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
-    decorations.push(utils.getHideDecoration({ range: [node.from, node.from + 1] }));
+    decorations.push(Decoration.replace({}).range(node.from, node.from + 1));
   }
 }
-
-export const mentionDecorationPlugin: DecorationPlugin = {
-  decorations: [getMentionDecorations],
-  selectionDecorations: [getMentionSelectionDecorations],
-};

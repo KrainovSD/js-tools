@@ -3,7 +3,7 @@ import {
   CODE_OF_UNDERLINE_MARK,
   NAME_OF_UNDERLINE,
   NAME_OF_UNDERLINE_MARK,
-} from "./underline-constants";
+} from "./underline-model";
 
 const UNDERLINE_DELIMITER = {
   resolve: NAME_OF_UNDERLINE,

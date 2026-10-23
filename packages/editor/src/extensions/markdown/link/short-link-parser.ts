@@ -6,7 +6,7 @@ import {
   CODE_OF_START_SHORT_LINK,
   NAME_OF_SHORT_LINK,
   NAME_OF_SHORT_LINK_MARK,
-} from "./short-link-constants";
+} from "./link-model";
 
 export const shortLinkParser: MarkdownConfig = {
   defineNodes: [{ name: NAME_OF_SHORT_LINK }, { name: NAME_OF_SHORT_LINK_MARK }],

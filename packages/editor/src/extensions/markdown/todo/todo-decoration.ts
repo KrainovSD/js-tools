@@ -1,56 +1,45 @@
+import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
+import type { SelectionDecorationOptions } from "../markdown-model";
 import styles from "../styles.module.scss";
-import { LIST_OF_TODO_MARKS, NAME_OF_LIST_MARK, NAME_OF_TODO } from "./todo-constants";
 import { TodoWidget } from "./todo-widget";
 
-function getTodoSelectionDecoration({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_TODO) return;
+const NAME_OF_LIST_MARK = "ListMark";
+const LIST_OF_TODO_MARKS = new Set([120, 1093]); // x
 
+export function fillTodoSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   const prevSibling = node.node.prevSibling;
   if (!prevSibling || prevSibling.name !== NAME_OF_LIST_MARK) return;
-
   const isChecked = LIST_OF_TODO_MARKS.has(
     view.state.doc.sliceString(node.from + 1, node.from + 2).codePointAt(0) ?? 0,
   );
 
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [prevSibling.from, node.from + 3])
   ) {
     decorations.push(
-      utils.getReplaceDecoration({
-        range: [node.from, node.from + 3],
+      Decoration.replace({
         widget: new TodoWidget(isChecked, node.from + 1),
-      }),
+      }).range(node.from, node.from + 3),
     );
   }
 
   if (isChecked) {
     const line = view.lineBlockAt(node.from);
-
     if (
-      forceActive ||
+      readonly ||
       !view.hasFocus ||
       !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
     )
       decorations.push(
-        utils.getMarkDecoration({
-          style: clsx(styles.todo__checked, CLASSES.todoChecked),
-          range: [node.from + 4, node.to],
-        }),
+        Decoration.mark({
+          class: clsx(styles.todo__checked, CLASSES.todoChecked),
+        }).range(node.from + 4, node.to),
       );
   }
 }
-
-export const todoDecorationPlugin: DecorationPlugin = {
-  selectionDecorations: [getTodoSelectionDecoration],
-};

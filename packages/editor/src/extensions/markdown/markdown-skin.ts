@@ -2,7 +2,7 @@ import type { Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 import { CLASSES } from "./classes-constants";
 
-export const markdownSkin: Extension = EditorView.theme({
+export const Skin: Extension = EditorView.theme({
   [`.${CLASSES.code}`]: {
     color: "var(--ksd-md-code-color, currentColor)",
     background: "var(--ksd-md-code-bg, color-mix(in srgb, currentColor 8%, transparent))",

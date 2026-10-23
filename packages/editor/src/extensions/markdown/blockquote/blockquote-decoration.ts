@@ -1,24 +1,16 @@
+import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type {
-  DecorationPlugin,
-  GetDecorationOptions,
-  GetSelectionDecorationOptions,
-} from "../markdown-types";
+import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
 import styles from "../styles.module.scss";
-import {
-  CODE_OF_BLOCKQUOTE_MARK,
-  CODE_OF_SPACE,
-  NAME_OF_BLOCKQUOTE_MARK,
-} from "./blockquote-constants";
 import { BlockquoteWidget } from "./blockquote-widget";
 
-function getBlockquoteDecorations({ decorations, node, view }: GetDecorationOptions) {
-  if (node.name !== NAME_OF_BLOCKQUOTE_MARK) {
-    return;
-  }
+const CODE_OF_SPACE = " ".codePointAt(0);
+const CODE_OF_BLOCKQUOTE_MARK = 62; // >
 
+export function fillBlockquoteContentDecorations(opts: ContentDecorationOptions) {
+  const { view, node, decorations } = opts;
   const line = view.lineBlockAt(node.from);
   let isInner = false;
 
@@ -47,24 +39,15 @@ function getBlockquoteDecorations({ decorations, node, view }: GetDecorationOpti
 
   if (!isInner) {
     decorations.push(
-      utils.getLineDecoration({
-        style: clsx(styles.blockquote, CLASSES.blockquote),
-        range: [line.from],
-      }),
+      Decoration.line({
+        class: clsx(styles.blockquote, CLASSES.blockquote),
+      }).range(line.from),
     );
   }
 }
 
-function getBlockquoteSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_BLOCKQUOTE_MARK) {
-    return;
-  }
-
+export function fillBlockquoteSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   const line = view.lineBlockAt(node.from);
   let isInner = false;
   let isDeepInner = false;
@@ -98,22 +81,18 @@ function getBlockquoteSelectionDecorations({
   }
 
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
   ) {
-    if (!isInner) decorations.push(utils.getHideDecoration({ range: [node.from, node.to] }));
-    else
+    if (!isInner) {
+      decorations.push(Decoration.replace({}).range(node.from, node.to));
+    } else {
       decorations.push(
-        utils.getReplaceDecoration({
+        Decoration.replace({
           widget: new BlockquoteWidget(isDeepInner),
-          range: [node.from, node.to],
-        }),
+        }).range(node.from, node.to),
       );
+    }
   }
 }
-
-export const blockquoteDecorationPlugin: DecorationPlugin = {
-  decorations: [getBlockquoteDecorations],
-  selectionDecorations: [getBlockquoteSelectionDecorations],
-};

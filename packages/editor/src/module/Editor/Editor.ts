@@ -18,7 +18,6 @@ import {
   VimModeCompartment,
 } from "@/extensions/compartments";
 import { type LanguageFormatter, type LanguageOptions, NewLanguage } from "@/extensions/language";
-import { type TableMode, setTableModeEffect } from "@/extensions/markdown";
 import { NewVim, type VimGetter } from "@/extensions/vim";
 import { saveDispatch } from "@/lib/utils";
 import {
@@ -359,13 +358,6 @@ export class Editor {
       this.view.dispatch({
         effects: ThemeCompartment.reconfigure(theme),
       });
-    });
-  };
-
-  setTableMode = (mode: TableMode) => {
-    saveDispatch(() => {
-      if (!this.view) return;
-      this.view.dispatch({ effects: setTableModeEffect.of(mode) });
     });
   };
 

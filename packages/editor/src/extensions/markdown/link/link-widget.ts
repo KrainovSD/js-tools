@@ -1,9 +1,9 @@
 import { EditorView, WidgetType } from "@codemirror/view";
 import { getHeaderId, normalizeUrl } from "@/lib/utils";
 import { CLASSES } from "../classes-constants";
-import { getHeaderPositionById } from "../header/header-index";
+import { MarkdownState } from "../markdown-state";
 import styles from "../styles.module.scss";
-import { CODE_OF_ANCHOR } from "./link-constants";
+import { CODE_OF_ANCHOR } from "./link-model";
 
 const LINK_NODES: Record<string, AnchorElement | undefined> = {};
 
@@ -97,7 +97,10 @@ export class LinkWidget extends WidgetType {
 }
 
 function navigateToHeader(view: EditorView, link: string, from: number, to: number) {
-  const position = getHeaderPositionById(view.state, getHeaderId(link));
+  const position = view.state
+    .field(MarkdownState)
+    .getHeaders(view.state, true)
+    .find((h) => h.id === getHeaderId(link))?.lineStart;
   if (position == undefined) {
     view.dispatch({ selection: { anchor: from, head: to }, userEvent: "select" });
     view.focus();

@@ -1,6 +1,6 @@
 import type { EditorView } from "@codemirror/view";
-import type { MarkdownDecorationSettings } from "../markdown-types";
-import { NewImageIndex } from "./image-lib";
+import type { MarkdownDecorationSettings } from "../markdown-model";
+import { MarkdownState } from "../markdown-state";
 
 export type ImageViewerSettings = Pick<
   MarkdownDecorationSettings,
@@ -8,12 +8,10 @@ export type ImageViewerSettings = Pick<
 >;
 
 export function NewImageViewer(settings: ImageViewerSettings) {
-  const getImageIndex = NewImageIndex();
   let opened = false;
-
   return async (view: EditorView, from: number): Promise<void> => {
     if (opened) return;
-    const entries = getImageIndex(view);
+    const entries = view.state.field(MarkdownState).getImages(view.state, true);
     const startIndex = entries.findIndex((entry) => from >= entry.from && from <= entry.to);
     if (startIndex === -1) return;
     opened = true;

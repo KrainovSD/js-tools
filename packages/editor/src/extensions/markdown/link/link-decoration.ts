@@ -1,118 +1,104 @@
+import { Decoration } from "@codemirror/view";
 import { utils } from "@/lib";
-import { markdownState } from "../markdown-state";
-import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
+import type { SelectionDecorationOptions } from "../markdown-model";
+import { MarkdownState } from "../markdown-state";
+import styles from "../styles.module.scss";
 import {
   CODE_OF_END_LINK_TEXT,
   CODE_OF_END_LINK_URL,
+  CODE_OF_LINK_LABEL_END,
   CODE_OF_START_LINK_TEXT,
   CODE_OF_START_LINK_URL,
-  NAME_OF_LINK,
-} from "./link-constants";
-import { getLinkLabelSelectionDecoration } from "./link-label-decoration";
+} from "./link-model";
 import { LinkWidget } from "./link-widget";
-import { NAME_OF_SHORT_LINK } from "./short-link-constants";
 
-function getLinkSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-  settings,
-}: GetSelectionDecorationOptions) {
-  const short = node.name === NAME_OF_SHORT_LINK;
-  if (!short && node.name !== NAME_OF_LINK) {
-    return;
+export function fillLinkSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
+  const content = view.state.doc.sliceString(node.from, node.to);
+  const textCoordinates = { from: -1, to: -1 };
+  const urlCoordinates = { from: -1, to: -1 };
+  let pos = -1;
+  while (pos < content.length) {
+    pos++;
+    const code = content.charCodeAt(pos);
+
+    if (textCoordinates.from === -1 && code === CODE_OF_START_LINK_TEXT)
+      textCoordinates.from = pos + 1;
+    else if (
+      urlCoordinates.from === -1 &&
+      textCoordinates.to !== -1 &&
+      code === CODE_OF_START_LINK_URL
+    )
+      urlCoordinates.from = pos + 1;
+    else if (
+      textCoordinates.from !== -1 &&
+      textCoordinates.to === -1 &&
+      code === CODE_OF_END_LINK_TEXT
+    )
+      textCoordinates.to = pos;
+    else if (
+      urlCoordinates.from !== -1 &&
+      urlCoordinates.to === -1 &&
+      code === CODE_OF_END_LINK_URL
+    )
+      urlCoordinates.to = pos;
+  }
+  if (urlCoordinates.from === -1 || urlCoordinates.to === -1) {
+    return void fillLinkLabelSelectionDecorations(opts);
   }
 
-  let text: string;
-  let url: string;
-  if (short) {
-    text = view.state.doc.sliceString(node.from + 2, node.to - 2);
-    url = text;
-  } else {
-    const content = view.state.doc.sliceString(node.from, node.to);
-    const textCoordinates = { from: -1, to: -1 };
-    const urlCoordinates = { from: -1, to: -1 };
-    let pos = -1;
-
-    while (pos < content.length) {
-      pos++;
-      const code = content.charCodeAt(pos);
-
-      if (textCoordinates.from === -1 && code === CODE_OF_START_LINK_TEXT)
-        textCoordinates.from = pos + 1;
-      else if (
-        urlCoordinates.from === -1 &&
-        textCoordinates.to !== -1 &&
-        code === CODE_OF_START_LINK_URL
-      )
-        urlCoordinates.from = pos + 1;
-      else if (
-        textCoordinates.from !== -1 &&
-        textCoordinates.to === -1 &&
-        code === CODE_OF_END_LINK_TEXT
-      )
-        textCoordinates.to = pos;
-      else if (
-        urlCoordinates.from !== -1 &&
-        urlCoordinates.to === -1 &&
-        code === CODE_OF_END_LINK_URL
-      )
-        urlCoordinates.to = pos;
-    }
-
-    if (urlCoordinates.from === -1 || urlCoordinates.to === -1)
-      return void getLinkLabelSelectionDecoration({
-        decorations,
-        forceActive,
-        node,
-        view,
-        settings,
-      });
-
-    text = content.substring(textCoordinates.from, textCoordinates.to);
-    url = content.substring(urlCoordinates.from, urlCoordinates.to);
-  }
-
-  const openedLink = view.state.field(markdownState).openedLink;
-  const uniqueId = view.state.field(markdownState).uniqueId;
-  const key = `${url}:${text}:${uniqueId}:${node.from}:${node.to}`;
-  const isOpened = openedLink && openedLink === key;
-
-  if (isOpened) {
-    return void decorations.push(
-      utils.getMarkDecoration({
-        range: [node.from, node.to],
-        attributes: {
-          "data-id": key,
-        },
-      }),
-    );
-  }
+  const text = content.substring(textCoordinates.from, textCoordinates.to);
+  const url = content.substring(urlCoordinates.from, urlCoordinates.to);
+  const uniqueId = view.state.field(MarkdownState).uniqueId;
 
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
     decorations.push(
-      utils.getReplaceDecoration({
-        range: [node.from, node.to],
-        widget: new LinkWidget(text, url, node.from, node.to, uniqueId, view, short),
-      }),
-    );
-  } else {
-    decorations.push(
-      utils.getMarkDecoration({
-        range: [node.from, node.to],
-        attributes: {
-          "data-id": key,
-        },
-      }),
+      Decoration.replace({
+        widget: new LinkWidget(text, url, node.from, node.to, uniqueId, view, false),
+      }).range(node.from, node.to),
     );
   }
 }
 
-export const linkDecorationPlugin: DecorationPlugin = {
-  selectionDecorations: [getLinkSelectionDecorations],
-};
+export function fillShortLinkSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
+  const text = view.state.doc.sliceString(node.from + 2, node.to - 2);
+  const url = text;
+  const uniqueId = view.state.field(MarkdownState).uniqueId;
+
+  if (
+    readonly ||
+    !view.hasFocus ||
+    !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
+  ) {
+    decorations.push(
+      Decoration.replace({
+        widget: new LinkWidget(text, url, node.from, node.to, uniqueId, view, true),
+      }).range(node.from, node.to),
+    );
+  }
+}
+
+function fillLinkLabelSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
+  if (view.state.doc.sliceString(node.to, node.to + 1).charCodeAt(0) !== CODE_OF_LINK_LABEL_END)
+    return;
+
+  if (
+    readonly ||
+    !view.hasFocus ||
+    !utils.isInRange(view.state.selection.ranges, [node.from, node.to + 1])
+  ) {
+    decorations.push(
+      Decoration.mark({
+        class: styles.link__label,
+      }).range(node.from, node.to + 1),
+    );
+    decorations.push(Decoration.replace({}).range(node.from, node.from + 1));
+    decorations.push(Decoration.replace({}).range(node.to - 1, node.to + 1));
+  }
+}

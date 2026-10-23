@@ -3,7 +3,7 @@ import { saveDispatch } from "@/lib/utils";
 
 const URL_LIKE = /^https?:\/\//i;
 
-export const pasteLink = EditorView.domEventHandlers({
+export const OnPasteLink = EditorView.domEventHandlers({
   paste: (event, view) => {
     if (!event.clipboardData) return false;
     const { main } = view.state.selection;

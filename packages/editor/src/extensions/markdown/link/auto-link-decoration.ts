@@ -1,28 +1,21 @@
+import { Decoration } from "@codemirror/view";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import { markdownState } from "../markdown-state";
-import type {
-  DecorationPlugin,
-  GetDecorationOptions,
-  GetSelectionDecorationOptions,
-} from "../markdown-types";
-import { NAME_OF_AUTO_LINK, NAME_OF_IMAGE, NAME_OF_LINK, NAME_OF_URL } from "./link-constants";
+import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import { MarkdownState } from "../markdown-state";
+import { NAME_OF_AUTO_LINK, NAME_OF_IMAGE, NAME_OF_LINK, NAME_OF_SHORT_LINK } from "./link-model";
 import { LinkWidget } from "./link-widget";
-import { NAME_OF_SHORT_LINK } from "./short-link-constants";
 
-function getUrlDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== NAME_OF_URL) return;
-  decorations.push(utils.getMarkDecoration({ range: [node.from, node.to], style: CLASSES.link }));
+export function fillURLContentDecorations(opts: ContentDecorationOptions) {
+  opts.decorations.push(
+    Decoration.mark({
+      class: CLASSES.link,
+    }).range(opts.node.from, opts.node.to),
+  );
 }
 
-function getUrlSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_URL) return;
-
+export function fillURLSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   const parent = node.node.parent?.name;
   if (
     parent === NAME_OF_LINK ||
@@ -31,71 +24,35 @@ function getUrlSelectionDecorations({
     parent === NAME_OF_SHORT_LINK
   )
     return;
+
   const url = view.state.doc.sliceString(node.from, node.to);
-  const uniqueId = view.state.field(markdownState).uniqueId;
+  const uniqueId = view.state.field(MarkdownState).uniqueId;
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
     decorations.push(
-      utils.getReplaceDecoration({
-        range: [node.from, node.to],
+      Decoration.replace({
         widget: new LinkWidget(url, url, node.from, node.to, uniqueId, view),
-      }),
+      }).range(node.from, node.to),
     );
   }
 }
 
-function getAutoLinkSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_AUTO_LINK) return;
-
+export function fillAutolinkSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   const url = view.state.doc.sliceString(node.from + 1, node.to - 1);
-  const openedLink = view.state.field(markdownState).openedLink;
-  const uniqueId = view.state.field(markdownState).uniqueId;
-  const key = `${url}:${url}:${uniqueId}:${node.from}:${node.to}`;
-  const isOpened = openedLink && openedLink === key;
-
-  if (isOpened) {
-    return void decorations.push(
-      utils.getMarkDecoration({
-        range: [node.from, node.to],
-        attributes: {
-          "data-id": key,
-        },
-      }),
-    );
-  }
-
+  const uniqueId = view.state.field(MarkdownState).uniqueId;
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
     decorations.push(
-      utils.getReplaceDecoration({
-        range: [node.from, node.to],
+      Decoration.replace({
         widget: new LinkWidget(url, url, node.from, node.to, uniqueId, view),
-      }),
-    );
-  } else {
-    decorations.push(
-      utils.getMarkDecoration({
-        range: [node.from, node.to],
-        attributes: {
-          "data-id": key,
-        },
-      }),
+      }).range(node.from, node.to),
     );
   }
 }
-
-export const autoLinkDecorationPlugin: DecorationPlugin = {
-  decorations: [getUrlDecorations],
-  selectionDecorations: [getAutoLinkSelectionDecorations, getUrlSelectionDecorations],
-};

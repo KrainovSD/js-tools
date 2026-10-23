@@ -1,35 +1,24 @@
+import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
+import type { SelectionDecorationOptions } from "../markdown-model";
 import styles from "../styles.module.scss";
-import { NAME_OF_HORIZONTAL } from "./horizontal-constants";
 
-function getHorizontalSelectionDecoration({
-  decorations,
-  forceActive,
-  node,
-  view,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_HORIZONTAL) return;
-
+export function fillHorizontalSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   const line = view.lineBlockAt(node.from);
 
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [line.from, line.to])
   ) {
     decorations.push(
-      utils.getLineDecoration({
-        style: clsx(styles.horizontal, CLASSES.horizontal),
-        range: [line.from],
-      }),
+      Decoration.line({
+        class: clsx(styles.horizontal, CLASSES.horizontal),
+      }).range(line.from),
     );
-    decorations.push(utils.getHideDecoration({ range: [node.from, node.to] }));
+    decorations.push(Decoration.replace({}).range(node.from, node.to));
   }
 }
-
-export const horizontalDecorationPlugin: DecorationPlugin = {
-  selectionDecorations: [getHorizontalSelectionDecoration],
-};

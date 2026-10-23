@@ -1,48 +1,26 @@
+import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type {
-  DecorationPlugin,
-  GetDecorationOptions,
-  GetSelectionDecorationOptions,
-} from "../markdown-types";
+import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
 import styles from "../styles.module.scss";
-import { NAME_OF_UNDERLINE } from "./underline-constants";
 
-function getUnderlineDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== NAME_OF_UNDERLINE) {
-    return;
-  }
-
-  decorations.push(
-    utils.getMarkDecoration({
-      style: clsx(styles.underline, CLASSES.underline),
-      range: [node.from, node.to],
-    }),
+export function fillUnderlineContentDecorations(opts: ContentDecorationOptions) {
+  opts.decorations.push(
+    Decoration.mark({
+      class: clsx(styles.underline, CLASSES.underline),
+    }).range(opts.node.from, opts.node.to),
   );
 }
 
-function getUnderlineSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_UNDERLINE) {
-    return;
-  }
-
+export function fillUnderlineSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
-    decorations.push(utils.getHideDecoration({ range: [node.from, node.from + 2] }));
-    decorations.push(utils.getHideDecoration({ range: [node.to - 2, node.to] }));
+    decorations.push(Decoration.replace({}).range(node.from, node.from + 2));
+    decorations.push(Decoration.replace({}).range(node.to - 2, node.to));
   }
 }
-
-export const underlineDecorationPlugin: DecorationPlugin = {
-  decorations: [getUnderlineDecorations],
-  selectionDecorations: [getUnderlineSelectionDecorations],
-};

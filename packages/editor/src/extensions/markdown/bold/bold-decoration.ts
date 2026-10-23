@@ -1,62 +1,44 @@
 import { syntaxTree } from "@codemirror/language";
+import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type {
-  DecorationPlugin,
-  GetDecorationOptions,
-  GetSelectionDecorationOptions,
-} from "../markdown-types";
+import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
 import styles from "../styles.module.scss";
-import { LIST_OF_BOLD_MARKS, NAME_OF_BOLD } from "./bold-constants";
 
-function getBoldDecorations({ decorations, node, view }: GetDecorationOptions) {
-  if (node.name !== NAME_OF_BOLD) {
-    return;
-  }
+export const NAME_OF_BOLD = "StrongEmphasis";
+export const LIST_OF_BOLD_MARKS = new Set(["_".codePointAt(0), "*".codePointAt(0)]);
 
+export function fillBoldContentDecorations(opts: ContentDecorationOptions) {
   const step =
-    LIST_OF_BOLD_MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
-    syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
+    LIST_OF_BOLD_MARKS.has(
+      opts.view.state.doc.sliceString(opts.node.from - 1, opts.node.from).charCodeAt(0),
+    ) && syntaxTree(opts.view.state).resolve(opts.node.from - 1).type.name !== "Emphasis"
       ? 1
       : 0;
-
-  decorations.push(
-    utils.getMarkDecoration({
-      style: clsx(styles.bold, CLASSES.bold),
-      range: [node.from - step, node.to + step],
-    }),
+  opts.decorations.push(
+    Decoration.mark({
+      class: clsx(styles.bold, CLASSES.bold),
+    }).range(opts.node.from - step, opts.node.to + step),
   );
 }
 
-function getBoldSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_BOLD) {
-    return;
-  }
-
+export function fillBoldSelectionDecorations(opts: SelectionDecorationOptions) {
   if (
-    LIST_OF_BOLD_MARKS.has(view.state.doc.sliceString(node.from - 1, node.from).charCodeAt(0)) &&
-    syntaxTree(view.state).resolve(node.from - 1).type.name !== "Emphasis"
+    LIST_OF_BOLD_MARKS.has(
+      opts.view.state.doc.sliceString(opts.node.from - 1, opts.node.from).charCodeAt(0),
+    ) &&
+    syntaxTree(opts.view.state).resolve(opts.node.from - 1).type.name !== "Emphasis"
   ) {
     return;
   }
 
   if (
-    forceActive ||
-    !view.hasFocus ||
-    !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
+    opts.readonly ||
+    !opts.view.hasFocus ||
+    !utils.isInRange(opts.view.state.selection.ranges, [opts.node.from, opts.node.to])
   ) {
-    decorations.push(utils.getHideDecoration({ range: [node.from, node.from + 2] }));
-    decorations.push(utils.getHideDecoration({ range: [node.to - 2, node.to] }));
+    opts.decorations.push(Decoration.replace({}).range(opts.node.from, opts.node.from + 2));
+    opts.decorations.push(Decoration.replace({}).range(opts.node.to - 2, opts.node.to));
   }
 }
-
-export const boldDecorationPlugin: DecorationPlugin = {
-  decorations: [getBoldDecorations],
-  selectionDecorations: [getBoldSelectionDecorations],
-};

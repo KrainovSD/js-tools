@@ -1,23 +1,13 @@
+import { Decoration } from "@codemirror/view";
 import { utils } from "@/lib";
-import type { DecorationPlugin, GetSelectionDecorationOptions } from "../markdown-types";
-import {
-  LIST_OF_LIST_MARKS,
-  LIST_OF_ORDERED_LIST_MARKS,
-  NAME_OF_LIST,
-  NAME_OF_TODO,
-} from "./list-constants";
+import type { SelectionDecorationOptions } from "../markdown-model";
+import { LIST_OF_LIST_MARKS, LIST_OF_ORDERED_LIST_MARKS } from "./list-model";
 import { ListPointWidget } from "./list-widget";
 
-function getListSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_LIST) {
-    return;
-  }
+const NAME_OF_TODO = "Task";
 
+export function fillListMarkSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   const content = view.state.doc.sliceString(node.from, node.to);
   const lastCodePoint = content.codePointAt(content.length - 1) ?? 0;
   if (!LIST_OF_LIST_MARKS.has(lastCodePoint) && !LIST_OF_ORDERED_LIST_MARKS.has(lastCodePoint)) {
@@ -27,30 +17,24 @@ function getListSelectionDecorations({
   const nextSibling = node.node.nextSibling;
   if (nextSibling && nextSibling.name === NAME_OF_TODO) {
     if (
-      forceActive ||
+      readonly ||
       !view.hasFocus ||
       !utils.isInRange(view.state.selection.ranges, [node.from, nextSibling.from + 3])
     ) {
-      decorations.push(utils.getHideDecoration({ range: [node.from, nextSibling.from] }));
+      decorations.push(Decoration.replace({}).range(node.from, nextSibling.from));
     }
-
     return;
   }
 
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
     decorations.push(
-      utils.getReplaceDecoration({
-        range: [node.from, node.to],
+      Decoration.replace({
         widget: new ListPointWidget(content, lastCodePoint),
-      }),
+      }).range(node.from, node.to),
     );
   }
 }
-
-export const listDecorationPlugin: DecorationPlugin = {
-  selectionDecorations: [getListSelectionDecorations],
-};

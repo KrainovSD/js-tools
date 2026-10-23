@@ -5,13 +5,19 @@ import { styleTags } from "@lezer/highlight";
 import type { MarkdownParser } from "@lezer/markdown";
 import { NewListRenumber } from "@/extensions/markdown/list";
 import { NewImageViewer } from "./image";
-import { boldKeymap, codeKeymap, italicKeymap, linkKeymap, pasteLink, todoKeymap } from "./keymaps";
-import { markdownDecorationPlugin } from "./markdown-decoration";
+import {
+  OnPasteLink,
+  boldKeymap,
+  codeKeymap,
+  italicKeymap,
+  linkKeymap,
+  todoKeymap,
+} from "./keymaps";
+import { type MarkdownOptions } from "./markdown-model";
 import { markdownParserPlugin } from "./markdown-parser";
-import { markdownSkin } from "./markdown-skin";
-import { markdownState } from "./markdown-state";
-import type { MarkdownOptions } from "./markdown-types";
-import { tableExtension } from "./table";
+import { Skin } from "./markdown-skin";
+import { NewState } from "./markdown-state";
+import { NewViewDecorations } from "./markdown-view";
 
 const taglessStyles = styleTags(
   Object.fromEntries(
@@ -32,8 +38,7 @@ export function NewMarkdownLanguage(
   });
 
   return [
-    markdownState,
-    markdownSkin,
+    Skin,
     markdown({
       base: markdownLanguage,
       codeLanguages: markdownOptions?.languages,
@@ -41,10 +46,10 @@ export function NewMarkdownLanguage(
       pasteURLAsLink: false,
       extensions: [markdownParserPlugin, { props: [taglessStyles] }],
     }),
-    pasteLink,
-    NewListRenumber(ySyncAnnotation),
-    markdownDecorationPlugin({ ...markdownOptions, openImageFullscreen }),
-    tableExtension("source"),
+    NewState(),
+    NewViewDecorations({ ...markdownOptions, openImageFullscreen }),
     keymap.of([boldKeymap, italicKeymap, linkKeymap, codeKeymap, todoKeymap]),
+    OnPasteLink,
+    NewListRenumber(ySyncAnnotation),
   ];
 }

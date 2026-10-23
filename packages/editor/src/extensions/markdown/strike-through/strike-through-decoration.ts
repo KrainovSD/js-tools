@@ -1,48 +1,28 @@
+import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type {
-  DecorationPlugin,
-  GetDecorationOptions,
-  GetSelectionDecorationOptions,
-} from "../markdown-types";
+import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
 import styles from "../styles.module.scss";
-import { NAME_OF_STRIKE_THROUGH } from "./strike-through-constants";
 
-function getStrikeThroughDecorations({ decorations, node }: GetDecorationOptions) {
-  if (node.name !== NAME_OF_STRIKE_THROUGH) {
-    return;
-  }
+export const NAME_OF_STRIKE_THROUGH = "Strikethrough";
 
-  decorations.push(
-    utils.getMarkDecoration({
-      style: clsx(styles["strike-through"], CLASSES.strikeThrough),
-      range: [node.from, node.to],
-    }),
+export function fillStrikeThroughContentDecorations(opts: ContentDecorationOptions) {
+  opts.decorations.push(
+    Decoration.mark({
+      class: clsx(styles["strike-through"], CLASSES.strikeThrough),
+    }).range(opts.node.from, opts.node.to),
   );
 }
 
-function getStrikeThroughSelectionDecorations({
-  decorations,
-  node,
-  view,
-  forceActive,
-}: GetSelectionDecorationOptions) {
-  if (node.name !== NAME_OF_STRIKE_THROUGH) {
-    return;
-  }
-
+export function fillStrikeThroughSelectionDecorations(opts: SelectionDecorationOptions) {
+  const { view, node, decorations, readonly } = opts;
   if (
-    forceActive ||
+    readonly ||
     !view.hasFocus ||
     !utils.isInRange(view.state.selection.ranges, [node.from, node.to])
   ) {
-    decorations.push(utils.getHideDecoration({ range: [node.from, node.from + 2] }));
-    decorations.push(utils.getHideDecoration({ range: [node.to - 2, node.to] }));
+    decorations.push(Decoration.replace({}).range(node.from, node.from + 2));
+    decorations.push(Decoration.replace({}).range(node.to - 2, node.to));
   }
 }
-
-export const strikeThroughDecorationPlugin: DecorationPlugin = {
-  decorations: [getStrikeThroughDecorations],
-  selectionDecorations: [getStrikeThroughSelectionDecorations],
-};

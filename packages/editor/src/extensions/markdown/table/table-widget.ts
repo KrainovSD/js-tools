@@ -1,18 +1,18 @@
 import type { ChangeSpec, EditorState } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
-import type { SyntaxNode, Tree } from "@lezer/common";
+import type { SyntaxNode } from "@lezer/common";
 import clsx from "clsx";
 import { normalizeUrl, saveDispatch } from "@/lib/utils";
-import { NAME_OF_BOLD } from "../bold/bold-constants";
+import { NAME_OF_BOLD } from "../bold/bold-decoration";
 import { CLASSES } from "../classes-constants";
-import { NAME_OF_INLINE_CODE } from "../code/code-constants";
-import { NAME_OF_ITALIC } from "../italic/italic-constants";
-import { NAME_OF_AUTO_LINK, NAME_OF_LINK, NAME_OF_URL } from "../link/link-constants";
-import { NAME_OF_STRIKE_THROUGH } from "../strike-through/strike-through-constants";
+import { NAME_OF_INLINE_CODE } from "../code/code-decoration";
+import { NAME_OF_ITALIC } from "../italic/italic-decoration";
+import { NAME_OF_AUTO_LINK, NAME_OF_LINK, NAME_OF_URL } from "../link/link-model";
+import { NAME_OF_STRIKE_THROUGH } from "../strike-through/strike-through-decoration";
 import styles from "../styles.module.scss";
-import { NAME_OF_UNDERLINE } from "../underline/underline-constants";
+import { NAME_OF_UNDERLINE } from "../underline/underline-model";
 import { getTableAt, matrixToSource, modelToMatrix, rowSource, withExtraColumn } from "./table-lib";
-import type { TableCellModel, TableMode, TableModel } from "./table-model";
+import type { TableCellModel, TableModel } from "./table-model";
 
 export class TableWidget extends WidgetType {
   private controller: AbortController | undefined;
@@ -22,13 +22,10 @@ export class TableWidget extends WidgetType {
 
   constructor(
     private readonly model: TableModel,
-    readonly mode: TableMode,
     private readonly isReadonly: boolean,
-    private readonly cache: WeakMap<Tree, TableModel[]>,
   ) {
     super();
     this.key = [
-      mode,
       model.rowCount,
       model.colCount,
       model.alignments.map((alignment) => alignment ?? "").join(","),
@@ -80,7 +77,7 @@ export class TableWidget extends WidgetType {
   }
 
   updateDOM(dom: HTMLElement, view: EditorView, from: TableWidget): boolean {
-    if (from.mode !== this.mode || from.isReadonly !== this.isReadonly) return false;
+    if (from.isReadonly !== this.isReadonly) return false;
     if (!this.isStructureMatching(dom)) return false;
 
     try {
@@ -216,7 +213,7 @@ export class TableWidget extends WidgetType {
 
   private getFreshModel(view: EditorView): TableModel {
     if (!this.dom) return this.model;
-    const fresh = getTableAt(view.state, view.posAtDOM(this.dom), this.cache);
+    const fresh = getTableAt(view.state, view.posAtDOM(this.dom));
     return fresh ?? this.model;
   }
 }

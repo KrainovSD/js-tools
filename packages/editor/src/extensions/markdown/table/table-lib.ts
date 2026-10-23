@@ -1,9 +1,8 @@
-import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
 import type { EditorState } from "@codemirror/state";
-import type { SyntaxNode, Tree } from "@lezer/common";
+import type { SyntaxNode } from "@lezer/common";
+import { getTreeIndex } from "../markdown-state";
 import {
   MIN_COLUMN_WIDTH,
-  NAME_OF_TABLE,
   NAME_OF_TABLE_CELL,
   NAME_OF_TABLE_DELIMITER,
   NAME_OF_TABLE_HEADER,
@@ -15,31 +14,7 @@ import {
   type TableRow,
 } from "./table-model";
 
-export function getTables(state: EditorState, cache: WeakMap<Tree, TableModel[]>): TableModel[] {
-  const currentTree = syntaxTree(state);
-  const cached = cache.get(currentTree);
-  if (cached) return cached;
-  const tree = ensureSyntaxTree(state, state.doc.length) ?? currentTree;
-  const ensured = cache.get(tree);
-  if (ensured) return ensured;
-  const tables: TableModel[] = [];
-  tree.iterate({
-    enter: (node) => {
-      if (node.name !== NAME_OF_TABLE) {
-        return undefined;
-      }
-      const model = buildTableModel(state, node.node);
-      if (model) {
-        tables.push(model);
-      }
-      return false;
-    },
-  });
-  cache.set(tree, tables);
-  return tables;
-}
-
-function buildTableModel(state: EditorState, node: SyntaxNode): TableModel | undefined {
+export function parseTable(state: EditorState, node: SyntaxNode): TableModel | undefined {
   const header = node.getChild(NAME_OF_TABLE_HEADER);
   const delimiter = node.getChild(NAME_OF_TABLE_DELIMITER);
   if (!header || !delimiter) return undefined;
@@ -172,12 +147,8 @@ function collectRowCells(state: EditorState, rowNode: SyntaxNode, rowIndex: numb
   return { cells, lineTo: line.to };
 }
 
-export function getTableAt(
-  state: EditorState,
-  pos: number,
-  cache: WeakMap<Tree, TableModel[]>,
-): TableModel | undefined {
-  return getTables(state, cache).find((table) => table.from <= pos && pos <= table.to);
+export function getTableAt(state: EditorState, pos: number): TableModel | undefined {
+  return getTreeIndex(state).tables.find((table) => table.from <= pos && pos <= table.to);
 }
 
 export function modelToMatrix(model: TableModel): TableMatrix {

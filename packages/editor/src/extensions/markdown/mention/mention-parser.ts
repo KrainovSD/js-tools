@@ -1,5 +1,7 @@
 import type { MarkdownConfig } from "@lezer/markdown";
-import { CODE_OF_START_MENTION, NAME_OF_MENTION } from "./mention-constants";
+
+const CODE_OF_START_MENTION = "@".codePointAt(0); // @
+const NAME_OF_MENTION = "Mention";
 
 function isMentionCharCode(code: number) {
   return (

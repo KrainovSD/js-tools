@@ -1,6 +1,6 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { CLASSES } from "../classes-constants";
-import type { MarkdownDecorationSettings } from "../markdown-types";
+import type { MarkdownDecorationSettings } from "../markdown-model";
 import styles from "../styles.module.scss";
 
 const IMAGE_NODES: Record<string, ImageContainerElement | undefined> = {};
