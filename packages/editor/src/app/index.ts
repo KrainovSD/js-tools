@@ -1,9 +1,9 @@
 import { languages } from "@codemirror/language-data";
+import "@fontsource/fira-code";
+import "@fontsource/nunito";
 import { vsCodeDark } from "@fsegurai/codemirror-theme-vscode-dark";
-import type Viewer from "viewerjs";
 import type { MarkdownOptions } from "@/extensions/markdown";
 import { Editor, type MultiCursorOptions } from "@/module";
-import "./global.css";
 import {
   COMMON_TEST,
   FULL_EXAMPLE,

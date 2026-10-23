@@ -1,3 +1,5 @@
+import "@fontsource/fira-code";
+import "@fontsource/nunito";
 import { DecoratorHelpers } from "@storybook/addon-themes";
 import { type Decorator, setup } from "@storybook/vue3";
 import { THEME_CONFIG } from "../src/constants";

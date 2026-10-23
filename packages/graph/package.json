@@ -63,7 +63,7 @@
     "@krainovsd/vue-ui": "0.4.0",
     "@krainovsd/vue-icons": "0.1.4",
     "sass-embedded": "1.81.0",
-    "@fontsource/nunito": "5.2.7"
+    "@fontsource/nunito": "5.3.0"
   },
   "dependencies": {
     "@krainovsd/js-helpers": "^0.16.5",

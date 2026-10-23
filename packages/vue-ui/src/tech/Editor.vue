@@ -72,7 +72,7 @@ function test(number: number): number {
       :readonly="readonly"
       :language="markdown"
       :font="'Nunito'"
-      :font-code="'Firacode'"
+      :font-code="'Fira Code'"
     />
   </div>
   <div :class="$style.group">
@@ -84,7 +84,7 @@ function test(number: number): number {
       :readonly="readonly"
       :language="markdown"
       :font="'Nunito'"
-      :font-code="'Firacode'"
+      :font-code="'Fira Code'"
     />
   </div>
 </template>
