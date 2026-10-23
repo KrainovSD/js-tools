@@ -1,6 +1,20 @@
 import type { Extension } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
+import { CALLOUT_TYPES, type CalloutMeta, type CalloutType } from "./callout/callout-constants";
 import { CLASSES } from "./classes-constants";
+
+const CALLOUT_COLOR_RULES: Record<string, { borderLeftColor?: string; color?: string }> = {};
+
+for (const [type, meta] of Object.entries(CALLOUT_TYPES) as [CalloutType, CalloutMeta][]) {
+  const color = `var(--ksd-md-callout-${type}-color, color-mix(in srgb, currentColor 35%, ${meta.accent}))`;
+  CALLOUT_COLOR_RULES[`.${CLASSES.callout}.${CLASSES.calloutTypes[type]}`] = {
+    borderLeftColor: color,
+  };
+  CALLOUT_COLOR_RULES[`.${CLASSES.calloutTitle}.${CLASSES.calloutTypes[type]}`] = {
+    color,
+    borderLeftColor: `var(--ksd-md-callout-${type}-color, currentColor)`,
+  };
+}
 
 export const Skin: Extension = EditorView.theme({
   [`.${CLASSES.code}`]: {
@@ -68,6 +82,16 @@ export const Skin: Extension = EditorView.theme({
   [`.${CLASSES.blockquoteInner}:before`]: {
     borderLeftColor: "var(--ksd-md-blockquote, currentColor)",
   },
+  [`.${CLASSES.callout}`]: {
+    color: "var(--ksd-md-callout-color, currentColor)",
+  },
+  [`.${CLASSES.calloutTitle}`]: {
+    fontWeight: "var(--ksd-md-callout-title-weight, 600)",
+  },
+  [`.${CLASSES.calloutIcon}`]: {
+    color: "var(--ksd-md-callout-icon-color, currentColor)",
+  },
+  ...CALLOUT_COLOR_RULES,
   [`.${CLASSES.bold}`]: {
     color: "var(--ksd-md-bold-color, currentColor)",
   },

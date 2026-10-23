@@ -1,3 +1,5 @@
+import type { CalloutType } from "./callout/callout-constants";
+
 export const CLASSES = {
   listCommon: "ksd-cm-list-common",
   listOrdered: "ksd-cm-list-ordered",
@@ -12,6 +14,24 @@ export const CLASSES = {
   horizontal: "ksd-cm-horizontal",
   blockquote: "ksd-cm-blockquote",
   blockquoteInner: "ksd-cm-blockquote-inner",
+  callout: "ksd-cm-callout",
+  calloutTitle: "ksd-cm-callout-title",
+  calloutIcon: "ksd-cm-callout-icon",
+  calloutTypes: {
+    note: "ksd-cm-callout-note",
+    abstract: "ksd-cm-callout-abstract",
+    info: "ksd-cm-callout-info",
+    todo: "ksd-cm-callout-todo",
+    tip: "ksd-cm-callout-tip",
+    success: "ksd-cm-callout-success",
+    question: "ksd-cm-callout-question",
+    warning: "ksd-cm-callout-warning",
+    failure: "ksd-cm-callout-failure",
+    error: "ksd-cm-callout-error",
+    bug: "ksd-cm-callout-bug",
+    example: "ksd-cm-callout-example",
+    quote: "ksd-cm-callout-quote",
+  } satisfies Record<CalloutType, string>,
   bold: "ksd-cm-bold",
   italic: "ksd-cm-italic",
   strikeThrough: "ksd-cm-strike-through",

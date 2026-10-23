@@ -13,6 +13,10 @@ import {
 } from "./blockquote/blockquote-decoration";
 import { fillBoldContentDecorations, fillBoldSelectionDecorations } from "./bold/bold-decoration";
 import {
+  fillCalloutContentDecorations,
+  fillCalloutSelectionDecorations,
+} from "./callout/callout-decoration";
+import {
   fillCodeBlockContentDecorations,
   fillFencedCodeSelectionDecorations,
   fillInlineCodeSelectionDecorations,
@@ -67,6 +71,7 @@ const ContentDecorationFns = {
   URL: fillURLContentDecorations,
   Mention: fillMentionContentDecorations,
   QuoteMark: fillBlockquoteContentDecorations,
+  Blockquote: fillCalloutContentDecorations,
   ATXHeading1: fillATXHeadingContentDecorations,
   ATXHeading2: fillATXHeadingContentDecorations,
   ATXHeading3: fillATXHeadingContentDecorations,
@@ -93,6 +98,7 @@ const SelectionDecorationFns = {
   ListMark: fillListMarkSelectionDecorations,
   Mention: fillMentionSelectionDecorations,
   QuoteMark: fillBlockquoteSelectionDecorations,
+  Blockquote: fillCalloutSelectionDecorations,
   Task: fillTodoSelectionDecorations,
   ATXHeading1: fillATXHeadingSelectionDecorations,
   ATXHeading2: fillATXHeadingSelectionDecorations,

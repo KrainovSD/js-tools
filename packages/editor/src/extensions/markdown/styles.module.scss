@@ -59,6 +59,16 @@
   text-decoration: line-through;
 }
 
+.callout {
+  &__icon {
+    svg {
+      display: inline-block;
+      vertical-align: -0.125em;
+      margin-right: 4px;
+    }
+  }
+}
+
 .underline {
   text-decoration: underline;
 }
