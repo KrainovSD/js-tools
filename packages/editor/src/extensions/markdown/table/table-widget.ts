@@ -3,15 +3,32 @@ import { type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
 import clsx from "clsx";
 import { normalizeUrl, saveDispatch } from "@/lib/utils";
-import { NAME_OF_BOLD } from "../bold/bold-decoration";
 import { CLASSES } from "../classes-constants";
-import { NAME_OF_INLINE_CODE } from "../code/code-decoration";
-import { NAME_OF_ITALIC } from "../italic/italic-decoration";
-import { NAME_OF_AUTO_LINK, NAME_OF_LINK, NAME_OF_URL } from "../link/link-model";
 import { getTreeIndex } from "../markdown-lib";
-import { NAME_OF_STRIKE_THROUGH } from "../strike-through/strike-through-decoration";
+import {
+  CODE_OF_GREATER_THAN,
+  CODE_OF_LATIN_B,
+  CODE_OF_LATIN_R,
+  CODE_OF_LESS_THAN,
+  CODE_OF_SLASH,
+  NAME_OF_AUTO_LINK,
+  NAME_OF_BOLD,
+  NAME_OF_CODE_MARK,
+  NAME_OF_EMPHASIS_MARK,
+  NAME_OF_ESCAPE,
+  NAME_OF_HTML_TAG,
+  NAME_OF_INLINE_CODE,
+  NAME_OF_ITALIC,
+  NAME_OF_LINK,
+  NAME_OF_LINK_MARK,
+  NAME_OF_STRIKE_THROUGH,
+  NAME_OF_STRIKE_THROUGH_MARK,
+  NAME_OF_UNDERLINE,
+  NAME_OF_UNDERLINE_MARK,
+  NAME_OF_URL,
+  isWhitespaceCode,
+} from "../markdown-model";
 import styles from "../styles.module.scss";
-import { NAME_OF_UNDERLINE } from "../underline/underline-model";
 import { matrixToSource, modelToMatrix, rowSource, withExtraColumn } from "./table-lib";
 import type { TableCellModel, TableModel } from "./table-model";
 
@@ -222,15 +239,12 @@ export class TableWidget extends WidgetType {
   }
 }
 
-const NAME_OF_ESCAPE = "Escape";
-const NAME_OF_HTML_TAG = "HTMLTag";
-
 const SKIP_NODES = new Set([
-  "EmphasisMark",
-  "StrikethroughMark",
-  "CodeMark",
-  "LinkMark",
-  "UnderlineMark",
+  NAME_OF_EMPHASIS_MARK,
+  NAME_OF_STRIKE_THROUGH_MARK,
+  NAME_OF_CODE_MARK,
+  NAME_OF_LINK_MARK,
+  NAME_OF_UNDERLINE_MARK,
   NAME_OF_URL,
 ]);
 
@@ -315,23 +329,14 @@ function createStyledElement(tag: string, className: string) {
   return element;
 }
 
-const LT = 60; // "<"
-const GT = 62; // ">"
-const SLASH = 47; // "/"
-const LETTER_B = 98; // "b"
-const LETTER_R = 114; // "r"
 function isBrTag(text: string): boolean {
   if (text.length < 4) return false;
-  if (text.charCodeAt(0) !== LT) return false;
+  if (text.charCodeAt(0) !== CODE_OF_LESS_THAN) return false;
   // | 32 — is to lower case
-  if ((text.charCodeAt(1) | 32) !== LETTER_B) return false;
-  if ((text.charCodeAt(2) | 32) !== LETTER_R) return false;
+  if ((text.charCodeAt(1) | 32) !== CODE_OF_LATIN_B) return false;
+  if ((text.charCodeAt(2) | 32) !== CODE_OF_LATIN_R) return false;
   let index = 3;
-  while (index < text.length && isSpaceCode(text.charCodeAt(index))) index++;
-  if (index < text.length && text.charCodeAt(index) === SLASH) index++;
-  return index === text.length - 1 && text.charCodeAt(index) === GT;
-}
-
-function isSpaceCode(code: number): boolean {
-  return code === 32 || (code >= 9 && code <= 13);
+  while (index < text.length && isWhitespaceCode(text.charCodeAt(index))) index++;
+  if (index < text.length && text.charCodeAt(index) === CODE_OF_SLASH) index++;
+  return index === text.length - 1 && text.charCodeAt(index) === CODE_OF_GREATER_THAN;
 }

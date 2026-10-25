@@ -4,26 +4,34 @@ import type { SyntaxNodeRef } from "@lezer/common";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import {
+  CODE_OF_CLOSE_BRACKET,
+  CODE_OF_DIGIT_END,
+  CODE_OF_DIGIT_START,
+  CODE_OF_EXCLAMATION,
+  CODE_OF_HYPHEN,
+  CODE_OF_LATIN_LOWER_END,
+  CODE_OF_LATIN_LOWER_START,
+  CODE_OF_LATIN_UPPER_END,
+  CODE_OF_LATIN_UPPER_START,
+  CODE_OF_OPEN_BRACKET,
+  CODE_OF_PLUS,
+  CODE_OF_SPACE,
+  CODE_OF_TAB,
+  CODE_OF_UNDERSCORE,
+  type ContentDecorationOptions,
+  NAME_OF_BLOCKQUOTE,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import { type CalloutType, getCalloutDefaultTitle, getCalloutType } from "./callout-constants";
 import { CalloutWidget } from "./callout-widget";
 
-const NAME_OF_BLOCKQUOTE = "Blockquote";
-
-const CODE_OF_SPACE = " ".codePointAt(0);
-const CODE_OF_TAB = "\t".codePointAt(0);
-const CODE_OF_OPEN_BRACKET = "[".codePointAt(0);
-const CODE_OF_EXCLAMATION = "!".codePointAt(0);
-const CODE_OF_CLOSE_BRACKET = "]".codePointAt(0);
-const CODE_OF_MINUS = "-".codePointAt(0);
-const CODE_OF_PLUS = "+".codePointAt(0);
-
 function isWordCode(code: number) {
   return (
-    (code >= 97 && code <= 122) || // a-z
-    (code >= 65 && code <= 90) || // A-Z
-    (code >= 48 && code <= 57) || // 0-9
-    code === 95 // _
+    (code >= CODE_OF_LATIN_LOWER_START && code <= CODE_OF_LATIN_LOWER_END) ||
+    (code >= CODE_OF_LATIN_UPPER_START && code <= CODE_OF_LATIN_UPPER_END) ||
+    (code >= CODE_OF_DIGIT_START && code <= CODE_OF_DIGIT_END) ||
+    code === CODE_OF_UNDERSCORE
   );
 }
 
@@ -104,7 +112,7 @@ function getCallout(doc: Text, node: SyntaxNodeRef): CalloutInfo | undefined {
   pos++;
 
   const foldCode = text.charCodeAt(pos);
-  if (foldCode === CODE_OF_MINUS || foldCode === CODE_OF_PLUS) pos++;
+  if (foldCode === CODE_OF_HYPHEN || foldCode === CODE_OF_PLUS) pos++;
   if (text.charCodeAt(pos) === CODE_OF_SPACE) pos++;
 
   let hasTitle = false;

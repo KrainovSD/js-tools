@@ -2,12 +2,14 @@ import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import {
+  CODE_OF_GREATER_THAN,
+  CODE_OF_SPACE,
+  type ContentDecorationOptions,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import styles from "../styles.module.scss";
 import { BlockquoteWidget } from "./blockquote-widget";
-
-const CODE_OF_SPACE = " ".codePointAt(0);
-const CODE_OF_BLOCKQUOTE_MARK = 62; // >
 
 export function fillBlockquoteContentDecorations(opts: ContentDecorationOptions) {
   const { view, node, decorations } = opts;
@@ -23,7 +25,7 @@ export function fillBlockquoteContentDecorations(opts: ContentDecorationOptions)
       pos--;
       const currentCode = content.charCodeAt(pos);
       if (currentCode === CODE_OF_SPACE) continue;
-      if (currentCode === CODE_OF_BLOCKQUOTE_MARK) {
+      if (currentCode === CODE_OF_GREATER_THAN) {
         if (!isHasMark) {
           isHasMark = true;
           continue;
@@ -62,7 +64,7 @@ export function fillBlockquoteSelectionDecorations(opts: SelectionDecorationOpti
       const currentCode = content.charCodeAt(pos);
 
       if (currentCode === CODE_OF_SPACE) continue;
-      if (currentCode === CODE_OF_BLOCKQUOTE_MARK) {
+      if (currentCode === CODE_OF_GREATER_THAN) {
         if (!isHasMark) {
           isHasMark = true;
           continue;

@@ -1,15 +1,15 @@
 import { Decoration } from "@codemirror/view";
 import { utils } from "@/lib";
-import type { SelectionDecorationOptions } from "../markdown-model";
+import {
+  CODE_OF_CLOSE_BRACKET,
+  CODE_OF_CLOSE_PAREN,
+  CODE_OF_COLON,
+  CODE_OF_OPEN_BRACKET,
+  CODE_OF_OPEN_PAREN,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
 import styles from "../styles.module.scss";
-import {
-  CODE_OF_END_LINK_TEXT,
-  CODE_OF_END_LINK_URL,
-  CODE_OF_LINK_LABEL_END,
-  CODE_OF_START_LINK_TEXT,
-  CODE_OF_START_LINK_URL,
-} from "./link-model";
 import { LinkWidget } from "./link-widget";
 
 export function fillLinkSelectionDecorations(opts: SelectionDecorationOptions) {
@@ -22,25 +22,17 @@ export function fillLinkSelectionDecorations(opts: SelectionDecorationOptions) {
     pos++;
     const code = content.charCodeAt(pos);
 
-    if (textCoordinates.from === -1 && code === CODE_OF_START_LINK_TEXT)
+    if (textCoordinates.from === -1 && code === CODE_OF_OPEN_BRACKET)
       textCoordinates.from = pos + 1;
-    else if (
-      urlCoordinates.from === -1 &&
-      textCoordinates.to !== -1 &&
-      code === CODE_OF_START_LINK_URL
-    )
+    else if (urlCoordinates.from === -1 && textCoordinates.to !== -1 && code === CODE_OF_OPEN_PAREN)
       urlCoordinates.from = pos + 1;
     else if (
       textCoordinates.from !== -1 &&
       textCoordinates.to === -1 &&
-      code === CODE_OF_END_LINK_TEXT
+      code === CODE_OF_CLOSE_BRACKET
     )
       textCoordinates.to = pos;
-    else if (
-      urlCoordinates.from !== -1 &&
-      urlCoordinates.to === -1 &&
-      code === CODE_OF_END_LINK_URL
-    )
+    else if (urlCoordinates.from !== -1 && urlCoordinates.to === -1 && code === CODE_OF_CLOSE_PAREN)
       urlCoordinates.to = pos;
   }
   if (urlCoordinates.from === -1 || urlCoordinates.to === -1) {
@@ -85,8 +77,7 @@ export function fillShortLinkSelectionDecorations(opts: SelectionDecorationOptio
 
 function fillLinkLabelSelectionDecorations(opts: SelectionDecorationOptions) {
   const { view, node, decorations, readonly } = opts;
-  if (view.state.doc.sliceString(node.to, node.to + 1).charCodeAt(0) !== CODE_OF_LINK_LABEL_END)
-    return;
+  if (view.state.doc.sliceString(node.to, node.to + 1).charCodeAt(0) !== CODE_OF_COLON) return;
 
   if (
     readonly ||

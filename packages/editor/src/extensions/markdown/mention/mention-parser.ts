@@ -1,24 +1,39 @@
 import type { MarkdownConfig } from "@lezer/markdown";
-
-const CODE_OF_START_MENTION = "@".codePointAt(0); // @
-const NAME_OF_MENTION = "Mention";
+import {
+  CODE_OF_AT,
+  CODE_OF_CYRILLIC_LOWER_END,
+  CODE_OF_CYRILLIC_LOWER_IO,
+  CODE_OF_CYRILLIC_UPPER_IO,
+  CODE_OF_CYRILLIC_UPPER_START,
+  CODE_OF_DIGIT_END,
+  CODE_OF_DIGIT_START,
+  CODE_OF_DOT,
+  CODE_OF_HYPHEN,
+  CODE_OF_LATIN_LOWER_END,
+  CODE_OF_LATIN_LOWER_START,
+  CODE_OF_LATIN_UPPER_END,
+  CODE_OF_LATIN_UPPER_START,
+  CODE_OF_SLASH,
+  CODE_OF_UNDERSCORE,
+  NAME_OF_MENTION,
+} from "../markdown-model";
 
 function isMentionCharCode(code: number) {
   return (
-    (code >= 97 && code <= 122) || // a-z
-    (code >= 65 && code <= 90) || // A-Z
-    (code >= 48 && code <= 57) || // 0-9
-    (code >= 0x410 && code <= 0x44f) || // А-я
-    code === 0x401 || // Ё
-    code === 0x451 || // ё
-    code === 45 || // -
-    code === 46 || // .
-    code === 95 // _
+    (code >= CODE_OF_LATIN_LOWER_START && code <= CODE_OF_LATIN_LOWER_END) ||
+    (code >= CODE_OF_LATIN_UPPER_START && code <= CODE_OF_LATIN_UPPER_END) ||
+    (code >= CODE_OF_DIGIT_START && code <= CODE_OF_DIGIT_END) ||
+    (code >= CODE_OF_CYRILLIC_UPPER_START && code <= CODE_OF_CYRILLIC_LOWER_END) ||
+    code === CODE_OF_CYRILLIC_UPPER_IO ||
+    code === CODE_OF_CYRILLIC_LOWER_IO ||
+    code === CODE_OF_HYPHEN ||
+    code === CODE_OF_DOT ||
+    code === CODE_OF_UNDERSCORE
   );
 }
 
 function isTrimmedCharCode(code: number) {
-  return code === 45 || code === 46 || code === 95;
+  return code === CODE_OF_HYPHEN || code === CODE_OF_DOT || code === CODE_OF_UNDERSCORE;
 }
 
 export const mentionParser: MarkdownConfig = {
@@ -27,13 +42,11 @@ export const mentionParser: MarkdownConfig = {
     {
       name: NAME_OF_MENTION,
       parse(cx, code, pos) {
-        if (code != CODE_OF_START_MENTION) return -1;
+        if (code != CODE_OF_AT) return -1;
         const prevCode = cx.char(pos - 1);
         if (
           prevCode !== -1 &&
-          (isMentionCharCode(prevCode) ||
-            prevCode === CODE_OF_START_MENTION ||
-            prevCode === 47) /* / */
+          (isMentionCharCode(prevCode) || prevCode === CODE_OF_AT || prevCode === CODE_OF_SLASH)
         ) {
           return -1;
         }

@@ -2,9 +2,8 @@ import { type ChangeSpec, type StateCommand } from "@codemirror/state";
 import { type KeyBinding } from "@codemirror/view";
 import { utils } from "@/lib";
 import { saveDispatch } from "@/lib/utils";
+import { CODE_OF_ASTERISK, CODE_OF_UNDERSCORE } from "../markdown-model";
 
-const BOLD_MARK_STAR = "*".codePointAt(0);
-const BOLD_MARK_DASH = "_".codePointAt(0);
 const SHIFT = 2;
 
 const insertBoldMarker: StateCommand = ({ state, dispatch }) => {
@@ -13,7 +12,7 @@ const insertBoldMarker: StateCommand = ({ state, dispatch }) => {
   if (from === to) return true;
 
   const { end, start, marked, originalText } = utils.overlapMark({
-    marks: [BOLD_MARK_DASH, BOLD_MARK_STAR],
+    marks: [CODE_OF_UNDERSCORE, CODE_OF_ASTERISK],
     requireMatched: [SHIFT],
     shift: SHIFT,
     state,

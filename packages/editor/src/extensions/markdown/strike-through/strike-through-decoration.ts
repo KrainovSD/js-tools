@@ -5,8 +5,6 @@ import { CLASSES } from "../classes-constants";
 import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
 import styles from "../styles.module.scss";
 
-export const NAME_OF_STRIKE_THROUGH = "Strikethrough";
-
 export function fillStrikeThroughContentDecorations(opts: ContentDecorationOptions) {
   opts.decorations.push(
     Decoration.mark({

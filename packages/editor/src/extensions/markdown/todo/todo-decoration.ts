@@ -2,12 +2,16 @@ import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { SelectionDecorationOptions } from "../markdown-model";
+import {
+  CODE_OF_CYRILLIC_HA,
+  CODE_OF_LATIN_X,
+  NAME_OF_LIST_MARK,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import styles from "../styles.module.scss";
 import { TodoWidget } from "./todo-widget";
 
-const NAME_OF_LIST_MARK = "ListMark";
-const LIST_OF_TODO_MARKS = new Set([120, 1093]); // x
+const LIST_OF_TODO_MARKS = new Set([CODE_OF_LATIN_X, CODE_OF_CYRILLIC_HA]); // x, х
 
 export function fillTodoSelectionDecorations(opts: SelectionDecorationOptions) {
   const { view, node, decorations, readonly } = opts;

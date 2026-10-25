@@ -2,9 +2,8 @@ import { type ChangeSpec, type StateCommand } from "@codemirror/state";
 import { type KeyBinding } from "@codemirror/view";
 import { utils } from "@/lib";
 import { saveDispatch } from "@/lib/utils";
+import { CODE_OF_ASTERISK, CODE_OF_UNDERSCORE } from "../markdown-model";
 
-const ITALIC_MARK_STAR = "*".codePointAt(0);
-const ITALIC_MARK_DASH = "_".codePointAt(0);
 const SHIFT_COUPLE = 3;
 const SHIFT_ALONE = 1;
 
@@ -14,7 +13,7 @@ const insertItalicMarker: StateCommand = ({ state, dispatch }) => {
   if (from === to) return true;
 
   const { end, start, marked, originalText } = utils.overlapMark({
-    marks: [ITALIC_MARK_STAR, ITALIC_MARK_DASH],
+    marks: [CODE_OF_ASTERISK, CODE_OF_UNDERSCORE],
     requireMatched: [SHIFT_ALONE, SHIFT_COUPLE],
     shift: SHIFT_COUPLE,
     state,

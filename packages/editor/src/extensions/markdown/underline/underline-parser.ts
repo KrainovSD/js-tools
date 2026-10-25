@@ -1,32 +1,15 @@
 import type { MarkdownConfig } from "@lezer/markdown";
 import {
-  CODE_OF_UNDERLINE_MARK,
+  CODE_OF_CARET,
   NAME_OF_UNDERLINE,
   NAME_OF_UNDERLINE_MARK,
-} from "./underline-model";
+  isWhitespaceCode,
+} from "../markdown-model";
 
 const UNDERLINE_DELIMITER = {
   resolve: NAME_OF_UNDERLINE,
   mark: NAME_OF_UNDERLINE_MARK,
 };
-
-function isWhitespace(code: number): boolean {
-  return (
-    code === -1 ||
-    Number.isNaN(code) ||
-    code === 32 ||
-    (code >= 9 && code <= 13) ||
-    code === 0xa0 ||
-    code === 0x1680 ||
-    (code >= 0x2000 && code <= 0x200a) ||
-    code === 0x2028 ||
-    code === 0x2029 ||
-    code === 0x202f ||
-    code === 0x205f ||
-    code === 0x3000 ||
-    code === 0xfeff
-  );
-}
 
 function isPunctuation(code: number): boolean {
   return (
@@ -47,17 +30,17 @@ export const underlineParser: MarkdownConfig = {
       before: "Superscript",
       parse(cx, code, pos) {
         if (
-          code !== CODE_OF_UNDERLINE_MARK ||
-          cx.char(pos + 1) !== CODE_OF_UNDERLINE_MARK ||
-          cx.char(pos + 2) === CODE_OF_UNDERLINE_MARK
+          code !== CODE_OF_CARET ||
+          cx.char(pos + 1) !== CODE_OF_CARET ||
+          cx.char(pos + 2) === CODE_OF_CARET
         ) {
           return -1;
         }
 
         const before = cx.char(pos - 1);
         const after = cx.char(pos + 2);
-        const spaceBefore = isWhitespace(before);
-        const spaceAfter = isWhitespace(after);
+        const spaceBefore = isWhitespaceCode(before);
+        const spaceAfter = isWhitespaceCode(after);
 
         return cx.addDelimiter(
           UNDERLINE_DELIMITER,

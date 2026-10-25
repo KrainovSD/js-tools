@@ -2,18 +2,20 @@ import { Decoration, type EditorView } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import {
+  CODE_OF_BACKTICK,
+  CODE_OF_SPACE,
+  CODE_OF_TILDE,
+  type ContentDecorationOptions,
+  NAME_OF_CODE_INFO,
+  NAME_OF_CODE_TEXT,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import styles from "../styles.module.scss";
 import { CodeWidget } from "./code-widget";
 
-export const NAME_OF_INLINE_CODE = "InlineCode";
-
-const CODE_OF_SPACE = " ".codePointAt(0);
-const CODE_OF_CODE_MARK = 96; // `
-const CODE_OF_TILDE_MARK = 126; // ~ (~~~ — тоже валидный фенс)
-
 function isCodeMark(code: number) {
-  return code === CODE_OF_CODE_MARK || code === CODE_OF_TILDE_MARK;
+  return code === CODE_OF_BACKTICK || code === CODE_OF_TILDE;
 }
 
 export function fillFencedCodeSelectionDecorations(opts: SelectionDecorationOptions) {
@@ -23,8 +25,8 @@ export function fillFencedCodeSelectionDecorations(opts: SelectionDecorationOpti
   let languagePos: [number, number] | undefined;
   let codeContent: string | undefined;
 
-  const codeInfo = node.node.getChild("CodeInfo");
-  const codeText = node.node.getChild("CodeText");
+  const codeInfo = node.node.getChild(NAME_OF_CODE_INFO);
+  const codeText = node.node.getChild(NAME_OF_CODE_TEXT);
   if (codeInfo) {
     language = view.state.doc.sliceString(codeInfo.from, codeInfo.to);
     languagePos = [codeInfo.from, codeInfo.to];

@@ -1,10 +1,8 @@
 import { Decoration } from "@codemirror/view";
 import { utils } from "@/lib";
-import type { SelectionDecorationOptions } from "../markdown-model";
+import { NAME_OF_TODO, type SelectionDecorationOptions } from "../markdown-model";
 import { LIST_OF_LIST_MARKS, LIST_OF_ORDERED_LIST_MARKS } from "./list-model";
 import { ListPointWidget } from "./list-widget";
-
-const NAME_OF_TODO = "Task";
 
 export function fillListMarkSelectionDecorations(opts: SelectionDecorationOptions) {
   const { view, node, decorations, readonly } = opts;

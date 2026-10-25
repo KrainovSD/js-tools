@@ -7,6 +7,14 @@ import {
   Transaction,
   type TransactionSpec,
 } from "@codemirror/state";
+import {
+  CODE_OF_CLOSE_PAREN,
+  CODE_OF_DIGIT_END,
+  CODE_OF_DIGIT_START,
+  CODE_OF_DOT,
+  CODE_OF_SPACE,
+  CODE_OF_TAB,
+} from "../markdown-model";
 
 export function NewListRenumber(ySyncAnnotation: AnnotationType<unknown> | undefined) {
   const verifiedLines = new Set<number>();
@@ -102,19 +110,16 @@ function getItem(text: string): ItemLine | undefined {
 
 function getItemLine(text: string): ItemLine | undefined {
   let pos = 0;
-  /* " ", /t */
-  while (text.charCodeAt(pos) === 32 || text.charCodeAt(pos) === 9) pos++;
+  while (text.charCodeAt(pos) === CODE_OF_SPACE || text.charCodeAt(pos) === CODE_OF_TAB) pos++;
   const numberStart = pos;
-  /* /d */
-  while (text.charCodeAt(pos) >= 48 && text.charCodeAt(pos) <= 57) pos++;
+  while (text.charCodeAt(pos) >= CODE_OF_DIGIT_START && text.charCodeAt(pos) <= CODE_OF_DIGIT_END)
+    pos++;
   const code = text.charCodeAt(pos);
-  /* ".", ")"  */
-  if (code !== 46 && code !== 41) {
+  if (code !== CODE_OF_DOT && code !== CODE_OF_CLOSE_PAREN) {
     return undefined;
   }
   const separator = text.charCodeAt(pos + 1);
-  /* " ", /t */
-  if (separator !== 32 && separator !== 9 && !Number.isNaN(separator)) {
+  if (separator !== CODE_OF_SPACE && separator !== CODE_OF_TAB && !Number.isNaN(separator)) {
     return undefined;
   }
   const numberLength = pos - numberStart;

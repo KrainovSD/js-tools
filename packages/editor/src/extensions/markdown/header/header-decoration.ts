@@ -2,10 +2,14 @@ import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import {
+  CODE_OF_SPACE,
+  type ContentDecorationOptions,
+  NAME_OF_HEADER_MARK,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
 import styles from "../styles.module.scss";
-import { NAME_OF_HEADER_MARK } from "./header-model";
 
 export function fillATXHeadingContentDecorations(opts: ContentDecorationOptions) {
   const { view, node } = opts;
@@ -13,7 +17,7 @@ export function fillATXHeadingContentDecorations(opts: ContentDecorationOptions)
   if (!header) {
     return;
   }
-  if (view.state.doc.sliceString(node.from + header.level).charCodeAt(0) !== 32) return;
+  if (view.state.doc.sliceString(node.from + header.level).charCodeAt(0) !== CODE_OF_SPACE) return;
   opts.decorations.push(
     Decoration.line({
       class: clsx(

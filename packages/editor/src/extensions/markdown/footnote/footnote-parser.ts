@@ -1,13 +1,13 @@
 import type { BlockContext, LeafBlock, LeafBlockParser, MarkdownConfig } from "@lezer/markdown";
-import { isFootnoteDefinitionStart } from "./footnote-lib";
 import {
-  CODE_OF_FOOTNOTE_CARET,
-  CODE_OF_FOOTNOTE_END,
-  CODE_OF_FOOTNOTE_START,
+  CODE_OF_CARET,
+  CODE_OF_CLOSE_BRACKET,
   CODE_OF_LINE_BREAK,
+  CODE_OF_OPEN_BRACKET,
   NAME_OF_FOOTNOTE_DEFINITION,
   NAME_OF_FOOTNOTE_REF,
-} from "./footnote-model";
+} from "../markdown-model";
+import { isFootnoteDefinitionStart } from "./footnote-lib";
 
 class FootnoteDefLeafParser implements LeafBlockParser {
   nextLine() {
@@ -35,16 +35,16 @@ export const footnoteParser: MarkdownConfig = {
       name: NAME_OF_FOOTNOTE_REF,
       before: "Link",
       parse(cx, code, pos) {
-        if (code !== CODE_OF_FOOTNOTE_START || cx.char(pos + 1) !== CODE_OF_FOOTNOTE_CARET) {
+        if (code !== CODE_OF_OPEN_BRACKET || cx.char(pos + 1) !== CODE_OF_CARET) {
           return -1;
         }
         for (let i = pos + 2; i < cx.end; i++) {
           const charCode = cx.char(i);
-          if (charCode === CODE_OF_FOOTNOTE_END) {
+          if (charCode === CODE_OF_CLOSE_BRACKET) {
             if (i === pos + 2) return -1;
             return cx.addElement(cx.elt(NAME_OF_FOOTNOTE_REF, pos, i + 1));
           }
-          if (charCode === CODE_OF_FOOTNOTE_START || charCode === CODE_OF_LINE_BREAK) return -1;
+          if (charCode === CODE_OF_OPEN_BRACKET || charCode === CODE_OF_LINE_BREAK) return -1;
         }
         return -1;
       },

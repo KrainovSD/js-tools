@@ -3,17 +3,22 @@ import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import {
+  CODE_OF_ASTERISK,
+  CODE_OF_UNDERSCORE,
+  type ContentDecorationOptions,
+  NAME_OF_ITALIC,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import styles from "../styles.module.scss";
 
-export const NAME_OF_BOLD = "StrongEmphasis";
-export const LIST_OF_BOLD_MARKS = new Set(["_".codePointAt(0), "*".codePointAt(0)]);
+export const LIST_OF_BOLD_MARKS = new Set([CODE_OF_UNDERSCORE, CODE_OF_ASTERISK]);
 
 export function fillBoldContentDecorations(opts: ContentDecorationOptions) {
   const step =
     LIST_OF_BOLD_MARKS.has(
       opts.view.state.doc.sliceString(opts.node.from - 1, opts.node.from).charCodeAt(0),
-    ) && syntaxTree(opts.view.state).resolve(opts.node.from - 1).type.name !== "Emphasis"
+    ) && syntaxTree(opts.view.state).resolve(opts.node.from - 1).type.name !== NAME_OF_ITALIC
       ? 1
       : 0;
   opts.decorations.push(
@@ -28,7 +33,7 @@ export function fillBoldSelectionDecorations(opts: SelectionDecorationOptions) {
     LIST_OF_BOLD_MARKS.has(
       opts.view.state.doc.sliceString(opts.node.from - 1, opts.node.from).charCodeAt(0),
     ) &&
-    syntaxTree(opts.view.state).resolve(opts.node.from - 1).type.name !== "Emphasis"
+    syntaxTree(opts.view.state).resolve(opts.node.from - 1).type.name !== NAME_OF_ITALIC
   ) {
     return;
   }

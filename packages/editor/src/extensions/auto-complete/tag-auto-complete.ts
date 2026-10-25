@@ -1,8 +1,9 @@
 import type { CompletionContext, CompletionResult } from "@codemirror/autocomplete";
-
-const CODE_OF_START_MENTION = "@".codePointAt(0); // @
-const CODE_OF_SPACE = " ".codePointAt(0);
-const CODE_OF_LINE_BREAK = "\n".codePointAt(0);
+import {
+  CODE_OF_AT,
+  CODE_OF_LINE_BREAK,
+  CODE_OF_SPACE,
+} from "@/extensions/markdown/markdown-model";
 
 export const tagAutoComplete = (tagOptions: string[]) => {
   const options = tagOptions.map((user) => ({
@@ -21,7 +22,7 @@ export const tagAutoComplete = (tagOptions: string[]) => {
     while (pos > -1) {
       const code = content.codePointAt(pos);
       if (!code || code === CODE_OF_SPACE || code === CODE_OF_LINE_BREAK) return null;
-      if (code == CODE_OF_START_MENTION) break;
+      if (code == CODE_OF_AT) break;
 
       pos--;
     }

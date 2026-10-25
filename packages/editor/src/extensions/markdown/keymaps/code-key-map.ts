@@ -2,8 +2,8 @@ import { type ChangeSpec, type StateCommand } from "@codemirror/state";
 import { type KeyBinding } from "@codemirror/view";
 import { utils } from "@/lib";
 import { saveDispatch } from "@/lib/utils";
+import { CODE_OF_BACKTICK } from "../markdown-model";
 
-const CODE_MARK = "`".codePointAt(0);
 const SHIFT = 1;
 
 const insertCodeMarker: StateCommand = ({ state, dispatch }) => {
@@ -12,7 +12,7 @@ const insertCodeMarker: StateCommand = ({ state, dispatch }) => {
   if (from === to) return true;
 
   const { end, start, marked, originalText } = utils.overlapMark({
-    marks: [CODE_MARK],
+    marks: [CODE_OF_BACKTICK],
     requireMatched: [SHIFT],
     shift: SHIFT,
     state,

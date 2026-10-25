@@ -3,11 +3,6 @@ import type { SyntaxNode } from "@lezer/common";
 
 export const setFocusEffect = StateEffect.define<boolean>();
 
-export const NAME_OF_TABLE = "Table";
-export const NAME_OF_TABLE_HEADER = "TableHeader";
-export const NAME_OF_TABLE_ROW = "TableRow";
-export const NAME_OF_TABLE_CELL = "TableCell";
-export const NAME_OF_TABLE_DELIMITER = "TableDelimiter";
 export const MIN_COLUMN_WIDTH = 3;
 
 export type TableAlignment = "left" | "center" | "right";

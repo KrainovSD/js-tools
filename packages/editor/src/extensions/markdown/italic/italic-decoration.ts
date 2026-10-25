@@ -2,11 +2,15 @@ import { Decoration } from "@codemirror/view";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import {
+  CODE_OF_ASTERISK,
+  CODE_OF_UNDERSCORE,
+  type ContentDecorationOptions,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import styles from "../styles.module.scss";
 
-export const NAME_OF_ITALIC = "Emphasis";
-const LIST_OF_ITALIC_MARKS = new Set([95, 42]); // _  *
+const LIST_OF_ITALIC_MARKS = new Set([CODE_OF_UNDERSCORE, CODE_OF_ASTERISK]); // _  *
 
 export function fillItalicContentDecorations(opts: ContentDecorationOptions) {
   opts.decorations.push(

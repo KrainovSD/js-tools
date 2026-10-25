@@ -1,9 +1,10 @@
 import { EditorView, WidgetType } from "@codemirror/view";
-import { getHeaderId, normalizeUrl } from "@/lib/utils";
+import { normalizeUrl } from "@/lib/utils";
 import { CLASSES } from "../classes-constants";
+import { getHeaderId } from "../header/header-lib";
+import { CODE_OF_HASH } from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
 import styles from "../styles.module.scss";
-import { CODE_OF_ANCHOR } from "./link-model";
 
 const LINK_NODES: Record<string, AnchorElement | undefined> = {};
 
@@ -138,7 +139,7 @@ function handleClick(
     selectLinkUrl(view, link, from, to);
     return;
   }
-  if (link.charCodeAt(0) === CODE_OF_ANCHOR) {
+  if (link.charCodeAt(0) === CODE_OF_HASH) {
     const textFrom = short ? from + 2 : from + 1;
     const textTo = short ? to - 2 : from + 1 + text.length;
     navigateToHeader(view, link, textFrom, textTo);

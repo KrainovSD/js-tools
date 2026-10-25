@@ -3,9 +3,12 @@ import type { SyntaxNode, SyntaxNodeRef } from "@lezer/common";
 import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import {
+  type ContentDecorationOptions,
+  NAME_OF_FOOTNOTE_DEFINITION,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import styles from "../styles.module.scss";
-import { NAME_OF_FOOTNOTE_DEFINITION } from "./footnote-model";
 
 function findFootnoteDefinition(node: SyntaxNodeRef): SyntaxNode | null {
   let parent = node.node.parent;

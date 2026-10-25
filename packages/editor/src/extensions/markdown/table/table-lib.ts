@@ -1,11 +1,16 @@
 import type { EditorState } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
 import {
-  MIN_COLUMN_WIDTH,
+  CODE_OF_COLON,
+  CODE_OF_HYPHEN,
+  CODE_OF_PIPE,
   NAME_OF_TABLE_CELL,
   NAME_OF_TABLE_DELIMITER,
   NAME_OF_TABLE_HEADER,
   NAME_OF_TABLE_ROW,
+} from "../markdown-model";
+import {
+  MIN_COLUMN_WIDTH,
   type TableAlignment,
   type TableCellModel,
   type TableMatrix,
@@ -60,10 +65,6 @@ export function parseTable(state: EditorState, node: SyntaxNode): TableModel | u
   };
 }
 
-const PIPE = 124; // "|"
-const COLON = 58; // ":"
-const DASH = 45; // "-"
-
 function parseColumns(text: string): [(TableAlignment | undefined)[], number[]] {
   const alignments: (TableAlignment | undefined)[] = [];
   const delimiterWidths: number[] = [];
@@ -74,9 +75,9 @@ function parseColumns(text: string): [(TableAlignment | undefined)[], number[]] 
   const pushColumn = () => {
     const start = startMark === -1 ? NaN : text.charCodeAt(startMark);
     const end = endMark === -1 ? NaN : text.charCodeAt(endMark);
-    if (start === COLON && end === COLON) alignments.push("center");
-    else if (start === COLON) alignments.push("left");
-    else if (end === COLON) alignments.push("right");
+    if (start === CODE_OF_COLON && end === CODE_OF_COLON) alignments.push("center");
+    else if (start === CODE_OF_COLON) alignments.push("left");
+    else if (end === CODE_OF_COLON) alignments.push("right");
     else alignments.push(undefined);
     delimiterWidths.push(symbols);
     symbols = 0;
@@ -86,14 +87,14 @@ function parseColumns(text: string): [(TableAlignment | undefined)[], number[]] 
 
   for (let index = 0; index < text.length; index++) {
     const code = text.charCodeAt(index);
-    if (code === PIPE) {
+    if (code === CODE_OF_PIPE) {
       if (symbols > 0) pushColumn();
       continue;
     }
-    if (code === DASH) {
+    if (code === CODE_OF_HYPHEN) {
       if (startMark === -1) startMark = index;
       symbols++;
-    } else if (code === COLON) {
+    } else if (code === CODE_OF_COLON) {
       if (startMark === -1) startMark = index;
       else if (endMark === -1) endMark = index;
       symbols++;

@@ -1,9 +1,15 @@
 import { Decoration } from "@codemirror/view";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import type { ContentDecorationOptions, SelectionDecorationOptions } from "../markdown-model";
+import {
+  type ContentDecorationOptions,
+  NAME_OF_AUTO_LINK,
+  NAME_OF_IMAGE,
+  NAME_OF_LINK,
+  NAME_OF_SHORT_LINK,
+  type SelectionDecorationOptions,
+} from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
-import { NAME_OF_AUTO_LINK, NAME_OF_IMAGE, NAME_OF_LINK, NAME_OF_SHORT_LINK } from "./link-model";
 import { LinkWidget } from "./link-widget";
 
 export function fillURLContentDecorations(opts: ContentDecorationOptions) {

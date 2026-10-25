@@ -2,12 +2,15 @@ import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
 import { type EditorState } from "@codemirror/state";
 import { type Tree } from "@lezer/common";
 import { parseHeader, parseSetextHeader } from "./header/header-lib";
-import { NAME_OF_HEADER, NAME_OF_HEADER_UNDER } from "./header/header-model";
 import { parseImage } from "./image/image-lib";
-import { NAME_OF_IMAGE } from "./image/image-model";
-import type { TreeIndex } from "./markdown-model";
+import {
+  NAME_OF_HEADER,
+  NAME_OF_HEADER_UNDER,
+  NAME_OF_IMAGE,
+  NAME_OF_TABLE,
+  type TreeIndex,
+} from "./markdown-model";
 import { parseTable } from "./table/table-lib";
-import { NAME_OF_TABLE } from "./table/table-model";
 
 const treeIndexCache = new WeakMap<Tree, TreeIndex>();
 export function getTreeIndex(state: EditorState, ensure: boolean = false): TreeIndex {
