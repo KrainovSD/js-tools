@@ -22,11 +22,24 @@ import {
   fillInlineCodeSelectionDecorations,
 } from "./code/code-decoration";
 import {
+  fillFootnoteDefinitionContentDecorations,
+  fillFootnoteRefContentDecorations,
+  fillFootnoteRefSelectionDecorations,
+} from "./footnote/footnote-decoration";
+import {
+  fillHashtagContentDecorations,
+  fillHashtagSelectionDecorations,
+} from "./hashtag/hashtag-decoration";
+import {
   fillATXHeadingContentDecorations,
   fillATXHeadingSelectionDecorations,
   fillSetextHeadingContentDecorations,
   fillSetextHeadingSelectionDecorations,
 } from "./header/header-decoration";
+import {
+  fillHighlightContentDecorations,
+  fillHighlightSelectionDecorations,
+} from "./highlight/highlight-decoration";
 import { fillHorizontalSelectionDecorations } from "./horizontal/horizontal-decoration";
 import {
   fillImageContentDecorations,
@@ -70,6 +83,10 @@ const ContentDecorationFns = {
   Image: fillImageContentDecorations,
   URL: fillURLContentDecorations,
   Mention: fillMentionContentDecorations,
+  Highlight: fillHighlightContentDecorations,
+  Hashtag: fillHashtagContentDecorations,
+  FootnoteRef: fillFootnoteRefContentDecorations,
+  FootnoteDefinition: fillFootnoteDefinitionContentDecorations,
   QuoteMark: fillBlockquoteContentDecorations,
   Blockquote: fillCalloutContentDecorations,
   ATXHeading1: fillATXHeadingContentDecorations,
@@ -97,6 +114,9 @@ const SelectionDecorationFns = {
   Autolink: fillAutolinkSelectionDecorations,
   ListMark: fillListMarkSelectionDecorations,
   Mention: fillMentionSelectionDecorations,
+  Highlight: fillHighlightSelectionDecorations,
+  Hashtag: fillHashtagSelectionDecorations,
+  FootnoteRef: fillFootnoteRefSelectionDecorations,
   QuoteMark: fillBlockquoteSelectionDecorations,
   Blockquote: fillCalloutSelectionDecorations,
   Task: fillTodoSelectionDecorations,

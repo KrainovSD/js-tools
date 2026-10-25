@@ -264,6 +264,30 @@
   font-weight: 700;
 }
 
+.highlight {
+  border-radius: 2px;
+}
+
+.hashtag {
+  font-weight: 700;
+}
+
+.footnote {
+  &__ref {
+    font-size: 0.75em;
+    vertical-align: super;
+  }
+
+  &__label {
+    font-weight: 700;
+  }
+
+  &__definition {
+    border-left: 1px solid;
+    margin-left: 5px;
+  }
+}
+
 .table {
   max-width: 100%;
   padding: 0 2px 0 6px;

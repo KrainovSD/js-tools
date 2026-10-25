@@ -1,5 +1,30 @@
 export const COMMON_TEST = `# Заголовок для якорей
 
+## Highlight
+
+==highlighted text==, ==in the middle of sentence==,  **bold==combine==**.
+===bad example===, == with whitespaces ==.
+==start this
+end this==.
+
+## Hashtags
+
+#тег, #tag, #Tag123, #тег-с-дефисом, #tag_with_underscore, #dot.inside, #tag/slash, #tag.,  #tag-
+##tag, foo#bar
+## Header with #tag inside
+
+## Footnotes
+
+одна[^1], note[^note], note[^сноска], note[^with whitespace], note[^without definition], empty[^] 
+
+[^1]: first
+[^note]: second with **bold**, ==highlight== and [link](https://example.com) inside
+[^сноска]: first
+    second
+    third with **bold** inside
+
+[^empty]:
+
 ## Каллауты
 
 > [!INFO] Заголовок!

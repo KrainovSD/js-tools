@@ -132,6 +132,22 @@ export const Skin: Extension = EditorView.theme({
   [`.${CLASSES.mention}`]: {
     color: "var(--ksd-md-mention-color, color-mix(in srgb, currentColor 60%, #4da3ff))",
   },
+  [`.${CLASSES.highlight}`]: {
+    color: "var(--ksd-md-highlight-color, currentColor)",
+    background: "var(--ksd-md-highlight-bg, color-mix(in srgb, currentColor 15%, #64572d))",
+  },
+  [`.${CLASSES.hashtag}`]: {
+    color: "var(--ksd-md-hashtag-color, color-mix(in srgb, currentColor 60%, #4da3ff))",
+  },
+  [`.${CLASSES.footnoteRef}`]: {
+    color: "var(--ksd-md-footnote-color, color-mix(in srgb, currentColor 60%, #4da3ff))",
+  },
+  [`.${CLASSES.footnoteDefinition}`]: {
+    color:
+      "var(--ksd-md-footnote-definition-color, color-mix(in srgb, currentColor 75%, transparent))",
+    borderColor:
+      "var(--ksd-md-footnote-definition-border, color-mix(in srgb, currentColor 25%, transparent))",
+  },
   [`.${CLASSES.table}`]: {
     color: "var(--ksd-md-table-color, currentColor)",
   },
