@@ -1,7 +1,6 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import styles from "../styles.module.scss";
 
 export class CodeWidget extends WidgetType {
   view: EditorView | undefined;
@@ -24,44 +23,34 @@ export class CodeWidget extends WidgetType {
       const span = this.span;
       const button = this.button;
       clearTimeout(this.timer);
-      button.classList.remove(styles.pending);
       button.classList.remove(CLASSES.codeButtonPending);
-      button.classList.remove(styles.success);
       button.classList.remove(CLASSES.codeButtonSuccess);
-      button.classList.remove(styles.fail);
       button.classList.remove(CLASSES.codeButtonFail);
 
-      button.classList.add(styles.pending);
       button.classList.add(CLASSES.codeButtonPending);
 
-      span.classList.add(styles.hide);
+      span.classList.add(CLASSES.codeButtonSpanHidden);
 
       void utils
         .copyToClipboard(this.content)
         .then(() => {
-          button.classList.remove(styles.pending);
           button.classList.remove(CLASSES.codeButtonPending);
 
-          button.classList.add(styles.success);
           button.classList.add(CLASSES.codeButtonSuccess);
 
           this.timer = setTimeout(() => {
-            button.classList.remove(styles.success);
             button.classList.remove(CLASSES.codeButtonSuccess);
-            span.classList.remove(styles.hide);
+            span.classList.remove(CLASSES.codeButtonSpanHidden);
           }, 500);
         })
         .catch(() => {
-          button.classList.remove(styles.pending);
           button.classList.remove(CLASSES.codeButtonPending);
-          button.classList.add(styles.fail);
           button.classList.add(CLASSES.codeButtonFail);
 
           this.timer = setTimeout(() => {
-            button.classList.remove(styles.fail);
             button.classList.remove(CLASSES.codeButtonFail);
 
-            span.classList.remove(styles.hide);
+            span.classList.remove(CLASSES.codeButtonSpanHidden);
           }, 500);
         });
     }
@@ -71,13 +60,11 @@ export class CodeWidget extends WidgetType {
     this.view = view;
 
     const span = document.createElement("span");
-    span.classList.add(styles.code__span);
     span.classList.add(CLASSES.codeButtonSpan);
 
     span.textContent = this.language;
 
     const button = document.createElement("button");
-    button.classList.add(styles.code__button);
     button.classList.add(CLASSES.codeButton);
 
     if (this.content) button.addEventListener("click", this.onClick.bind(this));

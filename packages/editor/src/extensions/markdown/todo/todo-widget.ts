@@ -2,7 +2,6 @@ import { type ChangeSpec } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { saveDispatch } from "@/lib/utils";
 import { CLASSES } from "../classes-constants";
-import styles from "../styles.module.scss";
 
 export class TodoWidget extends WidgetType {
   view: EditorView | undefined;
@@ -42,7 +41,7 @@ export class TodoWidget extends WidgetType {
 
   toDOM(view: EditorView): HTMLElement {
     const span = document.createElement("span");
-    span.classList.add(styles.todo, CLASSES.todo);
+    span.classList.add(CLASSES.todo);
     this.view = view;
 
     const checkbox = document.createElement("input");

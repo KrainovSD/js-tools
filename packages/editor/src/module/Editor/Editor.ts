@@ -18,6 +18,15 @@ import {
   VimModeCompartment,
 } from "@/extensions/compartments";
 import { type LanguageFormatter, type LanguageOptions, NewLanguage } from "@/extensions/language";
+import {
+  NewSearch,
+  type SearchMatch,
+  SearchState,
+  findMatches,
+  getCharCodes,
+  gotoSearchEffect,
+  setSearchEffect,
+} from "@/extensions/search";
 import { NewVim, type VimGetter } from "@/extensions/vim";
 import { saveDispatch } from "@/lib/utils";
 import {
@@ -111,6 +120,7 @@ export class Editor {
       VimModeCompartment.of(vimPlugin),
       ThemeCompartment.of(this.theme ?? []),
       history(),
+      NewSearch(),
       EditorView.lineWrapping,
       keyMapPlugin,
       LanguageCompartment.of(language),
@@ -282,6 +292,64 @@ export class Editor {
   focus = () => {
     if (!this.view) return;
     this.view.focus();
+  };
+
+  search = (text: string): Promise<SearchMatch[] | undefined> => {
+    return new Promise<SearchMatch[] | undefined>((resolve) => {
+      if (!this.view) {
+        return void resolve(undefined);
+      }
+      const query = text.trim() ? text : "";
+      saveDispatch(() => {
+        const view = this.view;
+        if (!view) {
+          return void resolve(undefined);
+        }
+        if (query) {
+          const matches = findMatches(view.state.doc, getCharCodes(query));
+          if (matches.length) {
+            view.dispatch({
+              effects: [
+                setSearchEffect.of(query),
+                EditorView.scrollIntoView(matches[0].from, { y: "center" }),
+              ],
+              selection: { anchor: matches[0].from, head: matches[0].from },
+            });
+            view.focus();
+            return void resolve(matches);
+          }
+        }
+        view.dispatch({ effects: [setSearchEffect.of(query)] });
+        return void resolve(undefined);
+      });
+    });
+  };
+
+  nextSearch = () => {
+    this.gotoSearch(1);
+  };
+
+  prevSearch = () => {
+    this.gotoSearch(-1);
+  };
+
+  gotoSearch = (delta: number) => {
+    saveDispatch(() => {
+      const view = this.view;
+      if (!view) return;
+      const state = view.state.field(SearchState, false);
+      if (!state || state.matches.length < 2) return;
+      const index = (state.index + delta + state.matches.length) % state.matches.length;
+      const match = state.matches[index];
+      view.dispatch({
+        effects: [
+          gotoSearchEffect.of(index),
+          EditorView.scrollIntoView(match.from, { y: "center" }),
+        ],
+        selection: { anchor: match.from, head: match.from },
+      });
+      view.focus();
+    });
   };
 
   getContent = () => {

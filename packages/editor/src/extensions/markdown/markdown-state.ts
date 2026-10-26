@@ -1,4 +1,4 @@
-import { syntaxTree } from "@codemirror/language";
+import { foldEffect, syntaxTree, unfoldEffect } from "@codemirror/language";
 import {
   type EditorState,
   type Extension,
@@ -8,8 +8,8 @@ import {
 } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView } from "@codemirror/view";
 import { randomString } from "@/lib/utils";
-import { getTreeIndex } from "./markdown-lib";
 import type { MarkdownStateType } from "./markdown-model";
+import { getTreeIndex } from "./markdown-tree-index";
 import { fillTableStateDecorations } from "./table/table-decoration";
 
 const setFocusEffect = StateEffect.define<boolean>();
@@ -36,14 +36,19 @@ export const MarkdownState = StateField.define<MarkdownStateType>({
   update: (value, tr) => {
     let focused = value.focused;
     let stateChanged = false;
+    let foldChanged = false;
     for (const effect of tr.effects) {
       if (effect.is(setFocusEffect) && effect.value !== focused) {
         focused = effect.value;
         stateChanged = true;
       }
+      if (effect.is(foldEffect) || effect.is(unfoldEffect)) {
+        foldChanged = true;
+      }
     }
     const requiredUpdate =
       stateChanged ||
+      foldChanged ||
       tr.docChanged ||
       tr.selection !== undefined ||
       syntaxTree(tr.startState) !== syntaxTree(tr.state) ||

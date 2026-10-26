@@ -3,6 +3,7 @@ import "@fontsource/fira-code";
 import "@fontsource/nunito";
 import { vsCodeDark } from "@fsegurai/codemirror-theme-vscode-dark";
 import type { MarkdownOptions } from "@/extensions/markdown";
+import "@/extensions/markdown/styles.scss";
 import { Editor, type MultiCursorOptions } from "@/module";
 import {
   COMMON_TEST,
@@ -251,6 +252,20 @@ async function initEditor() {
       editor.replaceContent(content);
     });
   }
+}
+
+{
+  const searchInput = document.querySelector<HTMLInputElement>(".search-input");
+  const searchPrevButton = document.querySelector(".search-prev");
+  const searchNextButton = document.querySelector(".search-next");
+
+  searchInput?.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    void editor?.search(searchInput.value);
+  });
+  searchPrevButton?.addEventListener("click", () => editor?.prevSearch());
+  searchNextButton?.addEventListener("click", () => editor?.nextSearch());
 }
 
 void initEditor();

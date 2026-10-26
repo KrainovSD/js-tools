@@ -1,5 +1,4 @@
 import { Decoration } from "@codemirror/view";
-import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
 import {
@@ -8,7 +7,6 @@ import {
   NAME_OF_LIST_MARK,
   type SelectionDecorationOptions,
 } from "../markdown-model";
-import styles from "../styles.module.scss";
 import { TodoWidget } from "./todo-widget";
 
 const LIST_OF_TODO_MARKS = new Set([CODE_OF_LATIN_X, CODE_OF_CYRILLIC_HA]); // x, х
@@ -42,7 +40,7 @@ export function fillTodoSelectionDecorations(opts: SelectionDecorationOptions) {
     )
       decorations.push(
         Decoration.mark({
-          class: clsx(styles.todo__checked, CLASSES.todoChecked),
+          class: CLASSES.todoChecked,
         }).range(node.from + 4, node.to),
       );
   }

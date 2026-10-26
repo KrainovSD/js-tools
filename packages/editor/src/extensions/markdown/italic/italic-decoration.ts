@@ -1,5 +1,4 @@
 import { Decoration } from "@codemirror/view";
-import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
 import {
@@ -8,14 +7,13 @@ import {
   type ContentDecorationOptions,
   type SelectionDecorationOptions,
 } from "../markdown-model";
-import styles from "../styles.module.scss";
 
 const LIST_OF_ITALIC_MARKS = new Set([CODE_OF_UNDERSCORE, CODE_OF_ASTERISK]); // _  *
 
 export function fillItalicContentDecorations(opts: ContentDecorationOptions) {
   opts.decorations.push(
     Decoration.mark({
-      class: clsx(styles.italic, CLASSES.italic),
+      class: CLASSES.italic,
     }).range(opts.node.from, opts.node.to),
   );
 }

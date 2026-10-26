@@ -4,6 +4,7 @@ import { keymap } from "@codemirror/view";
 import { styleTags } from "@lezer/highlight";
 import type { MarkdownParser } from "@lezer/markdown";
 import { NewListRenumber } from "@/extensions/markdown/list/list-renumber";
+import { NewFold } from "./fold";
 import { NewImageViewer } from "./image/image-viewer";
 import { boldKeymap } from "./keymaps/bold-key-map";
 import { codeKeymap } from "./keymaps/code-key-map";
@@ -13,7 +14,6 @@ import { OnPasteLink } from "./keymaps/paste-link";
 import { todoKeymap } from "./keymaps/todo-key-map";
 import { type MarkdownOptions } from "./markdown-model";
 import { markdownParserPlugin } from "./markdown-parser";
-import { Skin } from "./markdown-skin";
 import { NewState } from "./markdown-state";
 import { NewViewDecorations } from "./markdown-view";
 
@@ -36,7 +36,7 @@ export function NewMarkdownLanguage(
   });
 
   return [
-    Skin,
+    NewFold(),
     markdown({
       base: markdownLanguage,
       codeLanguages: markdownOptions?.languages,

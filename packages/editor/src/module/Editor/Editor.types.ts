@@ -70,3 +70,8 @@ export type KeyMapsOptions = {
   custom?: CustomKeyMap[];
   vim?: boolean;
 };
+
+export type DocRange = {
+  from: number;
+  to: number;
+};

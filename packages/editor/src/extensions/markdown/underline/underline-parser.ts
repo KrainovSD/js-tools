@@ -1,10 +1,6 @@
 import type { MarkdownConfig } from "@lezer/markdown";
-import {
-  CODE_OF_CARET,
-  NAME_OF_UNDERLINE,
-  NAME_OF_UNDERLINE_MARK,
-  isWhitespaceCode,
-} from "../markdown-model";
+import { isWhitespaceCode } from "../markdown-lib";
+import { CODE_OF_CARET, NAME_OF_UNDERLINE, NAME_OF_UNDERLINE_MARK } from "../markdown-model";
 
 const UNDERLINE_DELIMITER = {
   resolve: NAME_OF_UNDERLINE,

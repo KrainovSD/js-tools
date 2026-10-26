@@ -1,10 +1,9 @@
 import type { ChangeSpec, EditorState } from "@codemirror/state";
 import { type EditorView, WidgetType } from "@codemirror/view";
 import type { SyntaxNode } from "@lezer/common";
-import clsx from "clsx";
 import { normalizeUrl, saveDispatch } from "@/lib/utils";
 import { CLASSES } from "../classes-constants";
-import { getTreeIndex } from "../markdown-lib";
+import { isWhitespaceCode } from "../markdown-lib";
 import {
   CODE_OF_GREATER_THAN,
   CODE_OF_LATIN_B,
@@ -26,9 +25,8 @@ import {
   NAME_OF_UNDERLINE,
   NAME_OF_UNDERLINE_MARK,
   NAME_OF_URL,
-  isWhitespaceCode,
 } from "../markdown-model";
-import styles from "../styles.module.scss";
+import { getTreeIndex } from "../markdown-tree-index";
 import { matrixToSource, modelToMatrix, rowSource, withExtraColumn } from "./table-lib";
 import type { TableCellModel, TableModel } from "./table-model";
 
@@ -60,11 +58,11 @@ export class TableWidget extends WidgetType {
     this.controller = new AbortController();
     const { signal } = this.controller;
     const root = document.createElement("div");
-    root.classList.add(styles.table, CLASSES.table);
+    root.classList.add(CLASSES.table);
     const wrapper = document.createElement("div");
-    wrapper.classList.add(styles.table__wrapper, CLASSES.tableWrapper);
+    wrapper.classList.add(CLASSES.tableWrapper);
     const table = document.createElement("table");
-    table.classList.add(styles.table__editor, CLASSES.tableEditor);
+    table.classList.add(CLASSES.tableEditor);
     table.tabIndex = -1;
     const head = document.createElement("thead");
     const headRow = document.createElement("tr");
@@ -139,7 +137,7 @@ export class TableWidget extends WidgetType {
 
   private createCellElement(state: EditorState, cell: TableCellModel, tag: "th" | "td") {
     const element = document.createElement(tag);
-    element.classList.add(styles.table__cell, CLASSES.tableCell);
+    element.classList.add(CLASSES.tableCell);
     this.fillCellElement(state, element, cell);
     return element;
   }
@@ -153,7 +151,7 @@ export class TableWidget extends WidgetType {
       element.style.textAlign = alignment;
     }
     const content = document.createElement("div");
-    content.classList.add(styles["table__cell-content"]);
+    content.classList.add(CLASSES.tableCellContent);
     content.appendChild(renderCellContent(state, cell));
     element.appendChild(content);
   }
@@ -191,10 +189,7 @@ export class TableWidget extends WidgetType {
   private createPlusButton(view: EditorView, kind: "row" | "col") {
     const button = document.createElement("button");
     button.type = "button";
-    button.classList.add(
-      kind === "row" ? styles["table__row-btn"] : styles["table__col-btn"],
-      kind === "row" ? CLASSES.tableRowButton : CLASSES.tableColButton,
-    );
+    button.classList.add(kind === "row" ? CLASSES.tableRowButton : CLASSES.tableColButton);
     button.textContent = "+";
     button.addEventListener(
       "click",
@@ -284,18 +279,18 @@ function renderNode(target: Node, state: EditorState, node: SyntaxNode) {
 function createElementFor(state: EditorState, node: SyntaxNode): HTMLElement | null {
   switch (node.name) {
     case NAME_OF_BOLD:
-      return createStyledElement("strong", clsx(styles.bold, CLASSES.bold));
+      return createStyledElement("strong", CLASSES.bold);
     case NAME_OF_ITALIC:
-      return createStyledElement("em", clsx(styles.italic, CLASSES.italic));
+      return createStyledElement("em", CLASSES.italic);
     case NAME_OF_STRIKE_THROUGH:
-      return createStyledElement("span", clsx(styles["strike-through"], CLASSES.strikeThrough));
+      return createStyledElement("span", CLASSES.strikeThrough);
     case NAME_OF_UNDERLINE:
-      return createStyledElement("span", clsx(styles.underline, CLASSES.underline));
+      return createStyledElement("span", CLASSES.underline);
     case NAME_OF_INLINE_CODE:
-      return createStyledElement("code", clsx(styles.code, CLASSES.code));
+      return createStyledElement("code", CLASSES.code);
     case NAME_OF_LINK: {
       const anchor = document.createElement("a");
-      anchor.className = clsx(styles.link, CLASSES.link);
+      anchor.className = CLASSES.link;
       const url = node.getChild(NAME_OF_URL);
       if (url) {
         anchor.href = normalizeUrl(state.doc.sliceString(url.from, url.to));
@@ -305,7 +300,7 @@ function createElementFor(state: EditorState, node: SyntaxNode): HTMLElement | n
     }
     case NAME_OF_AUTO_LINK: {
       const anchor = document.createElement("a");
-      anchor.className = clsx(styles.link, CLASSES.link);
+      anchor.className = CLASSES.link;
       const url = state.doc.sliceString(node.from + 1, node.to - 1);
       anchor.href = normalizeUrl(url);
       anchor.target = "_blank";

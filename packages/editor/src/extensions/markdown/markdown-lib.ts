@@ -1,66 +1,55 @@
-import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
-import { type EditorState } from "@codemirror/state";
-import { type Tree } from "@lezer/common";
-import { parseHeader, parseSetextHeader } from "./header/header-lib";
-import { parseImage } from "./image/image-lib";
 import {
-  NAME_OF_HEADER,
-  NAME_OF_HEADER_UNDER,
-  NAME_OF_IMAGE,
-  NAME_OF_TABLE,
-  type TreeIndex,
+  CODE_OF_CARRIAGE_RETURN,
+  CODE_OF_CYRILLIC_END,
+  CODE_OF_CYRILLIC_LOWER_IO,
+  CODE_OF_CYRILLIC_START,
+  CODE_OF_CYRILLIC_UPPER_END,
+  CODE_OF_CYRILLIC_UPPER_IO,
+  CODE_OF_CYRILLIC_UPPER_START,
+  CODE_OF_LATIN_LOWER_END,
+  CODE_OF_LATIN_LOWER_START,
+  CODE_OF_LATIN_UPPER_END,
+  CODE_OF_LATIN_UPPER_START,
+  CODE_OF_SPACE,
+  CODE_OF_TAB,
 } from "./markdown-model";
-import { parseTable } from "./table/table-lib";
 
-const treeIndexCache = new WeakMap<Tree, TreeIndex>();
-export function getTreeIndex(state: EditorState, ensure: boolean = false): TreeIndex {
-  let currentTree = syntaxTree(state);
-  const cached = treeIndexCache.get(currentTree);
-  if (cached) {
-    return cached;
+export function isWhitespaceCode(code: number): boolean {
+  return (
+    code === -1 ||
+    Number.isNaN(code) ||
+    code === CODE_OF_SPACE ||
+    (code >= CODE_OF_TAB && code <= CODE_OF_CARRIAGE_RETURN) ||
+    code === 0xa0 ||
+    code === 0x1680 ||
+    (code >= 0x2000 && code <= 0x200a) ||
+    code === 0x2028 ||
+    code === 0x2029 ||
+    code === 0x202f ||
+    code === 0x205f ||
+    code === 0x3000 ||
+    code === 0xfeff
+  );
+}
+
+export function isLetterCode(code: number): boolean {
+  return (
+    (code >= CODE_OF_LATIN_UPPER_START && code <= CODE_OF_LATIN_UPPER_END) ||
+    (code >= CODE_OF_LATIN_LOWER_START && code <= CODE_OF_LATIN_LOWER_END) ||
+    (code >= CODE_OF_CYRILLIC_START && code <= CODE_OF_CYRILLIC_END) ||
+    (code >= 0xc0 && code <= 0xff && code !== 0xd7 && code !== 0xf7) ||
+    (code >= 0x100 && code <= 0x24f)
+  );
+}
+
+export function toLowerLetterCode(code: number): number {
+  if (
+    (code >= CODE_OF_LATIN_UPPER_START && code <= CODE_OF_LATIN_UPPER_END) ||
+    (code >= CODE_OF_CYRILLIC_UPPER_START && code <= CODE_OF_CYRILLIC_UPPER_END)
+  ) {
+    return code + 32;
   }
-  if (ensure) {
-    const tree = ensureSyntaxTree(state, state.doc.length) ?? currentTree;
-    const ensured = treeIndexCache.get(tree);
-    if (ensured) {
-      return ensured;
-    }
-    currentTree = tree;
-  }
-  const index: TreeIndex = {
-    headers: [],
-    images: [],
-    tables: [],
-    headersByFrom: new Map(),
-    imagesByFrom: new Map(),
-  };
-  const headerSlugs = new Map<string, number>();
-  currentTree.iterate({
-    enter: (node) => {
-      if (node.name === NAME_OF_TABLE) {
-        const table = parseTable(state, node.node);
-        if (table) {
-          index.tables.push(table);
-        }
-      } else if (node.name.startsWith(NAME_OF_HEADER)) {
-        const header = parseHeader(state, node, headerSlugs);
-        if (header) {
-          index.headers.push(header);
-          index.headersByFrom.set(header.from, header);
-        }
-      } else if (node.name.startsWith(NAME_OF_HEADER_UNDER)) {
-        const header = parseSetextHeader(state, node, headerSlugs);
-        if (header) {
-          index.headers.push(header);
-          index.headersByFrom.set(header.from, header);
-        }
-      } else if (node.name === NAME_OF_IMAGE) {
-        const image = parseImage(state, node);
-        index.images.push(image);
-        index.imagesByFrom.set(image.from, image);
-      }
-    },
-  });
-  treeIndexCache.set(currentTree, index);
-  return index;
+  if (code === CODE_OF_CYRILLIC_UPPER_IO) return CODE_OF_CYRILLIC_LOWER_IO;
+  if (code >= 0xc0 && code <= 0xde) return code + 32;
+  return code;
 }

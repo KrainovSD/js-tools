@@ -1,5 +1,4 @@
 import { Decoration } from "@codemirror/view";
-import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
 import {
@@ -8,7 +7,6 @@ import {
   type ContentDecorationOptions,
   type SelectionDecorationOptions,
 } from "../markdown-model";
-import styles from "../styles.module.scss";
 import { BlockquoteWidget } from "./blockquote-widget";
 
 export function fillBlockquoteContentDecorations(opts: ContentDecorationOptions) {
@@ -42,7 +40,7 @@ export function fillBlockquoteContentDecorations(opts: ContentDecorationOptions)
   if (!isInner) {
     decorations.push(
       Decoration.line({
-        class: clsx(styles.blockquote, CLASSES.blockquote),
+        class: CLASSES.blockquote,
       }).range(line.from),
     );
   }

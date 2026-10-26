@@ -1,9 +1,7 @@
 import { Decoration } from "@codemirror/view";
-import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
 import type { SelectionDecorationOptions } from "../markdown-model";
-import styles from "../styles.module.scss";
 
 export function fillHorizontalSelectionDecorations(opts: SelectionDecorationOptions) {
   const { view, node, decorations, readonly } = opts;
@@ -16,7 +14,7 @@ export function fillHorizontalSelectionDecorations(opts: SelectionDecorationOpti
   ) {
     decorations.push(
       Decoration.line({
-        class: clsx(styles.horizontal, CLASSES.horizontal),
+        class: CLASSES.horizontal,
       }).range(line.from),
     );
     decorations.push(Decoration.replace({}).range(node.from, node.to));

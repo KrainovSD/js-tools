@@ -1,6 +1,5 @@
 import { syntaxTree } from "@codemirror/language";
 import { Decoration } from "@codemirror/view";
-import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
 import {
@@ -10,7 +9,6 @@ import {
   NAME_OF_ITALIC,
   type SelectionDecorationOptions,
 } from "../markdown-model";
-import styles from "../styles.module.scss";
 
 export const LIST_OF_BOLD_MARKS = new Set([CODE_OF_UNDERSCORE, CODE_OF_ASTERISK]);
 
@@ -23,7 +21,7 @@ export function fillBoldContentDecorations(opts: ContentDecorationOptions) {
       : 0;
   opts.decorations.push(
     Decoration.mark({
-      class: clsx(styles.bold, CLASSES.bold),
+      class: CLASSES.bold,
     }).range(opts.node.from - step, opts.node.to + step),
   );
 }

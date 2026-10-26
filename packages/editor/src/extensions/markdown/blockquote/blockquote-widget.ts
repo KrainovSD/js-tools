@@ -1,6 +1,5 @@
 import { WidgetType } from "@codemirror/view";
 import { CLASSES } from "../classes-constants";
-import styles from "../styles.module.scss";
 
 export class BlockquoteWidget extends WidgetType {
   constructor(private readonly deep: boolean) {
@@ -9,9 +8,8 @@ export class BlockquoteWidget extends WidgetType {
 
   toDOM(): HTMLElement {
     const span = document.createElement("span");
-    span.classList.add(styles.blockquote__inner);
-    if (this.deep) span.classList.add(styles["blockquote__inner-deep"]);
     span.classList.add(CLASSES.blockquoteInner);
+    if (this.deep) span.classList.add(CLASSES.blockquoteInnerDeep);
 
     return span;
   }

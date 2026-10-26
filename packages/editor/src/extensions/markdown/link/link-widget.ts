@@ -4,7 +4,6 @@ import { CLASSES } from "../classes-constants";
 import { getHeaderId } from "../header/header-lib";
 import { CODE_OF_HASH } from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
-import styles from "../styles.module.scss";
 
 const LINK_NODES: Record<string, AnchorElement | undefined> = {};
 
@@ -51,11 +50,9 @@ export class LinkWidget extends WidgetType {
 
   toDOM(): HTMLElement {
     const anchor = document.createElement("a") as AnchorElement;
-    anchor.classList.add(styles.link);
     anchor.classList.add(CLASSES.link);
 
     if (this.short) {
-      anchor.classList.add(styles.short);
       anchor.classList.add(CLASSES.shortLink);
     }
 

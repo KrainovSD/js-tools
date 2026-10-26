@@ -1,4 +1,4 @@
-import { syntaxTree } from "@codemirror/language";
+import { foldEffect, syntaxTree, unfoldEffect } from "@codemirror/language";
 import { type Range } from "@codemirror/state";
 import {
   Decoration,
@@ -217,7 +217,11 @@ export function NewViewDecorations(settings: MarkdownDecorationSettings) {
         const treeChanged = syntaxTree(update.startState) !== syntaxTree(update.state);
         const editableChanged =
           update.startState.facet(EditorView.editable) !== update.state.facet(EditorView.editable);
-        const contentChanged = update.docChanged || update.viewportChanged || treeChanged;
+        const foldChanged = update.transactions.some((transaction) =>
+          transaction.effects.some((effect) => effect.is(foldEffect) || effect.is(unfoldEffect)),
+        );
+        const contentChanged =
+          update.docChanged || update.viewportChanged || treeChanged || foldChanged;
         const selectionChanged =
           contentChanged || update.focusChanged || update.selectionSet || editableChanged;
         this.decorations = buildDecorations(update.view, contentChanged, selectionChanged);

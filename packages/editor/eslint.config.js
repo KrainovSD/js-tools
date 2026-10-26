@@ -8,6 +8,7 @@ export default [
   {
     rules: {
       "new-cap": "off",
+      "no-promise-executor-return": "off",
     },
   },
 ];

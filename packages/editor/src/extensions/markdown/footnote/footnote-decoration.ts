@@ -1,6 +1,5 @@
 import { Decoration } from "@codemirror/view";
 import type { SyntaxNode, SyntaxNodeRef } from "@lezer/common";
-import clsx from "clsx";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
 import {
@@ -8,7 +7,6 @@ import {
   NAME_OF_FOOTNOTE_DEFINITION,
   type SelectionDecorationOptions,
 } from "../markdown-model";
-import styles from "../styles.module.scss";
 
 function findFootnoteDefinition(node: SyntaxNodeRef): SyntaxNode | null {
   let parent = node.node.parent;
@@ -28,10 +26,7 @@ export function fillFootnoteRefContentDecorations(opts: ContentDecorationOptions
   const { node, decorations } = opts;
   decorations.push(
     Decoration.mark({
-      class: clsx(
-        isDefinitionLabel(node) ? styles.footnote__label : styles.footnote__ref,
-        CLASSES.footnoteRef,
-      ),
+      class: isDefinitionLabel(node) ? CLASSES.footnoteLabel : CLASSES.footnoteRef,
     }).range(node.from, node.to),
   );
 }
@@ -56,7 +51,7 @@ export function fillFootnoteDefinitionContentDecorations(opts: ContentDecoration
   lines.forEach((line) => {
     decorations.push(
       Decoration.line({
-        class: clsx(styles.footnote__definition, CLASSES.footnoteDefinition),
+        class: CLASSES.footnoteDefinition,
       }).range(line.from),
     );
   });

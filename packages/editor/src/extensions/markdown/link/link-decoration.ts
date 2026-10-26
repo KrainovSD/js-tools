@@ -1,5 +1,6 @@
 import { Decoration } from "@codemirror/view";
 import { utils } from "@/lib";
+import { CLASSES } from "../classes-constants";
 import {
   CODE_OF_CLOSE_BRACKET,
   CODE_OF_CLOSE_PAREN,
@@ -9,7 +10,6 @@ import {
   type SelectionDecorationOptions,
 } from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
-import styles from "../styles.module.scss";
 import { LinkWidget } from "./link-widget";
 
 export function fillLinkSelectionDecorations(opts: SelectionDecorationOptions) {
@@ -86,7 +86,7 @@ function fillLinkLabelSelectionDecorations(opts: SelectionDecorationOptions) {
   ) {
     decorations.push(
       Decoration.mark({
-        class: styles.link__label,
+        class: CLASSES.linkLabel,
       }).range(node.from, node.to + 1),
     );
     decorations.push(Decoration.replace({}).range(node.from, node.from + 1));

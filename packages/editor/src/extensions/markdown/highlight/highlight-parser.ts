@@ -1,10 +1,6 @@
 import type { MarkdownConfig } from "@lezer/markdown";
-import {
-  CODE_OF_EQUALS,
-  NAME_OF_HIGHLIGHT,
-  NAME_OF_HIGHLIGHT_MARK,
-  isWhitespaceCode,
-} from "../markdown-model";
+import { isWhitespaceCode } from "../markdown-lib";
+import { CODE_OF_EQUALS, NAME_OF_HIGHLIGHT, NAME_OF_HIGHLIGHT_MARK } from "../markdown-model";
 
 const HIGHLIGHT_DELIMITER = {
   resolve: NAME_OF_HIGHLIGHT,

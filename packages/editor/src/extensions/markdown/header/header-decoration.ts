@@ -9,7 +9,6 @@ import {
   type SelectionDecorationOptions,
 } from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
-import styles from "../styles.module.scss";
 
 export function fillATXHeadingContentDecorations(opts: ContentDecorationOptions) {
   const { view, node } = opts;
@@ -20,14 +19,9 @@ export function fillATXHeadingContentDecorations(opts: ContentDecorationOptions)
   if (view.state.doc.sliceString(node.from + header.level).charCodeAt(0) !== CODE_OF_SPACE) return;
   opts.decorations.push(
     Decoration.line({
-      class: clsx(
-        styles.header,
-        styles[`level_${header.level}`],
-        CLASSES.header,
-        CLASSES.headerLevels[header.level - 1],
-      ),
+      class: clsx(CLASSES.header, CLASSES.headerLevels[header.level - 1]),
       attributes: { id: header.id },
-    }).range(view.lineBlockAt(node.from).from),
+    }).range(view.state.doc.lineAt(node.from).from),
   );
 }
 
@@ -39,14 +33,9 @@ export function fillSetextHeadingContentDecorations(opts: ContentDecorationOptio
   }
   opts.decorations.push(
     Decoration.line({
-      class: clsx(
-        styles.header,
-        styles[`level_${header.level}`],
-        CLASSES.header,
-        CLASSES.headerLevels[header.level - 1],
-      ),
+      class: clsx(CLASSES.header, CLASSES.headerLevels[header.level - 1]),
       attributes: { id: header.id },
-    }).range(view.lineBlockAt(node.from).from),
+    }).range(view.state.doc.lineAt(node.from).from),
   );
 }
 
@@ -54,7 +43,7 @@ export function fillATXHeadingSelectionDecorations(opts: SelectionDecorationOpti
   const { view, node, decorations, readonly } = opts;
   const mark = node.node.getChild(NAME_OF_HEADER_MARK);
   if (!mark) return;
-  const line = view.lineBlockAt(mark.from);
+  const line = view.state.doc.lineAt(mark.from);
   if (line.length < mark.to - mark.from + 1) return;
   if (
     readonly ||
@@ -69,8 +58,8 @@ export function fillSetextHeadingSelectionDecorations(opts: SelectionDecorationO
   const { view, node, decorations, readonly } = opts;
   const mark = node.node.getChild(NAME_OF_HEADER_MARK);
   if (!mark) return;
-  const lineHeader = view.lineBlockAt(node.from);
-  const lineMark = view.lineBlockAt(mark.from);
+  const lineHeader = view.state.doc.lineAt(node.from);
+  const lineMark = view.state.doc.lineAt(mark.from);
   if (
     readonly ||
     !view.hasFocus ||

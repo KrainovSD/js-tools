@@ -1,51 +1,19 @@
 import type { EditorState } from "@codemirror/state";
 import type { SyntaxNodeRef } from "@lezer/common";
+import { isLetterCode, isWhitespaceCode, toLowerLetterCode } from "../markdown-lib";
 import {
-  CODE_OF_CYRILLIC_END,
-  CODE_OF_CYRILLIC_LOWER_IO,
-  CODE_OF_CYRILLIC_START,
-  CODE_OF_CYRILLIC_UPPER_END,
-  CODE_OF_CYRILLIC_UPPER_IO,
-  CODE_OF_CYRILLIC_UPPER_START,
   CODE_OF_DIGIT_END,
   CODE_OF_DIGIT_START,
   CODE_OF_HYPHEN,
-  CODE_OF_LATIN_LOWER_END,
-  CODE_OF_LATIN_LOWER_START,
-  CODE_OF_LATIN_UPPER_END,
-  CODE_OF_LATIN_UPPER_START,
   NAME_OF_HEADER,
   NAME_OF_HEADER_MARK,
   NAME_OF_HEADER_UNDER,
-  isWhitespaceCode,
 } from "../markdown-model";
 import type { HeaderEntry } from "./header-model";
 
 const CODES_CHUNK_LIMIT = 4096;
 
 const codeBuffer: number[] = [];
-
-function isLetterCode(code: number): boolean {
-  return (
-    (code >= CODE_OF_LATIN_UPPER_START && code <= CODE_OF_LATIN_UPPER_END) ||
-    (code >= CODE_OF_LATIN_LOWER_START && code <= CODE_OF_LATIN_LOWER_END) ||
-    (code >= CODE_OF_CYRILLIC_START && code <= CODE_OF_CYRILLIC_END) ||
-    (code >= 0xc0 && code <= 0xff && code !== 0xd7 && code !== 0xf7) ||
-    (code >= 0x100 && code <= 0x24f)
-  );
-}
-
-function toLowerLetterCode(code: number): number {
-  if (
-    (code >= CODE_OF_LATIN_UPPER_START && code <= CODE_OF_LATIN_UPPER_END) ||
-    (code >= CODE_OF_CYRILLIC_UPPER_START && code <= CODE_OF_CYRILLIC_UPPER_END)
-  ) {
-    return code + 32;
-  }
-  if (code === CODE_OF_CYRILLIC_UPPER_IO) return CODE_OF_CYRILLIC_LOWER_IO;
-  if (code >= 0xc0 && code <= 0xde) return code + 32;
-  return code;
-}
 
 export function getHeaderId(value: string): string {
   let result = "";

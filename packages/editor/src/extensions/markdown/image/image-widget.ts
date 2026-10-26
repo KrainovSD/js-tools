@@ -1,7 +1,6 @@
 import { type EditorView, WidgetType } from "@codemirror/view";
 import { CLASSES } from "../classes-constants";
 import type { MarkdownDecorationSettings } from "../markdown-model";
-import styles from "../styles.module.scss";
 
 const IMAGE_NODES: Record<string, ImageContainerElement | undefined> = {};
 const INTERVAL_DELAY = 10000;
@@ -88,7 +87,7 @@ export class ImageWidget extends WidgetType {
     }
 
     image = document.createElement("img");
-    image.classList.add(styles.image, CLASSES.image);
+    image.classList.add(CLASSES.image);
     image.alt = this.text;
     image.src = this.src;
     this.applyPreviewStyles(image);

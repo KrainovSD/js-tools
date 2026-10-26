@@ -67,24 +67,6 @@ export const CODE_OF_CYRILLIC_UPPER_IO = 0x401; // Ё
 export const CODE_OF_CYRILLIC_LOWER_IO = 0x451; // ё
 export const CODE_OF_CYRILLIC_HA = 0x445; // х
 
-export function isWhitespaceCode(code: number): boolean {
-  return (
-    code === -1 ||
-    Number.isNaN(code) ||
-    code === CODE_OF_SPACE ||
-    (code >= CODE_OF_TAB && code <= CODE_OF_CARRIAGE_RETURN) ||
-    code === 0xa0 ||
-    code === 0x1680 ||
-    (code >= 0x2000 && code <= 0x200a) ||
-    code === 0x2028 ||
-    code === 0x2029 ||
-    code === 0x202f ||
-    code === 0x205f ||
-    code === 0x3000 ||
-    code === 0xfeff
-  );
-}
-
 export const NAME_OF_HEADER = "ATXHeading";
 export const NAME_OF_HEADER_UNDER = "SetextHeading";
 export const NAME_OF_HEADER_MARK = "HeaderMark";

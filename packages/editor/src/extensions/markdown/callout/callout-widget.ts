@@ -1,6 +1,5 @@
 import { WidgetType } from "@codemirror/view";
 import { CLASSES } from "../classes-constants";
-import styles from "../styles.module.scss";
 import { CALLOUT_TYPES, type CalloutType } from "./callout-constants";
 
 export class CalloutWidget extends WidgetType {
@@ -21,7 +20,7 @@ export class CalloutWidget extends WidgetType {
 
   toDOM(): HTMLElement {
     const span = document.createElement("span");
-    span.classList.add(styles.callout__icon, CLASSES.calloutIcon);
+    span.classList.add(CLASSES.calloutIcon);
     span.innerHTML = CALLOUT_TYPES[this.type].icon;
 
     if (this.defaultTitle) {

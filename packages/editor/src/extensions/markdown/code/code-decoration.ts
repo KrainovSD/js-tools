@@ -11,7 +11,6 @@ import {
   NAME_OF_CODE_TEXT,
   type SelectionDecorationOptions,
 } from "../markdown-model";
-import styles from "../styles.module.scss";
 import { CodeWidget } from "./code-widget";
 
 function isCodeMark(code: number) {
@@ -84,13 +83,13 @@ export function fillCodeBlockContentDecorations(opts: ContentDecorationOptions) 
 
     decorations.push(
       Decoration.mark({
-        class: clsx(styles.code__block, CLASSES.codeBlock),
+        class: CLASSES.codeBlock,
       }).range(line.from + startContent, line.to),
     );
 
     decorations.push(
       Decoration.line({
-        class: clsx(styles.code__block_line, CLASSES.codeBlockLine),
+        class: CLASSES.codeBlockLine,
       }).range(line.from),
     );
   });
@@ -167,7 +166,7 @@ function pushCodeSelectionDecorations(opts: SelectionDecorationOptions, ctx: Cod
     lines.forEach((line) => {
       decorations.push(
         Decoration.line({
-          class: clsx(styles.code__line, CLASSES.code),
+          class: CLASSES.code,
         }).range(line.from),
       );
     });
