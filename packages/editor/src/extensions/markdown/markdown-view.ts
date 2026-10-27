@@ -21,6 +21,7 @@ import {
   fillFencedCodeSelectionDecorations,
   fillInlineCodeSelectionDecorations,
 } from "./code/code-decoration";
+import { NewFoldCoverage } from "./fold";
 import {
   fillFootnoteDefinitionContentDecorations,
   fillFootnoteRefContentDecorations,
@@ -169,11 +170,13 @@ export function NewViewDecorations(settings: MarkdownDecorationSettings) {
       ? []
       : selectionDecorationsCache;
     const readonly = !view.state.facet(EditorView.editable);
+    const isFoldCovered = NewFoldCoverage(view.state);
     for (const { from: fromVisible, to: toVisible } of view.visibleRanges) {
       syntaxTree(view.state).iterate({
         from: fromVisible,
         to: toVisible,
         enter: (node) => {
+          if (isFoldCovered(node.from, node.to)) return false;
           if (contentChanged) {
             ContentDecorationFns[node.name as keyof typeof ContentDecorationFns]?.({
               view,

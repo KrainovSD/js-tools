@@ -6,6 +6,7 @@ import {
   CODE_OF_OPEN_BRACKET,
   NAME_OF_FOOTNOTE_DEFINITION,
   NAME_OF_FOOTNOTE_REF,
+  NAME_OF_LINK_REFERENCE,
 } from "../markdown-model";
 import { isFootnoteDefinitionStart } from "./footnote-lib";
 
@@ -52,8 +53,7 @@ export const footnoteParser: MarkdownConfig = {
   ],
   parseBlock: [
     {
-      name: NAME_OF_FOOTNOTE_DEFINITION,
-      before: "LinkReference",
+      name: NAME_OF_LINK_REFERENCE,
       leaf(_, leaf) {
         return isFootnoteDefinitionStart(leaf.content) ? new FootnoteDefLeafParser() : null;
       },

@@ -1,6 +1,7 @@
 import { foldedRanges, syntaxTree } from "@codemirror/language";
 import type { EditorState, Line } from "@codemirror/state";
 import type { SyntaxNode } from "@lezer/common";
+import type { DocRange } from "@/module";
 import {
   CODE_OF_DIGIT_END,
   CODE_OF_DIGIT_START,
@@ -35,4 +36,19 @@ export function isFoldedFrom(state: EditorState, foldFrom: number): boolean {
     }
   });
   return folded;
+}
+
+export function NewFoldCoverage(state: EditorState): (from: number, to: number) => boolean {
+  const folds: DocRange[] = [];
+  const iter = foldedRanges(state).iter();
+  while (iter.value) {
+    folds.push({ from: iter.from, to: iter.to });
+    iter.next();
+  }
+  let cursor = 0;
+  return (from, to) => {
+    while (cursor < folds.length && folds[cursor].to < from) cursor++;
+    const fold = folds[cursor];
+    return fold !== undefined && fold.from <= from && fold.to >= to;
+  };
 }

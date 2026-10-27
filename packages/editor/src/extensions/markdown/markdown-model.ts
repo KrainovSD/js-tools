@@ -88,6 +88,7 @@ export const NAME_OF_CODE_TEXT = "CodeText";
 export const NAME_OF_IMAGE = "Image";
 export const NAME_OF_LINK = "Link";
 export const NAME_OF_LINK_MARK = "LinkMark";
+export const NAME_OF_LINK_REFERENCE = "LinkReference";
 export const NAME_OF_AUTO_LINK = "Autolink";
 export const NAME_OF_URL = "URL";
 export const NAME_OF_SHORT_LINK = "ShortLink";

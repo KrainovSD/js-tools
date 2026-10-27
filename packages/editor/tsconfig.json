@@ -5,7 +5,8 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "plugins": [{ "name": "@vue/typescript-plugin", "language": "vue" }]
   },
   "include": [
     "src/**/*",
@@ -13,7 +14,8 @@
     "src/types.d.ts",
     "rollup.config.ts",
     ".prettierrc.mjs",
-    "vite.config.ts"
+    "vite.config.ts",
+    "src/vite-env.d.ts"
   ],
   "exclude": ["node_modules", "dist"]
 }

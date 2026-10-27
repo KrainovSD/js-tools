@@ -6,5 +6,6 @@ import { recommended } from "@krainovsd/presets/prettier";
  */
 const config = {
   ...recommended,
+  vueIndentScriptAndStyle: true,
 };
 export default config;
