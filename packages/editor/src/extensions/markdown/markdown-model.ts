@@ -2,9 +2,11 @@ import type { LanguageDescription } from "@codemirror/language";
 import type { EditorState, Range } from "@codemirror/state";
 import type { Decoration, DecorationSet, EditorView } from "@codemirror/view";
 import type { SyntaxNodeRef } from "@lezer/common";
+import type { MermaidConfig } from "mermaid";
 import type Viewer from "viewerjs";
 import type { HeaderEntry } from "./header/header-model";
 import type { ImageEntry } from "./image/image-model";
+import type { MermaidModel, MermaidSettings } from "./mermaid/mermaid-model";
 import type { TableModel } from "./table/table-model";
 
 export const CODE_OF_TAB = 9; // \t
@@ -85,6 +87,7 @@ export const NAME_OF_CODE_BLOCK = "CodeBlock";
 export const NAME_OF_CODE_MARK = "CodeMark";
 export const NAME_OF_CODE_INFO = "CodeInfo";
 export const NAME_OF_CODE_TEXT = "CodeText";
+export const NAME_OF_MERMAID = "mermaid";
 export const NAME_OF_IMAGE = "Image";
 export const NAME_OF_LINK = "Link";
 export const NAME_OF_LINK_MARK = "LinkMark";
@@ -120,6 +123,7 @@ export type TreeIndex = {
   tables: TableModel[];
   images: ImageEntry[];
   headers: HeaderEntry[];
+  mermaids: MermaidModel[];
   headersByFrom: Map<number, HeaderEntry>;
   imagesByFrom: Map<number, ImageEntry>;
 };
@@ -147,6 +151,7 @@ export type SelectionDecorationOptions = {
 
 export type MarkdownStateType = {
   uniqueId: string;
+  mermaid: MermaidSettings;
   focused: boolean;
   decorations: DecorationSet;
   getHeaders: (state: EditorState, ensure?: boolean) => HeaderEntry[];
@@ -163,4 +168,7 @@ export type MarkdownDecorationSettings = {
   imageTransition?: boolean | Viewer.TransitionOptions;
   imagePreviewSize?: number;
   openImageFullscreen?: (view: EditorView, from: number) => Promise<void>;
+  mermaid?: MermaidConfig;
+  mermaidEmptyLabel?: string;
+  mermaidErrorLabel?: string;
 };

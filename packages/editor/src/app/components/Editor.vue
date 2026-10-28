@@ -69,8 +69,8 @@
     disabled: props.readonly,
   }));
   const styles = computed(() => ({
-    "--ksd-md-code-font": props.fontCode ?? "monospace",
-    "--ksd-editor-font": props.font ?? "inherit",
+    "--ksd-cm-code-font": props.fontCode ?? "monospace",
+    "--ksd-cm-font": props.font ?? "inherit",
   }));
 
   function clickPlaceholder() {

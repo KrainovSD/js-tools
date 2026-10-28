@@ -44,7 +44,7 @@ export function NewMarkdownLanguage(
       pasteURLAsLink: false,
       extensions: [markdownParserPlugin, { props: [taglessStyles] }],
     }),
-    NewState(),
+    NewState(markdownOptions),
     NewViewDecorations({ ...markdownOptions, openImageFullscreen }),
     keymap.of([boldKeymap, italicKeymap, linkKeymap, codeKeymap, todoKeymap]),
     OnPasteLink,

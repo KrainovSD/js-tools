@@ -4,12 +4,14 @@ import { type Tree } from "@lezer/common";
 import { parseHeader, parseSetextHeader } from "./header/header-lib";
 import { parseImage } from "./image/image-lib";
 import {
+  NAME_OF_FENCED_CODE,
   NAME_OF_HEADER,
   NAME_OF_HEADER_UNDER,
   NAME_OF_IMAGE,
   NAME_OF_TABLE,
   type TreeIndex,
 } from "./markdown-model";
+import { parseMermaid } from "./mermaid/mermaid-lib";
 import { parseTable } from "./table/table-lib";
 
 const treeIndexCache = new WeakMap<Tree, TreeIndex>();
@@ -31,6 +33,7 @@ export function getTreeIndex(state: EditorState, ensure: boolean = false): TreeI
     headers: [],
     images: [],
     tables: [],
+    mermaids: [],
     headersByFrom: new Map(),
     imagesByFrom: new Map(),
   };
@@ -58,6 +61,11 @@ export function getTreeIndex(state: EditorState, ensure: boolean = false): TreeI
         const image = parseImage(state, node);
         index.images.push(image);
         index.imagesByFrom.set(image.from, image);
+      } else if (node.name === NAME_OF_FENCED_CODE) {
+        const mermaid = parseMermaid(state, node.node);
+        if (mermaid) {
+          index.mermaids.push(mermaid);
+        }
       }
     },
   });

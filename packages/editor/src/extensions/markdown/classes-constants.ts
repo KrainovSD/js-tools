@@ -69,4 +69,7 @@ export const CLASSES = {
   tableCellContent: "ksd-cm-table-cell-content",
   tableRowButton: "ksd-cm-table-row-button",
   tableColButton: "ksd-cm-table-col-button",
+  mermaid: "ksd-cm-mermaid",
+  mermaidPending: "ksd-cm-mermaid-pending",
+  mermaidError: "ksd-cm-mermaid-error",
 };

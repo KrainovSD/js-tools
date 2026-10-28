@@ -11,6 +11,7 @@ import {
   NAME_OF_CODE_TEXT,
   type SelectionDecorationOptions,
 } from "../markdown-model";
+import { isMermaidBlock } from "../mermaid/mermaid-lib";
 import { CodeWidget } from "./code-widget";
 
 function isCodeMark(code: number) {
@@ -18,8 +19,14 @@ function isCodeMark(code: number) {
 }
 
 export function fillFencedCodeSelectionDecorations(opts: SelectionDecorationOptions) {
-  const { view, node } = opts;
+  const { view, node, decorations } = opts;
   const ctx = getCodeMarksContext(view, node);
+
+  if (isMermaidBlock(view.state, node.node)) {
+    pushCodeContentDecorations(decorations, ctx, node);
+    return;
+  }
+
   let language: string | undefined;
   let languagePos: [number, number] | undefined;
   let codeContent: string | undefined;
@@ -36,6 +43,7 @@ export function fillFencedCodeSelectionDecorations(opts: SelectionDecorationOpti
     codeContent = "";
   }
 
+  pushCodeContentDecorations(decorations, ctx, node);
   pushCodeSelectionDecorations(opts, {
     ...ctx,
     language: language ?? "copy",
@@ -45,13 +53,14 @@ export function fillFencedCodeSelectionDecorations(opts: SelectionDecorationOpti
 }
 
 export function fillInlineCodeSelectionDecorations(opts: SelectionDecorationOptions) {
-  const { view, node } = opts;
+  const { view, node, decorations } = opts;
   const ctx = getCodeMarksContext(view, node);
   const codeContent =
     ctx.startMarkRange && ctx.endMarkRange
       ? view.state.doc.sliceString(ctx.startMarkRange[1], ctx.endMarkRange[0]).trim()
       : "";
 
+  pushCodeContentDecorations(decorations, ctx, node);
   pushCodeSelectionDecorations(opts, {
     ...ctx,
     language: "copy",
@@ -158,12 +167,13 @@ type CodeSelectionContext = CodeMarksContext & {
   codeContent: string | undefined;
 };
 
-function pushCodeSelectionDecorations(opts: SelectionDecorationOptions, ctx: CodeSelectionContext) {
-  const { view, node, decorations, readonly } = opts;
-  const { lines, isOverlapSelection, startMarkRange, endMarkRange, language, languagePos } = ctx;
-
-  if (lines.length > 1) {
-    lines.forEach((line) => {
+function pushCodeContentDecorations(
+  decorations: SelectionDecorationOptions["decorations"],
+  ctx: CodeMarksContext,
+  node: SelectionDecorationOptions["node"],
+) {
+  if (ctx.lines.length > 1) {
+    ctx.lines.forEach((line) => {
       decorations.push(
         Decoration.line({
           class: CLASSES.code,
@@ -177,6 +187,11 @@ function pushCodeSelectionDecorations(opts: SelectionDecorationOptions, ctx: Cod
       }).range(node.from, node.to),
     );
   }
+}
+
+function pushCodeSelectionDecorations(opts: SelectionDecorationOptions, ctx: CodeSelectionContext) {
+  const { view, node, decorations, readonly } = opts;
+  const { lines, isOverlapSelection, startMarkRange, endMarkRange, language, languagePos } = ctx;
 
   if (
     readonly ||

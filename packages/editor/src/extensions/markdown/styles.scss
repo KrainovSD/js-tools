@@ -1,51 +1,99 @@
+@use "sass:list";
+
+$blue: light-dark(#006ab1, #4da3ff);
+$purple: light-dark(#6f42c1, #b180ff);
+$red: light-dark(#a22232, #e93147);
+$highlight-bg: light-dark(rgba(255, 208, 0, 0.4), rgba(255, 208, 0, 0.25));
+$search-bg: light-dark(rgba(255, 195, 0, 0.3), rgba(255, 195, 0, 0.18));
+$search-active-bg: light-dark(rgba(255, 195, 0, 0.6), rgba(255, 195, 0, 0.38));
+
 $callout-accents: (
-  note: #086ddd,
-  abstract: #00bfbc,
-  info: #086ddd,
-  todo: #086ddd,
-  tip: #00bfbc,
-  success: #08b94e,
-  question: #ec7500,
-  warning: #ec7500,
-  failure: #e93147,
-  error: #e93147,
-  bug: #e93147,
-  example: #7852ee,
-  quote: #9e9e9e,
+  note: (
+    #064c9b,
+    #086ddd,
+  ),
+  abstract: (
+    #008684,
+    #00bfbc,
+  ),
+  info: (
+    #064c9b,
+    #086ddd,
+  ),
+  todo: (
+    #064c9b,
+    #086ddd,
+  ),
+  tip: (
+    #008684,
+    #00bfbc,
+  ),
+  success: (
+    #067f35,
+    #08b94e,
+  ),
+  question: (
+    #a75200,
+    #ec7500,
+  ),
+  warning: (
+    #a75200,
+    #ec7500,
+  ),
+  failure: (
+    #a22232,
+    #e93147,
+  ),
+  error: (
+    #a22232,
+    #e93147,
+  ),
+  bug: (
+    #a22232,
+    #e93147,
+  ),
+  example: (
+    #5439a7,
+    #7852ee,
+  ),
+  quote: (
+    #6f6f6f,
+    #9e9e9e,
+  ),
 );
 
 .ksd-cm-header {
   font-weight: bold;
-  color: var(--ksd-md-header-color, currentColor);
+  color: var(--ksd-cm-header-color, currentColor);
 
   &.ksd-cm-header-1 {
     font-size: 2em;
-    color: var(--ksd-md-header-1-color, currentColor);
+    color: var(--ksd-cm-header-1-color, currentColor);
   }
 
   &.ksd-cm-header-2 {
     font-size: 1.8em;
-    color: var(--ksd-md-header-2-color, currentColor);
+    color: var(--ksd-cm-header-2-color, currentColor);
   }
 
   &.ksd-cm-header-3 {
     font-size: 1.6em;
-    color: var(--ksd-md-header-3-color, currentColor);
+    color: var(--ksd-cm-header-3-color, currentColor);
   }
 
   &.ksd-cm-header-4 {
     font-size: 1.4em;
-    color: var(--ksd-md-header-4-color, currentColor);
+    color: var(--ksd-cm-header-4-color, currentColor);
   }
 
   &.ksd-cm-header-5 {
     font-size: 1.3em;
-    color: var(--ksd-md-header-5-color, currentColor);
+    color: var(--ksd-cm-header-5-color, currentColor);
   }
 
   &.ksd-cm-header-6 {
     font-size: 1.2em;
-    color: var(--ksd-md-header-6-color, currentColor);
+    color: var(--ksd-cm-header-6-color, currentColor);
   }
 }
 
@@ -58,7 +106,7 @@ $callout-accents: (
   // opacity: 0;
   user-select: none;
   margin-inline-end: 2px;
-  color: var(--ksd-md-fold-color, currentColor);
+  color: var(--ksd-cm-fold-color, currentColor);
   transition:
     opacity 0.2s ease,
     transform 0.15s ease;
@@ -75,46 +123,46 @@ $callout-accents: (
 }
 
 .ksd-cm-fold-placeholder {
-  margin: 0 var(--ksd-md-fold-inline-margin, 6px);
-  padding: 0 var(--ksd-md-fold-placeholder-padding, 6px);
-  color: var(--ksd-md-code-color, currentColor);
-  background: var(--ksd-md-code-block-bg, color-mix(in srgb, currentColor 5%, transparent));
-  border: var(--ksd-md-fold-placeholder-border, 1px solid currentColor);
-  border-radius: var(--ksd-md-fold-placeholder-radius, 0.2em);
+  margin: 0 var(--ksd-cm-fold-inline-margin, 6px);
+  padding: 0 var(--ksd-cm-fold-placeholder-padding, 6px);
+  color: var(--ksd-cm-code-color, currentColor);
+  background: var(--ksd-cm-code-block-bg, color-mix(in srgb, currentColor 5%, transparent));
+  border: var(--ksd-cm-fold-placeholder-border, 1px solid currentColor);
+  border-radius: var(--ksd-cm-fold-placeholder-radius, 0.2em);
   cursor: pointer;
 }
 
 .ksd-cm-bold {
   font-weight: bold;
-  color: var(--ksd-md-bold-color, currentColor);
+  color: var(--ksd-cm-bold-color, currentColor);
 }
 
 .ksd-cm-italic {
   font-style: italic;
-  color: var(--ksd-md-italic-color, currentColor);
+  color: var(--ksd-cm-italic-color, currentColor);
 }
 
 .ksd-cm-strike-through {
   text-decoration: line-through;
-  color: var(--ksd-md-strike-through-color, currentColor);
+  color: var(--ksd-cm-strike-through-color, currentColor);
 }
 
 .ksd-cm-underline {
   text-decoration: underline;
-  color: var(--ksd-md-underline-color, currentColor);
+  color: var(--ksd-cm-underline-color, currentColor);
 }
 
 .ksd-cm-blockquote {
-  border-left: 3px solid var(--ksd-md-blockquote, currentColor);
+  border-left: 3px solid var(--ksd-cm-blockquote, currentColor);
   margin-left: 5px;
-  color: var(--ksd-md-blockquote-color, currentColor);
+  color: var(--ksd-cm-blockquote-color, currentColor);
 }
 
 .ksd-cm-blockquote-inner {
   margin-left: 1px;
   padding-left: 5px;
   position: relative;
-  color: var(--ksd-md-blockquote-inner-color, currentColor);
+  color: var(--ksd-cm-blockquote-inner-color, currentColor);
 
   &:before {
     content: "";
@@ -122,7 +170,7 @@ $callout-accents: (
     top: -3px;
     left: 0;
     height: 140%;
-    border-left: 3px solid var(--ksd-md-blockquote, currentColor);
+    border-left: 3px solid var(--ksd-cm-blockquote, currentColor);
   }
 
   &.ksd-cm-blockquote-inner-deep {
@@ -131,31 +179,34 @@ $callout-accents: (
 }
 
 .ksd-cm-callout {
-  color: var(--ksd-md-callout-color, currentColor);
+  color: var(--ksd-cm-callout-color, currentColor);
 
   @each $type, $accent in $callout-accents {
     &.ksd-cm-callout-#{$type} {
       border-left-color: var(
-        --ksd-md-callout-#{$type}-color,
-        color-mix(in srgb, currentColor 35%, $accent)
+        --ksd-cm-callout-#{$type}-color,
+        light-dark(#{list.nth($accent, 1)}, #{list.nth($accent, 2)})
       );
     }
   }
 }
 
 .ksd-cm-callout-title {
-  font-weight: var(--ksd-md-callout-title-weight, 600);
+  font-weight: var(--ksd-cm-callout-title-weight, 600);
 
   @each $type, $accent in $callout-accents {
     &.ksd-cm-callout-#{$type} {
-      color: var(--ksd-md-callout-#{$type}-color, color-mix(in srgb, currentColor 35%, $accent));
-      border-left-color: var(--ksd-md-callout-#{$type}-color, currentColor);
+      color: var(
+        --ksd-cm-callout-#{$type}-color,
+        light-dark(#{list.nth($accent, 1)}, #{list.nth($accent, 2)})
+      );
+      border-left-color: var(--ksd-cm-callout-#{$type}-color, currentColor);
     }
   }
 }
 
 .ksd-cm-callout-icon {
-  color: var(--ksd-md-callout-icon-color, currentColor);
+  color: var(--ksd-cm-callout-icon-color, currentColor);
 
   svg {
     display: inline-block;
@@ -167,7 +218,7 @@ $callout-accents: (
 .ksd-cm-list-common {
   position: relative;
   visibility: hidden;
-  color: var(--ksd-md-list-common-color, currentColor);
+  color: var(--ksd-cm-list-common-color, currentColor);
 
   &::after {
     content: "";
@@ -184,12 +235,12 @@ $callout-accents: (
 }
 
 .ksd-cm-list-ordered {
-  color: var(--ksd-md-list-mark-color, color-mix(in srgb, currentColor 60%, #b180ff));
+  color: var(--ksd-cm-list-mark-color, $purple);
 }
 
 .ksd-cm-link {
   text-decoration: underline;
-  color: var(--ksd-md-link-color, color-mix(in srgb, currentColor 60%, #4da3ff));
+  color: var(--ksd-cm-link-color, $blue);
 }
 
 .ksd-cm-link-label {
@@ -200,34 +251,34 @@ $callout-accents: (
 
 .ksd-cm-short-link {
   cursor: pointer;
-  color: var(--ksd-md-short-link-color, color-mix(in srgb, currentColor 60%, #4da3ff));
+  color: var(--ksd-cm-short-link-color, $blue);
 }
 
 .ksd-cm-image {
   display: inline-flex;
-  color: var(--ksd-md-image-color, currentColor);
+  color: var(--ksd-cm-image-color, currentColor);
 }
 
 .ksd-cm-code {
   position: relative;
   padding: 5px;
-  color: var(--ksd-md-code-color, currentColor);
-  background: var(--ksd-md-code-bg, color-mix(in srgb, currentColor 8%, transparent));
-  font-family: var(--ksd-md-code-font, monospace);
+  color: var(--ksd-cm-code-color, currentColor);
+  background: var(--ksd-cm-code-bg, color-mix(in srgb, currentColor 8%, transparent));
+  font-family: var(--ksd-cm-code-font, monospace);
 }
 
 .ksd-cm-code-block {
   padding: 1px 5px;
-  color: var(--ksd-md-code-block-color, currentColor);
-  background: var(--ksd-md-code-block-bg, color-mix(in srgb, currentColor 5%, transparent));
-  font-family: var(--ksd-md-code-block-font, var(--ksd-md-code-font, monospace));
+  color: var(--ksd-cm-code-block-color, currentColor);
+  background: var(--ksd-cm-code-block-bg, color-mix(in srgb, currentColor 5%, transparent));
+  font-family: var(--ksd-cm-code-block-font, var(--ksd-cm-code-font, monospace));
 }
 
 .ksd-cm-code-block-line {
   border-left: 1px solid
-    var(--ksd-md-code-block-border, color-mix(in srgb, currentColor 20%, transparent));
+    var(--ksd-cm-code-block-border, color-mix(in srgb, currentColor 20%, transparent));
   margin-left: 5px;
-  color: var(--ksd-md-code-block-line-color, currentColor);
+  color: var(--ksd-cm-code-block-line-color, currentColor);
 }
 
 .ksd-cm-code-button {
@@ -244,14 +295,14 @@ $callout-accents: (
   z-index: 1;
   min-width: 30px;
   cursor: pointer;
-  color: var(--ksd-md-code-button-color, currentColor);
+  color: var(--ksd-cm-code-button-color, currentColor);
 
   &:hover {
-    background: var(--ksd-md-code-button-hover, color-mix(in srgb, currentColor 12%, transparent));
+    background: var(--ksd-cm-code-button-hover, color-mix(in srgb, currentColor 12%, transparent));
   }
 
   &.ksd-cm-code-button-pending {
-    color: var(--ksd-md-code-button-pending-color, currentColor);
+    color: var(--ksd-cm-code-button-pending-color, currentColor);
 
     &:before {
       $circle-size: 15px;
@@ -278,7 +329,7 @@ $callout-accents: (
   }
 
   &.ksd-cm-code-button-success {
-    color: var(--ksd-md-code-button-success-color, currentColor);
+    color: var(--ksd-cm-code-button-success-color, currentColor);
 
     &:after {
       content: "";
@@ -302,7 +353,7 @@ $callout-accents: (
   }
 
   &.ksd-cm-code-button-fail {
-    color: var(--ksd-md-code-button-fail-color, currentColor);
+    color: var(--ksd-cm-code-button-fail-color, currentColor);
 
     &:before,
     &:after {
@@ -318,6 +369,7 @@ $callout-accents: (
     &:before {
       transform: translate(-50%, -50%) rotate(45deg);
     }
+
     &:after {
       transform: translate(-50%, -50%) rotate(-45deg);
     }
@@ -347,7 +399,7 @@ $callout-accents: (
 .ksd-cm-code-span {
   opacity: 1;
   transition: opacity 0.3s ease;
-  color: var(--ksd-md-code-span-color, currentColor);
+  color: var(--ksd-cm-code-span-color, currentColor);
 
   &.ksd-cm-code-span-hidden {
     opacity: 0;
@@ -359,7 +411,7 @@ $callout-accents: (
   position: relative;
   border-bottom: 1px solid;
   margin: 0px 5px;
-  color: var(--ksd-md-horizontal-color, currentColor);
+  color: var(--ksd-cm-horizontal-color, currentColor);
 }
 
 .ksd-cm-todo {
@@ -368,7 +420,7 @@ $callout-accents: (
   height: 100%;
   padding-right: 3px;
   padding-left: 3px;
-  color: var(--ksd-md-todo-color, currentColor);
+  color: var(--ksd-cm-todo-color, currentColor);
 
   & > input {
     margin: 0;
@@ -377,29 +429,29 @@ $callout-accents: (
 
 .ksd-cm-todo-checked {
   text-decoration: line-through;
-  color: var(--ksd-md-todo-checked-color, currentColor);
+  color: var(--ksd-cm-todo-checked-color, currentColor);
 }
 
 .ksd-cm-mention {
   font-weight: 700;
-  color: var(--ksd-md-mention-color, color-mix(in srgb, currentColor 60%, #4da3ff));
+  color: var(--ksd-cm-mention-color, $blue);
 }
 
 .ksd-cm-highlight {
   border-radius: 2px;
-  color: var(--ksd-md-highlight-color, currentColor);
-  background: var(--ksd-md-highlight-bg, color-mix(in srgb, currentColor 15%, #64572d));
+  color: var(--ksd-cm-highlight-color, currentColor);
+  background: var(--ksd-cm-highlight-bg, $highlight-bg);
 }
 
 .ksd-cm-hashtag {
   font-weight: 700;
-  color: var(--ksd-md-hashtag-color, color-mix(in srgb, currentColor 60%, #4da3ff));
+  color: var(--ksd-cm-hashtag-color, $blue);
 }
 
 .ksd-cm-footnote-ref {
   font-size: 0.75em;
   vertical-align: super;
-  color: var(--ksd-md-footnote-color, color-mix(in srgb, currentColor 60%, #4da3ff));
+  color: var(--ksd-cm-footnote-color, $blue);
 }
 
 .ksd-cm-footnote-label {
@@ -408,16 +460,16 @@ $callout-accents: (
 
 .ksd-cm-footnote-definition {
   border-left: 1px solid
-    var(--ksd-md-footnote-definition-border, color-mix(in srgb, currentColor 25%, transparent));
+    var(--ksd-cm-footnote-definition-border, color-mix(in srgb, currentColor 25%, transparent));
   margin-left: 5px;
-  color: var(--ksd-md-footnote-definition-color, color-mix(in srgb, currentColor 75%, transparent));
+  color: var(--ksd-cm-footnote-definition-color, color-mix(in srgb, currentColor 75%, transparent));
 }
 
 .ksd-cm-table {
   max-width: 100%;
   padding: 0 2px 0 6px;
   overflow: clip;
-  color: var(--ksd-md-table-color, currentColor);
+  color: var(--ksd-cm-table-color, currentColor);
 
   &:hover .ksd-cm-table-row-button,
   &:hover .ksd-cm-table-col-button {
@@ -436,16 +488,16 @@ $callout-accents: (
 .ksd-cm-table-editor {
   border-collapse: collapse;
   position: relative;
-  border-color: var(--ksd-md-table-border, color-mix(in srgb, currentColor 25%, transparent));
+  border-color: var(--ksd-cm-table-border, color-mix(in srgb, currentColor 25%, transparent));
 
   th {
-    background: var(--ksd-md-table-header-bg, color-mix(in srgb, currentColor 7%, transparent));
-    font-weight: var(--ksd-md-table-header-weight, 600);
-    border: 1px solid var(--ksd-md-table-border, color-mix(in srgb, currentColor 25%, transparent));
+    background: var(--ksd-cm-table-header-bg, color-mix(in srgb, currentColor 7%, transparent));
+    font-weight: var(--ksd-cm-table-header-weight, 600);
+    border: 1px solid var(--ksd-cm-table-border, color-mix(in srgb, currentColor 25%, transparent));
   }
 
   td {
-    border: 1px solid var(--ksd-md-table-border, color-mix(in srgb, currentColor 25%, transparent));
+    border: 1px solid var(--ksd-cm-table-border, color-mix(in srgb, currentColor 25%, transparent));
   }
 }
 
@@ -457,7 +509,7 @@ $callout-accents: (
   padding: 4px 8px;
   vertical-align: top;
   cursor: text;
-  color: var(--ksd-md-table-cell-color, currentColor);
+  color: var(--ksd-cm-table-cell-color, currentColor);
 }
 
 .ksd-cm-table-cell-content {
@@ -480,12 +532,12 @@ $callout-accents: (
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s ease;
-  color: var(--ksd-md-table-button-color, currentColor);
-  background: var(--ksd-md-table-button-bg, color-mix(in srgb, currentColor 10%, transparent));
+  color: var(--ksd-cm-table-button-color, currentColor);
+  background: var(--ksd-cm-table-button-bg, color-mix(in srgb, currentColor 10%, transparent));
 
   &:hover {
     opacity: 1;
-    background: var(--ksd-md-table-button-hover, color-mix(in srgb, currentColor 20%, transparent));
+    background: var(--ksd-cm-table-button-hover, color-mix(in srgb, currentColor 20%, transparent));
   }
 }
 
@@ -499,13 +551,68 @@ $callout-accents: (
   right: -15px;
 }
 
+.ksd-cm-mermaid {
+  max-width: 100%;
+  padding: 6px;
+  overflow-x: auto;
+  cursor: text;
+  color: var(--ksd-cm-mermaid-color, currentColor);
+  background: var(--ksd-cm-mermaid-bg, color-mix(in srgb, currentColor 5%, transparent));
+  border: var(--ksd-cm-mermaid-border, none);
+  border-radius: var(--ksd-cm-mermaid-radius, 4px);
+
+  & > svg {
+    display: block;
+    max-width: none;
+    filter: var(--ksd-cm-mermaid-filter, none);
+  }
+}
+
+.ksd-cm-mermaid-pending {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ksd-cm-mermaid-pending-color, color-mix(in srgb, currentColor 60%, transparent));
+
+  &:empty::before {
+    content: "";
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    border: 2px solid color-mix(in srgb, currentColor 33%, transparent);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: mermaid-pending--rotation 0.66s linear 0s infinite;
+  }
+}
+
+.ksd-cm-mermaid-error {
+  min-height: 50px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  white-space: pre-wrap;
+  font-family: var(--ksd-cm-code-block-font, var(--ksd-cm-code-font, monospace));
+  color: var(--ksd-cm-mermaid-error-color, $red);
+}
+
+@keyframes mermaid-pending--rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .ksd-cm-search-match {
   border-radius: 2px;
-  background: var(--ksd-search-match-bg, color-mix(in srgb, #ffc300 18%, transparent));
+  background: var(--ksd-cm-search-bg, $search-bg);
 }
 
 .ksd-cm-search-match-active {
-  background: var(--ksd-search-match-active-bg, color-mix(in srgb, #ffc300 38%, transparent));
+  background: var(--ksd-cm-search-active-bg, $search-active-bg);
   outline: 1px solid
-    var(--ksd-search-match-active-border, color-mix(in srgb, currentColor 60%, transparent));
+    var(--ksd-cm-search-active-border, color-mix(in srgb, currentColor 60%, transparent));
 }

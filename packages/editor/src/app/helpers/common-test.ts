@@ -1,4 +1,40 @@
-export const COMMON_TEST = `# Заголовок для якорей
+export const COMMON_TEST = `
+# Заголовок для якорей
+
+## Диаграммы
+
+\`\`\`mermaid
+flowchart TD
+    A[Начало] --> B{Условие?}
+    B -- да --> C[Действие]
+    B -- нет --> D[Конец]
+    C --> D
+\`\`\`
+
+\`\`\`mermaid
+sequenceDiagram
+    participant User as Пользователь
+    participant Editor as Редактор
+    User->>Editor: Клик по виджету
+    Editor-->>User: Исходный markdown
+    User->>Editor: Правка исходника
+    Editor-->>User: Обновлённая диаграмма
+\`\`\`
+
+\`\`\`mermaid
+flowchart TD
+    A --> oops((
+\`\`\`
+
+\`\`\`mermaid
+\`\`\`
+
+
+> \`\`\`mermaid
+> flowchart LR
+>     X --> Y
+> \`\`\`
+
 
 ## Highlight
 

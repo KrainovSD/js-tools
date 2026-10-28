@@ -24,6 +24,10 @@ export function useTheme() {
     theme,
     (value) => {
       document.documentElement.style.colorScheme = value;
+      document.documentElement.style.setProperty(
+        "--ksd-cm-mermaid-filter",
+        value === "dark" ? "invert(1) hue-rotate(180deg)" : "",
+      );
     },
     { immediate: true },
   );

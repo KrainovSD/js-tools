@@ -105,7 +105,7 @@ export class Editor {
           outline: "none",
         },
         "& .cm-content": {
-          fontFamily: "var(--ksd-editor-font, inherit)",
+          fontFamily: "var(--ksd-cm-font, inherit)",
           maxWidth: "100%",
         },
         "& .cm-selectionBackground": {
