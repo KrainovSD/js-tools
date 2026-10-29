@@ -95,7 +95,7 @@ export class Editor {
         }
       }
       const vimPlugin = await this.vimGetter(this.vim);
-      const keyMapPlugin = await this.initKeyMap();
+      const keyMapPlugin = await this.initKeyMap(!!provider);
       const [language, formatter] = await NewLanguage(this.language, this.ySyncAnnotation, signal);
       this.formatter = formatter;
       if (this.formatOnOpen && this.initialText && this.formatter) {
@@ -234,7 +234,7 @@ export class Editor {
     return autocomplete;
   };
 
-  private initKeyMap = async (): Promise<Extension> => {
+  private initKeyMap = async (withProvider: boolean): Promise<Extension> => {
     const keyBindings: CustomKeyMap[] = [indentWithTab];
     keyBindings.push(
       ...standardKeymap.map<CustomKeyMap>((keyMap) => {
@@ -288,7 +288,7 @@ export class Editor {
     if (this.keymaps?.custom) {
       keyBindings.push(...this.keymaps.custom);
     }
-    if (this.multiCursor && this.provider) {
+    if (withProvider) {
       const { yUndoManagerKeymap } = await import("y-codemirror.next");
       keyBindings.push(...yUndoManagerKeymap);
     } else {

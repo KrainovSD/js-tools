@@ -55,6 +55,7 @@
     syncProvider: [synced: boolean, provider: WebsocketProvider, doc: Text];
     mounted: [];
     unmounted: [];
+    error: [error: unknown];
   };
 
   const props = defineProps<EditorProps>();
@@ -127,6 +128,10 @@
         }
       }
 
+      function onSyncProvider(synced: boolean, provider: YWebsocketProvider, doc: YText) {
+        emit("syncProvider", synced, provider, doc);
+      }
+
       const instance = new Factory({
         root: mountRef,
         initialText: model.value,
@@ -139,7 +144,9 @@
         vim: props.vim,
         autocomplete: props.autocomplete,
         language: props.language,
-        multiCursor: multiCursor ? { ...multiCursor, onChangeStatusProvider } : undefined,
+        multiCursor: multiCursor
+          ? { ...multiCursor, onChangeStatusProvider, onSyncProvider }
+          : undefined,
         keymaps: {
           ...(keymaps ?? {}),
           onEnter: props.handleEnter,
@@ -168,10 +175,15 @@
           },
         },
       });
-      void instance.init().then(() => {
-        if (disposed) return;
-        empty.value = instance.view?.state.doc.length === 0;
-      });
+      void instance
+        .init()
+        .then(() => {
+          if (disposed) return;
+          empty.value = instance.view?.state.doc.length === 0;
+        })
+        .catch((error: unknown) => {
+          emit("error", error);
+        });
       editor.value = instance;
       emit("mounted");
       clean(() => {
@@ -188,7 +200,9 @@
     () => props.vimMode,
     (vimMode) => {
       if (editor.value) {
-        void editor.value.setVimMode(vimMode);
+        void editor.value.setVimMode(vimMode).catch((error: unknown) => {
+          emit("error", error);
+        });
       }
     },
     { immediate: false },
@@ -208,7 +222,9 @@
     () => props.language,
     (language) => {
       if (!editor.value || !language) return;
-      void editor.value.setLanguage(language);
+      void editor.value.setLanguage(language).catch((error: unknown) => {
+        emit("error", error);
+      });
     },
     { immediate: false },
   );
@@ -233,9 +249,13 @@
 
   onMounted(() => {
     void import("@krainovsd/editor/styles.css");
-    void import("@krainovsd/editor").then((module) => {
-      Factory.value = module.Editor;
-    });
+    void import("@krainovsd/editor")
+      .then((module) => {
+        Factory.value = module.Editor;
+      })
+      .catch((error: unknown) => {
+        emit("error", error);
+      });
   });
 
   defineExpose({ element: mountRef, editor });

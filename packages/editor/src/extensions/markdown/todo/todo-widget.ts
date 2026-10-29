@@ -5,6 +5,7 @@ import { CLASSES } from "../classes-constants";
 
 export class TodoWidget extends WidgetType {
   view: EditorView | undefined;
+  private controller = new AbortController();
 
   constructor(
     public checked: boolean,
@@ -13,7 +14,7 @@ export class TodoWidget extends WidgetType {
     super();
   }
 
-  onClick(event: MouseEvent) {
+  onClick = (event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
 
@@ -32,14 +33,16 @@ export class TodoWidget extends WidgetType {
 
     this.checked = !this.checked;
     target.checked = this.checked;
-  }
+  };
 
-  onBlock(event: MouseEvent) {
+  onBlock = (event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
-  }
+  };
 
   toDOM(view: EditorView): HTMLElement {
+    this.controller.abort();
+    this.controller = new AbortController();
     const span = document.createElement("span");
     span.classList.add(CLASSES.todo);
     this.view = view;
@@ -48,16 +51,16 @@ export class TodoWidget extends WidgetType {
     checkbox.type = "checkbox";
     checkbox.checked = this.checked;
 
-    checkbox.addEventListener("click", this.onBlock.bind(this));
-    checkbox.addEventListener("mousedown", this.onClick.bind(this));
+    checkbox.addEventListener("click", this.onBlock, { signal: this.controller.signal });
+    checkbox.addEventListener("mousedown", this.onClick, { signal: this.controller.signal });
 
     span.appendChild(checkbox);
 
     return span;
   }
 
-  destroy(dom: HTMLElement): void {
-    dom.removeEventListener("click", this.onBlock.bind(this));
-    dom.removeEventListener("mousedown", this.onClick.bind(this));
+  destroy(): void {
+    this.controller.abort();
+    this.view = undefined;
   }
 }
