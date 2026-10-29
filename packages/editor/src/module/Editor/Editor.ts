@@ -42,6 +42,7 @@ export class Editor {
   view: EditorView | undefined;
   provider: WebsocketProvider | undefined;
   yText: Text | undefined;
+  private controller = new AbortController();
   private ySyncAnnotation: AnnotationType<YSyncConfig> | undefined;
   private vimGetter: VimGetter;
   private initialText: string | undefined;
@@ -73,94 +74,110 @@ export class Editor {
   }
 
   init = async () => {
+    this.destroy();
+    this.controller = new AbortController();
+    const signal = this.controller.signal;
     const extensions: Extension[] = [];
     let provider: WebsocketProvider | undefined;
     let multiCursorText: Text | undefined;
-    if (this.multiCursor) {
-      ({ provider, multiCursorText } = await this.initProvider(this.multiCursor));
-      if (provider && multiCursorText) {
-        const multiCursorModules = await Promise.all([import("yjs"), import("y-codemirror.next")]);
-        const [{ UndoManager }, { yCollab, ySyncAnnotation }] = multiCursorModules;
-        const undoManager = new UndoManager(multiCursorText);
-        this.ySyncAnnotation = ySyncAnnotation;
-        extensions.push(yCollab(multiCursorText, provider.awareness, { undoManager }));
+    try {
+      if (this.multiCursor) {
+        ({ provider, multiCursorText } = await this.initProvider(this.multiCursor));
+        if (provider && multiCursorText) {
+          const multiCursorModules = await Promise.all([
+            import("yjs"),
+            import("y-codemirror.next"),
+          ]);
+          const [{ UndoManager }, { yCollab, ySyncAnnotation }] = multiCursorModules;
+          const undoManager = new UndoManager(multiCursorText);
+          this.ySyncAnnotation = ySyncAnnotation;
+          extensions.push(yCollab(multiCursorText, provider.awareness, { undoManager }));
+        }
       }
-    }
-    const vimPlugin = await this.vimGetter(this.vim);
-    const keyMapPlugin = await this.initKeyMap();
-    const [language, formatter] = await NewLanguage(this.language, this.ySyncAnnotation);
-    this.formatter = formatter;
-    if (this.formatOnOpen && this.initialText && this.formatter) {
-      try {
-        this.initialText = this.formatter(this.initialText);
-      } catch {}
-    }
-    extensions.push([
-      EditorView.theme({
-        "&.cm-editor": {
-          height: "100%",
-          width: "100%",
-        },
-        "&.cm-editor.cm-focused": {
-          outline: "none",
-        },
-        "& .cm-content": {
-          fontFamily: "var(--ksd-cm-font, inherit)",
-          maxWidth: "100%",
-        },
-        "& .cm-selectionBackground": {
-          background: "color-mix(in srgb, currentColor 18%, transparent)",
-        },
-        "&.cm-focused > .cm-scroller > .cm-selectionLayer > .cm-selectionBackground": {
-          background: "color-mix(in srgb, currentColor 30%, transparent)",
-        },
-      }),
-      AutocompleteCompartment.of(this.initAutocomplete()),
-      ReadonlyCompartment.of(EditorView.editable.of(!this.readonly)),
-      VimModeCompartment.of(vimPlugin),
-      ThemeCompartment.of(this.theme ?? []),
-      history(),
-      NewSearch(),
-      EditorView.lineWrapping,
-      keyMapPlugin,
-      LanguageCompartment.of(language),
-    ]);
-    if (this.listeners?.onChange || this.listeners?.onViewChange) {
-      const onViewChange = this.listeners?.onViewChange;
-      const onChange = this.listeners?.onChange;
-      extensions.push(
-        EditorView.updateListener.of((event) => {
-          onViewChange?.(event);
-          if (event.docChanged) {
-            onChange?.(event);
-          }
+      const vimPlugin = await this.vimGetter(this.vim);
+      const keyMapPlugin = await this.initKeyMap();
+      const [language, formatter] = await NewLanguage(this.language, this.ySyncAnnotation, signal);
+      this.formatter = formatter;
+      if (this.formatOnOpen && this.initialText && this.formatter) {
+        try {
+          this.initialText = this.formatter(this.initialText);
+        } catch {}
+      }
+      extensions.push([
+        EditorView.theme({
+          "&.cm-editor": {
+            height: "100%",
+            width: "100%",
+          },
+          "&.cm-editor.cm-focused": {
+            outline: "none",
+          },
+          "& .cm-content": {
+            fontFamily: "var(--ksd-cm-font, inherit)",
+            maxWidth: "100%",
+          },
+          "& .cm-selectionBackground": {
+            background: "color-mix(in srgb, currentColor 18%, transparent)",
+          },
+          "&.cm-focused > .cm-scroller > .cm-selectionLayer > .cm-selectionBackground": {
+            background: "color-mix(in srgb, currentColor 30%, transparent)",
+          },
         }),
-      );
-    }
-    if (this.listeners?.onBlur || this.listeners?.onFocus) {
-      const onFocus = this.listeners?.onFocus;
-      const onBlur = this.listeners?.onBlur;
-      extensions.push(
-        EditorView.focusChangeEffect.of((event, focus) => {
-          if (focus && onFocus) onFocus(event);
-          else if (!focus && onBlur) onBlur(event);
-          return null;
-        }),
-      );
-    }
+        ReadonlyCompartment.of(EditorView.editable.of(!this.readonly)),
+        VimModeCompartment.of(vimPlugin),
+        ThemeCompartment.of(this.theme ?? []),
+        history(),
+        NewSearch(),
+        EditorView.lineWrapping,
+        LanguageCompartment.of(language),
+        keyMapPlugin,
+        AutocompleteCompartment.of(this.initAutocomplete()),
+      ]);
+      if (this.listeners?.onChange || this.listeners?.onViewChange) {
+        const onViewChange = this.listeners?.onViewChange;
+        const onChange = this.listeners?.onChange;
+        extensions.push(
+          EditorView.updateListener.of((event) => {
+            onViewChange?.(event);
+            if (event.docChanged) {
+              onChange?.(event);
+            }
+          }),
+        );
+      }
+      if (this.listeners?.onBlur || this.listeners?.onFocus) {
+        const onFocus = this.listeners?.onFocus;
+        const onBlur = this.listeners?.onBlur;
+        extensions.push(
+          EditorView.focusChangeEffect.of((event, focus) => {
+            if (focus && onFocus) onFocus(event);
+            else if (!focus && onBlur) onBlur(event);
+            return null;
+          }),
+        );
+      }
 
-    const state = EditorState.create({
-      // eslint-disable-next-line @typescript-eslint/no-base-to-string
-      doc: multiCursorText ? multiCursorText.toString() : this.initialText,
-      extensions,
-    });
-    const view = new EditorView({
-      state,
-      parent: this.root,
-    });
-    this.view = view;
-    this.provider = provider;
-    this.yText = multiCursorText;
+      const state = EditorState.create({
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
+        doc: multiCursorText ? multiCursorText.toString() : this.initialText,
+        extensions,
+      });
+      const view = new EditorView({
+        state,
+        parent: this.root,
+      });
+      if (signal.aborted) {
+        view.destroy();
+        provider?.destroy?.();
+        return;
+      }
+      this.view = view;
+      this.provider = provider;
+      this.yText = multiCursorText;
+    } catch (error) {
+      provider?.destroy?.();
+      throw error;
+    }
   };
 
   private initProvider = async (opts: MultiCursorOptions) => {
@@ -202,14 +219,15 @@ export class Editor {
   private initAutocomplete = () => {
     const autocomplete: Extension[] = [];
     if (this.autocomplete) {
+      const override = [
+        ...(this.autocomplete.tags?.length ? [tagAutoComplete(this.autocomplete.tags)] : []),
+        ...(this.autocomplete.sources ?? []),
+      ];
       autocomplete.push(
         autocompletion({
           ...DefaultAutoCompleteOptions,
           ...(this.autocomplete.config ?? {}),
-          override: [
-            ...(this.autocomplete.tags?.length ? [tagAutoComplete(this.autocomplete.tags)] : []),
-            ...(this.autocomplete.sources ?? []),
-          ],
+          ...(override.length ? { override } : {}),
         }),
       );
     }
@@ -280,13 +298,12 @@ export class Editor {
   };
 
   destroy = () => {
-    return new Promise((resolve) => {
-      saveDispatch(() => {
-        this.view?.destroy?.();
-        this.provider?.destroy?.();
-        resolve(true);
-      });
-    });
+    this.controller.abort();
+    this.view?.destroy?.();
+    this.provider?.destroy?.();
+    this.view = undefined;
+    this.provider = undefined;
+    this.yText = undefined;
   };
 
   focus = () => {
@@ -455,7 +472,11 @@ export class Editor {
   setLanguage = async (opts: LanguageOptions) => {
     if (!this.view) return;
     this.language = opts;
-    const [language, formatter] = await NewLanguage(this.language, this.ySyncAnnotation);
+    const [language, formatter] = await NewLanguage(
+      this.language,
+      this.ySyncAnnotation,
+      this.controller.signal,
+    );
     this.formatter = formatter;
     saveDispatch(() => {
       if (!this.view) return;

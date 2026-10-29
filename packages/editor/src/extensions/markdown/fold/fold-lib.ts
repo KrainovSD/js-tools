@@ -24,7 +24,7 @@ export function getHeadingAnchorLine(state: EditorState, pos: number): Line | un
   while (node && !isHeadingNodeName(node.name)) {
     node = node.parent;
   }
-  return node ? state.doc.lineAt(node.to) : undefined;
+  return node ? state.doc.lineAt(node.from) : undefined;
 }
 
 export function isFoldedFrom(state: EditorState, foldFrom: number): boolean {

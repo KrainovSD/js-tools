@@ -38,6 +38,7 @@ export const CLASSES = {
   italic: "ksd-cm-italic",
   strikeThrough: "ksd-cm-strike-through",
   underline: "ksd-cm-underline",
+  escape: "ksd-cm-escape",
   header: "ksd-cm-header",
   headerLevels: [
     "ksd-cm-header-1",

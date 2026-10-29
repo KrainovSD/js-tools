@@ -45,7 +45,7 @@ export class TableWidget extends WidgetType {
       model.rowCount,
       model.colCount,
       model.alignments.map((alignment) => alignment ?? "").join(","),
-      model.cells.map((cell) => cell.text).join(""),
+      model.cells.map((cell) => `${cell.text.length}:${cell.text}`).join("|"),
       isReadonly ? "ro" : "rw",
     ].join(":");
   }

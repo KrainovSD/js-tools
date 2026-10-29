@@ -28,12 +28,16 @@ const taglessStyles = styleTags(
 export function NewMarkdownLanguage(
   markdownOptions: MarkdownOptions | undefined,
   ySyncAnnotation: AnnotationType<unknown> | undefined,
+  signal: AbortSignal,
 ): Extension[] {
-  const openImageFullscreen = NewImageViewer({
-    imageSrcGetter: markdownOptions?.imageSrcGetter,
-    imageFullscreenRoot: markdownOptions?.imageFullscreenRoot,
-    imageTransition: markdownOptions?.imageTransition,
-  });
+  const openImageFullscreen = NewImageViewer(
+    {
+      imageSrcGetter: markdownOptions?.imageSrcGetter,
+      imageFullscreenRoot: markdownOptions?.imageFullscreenRoot,
+      imageTransition: markdownOptions?.imageTransition,
+    },
+    signal,
+  );
 
   return [
     NewFold(),

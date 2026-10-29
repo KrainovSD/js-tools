@@ -1,6 +1,6 @@
 import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
 import { type EditorState } from "@codemirror/state";
-import { type Tree } from "@lezer/common";
+import type { Tree } from "@lezer/common";
 import { parseHeader, parseSetextHeader } from "./header/header-lib";
 import { parseImage } from "./image/image-lib";
 import {

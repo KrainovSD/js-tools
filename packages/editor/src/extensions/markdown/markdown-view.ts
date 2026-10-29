@@ -21,6 +21,10 @@ import {
   fillFencedCodeSelectionDecorations,
   fillInlineCodeSelectionDecorations,
 } from "./code/code-decoration";
+import {
+  fillEscapeContentDecorations,
+  fillEscapeSelectionDecorations,
+} from "./escape/escape-decoration";
 import { NewFoldCoverage } from "./fold";
 import {
   fillFootnoteDefinitionContentDecorations,
@@ -66,6 +70,7 @@ import {
   NAME_OF_BLOCKQUOTE,
   NAME_OF_BOLD,
   NAME_OF_CODE_BLOCK,
+  NAME_OF_ESCAPE,
   NAME_OF_FENCED_CODE,
   NAME_OF_FOOTNOTE_DEFINITION,
   NAME_OF_FOOTNOTE_REF,
@@ -108,6 +113,7 @@ const ContentDecorationFns = {
   [NAME_OF_UNDERLINE]: fillUnderlineContentDecorations,
   [NAME_OF_CODE_BLOCK]: fillCodeBlockContentDecorations,
   [NAME_OF_IMAGE]: fillImageContentDecorations,
+  [NAME_OF_ESCAPE]: fillEscapeContentDecorations,
   [NAME_OF_URL]: fillURLContentDecorations,
   [NAME_OF_MENTION]: fillMentionContentDecorations,
   [NAME_OF_HIGHLIGHT]: fillHighlightContentDecorations,
@@ -131,6 +137,7 @@ const SelectionDecorationFns = {
   [NAME_OF_ITALIC]: fillItalicSelectionDecorations,
   [NAME_OF_STRIKE_THROUGH]: fillStrikeThroughSelectionDecorations,
   [NAME_OF_UNDERLINE]: fillUnderlineSelectionDecorations,
+  [NAME_OF_ESCAPE]: fillEscapeSelectionDecorations,
   [NAME_OF_FENCED_CODE]: fillFencedCodeSelectionDecorations,
   [NAME_OF_INLINE_CODE]: fillInlineCodeSelectionDecorations,
   [NAME_OF_HORIZONTAL_RULE]: fillHorizontalSelectionDecorations,
@@ -208,7 +215,6 @@ export function NewViewDecorations(settings: MarkdownDecorationSettings) {
       decorations: DecorationSet;
       dom: HTMLElement;
       view: EditorView;
-      controller = new AbortController();
 
       constructor(view: EditorView) {
         this.decorations = buildDecorations(view, true, true);
@@ -228,10 +234,6 @@ export function NewViewDecorations(settings: MarkdownDecorationSettings) {
         const selectionChanged =
           contentChanged || update.focusChanged || update.selectionSet || editableChanged;
         this.decorations = buildDecorations(update.view, contentChanged, selectionChanged);
-      }
-
-      destroy() {
-        this.controller.abort();
       }
     },
     {

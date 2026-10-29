@@ -1,4 +1,5 @@
 import type { EditorView } from "@codemirror/view";
+import type Viewer from "viewerjs";
 import type { MarkdownDecorationSettings } from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
 
@@ -7,7 +8,9 @@ export type ImageViewerSettings = Pick<
   "imageSrcGetter" | "imageFullscreenRoot" | "imageTransition"
 >;
 
-export function NewImageViewer(settings: ImageViewerSettings) {
+type ViewerInstance = InstanceType<typeof Viewer>;
+
+export function NewImageViewer(settings: ImageViewerSettings, signal: AbortSignal) {
   let opened = false;
   return async (view: EditorView, from: number): Promise<void> => {
     if (opened) return;
@@ -20,6 +23,10 @@ export function NewImageViewer(settings: ImageViewerSettings) {
         import("viewerjs"),
         import("viewerjs/dist/viewer.css"),
       ]);
+      if (signal.aborted) {
+        opened = false;
+        return;
+      }
       const list = document.createElement("div");
       for (const entry of entries) {
         const image = document.createElement("img");
@@ -29,7 +36,13 @@ export function NewImageViewer(settings: ImageViewerSettings) {
           : entry.url;
         list.appendChild(image);
       }
-      const ref: { current?: InstanceType<typeof Viewer> } = {};
+      const ref: { current?: ViewerInstance } = {};
+      function cleanup() {
+        ref.current?.destroy?.();
+        ref.current = undefined;
+        opened = false;
+      }
+      signal.addEventListener("abort", cleanup);
       ref.current = new Viewer(list, {
         container: settings.imageFullscreenRoot ?? document.body,
         url: (image) => image.dataset.url ?? "",
@@ -60,9 +73,8 @@ export function NewImageViewer(settings: ImageViewerSettings) {
         slideOnTouch: true,
         toggleOnDblclick: true,
         hidden: () => {
-          ref.current?.destroy();
-          ref.current = undefined;
-          opened = false;
+          signal.removeEventListener("abort", cleanup);
+          cleanup();
         },
       });
       ref.current.show();

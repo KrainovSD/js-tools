@@ -116,7 +116,7 @@ export type { EmptyProps } from "./Empty.vue";
 export type { PaginationProps, PaginationSize, PaginationPlacement } from "./Pagination.vue";
 export type { LoaderProps, LoaderType } from "./Loader.vue";
 export type { ImportProps } from "./Import.vue";
-export type { EditorProps } from "./Editor.vue";
+export type { EditorProps, EditorKeymaps, EditorMultiCursor } from "./Editor.vue";
 export type {
   ControlComponents,
   ControlProps,

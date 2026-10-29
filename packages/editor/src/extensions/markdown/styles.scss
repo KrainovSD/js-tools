@@ -3,6 +3,7 @@
 $blue: light-dark(#006ab1, #4da3ff);
 $purple: light-dark(#6f42c1, #b180ff);
 $red: light-dark(#a22232, #e93147);
+$gray: light-dark(#6f6f6f, #9e9e9e);
 $highlight-bg: light-dark(rgba(255, 208, 0, 0.4), rgba(255, 208, 0, 0.25));
 $search-bg: light-dark(rgba(255, 195, 0, 0.3), rgba(255, 195, 0, 0.18));
 $search-active-bg: light-dark(rgba(255, 195, 0, 0.6), rgba(255, 195, 0, 0.38));
@@ -150,6 +151,10 @@ $callout-accents: (
 .ksd-cm-underline {
   text-decoration: underline;
   color: var(--ksd-cm-underline-color, currentColor);
+}
+
+.ksd-cm-escape {
+  color: var(--ksd-cm-escape-color, $gray);
 }
 
 .ksd-cm-blockquote {

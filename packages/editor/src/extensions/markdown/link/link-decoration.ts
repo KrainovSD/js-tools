@@ -1,48 +1,18 @@
 import { Decoration } from "@codemirror/view";
 import { utils } from "@/lib";
 import { CLASSES } from "../classes-constants";
-import {
-  CODE_OF_CLOSE_BRACKET,
-  CODE_OF_CLOSE_PAREN,
-  CODE_OF_COLON,
-  CODE_OF_OPEN_BRACKET,
-  CODE_OF_OPEN_PAREN,
-  type SelectionDecorationOptions,
-} from "../markdown-model";
+import { CODE_OF_COLON, type SelectionDecorationOptions } from "../markdown-model";
 import { MarkdownState } from "../markdown-state";
+import { parseLink } from "./link-lib";
 import { LinkWidget } from "./link-widget";
 
 export function fillLinkSelectionDecorations(opts: SelectionDecorationOptions) {
   const { view, node, decorations, readonly } = opts;
-  const content = view.state.doc.sliceString(node.from, node.to);
-  const textCoordinates = { from: -1, to: -1 };
-  const urlCoordinates = { from: -1, to: -1 };
-  let pos = -1;
-  while (pos < content.length) {
-    pos++;
-    const code = content.charCodeAt(pos);
-
-    if (textCoordinates.from === -1 && code === CODE_OF_OPEN_BRACKET)
-      textCoordinates.from = pos + 1;
-    else if (urlCoordinates.from === -1 && textCoordinates.to !== -1 && code === CODE_OF_OPEN_PAREN)
-      urlCoordinates.from = pos + 1;
-    else if (
-      textCoordinates.from !== -1 &&
-      textCoordinates.to === -1 &&
-      code === CODE_OF_CLOSE_BRACKET
-    )
-      textCoordinates.to = pos;
-    else if (urlCoordinates.from !== -1 && urlCoordinates.to === -1 && code === CODE_OF_CLOSE_PAREN)
-      urlCoordinates.to = pos;
-  }
-  if (urlCoordinates.from === -1 || urlCoordinates.to === -1) {
+  const entry = parseLink(view.state, node);
+  if (!entry.url) {
     return void fillLinkLabelSelectionDecorations(opts);
   }
-
-  const text = content.substring(textCoordinates.from, textCoordinates.to);
-  const url = content.substring(urlCoordinates.from, urlCoordinates.to);
   const uniqueId = view.state.field(MarkdownState).uniqueId;
-
   if (
     readonly ||
     !view.hasFocus ||
@@ -50,7 +20,7 @@ export function fillLinkSelectionDecorations(opts: SelectionDecorationOptions) {
   ) {
     decorations.push(
       Decoration.replace({
-        widget: new LinkWidget(text, url, node.from, node.to, uniqueId, view, false),
+        widget: new LinkWidget(entry.text, entry.url, node.from, node.to, uniqueId, view, false),
       }).range(node.from, node.to),
     );
   }

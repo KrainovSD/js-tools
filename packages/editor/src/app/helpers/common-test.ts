@@ -1,4 +1,6 @@
 export const COMMON_TEST = `
+[a \\[b\\]](url) 
+
 # Заголовок для якорей
 
 ## Диаграммы
@@ -204,6 +206,10 @@ Setext-заголовок второго уровня
 - почта: mail@gmail.com
 - референсная ссылка: [текст по референсу][ref-demo]
 - **[жирная ссылка](https://example.com)** и *[курсивная ссылка](https://example.com)*
+[a \\[b\\]](url) 
+[a](page "Title")
+[alt](foo(bar).png)
+[alt](<my url.png>)
 
 
 

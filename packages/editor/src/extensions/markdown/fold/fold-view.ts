@@ -44,7 +44,7 @@ function buildIndicators(view: EditorView): DecorationSet {
       to,
       enter: (node) => {
         if (!isHeadingNodeName(node.name)) return;
-        const anchorLine = doc.lineAt(node.to);
+        const anchorLine = doc.lineAt(node.from);
         const lineFrom = doc.lineAt(node.from).from;
         const last = decorations[decorations.length - 1];
         if (foldable(state, anchorLine.from, anchorLine.to) && last?.from !== lineFrom) {

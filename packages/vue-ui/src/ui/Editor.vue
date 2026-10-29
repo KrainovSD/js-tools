@@ -14,22 +14,27 @@
     YText,
     YWebsocketProvider,
   } from "@krainovsd/editor";
-  import { getByPath, waitUntil } from "@krainovsd/js-helpers";
   import { computed, onMounted, ref, useTemplateRef, watch } from "vue";
   import type { WebsocketProvider } from "y-websocket";
   import type { Text } from "yjs";
   import { VText } from ".";
   import type { InputVariant } from "./Input.vue";
 
+  export type EditorMultiCursor = Omit<
+    MultiCursorOptions,
+    "onChangeStatusProvider" | "onSyncProvider"
+  >;
+  export type EditorKeymaps = Omit<KeyMapsOptions, "onEnter" | "onEscape">;
+
   export type EditorProps = {
     variant?: Exclude<InputVariant, "borderless" | "underline">;
     readonly?: boolean;
     vimMode?: boolean;
     placeholder?: string;
-    multiCursor?: Omit<MultiCursorOptions, "onChangeStatusProvider" | "onSyncProvider">;
+    multiCursor?: EditorMultiCursor;
     vim?: VimOptions;
     autocomplete?: AutoCompleteOptions;
-    keymaps?: Omit<KeyMapsOptions, "onEnter" | "onEscape">;
+    keymaps?: EditorKeymaps;
     language?: LanguageOptions;
     formatOnOpen?: boolean;
     theme?: Extension[] | Extension;
@@ -69,8 +74,8 @@
     disabled: props.readonly,
   }));
   const styles = computed(() => ({
-    "--ksd-md-code-font": props.fontCode ?? "monospace",
-    "--ksd-editor-font": props.font ?? "inherit",
+    "--ksd-cm-code-font": props.fontCode ?? "monospace",
+    "--ksd-cm-font": props.font ?? "inherit",
   }));
 
   function clickPlaceholder() {
@@ -83,6 +88,7 @@
       if (!mountRef || !Factory) return;
       let connectingCount = 0;
       let firstConnecting = true;
+      let disposed = false;
       if (!multiCursor) {
         mounted.value = true;
       }
@@ -111,13 +117,7 @@
           }
           case "disconnected": {
             connectingCount = 0;
-            if (instance.view && "destroyed" in instance.view) {
-              const destroyed = getByPath(instance.view, "destroyed" as keyof typeof instance.view);
-
-              if (destroyed) {
-                return;
-              }
-            }
+            if (disposed) return;
             emit("disconnect");
             break;
           }
@@ -168,26 +168,15 @@
           },
         },
       });
-      void instance.init();
-      editor.value = instance;
-      if (!props.placeholder) return;
-      let waiting = true;
-      void waitUntil(() => !instance?.view?.dom && waiting).then(() => {
-        if (!empty.value && instance?.view?.state.doc.length === 0) {
-          empty.value = true;
-        }
-        if (empty.value && instance?.view?.state.doc.length !== 0) {
-          empty.value = false;
-        }
+      void instance.init().then(() => {
+        if (disposed) return;
+        empty.value = instance.view?.state.doc.length === 0;
       });
-      setTimeout(() => {
-        waiting = false;
-      }, 1000);
+      editor.value = instance;
       emit("mounted");
       clean(() => {
-        if (instance) {
-          void instance.destroy();
-        }
+        disposed = true;
+        void instance.destroy();
         editor.value = undefined;
         emit("unmounted");
       });
@@ -243,6 +232,7 @@
   );
 
   onMounted(() => {
+    void import("@krainovsd/editor/styles.css");
     void import("@krainovsd/editor").then((module) => {
       Factory.value = module.Editor;
     });

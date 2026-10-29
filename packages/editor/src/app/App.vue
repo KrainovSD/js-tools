@@ -54,6 +54,7 @@
       ? ({
           languages,
           imageSrcGetter: (url: string) => url,
+          imageFullscreen: true,
         } as MarkdownOptions)
       : {}),
   }));

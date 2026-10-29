@@ -11,11 +11,12 @@ export type LanguageFormatter = (text: string) => string;
 export async function NewLanguage(
   opts: LanguageOptions,
   ySyncAnnotation: AnnotationType<unknown> | undefined,
+  signal: AbortSignal,
 ): Promise<[Extension[], LanguageFormatter | undefined]> {
   switch (opts.name) {
     case "markdown": {
       const { NewMarkdownLanguage } = await import("../markdown/new-markdown");
-      const extensions = NewMarkdownLanguage(opts, ySyncAnnotation);
+      const extensions = NewMarkdownLanguage(opts, ySyncAnnotation, signal);
       return [[extensions, ...(opts.extension ?? [])], opts.formatter];
     }
     case "json": {
