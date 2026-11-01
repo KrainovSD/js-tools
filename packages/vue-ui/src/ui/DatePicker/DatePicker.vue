@@ -50,6 +50,10 @@
     ? string | number | undefined | null
     : (string | number | null)[] | undefined | null;
 
+  defineOptions({
+    inheritAttrs: false,
+  });
+
   const props = withDefaults(defineProps<DatePickerProps<Multiple>>(), {
     displayFormat: "ru-dot",
     outputFormat: DATE_PICKER_OUTPUT_FORMAT,

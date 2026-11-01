@@ -56,6 +56,25 @@ const FILTERS: QueryField<string, string | number>[] = [
     ],
   },
   {
+    field: "user",
+    label: "Юзер",
+    components: [
+      {
+        component: "user",
+        operatorLabel: "равно",
+        operatorValue: "equal",
+        props: {
+          users: [
+            { id: 1, name: "test1", username: "test_1" },
+            { id: 2, name: "test2", username: "test_2" },
+            { id: 3, name: "test3", username: "test_3" },
+            { id: 4, name: "test4", username: "test_4" },
+          ],
+        },
+      },
+    ],
+  },
+  {
     field: "range",
     label: "Количество",
     components: [{ component: "number-range", operatorLabel: "равно", operatorValue: "equal" }],
@@ -170,11 +189,17 @@ const FILTERS: QueryField<string, string | number>[] = [
     label: "Дата создания",
     components: [
       { component: "date", operatorLabel: "Дата", operatorValue: "date" },
-      { component: "date-range", operatorLabel: "Между датами", operatorValue: "date-range" },
       {
-        component: "date-range",
+        component: "date",
+        operatorLabel: "Между датами",
+        operatorValue: "date-range",
+        props: { multiple: true },
+      },
+      {
+        component: "date",
         operatorLabel: "Не между датами",
         operatorValue: "not-date-range",
+        props: { multiple: true },
       },
     ],
   },
@@ -183,16 +208,18 @@ const FILTERS: QueryField<string, string | number>[] = [
     label: "Дата изменения",
     components: [
       {
-        component: "date-range",
+        component: "date",
         operatorLabel: "Между датами",
         operatorValue: "date-range",
         clearTag: "date-range",
+        props: { multiple: true },
       },
       {
-        component: "date-range",
+        component: "date",
         operatorLabel: "Не между датами",
         operatorValue: "not-date-range",
         clearTag: "date-range",
+        props: { multiple: true },
       },
       { component: "date", operatorLabel: "Дата", operatorValue: "date" },
     ],
@@ -206,8 +233,8 @@ const QUERY: QueryCondition<string, string, string>[] = [
     rules: [
       {
         type: "rule",
-        field: "string",
-        id: 2061061316591201,
+        field: "user",
+        id: 1,
         operator: "equal",
         value: undefined,
       },

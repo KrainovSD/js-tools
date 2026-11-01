@@ -37,6 +37,10 @@
     disabled?: boolean;
   } & Pick<UserAvatarsProps, "count" | "shift" | "size" | "tooltip">;
 
+  defineOptions({
+    inheritAttrs: false,
+  });
+
   const props = withDefaults(defineProps<UserPickerProps<ID, Multiple>>(), {
     count: AVATAR_COUNT_DEFAULT,
     size: "default",

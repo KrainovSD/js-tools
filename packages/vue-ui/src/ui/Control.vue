@@ -58,6 +58,10 @@
 
   defineProps<ControlProps>();
   const model = defineModel<unknown>();
+
+  defineOptions({
+    inheritAttrs: false,
+  });
 </script>
 
 <template>

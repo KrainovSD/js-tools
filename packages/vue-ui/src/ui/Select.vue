@@ -82,6 +82,10 @@
 
   const TRIGGERS: PopperTrigger[] = [];
 
+  defineOptions({
+    inheritAttrs: false,
+  });
+
   const props = withDefaults(defineProps<SelectProps<V, Multiple>>(), {
     clear: true,
     search: true,
