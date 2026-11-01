@@ -267,7 +267,6 @@ const Template: StoryFn<typeof VFilter> = (args) => ({
       { field: "number", value: 0 },
       { field: "custom_bool", value: 0 },
       { field: "select", value: [1] },
-      { field: "select_single", value: 1 },
       {
         field: "date",
         value: dateFormat(getDateByRules([{ increment: -1, type: "years" }]), "YYYY-MM-DD"),

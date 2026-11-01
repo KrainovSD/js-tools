@@ -12,6 +12,7 @@
     icon: undefined,
     direction: "right",
     wrap: true,
+    disabled: false,
   });
   const filterRef = useTemplateRef("filter-component");
   const filterBodyComponentTef = useTemplateRef("body");

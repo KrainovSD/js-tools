@@ -33,7 +33,7 @@
   const buttonRef = useTemplateRef("button");
   const hoverDrop = ref(false);
   const focusDrop = ref(false);
-  const activeDrop = computed(() => hoverDrop.value || focusDrop.value);
+  const activeDrop = computed(() => !props.disabled && (hoverDrop.value || focusDrop.value));
 
   const filterMap = computed(() => arrayToMapByKey(filter.value, "field"));
 
@@ -323,6 +323,7 @@
       :size="$props.buttonSize"
       class="ksd-filter__button-filter"
       :class="{ clear: openedFields.length > 0 }"
+      :disabled="$props.disabled"
       @click="openFilterField"
     >
       <template #icon>
@@ -337,6 +338,7 @@
       class="ksd-filter__button-clear"
       :class="{ empty: availableFilters.length === 0 }"
       :size="$props.buttonSize"
+      :disabled="$props.disabled"
       @click="dropFilters"
     >
       <template #icon>
@@ -350,19 +352,20 @@
     class="ksd-filter__field"
     :class="{ drop: activeDrop }"
   >
-    <DropDown :menu="dropMenu(index)">
+    <DropDown :menu="dropMenu(index)" :disabled="$props.disabled">
       <Button
         :data-id="openedFilter.field"
         :size="$props.buttonSize"
         class="ksd-filter__field-button-info"
         :class="{ operator: openedFilter.operators && openedFilter.operators.length > 0 }"
+        :disabled="$props.disabled"
       >
         <component
           :is="openedFilter.icon"
           v-if="openedFilter.icon"
           class="ksd-filter__field-icon"
         />
-        <Tooltip :text="openedFilter.label" :open-not-visible="true">
+        <Tooltip :text="openedFilter.label" :open-not-visible="true" :disabled="$props.disabled">
           <span class="ksd-filter__field-label">
             {{ openedFilter.label }}
           </span>
@@ -378,11 +381,13 @@
           onClick: () => changeOperator(openedFilter, operator.value),
         }))
       "
+      :disabled="$props.disabled"
     >
       <Button
         :data-id="openedFilter.field"
         :size="$props.buttonSize"
         class="ksd-filter__field-button-operator"
+        :disabled="$props.disabled"
         >{{
           openedFilter.operatorShortLabel ??
           openedFilter.operatorLabel ??
@@ -390,14 +395,19 @@
         }}</Button
       >
     </DropDown>
-    <Popover :size="$props.controlSize" :autofocus="false">
+    <Popover :size="$props.controlSize" :autofocus="false" :disabled="$props.disabled">
       <Button
         :data-id="openedFilter.field"
         :size="$props.buttonSize"
         class="ksd-filter__field-button-value"
         :class="{ operator: openedFilter.operators && openedFilter.operators.length > 0 }"
+        :disabled="$props.disabled"
       >
-        <Tooltip :text="extractFilterDisplayValue(openedFilter)" :open-not-visible="true">
+        <Tooltip
+          :text="extractFilterDisplayValue(openedFilter)"
+          :open-not-visible="true"
+          :disabled="$props.disabled"
+        >
           <span class="ksd-filter__field-value">
             {{
               filterMap[openedFilter.field.toString()]?.value == undefined ||
@@ -438,6 +448,7 @@
     <Button
       :size="$props.buttonSize"
       class="ksd-filter__field-button-close"
+      :disabled="$props.disabled"
       @click="closeFilter(openedFilter.field)"
     >
       <template #icon>
@@ -451,6 +462,7 @@
       :size="$props.buttonSize"
       class="ksd-filter__button-filter"
       :class="{ clear: openedFields.length > 0 }"
+      :disabled="$props.disabled"
       @click="openFilterField"
     >
       <template #icon>
@@ -465,6 +477,7 @@
       class="ksd-filter__button-clear"
       :class="{ empty: availableFilters.length === 0 }"
       :size="$props.buttonSize"
+      :disabled="$props.disabled"
       @click="dropFilters"
     >
       <template #icon>

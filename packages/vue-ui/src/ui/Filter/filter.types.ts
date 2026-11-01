@@ -94,4 +94,5 @@ export type FilterProps<
   displayedDateFormat?: string;
   /** the flag for wrap filter in flex-wrap container */
   wrap?: boolean;
+  disabled?: boolean;
 };
