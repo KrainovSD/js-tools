@@ -22,6 +22,9 @@ export function debounce<TArgs extends unknown[]>(
     return timer !== undefined;
   };
   debounced.cancel = () => {
+    clearTimeout(timer);
+  };
+  debounced.close = () => {
     active = false;
   };
   debounced.flush = (...args: TArgs) => {
