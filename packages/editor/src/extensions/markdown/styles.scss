@@ -621,3 +621,23 @@ $callout-accents: (
   outline: 1px solid
     var(--ksd-cm-search-active-border, color-mix(in srgb, currentColor 60%, transparent));
 }
+
+.cm-editor.ksd-cm-fullscreen {
+  position: fixed !important;
+  inset: 0;
+  z-index: var(--ksd-cm-fullscreen-z-index, 100);
+}
+
+:where(.ksd-cm-fullscreen) {
+  background: var(--ksd-cm-fullscreen-bg, light-dark(#ffffff, #292929));
+}
+
+.cm-editor .cm-scroller .cm-gutters {
+  padding-right: 0px;
+}
+.cm-editor .cm-scroller .cm-gutters {
+  padding-right: 0px;
+  & .cm-gutterElement {
+    padding: 0 5px 0 5px;
+  }
+}

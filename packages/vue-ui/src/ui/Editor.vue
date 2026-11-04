@@ -290,7 +290,7 @@
       background var(--ksd-transition-mid);
     padding-inline: calc(var(--ksd-input-padding-inline) - 6px);
 
-    & .cm-editor.cm-editor {
+    & .cm-editor.cm-editor:not(.ksd-cm-fullscreen) {
       background: transparent;
     }
 

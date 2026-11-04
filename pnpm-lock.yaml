@@ -466,8 +466,8 @@ importers:
   packages/vue-ui:
     dependencies:
       '@krainovsd/editor':
-        specifier: ^0.7.0-beta.4
-        version: 0.7.0-beta.4(@codemirror/search@6.5.10)
+        specifier: ^0.7.0
+        version: 0.7.0(@codemirror/search@6.5.10)
       '@krainovsd/js-helpers':
         specifier: ^0.16.6
         version: 0.16.6
@@ -1570,8 +1570,8 @@ packages:
     resolution: {integrity: sha512-OFJgIyKh+Ux3ErB7K4aB85As5bXkSL5vy4w+icf14vM/AYxZcCc299ZOiPSSHN6irAlX8EMuNDY4uMrg6bUAqA==}
     hasBin: true
 
-  '@krainovsd/editor@0.7.0-beta.4':
-    resolution: {integrity: sha512-qLkfTpKRcTT96fqeWN0glD90xE0CkT+ZAR6gGqZD5jsK/3YPXdHDGTyUvFYd2eBeRaE00xFuRwb96G9/ACrgpw==}
+  '@krainovsd/editor@0.7.0':
+    resolution: {integrity: sha512-O7/NF5GdIHzAbeeksdEpmraUA4wFiuPod5OBFZGd+xg4VzK3yBxp933AGep9iUTdEhw2+bAphHokZsKr00UeiA==}
 
   '@krainovsd/fastify-health-controller@0.3.2':
     resolution: {integrity: sha512-ZlTXeZQIiLS08HVsHVlMuXzEhZn/1nZ6lP9VxQX8wenLcIvuK5OpxT2ZlASdxxqZ7VCAmhmWBM0d1Q9ACxg2rw==}
@@ -7286,8 +7286,8 @@ packages:
   vue-component-type-helpers@2.2.10:
     resolution: {integrity: sha512-iDUO7uQK+Sab2tYuiP9D1oLujCWlhHELHMgV/cB13cuGbG4qwkLHvtfWb6FzvxrIOPDnU0oHsz2MlQjhYDeaHA==}
 
-  vue-component-type-helpers@3.3.13:
-    resolution: {integrity: sha512-02KCxSmKDhIITjKyJ4QT5csP6L0WoRborLqY/34a40+S9uvMvdNgMV0yVjO3p2Gkz3ZoPmFz/0JsGHacwJYTxw==}
+  vue-component-type-helpers@3.3.14:
+    resolution: {integrity: sha512-Pq3+OnbCiPCHk0R7KSZrx+j/XXaUn2kSQ1epxq60w8CPbByLjC1EJgV51n4WY851sTXUVzsNMuitywdkdVyKjA==}
 
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
@@ -8697,7 +8697,7 @@ snapshots:
 
   '@krainovsd/cli@0.3.3': {}
 
-  '@krainovsd/editor@0.7.0-beta.4(@codemirror/search@6.5.10)':
+  '@krainovsd/editor@0.7.0(@codemirror/search@6.5.10)':
     dependencies:
       '@codemirror/autocomplete': 6.20.3
       '@codemirror/commands': 6.11.1
@@ -9731,7 +9731,7 @@ snapshots:
       storybook: 9.0.16(@testing-library/dom@10.4.0)(prettier@3.6.1)
       type-fest: 2.19.0
       vue: 3.5.14(typescript@5.8.3)
-      vue-component-type-helpers: 3.3.13
+      vue-component-type-helpers: 3.3.14
 
   '@sveltejs/acorn-typescript@1.0.5(acorn@8.15.0)':
     dependencies:
@@ -15715,7 +15715,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.10: {}
 
-  vue-component-type-helpers@3.3.13: {}
+  vue-component-type-helpers@3.3.14: {}
 
   vue-docgen-api@4.79.2(vue@3.5.14(typescript@5.8.3)):
     dependencies:

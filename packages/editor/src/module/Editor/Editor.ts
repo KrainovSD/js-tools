@@ -17,6 +17,7 @@ import {
   ThemeCompartment,
   VimModeCompartment,
 } from "@/extensions/compartments";
+import { NewFullscreen } from "@/extensions/fullscreen";
 import { type LanguageFormatter, type LanguageOptions, NewLanguage } from "@/extensions/language";
 import {
   NewSearch,
@@ -130,6 +131,7 @@ export class Editor {
         NewSearch(),
         EditorView.lineWrapping,
         LanguageCompartment.of(language),
+        NewFullscreen(),
         keyMapPlugin,
         AutocompleteCompartment.of(this.initAutocomplete()),
       ]);

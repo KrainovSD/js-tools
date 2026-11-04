@@ -269,7 +269,7 @@
     overflow: hidden;
     border: 1px solid currentColor;
 
-    & .cm-editor.cm-editor {
+    & .cm-editor.cm-editor:not(.ksd-cm-fullscreen) {
       background: transparent;
     }
 

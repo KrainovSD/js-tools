@@ -1,5 +1,6 @@
 import { type Extension } from "@codemirror/state";
 import { drawSelection } from "@codemirror/view";
+import { NewLineNumbers } from "./new-line-numbers";
 
 type VimApi = {
   map: (lhs: string, rhs: string, ctx: "normal" | "insert" | "visual") => void;
@@ -23,7 +24,7 @@ export function NewVim(opts: VimOptions | undefined): VimGetter {
     if (!enabled) return [];
     const { vim, Vim } = await import("@replit/codemirror-vim");
     registerVimMappings(Vim as VimApi, mergedSettings);
-    return [vim({ status: true }), drawSelection()];
+    return [vim({ status: true }), drawSelection(), NewLineNumbers()];
   };
 }
 
