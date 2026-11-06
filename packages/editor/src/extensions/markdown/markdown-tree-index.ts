@@ -1,5 +1,6 @@
 import { ensureSyntaxTree, syntaxTree } from "@codemirror/language";
-import { type EditorState } from "@codemirror/state";
+import { type EditorState, type Extension } from "@codemirror/state";
+import { EditorView, type ViewUpdate } from "@codemirror/view";
 import type { Tree } from "@lezer/common";
 import { parseHeader, parseSetextHeader } from "./header/header-lib";
 import { parseImage } from "./image/image-lib";
@@ -71,4 +72,17 @@ export function getTreeIndex(state: EditorState, ensure: boolean = false): TreeI
   });
   treeIndexCache.set(currentTree, index);
   return index;
+}
+
+export type TreeIndexHandler = (index: TreeIndex, view: EditorView) => void;
+
+export function NewTreeIndexListener(handler: TreeIndexHandler): Extension {
+  let lastIndex: TreeIndex | undefined;
+  return EditorView.updateListener.of((update: ViewUpdate) => {
+    const index = getTreeIndex(update.view.state, false);
+    if (index !== lastIndex) {
+      lastIndex = index;
+      handler(index, update.view);
+    }
+  });
 }

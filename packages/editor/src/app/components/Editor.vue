@@ -12,6 +12,7 @@
     HandleEnterKeyMapEditorFunction,
     HandleEscapeKeyMapEditorFunction,
     KeyMapsOptions,
+    ListenersOptions,
     MultiCursorOptions,
     ProviderStatusEvent,
     YText,
@@ -40,6 +41,7 @@
     fontCode?: string;
     handleEnter?: HandleEnterKeyMapEditorFunction;
     handleEscape?: HandleEscapeKeyMapEditorFunction;
+    listeners?: ListenersOptions;
   };
   type Emits = {
     blur: [state: EditorState];
@@ -148,6 +150,7 @@
           onEscape: props.handleEscape,
         },
         listeners: {
+          ...props.listeners,
           onBlur: (state) => {
             focus.value = false;
             emit("blur", state);
@@ -263,7 +266,7 @@
   .ksd-markdown-editor {
     width: 100%;
     min-height: 100px;
-    height: fit-content;
+    height: 100%;
     display: flex;
     position: relative;
     overflow: hidden;

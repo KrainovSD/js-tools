@@ -4,5 +4,6 @@ export type HeaderEntry = {
   to: number;
   id: string;
   slug: string;
+  text: string;
   level: number;
 };

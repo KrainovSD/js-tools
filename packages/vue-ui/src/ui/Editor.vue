@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { EditorState, Extension } from "@codemirror/state";
-  import { type ViewUpdate } from "@codemirror/view";
+  import type { EditorView, ViewUpdate } from "@codemirror/view";
   import type {
     AutoCompleteOptions,
     Editor,
@@ -10,6 +10,7 @@
     LanguageOptions,
     MultiCursorOptions,
     ProviderStatusEvent,
+    TreeIndex,
     VimOptions,
     YText,
     YWebsocketProvider,
@@ -48,6 +49,7 @@
     focus: [state: EditorState];
     change: [view: ViewUpdate];
     changeView: [view: ViewUpdate];
+    changeTreeIndex: [index: TreeIndex, view: EditorView];
     connectError: [first: boolean];
     disconnect: [];
     connect: [first: boolean];
@@ -153,6 +155,9 @@
           onEscape: props.handleEscape,
         },
         listeners: {
+          onTreeIndexChange: (index, view) => {
+            emit("changeTreeIndex", index, view);
+          },
           onBlur: (state) => {
             focus.value = false;
             emit("blur", state);

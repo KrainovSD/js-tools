@@ -1,13 +1,15 @@
 <script setup lang="ts">
   import { languages } from "@codemirror/language-data";
-  import { computed, ref } from "vue";
+  import { EditorView } from "@codemirror/view";
+  import { computed, ref, watch } from "vue";
   import type { AutoCompleteOptions } from "@/extensions/auto-complete";
-  import type { MarkdownOptions } from "@/extensions/markdown";
-  import type { Editor, ProviderStatusEvent } from "@/module";
+  import type { HeaderEntry, MarkdownOptions } from "@/extensions/markdown";
+  import type { Editor, ListenersOptions, ProviderStatusEvent } from "@/module";
   import ActionButton from "./components/ActionButton.vue";
   import VEditor, { type EditorKeymaps, type EditorMultiCursor } from "./components/Editor.vue";
   import LanguageSelect from "./components/LanguageSelect.vue";
   import SearchControls from "./components/SearchControls.vue";
+  import TableOfContents from "./components/TableOfContents.vue";
   import ThemeSwitcher from "./components/ThemeSwitcher.vue";
   import { EDITOR_THEMES, useTheme } from "./composables/use-theme";
   import { COMMON_TEST, JSON_TEST, randomColor, randomString } from "./helpers";
@@ -16,6 +18,7 @@
 
   const editor = ref<Editor | undefined>();
   const content = ref(COMMON_TEST);
+  const headers = ref<HeaderEntry[]>([]);
   const { theme } = useTheme();
 
   const PLAYGROUND_KEYMAPS: EditorKeymaps = {
@@ -26,6 +29,11 @@
     tags: Array.from({ length: 100 }, () => randomString(10)),
     config: {
       closeOnBlur: false,
+    },
+  };
+  const PLAYGROUND_LISTENERS: ListenersOptions = {
+    onTreeIndexChange: (index) => {
+      headers.value = index.headers;
     },
   };
   function getRoomId() {
@@ -89,6 +97,20 @@
     created.value = !created.value;
   }
 
+  watch(created, (value) => {
+    if (!value) headers.value = [];
+  });
+
+  function gotoHeader(header: HeaderEntry) {
+    const view = editor.value?.view;
+    if (!view) return;
+    view.focus();
+    view.dispatch({
+      selection: { anchor: header.from, head: header.from },
+      effects: [EditorView.scrollIntoView(header.from, { y: "center" })],
+    });
+  }
+
   function handleMultiModeToggle() {
     multiCursorEnabled.value = !multiCursorEnabled.value;
     pushRoomState(multiCursorEnabled.value);
@@ -139,21 +161,25 @@
       <span>Форматировать: Shift-Alt-F</span>
     </div>
 
-    <VEditor
-      v-if="created"
-      :key="resetKey"
-      v-model:editor="editor"
-      v-model="content"
-      :class="$style.editor"
-      :theme="EDITOR_THEMES[theme]"
-      :language="languageOptions"
-      :multi-cursor="multiCursorOptions"
-      :readonly="readonly"
-      format-on-open
-      :autocomplete="PLAYGROUND_AUTOCOMPLETE"
-      :keymaps="PLAYGROUND_KEYMAPS"
-      @change-provider-status="handleProviderStatus"
-    />
+    <div :class="$style.body">
+      <VEditor
+        v-if="created"
+        :key="resetKey"
+        v-model:editor="editor"
+        v-model="content"
+        :class="$style.editor"
+        :theme="EDITOR_THEMES[theme]"
+        :language="languageOptions"
+        :multi-cursor="multiCursorOptions"
+        :readonly="readonly"
+        format-on-open
+        :autocomplete="PLAYGROUND_AUTOCOMPLETE"
+        :keymaps="PLAYGROUND_KEYMAPS"
+        :listeners="PLAYGROUND_LISTENERS"
+        @change-provider-status="handleProviderStatus"
+      />
+      <TableOfContents v-if="created" :headers="headers" @select="gotoHeader" />
+    </div>
   </div>
 </template>
 
@@ -182,10 +208,18 @@
     margin-top: 20px;
   }
 
+  .body {
+    display: flex;
+    gap: 10px;
+    flex: 1 1 auto;
+    align-items: stretch;
+    min-height: 0;
+    margin-top: 20px;
+  }
+
   .editor {
     flex: 1 1 auto;
     min-height: 0;
-    margin-top: 20px;
     overflow: hidden;
   }
 </style>

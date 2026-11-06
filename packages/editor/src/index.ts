@@ -25,12 +25,14 @@ export type { JSONOptions, LanguageFormatter, LanguageOptions } from "./extensio
 export type {
   ContentDecorationOptions,
   EditorLanguages,
+  HeaderEntry,
   MarkdownDecorationSettings,
   MarkdownOptions,
   MarkdownStateType,
   SelectionDecorationOptions,
   StateDecorationOptions,
   TreeIndex,
+  TreeIndexHandler,
 } from "./extensions/markdown";
 export type { SearchMatch } from "./extensions/search";
 export type { VimGetter, VimMapping, VimMode, VimOptions, VimUnMapping } from "./extensions/vim";

@@ -113,6 +113,8 @@ export const NAME_OF_FOOTNOTE_DEFINITION = "FootnoteDefinition";
 export const NAME_OF_ESCAPE = "Escape";
 export const NAME_OF_HTML_TAG = "HTMLTag";
 
+export type { HeaderEntry } from "./header/header-model";
+
 export type EditorLanguages = LanguageDescription;
 export type MarkdownOptions = {
   name?: "markdown";

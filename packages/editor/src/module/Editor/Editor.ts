@@ -19,6 +19,7 @@ import {
 } from "@/extensions/compartments";
 import { NewFullscreen } from "@/extensions/fullscreen";
 import { type LanguageFormatter, type LanguageOptions, NewLanguage } from "@/extensions/language";
+import { NewTreeIndexListener } from "@/extensions/markdown";
 import {
   NewSearch,
   type SearchMatch,
@@ -157,6 +158,9 @@ export class Editor {
             return null;
           }),
         );
+      }
+      if (this.listeners?.onTreeIndexChange) {
+        extensions.push(NewTreeIndexListener(this.listeners.onTreeIndexChange));
       }
 
       const state = EditorState.create({

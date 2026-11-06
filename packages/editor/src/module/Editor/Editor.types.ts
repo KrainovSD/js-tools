@@ -4,6 +4,7 @@ import type { WebsocketProvider } from "y-websocket";
 import type { Text } from "yjs";
 import type { AutoCompleteOptions } from "@/extensions/auto-complete";
 import type { LanguageOptions } from "@/extensions/language";
+import type { TreeIndexHandler } from "@/extensions/markdown";
 import type { VimOptions } from "@/extensions/vim";
 
 export type YWebsocketProvider = WebsocketProvider;
@@ -54,6 +55,7 @@ export type ListenersOptions = {
   onViewChange?: EditorViewHandle;
   onFocus?: EditorStateHandle;
   onBlur?: EditorStateHandle;
+  onTreeIndexChange?: TreeIndexHandler;
 };
 
 export type SettingsOptions = {
