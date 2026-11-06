@@ -131,6 +131,7 @@ function getCodeMarksContext(
   while ((startMarkRange[0] === -1 || startMarkRange[1] === -1) && pos < content.length) {
     const code = content.charCodeAt(pos);
     if (!isCodeMark(code) && startMarkRange[0] === -1) {
+      pos++;
       continue;
     } else if (isCodeMark(code) && startMarkRange[0] === -1) {
       startMarkRange[0] = node.from + pos;
@@ -143,6 +144,7 @@ function getCodeMarksContext(
   while ((endMarkRange[0] === -1 || endMarkRange[1] === -1) && pos > -1) {
     const code = content.charCodeAt(pos);
     if (!isCodeMark(code) && endMarkRange[1] === -1) {
+      pos--;
       continue;
     } else if (isCodeMark(code) && endMarkRange[1] === -1) {
       endMarkRange[1] = node.from + pos + 1;

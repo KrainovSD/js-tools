@@ -466,8 +466,8 @@ importers:
   packages/vue-ui:
     dependencies:
       '@krainovsd/editor':
-        specifier: ^0.7.1
-        version: 0.7.1(@codemirror/search@6.5.10)
+        specifier: ^0.7.2
+        version: 0.7.2(@codemirror/search@6.5.10)
       '@krainovsd/js-helpers':
         specifier: ^0.16.6
         version: 0.16.6
@@ -1570,8 +1570,8 @@ packages:
     resolution: {integrity: sha512-OFJgIyKh+Ux3ErB7K4aB85As5bXkSL5vy4w+icf14vM/AYxZcCc299ZOiPSSHN6irAlX8EMuNDY4uMrg6bUAqA==}
     hasBin: true
 
-  '@krainovsd/editor@0.7.1':
-    resolution: {integrity: sha512-bqjfZ/kHFZm5/qIJ5WINk7pTPGU9ViKDbop+5JUmWPbqhXZkaX9zH/doEeiFwdHO2HeO3Z3YJ3KMGkabakuIug==}
+  '@krainovsd/editor@0.7.2':
+    resolution: {integrity: sha512-tJU3fMPZgSZQQ2BIU1ls5cxtBvV3I4QWLBE+20Z0ErydlBYAQRXPbilb+gnKl/EU+U3tsTocsY0yixZQL7sY1w==}
 
   '@krainovsd/fastify-health-controller@0.3.2':
     resolution: {integrity: sha512-ZlTXeZQIiLS08HVsHVlMuXzEhZn/1nZ6lP9VxQX8wenLcIvuK5OpxT2ZlASdxxqZ7VCAmhmWBM0d1Q9ACxg2rw==}
@@ -8697,7 +8697,7 @@ snapshots:
 
   '@krainovsd/cli@0.3.3': {}
 
-  '@krainovsd/editor@0.7.1(@codemirror/search@6.5.10)':
+  '@krainovsd/editor@0.7.2(@codemirror/search@6.5.10)':
     dependencies:
       '@codemirror/autocomplete': 6.20.3
       '@codemirror/commands': 6.11.1
