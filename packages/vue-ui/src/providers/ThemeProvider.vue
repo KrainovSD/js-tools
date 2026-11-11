@@ -14,7 +14,7 @@
   const props = defineProps<Props>();
 
   watch(
-    (): [T | undefined, number | undefined] => [props.theme, props.fontSize],
+    () => [props.theme, props.fontSize, props.targetStyle, props.themeConfig] as const,
     (state) => {
       if (!IS_BROWSER) return;
 
